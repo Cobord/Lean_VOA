@@ -1,5 +1,6 @@
 # Lean / Lake build artifacts
 /.lake
+/moonshine-lean4.35/.lake
 *.olean
 
 # Local proof experiments and generated research probes

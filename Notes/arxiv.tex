@@ -32,7 +32,7 @@
   \small\textsuperscript{b}C.\,N.\ Yang Institute for Theoretical Physics, Stony Brook University, Stony Brook, NY
   11794-3840, USA\\[0.5em]
   \small\texttt{fpopov@scgp.stonybrook.edu}, \texttt{leonardo.rastelli@stonybrook.edu}}
-\date{Release v1.05}
+\date{Release v1.06}
 
 \begin{document}
 \maketitle
@@ -43,14 +43,15 @@
   Moonshine module $V^\natural$ and proves, with no hypotheses, the Conway--Norton moonshine conjecture for every
   automorphism of $V^\natural$ (Borcherds' theorem), along Borcherds' route through the Monster Lie algebra. It
   identifies $\mathrm{Aut}\,V^\natural$ with a formal model of the Monster taken from the AxiomMath library for the
-  classification of finite simple groups, given one named hypothesis that is a theorem of that library, so that
-  moonshine holds for every element of the Monster. It also formalizes Zhu's modular invariance, Huang's tensor
+  classification of finite simple groups. A companion project on Lean~v4.35 imports that library's generation
+  theorem for the model and proves, with no hypotheses, that $\mathrm{Aut}\,V^\natural$ is isomorphic to the model,
+  compatibly with the Griess algebras, and that moonshine holds for every element of the Monster. It also formalizes Zhu's modular invariance, Huang's tensor
   categories with the Verlinde formula, the Gannon--Rayhaun classification of $c=1$ VOAs, and classical freeness of the boundary admissible
   $L_k(\sltwo)$ (Arakawa--Dai) and of the minimal models $M(2,2m+3)$ (van Ekeren--Heluani). It also contains new
   results: graded first-order rigidity of all Virasoro minimal models and of $L_k(\sltwo)$ at every admissible level; classical freeness of $L_{-3/2}(\slthree)$, and of the other members of the Deligne series under stated
   assumptions; and a proof that graded
   unitarity of the boundary admissible $L_k(\sltwo)$ implies that of the minimal models $M(2,2n+1)$. The library
-  declares no axiom of its own. This note announces release v1.05.
+  declares no axiom of its own. This note announces release v1.06.
 \end{abstract}
 
 % =====================================================================
@@ -68,10 +69,12 @@ and says whether the Lean statement is the same as, stronger than, or weaker tha
 
 \begin{itemize}
   \item Repository: \url{https://github.com/Fedor-Popov/Lean_VOA}
-  \item Release: v1.05 (tag \texttt{v1.05}; previous release v1.0)
-  \item Book (PDF): \texttt{Notes/book.pdf} in the repository (2{,}786 pages); its \LaTeX{} sources are in
+  \item Release: v1.06 (tag \texttt{v1.06}; previous releases v1.05 and v1.0)
+  \item Lean~v4.35 companion: the folder \texttt{moonshine-lean4.35/} of the repository, a separate Lake project
+    that depends on the AxiomMath library \cite{AxiomCFSG}
+  \item Book (PDF): \texttt{Notes/book.pdf} in the repository (2{,}794 pages); its \LaTeX{} sources are in
     \texttt{Notes/Textbook/}
-  \item Short version of the book (PDF): \texttt{Notes/brief.pdf} (257 pages): the main statements of each chapter,
+  \item Short version of the book (PDF): \texttt{Notes/brief.pdf} (258 pages): the main statements of each chapter,
     each with its verbatim Lean declaration and its status, without proofs or discussion, numbered as in the book
   \item License: Apache-2.0.
 \end{itemize}
@@ -116,8 +119,24 @@ lemma: every $\mathbb Q$-linear map commuting with $\mathrm{Gmat}$ is $a\cdot1+b
 the line of the Griess unit, with the transitivity inputs from the Mathieu group $M_{24}$ checked by the kernel. Finally, given
 the named hypothesis \lean{GmatEqAutO}, defined as the proposition $\mathrm{Gmat}=\mathrm{AutO}$, the theorem
 \lean{monstrousMoonshine} provides an isomorphism $\varphi:\mathrm{AutO}\simeq\mathrm{Aut}\,\Vn$ compatible with the
-Griess algebras, and moonshine for every element of the Monster. The hypothesis is a theorem of the AxiomMath library
-that does not yet run on our toolchain; Section~\ref{sec:trust} says exactly what is known about it.
+Griess algebras, and moonshine for every element of the Monster. The hypothesis is a theorem of the AxiomMath library,
+which runs on Lean~v4.35, not on the library's v4.30.
+
+\paragraph{New in v1.06: the hypothesis discharged.} Release v1.06 adds a companion project on Lean~v4.35,
+\texttt{moonshine-lean4.35/}: the 1{,}031 Lean files of the import closure of the moonshine part, ported to Lean~v4.35,
+with the AxiomMath library as a dependency. In it the Monster definitions are built on AxiomMath's own structures, so
+that our \lean{Generated.Gmat} and \lean{AutO} are definitionally theirs. AxiomMath's theorem
+\lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess} then proves \lean{GmatEqAutO}, and the companion's
+theorem \lean{VOA.Moonshine.ConwayNorton.monstrousMoonshine_unconditional} states monstrous moonshine for AxiomMath's
+Monster with no hypotheses:
+\begin{gather*}
+  \exists\,\varphi:\mathrm{AutO}\simeq\mathrm{Aut}\,\Vn\quad\text{with}\quad
+  \varphi(g)|_{\Vn_2}=\C\otimes g\ \text{ for all } g\in\mathrm{AutO},\\
+  \text{and } T_{\varphi(g)} \text{ a normalised genus-zero Hauptmodul for every } g\in\mathrm{AutO}.
+\end{gather*}
+Its axioms are Lean's three standard ones (\lean{propext}, \lean{Classical.choice}, \lean{Quot.sound}). The
+generation theorem $\mathrm{Gmat}=\mathrm{AutO}$ is AxiomMath's \cite{AxiomCFSG}; our contribution is the bridge that
+makes it apply to the moonshine theorems. The rest of the library stays on Lean~v4.30, byte-identical to v1.05.
 
 % =====================================================================
 \section{Scope}\label{sec:scope}
@@ -224,11 +243,12 @@ hypothesis, discussed in Section~\ref{sec:trust}.
     & \lean{VOA.Moonshine.ConwayNorton.conwayNorton_gmat},
     \lean{VOA.Moonshine.ConwayNorton.nonempty_autVnat_mulEquiv_liftable}\\
     \addlinespace
-    \textbf{Monstrous moonshine for the Monster, given one named theorem.} Given \lean{GmatEqAutO}
-    ($\mathrm{Gmat}=\mathrm{AutO}$, a theorem of AxiomMath's library on Lean v4.35): an isomorphism
-    $\mathrm{AutO}\simeq\mathrm{Aut}\,V^\natural$ compatible with the Griess algebras, and moonshine for every element
-    of the Monster.
-    & \lean{VOA.Moonshine.ConwayNorton.monstrousMoonshine}\\
+    \textbf{Monstrous moonshine for the Monster.} An isomorphism $\mathrm{AutO}\simeq\mathrm{Aut}\,V^\natural$
+    compatible with the Griess algebras, and moonshine for every element of the Monster. No hypotheses in the
+    Lean~v4.35 companion, which imports AxiomMath's generation theorem $\mathrm{Gmat}=\mathrm{AutO}$; in the Lean~v4.30
+    library, given that theorem as the named hypothesis \lean{GmatEqAutO}.
+    & \lean{VOA.Moonshine.ConwayNorton.monstrousMoonshine_unconditional} (v4.35),
+    \lean{VOA.Moonshine.ConwayNorton.monstrousMoonshine} (v4.30)\\
     \midrule
     \multicolumn{2}{l}{\textbf{New results: rigidity}}\\
     \midrule
@@ -279,7 +299,9 @@ system as examples, and the triplet algebra $W(2)$, proved simple, $C_2$-cofinit
 \section{Trust model}\label{sec:trust}
 % =====================================================================
 
-\paragraph{Base.} The library is built with Lean~4.30.0 and Mathlib v4.30.0. It declares no axiom of its own.
+\paragraph{Base.} The library is built with Lean~4.30.0 and Mathlib v4.30.0; the companion
+\texttt{moonshine-lean4.35/} with Lean~v4.35.0-rc3, the Mathlib commit pinned by AxiomMath, and AxiomMath's library.
+Neither declares an axiom of its own.
 Production code contains no \lean{sorry}, \lean{admit}, \lean{native_decide}, \lean{stop} or
 \lean{implemented_by}. We wrote an independent repository checker that rejects any of these, as well as any
 \lean{axiom} declaration, and requires every library file to be reachable from the umbrella module. Large finite
@@ -299,27 +321,41 @@ headline area received an independent \emph{release audit}: a fresh AI reviewer 
 compared the Lean statement with the source paper, traced every definition it depends on,
 listed every explicit hypothesis, and re-printed the axioms. A final read of the book's release edition then brought every chapter into line with the audited wording.
 
-\paragraph{The one named hypothesis.} \lean{GmatEqAutO} is a hypothesis of \lean{monstrousMoonshine}, not an axiom:
-the library still declares no axiom. It is the theorem \lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess} of the AxiomMath library
-\cite{AxiomCFSG} after renaming. We compared the ported definitions with that library declaration by declaration: they
-are identical up to renaming, except one that is restated in a definitionally equal form; the comparison is the
-port-fidelity report \texttt{Notes/monster\_aut/CFSG\_PORT\_FIDELITY.md}, which ships with the release. The proof of
-\lean{gmat_eq_griess}, about $15{,}500$ files through the Stroth--Leon--Sims recognition of the Baby Monster, runs on
-Lean v4.35 and not on this library's v4.30. The literature milestones on its path that we inspected are theorems in
-AxiomMath's library, not axioms; we have not re-checked its axiom footprint ourselves. Every other result in
-Table~\ref{tab:scope}, including moonshine for every automorphism of $V^\natural$ and for every element of
-$\mathrm{Gmat}$, is independent of it.
+\paragraph{The named hypothesis and its discharge.} In the Lean~v4.30 library, \lean{GmatEqAutO} is a hypothesis of
+\lean{monstrousMoonshine}, not an axiom: the library declares no axiom. Its content is the theorem
+\lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess} of the AxiomMath library \cite{AxiomCFSG}, whose proof
+passes through the Stroth--Leon--Sims recognition of the Baby Monster and runs on Lean~v4.35. Our ported definitions
+are textually AxiomMath's after renaming (the port-fidelity report \texttt{Notes/monster\_aut/CFSG\_PORT\_FIDELITY.md}
+ships with the release). Textual identity was not enough, however. A Lean structure is a nominal type, so redeclared
+copies of AxiomMath's structures are distinct types, and in v1.05 \lean{gmat_eq_griess} could not have proved
+\lean{GmatEqAutO} even on a common toolchain. The Lean~v4.35 companion therefore uses AxiomMath's own structures (the
+field $\mathbb F_4$, the spin coordinates, the Parker loop), its Golay code and its lattice map, so that every layer of our
+\lean{Generated.Gmat} and \lean{AutO} is definitionally AxiomMath's. The kernel accepts
+\lean{gmat_eq_griess} as a proof of \lean{GmatEqAutO}. Lean's elaborator times out unfolding the Griess product, so
+the theorem \lean{gmatEqAutO} is added by a command that hands this one declaration directly to the kernel. Nothing
+beyond the kernel is trusted, and \texttt{\#print axioms} reports it as for any theorem.
+
+\paragraph{Verification of the companion.} On Lean~v4.35.0-rc3, the companion with AxiomMath's library at commit
+\texttt{5437cdc313} (whose definitions of \lean{Gmat} and \lean{AutO}, with their import closure, are byte-identical to
+those of the commit we ported from) builds green: 31{,}463 jobs, including AxiomMath's proof of \lean{gmat_eq_griess}
+built from source. \texttt{\#print axioms} for \lean{gmatEqAutO} and
+\lean{monstrousMoonshine_unconditional} gives \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}; this
+also checks the axiom footprint of \lean{gmat_eq_griess} itself. Every other result in Table~\ref{tab:scope},
+including moonshine for every automorphism of $V^\natural$ and for every element of $\mathrm{Gmat}$, is independent of
+the companion and holds in the Lean~v4.30 library.
 
 \paragraph{Verification of v1.05.} Every Lean file of v1.0 is byte-identical in v1.05, except four umbrella files
 whose only change is new imports. The new part builds green (\texttt{lake build VOA.Moonshine}, 9{,}504 jobs). The
 axiom audit passes with 5{,}983 reports across 25 probes; the new probe, for monstrous moonshine, covers 25 headline
-declarations. The library contains no \lean{axiom} declaration.
+declarations. The library contains no \lean{axiom} declaration. Release v1.06 leaves the Lean~v4.30 library
+byte-identical to v1.05 and adds the companion.
 
 % =====================================================================
 \section{Size and structure}
 % =====================================================================
 
-The released library has 12{,}051 Lean files and 3{,}843{,}978 lines under \texttt{VOA/}.
+The released library has 12{,}051 Lean files and 3{,}843{,}978 lines under \texttt{VOA/}. The Lean~v4.35 companion
+has 1{,}031 further files, ported copies of the moonshine closure together with the bridge file.
 
 \begin{center}\small
   \begin{tabular}{lrrl}
@@ -348,7 +384,7 @@ A large part of the line count is certificate data. The 167 files larger than 20
 reduction (about 39{,}600 \texttt{decide +kernel} calls), and the book describes them collectively --- what is checked,
 how, and at what size --- while presenting the theorems that consume them individually.
 
-The release edition of the book has 2{,}786 pages, and its brief edition 257 pages; every Lean block quoted in
+The release edition of the book has 2{,}794 pages, and its brief edition 258 pages; every Lean block quoted in
 the brief is checked verbatim against the source. Part~VIII of the book, on monstrous moonshine, has seven chapters,
 each refereed twice.
 
@@ -373,8 +409,8 @@ examples in the book's verification chapter.
 % =====================================================================
 
 \begin{itemize}
-  \item \textbf{Lean v4.35 (release v1.1).} Moving the library to AxiomMath's toolchain and importing their theorem, so
-    that \lean{GmatEqAutO} is discharged and $\mathrm{Aut}\,V^\natural\cong\Mon$ holds with no hypotheses.
+  \item \textbf{The whole library on Lean v4.35.} Release v1.06 moves only the moonshine part (1{,}031 files) to
+    AxiomMath's toolchain; the rest of the library is to follow, so that all of it lives on one toolchain.
   \item \textbf{The table-level Conway--Norton statement}, identifying each $\Gamma_g$ with the group in Conway and
     Norton's table \cite{ConwayNorton}.
   \item \textbf{Generalized moonshine} (Norton), for the twisted modules of $V^\natural$.
@@ -522,8 +558,9 @@ grant 681267 (Simons Investigator Award).
   A.~Jiang, T.~Jordan, A.~Kurghinyan, K.~Lau, J.~Laurent, D.~Liang, J.~Limperg, S.~Mahns, B.~Nugent, C.~Olson, K.~Ono,
   E.~Paul, D.~Rajan, K.~Ram, C.~Ray, H.~C.~Siu, A.~A.~Swaminathan, J.~Thorner, A.~Tsaplin and C.~Wang (AxiomMath),
   Lean formalization of the classification of finite simple groups, software, 2026,
-  \url{https://github.com/AxiomMath/CFSG}, commit \texttt{69cb972f587a3ecc035e092253167ff2e303c962} (Lean
-  v4.35.0-rc3), Apache License~2.0.
+  \url{https://github.com/AxiomMath/CFSG}, commits \texttt{69cb972f587a3ecc035e092253167ff2e303c962} (ported
+  definitions) and \texttt{5437cdc31389dd9aeaa5c2a9465a4e164f8dea33} (dependency of the Lean~v4.35 companion), Lean
+  v4.35.0-rc3, Apache License~2.0.
 
   \bibitem{lean4}
   L.~de~Moura and S.~Ullrich, The Lean~4 theorem prover and programming language, in \emph{Automated Deduction ---

@@ -73,6 +73,17 @@ is replaced by its present, much narrower, form. The Deligne-series files added 
 \texttt{D4Core}, \texttt{SL4T}, \texttt{F4Star}) are held from this release and have no
 coverage in the book.
 
+\paragraph{The update of release v1.06.} Release v1.06 discharges \lean{GmatEqAutO}. The Lean~4.30 library is
+byte-identical to v1.05, and in it \lean{monsterEquivAutVnat} and \lean{monstrousMoonshine} stay conditional on
+\lean{GmatEqAutO}. What is new is a self-contained companion project in the folder \texttt{moonshine-lean4.35/}: the
+import closure of the moonshine part ($1{,}031$ Lean files), ported to Lean v4.35.0-rc3 and built against AxiomMath's
+CFSG library, in which \lean{gmatEqAutO} proves \lean{GmatEqAutO} from AxiomMath's \lean{gmat_eq_griess} and
+\lean{monstrousMoonshine_unconditional} has no hypotheses (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged};
+Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}). The rest of the library is not ported and stays on Lean~4.30. This
+chapter records the release build of the companion (Section~\ref{ch15:sec:record}), the dead ends met while discharging
+the hypothesis, including a correction to the fidelity claim of v1.05 (Section~\ref{ch15:sec:deadends-moon}), and the
+open problems as they now stand (Section~\ref{ch15:sec:open}).
+
 \begin{remark}[A note on the physics]\label{ch15:rem:physics}
 A physicist reading this chapter may wonder why so much effort goes into checking that a
 statement means what it says. In a conformal field theory one rarely writes down the axioms of
@@ -474,10 +485,13 @@ every automorphism (\lean{hfin}, Chapter~\ref{ch:19}) --- that are discharged in
 so the hypothesis closure of the final theorem \lean{VOA.Moonshine.ConwayNorton.conwayNorton} is empty and it is
 unconditional. By contrast \lean{monstrousMoonshine} and \lean{monsterEquivAutVnat} take the explicit argument
 \lean{(hM : GmatEqAutO)}, the proposition $\mathrm{Gmat}=\mathrm{AutO}$. It is a theorem of the AxiomMath CFSG library
-(\lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess}, commit \texttt{69cb972f}, Lean~4.35), but not of this
-library, whose toolchain cannot load its proof; inside LeanVOA it is an unestablished datum, so those two theorems are
-``\texttt{\#print axioms}-clean, conditional on \lean{GmatEqAutO}''. It is not an axiom: no declaration of the library
-asserts it (Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}).
+(\lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess}, Lean~4.35), but not of the Lean~4.30
+library, whose toolchain cannot load its proof; inside that library it is an unestablished datum, so those two
+theorems are ``\texttt{\#print axioms}-clean, conditional on \lean{GmatEqAutO}''. It is not an axiom: no declaration
+of the library asserts it (Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}). Release v1.06 discharges it in the
+Lean~4.35 companion \texttt{moonshine-lean4.35/}: there \lean{gmatEqAutO : GmatEqAutO} is a theorem, and
+\lean{monstrousMoonshine_unconditional} has an empty hypothesis closure (Chapter~\ref{ch:22},
+Section~\ref{ch22:sec:discharged}).
 
 \subsection{Independent re-verification of agent-produced work}\label{ch15:sec:agents}
 
@@ -558,6 +572,38 @@ the moonshine headlines listed in Section~\ref{ch15:sec:moonrecord}:
 \item \lean{scripts/check_repository.py}: 12{,}627 library files, 0 axiom declarations, no forbidden construct. Its
   only failure is three held \texttt{COneBootstrap} files that the release does not contain. The export leaves out the
   held files and strips their imports from the umbrellas, with 0 dangling imports.
+\end{itemize}
+\end{status}
+
+\begin{status}[title={The release build of v1.06}]
+Release v1.06 leaves the Lean~4.30 library byte-identical to v1.05, so the record above certifies it unchanged. It adds
+the companion project \texttt{moonshine-lean4.35/}: Lean v4.35.0-rc3, Mathlib commit
+\texttt{b63f6e8a68d220e3b3bc4f3792bb53650d375f24}, AxiomMath's CFSG library at commit
+\texttt{5437cdc31389dd9aeaa5c2a9465a4e164f8dea33}; $1{,}031$ Lean files, the import closure of \lean{VOA.Moonshine} and
+\lean{VOA.Moonshine.MoonshineLRCFSGBridge} ($548$ of them under \leanpath{VOA/Moonshine}). On Lean v4.35.0-rc3, with
+memory-capped builds:
+\begin{itemize}
+\item in the development tree, build of the targets \lean{VOA.Moonshine} and
+  \lean{VOA.Moonshine.MoonshineLRCFSGBridge}, with CFSG as a dependency: \lean{Build completed successfully (31463 jobs)} (the jobs include Mathlib and the CFSG modules), 0
+  \lean{sorry};
+\item \texttt{\#print axioms} of \lean{gmatEqAutO}, \lean{monstrousMoonshine_unconditional}, \lean{monsterEquivAutVnat'},
+  \lean{monsterEquivAutVnat'_restrict} and \lean{monstrousMoonshine}: each reports exactly
+  \lean{[propext, Classical.choice, Quot.sound]}. Since the value of \lean{gmatEqAutO} is AxiomMath's
+  \lean{gmat_eq_griess}, this also certifies that theorem's axiom footprint, previously not re-checked;
+\item AxiomMath's module \lean{CFSG.Sporadic.Bridge.MonsterModelsGriess}, which contains \lean{gmat_eq_griess}, built
+  from source: $30{,}431$ jobs, green;
+\item the definitions of \lean{Gmat} and \lean{AutO}, with their $102$-file import closure, are byte-identical in
+  AxiomMath's commits \texttt{69cb972f} (from which v1.05 ported) and \texttt{5437cdc313};
+\item repository check on the companion: no \lean{axiom} declaration, no \lean{sorry}, \lean{admit} or
+  \lean{native_decide}.
+\item the released folder \leanpath{moonshine-lean4.35/} itself (1{,}031 Lean files), built in place with
+  \lean{lake build}: \lean{Build completed successfully (30982 jobs)} (the jobs include Mathlib and the CFSG modules), no
+  \lean{sorry}; \texttt{\#print axioms} on that build reports \lean{[propext, Classical.choice, Quot.sound]} for
+  \lean{gmatEqAutO}, \lean{monstrousMoonshine_unconditional}, \lean{monsterEquivAutVnat'},
+  \lean{monsterEquivAutVnat'_restrict}, \lean{monstrousMoonshine} and AxiomMath's
+  \lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess};
+\item the Lean~4.30 library of v1.06 is byte-identical to that of v1.05, so the v1.05 build record above still
+  certifies it; the release Brief's $1{,}578$ Lean excerpts are verbatim against the released sources.
 \end{itemize}
 \end{status}
 
@@ -664,7 +710,12 @@ re-run for this chapter):
   \lean{conwayNorton_gmat}, \lean{M8.finite_autVnat}, \lean{rationalTraces} and
   \lean{nonempty_autVnat_mulEquiv_liftable} (all in the namespace \lean{VOA.Moonshine.ConwayNorton}); Tits's theorem is
   not used;
-\item \emph{conditional on} \lean{GmatEqAutO} \emph{only}: \lean{monsterEquivAutVnat} and \lean{monstrousMoonshine};
+\item \emph{conditional on} \lean{GmatEqAutO} \emph{only}: \lean{monsterEquivAutVnat} and \lean{monstrousMoonshine},
+  in the Lean~4.30 library;
+\item with \emph{no hypotheses}, in the Lean~4.35 companion of release v1.06 (\texttt{moonshine-lean4.35/}):
+  \lean{gmatEqAutO}, \lean{monsterEquivAutVnat'}, \lean{monsterEquivAutVnat'_restrict} and
+  \lean{monstrousMoonshine_unconditional} (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged}; figures in
+  Section~\ref{ch15:sec:record});
 \item for every audited headline, \texttt{\#print axioms} is contained in \lean{[propext, Classical.choice, Quot.sound]};
   the library declares no axiom.
 \end{itemize}
@@ -717,7 +768,8 @@ it; most were not re-run for the book, and the release figures belong in the slo
 For the physicist the record separates two claims about the moonshine conformal field theory. ``The twisted partition
 function of every global symmetry is a genus-zero Hauptmodul'' is proved outright. ``The global symmetry group is the
 Monster'' is proved up to one group-theoretic identification, which is a theorem in another Lean library and enters
-here as a named, explicit premise.
+the Lean~4.30 library as a named, explicit premise; the Lean~4.35 companion of release v1.06 imports that theorem and
+drops the premise.
 \end{physics}
 
 \subsection{The book's own verification record (October 2026)}\label{ch15:sec:bookrecord}
@@ -1903,7 +1955,36 @@ Lean, the cited chapter says so.
 \item \textbf{Porting \texttt{gmat\_eq\_griess} to Lean~4.30} (Chapters~\ref{ch:21} and~\ref{ch:22}). The import closure of
   AxiomMath's proof is about $15{,}500$ CFSG files ($16{,}361$ files and $208$\,MB at file level), with $13{,}487$ kernel
   \lean{decide} proofs, and it cannot avoid the Stroth--Leon--Sims recognition of the Baby Monster. This is why
-  \lean{GmatEqAutO} is a named hypothesis; the different figures quoted in the sources are consistent.
+  \lean{GmatEqAutO} is a named hypothesis of the Lean~4.30 library; the different figures quoted in the sources are
+  consistent. Since AxiomMath's library needs Lean~4.35, porting its proof closure (about $20{,}000$ CFSG modules in the closure
+  of the bridge of v1.06) down to Lean~4.30 was rejected as infeasible; release v1.06 instead moved the moonshine closure
+  ($1{,}031$ files) up to Lean~4.35, in the companion \texttt{moonshine-lean4.35/} (Chapter~\ref{ch:22},
+  Section~\ref{ch22:sec:discharged}).
+\item \textbf{Nominal structures: a correction to the fidelity claim of v1.05} (Chapter~\ref{ch:22},
+  Section~\ref{ch22:sec:discharged}). Release v1.05 said that the ported Monster definitions agree with AxiomMath's ``up
+  to renaming'', so that \lean{GmatEqAutO} is the statement AxiomMath proves. That is true of the text and false of the
+  Lean terms: a Lean \lean{structure} is a nominal type, so the redeclared copies of \lean{F4}, \lean{SpinCoord} and
+  \lean{Parker} are types distinct from AxiomMath's, and so is every type built on them. Kernel probes by \lean{rfl} and
+  \lean{HEq.rfl}: \lean{symMat} matches; \lean{SpinLattice.L2}, \lean{SpaceW}, \lean{IsShortCoord}, \lean{ShortIdx},
+  \lean{SpaceB}, \lean{tauB}, \lean{Visible.Gvis}, \lean{AutO} and \lean{Generated.Gmat} all fail with a type mismatch.
+  So in v1.05, even on a common toolchain, \lean{gmat_eq_griess} could not have been used as a proof of
+  \lean{GmatEqAutO}: the statement was the right mathematics, but not yet the same Lean proposition. The fix, in the
+  companion, is to build on AxiomMath's own structures (\lean{CFSG.Monster.Code.F4}, \lean{CFSG.Monster.Code.C},
+  \lean{CFSG.Monster.Spin.SpinCoord}, \lean{CFSG.Monster.Code.Parker}, and the bundled map
+  \lean{CFSG.Monster.SpinLattice.phi0} applied pointwise); then every layer is definitionally AxiomMath's. Seven proofs
+  needed small rewrites; no statement changed. Lesson: ``identical up to renaming'' must be checked on the Lean terms,
+  by a kernel probe, not on the source text.
+\item \textbf{\lean{phi0} as a plain function} (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged}). Restating
+  \lean{phi0} as a plain function, as in v1.05, made the elaborator time out on \lean{uQ}, \lean{Umat} and \lean{qf}, and
+  a kernel check exceeded $20$\,GB of memory. AxiomMath's bundled linear map, applied pointwise, fixes
+  it.
+\item \textbf{Elaborator versus kernel} (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged}).
+  \lean{example : GmatEqAutO := gmat_eq_griess} exceeds the elaborator's heartbeats, because checking it unfolds the Griess
+  product \lean{gmulX}, although the two sides are definitionally equal; the kernel, which shares already-checked
+  equalities, accepts the same declaration in milliseconds. So \lean{gmatEqAutO} is added by an \lean{addDecl} command
+  that hands the declaration to the kernel directly, followed by the elaborator-level check
+  \lean{example : GmatEqAutO := gmatEqAutO} of its type. The result is an ordinary kernel-checked theorem; nothing is
+  trusted beyond the kernel. Lesson: an elaborator timeout on a definitional equality is not evidence that it fails.
 \item \textbf{Parts of the original plan that were not formalised} (Chapter~\ref{ch:19}): the modular polynomials, the
   Hecke identity for composite $n$, an explicit injective region, the exponential identity, Rouch\'e's ``large values from
   the top'', the Parseval step and the logarithmic Faber identity were argued on paper and found unnecessary; they are not
@@ -1919,14 +2000,16 @@ Lean, the cited chapter says so.
 \paragraph{Documentation defects (severity S4).} None affects a Lean statement.
 \begin{enumerate}
 \item \textbf{Docstrings that say more than the Lean} (Chapter~\ref{ch:16}): the module docstring of the statement file
-  identifies \lean{AutVnat} with the Monster, which holds only given \lean{GmatEqAutO}; the docstring of
+  identifies \lean{AutVnat} with the Monster, which holds only given \lean{GmatEqAutO} in the Lean~4.30 library (it is
+  discharged in the Lean~4.35 companion); the docstring of
   \lean{RationalTraces} describes a superseded role.
 \item \textbf{Stale docstrings and notes} (Chapter~\ref{ch:20}): the docstring of \lean{MonsterLieSimpleRootGeneration}
   still calls generation unproved; earlier working notes list finite
   order and finiteness as open. The paper route of the finite-order proof was unrefereed; its normalisations are settled
   by the Lean proofs.
 \item \textbf{The ported \lean{phi0}} (Chapter~\ref{ch:21}) is a plain function rather than AxiomMath's bundled linear map;
-  the two are definitionally equal. Several port docstrings still call ported statements ``not ported''.
+  the two are definitionally equal. Several port docstrings still call ported statements ``not ported''. (In the
+  Lean~4.35 companion \lean{phi0} is AxiomMath's bundled map, applied; see item~3 of (F).)
 \item \textbf{Stale module docstrings of the lift chain} (Chapter~\ref{ch:22}): \texttt{MoonshineLRLiftTwisted},
   \texttt{LiftTwisted2}, \texttt{LiftLiftable2}--\texttt{4}, \texttt{LiftVisible}, \texttt{SigmaBlock},
   \texttt{SigmaBlock2}, \texttt{SigmaB} and \texttt{TauB} describe gaps closed in later files; an earlier working note
@@ -2243,6 +2326,20 @@ import VOA
 \item \textbf{Numerics}: Python 3 with NumPy, SciPy, SymPy; each subdirectory's \lean{README.md}
   gives the run order; paths may need adjusting; the KeySkew cache is about 68\,MB and is recomputable
   in about 30 minutes; the original triality pipeline writes about 2\,GB.
+\item \textbf{The Lean~4.35 companion} of release v1.06 (folder \texttt{moonshine-lean4.35/}): toolchain
+  \lean{leanprover/lean4:v4.35.0-rc3}, Mathlib commit \texttt{b63f6e8a68d220e3b3bc4f3792bb53650d375f24}, AxiomMath's CFSG
+  library at commit \texttt{5437cdc31389dd9aeaa5c2a9465a4e164f8dea33}. Build it with
+\begin{plaincode}
+cd moonshine-lean4.35 && lake exe cache get && lake build
+\end{plaincode}
+  Lake clones AxiomMath's library and builds it from source (no build cache is published): the bridge's closure is
+  about $20{,}000$ CFSG modules, many hours and memory-heavy, while \lean{lake build VOA.Moonshine} alone needs only about
+  $45$ small CFSG modules. On macOS (case-insensitive file system) two pairs of CFSG data files differ only in case,
+  \leanpath{CFSG/Certificates/Kernel/BabyMonster/Max2/data/R4.bin} and \leanpath{r4.bin}, \leanpath{CFSG/Certificates/Kernel/BabyMonster/Fu/data/W.bin} and
+  \leanpath{w.bin}; their readers (\lean{Max2.Data0} reads \leanpath{r4}, \lean{Max2.Data2} reads \leanpath{R4},
+  \lean{Fu.Data0} reads \leanpath{W}, \lean{Fu.Data5} reads \leanpath{w}) each pin size and hash, and Lake does not
+  track the \texttt{.bin} files, so each reader must be built with its own file in place (\lean{Fu.Data5} is not in
+  the closure of \lean{gmat_eq_griess}). Linux is unaffected.
 \item \textbf{Never commit} \leanpath{.lake/}.
 \end{itemize}
 
@@ -2251,13 +2348,23 @@ import VOA
 
 \subsection{Moonshine}
 \begin{enumerate}
-\item \textbf{Discharge \lean{GmatEqAutO}.} Earlier editions listed ``$\Aut(\Vnat)\cong\mathbb M$'' here as out of
-  reach. It is now proved conditionally on the one named hypothesis \lean{GmatEqAutO}, $\mathrm{Gmat}=\mathrm{AutO}$
-  (\lean{monsterEquivAutVnat}, \lean{monstrousMoonshine}; Chapter~\ref{ch:22}), and $\Aut(\Vnat)$ is isomorphic, with no
-  hypotheses, to the subgroup of AxiomMath's Monster of elements that act on $\Vnat$. The hypothesis is AxiomMath's
-  theorem \lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess} (commit \texttt{69cb972f}, Lean~4.35), whose
-  proof does not run on Lean~4.30 (Section~\ref{ch15:sec:deadends-moon}, paragraph (F), item~1). Release v1.1 is planned to move the
-  library to Lean~4.35 and import it, which would make both theorems unconditional.
+\item \textbf{Discharge \lean{GmatEqAutO}: done in release v1.06.} Earlier editions listed
+  ``$\Aut(\Vnat)\cong\mathbb M$'' here as out of reach; v1.05 proved it conditionally on the one named hypothesis
+  \lean{GmatEqAutO}, $\mathrm{Gmat}=\mathrm{AutO}$ (\lean{monsterEquivAutVnat}, \lean{monstrousMoonshine};
+  Chapter~\ref{ch:22}), and $\Aut(\Vnat)$ is isomorphic, with no hypotheses, to the subgroup of AxiomMath's Monster of
+  elements that act on $\Vnat$. The hypothesis is AxiomMath's theorem
+  \lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess}, whose proof does not run on Lean~4.30
+  (Section~\ref{ch15:sec:deadends-moon}, paragraph (F), item~1). Release v1.06 discharged it by moving the moonshine
+  closure ($1{,}031$ files) up to Lean~4.35, in the companion \texttt{moonshine-lean4.35/}, rebuilding the Monster
+  definitions on AxiomMath's own structures so that they are definitionally AxiomMath's (paragraph (F), item~2), and
+  handing \lean{gmatEqAutO : GmatEqAutO}, with value \lean{gmat_eq_griess}, to the kernel (item~4). There
+  \lean{monstrousMoonshine_unconditional} has no hypotheses (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged};
+  figures in Section~\ref{ch15:sec:record}). In the Lean~4.30 library the two theorems remain conditional on
+  \lean{GmatEqAutO}.
+\item \textbf{Port the rest of the library to Lean~4.35}, so that the moonshine theorems and the rest of the library
+  live on one toolchain. Release v1.06 ported only the import closure of the moonshine part; the other files of the
+  library (about $11{,}600$: the Deligne series, the Huang and Zhu files, graded unitarity, \dots) stay on Lean~4.30,
+  and the unconditional \lean{monstrousMoonshine_unconditional} exists only in the companion.
 \item \textbf{The table-level Conway--Norton statement.} The library proves the qualitative genus-zero form: $T_g$ is the
   normalised Hauptmodul of \emph{some} genus-zero $\Gamma_g$ containing \emph{some} $\Gamma_0(N)$ and commensurable with
   $\mathrm{SL}_2(\Z)$ (\lean{conwayNorton}, Chapter~\ref{ch:20}). Open: to identify $\Gamma_g$ with the group of Conway and
@@ -2474,7 +2581,8 @@ declaration & meaning & status & fidelity\\
 \lean{ConwayNorton.conwayNorton} & Conway--Norton, genus-zero form, every $g\in\Aut(\Vnat)$ & no hypotheses; standard axioms & \S\ref{ch15:sec:moonrecord}, Ch.~\ref{ch:16}, \ref{ch:20}\\
 \lean{conwayNorton_gmat}, \lean{rationalTraces}, \lean{M8.finite_autVnat} & the same for $\mathrm{Gmat}$; rational traces; $\Aut(\Vnat)$ finite & no hypotheses (for \lean{conwayNorton_gmat}: beyond $g\in\mathrm{Gmat}$); standard axioms & \S\ref{ch15:sec:moonrecord}, Ch.~\ref{ch:20}, \ref{ch:22}\\
 \lean{nonempty_autVnat_mulEquiv_liftable} & $\Aut(\Vnat)\cong$ liftable subgroup of \lean{AutO} & no hypotheses; no Tits & \S\ref{ch15:sec:moonrecord}, Ch.~\ref{ch:22}\\
-\lean{monsterEquivAutVnat}, \lean{monstrousMoonshine} & $\mathrm{AutO}\cong\Aut(\Vnat)$; moonshine for the Monster & conditional on \lean{GmatEqAutO} only & \S\ref{ch15:sec:uncond}, Ch.~\ref{ch:22}\\
+\lean{monsterEquivAutVnat}, \lean{monstrousMoonshine} & $\mathrm{AutO}\cong\Aut(\Vnat)$; moonshine for the Monster & conditional on \lean{GmatEqAutO} only (Lean~4.30 library) & \S\ref{ch15:sec:uncond}, Ch.~\ref{ch:22}\\
+\lean{gmatEqAutO}, \lean{monsterEquivAutVnat'}, \lean{monstrousMoonshine_unconditional} & $\mathrm{Gmat}=\mathrm{AutO}$ (AxiomMath's \lean{gmat_eq_griess}); $\mathrm{AutO}\cong\Aut(\Vnat)$; moonshine for AxiomMath's Monster & unconditional, standard axioms (Lean~4.35 companion, \texttt{moonshine-lean4.35/}) & \S\ref{ch15:sec:record}, \S\ref{ch22:sec:discharged}\\
 \bottomrule
 \end{longtable}
 

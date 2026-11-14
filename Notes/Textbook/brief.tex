@@ -71,9 +71,9 @@
 \newcommand{\tr}{\operatorname{tr}}
 
 % Edition
-\newcommand{\bookrelease}{release v1.05}
+\newcommand{\bookrelease}{release v1.06}
 \newcommand{\bookcommit}{(recorded at release)}
-\newcommand{\bookdate}{2026-11-08}
+\newcommand{\bookdate}{2026-11-14}
 
 % Brief statement environments carry the book's own number: \begin{btheorem}{5.4}[title] ... \end{btheorem}
 \newtheoremstyle{briefplain}{6pt}{3pt}{\itshape}{}{\bfseries}{.}{0.5em}{\thmname{#1}~\thmnote{#3}}
@@ -113,12 +113,13 @@ commit above. The qualified names are computed from the \texttt{namespace} block
 
 A clean \texttt{\#print axioms} does not make a theorem unconditional: explicit hypotheses are
 listed in the status line. The library has no project axiom (\texttt{VOA.pbw} is a theorem)
-(book Chapter~3). Part~VIII (monstrous moonshine) has exactly one named hypothesis,
-\texttt{GmatEqAutO}: AxiomMath's generation theorem for their model of the Monster, a theorem of their
-library that does not run on this library's toolchain. It enters only the identification of
-$\operatorname{Aut}V^\natural$ with the whole Monster (\texttt{monstrousMoonshine}). The Conway--Norton theorem for
-every automorphism of $V^\natural$, and the isomorphism of $\operatorname{Aut}V^\natural$ with the subgroup of the
-Monster that acts on $V^\natural$, do not use it.
+(book Chapter~3). In the Lean~v4.30 library, Part~VIII (monstrous moonshine) has exactly one named hypothesis,
+\texttt{GmatEqAutO}: AxiomMath's generation theorem for their model of the Monster. It enters only the
+identification of $\operatorname{Aut}V^\natural$ with the whole Monster (\texttt{monstrousMoonshine}). The
+Conway--Norton theorem for every automorphism of $V^\natural$, and the isomorphism of $\operatorname{Aut}V^\natural$
+with the subgroup of the Monster that acts on $V^\natural$, do not use it. Release v1.06 discharges it: the Lean~v4.35
+companion \texttt{moonshine-lean4.35/} imports AxiomMath's theorem and proves
+\texttt{monstrousMoonshine\_unconditional} with no hypotheses (book Section~49.14, Theorem~49.36).
 \tableofcontents
 \mainmatter
 \pagestyle{plain}% chapter titles are too long for running heads
@@ -1379,7 +1380,7 @@ For every $t\in\C\setminus\{0\}$, every $n\in\N$ and every $h\in\C$,
 \end{equation*}
 Since every $c\in\C$ is some $c(t)$, this is the Kac determinant for all Virasoro Verma modules.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~343.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~344.)}\par
 \noindent\textbf{Hypotheses / status.} $t\ne0$; unconditional\ (check not in this release)\par
 \medskip
 \endgroup
@@ -2938,7 +2939,7 @@ Every $f\in\lfourteenE$ of weight $k$ is a linear combination of monomials $E_4^
 \lean{E46HasWeightedPolynomialReps} holds.
 \end{btheorem}
 {\raggedright\noindent File \leanpath{VOA/\allowbreak Modularity/\allowbreak EisensteinSerreClosure.lean}.\par}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~687.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~688.)}\par
 \medskip
 \begin{btheorem}{14.23}[Holomorphy and term-by-term differentiation]
 Let $\chi$ be a formal $q$-series with $\|\chi(h+n)\|$ subexponential. Then $z\mapsto\chi^{\C}_h(z)$ is holomorphic on
@@ -3008,7 +3009,7 @@ theorem subexponential_of_majorant_recursion {χ a b p : ℕ → ℝ}
 For every super character system $S$: $\mathtt{CompleteRationalFamily}\,S\,P\iff P$; $\mathtt{Conjecture\_HalfWeight}\,S\,
 \mathrm{False}$ holds; and the zero family satisfies \lean{SuperRealisesLawOn} for every $\Gamma$, $J$, $\rho$.
 \end{bproposition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~722.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~723.)}\par
 \medskip
 \endgroup
 \setcounter{chapter}{14}
@@ -3034,7 +3035,7 @@ Let $V$ be rational and $C_2$-cofinite, with irreducible modules $M_1,\dots,M_r$
   unique.
 \end{enumerate}
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~734.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~735.)}\par
 \medskip
 \begin{btheorem}{15.16}[Convergence of one-point functions; Zhu 1996 \S4.4, Dong--Li--Mason 2000 \S\S6--7]
 Let $V$ be $C_2$-cofinite and $M$ an ordinary module with conformal weight $h$. Then for every $v\in V$ the coefficients
@@ -3336,7 +3337,7 @@ theorem V2m_stronglyRational (m : ℕ) (hm : 1 ≤ m) : StronglyRational (V2m m 
 If $R$ is a finitely generated Poisson algebra whose variety $\operatorname{Specm}R$ has finitely many
 symplectic leaves, then $\dim\lsixteenHP(R)<\infty$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~800.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~801.)}\par
 \medskip
 \begin{bdefinition}{16.9}[Etingof-finite]
 $V$ is \emph{Etingof-finite} if $\dim_\C\lsixteenHP(R_V)<\infty$.
@@ -3629,7 +3630,7 @@ There is a three-dimensional super vertex algebra in the library's sense (purely
 and $2$) on which the super Jacobi identity fails at $(u,v,x,\ell,m,n)=(x_1,\lseventeenvac,\lseventeenvac,-2,0,-2)$
 and on which $Y(Tu,z)\neq\partial_zY(u,z)$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~850.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~851.)}\par
 \medskip
 \begin{btheorem}{17.14}[Super Borcherds / Jacobi identity]
 Let $V$ be a super near-VOA, $u\in V_{\bar p}$, $v\in V_{\bar q}$, $x\in V$. For all $\ell,m,n\in\Z$,
@@ -3671,12 +3672,12 @@ Let $W$ be any super VOA, $g$ any even automorphism, $N\ge2$, and $T$ any
 subsingleton, every weight space of $T$ is zero, and every parity-twisted (Ramond) carrier
 \lean{W.ParityTwistedModule M} is zero.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~864.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~865.)}\par
 \medskip
 \begin{btheorem}{17.27}[$\psi$ is not a field]
 $\neg\,\mathrm{IsField}(\psi)$: there is no $B$ with $\psi(n)\lseventeenvac=0$ for all $n<B$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~867.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~868.)}\par
 \medskip
 \begin{btheorem}{17.38}[The super Zhu ring of symplectic fermions is not semisimple]
 The super Zhu algebra $A(SF)$ (Definition~17.42) is an associative ring of dimension
@@ -3789,7 +3790,7 @@ theorem tripletW_centralCharge_eq_tripletW2 (hp : 1 ≤ 2) :
 \begin{btheorem}{18.7}[$E\ne0$ and $W(2)\ne V_{L_2}$; Lean check outside the library]
 At $p=2$, $E\ne0$, and $e^\alpha\notin W(2)$; hence $W(2)$ is a proper subalgebra of $V_{L_2}$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~912.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~913.)}\par
 \noindent\textbf{Hypotheses / status.} None\par
 \medskip
 \begin{btheorem}{18.10}[Adamovi\'c--Milas relations]
@@ -6622,7 +6623,7 @@ V_1*\dots*V_m=\bigoplus_{d\ge0}\Phi_{\le d}/\Phi_{<d},
 on which $x(r)$ acts by the map $\Phi_{\le d}/\Phi_{<d}\to\Phi_{\le d+r}/\Phi_{<d+r}$ that it induces. We write $V^{*m}$ for
 $m$ factors equal to $V$.
 \end{bdefinition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1393.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1394.)}\par
 \medskip
 \begin{bdefinition}{26.6}[The $A_2$ relations and two named statements]
 Let $\rho$ be a current module and $w\in V$.
@@ -7220,7 +7221,7 @@ $\ltwentysevenF_m=M_{0,m}$, is the \emph{truncated Weyl module} $W(m\theta,m)$ o
 quotient of $W_{\mathrm{loc}}(m\theta)$ on which $\ltwentyseveng\otimes t^m\C[t]$ acts by zero. In particular $M_{0,m}$ does not
 depend on the choice of $\mathcal S$ within these bounds.
 \end{blemma}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1463.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1464.)}\par
 \noindent\textbf{Hypotheses / status.} On paper; no Lean statement\par
 \medskip
 \begin{bdefinition}{27.7}[Input R]
@@ -8698,7 +8699,7 @@ Every $\chfiveSL$-invariant holomorphic function on $\chfiveH$ with at most a po
 cusp is a polynomial of degree $\le m$ in $j$. In particular $J$ is the unique invariant function
 of the form $q^{-1} + O(q)$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1743.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1744.)}\par
 \medskip
 \begin{bdefinition}{33.9}[Formal $\Delta$]
 $\Delta = (E_4^3 - E_6^2)/1728\in\C[[q]]$.
@@ -10450,7 +10451,7 @@ Let $\Gamma\le\chsixteenSLR$ be commensurable with $\chsixteenSL$ and contain $\
   ??--??.
 \end{enumerate}
 \end{bproposition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~2224.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~2225.)}\par
 \medskip
 \begin{bdefinition}{43.16}[The Conway--Norton property and the Conway--Norton conjecture]
 $g\in\Aut(\Vnat)$ has the \emph{Conway--Norton property} if there are a subgroup $\Gamma\le\chsixteenGLR$ and
@@ -11957,7 +11958,7 @@ theorem griessIso_form (x y : ℂ ⊗[ℚ] SpaceB) :
 \providecommand{\chtwentytwoCo}{\mathrm{Co}}
 \providecommand{\chtwentytwoiota}{\iota_{\natural}}
 \providecommand{\chtwentytwolean}[1]{\texttt{\directlua{ local s = "\luaescapestring{\detokenize{#1}}" for piece, sep in string.gmatch(s, "([^_.]*)([_.]?)") do if not (piece == "" and sep == "") then tex.sprint(-2, piece .. sep) if not (sep == "") then tex.sprint(string.char(92) .. "allowbreak{}") end end end}}}
-\noindent{\small 10 of the chapter's 34 numbered statements: its headline results and every definition they use.}\par\medskip
+\noindent{\small 11 of the chapter's 35 numbered statements: its headline results and every definition they use.}\par\medskip
 \begin{btheorem}{49.4}[$\chtwentytwoCo_0$ on $T^+$, covariantly]
 For a surjective isometry $\iota$ of $\Leech$, the map $\varphi_\iota=O_\iota\otimes\rho$ restricted to $T^+$ satisfies
 $\varphi_\iota(u_{(n)}t)=(\Phi_\iota u)_{(n)}\varphi_\iota(t)$ for all $u\in V_\Leech^+$, $n$, $t$; and some nonzero
@@ -12167,11 +12168,14 @@ theorem autVnat_mulEquiv_autO (hGmat : Generated.Gmat = AutO) : Nonempty (AutVna
 \begin{bdefinition}{49.33}[The generation theorem, as a proposition]
 $\mathrm{GmatEqAutO}$ is the proposition $\chtwentytwoGmat=\chtwentytwoAutO$: the subgroup of $\mathrm{GL}_\Q(\chtwentytwoB)$
 generated by the visible group and $\tau_B$ is the full group of $\Q$-linear automorphisms of AxiomMath's rational Griess
-algebra preserving its product and its form.  It is AxiomMath's statement \lean{gmat_eq_griess} after renaming, with one
-definition (\lean{SpinLattice.phi0}) restated in a definitionally equal form; that statement is proved in AxiomMath's library (Lean~4.35, commit \texttt{69cb972f}); the literature milestones on its proof path that were
+algebra preserving its product and its form.  It is the same mathematics as AxiomMath's theorem \lean{gmat_eq_griess}
+(Lean~4.35); the literature milestones on its proof path that were
 inspected (\lean{cl_lit_stroth_leon_sims_baby_monster_recognition}, its \lean{_models} variant, and
-\lean{cl_lit_goldschmidt_strongly_closed_abelian}) are theorems there, not axioms; its full axiom footprint has not been
-re-checked (that needs \texttt{\#print axioms} on a Lean~4.35 build of AxiomMath's library).
+\lean{cl_lit_goldschmidt_strongly_closed_abelian}) are theorems there, not axioms.  In v1.05 it was not the same Lean
+proposition, because the port had redeclared AxiomMath's structures, which are nominal types; in the Lean~4.35 companion of
+release v1.06 the definitions are built on AxiomMath's own structures, the two propositions are definitionally equal, and
+\lean{GmatEqAutO} is proved (\lean{gmatEqAutO}, \S49.14).  Its axiom footprint, and hence that of
+\lean{gmat_eq_griess}, is \lean{[propext, Classical.choice, Quot.sound]}.
 \end{bdefinition}
 {\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{GmatEqAutO}\par}
 \begin{leancode}
@@ -12227,6 +12231,31 @@ theorem monstrousMoonshine (hM : GmatEqAutO) :
 \end{leancode}
 \noindent File \leanpath{VOA/\allowbreak Moonshine/\allowbreak MoonshineLRMonsterHeadline.lean}.
 \noindent\textbf{Hypotheses / status.} \textbf{\lean{GmatEqAutO}}\par
+\medskip
+\begin{btheorem}{49.36}[Monstrous moonshine for AxiomMath's Monster, with no hypotheses]
+There is a group isomorphism $\varphi:\chtwentytwoAutO\to\Aut(\Vnat)$ such that, for every $g\in\chtwentytwoAutO$,
+$\varphi(g)$ acts on $\Vnat_2\cong\C\otimes_\Q\chtwentytwoB$ as $1\otimes g$, and the McKay--Thompson series $T_{\varphi(g)}$
+is the normalised Hauptmodul of a group $\Gamma\le\mathrm{SL}_2(\mathbb R)$ containing some $\Gamma_0(N)$ and commensurable
+with $\mathrm{SL}_2(\Z)$ (the conclusion of Theorem~49.35).
+\end{btheorem}
+{\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monsterEquivAutVnat'},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monsterEquivAutVnat'_restrict},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monstrousMoonshine_unconditional}\par}
+\begin{leancode}
+noncomputable def monsterEquivAutVnat' : AutO ≃* AutVnat :=
+  monsterEquivAutVnat gmatEqAutO
+
+theorem monsterEquivAutVnat'_restrict (g : AutO) :
+    vnatWeightTwoRestrict (monsterEquivAutVnat' g) =
+      griessConj (g : SpaceB ≃ₗ[ℚ] SpaceB) :=
+  monsterEquivAutVnat_restrict gmatEqAutO g
+
+theorem monstrousMoonshine_unconditional :
+    ∃ φ : AutO ≃* AutVnat,
+      (∀ g : AutO, vnatWeightTwoRestrict (φ g) = griessConj (g : SpaceB ≃ₗ[ℚ] SpaceB)) ∧
+        ConwayNortonVia (φ : AutO →* AutVnat) :=
+  monstrousMoonshine gmatEqAutO
+\end{leancode}
+\noindent File \leanpath{VOA/\allowbreak zz435/\allowbreak Moonshine\_MoonshineLRCFSGBridge.lean}.
+\noindent\textbf{Hypotheses / status.} None (v4.35 companion)\par
 \medskip
 \endgroup
 \part{Verification}

@@ -25,7 +25,8 @@ table, does not require $\Gamma_g$ to lie in the normaliser of $\Gamma_0(N)$, an
 so it is weaker than the table-level conjecture (Chapter~\ref{ch:16}, \S\ref{ch16:sec:fidelity}).  It is a statement about
 $\Aut(\Vnat)$, whatever that group is; its link with the Monster (AxiomMath's group $\mathrm{AutO}$) is the subject of
 Chapters~\ref{ch:21}--\ref{ch:22}, and the identification $\Aut(\Vnat)\cong\mathrm{AutO}$ there is conditional on the
-named hypothesis \lean{GmatEqAutO}.  The machine evidence is targeted and umbrella builds with \texttt{\#print axioms}
+named hypothesis \lean{GmatEqAutO}, which release v1.06 discharges in its Lean~4.35 companion (Chapter~\ref{ch:22},
+Section~\ref{ch22:sec:discharged}).  The machine evidence is targeted and umbrella builds with \texttt{\#print axioms}
 reports (listed in the status boxes); the book's authors did not re-run them.
 
 \paragraph{Where the chapter sits.}  Chapter~\ref{ch:16} stated the
@@ -2265,7 +2266,8 @@ top) and the proof uses neither a spanning statement nor \chtwentylean{vnatGries
 the notes on the Monster, \S0 and \S5, say \lean{Finite AutVnat} ``is not delivered''; it is now
 \lean{finite_autVnat}.  (iii) The docstring of \chtwentylean{MonsterLieSimpleRootGeneration} calls generation ``not yet proved''
 (\S\ref{ch20:sec:generation}).  (iv) The docstring of \lean{AutVnat} calls it the group ``the campaign identifies with the
-Monster'' (quoted); the identification is conditional on \lean{GmatEqAutO} (Chapter~\ref{ch:22}).  None affects a Lean statement.
+Monster'' (quoted); the identification is conditional on \lean{GmatEqAutO} (Chapter~\ref{ch:22}), and holds with no
+hypothesis in the Lean~4.35 companion of release v1.06 (Section~\ref{ch22:sec:discharged}).  None affects a Lean statement.
 \end{warning}
 
 \begin{warning}

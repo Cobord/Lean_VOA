@@ -38,7 +38,9 @@ formalisation of parts of the classification of finite simple groups, CFSG), whi
 subgroup $\mathrm{Gmat}$ (all of this is explained in \S\ref{ch16:sec:gmat}), and,
 \emph{conditionally on one named hypothesis} (\lean{GmatEqAutO}: $\mathrm{Gmat}=\mathrm{AutO}$, a theorem of the
 AxiomMath CFSG library that is not available on this library's toolchain), that $\Aut(\Vnat)\cong\mathrm{AutO}$ and
-that monstrous moonshine holds for every element of $\mathrm{AutO}$.
+that monstrous moonshine holds for every element of $\mathrm{AutO}$.  Release v1.06 discharges that hypothesis in a
+Lean~4.35 companion project, where \lean{monstrousMoonshine_unconditional} has no hypotheses (Chapter~\ref{ch:22},
+Section~\ref{ch22:sec:discharged}).
 
 \paragraph{What this chapter does.}  Its job is to make the statement checkable.  (The ``Fidelity Protocol'' mentioned below is the book's
 fixed format for presenting a definition or theorem: statement, verbatim Lean, dictionary, proof on paper, physical
@@ -260,7 +262,8 @@ The nodes are the following; ``uses'' lists the nodes whose results are used.
 \item\label{ch16:node:K} \textbf{The Monster acts on $\Vnat$} (Chapter~\ref{ch:22}): every element of
   $\mathrm{Gmat}=\langle\mathrm{Gvis},\tau_B\rangle\le\mathrm{AutO}$ lifts to $\Vnat$; $\Aut(\Vnat)$ is isomorphic to the
   subgroup of liftable elements (via a commutant lemma); given \lean{GmatEqAutO}, $\Aut(\Vnat)\cong\mathrm{AutO}$ and
-  monstrous moonshine holds for the Monster.  Uses (J), (I), and for rationality of traces (H).
+  monstrous moonshine holds for the Monster; in the Lean~4.35 companion of release v1.06 the hypothesis is discharged.
+  Uses (J), (I), and for rationality of traces (H).
 \end{enumerate}
 As a list of edges (``$X\Rightarrow Y$'': $Y$ uses $X$):
 \begin{plaincode}
@@ -305,6 +308,9 @@ Lean name & informal content & hypotheses; where\\
 \chsixteenlean{ConwayNorton.monstrousMoonshine} & monstrous moonshine for AxiomMath's Monster: an isomorphism
   $\varphi:\mathrm{AutO}\to\Aut(\Vnat)$ as above such that $T_{\varphi(g)}$ is a normalised Hauptmodul as in
   \chsixteenlean{conwayNorton}, for every $g$ & \textbf{\chsixteenlean{GmatEqAutO}}; Ch.~\ref{ch:22}\\
+\chsixteenlean{ConwayNorton.monstrousMoonshine_unconditional} & the same, with the hypothesis discharged by
+  \chsixteenlean{gmatEqAutO} (AxiomMath's \chsixteenlean{gmat_eq_griess}) & none, in the Lean~4.35 companion
+  \texttt{moonshine-lean4.35/}; \S\ref{ch22:sec:discharged}\\
 \bottomrule
 \end{longtable}
 \end{center}
@@ -329,17 +335,28 @@ generated group is the whole automorphism group.  It is a theorem of the AxiomMa
 Stroth--Leon--Sims recognition of the Baby Monster; the project measured its import closure at about $16{,}000$ files
 and $208$\,MB on a newer toolchain, so it cannot be ported to this
 library's Lean~4.30 / Mathlib~v4.30 at reasonable cost.  It therefore enters as an \emph{explicit hypothesis}, never
-as an axiom, of exactly two final theorems, \lean{monsterEquivAutVnat} and \lean{monstrousMoonshine}.
+as an axiom, of exactly two final theorems of the Lean~4.30 library, \lean{monsterEquivAutVnat} and
+\lean{monstrousMoonshine}.  Release v1.06 discharges it the other way round: the import closure of the moonshine part
+($1{,}031$ files) is ported \emph{up} to Lean~4.35 in a companion project, \texttt{moonshine-lean4.35/}, which requires AxiomMath's library
+(commit \texttt{5437cdc31389dd9aeaa5c2a9465a4e164f8dea33}); there \lean{gmatEqAutO : GmatEqAutO} is a theorem, with
+value \lean{gmat_eq_griess}, and \lean{monstrousMoonshine_unconditional} has no hypotheses (Chapter~\ref{ch:22},
+Section~\ref{ch22:sec:discharged}).  The rest of the library stays on Lean~4.30.
 
 Three points must be kept in mind.
 \begin{enumerate}[label=(\alph*)]
 \item A theorem with the hypothesis \lean{(hM : GmatEqAutO)} is \textbf{conditional}, however clean its
   \texttt{\#print axioms} output; \texttt{\#print axioms} does not report explicit hypotheses
   (Chapter~\ref{ch:01}, \S\ref{ch01:sec:uncond}).  This book never calls such a theorem unconditional.
-\item The project checked that the ported definitions agree with AxiomMath's up to definitional equality
+\item The project checked that the text of the ported definitions agrees with AxiomMath's up to renaming
   (\texttt{Notes/monster\_aut/CFSG\_PORT\_FIDELITY.md}; one definition, \lean{SpinLattice.phi0}, is an unbundled
-  form of the original), so that \lean{GmatEqAutO} is the statement AxiomMath proves.  The project did \emph{not}
-  check the axiom footprint of AxiomMath's proof inside AxiomMath's library.
+  form of the original), so \lean{GmatEqAutO} is the right mathematics.  It is not the same Lean proposition as
+  AxiomMath's: a Lean \lean{structure} is a nominal type, so the redeclared copies of \lean{F4}, \lean{SpinCoord} and
+  \lean{Parker}, and every type built on them, differ from AxiomMath's, and \lean{gmat_eq_griess} could not have
+  been used as a proof of \lean{GmatEqAutO} even on a common toolchain.  The Lean~4.35 companion of release v1.06
+  builds on AxiomMath's own structures instead, so that \lean{AutO} and \lean{Generated.Gmat} are definitionally
+  AxiomMath's (Chapter~\ref{ch:15}, \S\ref{ch15:sec:deadends-moon}).  The axiom footprint of AxiomMath's proof, not
+  checked for v1.05, is checked there: \texttt{\#print axioms} of \lean{gmatEqAutO}, whose value is
+  \lean{gmat_eq_griess}, is \lean{[propext, Classical.choice, Quot.sound]}.
 \item That $\mathrm{AutO}$ is \emph{the Monster} (finite, simple, of the order displayed above) is likewise a
   theorem of AxiomMath's library; only the definitions are ported (the docstring of
   \leanpath{VOA/Moonshine/MonsterGriess/AutO.lean} says so).  Inside LeanVOA, ``the Monster'' means the Lean group
@@ -448,7 +465,8 @@ with every $L_n=\omega_{(n+1)}$, hence preserve each $\Vnat_n$ (the $L_0$-eigens
 
 \textbf{\lean{AutVnat}} is an \lean{abbrev}, i.e.\ a transparent name: \lean{AutVnat} \emph{is} \lean{Aut VnatVOA}.
 The docstring's phrase ``the target is \lean{AutVnat ≃* 𝕄}'' records an intention; the identification with
-the Monster is the subject of Chapter~\ref{ch:22} and is conditional on \lean{GmatEqAutO}.
+the Monster is the subject of Chapter~\ref{ch:22} and is conditional on \lean{GmatEqAutO} in the Lean~4.30 library;
+release v1.06 discharges it in the Lean~4.35 companion (\S\ref{ch22:sec:discharged}).
 
 \textbf{Could this be vacuous?}  If the structure on \lean{Vnat} were degenerate, $\Aut$ could be enormous and
 traces meaningless; but \lean{VnatVOA} is simple, has $c=24$, $\Vnat_1=0$ and graded dimension $J$
@@ -1264,10 +1282,11 @@ are therefore involved.
   automorphisms of $\Vnat$}.  Chapter~\ref{ch:22} proves, with no hypotheses, that \lean{AutVnat} is isomorphic to the
   subgroup of AxiomMath's $\mathrm{AutO}$ consisting of the elements that act on $\Vnat$, which contains
   $\mathrm{Gmat}\supseteq2^{1+24}.\mathrm{Co}_1$; and, given \lean{GmatEqAutO}, that \lean{AutVnat} $\cong$
-  $\mathrm{AutO}$.
+  $\mathrm{AutO}$ (with no hypothesis in the Lean~4.35 companion of release v1.06, \S\ref{ch22:sec:discharged}).
 \end{itemize}
 So \lean{conwayNorton} is the conjecture for the group of all symmetries of the library's $\Vnat$; ``for the
-Monster'' requires Chapter~\ref{ch:22} and, for all of $\mathrm{AutO}$, the hypothesis \lean{GmatEqAutO}.
+Monster'' requires Chapter~\ref{ch:22} and, for all of $\mathrm{AutO}$, the hypothesis \lean{GmatEqAutO}, which
+release v1.06 discharges in its Lean~4.35 companion (\lean{monstrousMoonshine_unconditional}).
 
 \paragraph{(2) The series.}  \lean{mckayThompsonFun g} is $q^{-1}+\sum_{n\ge1}\tr(g|\Vnat_{n+1})q^n$, exactly
 $T_g$ (Definition~\ref{ch16:def:mtfun}), with the conventions $q=e^{2\pi i\tau}$ and weight $n+1$ in degree $n$.  The
@@ -1314,8 +1333,9 @@ conjecture in the three respects of (6), and it becomes a statement about the Mo
 \begin{warning}
 \textbf{Docstrings that say more than the Lean.}  The module docstring of
 \leanpath{VOA/Moonshine/MoonshineCNStatement.lean} begins ``For every automorphism $g$ of the moonshine module
-$\Vnat$ (the Monster, node M1)''; the parenthesis identifies \lean{AutVnat} with the Monster, which holds only given
-\lean{GmatEqAutO} (Chapter~\ref{ch:22}).  The docstring of \lean{ConwayNortonConjecture} is careful (``With M1
+$\Vnat$ (the Monster, node M1)''; the parenthesis identifies \lean{AutVnat} with the Monster, which holds in the Lean~4.30 library
+only given \lean{GmatEqAutO}, and with no hypothesis in the Lean~4.35 companion of release v1.06 (Chapter~\ref{ch:22},
+\S\ref{ch22:sec:discharged}).  The docstring of \lean{ConwayNortonConjecture} is careful (``With M1
 (\lean{AutVnat ≃* 𝕄}) this is the conjecture for every element of the Monster'').  The docstring of
 \lean{RationalTraces} calls it ``the M1-side input that upgrades $\Gamma_1$ to $\Gamma_0$''; that was the original plan, but the upgrade actually used does not need rationality (\S\ref{ch16:sec:gammazero}), and rationality
 is now a corollary.  The Lean statements are unaffected; the statement file was frozen before the proof.
@@ -2393,8 +2413,9 @@ declaration & intended meaning & hypotheses; status & check\\
   \textbf{conditional}; std. & Thm.~\ref{ch16:thm:family}\\
 \chsixteenlean{conwayNorton} & \textbf{Conway--Norton (genus-zero form) for every automorphism of $\Vnat$} & \textbf{none};
   std. & Thm.~\ref{ch16:thm:conwayNorton}, \S\ref{ch16:sec:fidelity}\\
-\chsixteenlean{GmatEqAutO} & AxiomMath's $\mathrm{Gmat}=\mathrm{AutO}$ & named hypothesis (a \chsixteenlean{Prop}), not an axiom &
-  \S\ref{ch16:sec:gmat}\\
+\chsixteenlean{GmatEqAutO} & AxiomMath's $\mathrm{Gmat}=\mathrm{AutO}$ & named hypothesis (a \chsixteenlean{Prop}), not an axiom;
+  proved by \chsixteenlean{gmatEqAutO} in the Lean~4.35 companion (release v1.06) & \S\ref{ch16:sec:gmat},
+  \S\ref{ch22:sec:discharged}\\
 \bottomrule
 \end{longtable}
 \end{center}
@@ -2450,7 +2471,11 @@ arXiv:0706.3359 (2007).
 \paragraph{The Monster in Lean.}  AxiomMath, \emph{CFSG} (a Lean formalisation of parts of the classification of finite
 simple groups), commit \texttt{69cb972f587a3ecc035e092253167ff2e303c962}, Lean v4.35; the theorem
 \lean{CFSG.Blueprint.NativeSporadic.MonsterModel.gmat_eq_griess} is the content of \lean{GmatEqAutO}.  The fidelity of the port is
-documented in \texttt{Notes/monster\_aut/CFSG\_PORT\_FIDELITY.md}.
+documented in \texttt{Notes/monster\_aut/CFSG\_PORT\_FIDELITY.md}; its claim that the ported definitions are AxiomMath's
+up to renaming holds of the text but not of the Lean terms (\S\ref{ch16:sec:gmat}).  The Lean~4.35 companion of release
+v1.06 requires AxiomMath's library at commit \texttt{5437cdc31389dd9aeaa5c2a9465a4e164f8dea33}, whose definitions of
+\lean{Gmat} and \lean{AutO}, with their import closure, are byte-identical to those of the commit above
+(Chapter~\ref{ch:22}, \S\ref{ch22:sec:discharged}).
 
 \paragraph{The development record.}  The development was recorded in the authors' working notes, which are not part of
 the release.  The statement file was written first and frozen before the proof.  Where this chapter states what the

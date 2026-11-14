@@ -1,5 +1,23 @@
 # CFSG port fidelity: is our `Generated.Gmat = AutO` literally CFSG's `gmat_eq_griess`?
 
+> **Correction (release v1.06).** The verdict of §7, "definitionally equal", is **false** for the copies shipped in
+> v1.05. The port redeclares three `structure`s, `Code.F4`, `Spin.SpinCoord` and `Code.Parker`, and in Lean a
+> structure declaration creates a new nominal type: our `F4` and CFSG's `F4` are never definitionally equal, even with
+> identical text. `F4` enters `Code.H₆`, hence `Code.C`, `C₀`, `SpinIdx`, `SpaceW` and `SpaceB`. With CFSG imported on
+> Lean v4.35, kernel `rfl`/`HEq.rfl` probes confirm it: `symMat` (no `F4`) matches, while `SpinLattice.L2`, `SpaceW`,
+> `IsShortCoord`, `ShortIdx`, `SpaceB`, `tauB`, `Visible.Gvis`, `AutO` and `Generated.Gmat` fail with a type mismatch.
+> The text comparison below remains correct as a comparison of declarations; what it misses is that matching text
+> over distinct structure types does not give definitional equality.
+>
+> **Resolution (release v1.06).** The Lean v4.35 companion `moonshine-lean4.35/` uses CFSG's own `Code.F4`,
+> `Spin.SpinCoord`, `Code.Parker` and `Code.C` (as `abbrev`s) and CFSG's bundled `SpinLattice.phi0` pointwise, against
+> CFSG commit `5437cdc31389dd9aeaa5c2a9465a4e164f8dea33` (whose definitions of `Gmat` and `AutO`, with their import
+> closure, are byte-identical to those of `69cb972f`). The kernel then accepts every layer as definitionally CFSG's,
+> and `moonshine-lean4.35/VOA/Moonshine/MoonshineLRCFSGBridge.lean` proves `GmatEqAutO` from `gmat_eq_griess`
+> (`#print axioms`: `propext`, `Classical.choice`, `Quot.sound`). The text comparison below is what makes the other
+> definitions agree.
+
+
 A read-only comparison of source texts; no build was involved. Source: AxiomMath/CFSG at the pinned commit
 `69cb972f587a3ecc035e092253167ff2e303c962`, fetched with `gh api …/contents/<path>?ref=<sha>`.
 The fetched files were kept outside the repository as data and were never built, run or imported.

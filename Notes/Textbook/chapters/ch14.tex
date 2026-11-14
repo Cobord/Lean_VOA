@@ -39,7 +39,8 @@ Conway--Norton conjecture holds, in a genus-zero form, for every automorphism (\
 proves, with no hypotheses, that $\Aut(\Vnat)$ is isomorphic to the subgroup of AxiomMath's Monster \lean{AutO}
 (Chapter~\ref{ch:21}) formed by the elements that act on $\Vnat$, and, conditionally on the one named hypothesis
 \lean{GmatEqAutO} (a theorem of AxiomMath's library, not available on this toolchain), that $\Aut(\Vnat)\cong\mathrm{AutO}$
-(Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}).  Three readings of this sentence are fixed once and for all.
+(Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}); release v1.06 discharges that hypothesis in its Lean~4.35 companion
+(Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged}).  Three readings of this sentence are fixed once and for all.
 (a) Although \lean{moonshine} is written as an existential, it is a \emph{construction}: the vertex
 map, vacuum, conformal vector and central charge are pinned to explicit definitions, the grading is
 then forced, and the witness is unique (\S\ref{ch14:sec:decode}).  (b) $J$ is the \emph{formal}
@@ -2774,7 +2775,8 @@ No weight-one states means no conserved currents: the Moonshine CFT has no conti
 its symmetry group is finite (by FLM's theorem it is the Monster).  In the library, finiteness of $\Aut\Vnat$ is the
 theorem \lean{M8.finite_autVnat} of Chapter~\ref{ch:20} (no hypotheses), and the identification with AxiomMath's
 Monster is Chapter~\ref{ch:22}'s, unconditional for the subgroup of liftable elements and conditional on
-\lean{GmatEqAutO} for the whole group.  This distinguishes it from the Leech lattice theory, whose 24
+\lean{GmatEqAutO} for the whole group (unconditional in the Lean~4.35 companion of release v1.06,
+Section~\ref{ch22:sec:discharged}).  This distinguishes it from the Leech lattice theory, whose 24
 currents generate a $U(1)^{24}$.
 \end{physics}
 
@@ -2908,12 +2910,14 @@ to say that FLM's construction is formalized verbatim, or that the isomorphism w
   (\lean{nonempty_autVnat_mulEquiv_liftable}, Chapter~\ref{ch:22}); and $\Aut\Vnat\cong\mathrm{AutO}$
   (\lean{monsterEquivAutVnat}) is proved conditionally on the named hypothesis \lean{GmatEqAutO}, a theorem of
   AxiomMath's library that is not available on this toolchain (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:headline};
-  Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}).
+  Chapter~\ref{ch:01}, Section~\ref{ch01:sec:gmat}); release v1.06 discharges it in its Lean~4.35 companion, where
+  \lean{monsterEquivAutVnat'} has no hypotheses (Chapter~\ref{ch:22}, Section~\ref{ch22:sec:discharged}).
 \item \textbf{No McKay--Thompson series in this theorem}, no modular invariance of trace functions (only the graded
   dimension), no rationality or $C_2$-cofiniteness of $\Vnat$.  The McKay--Thompson series and the Conway--Norton
   conjecture are stated in Chapter~\ref{ch:16} (\lean{ConwayNortonConjecture}) and proved, in a qualitative genus-zero
   form and with no hypotheses, in Chapter~\ref{ch:20} (\lean{conwayNorton}); monstrous moonshine for AxiomMath's Monster,
-  \lean{monstrousMoonshine}, is conditional on \lean{GmatEqAutO} (Chapter~\ref{ch:22}).
+  \lean{monstrousMoonshine}, is conditional on \lean{GmatEqAutO} (Chapter~\ref{ch:22}); release v1.06 discharges it in
+  the Lean~4.35 companion (\lean{monstrousMoonshine_unconditional}, Section~\ref{ch22:sec:discharged}).
 \item \textbf{No module category}: holomorphicity (that $\Vnat$ is its only irreducible module) is not
   stated.
 \item \textbf{No analytic $j$ in the statement.}  The headline's $J$ is the formal $q$-series \lean{JShift}; that it is
@@ -2991,7 +2995,8 @@ witness; \texttt{\#print axioms} $=$
 2026-10-27).  Not formalized: holomorphy, uniqueness of $\Vnat$, and the isomorphism with FLM's explicit $\Vnat$;
 the analytic $j$ is a separate theorem, not a clause of \lean{moonshine}.  Not part of this theorem, and treated in
 Chapters~\ref{ch:20}--\ref{ch:22}: $\Aut\Vnat$ (finite, and isomorphic to the liftable subgroup of AxiomMath's Monster,
-with no hypotheses) and $\Aut\Vnat\cong\mathbb M$ (conditional on \lean{GmatEqAutO}).
+with no hypotheses) and $\Aut\Vnat\cong\mathbb M$ (conditional on \lean{GmatEqAutO}; unconditional, for AxiomMath's
+Monster \lean{AutO}, in the Lean~4.35 companion of release v1.06, Section~\ref{ch22:sec:discharged}).
 \end{status}
 
 \section{Referee's checklist}\label{ch14:sec:checklist}
