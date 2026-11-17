@@ -29,7 +29,7 @@ theorem familyWord_adjacent (pre post : List (Fin 3×ℕ)) (a b : Fin 3×ℕ) :
     familyWord (pre++a::b::post)-familyWord (pre++b::a::post)=
       ∑c : Fin 3,fabc a.1 b.1 c • familyWord (pre++(c,bracketDepth a b)::post) := by
   funext k h
-  simpa only [Pi.sub_apply,Finset.sum_apply,Pi.smul_apply,familyWord] using
+  simpa only [Pi.sub_apply,Finset.sum_apply,Pi.smul_apply,familyWord] using!
     indexedWord_adjacent k h pre post a b
 
 /-- Simultaneous span of the fixed occupation representatives. Membership
@@ -48,7 +48,7 @@ theorem family_perm_difference_mem (S : Submodule ℂ VermaFamily)
   | nil => intro pre hb; rw [sub_self]; exact S.zero_mem
   | cons a hp ih =>
       intro pre hb
-      simpa only [List.append_assoc,List.singleton_append] using
+      simpa only [List.append_assoc,List.singleton_append] using!
         ih (pre++[a]) (by simp only [List.length_append,List.length_singleton,List.length_cons,List.length_nil] at *; omega)
   | swap a b w =>
       intro pre hb
@@ -61,8 +61,8 @@ theorem family_perm_difference_mem (S : Submodule ℂ VermaFamily)
       omega
   | trans hp hq ihp ihq =>
       intro pre hb
-      have hh := S.add_mem (ihp pre hb) (ihq pre (by simpa only [← hp.length_eq] using hb))
-      simpa only [sub_add_sub_cancel] using hh
+      have hh := S.add_mem (ihp pre hb) (ihq pre (by simpa only [← hp.length_eq] using! hb))
+      simpa only [sub_add_sub_cancel] using! hh
 
 /-- Every indexed creation word lies in the span of its fixed occupation
 representatives. Commutator corrections strictly decrease word length. -/
@@ -80,8 +80,8 @@ theorem familyWord_mem_span (w : List (Fin 3×ℕ)) :
       have hd : familyWord d.toMultiset.toList∈familySpan :=
         Submodule.subset_span ⟨d,rfl⟩
       have he := family_perm_difference_mem (familySpan) n
-        (fun v hv => ih v.length hv v rfl) hp [] (by simpa using hn.le)
-      simpa only [List.nil_append,sub_add_cancel] using (familySpan).add_mem he hd
+        (fun v hv => ih v.length hv v rfl) hp [] (by simpa using! hn.le)
+      simpa only [List.nil_append,sub_add_cancel] using! (familySpan).add_mem he hd
   exact H w.length w rfl
 
 /-- Actual PBW coordinates extracted from one member of a family. -/

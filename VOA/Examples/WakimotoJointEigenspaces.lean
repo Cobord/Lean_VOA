@@ -45,9 +45,10 @@ theorem Eul_monomial_one (w : Fin 3×ℕ→ℂ) (d : Occupation) :
 /-- Weighted Euler differentiation multiplies every actual polynomial
 coefficient by the corresponding occupation weight. -/
 theorem coeff_Eul (w : Fin 3×ℕ→ℂ) (d : Occupation) (P : WakFock) :
-    coeff d (Eul w P)=Finsupp.weight w d*coeff d P := by
+    (Eul w P).coeff d=Finsupp.weight w d*P.coeff d := by
   induction P using MvPolynomial.induction_on' with
-  | add P Q hP hQ => simp only [map_add,coeff_add,hP,hQ,mul_add]
+  | add P Q hP hQ =>
+      simp only [map_add,AddMonoidAlgebra.coeff_add,Finsupp.add_apply,hP,hQ,mul_add]
   | monomial e z =>
       have hz : monomial e z=z • (monomial e (1 : ℂ)) := by rw [smul_monomial]; simp only [smul_eq_mul,mul_one]
       rw [hz,map_smul,Eul_monomial_one,coeff_smul,coeff_smul,coeff_smul]
@@ -82,9 +83,9 @@ theorem mem_jointFockSpace_of_eigen (n : ℕ) (c : ℤ) (P : WakFock)
     P∈jointFockSpace n c := by
   change (P.support : Set Occupation)⊆{d : Occupation | occupationEnergy d=n ∧ occupationCharge d=c}
   intro d hd
-  have hd' : coeff d P≠0 := mem_support_iff.mp hd
-  have he := congrArg (coeff d) hE
-  have hc := congrArg (coeff d) hC
+  have hd' : P.coeff d≠0 := mem_support_iff.mp hd
+  have he : (Dwt P).coeff d=((n : ℂ) • P).coeff d := by rw [hE]
+  have hc : (Dch P).coeff d=((c : ℂ) • P).coeff d := by rw [hC]
   rw [Dwt,coeff_Eul,weight_wtFn,coeff_smul] at he
   rw [Dch,coeff_Eul,weight_chFn,coeff_smul] at hc
   constructor
@@ -99,12 +100,12 @@ theorem jointFockSpace_eigen (n : ℕ) (c : ℤ) (P : WakFock)
   constructor
   · ext d
     rw [Dwt,coeff_Eul,weight_wtFn,coeff_smul]
-    by_cases hd : coeff d P=0
+    by_cases hd : P.coeff d=0
     · simp [hd]
     · rw [(hs (mem_support_iff.mpr hd)).1]; rfl
   · ext d
     rw [Dch,coeff_Eul,weight_chFn,coeff_smul]
-    by_cases hd : coeff d P=0
+    by_cases hd : P.coeff d=0
     · simp [hd]
     · rw [(hs (mem_support_iff.mpr hd)).2]; rfl
 
@@ -113,8 +114,8 @@ occupation space. This is used with nonvanishing, not merely formal degree. -/
 theorem screening_mem_jointFockSpace (r q M : ℕ) (hq : 0<q) :
     Screening.state r q M∈jointFockSpace (r*q) (r : ℤ) := by
   apply mem_jointFockSpace_of_eigen
-  · simpa only [Nat.cast_mul] using Screening.state_energy r q M hq
-  · simpa only [Int.cast_natCast] using Screening.state_charge r q M
+  · simpa only [Nat.cast_mul] using! Screening.state_energy r q M hq
+  · simpa only [Int.cast_natCast] using! Screening.state_charge r q M
 
 end
 end VOA.Wak.Charged

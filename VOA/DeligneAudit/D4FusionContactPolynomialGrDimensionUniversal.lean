@@ -129,7 +129,7 @@ theorem univProj_pieceSum (spec : RelSpec n) (s : Finset ℕ)
     univProj f spec i.1 (univPieceSum f spec s x) = x i := by
   change univProj f spec i.1 (∑ d, (x d : UModG f spec)) = x i
   rw [map_sum, Finset.sum_eq_single i]
-  · simpa using univProj_cyc_degree f spec i.1 i.1 (x i).property
+  · simpa using! univProj_cyc_degree f spec i.1 i.1 (x i).property
   · intro d _ hdi
     rw [univProj_cyc_degree f spec i.1 d.1 (x d).property,
       if_neg (fun h => hdi (Subtype.ext h))]
@@ -141,7 +141,7 @@ theorem univPieceSum_injective (spec : RelSpec n) (s : Finset ℕ) :
   funext i
   apply Subtype.ext
   have hh := congrArg (univProj f spec i.1) hxy
-  simpa only [univProj_pieceSum] using hh
+  simpa only [univProj_pieceSum] using! hh
 
 /-- Current-degree independence is used only in the homogeneous universal
 quotient, never asserted for arbitrary ungraded source pieces. -/

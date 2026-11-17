@@ -36,7 +36,8 @@ open scoped TensorProduct
 
 /-- `FockW ≅ Fock ⊗[ℂ] ℂ[w]`. -/
 noncomputable def fockWEquiv : Fock ⊗[ℂ] Polynomial ℂ ≃ₐ[ℂ] FockW :=
-  MvPolynomial.scalarRTensorAlgEquiv
+  (Algebra.TensorProduct.comm ℂ Fock (Polynomial ℂ)).trans
+    ((MvPolynomial.scalarRTensorAlgEquiv (R := ℂ) (N := Polynomial ℂ) (σ := ℕ)).restrictScalars ℂ)
 
 /-- **Base change of an operator** from `Fock` to `FockW`: act on the `Fock` factor. -/
 noncomputable def bcEnd (T : Module.End ℂ Fock) : Module.End ℂ FockW :=

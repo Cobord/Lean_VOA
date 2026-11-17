@@ -17,7 +17,7 @@ theorem fullFlag_selected_card (B k : ℕ) (Y : Finset (Fin B))
           (if a.val < k ∧ ∀ i, f.val i = a → i ∈ Y then 1 else 0) := by
     let S := Y.filter fun i => f.val i = a
     let T := Finset.univ.filter fun i => f.val i = a
-    have hST : S ⊆ T := by intro i hi; simpa [S, T] using (Finset.mem_filter.mp hi).2
+    have hST : S ⊆ T := by intro i hi; simpa [S, T] using! (Finset.mem_filter.mp hi).2
     have hT : T.card = if a.val < k then 2 else 1 := f.property a
     have hle : S.card ≤ T.card := Finset.card_le_card hST
     by_cases ha : a ∈ Y.image f.val
@@ -100,7 +100,7 @@ theorem selectedSitePolynomial_natDegree (B k : ℕ) (Y : Finset (Fin B))
   have h := Polynomial.natDegree_prod_of_monic
     (s := Y.image f.val) (f := fun a => Polynomial.X - Polynomial.C (ζ a))
     (fun a ha => Polynomial.monic_X_sub_C _)
-  simpa using h
+  simpa using! h
 
 /-- Evaluation turns the selected alphabet characteristic into its product of site factors. -/
 theorem selectedAlphabetCharacteristic_evaluate (B k : ℕ) (Y : Finset (Fin B))
@@ -111,7 +111,7 @@ theorem selectedAlphabetCharacteristic_evaluate (B k : ℕ) (Y : Finset (Fin B))
   classical
   simp only [fullFlagSubalphabet, List.map_map, Function.comp_def, MvPolynomial.aeval_X,
     alphabetCharacteristic_product, List.map_map]
-  simpa only [Finset.toList_toFinset] using
+  simpa only [Finset.toList_toFinset] using!
     (List.prod_toFinset (fun i => Polynomial.X - Polynomial.C (ζ (f.val i)))
       (Finset.nodup_toList Y)).symm
 

@@ -79,7 +79,7 @@ theorem a2_radicalWord_zero_of_first_count (p q : ℕ)
     have hlen : p < (firstModes l).length := by
       rw [firstModes_length]
       exact hl
-    simpa [a2RadicalOp] using
+    simpa [a2RadicalOp] using!
       a2_simple_word_length_zero ρ w p q h (firstModes l) hlen
   rw [radicalWord_split ρ l]
   have hcomm :
@@ -113,7 +113,7 @@ theorem a2KeyLayer_eq_bot_of_first_count (p q : ℕ) (k : A2RadicalKey)
   rw [a2KeyLayer, eq_bot_iff, Submodule.span_le]
   intro z hz
   obtain ⟨l, hd₁, _, _, _, rfl⟩ := hz
-  rw [a2_radicalWord_zero_of_first_count ρ w p q h l (by simpa [hd₁] using hk)]
+  rw [a2_radicalWord_zero_of_first_count ρ w p q h l (by simpa [hd₁] using! hk)]
   exact Submodule.zero_mem _
 
 end VOA.DeligneAudit.A3Sector

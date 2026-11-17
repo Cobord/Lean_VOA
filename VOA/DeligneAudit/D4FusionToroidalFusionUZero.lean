@@ -43,7 +43,7 @@ theorem project_embedCo : (project n N).comp (embedCo n N) = LinearMap.id := by
 theorem embedCo_injective : Function.Injective (embedCo n N) := by
   intro x y h
   have hp := congrArg (project n N) h
-  simpa only [← LinearMap.comp_apply, project_embedCo, LinearMap.id_apply] using hp
+  simpa only [← LinearMap.comp_apply, project_embedCo, LinearMap.id_apply] using! hp
 
 def coTensorBasis : Module.Basis (Fin N → Fin n) ℂ (CoTensor n N) :=
   Basis.piTensorProduct (fun _ : Fin N => Pi.basisFun ℂ (Fin n))

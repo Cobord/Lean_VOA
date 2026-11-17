@@ -416,7 +416,9 @@ theorem wMode_mem (N : OrdVModule W M) {α : ℂ} {t : M} (ht : t ∈ N.weight �
   have h1 := VOA.mode_mem_weight N hφ ht (n + i)
   have h2 := Lm1_pow_mem N h1 i
   convert h2 using 2
-  push_cast; ring
+  all_goals first
+    | rfl
+    | (push_cast; ring)
 
 /-- The support of the product family `i ↦ cbz m i • F(u_i v)` lies in `[0, N]`. -/
 theorem exists_smul_bound (u v : 𝒱) :
@@ -513,7 +515,6 @@ theorem Dcomm_single (N : OrdVModule W M) {β γ : ℤ} {u v : 𝒱} (hu : u ∈
       = ∑ i ∈ S, cbz m i • What N α₀ c' one
           (Dfam N (β + γ - i - 1) (W.smul u i v) (m + n - i) g₀) := by
     have h3 := congrArg₂ (· - ·) hcomm hV'
-    simp only at h3
     rw [← sub_eq_zero] at h3 ⊢
     rw [← h3]
     abel

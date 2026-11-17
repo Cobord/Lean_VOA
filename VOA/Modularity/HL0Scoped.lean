@@ -106,7 +106,7 @@ theorem genHL0 (U : AMod W) (hval : ℂ) (homegaU : U.OmegaScalar hval) :
         (DJCarrier.incl W (U.toAmModZero) n)
       = (hval + (n : ℂ)) • DJCarrier.incl W (U.toAmModZero) n by
     have hcf := LinearMap.congr_fun hFG y
-    simpa only [LinearMap.comp_apply, LinearMap.smul_apply] using hcf
+    simpa only [LinearMap.comp_apply, LinearMap.smul_apply] using! hcf
   refine djPiece_ext (fun v w => ?_)
   -- `[ω]` acts by `hval` on the bottom `Ω(P)`.
   have homega : (U.toAmModZero).ρ (mkAnFull W 0 W.conformalVector) w = hval • w := by

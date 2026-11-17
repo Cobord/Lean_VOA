@@ -60,9 +60,9 @@ theorem cuspOrb_eq_of_firstColumn [NeZero N] (q q' : CosetQ N)
     · have h11 : ((g 1 1 : ℤ) : ZMod N) = -1 := by
         rw [h1] at hdetN
         have := congrArg (fun z => -z) hdetN
-        simpa using this
+        simpa using! this
       refine ⟨-ModularGroup.T ^ (g 0 1), cuspStab.mul_mem cuspStab_neg_one
-        (cuspStab_T_zpow _) |> fun h => by simpa using h, ?_⟩
+        (cuspStab_T_zpow _) |> fun h => by simpa using! h, ?_⟩
       rw [CongruenceSubgroup.Gamma_mem]
       simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_neg,
         ModularGroup.coe_T_zpow, Matrix.mul_apply, Fin.sum_univ_two,
@@ -376,7 +376,7 @@ theorem rank_injective (N : ℕ) {α : Type*} [Fintype α] :
     have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) s.isLt
     have h1 := congrArg (· / N) h
     simp only [Nat.mul_add_div hN, Nat.div_eq_of_lt s.isLt, Nat.div_eq_of_lt s'.isLt] at h1
-    simpa using h1
+    simpa using! h1
   have ha' : a = a' := (Fintype.equivFin α).injective (Fin.ext ha)
   rw [ha', Fin.ext hs]
 

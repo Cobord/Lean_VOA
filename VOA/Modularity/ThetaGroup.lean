@@ -180,7 +180,7 @@ theorem redEntry_det (g : SL(2, ℤ)) :
   have h : ((g : Matrix (Fin 2) (Fin 2) ℤ)).det = 1 := g.2
   rw [Matrix.det_fin_two] at h
   have h2 := congrArg (fun n : ℤ => (n : ZMod 2)) h
-  simp only at h2
+  try simp only at h2
   push_cast at h2
   exact h2
 

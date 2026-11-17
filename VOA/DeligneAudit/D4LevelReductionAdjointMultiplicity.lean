@@ -27,7 +27,7 @@ theorem adjointKey_word_colours (a d : ℕ) (l : List (Fin 6 × ℕ))
   simp only [adjointLetterKey, keyDepth, zero_add, add_zero] at hl
   simp only [wordKey, adjointLetterKey] at hx
   have hc : l.countP (fun p => p.1 = 1) = l.length := hx.trans hl
-  simpa using List.countP_eq_length.mp hc
+  simpa using! List.countP_eq_length.mp hc
 
 private noncomputable def modeWordPolynomial (l : List ℕ) : R := (l.map z).prod
 
@@ -35,11 +35,11 @@ private theorem modeWordPolynomial_homogeneous (l : List ℕ) :
     MvPolynomial.IsWeightedHomogeneous om (modeWordPolynomial l) (l.length, l.sum) := by
   induction l with
   | nil =>
-      simpa [modeWordPolynomial] using MvPolynomial.isWeightedHomogeneous_one ℂ om
+      simpa [modeWordPolynomial] using! MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s l ih =>
       have hz : MvPolynomial.IsWeightedHomogeneous om (z s) (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
-      simpa [modeWordPolynomial, Nat.add_comm] using hz.mul ih
+      simpa [modeWordPolynomial, Nat.add_comm] using! hz.mul ih
 
 private theorem modeWordPolynomial_evaluation (l : List ℕ) :
     Sl2Weyl.evAlg (rootF ρ 1) (rootF_comm ρ 1) (modeWordPolynomial l) =
@@ -61,13 +61,13 @@ theorem adjointMultiplicitySpan_le_box (m a : ℕ) (ha : a ≤ m)
       Submodule.span ℂ (adjointBoxVector ρ w '' (A3Sector.a2BoxModeSet m a : Set _)) := by
   apply iSup_le
   intro d
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hcol := adjointKey_word_colours a d l hl
   have hlen : l.length = a := by
     have hd := wordKey_depth l
     rw [hl] at hd
-    simpa [keyDepth, adjointLetterKey] using hd.symm
+    simpa [keyDepth, adjointLetterKey] using! hd.symm
   have heval : radicalWord ρ w l = ((l.map Prod.snd).map (rootF ρ 1)).prod w := by
     clear hl hlen
     induction l with
@@ -85,7 +85,7 @@ theorem adjointMultiplicitySpan_le_box (m a : ℕ) (ha : a ≤ m)
       (PowerSeries.coeff s (Garland.Fs (rootF ρ 1) ^ r)) w = 0 := by
     intro r s hr hs
     apply radical_garland_zero ρ w m h 1 r s hr
-    simpa [rootWeight] using hs
+    simpa [rootWeight] using! hs
   have hb := span_box_graded (rootF ρ 1) (rootF_comm ρ 1) w m hk
     (modeWordPolynomial_homogeneous (l.map Prod.snd))
   rw [modeWordPolynomial_evaluation, ← heval] at hb
@@ -95,7 +95,7 @@ theorem adjointMultiplicitySpan_le_box (m a : ℕ) (ha : a ≤ m)
   refine ⟨f, (A3Sector.mem_a2BoxModeSet m a ha f).mpr ⟨?_, hf⟩, rfl⟩
   have hfst := congrArg Prod.fst hw
   simpa [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum,
-    Prod.fst_sum, om, hlen] using hfst
+    Prod.fst_sum, om, hlen] using! hfst
 
 /-- The pure adjoint-letter multiplicity space has dimension at most a binomial coefficient. -/
 theorem adjointMultiplicitySpan_rank_le (m a : ℕ) (ha : a ≤ m)
@@ -105,7 +105,7 @@ theorem adjointMultiplicitySpan_rank_le (m a : ℕ) (ha : a ≤ m)
   classical
   let B := (A3Sector.a2BoxModeSet m a).image (adjointBoxVector ρ w)
   have hle : adjointMultiplicitySpan ρ w a ≤ Submodule.span ℂ (B : Set V) := by
-    simpa only [B, Finset.coe_image] using adjointMultiplicitySpan_le_box ρ w m a ha h
+    simpa only [B, Finset.coe_image] using! adjointMultiplicitySpan_le_box ρ w m a ha h
   haveI : FiniteDimensional ℂ (Submodule.span ℂ (B : Set V)) :=
     FiniteDimensional.span_of_finite ℂ B.finite_toSet
   haveI : FiniteDimensional ℂ (adjointMultiplicitySpan ρ w a) :=

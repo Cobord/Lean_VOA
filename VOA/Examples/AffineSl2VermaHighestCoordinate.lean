@@ -13,6 +13,8 @@ The principal degree 2*energy-charge does. This constructs the normalized
 highest coefficient in the actual Verma basis and proves it kills every
 nonempty creation word, without excluding critical level.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open NormalOrdering (currentWord)
@@ -37,7 +39,6 @@ theorem degree_word (k h : ℂ) (w : List (Fin 3×ℤ)) :
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ (Verma k h) =>
         T (currentWord (mode k h) w (highestVector k h))) (degree_mode_comm k h an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply,sub_eq_iff_eq_add] at hc
       simp only [currentWord,Module.End.mul_apply,wordEnergy,List.map_cons,List.sum_cons,
@@ -49,11 +50,10 @@ theorem cartan_word (k h : ℂ) (w : List (Fin 3×ℤ)) :
     mode k h 2 0 (currentWord (mode k h) w (highestVector k h))=
       (h+2*(wordCharge w : ℂ)) • currentWord (mode k h) w (highestVector k h) := by
   induction w with
-  | nil => simpa [currentWord,wordCharge] using mode_highest k h 2 0 (by simp [IsLower])
+  | nil => simpa [currentWord,wordCharge] using! mode_highest k h 2 0 (by simp [IsLower])
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ (Verma k h) =>
         T (currentWord (mode k h) w (highestVector k h))) (cartan_mode_comm k h an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply,sub_eq_iff_eq_add] at hc
       simp only [currentWord,Module.End.mul_apply,wordCharge,List.map_cons,List.sum_cons,Int.cast_add]

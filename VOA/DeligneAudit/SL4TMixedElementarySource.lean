@@ -71,9 +71,9 @@ theorem secondLeviElementaryAlphabet_complete (e₁ e₂ : ℕ) (j : Fin 2) (s :
     simp [secondLeviElementaryAlphabet, elementarySpecialization, map_esymm]
   fin_cases j
   · have he := AlgHom.congr_fun first (complete s)
-    simpa [elementarySpecialization_complete, map_hsymm] using he
+    simpa [elementarySpecialization_complete, map_hsymm] using! he
   · have he := AlgHom.congr_fun second (complete s)
-    simpa [elementarySpecialization_complete, map_hsymm] using he
+    simpa [elementarySpecialization_complete, map_hsymm] using! he
 
 set_option synthInstance.maxHeartbeats 100000 in
 -- Symmetric sources over nested quotient algebras need a larger synthesis budget.

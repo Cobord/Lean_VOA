@@ -21,7 +21,7 @@ theorem a3KeyLayer_le_count (d₁ d₂ d₃ degree : ℕ) :
 
 theorem a3CountSpan_zero : w ∈ a3CountSpan ρ w 0 0 0 := by
   apply a3KeyLayer_le_count ρ w 0 0 0 0
-  simpa [radicalWord] using
+  simpa [radicalWord] using!
     a3_radicalWord_mem_own_key ρ w ([] : List (Fin 3 × ℕ))
 
 theorem a3CountSpan_op (i : Fin 3) (s d₁ d₂ d₃ : ℕ)
@@ -39,7 +39,7 @@ theorem a3CountSpan_op (i : Fin 3) (s d₁ d₂ d₃ : ℕ)
     rw [a3CountSpan, iSup_le_iff]
     intro degree v hdegree
     apply a3KeyLayer_le_count ρ w _ _ _ (degree + s)
-    simpa [a3KeyInsert, radicalOp] using
+    simpa [a3KeyInsert, radicalOp] using!
       a3RadicalOp_maps_key ρ w i s ⟨d₁, d₂, d₃, degree⟩ hdegree
   exact hop hv
 
@@ -52,12 +52,12 @@ theorem a3CountSpan_word (i : Fin 3) (xs : List ℕ)
         (d₂ + if i = 1 then xs.length else 0)
         (d₃ + if i = 2 then xs.length else 0) := by
   induction xs generalizing d₁ d₂ d₃ v with
-  | nil => simpa using hv
+  | nil => simpa using! hv
   | cons s xs ih =>
       have h := a3CountSpan_op ρ w i s _ _ _ (ih d₁ d₂ d₃ hv)
       fin_cases i <;>
         simpa [List.map_cons, List.prod_cons, Nat.add_assoc,
-          Nat.add_comm, Nat.add_left_comm] using h
+          Nat.add_comm, Nat.add_left_comm] using! h
 
 theorem a3CountSpan_le_higher (b c : ℕ) (k : A3RadicalKey)
     (d₁ d₂ d₃ : ℕ)

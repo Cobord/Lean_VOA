@@ -62,7 +62,7 @@ theorem levelMultiplicitySpan_simple_raise (m : ℕ)
       (levelMultiplicitySpan ρ w m κ (p + simpleRaisingLevel i)).comap
         ((leviCurrent ρ).op (A3Sector.simpleE i) r) := by
   refine iSup_le fun k => iSup_le fun hg => iSup_le fun hp => ?_
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hs : raiseWordSpan ρ w i r l ≤
       levelMultiplicitySpan ρ w m κ (p + simpleRaisingLevel i) := by
@@ -92,8 +92,8 @@ theorem levelMultiplicitySpan_cartan (m : ℕ)
     exact Submodule.smul_mem _ _
       (keyLayer_le_levelMultiplicitySpan ρ w m κ p k hg hp hv)
   · exact keyLayer_le_levelMultiplicitySpan ρ w m κ p (keyShift r k)
-      (by simpa [keyAlphaGrade, keyDepth, keyShift] using hg)
-      (by simpa [keyLeviLevel, keyShift] using hp)
+      (by simpa [keyAlphaGrade, keyDepth, keyShift] using! hg)
+      (by simpa [keyLeviLevel, keyShift] using! hp)
       (cartan_pos_maps_key ρ w m h i r (Nat.pos_of_ne_zero hr) k hv)
 
 /-- The additional reductive Cartan also preserves the exact-level multiplicity space. -/
@@ -110,8 +110,8 @@ theorem levelMultiplicitySpan_extraCartan (m : ℕ)
     exact Submodule.smul_mem _ _
       (keyLayer_le_levelMultiplicitySpan ρ w m κ p k hg hp hv)
   · exact keyLayer_le_levelMultiplicitySpan ρ w m κ p (keyShift r k)
-      (by simpa [keyAlphaGrade, keyDepth, keyShift] using hg)
-      (by simpa [keyLeviLevel, keyShift] using hp)
+      (by simpa [keyAlphaGrade, keyDepth, keyShift] using! hg)
+      (by simpa [keyLeviLevel, keyShift] using! hp)
       (extra_pos_key ρ w m h r (Nat.pos_of_ne_zero hr) k hv)
 
 /-- Matrix-unit commutators generating the three nonsimple positive Levi roots. -/
@@ -150,11 +150,11 @@ theorem levelMultiplicitySpan_parabolic_raise (m : ℕ)
       (hv : v ∈ levelMultiplicitySpan ρ w m κ p) :
       Q.op (A3Sector.simpleE i) s v ∈ N := by
     apply levelMultiplicitySpan_le_filtration ρ w m h κ (p + 1)
-    simpa [simpleRaisingLevel, hi] using
+    simpa [simpleRaisingLevel, hi] using!
       levelMultiplicitySpan_simple_raise ρ w m h κ p i s hv
   have hmiddle (s : ℕ) {v : V} (hv : v ∈ levelMultiplicitySpan ρ w m κ p) :
       Q.op 3 s v ∈ levelMultiplicitySpan ρ w m κ p := by
-    simpa [simpleRaisingLevel] using
+    simpa [simpleRaisingLevel] using!
       levelMultiplicitySpan_simple_raise ρ w m h κ p 1 s hv
   intro v hv
   have h0 (s : ℕ) := houter 0 (by decide) s hv

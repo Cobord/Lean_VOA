@@ -49,7 +49,7 @@ def shPrepend (i : ℕ) (P : RawPoly ℕ) : RawPoly ℕ :=
 theorem shEval_prepend (i : ℕ) (P : RawPoly ℕ) :
     shEval (shPrepend i P) = sh i * shEval P := by
   by_cases hi : i = 0
-  · simp [shPrepend, hi, sh, vSchur_zero]
+  · simp [shPrepend, hi, sh, vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier)]
   · rw [shPrepend, if_neg hi]
     induction P with
     | nil => simp [shEval_nil]
@@ -75,30 +75,31 @@ theorem shAnnihilate_sound (w : List ℕ) (n : ℕ) :
   | nil =>
     rw [shWord_nil]
     change shEval (shAnnihilate n []) = aExpVec (latP 1) (-1 : ℤ) n (vacuumN _)
-    rw [aExpVec_vacuum, shAnnihilate]
+    rw [aExpVec_vacuum (latP 1) ((-1 : ℤ) : (latP 1).carrier) n, shAnnihilate]
     split_ifs <;> simp [shEval_cons, shEval_nil, shWord_nil, vacuumN]
   | cons i w ih =>
-    rw [shWord_cons, aExpVec_mul, shAnnihilate, shEval_flatMap]
+    rw [shWord_cons, aExpVec_mul (latP 1) ((-1 : ℤ) : (latP 1).carrier) n (sh i) (shWord w), shAnnihilate, shEval_flatMap]
     rw [list_sum_range]
     apply Finset.sum_congr rfl
     intro k hk
     by_cases hi : k ≤ i
     · by_cases h2 : k ≤ 2
       · rw [if_pos ⟨hi, h2⟩, shEval_scale, shEval_prepend, ih]
-        rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ i k hi]
-        rw [latP_form]
+        rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) ((-1 : ℤ) : (latP 1).carrier) ((-1 : ℤ) : (latP 1).carrier) i k hi]
+        rw [latP_form 1 (-1) (-1)]
         norm_num only [Nat.cast_one, mul_one, mul_neg, neg_mul, neg_neg, Int.cast_ofNat]
         rw [gTwo_sound k h2, smul_mul_assoc]
       · rw [if_neg (by simp [h2]), shEval_nil]
-        rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ i k hi, latP_form]
+        rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) ((-1 : ℤ) : (latP 1).carrier) ((-1 : ℤ) : (latP 1).carrier) i k hi,
+          latP_form 1 (-1) (-1)]
         norm_num only [Nat.cast_one, mul_one, mul_neg, neg_mul, neg_neg, Int.cast_ofNat]
         rw [gco_two_ge k (by omega), zero_smul, zero_mul]
     · rw [if_neg (by simp [hi]), shEval_nil, sh,
-        aExpVec_vSchur_of_lt (latP 1) _ _ (by omega : i < k), zero_mul]
+        aExpVec_vSchur_of_lt (latP 1) ((-1 : ℤ) : (latP 1).carrier) ((-1 : ℤ) : (latP 1).carrier) (by omega : i < k), zero_mul]
 
 theorem shWord_grading (w : List ℕ) : shWord w ∈ gradingWN (rank (latP 1)) w.sum := by
   induction w with
-  | nil => simpa [shWord_nil, vSchur_zero] using Screen.vSchur_mem_gradingWN (latP 1) (-1 : ℤ) 0
+  | nil => simpa [shWord_nil, vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier)] using! Screen.vSchur_mem_gradingWN (latP 1) (-1 : ℤ) 0
   | cons i w ih =>
     rw [shWord_cons, List.sum_cons, mem_gradingWN] at *
     exact (Screen.vSchur_mem_gradingWN (latP 1) (-1 : ℤ) i |> mem_gradingWN.mp).mul ih
@@ -109,7 +110,7 @@ def shScreenWord (s : ℕ) (w : List ℕ) : RawPoly ℕ :=
 
 theorem shScreenWord_sound (s : ℕ) (w : List ℕ) :
     shEval (shScreenWord s w) = EEVec (latP 1) (-1 : ℤ) (s : ℤ) (shWord w) := by
-  rw [WpC2.EEVec_eq_weight_bounded_sum' (latP 1) _ _ (shWord_grading w),
+  rw [WpC2.EEVec_eq_weight_bounded_sum' (latP 1) ((-1 : ℤ) : (latP 1).carrier) (s : ℤ) (shWord_grading w),
     shScreenWord, shEval_flatMap]
   rw [list_sum_range, show max (0 : ℤ) (s : ℤ) = s by omega]
   refine Finset.sum_nbij' (fun k => (s : ℤ) + k) (fun m => (m - s).toNat) ?_ ?_ ?_ ?_ ?_
@@ -124,7 +125,6 @@ theorem shScreenWord_sound (s : ℕ) (w : List ℕ) :
   · intro k hk; simp
   · intro m hm
     simp only [Finset.mem_Icc] at hm
-    dsimp only
     omega
   · intro k hk
     rw [shEval_prepend, shAnnihilate_sound]

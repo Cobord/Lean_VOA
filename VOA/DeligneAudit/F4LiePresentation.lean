@@ -126,10 +126,10 @@ theorem I2ns_le_ker : F4data.I ≤ RingHom.ker
       liDegreeZeroClass f4W 1 ⟨genS f4CertData (-5/2) f4_level_ne i,
         genS_weight_one f4CertData (-5/2) f4_level_ne i⟩).toRingHom := by
   intro p hp
-  have hle : quadraticIdeal F4data.rel ≤ RingHom.ker clF4.toRingHom := by
-    rw [quadraticIdeal, Ideal.span_le]
-    rintro _ ⟨r, rfl⟩
-    exact clF4_rel r
+  have hle : quadraticIdeal F4data.rel ≤ RingHom.ker clF4.toRingHom :=
+    Ideal.span_le.mpr (by
+      rintro _ ⟨r, rfl⟩
+      exact clF4_rel r)
   exact hle hp
 
 /-- **The explicit `F₄` presentation**: currents `J^a_{-1}|0⟩` of `L_{-5/2}(𝔣₄)`, ideal `I₂ⁿˢ`. -/

@@ -43,41 +43,46 @@ variable (hA : GradedUnitary LeeYangTransferAssembly.affineForm
   LeeYangTransferAssembly.affineRealStructure LeeYangTransferAssembly.affineFlag)
 
 /-- The proved Lee–Yang invariant-symbol bound, assembled from the existing chain. -/
-theorem leeYang_symbolBound : LeadingInvariantSymbolBound (endpointKahler hA) := by
+theorem leeYang_symbolBound : LeadingInvariantSymbolBound (ConcreteHodge.endpointKahler hA) := by
   have desc : ∀ r : ℕ, WordSymbolDescends (r + 2) := fun r => Desc.wordSymbolDescends (r + 2)
   have chi := VOA.JetProduct.jetProductBound_of_lower VOA.JetFermionic.jetFermionicLower
   have strict := grJetStrict_of_leadingSymbol_product (jetLeadingSymbols_of_descends desc) chi
-  have koszul := endpointGrLeadKoszul_of_residual hA
-    (koszulResidual_of_symbols hA (symbolResidual_endpoint hA))
+  have koszul := KoszulConcrete.endpointGrLeadKoszul_of_residual hA
+    (KoszulResidual.koszulResidual_of_symbols hA (KoszulResidual.symbolResidual_endpoint hA))
   have models := endpointSymbolModels_of_gr hA (fun r => (strict r).toGrCyclicVector)
     (fun n hp r => (koszul n hp r).toGrKoszulEmbedding)
-  exact leadingInvariantSymbolBound_of_heisenberg _ (endpoint_oddZero hA) (endpoint_negZero hA)
+  exact leadingInvariantSymbolBound_of_heisenberg _ (CyclicEval.endpoint_oddZero hA)
+    (CyclicEval.endpoint_negZero hA)
     models (levelOneHeisenbergSeparation_of_singular levelOneBottomDetected
       levelOneHeisenbergSingular).toSep
 
 /-- The concrete endpoint geometry, read as a level-`(twoSeriesLevels 1)` geometry. -/
 def leeYangBRSTKahler : BRSTKahlerGeometry (twoSeriesLevels 1) where
-  geometry := (endpointKahler hA).geometry
-  differential := (endpointKahler hA).differential
-  ghost := (endpointKahler hA).ghost
+  geometry := (ConcreteHodge.endpointKahler hA).geometry
+  differential := (ConcreteHodge.endpointKahler hA).differential
+  ghost := (ConcreteHodge.endpointKahler hA).ghost
 
 private abbrev endpointPkg :=
-  (bgGhostRemainderI hA ghostConjRhoD_proved ghostConjBE_proved).pkg LevelOneUnitary.bUnitary
+  (ConcreteHodge.bgGhostRemainderI hA ConcreteHodge.ghostConjRhoD_proved
+    ConcreteHodge.ghostConjBE_proved).pkg LevelOneUnitary.bUnitary
 
 /-- The BRST/Hodge package at `n = 1`, from the existing proofs. -/
 def leeYangHodgeInputs : BRSTHodgeInputs (twoSeriesLevels 1) where
   kahler := leeYangBRSTKahler hA
-  weakGU := concreteKahler_weakGU LevelOneUnitary.bUnitary bgPG_pos _
-  gu := ⟨(sp2GUData0 hA LevelOneUnitary.bUnitary bgPG_pos bgGh bgGh_isStd
+  weakGU := ConcreteHodge.concreteKahler_weakGU LevelOneUnitary.bUnitary bgPG_pos _
+  gu := ⟨(ConcreteHodge.sp2GUData0 hA LevelOneUnitary.bUnitary bgPG_pos bgGh bgGh_isStd
     (endpointPkg hA).sp2 (endpointPkg hA).conj0).data⟩
   generators hp :=
-    have h := interpretedGenerators_std bgGh hA LevelOneUnitary.bUnitary bgPG_pos _ _ _
+    have h := ConcreteHodge.interpretedGenerators_std bgGh hA LevelOneUnitary.bUnitary bgPG_pos
+      _ _ _
       bgGh_isStd hp
     ⟨h.vacuum, h.creation⟩
-  vacuumNormalized hp := harmonicVacuumNormalized_proved hA LevelOneUnitary.bUnitary hp
+  vacuumNormalized hp :=
+    ConcreteHodge.harmonicVacuumNormalized_proved hA LevelOneUnitary.bUnitary hp
   creationAdjoint i n m hpn hpm x y hx hy :=
-    harmonicCreationAdjoint_proved hA LevelOneUnitary.bUnitary i n m hpn hpm x y hx hy
-  wordsReal n hp w hw := harmonicWordsReal_proved hA LevelOneUnitary.bUnitary n hp w hw
+    ConcreteHodge.harmonicCreationAdjoint_proved hA LevelOneUnitary.bUnitary i n m hpn hpm x y hx hy
+  wordsReal n hp w hw :=
+    ConcreteHodge.harmonicWordsReal_proved hA LevelOneUnitary.bUnitary n hp w hw
 
 /-- `TwoSeriesSqueezeInput 1`: the squeeze input at `n = 1`, from the existing proofs, with
 `coeff = gapTwoCoefficient` (the coefficient of `z^{r(r+1)}/(z)_r`). -/

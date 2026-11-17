@@ -111,7 +111,7 @@ theorem range_inf_range_eq_bot {G : Subgroup (Aut W)} {E E' : Type*} [AddCommGro
     rw [map_zero, ← hfac x]
     have hrx : r (φ x) = 0 := by
       have := congrArg (fun F : Representation.IntertwiningMap σ σ' => F x) hF0
-      simpa [F] using this
+      simpa [F] using! this
     rw [hrx, map_zero]
 
 /-- **Inequivalence clause.** -/
@@ -191,13 +191,13 @@ theorem multSpace_inequivalent (hW : W.IsSimple) (G : Subgroup (Aut W)) [Finite 
     apply LinearMap.ext
     intro e
     have := congrArg (fun F : E × E' →ₗ[ℂ] 𝒱 => F (e, 0)) hξ
-    simpa [Φ] using this
+    simpa [Φ] using! this
   rw [hξ0, map_zero] at hξ
   apply hψ0
   apply LinearMap.ext
   intro e'
   have := congrArg (fun F : E × E' →ₗ[ℂ] 𝒱 => F (0, e')) hξ
-  simpa using this.symm
+  simpa using! this.symm
 
 /-- **Dong–Li–Mason Schur–Weyl duality for finite groups holds**: for every simple VOA `W`,
 finite `G ≤ Aut W` and irreducible `σ`, the multiplicity space `Hom_G(E, 𝒱)` is nonzero and an

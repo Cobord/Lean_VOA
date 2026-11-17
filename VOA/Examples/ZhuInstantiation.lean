@@ -28,9 +28,11 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 theorem std0_even : (stdLattice 0).Even := by
   intro v
   refine ⟨0, ?_⟩
-  show Matrix.toBilin' (1 : Matrix (Fin 0) (Fin 0) ℤ) v v = 2 * 0
-  rw [Matrix.toBilin'_apply', Matrix.one_mulVec]
-  simp [dotProduct]
+  have hw : ∀ w : Fin 0 → ℤ, Matrix.toBilin' (1 : Matrix (Fin 0) (Fin 0) ℤ) w w = 2 * 0 := by
+    intro w
+    rw [Matrix.toBilin'_apply', Matrix.one_mulVec]
+    simp [dotProduct]
+  exact hw v
 
 theorem std0_posDef : (stdLattice 0).PosDef := by
   intro v hv
@@ -114,7 +116,7 @@ theorem trivial_span_vacuum :
   rcases trivial_submodule (Submodule.span ℂ ({trivialVOA.vacuum} : Set (LatGen.LatModuleGen (stdLattice 0)))) with h | h
   · exfalso
     exact trivialVacuum_ne_zero (by
-      simpa [h] using Submodule.mem_span_singleton_self (R := ℂ) trivialVOA.vacuum)
+      simpa [h] using! Submodule.mem_span_singleton_self (R := ℂ) trivialVOA.vacuum)
   · exact h
 
 /-- **Obligation 1**: the vacuum grade condition. -/
@@ -239,7 +241,7 @@ theorem trivialVOA_zhuModularity [Finite (Φ trivialVOA)]
   refine zhuModularity_pinned_of_C2Cofinite_voaPBW
     (fun _ => trivialAdjointIrr) (fun _ => 0)
     trivial_C2Cofinite trivial_semisimpleA
-    (by simpa using hcard.symm)
+    (by simpa using! hcard.symm)
     (fun _ => adjoint_hasConformalWeight trivialVOA trivialVacuum_ne_zero)
     (fun j k hjk _ => absurd (Subsingleton.elim j k) hjk)
 

@@ -14,7 +14,7 @@ theorem ksHSeries_coeff_zero (vs : List A) :
   | nil => simp [ksHSeries]
   | cons a vs ih =>
       change PowerSeries.coeff 0 (ksGeometricSeries a * ksHSeries vs) = 1
-      simpa [PowerSeries.coeff_mul, ksGeometricSeries] using ih
+      simpa [PowerSeries.coeff_mul, ksGeometricSeries] using! ih
 
 /-- The top new-alphabet degree is isolated; every remaining summand has
     positive outer degree and strictly smaller new-alphabet degree. -/

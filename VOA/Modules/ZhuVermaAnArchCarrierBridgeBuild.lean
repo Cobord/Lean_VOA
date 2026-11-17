@@ -270,7 +270,12 @@ carries the *directional* DJ data per `U` (assembled into bridges by `ofData`), 
 same named grading data.  `toCarrierBridgeFamily` then produces the `CarrierBridgeFamily` the main theorem
 consumes. -/
 
-/-- **A per-`U` family of directional `CarrierBridgeData`** plus the named grading/finiteness data —
+/-- **EMPTY TYPE (for every `W`).** See `VHat.CarrierBridgeFamily.false` / `VHat.CarrierBridgeDataFamily.false`
+(`ZhuVermaAnArchCarrierBridgeVacuity.lean`): `hvac` transported along `bridge` makes `1₍₋₁₎` act as the identity
+on `M̄(U)`, whose augmentation then forces `U = 0` and contradicts `hbot` (`AMod W` contains the zero module).
+Any theorem taking this structure as a hypothesis is vacuous.
+
+**A per-`U` family of directional `CarrierBridgeData`** plus the named grading/finiteness data —
 the refined input where each bridge is given by its honest forward/backward DJ maps rather than as an
 opaque iso. -/
 structure CarrierBridgeDataFamily (W : VertexOperatorAlgebra 𝒱) where
@@ -297,7 +302,9 @@ namespace CarrierBridgeDataFamily
 
 variable (F : CarrierBridgeDataFamily W)
 
-/-- **The headline `CarrierBridgeFamily` produced by a directional family** — each per-`U` bridge is
+/-- **VACUOUS — do not cite.** The signature involves `VHat.CarrierBridgeFamily W`, a type the library proves EMPTY (`VOA.VHat.CarrierBridgeFamily.false`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The headline `CarrierBridgeFamily` produced by a directional family** — each per-`U` bridge is
 `CarrierBridge.ofData (F.data U)`; the grading/finiteness data are forwarded.  This is exactly the
 input `headline_zhuBijection_of_bridge` consumes. -/
 noncomputable def toCarrierBridgeFamily : VHat.CarrierBridgeFamily W where
@@ -327,7 +334,9 @@ End-to-end: a `CarrierBridgeDataFamily` (the four directional Dong–Jiang piece
 named grading data) yields the `CarrierBridgeFamily` consumed by `headline_zhuBijection_of_bridge`,
 hence the main Zhu theorem `Function.Bijective (forwardMap W)`. -/
 
-/-- **Main connection — the Zhu bijection from a directional carrier-bridge family.**
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**Main connection — the Zhu bijection from a directional carrier-bridge family.**
 
 From a `VHat.CarrierBridgeDataFamily W` (each bottom `U` supplied with the honest forward/backward
 Dong–Jiang maps `fwd`/`bwd`, their mutual-inverse identities, and `𝒱`-mode equivariance, together

@@ -18,17 +18,18 @@ theorem radicalWord_zero_of_E
     (he : 0 < l.countP (fun p => p.1 = 0)) :
     radicalWord ρ w l = 0 := by
   apply radicalWord_zero_of_count ρ w m h 0 l
-  simpa [rootWeight] using he
+  simpa [rootWeight] using! he
 
 /-- Every exact key containing an `E` has zero source layer. -/
 theorem keyLayer_eq_bot_of_E
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (k : RadicalKey) (he : 0 < k.e) : keyLayer ρ w k = ⊥ := by
-  rw [keyLayer, eq_bot_iff, Submodule.span_le]
+  rw [eq_bot_iff]
+  apply Submodule.span_le.mpr
   intro v hv
   obtain ⟨l, hk, rfl⟩ := hv
   have hcount : 0 < l.countP (fun p => p.1 = 0) := by
-    simpa [← hk, wordKey] using he
+    simpa [← hk, wordKey] using! he
   rw [radicalWord_zero_of_E ρ w m h l hcount]
   exact Submodule.zero_mem _
 

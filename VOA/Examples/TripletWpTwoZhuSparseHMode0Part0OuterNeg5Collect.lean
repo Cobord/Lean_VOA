@@ -15,7 +15,6 @@ theorem hMode0Part0OuterNeg5_eq :
   unfold hMode0Part0OuterSparseQ
   norm_num only [Int.reduceNeg, Int.reduceLE, ↓reduceIte, Int.reduceAdd]
   rw [hMode0Part0Neg5_inner_eq_expected]
-  simp only [if_false]
   have hsplit :
       scaleQ (-(1575 / 4096))
           (aWordActSparseQ [0, 0] 6 (Int.toNat 2)

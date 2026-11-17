@@ -46,7 +46,7 @@ theorem kacWeightProduct_translation_factor (t : ℂ) (n : ℕ) :
     (fun i => (X - Polynomial.C (fusionKacWeight (i.1.val+1) (i.2.val+1) t)) ^
       Fintype.card (VermaPartitions (n+1-(i.1.val+1)*(i.2.val+1))))
     (kacLabels_translation_mem n)
-  simpa [kacWeightProduct, kacWithoutTranslation, fusionKacWeight] using he.symm
+  simpa [kacWeightProduct, kacWithoutTranslation, fusionKacWeight] using! he.symm
 
 /-- The constant coefficient of the reduced polynomial is its explicit
 finite product of negative Kac weights. -/
@@ -60,7 +60,7 @@ theorem kacWeightProduct_first_coefficient (t : ℂ) (n : ℕ) :
     (kacWeightProduct t (n+1)).coeff (Fintype.card (VermaPartitions n)) =
       kacVacuumScalar t n := by
   rw [kacWeightProduct_translation_factor]
-  simpa using (coeff_X_pow_mul (kacWithoutTranslation t n)
+  simpa using! (coeff_X_pow_mul (kacWithoutTranslation t n)
     (Fintype.card (VermaPartitions n)) 0).trans (kacWithoutTranslation_zero t n)
 
 /-- A full Kac identity on nonreal parameters extends to every nonzero
@@ -86,7 +86,7 @@ theorem vermaWeightDeterminant_kac_extend (n : ℕ)
       nhdsWithin_le_nhds)
   filter_upwards [self_mem_nhdsWithin] with z hz
   have he := congrArg (Polynomial.eval h) (hs z hz)
-  simpa only [vermaWeightDeterminant_eval, eval_mul, eval_C] using he
+  simpa only [vermaWeightDeterminant_eval, eval_mul, eval_C] using! he
 
 /-- Once the ordinary Kac polynomial identity is available, its first
 coefficient gives the normalized actual vacuum determinant relation. This

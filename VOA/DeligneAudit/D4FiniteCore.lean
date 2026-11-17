@@ -41,8 +41,8 @@ def demMonoG (pr : G → ℤ) (sh : ℤ → G → G) (e : G) (c : ℤ) : AddMono
 theorem demMonoG_zero (pr : G → ℤ) (sh : ℤ → G → G) (e : G) : demMonoG pr sh e 0 = 0 := by
   unfold demMonoG
   split_ifs
-  · exact Finset.sum_eq_zero fun _ _ => Finsupp.single_zero _
-  · rw [Finset.sum_eq_zero fun _ _ => Finsupp.single_zero _, neg_zero]
+  · exact Finset.sum_eq_zero fun _ _ => AddMonoidAlgebra.single_zero _
+  · rw [Finset.sum_eq_zero fun _ _ => AddMonoidAlgebra.single_zero _, neg_zero]
 
 theorem demMonoG_add (pr : G → ℤ) (sh : ℤ → G → G) (e : G) (c d : ℤ) :
     demMonoG pr sh e (c + d) = demMonoG pr sh e c + demMonoG pr sh e d := by
@@ -56,18 +56,23 @@ theorem demMonoG_add (pr : G → ℤ) (sh : ℤ → G → G) (e : G) (c d : ℤ)
 
 /-- The Demazure operator, extended additively. -/
 def demazureG (pr : G → ℤ) (sh : ℤ → G → G) (f : AddMonoidAlgebra ℤ G) : AddMonoidAlgebra ℤ G :=
-  f.sum (demMonoG pr sh)
+  f.coeff.sum (demMonoG pr sh)
 
 theorem demazureG_add (pr : G → ℤ) (sh : ℤ → G → G) (f g : AddMonoidAlgebra ℤ G) :
-    demazureG pr sh (f + g) = demazureG pr sh f + demazureG pr sh g :=
-  Finsupp.sum_add_index' (demMonoG_zero pr sh) (demMonoG_add pr sh)
+    demazureG pr sh (f + g) = demazureG pr sh f + demazureG pr sh g := by
+  unfold demazureG
+  rw [AddMonoidAlgebra.coeff_add]
+  exact Finsupp.sum_add_index' (demMonoG_zero pr sh) (demMonoG_add pr sh)
 
 theorem demazureG_single (pr : G → ℤ) (sh : ℤ → G → G) (e : G) (c : ℤ) :
-    demazureG pr sh (AddMonoidAlgebra.single e c) = demMonoG pr sh e c :=
-  Finsupp.sum_single_index (demMonoG_zero pr sh e)
+    demazureG pr sh (AddMonoidAlgebra.single e c) = demMonoG pr sh e c := by
+  unfold demazureG
+  exact Finsupp.sum_single_index (demMonoG_zero pr sh e)
 
-theorem demazureG_zero (pr : G → ℤ) (sh : ℤ → G → G) : demazureG pr sh 0 = 0 :=
-  Finsupp.sum_zero_index
+theorem demazureG_zero (pr : G → ℤ) (sh : ℤ → G → G) : demazureG pr sh 0 = 0 := by
+  unfold demazureG
+  rw [AddMonoidAlgebra.coeff_zero]
+  exact Finsupp.sum_zero_index
 
 theorem demazureG_finset_sum {ι : Type*} (pr : G → ℤ) (sh : ℤ → G → G) (s : Finset ι)
     (F : ι → AddMonoidAlgebra ℤ G) :
@@ -79,7 +84,7 @@ theorem demazureG_finset_sum {ι : Type*} (pr : G → ℤ) (sh : ℤ → G → G
 
 omit [AddCommMonoid G] in
 theorem demazureG_eq_sum (pr : G → ℤ) (sh : ℤ → G → G) (f : AddMonoidAlgebra ℤ G) :
-    demazureG pr sh f = ∑ e ∈ f.support, demMonoG pr sh e (f e) := rfl
+    demazureG pr sh f = ∑ e ∈ f.coeff.support, demMonoG pr sh e (f.coeff e) := rfl
 
 /-- Shifting a monomial by a neutral exponent `m`. -/
 theorem demMonoG_shift (pr : G → ℤ) (sh : ℤ → G → G) (e m : G) (c d : ℤ)
@@ -97,17 +102,24 @@ theorem demMonoG_shift (pr : G → ℤ) (sh : ℤ → G → G) (e m : G) (c d : 
 /-- `π (f · h) = π f · h` when every monomial `m` of `h` is neutral: `pr (e + m) = pr e` and
 `sh j (e + m) = sh j e + m`. -/
 theorem demazureG_mul_neutral (pr : G → ℤ) (sh : ℤ → G → G) (f h : AddMonoidAlgebra ℤ G)
-    (hh : ∀ m ∈ h.support, ∀ e, pr (e + m) = pr e ∧ ∀ j, sh j (e + m) = sh j e + m) :
+    (hh : ∀ m ∈ h.coeff.support, ∀ e, pr (e + m) = pr e ∧ ∀ j, sh j (e + m) = sh j e + m) :
     demazureG pr sh (f * h) = demazureG pr sh f * h := by
-  rw [AddMonoidAlgebra.mul_def, Finsupp.sum, demazureG_finset_sum, demazureG_eq_sum,
-    Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro e _
-  rw [Finsupp.sum, demazureG_finset_sum]
-  conv_rhs => rw [← h.sum_single, Finsupp.sum, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro m hm
-  rw [demazureG_single, demMonoG_shift pr sh e m (f e) (h m) (hh m hm e).1 (hh m hm e).2]
+  classical
+  -- Linear in `f`; on a monomial, expand `h` into its monomials.  (Stated through `coeff` so
+  -- that it reads the same whether `AddMonoidAlgebra` is a `Finsupp` synonym or a structure.)
+  have hsum : h = ∑ m ∈ h.coeff.support, AddMonoidAlgebra.single m (h.coeff m) := by
+    apply AddMonoidAlgebra.coeff_injective
+    rw [AddMonoidAlgebra.coeff_sum]
+    exact (Finsupp.sum_single h.coeff).symm
+  refine AddMonoidAlgebra.induction_linear f ?_ ?_ ?_
+  · rw [zero_mul, demazureG_zero, zero_mul]
+  · intro x y hx hy
+    rw [add_mul, demazureG_add, demazureG_add, hx, hy, add_mul]
+  · intro e c
+    rw [hsum, Finset.mul_sum, demazureG_finset_sum, demazureG_single, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun m hm => ?_
+    rw [AddMonoidAlgebra.single_mul_single, demazureG_single,
+      demMonoG_shift pr sh e m c (h.coeff m) (hh m hm e).1 (hh m hm e).2]
 
 end Algebraic
 
@@ -215,7 +227,7 @@ theorem evalG_addAux [DecidableEq E] (a : Tm E) (p : List (Tm E)) (rec : List (T
         rw [h3]
         have : AddMonoidAlgebra.single (toG b.1.2) a.2 +
             AddMonoidAlgebra.single (toG b.1.2) b.2 = 0 := by
-          rw [← AddMonoidAlgebra.single_add, h4]; exact Finsupp.single_zero _
+          rw [← AddMonoidAlgebra.single_add, h4]; exact AddMonoidAlgebra.single_zero _
         linear_combination (-1 : AddMonoidAlgebra ℤ G) * this
       · rw [evalG_cons, hrec]
         simp only [evalG_cons]

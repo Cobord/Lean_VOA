@@ -110,6 +110,9 @@ open VertexOperatorAlgebra
 open Module (End)
 open scoped BigOperators TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -289,9 +292,8 @@ noncomputable def zhuDeg0 (W : VertexOperatorAlgebra 𝒱) : VHatCarrier W →�
 
 theorem zhuDeg0_gen (W : VertexOperatorAlgebra 𝒱) (a : 𝒱) (m : ℤ) :
     zhuDeg0 W (gen W a m) = _root_.VOA.mk W (gradeComp W (m + 1) a) := by
-  rw [zhuDeg0, gen, mk, show (loopDerivSubmodule W).mkQ (Finsupp.single m a)
-      = Submodule.Quotient.mk (Finsupp.single m a) from rfl,
-    Submodule.liftQ_apply, zhuLoop_single]
+  show zhuLoop W (Finsupp.single m a) = _
+  exact zhuLoop_single W m a
 
 /-- On a degree-`0` generator `a(wt a − 1)` the map is DLM3's `o(a) ↦ [a]`. -/
 theorem zhuDeg0_gen_deg_zero (W : VertexOperatorAlgebra 𝒱) {w m : ℤ} {a : 𝒱}

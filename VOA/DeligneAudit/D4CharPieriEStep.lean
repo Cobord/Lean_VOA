@@ -104,7 +104,7 @@ theorem pieri_e_step (q : Rˣ) (z : R) (n : ℕ)
       ∏ i : Fin n, pieriRightMatrix z (pieriPower q (a i.castSucc - b i.castSucc))
         (intGaussianPieriEdge q (a i.succ) (b i.succ) (ha i.succ))
         (t i.castSucc) (t i.succ) at h
-  simpa only [pieri_gaussian_right_path] using h
+  simpa only [pieri_gaussian_right_path] using! h
 
 end
 

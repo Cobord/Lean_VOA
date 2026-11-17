@@ -232,7 +232,7 @@ def toReduced (F : BGFactorDataI Gh hA BB RB) (hB : Unitary BB RB) (hs : Gh.IsSt
     rw [fine_P F.M F.G k hk z hz Y]
     have : k.1.1.1 = j := by
       have := congrArg (fun i : (ℤ × ℤ) × ℂ => i.1.1) hki
-      simpa [fstF] using this
+      simpa [fstF] using! this
     rw [this]
   ρ_deg := fun n j g x hxr hx => by
     rw [brstDeg_std hs]

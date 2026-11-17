@@ -60,7 +60,6 @@ theorem fivePointTerm_left_summable_norm (N P Q R : LogModuleCat W)
             (f ∘ₗ Lm1 (fivePointObject hC2 N P Q R .left).act.toWeakModule^j))
     (fun j => ‖(omegaPhase 0 (h'+d-β-1))⁻¹‖*‖sc j‖) ?_ ?_ ?_
   · intro j p
-    simp only []
     rw [norm_mul]
     have he : h'+(p.2 : ℂ)+d-β-1=(h'+d-β-1)+(p.2 : ℂ) := by ring
     rw [he, rootSkew_phase_norm_add_nat]
@@ -72,8 +71,7 @@ theorem fivePointTerm_left_summable_norm (N P Q R : LogModuleCat W)
       (tensorObject hC2 (tensorObject hC2 N P) Q).finiteGeneration _ _ _
       0 (Complex.log s) (Complex.log r) d c a b (β-j) w z x y _ h h' ht hu
   · intro p
-    simp only []
-    rw [hJ]
+    exact hJ _ _
 
 -- Actual fourfold point-block signatures require a larger elaboration budget.
 set_option maxHeartbeats 6000000 in
@@ -113,7 +111,6 @@ theorem fivePointTerm_inner_summable_norm (N P Q R : LogModuleCat W)
             (f ∘ₗ Lm1 (fivePointObject hC2 N P Q R .inner).act.toWeakModule^j))
     (fun j => ‖(omegaPhase 0 (h'+d-β-1))⁻¹‖*‖sc j‖) ?_ ?_ ?_
   · intro j p
-    simp only []
     rw [norm_mul]
     have he : h'+(p.2 : ℂ)+d-β-1=(h'+d-β-1)+(p.2 : ℂ) := by ring
     rw [he, rootSkew_phase_norm_add_nat]
@@ -125,8 +122,7 @@ theorem fivePointTerm_inner_summable_norm (N P Q R : LogModuleCat W)
       (tensorObject hC2 N (tensorObject hC2 P Q)).finiteGeneration _ _ _
       0 (Complex.log ((s : ℂ)+(r : ℂ))) (Complex.log s) d a b c (β-j) w x y z _ h h' ht hu
   · intro p
-    simp only []
-    rw [hJ]
+    exact hJ _ _
 
 -- Actual fourfold point-block signatures require a larger elaboration budget.
 set_option maxHeartbeats 6000000 in

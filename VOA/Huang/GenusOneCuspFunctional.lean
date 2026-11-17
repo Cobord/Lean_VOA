@@ -23,7 +23,7 @@ noncomputable def leading (S : M →ₗ[ℂ] FormalQSeries) (b : ℂ) : M →ₗ
 
 theorem qConv_leading (hsupp : ∀ w, S w ∈ QSeriesAt b) (f : ℕ → ℂ) (w : M) :
     qConv f (S w) b = f 0 * leading S b w := by
-  simpa using qConv_apply_of_support f (S w) b (QSeriesAt.support_neg (hsupp w)) 0
+  simpa using! qConv_apply_of_support f (S w) b (QSeriesAt.support_neg (hsupp w)) 0
 
 theorem cusp_tail_support (A : OrdVModule W M) (a : V) (k : ℕ) (w : M) :
     (Function.support fun m : ℕ =>
@@ -48,7 +48,6 @@ theorem leading_fzRes_pos (hsupp : ∀ w, S w ∈ QSeriesAt b)
     by_contra hn
     exact hm (by rw [hK m (by omega), map_zero, qConv_zero_right, smul_zero])
   have hev := congrArg (fun f : FormalQSeries => f b) hr
-  dsimp only at hev
   rw [Pi.add_apply, finsum_apply hfin] at hev
   simp only [Pi.smul_apply, smul_eq_mul, Pi.zero_apply, qConv_leading hsupp] at hev
   rw [← fullNegTwo_cusp A hp a w, map_add,

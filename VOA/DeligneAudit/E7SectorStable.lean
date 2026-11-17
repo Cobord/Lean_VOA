@@ -205,7 +205,7 @@ theorem stabRow_sound (g r : ℕ) (c : List ℕ) (h : stabRowOK g r c = true) :
     refine list_sum_mem fun y hy => ?_
     obtain ⟨p, hp, rfl⟩ := List.mem_map.mp hy
     rw [E7Sparse.quadP_scaleQ]
-    exact intCast_mul_mem _ (Pq_mem _ (by simpa using List.all_eq_true.mp hs p hp))
+    exact intCast_mul_mem _ (Pq_mem _ (by simpa using! List.all_eq_true.mp hs p hp))
   have hC : ((certL c : ℂ))⁻¹ • ((certL c : MvPolynomial (Fin 133) ℂ) *
       E7Sparse.quadP 133 (adS e7T g (Pq r))) = E7Sparse.quadP 133 (adS e7T g (Pq r)) := by
     rw [smul_eq_C_mul, ← mul_assoc,
@@ -654,7 +654,7 @@ theorem st132 : ∀ q ∈ S2, adDer fE7 (132 : Fin 133) q ∈ S2 :=
 
 theorem e7_stable : RelationsStable fE7 E7data.fullMatrix := by
   intro x r
-  rw [quadraticRelation_adMatrix]
+  erw [quadraticRelation_adMatrix]
   fin_cases x
   · exact st0 _ (Submodule.subset_span ⟨r, rfl⟩)
   · exact st1 _ (Submodule.subset_span ⟨r, rfl⟩)

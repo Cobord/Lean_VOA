@@ -121,7 +121,7 @@ theorem norm_of_rho (F : SphericalFusion C) (M : Modular F)
   rw [this] at h4
   have hne : Nonempty F.Label := ⟨F.unitLabel⟩
   have := congrFun (congrFun h4 F.unitLabel) F.unitLabel
-  simpa using this
+  simpa using! this
 
 open Classical in
 /-- **`NSGaloisTwistAll` for one modular category, from the twist core.** -/

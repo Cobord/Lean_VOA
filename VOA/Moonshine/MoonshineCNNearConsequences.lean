@@ -5,6 +5,10 @@ import VOA.Moonshine.MoonshineCNNearSkew
 namespace VOA
 open Module (End)
 open scoped BigOperators
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 namespace NearVOA
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -33,7 +37,7 @@ theorem zeroMode_derivation (V : NearVOA 𝒱) (u v : 𝒱) (n : ℤ) :
   have h := congrFun (V.nth_product u v 0) (-n - 1)
   simpa only [bracketDistε_one, cCoeff_apply, mulBySubPow_zero,
     LinearMap.id_apply, bracketDist_apply, LieRing.of_associative_ring_bracket,
-    mode_apply] using h
+    mode_apply, Nat.cast_zero, neg_zero, zero_sub] using h
 
 /-- Virasoro commutation for a primary state of conformal weight one. -/
 theorem primary_comm (V : NearVOA 𝒱) (u : 𝒱) (hu : V.L 0 u = u)

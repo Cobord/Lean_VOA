@@ -54,7 +54,7 @@ theorem coefficientAssociativityConverse_of_converse (hV : StronglyRational W)
     simp only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hz₁, abs_of_pos hz₂]
     linarith
   have hi : ‖((z₁ - z₂ : ℝ) : ℂ)‖ < ‖(z₂ : ℂ)‖ := by
-    simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hz₀, abs_of_pos hz₂] using hz
+    simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hz₀, abs_of_pos hz₂] using! hz
   have hn₂ : (z₂ : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hz₂
   have hn₀ : ((z₁ - z₂ : ℝ) : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hz₀
   push_cast at hi hn₀
@@ -63,7 +63,7 @@ theorem coefficientAssociativityConverse_of_converse (hV : StronglyRational W)
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro i _
-  simpa only [add_sub_cancel_right, Complex.ofReal_sub] using
+  simpa only [add_sub_cancel_right, Complex.ofReal_sub] using!
     heq α₁ α₂ β β w₁ w₂ (b i) (weightFunctional N.isMod β b i)
       hw₁ hw₂ (b i).property (supportedAt_weightFunctional N.isMod β b i) z₁ z₂ hz₀ hz
 

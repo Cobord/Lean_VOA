@@ -151,6 +151,6 @@ theorem jointDeterminant_root_relation (k : ℂ) (hk : k + 2 ≠ 0) (hk0 : k ≠
     obtain ⟨i,rfl⟩ := (jointChargeEquiv n h).surjective j
     have hh := congrFun hr i
     simpa only [Matrix.vecMul, dotProduct, RingHom.mapMatrix_apply, Matrix.map_apply,
-      jointGramSquare, Pi.zero_apply] using hh
+      jointGramSquare, Pi.zero_apply, Polynomial.coe_evalRingHom] using! hh
 
 end VOA.AffineSl2GeneralRigidity

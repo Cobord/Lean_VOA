@@ -42,7 +42,7 @@ theorem product_mode_zero_of_completed_zero (hC2 : C2Cofinite W)
       hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ hx hy hz f β (productInfinityChart_mem_halfPlane ht)
     dsimp only [F]
     rw [← he]
-    simpa only [productInfinityChart,neg_neg] using hzero t ht
+    simpa only [productInfinityChart,neg_neg] using! hzero t ht
   have hzF := infinity_zero_of_chart_zero hF hchart
   have hF' : HasLogExp overlapDomain F := by
     obtain ⟨E,hE⟩ := hF

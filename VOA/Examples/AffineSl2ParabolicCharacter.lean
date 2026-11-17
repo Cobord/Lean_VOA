@@ -26,7 +26,7 @@ theorem parabolicJointSpace_finrank_eq_sum_vacuum (k : ℂ) (d N : ℕ) (c : ℤ
     induction d with
     | zero =>
       intro c
-      simpa only [Nat.zero_add,Finset.sum_range_one,Nat.cast_zero,add_zero] using
+      simpa only [Nat.zero_add,Finset.sum_range_one,Nat.cast_zero,add_zero] using!
         (joint_vacuum_dimension N c).symm
     | succ d ih =>
       intro c

@@ -120,7 +120,7 @@ theorem s13_leading_coefficient (m : ℤ) :
     dsimp only [Function.comp_apply]
     have hs := (OrbIcoZ.s13v_spec t ht).1
     have hp : ∀ k ∈ t.2, 0 < k := by
-      simpa only [OrbOdd.posW, List.all_eq_true, decide_eq_true_eq] using
+      simpa only [OrbOdd.posW, List.all_eq_true, decide_eq_true_eq] using!
         (OrbIcoZ.s13v_spec t ht).2.2
     rw [show (13 : ℤ) = (t.2.sum : ℤ) by exact_mod_cast hs.symm,
       nullWord_leading m t.2 hp, zp_pscaleL, Polynomial.eval_mul, Polynomial.eval_C]

@@ -36,7 +36,7 @@ theorem norm_le_of_coeff_lt_Gamma1 {N : ℕ} [NeZero N] {k : ℤ}
   have hasSum_exp (τ : ℍ) : HasSum
       (fun n : ℕ => (qExpansion 1 F).coeff n * cexp (2 * Real.pi * I * n * τ))
       (F τ) := by
-    simpa only [smul_eq_mul, IsThetaTypeForm.qParam_one_pow] using
+    simpa only [smul_eq_mul, IsThetaTypeForm.qParam_one_pow] using!
       hasSum_qExpansion one_pos
         (SlashInvariantFormClass.periodic_comp_ofComplex F (one_mem_strictPeriods_Gamma1 N))
         (ModularFormClass.holo F) (ModularFormClass.bdd_at_infty F) τ
@@ -125,7 +125,7 @@ theorem eq_zero_of_coeff_lt_Gamma1 {N : ℕ} [NeZero N] {k : ℤ}
     have hq₀ : SlashInvariantForm.quotientFunc F q₀ τ = F τ := by simp [q₀]
     rw [hq₀]
     have hP : ∏ q ∈ Finset.univ.erase q₀, ‖SlashInvariantForm.quotientFunc F q τ‖ ≤ P :=
-      Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
+      Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
     calc
       _ ≤ (K * Real.exp (-(2 * Real.pi * B * τ.im))) * P :=
         mul_le_mul (hK τ hτ1) hP
@@ -175,6 +175,6 @@ theorem finrank_Gamma1_le (N : ℕ) [NeZero N] (k : ℤ) :
     Module.finrank ℂ
       (ModularForm (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ)) k) ≤
         integralSturmBound N k := by
-  simpa using LinearMap.finrank_le_finrank_of_injective (gamma1CoeffMap_injective N k)
+  simpa using! LinearMap.finrank_le_finrank_of_injective (gamma1CoeffMap_injective N k)
 
 end VOA.Classification.COne.SSHecke

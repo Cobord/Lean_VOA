@@ -179,7 +179,7 @@ theorem fockIndexF_eq_sum (s : Finset ModeIdx) :
   simp only [Function.comp_apply, Set.powersetCard.ofFinEmbEquiv_symm_apply]
   rw [← Finset.sum_coe_sort s]
   exact Fintype.sum_equiv (Finset.orderIsoOfFin s rfl).toEquiv _ _
-    (fun i => by rw [← Finset.coe_orderIsoOfFin_apply]; rfl)
+    (fun _ => rfl)
 
 theorem modeIdxF_snd_nonneg (p : ℕ × Fin 2) : 0 ≤ (modeIdxF p).2 := by
   unfold modeIdxF; split_ifs <;> norm_num
@@ -527,7 +527,7 @@ theorem mem_fockWord {p : ℕ × Fin 2} {s : Finset ModeIdx} (hp : p ∈ fockWor
   obtain ⟨i, rfl⟩ := hp
   have := (Set.powersetCard.mem_range_ofFinEmbEquiv_symm_iff_mem
     (Set.powersetCard.prodEquiv.symm s).2 _).mp ⟨i, rfl⟩
-  simpa using this
+  simpa using! this
 
 theorem wordIdxF_swapRev {l : SFWord} (h : ∀ p ∈ l, p ≠ (0, 1)) :
     wordIdxF (swapRev l) = conjF (wordIdxF l) := by
@@ -552,8 +552,8 @@ theorem fockWord_c0free {s : Finset ModeIdx} (h : (fockIndexF s).2 = 0) :
 theorem ghostConj_deg (k : KF) (hk : k.2 = 0) (y : Sl2GhostSpace) (hy : y ∈ ghostDegF k) :
     ghostConj y ∈ ghostDegF (conjF k) := by
   refine ghostDegF_induction (fun y => ghostConj y ∈ ghostDegF (conjF k))
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [LinearMap.map_smulₛₗ] using Submodule.smul_mem _ _ hx) ?_ hy
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [LinearMap.map_smulₛₗ] using! Submodule.smul_mem _ _ hx) ?_ hy
   intro i hi
   obtain ⟨h0, h1, h2⟩ := ghostIdx_snd_zero (hi ▸ hk)
   rw [ghostBasis_eq_W3, ghostConj_W]
@@ -574,8 +574,8 @@ def ghostIR : Module.End ℂ Sl2GhostSpace :=
 theorem ghostIR_eigen {k : KF} {y : Sl2GhostSpace} (hy : y ∈ ghostDegF k) :
     ghostIR y = Complex.I ^ k.1.1.1 • y := by
   refine ghostDegF_induction (fun y => ghostIR y = Complex.I ^ k.1.1.1 • y) (by simp)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [map_add, hx, hy, smul_add])
-    (fun c x hx => by simp only at hx ⊢; rw [map_smul, hx, smul_comm]) ?_ hy
+    (fun x y hx hy => by rw [map_add, hx, hy, smul_add])
+    (fun c x hx => by rw [map_smul, hx, smul_comm]) ?_ hy
   intro i hi
   rw [ghostIR, basisDiag_basis, hi]
 

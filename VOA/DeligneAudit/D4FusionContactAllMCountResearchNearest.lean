@@ -82,12 +82,12 @@ theorem h0Deriv_middle_nearest {p : MvPolynomial (Vars m) ℂ}
           left := z.right, right := z.left,
           left_lower := z.right_lower, left_upper := z.right_upper,
           right_lower := z.left_lower, right_upper := z.left_upper,
-          mode_sum := by simpa only [Nat.add_comm] using z.mode_sum}
+          mode_sum := by simpa only [Nat.add_comm] using! z.mode_sum}
       · exact h0_middle_product_mem b z
   | zero => rw [map_zero]; exact (nearestTopSpan b).zero_mem
-  | add p q _ _ ihp ihq => simpa only [map_add] using (nearestTopSpan b).add_mem ihp ihq
+  | add p q _ _ ihp ihq => simpa only [map_add] using! (nearestTopSpan b).add_mem ihp ihq
   | smul a p _ ih =>
-      simpa only [Derivation.map_smul] using (nearestTopSpan b).smul_mem a ih
+      simpa only [Derivation.map_smul] using! (nearestTopSpan b).smul_mem a ih
 
 theorem h0Deriv_middleSeed_nearest :
     g0Deriv m 0 (refinementMode b).val (middleSeed b) ∈ nearestTopSpan b :=

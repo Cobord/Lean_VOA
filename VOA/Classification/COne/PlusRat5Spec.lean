@@ -142,7 +142,7 @@ theorem evalW_mem (P : Submodule (modeAlg A) M) {x : M} (hx : x ∈ P) :
   | nil => simp [evalW]
   | cons p F ih =>
     rw [evalW_cons]
-    exact P.add_mem (P.smul_mem (algebraMap ℂ (modeAlg A) p.1) (by simpa using hw p.2)) ih
+    exact P.add_mem (P.smul_mem (algebraMap ℂ (modeAlg A) p.1) (by simpa using! hw p.2)) ih
 
 theorem evalW_span (F : WComb W) (U : Set M) {b : M} (hb : b ∈ Submodule.span ℂ U)
     (hU : ∀ u ∈ U, evalW A F u = 0) : evalW A F b = 0 := by
@@ -175,7 +175,7 @@ theorem kernel_annihilate (hC2 : C2Cofinite W) (A : WeakModule W M) (B : WeakMod
   have hvg : v ∈ (L0 A).maxGenEigenspace (h + ((d : ℤ) : ℂ)) := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hvL
+    simpa using! hvL
   have hcyc : cyclic A k₀ = P := by
     have hle : cyclic A k₀ ≤ P := Submodule.span_le.mpr (by rintro _ rfl; exact hk₀P)
     rcases hP.le_iff.mp hle with h0 | h1
@@ -202,7 +202,7 @@ theorem kernel_annihilate (hC2 : C2Cofinite W) (A : WeakModule W M) (B : WeakMod
     rcases Nat.eq_zero_or_pos d with hd0 | hdpos
     · subst hd0
       obtain ⟨c, h1, h2⟩ := evalW_zero_scalar A B χ hk₀ he hχk hχe hkL heL (compW G F)
-        (by simpa using hGF)
+        (by simpa using! hGF)
       rw [hBe] at h2
       have hc : c = 0 := (smul_eq_zero.mp h2.symm).resolve_right he0
       rw [h1, hc, zero_smul]
@@ -311,9 +311,9 @@ theorem evalW_annW_modP (P : Submodule (modeAlg A) M) (a b : HomogeneousLetter W
       evalW_add, evalW_add, evalW_smul, evalW_smul, List.map_cons, List.prod_cons, ← hc]
     simp only [evalW, List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, homogeneousWord,
       LinearMap.id_apply, add_zero]
-    have h1 : c • evalW A (polyW a b L) x ∈ P := P.smul_mem (algebraMap ℂ (modeAlg A) c) (by simpa using hx)
+    have h1 : c • evalW A (polyW a b L) x ∈ P := P.smul_mem (algebraMap ℂ (modeAlg A) c) (by simpa using! hx)
     have h2 : evalW A (polyW a b L) (y - c • x) ∈ P := evalW_mem A P ih _
-    have h3 : (-v) • (y - c • x) ∈ P := P.smul_mem (algebraMap ℂ (modeAlg A) (-v)) (by simpa using ih)
+    have h3 : (-v) • (y - c • x) ∈ P := P.smul_mem (algebraMap ℂ (modeAlg A) (-v)) (by simpa using! ih)
     simp only [evalW] at h1 h2
     convert P.add_mem (P.add_mem h1 h2) h3 using 1
     module
@@ -366,7 +366,7 @@ theorem kernel_ann_exists (hC2 : C2Cofinite W) (A : WeakModule W M) (B : WeakMod
     simp only [List.mem_map, Vs, pairs, List.mem_filter, List.mem_flatMap, List.mem_range] at hz
     obtain ⟨v, ⟨p, ⟨⟨s, hs, hp⟩, hQ⟩, rfl⟩, hv⟩ := hz
     obtain ⟨t, ht, rfl⟩ := hp
-    exact hne s t (by simpa using hQ) (by omega) (by omega) (neg_eq_zero.mp hv)
+    exact hne s t (by simpa using! hQ) (by omega) (by omega) (neg_eq_zero.mp hv)
   have hann := kernel_annihilate hC2 A B P hP χ hk₀P hk₀0 hk₀ he hχk hχe hkL heL he0 hlow D hmid
     d hdD (annW a b L Vs) (WDeg_annW a b ha hb L Vs) (by
       intro y hy

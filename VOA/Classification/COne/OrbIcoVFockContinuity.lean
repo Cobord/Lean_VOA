@@ -46,17 +46,17 @@ theorem fockWordScalar_continuousAt (s₀ : ℂ) (hs : s₀ ≠ 0) (w : List ℕ
 
 theorem fockRawEval_coeff_continuousAt (s₀ : ℂ) (hs : s₀ ≠ 0)
     (P : RawPoly ℕ) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (fockRawEval s P)) s₀ := by
+    ContinuousAt (fun s => (fockRawEval s P).coeff d) s₀ := by
   induction P with
-  | nil => simpa [fockRawEval, evalRaw] using (continuousAt_const :
+  | nil => simpa [fockRawEval, evalRaw] using! (continuousAt_const :
       ContinuousAt (fun _ : ℂ => (0 : ℂ)) s₀)
   | cons t P ih =>
     rcases t with ⟨q,w⟩
-    have he (s : ℂ) : coeff d (fockRawEval s ((q,w)::P)) =
-        (q : ℂ)*fockWordScalar s w*coeff d (evalWord fockBaseVar w) +
-          coeff d (fockRawEval s P) := by
-      change coeff d (algebraMap ℚ FF q * evalWord (fockRawVar s) w + fockRawEval s P) = _
-      rw [fock_rat_mul, fockWord_scalar, coeff_add, coeff_smul, coeff_smul]
+    have he (s : ℂ) : (fockRawEval s ((q,w)::P)).coeff d =
+        (q : ℂ)*fockWordScalar s w*(evalWord fockBaseVar w).coeff d +
+          (fockRawEval s P).coeff d := by
+      change (algebraMap ℚ FF q * evalWord (fockRawVar s) w + fockRawEval s P).coeff d = _
+      rw [fock_rat_mul, fockWord_scalar, MvPolynomial.coeff_add, coeff_smul, coeff_smul]
       simp only [smul_eq_mul]
       ring
     simp_rw [he]
@@ -82,11 +82,11 @@ theorem fockDescData_sound (s : ℂ) (hs : s ≠ 0) (w : List ℕ) :
 
 def familyLevelCoefficient (N : ℕ) (a : VermaPartitions N → ℂ)
     (s : ℂ) (d : (ℕ × Fin 1) →₀ ℕ) : ℂ :=
-  ∑ w : VermaPartitions N, a w * coeff d (fockRawEval s (fockDescData w.val))
+  ∑ w : VermaPartitions N, a w * (fockRawEval s (fockDescData w.val)).coeff d
 
 theorem familyLevelCoefficient_sound (N : ℕ) (a : VermaPartitions N → ℂ)
     (s : ℂ) (hs : s ≠ 0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    coeff d (familyMap s (vermaLevelState (familyCharge s) (familyWeight s) N a)) =
+    (familyMap s (vermaLevelState (familyCharge s) (familyWeight s) N a)).coeff d =
       familyLevelCoefficient N a s d := by
   simp only [vermaLevelState, map_sum, map_smul, familyLevelCoefficient,
     MvPolynomial.coeff_sum, coeff_smul, fockDescData_sound s hs]

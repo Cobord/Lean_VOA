@@ -376,7 +376,7 @@ section Rank
 
 /-- The vacuum as an `L[0]`-homogeneous point of `𝒱`. -/
 noncomputable def vacuumSqPt (W : VertexOperatorAlgebra 𝒱) : SqPt W :=
-  ⟨0, ⟨W.vacuum, by simpa using vacuum_mem_sqWeightSpace_zero W⟩⟩
+  ⟨0, ⟨W.vacuum, by simpa using! vacuum_mem_sqWeightSpace_zero W⟩⟩
 
 /-- Evaluation of a function on homogeneous points at a fixed point and a fixed `z`. -/
 def sqPtEvalAt (W : VertexOperatorAlgebra 𝒱) (p : SqPt W) (z : ℂ) :
@@ -471,7 +471,7 @@ theorem trivial_sqAnalyticRank_le :
       ≤ (Fintype.card (Fin 1) : Cardinal) := by
   rw [sqAnalyticSlashAmbient_eq_map_sqRestrict trivialFam _
     (hasConformalWeight_family trivialFam) trivial_onePointSubexp_fam]
-  simpa using rank_map_sqRestrict_analyticBlocks_le_one_of_span_vacuum
+  simpa using! rank_map_sqRestrict_analyticBlocks_le_one_of_span_vacuum
     (W := trivialVOA) trivial_top_eq_span_vacuum_sup_O₂
 
 /-- **The Arakawa–Kawasetsu headline, instantiated with every hypothesis discharged.**

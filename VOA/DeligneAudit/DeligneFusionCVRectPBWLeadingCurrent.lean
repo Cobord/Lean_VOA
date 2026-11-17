@@ -119,7 +119,7 @@ theorem quadratic_commutator_coefficient (i j r t : ℕ) :
   rw [hCC] at he
   have hc := congrArg (PowerSeries.coeff t) he
   simpa only [map_sub, map_add, map_nsmul, mul_assoc, PowerSeries.coeff_mul_C,
-    PowerSeries.coeff_C_mul, Q] using hc
+    PowerSeries.coeff_C_mul, Q] using! hc
 
 /-- The double contraction is genuinely a shorter negative-current coefficient. -/
 theorem double_contraction_below (i j r t : ℕ) :
@@ -140,8 +140,8 @@ theorem double_contraction_below (i j r t : ℕ) :
       rw [he] at hh
       have hm : (PowerSeries.coeff t
           (thetaShift R i * thetaShift R j * Garland.Fs (R.op 4) ^ r)) w ∈
-          Pbelow R w (r + 1 + 2) := by simpa using hh
-      simpa only [Nat.add_sub_cancel, LinearMap.smul_apply] using
+          Pbelow R w (r + 1 + 2) := by simpa using! hh
+      simpa only [Nat.add_sub_cancel, LinearMap.smul_apply] using!
         (Pbelow R w (r + 1 + 2)).nsmul_mem hm (r + 1)
 
 end

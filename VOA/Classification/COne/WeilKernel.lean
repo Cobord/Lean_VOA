@@ -114,7 +114,7 @@ theorem weilVec_zero_mobius (hN : 0 < N) {γ : Matrix.SpecialLinearGroup (Fin 2)
     apply hj
     apply fin_eq_of_modEq
     rw [h0]
-    simpa using hj'
+    simpa [h0] using hj'
   · simp
 
 theorem weilTheta_zero_I (hN : 0 < N) (t : ℝ) :
@@ -516,10 +516,10 @@ theorem gs_scale {n m : ℕ} (hn : 0 < n) (hm : 0 < m) (a : ℤ) :
   simp_rw [h1]
   have hs := sum_split (c := n * m) (m := m) (n := n) (Nat.mul_comm n m) (Nat.mul_pos hn hm)
     (fun x => E m (a * x ^ 2)) (fun x => by
-      simp only
+      try simp only
       rw [← E_period hm (a * x ^ 2) (a * (2 * x * n + n ^ 2 * m))]
       congr 1; push_cast; ring)
-  simp only at hs
+  try simp only at hs
   rw [hs, Finset.mul_sum]
   refine Finset.sum_congr rfl fun y _ => ?_
   have : ∀ z : Fin n, E m (a * (((y : ℕ) : ℤ) + m * ((z : ℕ) : ℤ)) ^ 2) =

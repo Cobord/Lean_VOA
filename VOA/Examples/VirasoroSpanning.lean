@@ -27,6 +27,8 @@ open VOA
 open Module (End)
 open LieAlgebra LieAlgebra.Extension UniversalEnvelopingAlgebra
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable (c : ℂ)
 
 /-! ## §1  The commutator law for the `𝔙𝔦𝔯`-action. -/

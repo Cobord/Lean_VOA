@@ -14,6 +14,8 @@ not formal symbols. Jacobi then propagates their positive commutators to all
 negative indices. A full negative-mode representation and fusion construction
 remain separate obligations.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 open VirModule LeeYangWardClosure
 
@@ -118,7 +120,7 @@ noncomputable def wardQ (c h b : ℂ) := wardShift c h (-2) (wardP2Map c h b)
 
 /-- The weight commutator of the first actual negative operator. -/
 theorem wardWeight_A (c h b : ℂ) : ⁅wardWeight c h,wardA c h b⁆=wardA c h b := by
-  simpa [wardA] using wardWeight_shift c h 1 (wardD1Map c h b)
+  simpa [wardA] using! wardWeight_shift c h 1 (wardD1Map c h b)
 /-- The weight commutator of the second actual negative operator. -/
 theorem wardWeight_B (c h b : ℂ) : ⁅wardWeight c h,wardB c h b⁆=(2:ℂ) • wardB c h b :=
   wardWeight_shift c h 2 (wardD2Map c h b)

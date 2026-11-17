@@ -24,7 +24,7 @@ theorem zp_eq_of_trim {p q : PL} (h : ptrim (paddL p (pscaleL (-1) q)) = []) :
   have hz : zp (paddL p (pscaleL (-1) q)) = 0 := by
     rw [← zp_ptrim, h]
     rfl
-  simpa [zp_paddL, zp_pscaleL, add_neg_eq_zero] using hz
+  simpa [zp_paddL, zp_pscaleL, add_neg_eq_zero] using! hz
 
 def icoFactors : List (ℕ × ℕ) :=
 [(25, 1), (1, 1), (0, 1), (81, 4), (9, 4), (1, 4), (64, 9), (49, 9), (25, 9), (121, 16), (81, 16), (144, 25), (121, 25), (81, 25), (64, 25), (49, 25), (36, 25), (16, 25), (9, 25), (4, 25), (1, 25), (289, 36), (169, 36), (121, 36), (225, 64), (169, 64), (121, 64), (81, 64), (49, 64), (25, 64), (9, 64), (1, 64), (529, 100), (441, 100), (361, 100), (289, 100), (169, 100), (121, 100), (81, 100), (49, 100), (9, 100), (1, 100), (1225, 144), (961, 144), (841, 144), (625, 144), (529, 144), (361, 144), (289, 144), (169, 144), (121, 144), (49, 144), (25, 144), (1, 144), (16, 1), (16, 1), (4, 1), (4, 1), (49, 4), (49, 4), (25, 4), (25, 4), (16, 9), (16, 9), (4, 9), (4, 9), (1, 9), (1, 9), (49, 16), (49, 16), (25, 16), (25, 16), (49, 36), (49, 36), (25, 36), (25, 36), (1, 36), (1, 36), (9, 1), (9, 1), (9, 1), (9, 16), (9, 16), (9, 16), (1, 16), (1, 16), (1, 16)]
@@ -60,8 +60,8 @@ theorem icoExtra_bezout :
     zp icoBezoutA * zp icoExtra9 + zp icoBezoutB * zp icoExtra10 = 1 := by
   have h := zp_eq_of_trim
     (p := paddL (pmulL icoBezoutA icoExtra9) (pmulL icoBezoutB icoExtra10))
-    (q := [1]) (by simpa [pscaleL] using icoExtra_bezout_check)
-  simpa [zp_paddL, zp_pmulL, zp] using h
+    (q := [1]) (by simpa [pscaleL] using! icoExtra_bezout_check)
+  simpa [zp_paddL, zp_pmulL, zp] using! h
 
 theorem icoFactors_positive :
     ∀ p ∈ icoFactors, 0 < p.2 ∧ (p.1 = 0 ∨ 0 < p.1) := by

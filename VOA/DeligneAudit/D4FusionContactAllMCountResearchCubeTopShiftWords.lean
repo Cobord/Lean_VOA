@@ -36,7 +36,7 @@ theorem topShiftWord_quartic_static_mem_topIdeal (m s : ℕ) (ks : List ℕ)
           topShift m k (topShiftWord m ks (PowerSeries.coeff s (topCurrent m ^ 4))) -
             n • topShift m k (PowerSeries.coeff t (topCurrent m ^ 4)) ∈
           topQuadraticCubicIdeal m := by
-        simpa only [map_sub,map_nsmul] using
+        simpa only [map_sub,map_nsmul] using!
           topQuadraticCubicIdeal_shift_closed m k ih
       have hstep := (topQuadraticCubicIdeal m).nsmul_mem
         (topShift_quartic_step_mem_topIdeal m t k (by dsimp [t]; omega)) n
@@ -51,7 +51,7 @@ theorem topShiftWord_quartic_static_mem_topIdeal (m s : ℕ) (ks : List ℕ)
             (n * 4) • PowerSeries.coeff (t + k) (topCurrent m ^ 4) := by abel
       rw [htel] at hsum
       simpa only [topShiftWord,List.length_cons,List.sum_cons,pow_succ,t,n,
-        Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hsum
+        Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using! hsum
 
 end
 #print axioms topShiftWord_mem_topIdeal

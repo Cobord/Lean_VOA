@@ -74,12 +74,12 @@ noncomputable def orderedKeys (m n d : ℕ) : List RadicalKey :=
 
 theorem mem_orderedKeys (m n d : ℕ) (k : RadicalKey) :
     k ∈ orderedKeys m n d ↔ k ∈ keyBox n d := by
-  simpa only [orderedKeys] using
+  simpa only [orderedKeys] using!
     (Finset.mem_sort (s := keyBox n d) (r := keyDescLE m))
 
 theorem pairwise_orderedKeys (m n d : ℕ) :
     (orderedKeys m n d).Pairwise (keyDescLE m) := by
-  simpa only [orderedKeys] using
+  simpa only [orderedKeys] using!
     (Finset.pairwise_sort (keyBox n d) (keyDescLE m))
 
 end VOA.DeligneAudit.D4Levi

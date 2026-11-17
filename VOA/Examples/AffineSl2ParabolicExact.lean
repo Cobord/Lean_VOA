@@ -42,7 +42,7 @@ theorem horizontalReflection_mk (k : ℂ) (d : ℕ) (u : U) :
 /-- The actual projection imposing the finite horizontal relation. -/
 def parabolicProjection (k : ℂ) (d : ℕ) : Verma k d →ₗ[ℂ] Parabolic k d :=
   ((highestIdeal k (d : ℂ)).mapQ (parabolicIdeal k d) (LinearMap.id : U →ₗ[U] U)
-    (by simpa using highestIdeal_le_parabolicIdeal k d)).restrictScalars ℂ
+    (by simpa using! highestIdeal_le_parabolicIdeal k d)).restrictScalars ℂ
 
 @[simp] theorem parabolicProjection_mk (k : ℂ) (d : ℕ) (u : U) :
     parabolicProjection k d (Submodule.Quotient.mk u) = Submodule.Quotient.mk u := rfl

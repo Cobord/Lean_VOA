@@ -32,7 +32,7 @@ theorem second_kernel_rel_fundamental (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 �
   have hb := CVSymmetry.cv3Rel_swap hs
   simpa only [CVSymmetry.swapRep_swapRep, CVSymmetry.swapRep_op3,
     Prod.fst_add, Prod.snd_add, Prod.fst_zero, Prod.snd_zero,
-    Nat.add_zero, Nat.zero_add] using hb
+    Nat.add_zero, Nat.zero_add] using! hb
 
 /-- The quotient's stronger first-root relations give its full first-root CV
 partition, with one extra part three and two fewer parts one. -/
@@ -79,7 +79,7 @@ theorem second_kernel_highest_cv (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j)
       3 * (ϱ.1 + ϱ.2) + 2 * ((ν.1 + 1) + ν.2 + (j - 2)) + 1 + 1 by omega]
     exact hn
   · intro q hq
-    exact htr q (by simpa only [Nat.add_zero] using hq)
+    exact htr q (by simpa only [Nat.add_zero] using! hq)
   · intro s hs
     exact Q_high (CVRoots.sl2_highest R).hFF htr 2 s
       (by dsimp only [L]; omega)
@@ -97,14 +97,14 @@ theorem second_kernel_rel_zero (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j)
     rw [show 0 + 2 * ν.1 + 3 * (ϱ.1 + 1) + (j - 2) =
       1 + 2 * (ν.1 + 1) + 3 * ϱ.1 + (j - 2) by omega]
     exact hf.cartan_first
-  · simpa only [Prod.snd_add, Nat.add_zero] using hf.cartan_second
+  · simpa only [Prod.snd_add, Nat.add_zero] using! hf.cartan_second
   · change (R.op 3 0)^[0 + 2 * ν.1 + 3 * (ϱ.1 + 1) + (j - 2) + 1] _ = 0
     rw [show 0 + 2 * ν.1 + 3 * (ϱ.1 + 1) + (j - 2) + 1 =
       1 + 2 * (ν.1 + 1) + 3 * ϱ.1 + (j - 2) + 1 by omega]
     exact hf.lowering_first
-  · simpa only [Prod.snd_add, Nat.add_zero] using hf.lowering_second
-  · simpa only [Prod.fst_add, Nat.zero_add] using second_kernel_first_cv h hj hfirst
-  · simpa only [Prod.snd_add, Nat.add_zero] using hf.second
+  · simpa only [Prod.snd_add, Nat.add_zero] using! hf.lowering_second
+  · simpa only [Prod.fst_add, Nat.zero_add] using! second_kernel_first_cv h hj hfirst
+  · simpa only [Prod.snd_add, Nat.add_zero] using! hf.second
   · change CVRel (R.op 5)
       (parts ((ϱ.1 + 1) + ϱ.2) (ν.1 + ν.2 + (j - 2)) (0 + 0)) _
     rw [show (ϱ.1 + 1) + ϱ.2 = ϱ.1 + ϱ.2 + 1 by omega, Nat.zero_add]

@@ -24,7 +24,7 @@ theorem Lsub_le_evalAt (d : ℕ) :
   change (Finsupp.single e v) d ∈ Fbelow R w d
   by_cases he : e = d
   · subst e
-    simpa only [Finsupp.single_eq_same] using hv
+    simpa only [Finsupp.single_eq_same] using! hv
   · rw [Finsupp.single_eq_of_ne (Ne.symm he)]
     exact Submodule.zero_mem _
 
@@ -32,9 +32,8 @@ theorem single_mem_Lsub_iff (d : ℕ) (v : T) :
     Finsupp.single d v ∈ Lsub R w ↔ v ∈ Fbelow R w d := by
   constructor
   · intro hv
-    have h := Lsub_le_evalAt R w d hv
-    simpa only [Submodule.mem_comap, evalAt, LinearMap.coe_mk, AddHom.coe_mk,
-      Finsupp.single_eq_same] using h
+    have h : (Finsupp.single d v) d ∈ Fbelow R w d := Lsub_le_evalAt R w d hv
+    simpa only [Finsupp.single_eq_same] using h
   · exact single_mem_Lsub R w
 
 def tag (d : ℕ) : T →ₗ[ℂ] ((ℕ →₀ T) ⧸ Lsub R w) :=
@@ -89,7 +88,7 @@ theorem range_symbol (d : ℕ) :
     refine ⟨⟨wordOp R l w, hv⟩, ?_⟩
     change tag R w d (wordOp R l w) = wordOp (grRep R w) l (wg R w)
     rw [tag_apply]
-    simpa only [hl] using (grRep_word R w l).symm
+    simpa only [hl] using! (grRep_word R w l).symm
 
 /-- Finite source implies finite actual cyclic graded pieces, not finite ambient quotient. -/
 theorem finite_cycDeg [FiniteDimensional ℂ T] (d : ℕ) :

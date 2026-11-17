@@ -29,8 +29,10 @@ noncomputable def lorentzianLattice : IntegralLattice where
 
 theorem lorentzian_form_apply (x y : lorentzianLattice.carrier) :
     lorentzianLattice.form x y = x 0 * y 1 + x 1 * y 0 := by
-  change Matrix.toBilin' hyperbolicGram x y = _
-  simp [hyperbolicGram, Matrix.toBilin'_apply, Fin.sum_univ_two]
+  have hx : ∀ x y : Fin 2 → ℤ, Matrix.toBilin' hyperbolicGram x y = x 0 * y 1 + x 1 * y 0 := by
+    intro x y
+    simp [hyperbolicGram, Matrix.toBilin'_apply, Fin.sum_univ_two]
+  exact hx x y
 
 theorem lorentzian_even : lorentzianLattice.Even := by
   intro x
@@ -47,9 +49,9 @@ theorem lorentzian_gram_det : hyperbolicGram.det = -1 := by
 theorem lorentzian_form_nondegenerate : lorentzianLattice.form.Nondegenerate := by
   have hleft : lorentzianLattice.form.SeparatingLeft := by
     intro x hx
-    have hx0 := hx ![0, 1]
-    have hx1 := hx ![1, 0]
-    simp only [lorentzian_form_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+    have hx0 := (lorentzian_form_apply x ![0, 1]).symm.trans (hx ![0, 1])
+    have hx1 := (lorentzian_form_apply x ![1, 0]).symm.trans (hx ![1, 0])
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.head_cons, mul_one, mul_zero, zero_add, add_zero] at hx0 hx1
     apply funext
     intro i
@@ -65,8 +67,8 @@ theorem lorentzian_not_posDef : ¬ lorentzianLattice.PosDef := by
     intro heq
     have := congrFun heq 0
     norm_num at this
-  have hp := h ![1, -1] hx
-  norm_num [lorentzian_form_apply] at hp
+  have hp := lt_of_lt_of_eq (h ![1, -1] hx) (lorentzian_form_apply _ _)
+  norm_num at hp
 
 /-- The base-changed isotropic basis; shared carrier with the standard lattice. -/
 noncomputable def lorentzianRealBasis :
@@ -84,7 +86,7 @@ theorem lorentzian_real_form_basis (i j : Fin 2) :
   have h := formℝ_tmul lorentzianLattice (Pi.single i (1 : ℤ)) (Pi.single j (1 : ℤ))
   trans (lorentzianLattice.form (Pi.single i (1 : ℤ)) (Pi.single j (1 : ℤ)) : ℝ)
   · exact h
-  rw [lorentzian_form_apply]
+  refine (congrArg (fun z : ℤ => (z : ℝ)) (lorentzian_form_apply _ _)).trans ?_
   fin_cases i <;> fin_cases j <;> norm_num [Pi.single_apply]
 
 theorem lorentzian_real_pairing_coordinate

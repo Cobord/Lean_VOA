@@ -63,7 +63,7 @@ theorem L3_H4 (hm2 : 2 ≤ m) : (V2mPlus m hm).smul (HP m hm 1) 4 (HP m hm 2) = 
   have hg : (V2mPlus m hm).smul (HP m hm 1) 4 (HP m hm 2) ∈ (V2mPlus m hm).grading 1 := by
     have := (V2mPlus m hm).toPreVertexAlgebra.smul_mem_grading (V2mPlus m hm).conformal_mem
       (HP_mem_grading m hm 2 (by norm_num) (by norm_num)) 4
-    simpa using this
+    simpa using! this
   rw [grading_one_eq_bot m hm hm2, Submodule.mem_bot] at hg
   exact hg
 

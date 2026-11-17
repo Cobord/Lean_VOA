@@ -143,12 +143,12 @@ theorem superZeroMode_koszul_antisymm_mod_superO₂
   let f : ℕ → 𝒱 := fun j => ((j.factorial : ℂ)⁻¹) •
     (sgn (-1 - (j : ℤ))) • ((V.L (-1) ^ j) (V.smul a (j : ℤ) b))
   have hfin : (Function.support f).Finite := by
-    simpa only [f, zero_add] using V.superSkewFamily_support_finite a b 0
+    simpa only [f, zero_add] using! V.superSkewFamily_support_finite a b 0
       (fun j => ((j.factorial : ℂ)⁻¹))
       (fun j x => (sgn (-1 - (j : ℤ))) • ((V.L (-1) ^ j) x))
       (fun j => by simp)
   have hsk : V.smul b 0 a = koszul p q • ∑ᶠ j : ℕ, f j := by
-    simpa [f] using V.superSmul_eq_skew_Lpow hap hbq 0
+    simpa [f] using! V.superSmul_eq_skew_Lpow hap hbq 0
   apply (Submodule.Quotient.mk_eq_zero Q).mp
   change Q.mkQ (V.smul a 0 b + koszul p q • V.smul b 0 a) = 0
   rw [map_add, map_smul, hsk, map_smul, smul_smul, koszul_mul_self, one_smul,

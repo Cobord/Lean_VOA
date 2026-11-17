@@ -55,7 +55,7 @@ theorem Lop_neg_one_negWordVir_mem (w : List ℕ) :
       · have h := Lop_mem_virFil_succ c a ih
         rw [show energyVir w + 1 + a + 2 = energyVir (a :: w) + 1 by
           rw [energyVir_cons]; omega] at h
-        simpa using h
+        simpa using! h
       · have h := negWordVir_mem_virFil c (w := (a + 1) :: w) (ℓ := (a :: w).length)
           (N := energyVir (a :: w) + 1) (by simp) (by simp only [energyVir_cons]; omega)
         rwa [negWordVir_cons] at h
@@ -79,7 +79,7 @@ theorem applyWord_mem_virFil (r : List ℕ) {ℓ N : ℕ} {v : VirUniv c}
     (hv : v ∈ virFil c ℓ (N : ℤ)) :
     applyWord c r v ∈ virFil c (ℓ + r.length) ((N + energyVir r : ℕ) : ℤ) := by
   induction r with
-  | nil => simpa [applyWord] using hv
+  | nil => simpa [applyWord] using! hv
   | cons a r ih =>
       have h := Lop_mem_virFil_succ c a ih
       change Lop c (-(a : ℤ) - 2) (applyWord c r v) ∈ _
@@ -200,7 +200,7 @@ theorem bsaState_lead (N : ℕ) : ∀ r, StateLead c N r := by
     refine ⟨?_, fun m hm => by omega⟩
     rw [bsaState_zero]
     have := negWordVir_mem_virFil c (w := []) (ℓ := 0) (N := 0) le_rfl rfl
-    simpa using this
+    simpa using! this
   · obtain ⟨hA, hB⟩ := bsaSource_lead_aux c N r ih
     rw [StateLead, bsaState_eq_source c N r hpos]
     refine ⟨Submodule.smul_mem _ _ hA, fun m hm => ?_⟩
@@ -208,6 +208,7 @@ theorem bsaState_lead (N : ℕ) : ∀ r, StateLead c N r := by
     subst hm
     rw [smul_sub, smul_smul] at h
     convert h using 3
+    rw [bsaLead]
 
 /-- **The leading term of the vacuum singular vector.** For `N = 2n+2`, the terminal BSA
 source is `bsaLead N n • L_{-2}^{n+1}|0⟩` modulo words of length `≤ n`. -/
@@ -222,10 +223,10 @@ theorem bsaSource_lead (n : ℕ) :
 /-- `jetSum c m k = Σ_{e₁+⋯+e_m=k} L_{-e₁-2} ⋯ L_{-e_m-2}|0⟩`, defined recursively. -/
 def jetSum : ℕ → ℕ → VirUniv c
   | 0, k => if k = 0 then vacVec c else 0
-  | m + 1, k => ∑ p ∈ Finset.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum m p.2)
+  | m + 1, k => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum m p.2)
 
 theorem jetSum_succ (m k : ℕ) :
-    jetSum c (m + 1) k = ∑ p ∈ Finset.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2) :=
+    jetSum c (m + 1) k = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2) :=
   rfl
 
 theorem jetSum_zero_right : ∀ m, jetSum c m 0 = negWordVir c (List.replicate m 0)
@@ -246,14 +247,14 @@ theorem Lop_neg_one_jetSum : ∀ (m k : ℕ),
       rw [jetSum_succ, jetSum_succ, map_sum]
       simp only [Lop_neg_one_comm, Lop_neg_one_jetSum m, map_smul]
       rw [Finset.sum_add_distrib]
-      have hk : ((k : ℂ) + 1) • ∑ p ∈ Finset.antidiagonal (k + 1),
+      have hk : ((k : ℂ) + 1) • ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1),
             Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2) =
-          ∑ p ∈ Finset.antidiagonal (k + 1),
+          ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1),
             ((p.1 : ℂ) • Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2)) +
-          ∑ p ∈ Finset.antidiagonal (k + 1), ((p.2 : ℂ) • Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2)) := by
+          ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1), ((p.2 : ℂ) • Lop c (-(p.1 : ℤ) - 2) (jetSum c m p.2)) := by
         rw [← Finset.sum_add_distrib, Finset.smul_sum]
         refine Finset.sum_congr rfl fun p hp => ?_
-        rw [Finset.mem_antidiagonal] at hp
+        rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
         rw [← add_smul]
         congr 1
         rw [show (k : ℂ) + 1 = ((k + 1 : ℕ) : ℂ) by push_cast; ring, ← hp]
@@ -286,7 +287,7 @@ theorem hasJetRelations_of_singular (n : ℕ) (s : VirUniv c) (hs : s ∈ maxIde
     | zero => exact hs
     | succ k ih => exact Submodule.smul_mem _ _ (Lop_mem_maxIdealVir c _ ih)
   · induction k with
-    | zero => rw [jetSum_zero_right]; simpa using hlead
+    | zero => rw [jetSum_zero_right]; simpa using! hlead
     | succ k ih =>
         have h := Lop_neg_one_mem_virFil c ih
         have hk : ((k : ℂ) + 1) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero k

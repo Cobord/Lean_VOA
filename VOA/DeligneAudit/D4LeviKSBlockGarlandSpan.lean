@@ -46,7 +46,7 @@ theorem ksBlockTheta_monomial_xx_mem (q n d k s : ℕ)
         omega
       have hd : s + ∑ j, β j = d := by
         have hh := congrArg Prod.snd hweight
-        simpa only [Prod.snd_add, hsum, Nat.add_comm] using hh
+        simpa only [Prod.snd_add, hsum, Nat.add_comm] using! hh
       subst n
       rw [mul_comm, ksBlockTheta_xx_mul_mono]
       apply Submodule.subset_span
@@ -86,12 +86,12 @@ theorem ksBlockTheta_component_J_mem (q n d : ℕ) (P : R) (hP : P ∈ J q) :
         intro B
         rw [smul_eq_mul, ← mul_assoc]
         exact ih (B * A)
-  simpa only [one_mul] using hmain P hP 1
+  simpa only [one_mul] using! hmain P hP 1
 
 theorem ksBlockTheta_J_mem (q n d : ℕ) (P : R)
     (hP : P ∈ J q) (hd : IsWeightedHomogeneous om P (n, d)) :
     ksBlockTheta n P ∈ ksBlockGarlandSpan q n d := by
-  simpa only [hd.weightedHomogeneousComponent_same] using
+  simpa only [hd.weightedHomogeneousComponent_same] using!
     ksBlockTheta_component_J_mem q n d P hP
 
 theorem ksBlockGarlandSpan_le_image (q n d : ℕ) :
@@ -108,7 +108,7 @@ theorem ksBlockGarlandSpan_le_image (q n d : ℕ) :
       rw [mono_eq]
       exact isWeightedHomogeneous_monomial om _ 1 (ksModeOccupation_weight l β)
     have hh := (xx_hom k s).mul hb
-    simpa only [Prod.mk_add_mk, hd] using hh
+    simpa only [Prod.mk_add_mk, hd] using! hh
   · exact ksBlockTheta_xx_mul_mono k l s β
 
 /-- Exact identification, degree by degree, of the occupation ideal with the

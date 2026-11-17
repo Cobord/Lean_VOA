@@ -44,8 +44,8 @@ theorem conformal_mem_towerSpan (W : VertexOperatorAlgebra V) {ι : Type*}
     apply Submodule.subset_span
     exact ⟨(i, n+1), by dsimp only; rw [pow_succ', Module.End.mul_apply]⟩
   | zero => simp
-  | add x y _ _ hx hy => simpa using (towerSpan W f).add_mem hx hy
-  | smul a x _ hx => simpa using (towerSpan W f).smul_mem a hx
+  | add x y _ _ hx hy => simpa using! (towerSpan W f).add_mem hx hy
+  | smul a x _ hx => simpa using! (towerSpan W f).smul_mem a hx
 
 theorem mk₂_virWord_mem (W : VertexOperatorAlgebra V) {ι : Type*}
     (f : ι → A₂ W) (x : V) (hx : mk₂ W x ∈ towerSpan W f) (ks : List ℕ) :
@@ -114,7 +114,7 @@ theorem conformalTowerSpan_of_dongJiangVirasoroSpan
       · rw [hN n hhi, map_zero]; exact Submodule.zero_mem _
       have hi : (n+1).toNat < M+1 := by dsimp [M]; omega
       have he : (((n+1).toNat : ℕ) : ℤ)-1 = n := by omega
-      simpa only [f, seeds, Sum.elim_inr, he] using hseed (.inr ⟨(n+1).toNat, hi⟩)
+      simpa only [f, seeds, Sum.elim_inr, he] using! hseed (.inr ⟨(n+1).toNat, hi⟩)
     · rw [(mk₂_eq_zero_iff W).mpr hx]; exact Submodule.zero_mem _
   have hall (x : V) : mk₂ W x ∈ towerSpan W f := by
     have hx : x ∈ Submodule.span ℂ (Set.range (fun p : List ℕ × djSeeds W u v =>
@@ -124,8 +124,8 @@ theorem conformalTowerSpan_of_dongJiangVirasoroSpan
       obtain ⟨⟨ks, ⟨z, hz⟩⟩, rfl⟩ := hy
       exact mk₂_virWord_mem W f z (hbase z hz) ks
     | zero => simp
-    | add x y _ _ hx hy => simpa using (towerSpan W f).add_mem hx hy
-    | smul a x _ hx => simpa using (towerSpan W f).smul_mem a hx
+    | add x y _ _ hx hy => simpa using! (towerSpan W f).add_mem hx hy
+    | smul a x _ hx => simpa using! (towerSpan W f).smul_mem a hx
   apply conformalTowerSpan_of_towerSpan_eq_top W f
   apply top_unique
   intro y _

@@ -41,11 +41,11 @@ theorem linear_W_squared (i : Fin 4)
     (hf : ∀ x, f (generator m hm 0 * x) = twistedRow m i 0 * f x) :
     f (generator m hm 1 * generator m hm 1) = twistedRow m i 1 * twistedRow m i 1 := by
   have hp (n : ℕ) : f (generator m hm 0 ^ n) = twistedRow m i 0 ^ n := by
-    simpa [h1] using linear_omega_power m hm f _ hf n 1
+    simpa [h1] using! linear_omega_power m hm f _ hf n 1
   rw [← pow_two, W_squared]
   simp only [map_add, map_sub, map_smul, smul_eq_mul, hp, hv, hf,
     linear_omega_power m hm f _ hf]
-  simpa [pow_two, hv] using (twistedRow_W_squared m i).symm
+  simpa [pow_two, hv] using! (twistedRow_W_squared m i).symm
 
 theorem linear_W_E (hm2 : 2 ≤ m) (i : Fin 4)
     (f : VOA.A (V2mPlus m hm) →ₗ[ℂ] ℂ)
@@ -109,35 +109,39 @@ theorem candidate_all_tests (hm2 : 2 ≤ m) (i : Fin 4)
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 1)
         (V2mPlus m hm).vacuum_mem_grading_zero j.val
       change f (_ * _) = _
-      simpa [spanningClass, spanningState, candidateValues, hunit, hv, mul_comm] using h
+      simpa [spanningClass, spanningState, candidateValues, hunit, hv, mul_comm] using! h
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 1)
         (WP_mem_grading m hm) j.val
       change f (_ * _) = iterateValue _ 4 _ * f (generator m hm 1 * generator m hm 1) at h
-      simpa [spanningClass, spanningState, candidateValues, hww, mul_left_comm] using h
+      simpa [spanningClass, spanningState, candidateValues, hww, mul_left_comm] using! h
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 1) hyv j.val
       rw [hy, mul_smul_comm, map_smul, hwe] at h
       convert h using 1
-      simp only [candidateValues, Int.cast_natCast, smul_eq_mul]
-      change twistedRow m i 1 * (iterateValue (twistedRow m i 0) m j.val *
-        (twistedRow m i 2 / 2)) = _
-      ring
+      all_goals first
+        | rfl
+        | (simp only [candidateValues, Int.cast_natCast, smul_eq_mul]
+           change twistedRow m i 1 * (iterateValue (twistedRow m i 0) m j.val *
+             (twistedRow m i 2 / 2)) = _
+           ring)
   · rcases j with (j | j) | j
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 2)
         (V2mPlus m hm).vacuum_mem_grading_zero j.val
-      simpa [spanningClass, spanningState, candidateValues, hunit, hv, mul_comm] using h
+      simpa [spanningClass, spanningState, candidateValues, hunit, hv, mul_comm] using! h
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 2)
         (WP_mem_grading m hm) j.val
       change f (_ * _) = iterateValue _ 4 _ * f (generator m hm 2 * generator m hm 1) at h
       rw [(W_commute_E m hm hm2).eq.symm, hwe] at h
       simpa [spanningClass, spanningState, candidateValues, mul_comm, mul_left_comm,
-        mul_assoc] using h
+        mul_assoc] using! h
     · have h := linear_mul_omegaIter m hm f _ hf (generator m hm 2) hyv j.val
       rw [hy, mul_smul_comm, map_smul, he] at h
       convert h using 1
-      simp only [candidateValues, Int.cast_natCast, smul_eq_mul]
-      change twistedRow m i 2 * (iterateValue (twistedRow m i 0) m j.val *
-        (twistedRow m i 2 / 2)) = _
-      ring
+      all_goals first
+        | rfl
+        | (simp only [candidateValues, Int.cast_natCast, smul_eq_mul]
+           change twistedRow m i 2 * (iterateValue (twistedRow m i 0) m j.val *
+             (twistedRow m i 2 / 2)) = _
+           ring)
 
 /-- The last index in each of the three conformal columns. -/
 def boundaryIndex : Fin 3 → Index m :=

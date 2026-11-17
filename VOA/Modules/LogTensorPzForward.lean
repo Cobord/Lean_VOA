@@ -44,10 +44,10 @@ variable (Y : LogIntertwiningOperator N₁.toWeakModule N₂.toWeakModule N.toWe
 noncomputable def forward : C2Rigid.RestrictedDual N.toGW →ₗ[ℂ]
     BilinearDual (M₁ := M₁) (M₂ := M₂) where
   toFun r := LinearMap.mk₂ ℂ (fun x y => completedPair N r (evaluateOne N₁ N₂ N Y x y))
-    (fun x z y => by dsimp only; simp)
-    (fun s x y => by dsimp only; simp)
-    (fun x y z => by dsimp only; simp)
-    (fun s x y => by dsimp only; simp)
+    (fun x z y => by simp)
+    (fun s x y => by simp)
+    (fun x y z => by simp)
+    (fun s x y => by simp)
   map_add' r s := by ext x y; simp only [LinearMap.mk₂_apply,map_add,LinearMap.add_apply]
   map_smul' s r := by
     ext x y
@@ -92,7 +92,7 @@ theorem paired_current_logZero {d : ℤ} {u : V} (hu : u ∈ W.grading d)
     have h := IsLogIntertwining.jacR_support_finite (A₁ := N₁.toWeakModule) Y.1 u x y 0 p n 0
     change (Function.support (fun i : ℤ =>
       cbz p i • Y.1 (p+n-i) 0 (mode (N₁.YM u) (0+i) x) y)).Finite at h
-    simpa only [zero_add] using h
+    simpa only [zero_add] using! h
   rw [map_add,map_finsum (C2Rigid.dualPairingFlip N.toGW r) hfin] at hp
   simp only [map_smul,C2Rigid.dualPairingFlip_apply,smul_eq_mul] at hp
   rw [hp,rhoL_apply,forward_homogeneous N₁ N₂ N Y hx (N₂.mode_mem_weight hu hy p) hr]

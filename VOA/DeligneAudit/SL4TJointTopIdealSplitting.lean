@@ -48,7 +48,11 @@ theorem det_update_column {V : Type*} [AddCommGroup V] [Module A V] {j : ℕ}
   by_cases hc : c = b
   · subst hc
     simp
+    exact (Matrix.updateCol_self (M := fun i c => L i (u c)) (j := c) (i := i)
+      (c := fun i => L i x)).symm
   · simp [Function.update_of_ne hc, Matrix.updateCol_ne hc]
+    exact (Matrix.updateCol_ne (M := fun i c => L i (u c)) (i := i)
+      (c := fun i => L i x) hc).symm
 
 section Splitting
 
@@ -98,7 +102,11 @@ theorem det_topRow_smul_column (u : Fin j → A[X]) (b : Fin j) (s : A) :
     ext i
     rw [← smul_eq_C_mul, map_smul]
     rfl
-  rw [hcol, Matrix.det_updateCol_smul, Matrix.updateCol_eq_self]
+  rw [hcol]
+  refine (Matrix.det_updateCol_smul _ b s _).trans ?_
+  exact congrArg (fun M : Matrix (Fin j) (Fin j) A => s * M.det)
+    (Matrix.updateCol_eq_self
+      (fun i c => topRowFunctional P r j i (u c) : Matrix (Fin j) (Fin j) A) b)
 
 /-- **The joint top-row ideal splits.** -/
 theorem jointTopIdeal_eq_sup (h : ℕ) (s : A) :
@@ -186,8 +194,12 @@ theorem jointTopIdeal_eq_sup (h : ℕ) (s : A) :
           · obtain ⟨b₀, hb₀⟩ := hz
             by_cases hz2 : ∃ b₁, b₁ ≠ b₀ ∧ c b₁ = 0
             · obtain ⟨b₁, hne, hb₁⟩ := hz2
-              rw [Matrix.det_zero_of_column_eq hne (fun i => by rw [hc b₁, hc b₀, hb₁, hb₀]),
-                zero_mul]
+              have hdet : Matrix.det (fun i b => topRowFunctional P r j i (u b)) = 0 :=
+                Matrix.det_zero_of_column_eq (M := fun i b => topRowFunctional P r j i (u b)) hne
+                  (fun i => show topRowFunctional P r j i (u b₁) =
+                      topRowFunctional P r j i (u b₀) by
+                    rw [hc b₁, hc b₀, hb₁, hb₀])
+              rw [hdet, zero_mul]
               exact Ideal.zero_mem _
             · have hpos : ∀ b, b ≠ b₀ → 1 ≤ c b := fun b hb => by
                 by_contra hlt

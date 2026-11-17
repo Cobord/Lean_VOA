@@ -15,7 +15,7 @@ theorem vacuumCoefficient_zero_ne_zero : vacuumCoefficient 0 ≠ 0 := by
   unfold vacuumCoefficient
   norm_num only [Nat.cast_zero, mul_zero, sub_zero, pow_zero, one_mul]
   rw [he, map_smul, vacuumProbe_vacuum]
-  simpa only [smul_eq_mul, mul_one] using hc
+  simpa only [smul_eq_mul, mul_one] using! hc
 
 private theorem Xico_L (k : ℕ) (hk : 0 < k) : V2v.L (k : ℤ) (Xico : Sp) = 0 := by
   have he := ((mem_prim _).mp Xico_ambient_primary).2 (k - 1)
@@ -26,7 +26,7 @@ private theorem chargedProbe_vacuum_tower :
   rw [show 18 = 1 + 17 by omega, pow_add, pow_one, Module.End.mul_apply,
     chargedProbe_L, neg_neg]
   have hz : (V2m 1 le_rfl).L 2 (Xico : Sp) = 0 := by
-    simpa using Xico_L 2 (by omega)
+    simpa using! Xico_L 2 (by omega)
   rw [hz, map_zero]
 
 /-- The canonical self coefficient at its lowest level is the certified sixth coupling. -/

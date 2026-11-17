@@ -42,7 +42,7 @@ theorem cyclicRelationObstruction_zero_of_zeroMode_separation
   refine ⟨0, P.zero_mem, ?_⟩
   ext r
   obtain ⟨a, w, _, α, β, δ, hx, hc, hr, hn⟩ := hs r
-  simpa using relation_zero_of_eigenvalue_separation
+  simpa using! relation_zero_of_eigenvalue_separation
     (mode (A.YM a) (w - 1)) r.val.val x α β δ hx hc hr hn
 
 /-- Full mode-algebra splitting from zero-mode separation of all relation

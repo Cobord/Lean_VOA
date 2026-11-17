@@ -79,6 +79,9 @@ open VertexOperatorAlgebra
 open Module (End)
 open scoped BigOperators TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -301,7 +304,12 @@ noncomputable def headline_buildMUModuleData {U : AMod W} {h : ℂ} {YMU : 𝒱 
 
 /-! ### The per-`U` family input to `MURepFamily` from a family of carrier bridges -/
 
-/-- **A per-`U` family of carrier-bridge data** — the carried Dong–Jiang identification for every
+/-- **EMPTY TYPE (for every `W`).** See `VHat.CarrierBridgeFamily.false` / `VHat.CarrierBridgeDataFamily.false`
+(`ZhuVermaAnArchCarrierBridgeVacuity.lean`): `hvac` transported along `bridge` makes `1₍₋₁₎` act as the identity
+on `M̄(U)`, whose augmentation then forces `U = 0` and contradicts `hbot` (`AMod W` contains the zero module).
+Any theorem taking this structure as a hypothesis is vacuous.
+
+**A per-`U` family of carrier-bridge data** — the carried Dong–Jiang identification for every
 bottom module, together with the named grading/finiteness data.  This is exactly the input the
 headline `MURepFamily` consumes, packaged through the bridge transport. -/
 structure CarrierBridgeFamily (W : VertexOperatorAlgebra 𝒱) where
@@ -351,7 +359,9 @@ end CarrierBridgeFamily
 
 end VHat
 
-/-- **Main connection — the Zhu bijection from a family of carrier bridges.**
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**Main connection — the Zhu bijection from a family of carrier bridges.**
 
 The linchpin assembled end-to-end: from a `CarrierBridgeFamily W` (the Dong–Jiang Prop 3.4/3.5
 identifications `M̄(U) ≅ MU W U` for every bottom, plus the named grading data), the transported

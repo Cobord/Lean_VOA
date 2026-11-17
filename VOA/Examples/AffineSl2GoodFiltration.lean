@@ -161,7 +161,7 @@ theorem currentCreation_mem_piece_one (k : ℂ) (hk : k + 2 ≠ 0) (a : Fin 3) (
     J k a (-(r : ℤ) - 1) (vacuumA k) ∈ correctedAffineRPiece k hk 1 := by
   have h := correctedWordState_mem_piece k hk [(Generator.current a, r)]
     (p := 1) (by simp)
-  simpa [correctedWordState, generatorState, smul_currentState_eq_J] using h
+  simpa [correctedWordState, generatorState, smul_currentState_eq_J, closed_vacuum] using h
 
 /-- In particular, every current state has corrected degree one. -/
 theorem currentState_mem_piece_one (k : ℂ) (hk : k + 2 ≠ 0) (a : Fin 3) :
@@ -375,9 +375,10 @@ private theorem generatorMode_word_mem_piece_succ (k : ℂ) (hk : k + 2 ≠ 0) :
       · obtain ⟨r, hr⟩ : ∃ r : ℕ, m = -(r : ℤ) - 1 :=
           ⟨(-m - 1).toNat, by omega⟩
         rw [hr]
-        simpa only [correctedWordState, List.length_cons, List.length_nil,
-          zero_add] using
-          correctedWordState_mem_piece k hk [(gr, r)] (p := 1) (by simp)
+        have h := correctedWordState_mem_piece k hk [(gr, r)] (p := 1) (by simp)
+        simp only [correctedWordState, List.length_cons, List.length_nil,
+          zero_add] at h ⊢
+        exact h
   | ((headGr, r) :: rest), gr, m => by
       have ih := fun gr' j => generatorMode_word_mem_piece_succ k hk rest gr' j
       cases gr with
@@ -589,7 +590,7 @@ theorem weightTwoDegreeOneSpan_le_weightPiece (k : ℂ) (hk : k + 2 ≠ 0) :
   intro x hx
   rcases hx with hx | hx
   · obtain ⟨a, rfl⟩ := hx
-    simpa only [show (-(1 : ℤ) - 1) = -2 by norm_num,
+    simpa only [Nat.cast_one, SetLike.mem_coe, show (-(1 : ℤ) - 1) = -2 by norm_num,
       show (((1 + 1 : ℕ) : ℤ)) = 2 by norm_num] using
       currentCreation_mem_weightPiece_one k hk a 1
   · rw [Set.mem_singleton_iff] at hx
@@ -626,7 +627,7 @@ private theorem piHom_two_word_length_one_mem_span (k : ℂ) (hk : k + 2 ≠ 0)
               (affineSl2VOA_closed k hk).grading 2 := by
             simpa using (currentCreation_mem_weightPiece_one k hk a 1).2
           rw [piHom_of_mem (affineSl2VOA_closed k hk) hgrade]
-          simpa only [show (-(1 : ℤ) - 1) = -2 by norm_num] using
+          simpa only [Nat.cast_one, show (-(1 : ℤ) - 1) = -2 by norm_num] using
             currentDerivative_mem_weightTwoDegreeOneSpan k hk a
         · have hgrade := (currentCreation_mem_weightPiece_one k hk a r).2
           have hne : ((r + 1 : ℕ) : ℤ) ≠ 2 := by
@@ -640,7 +641,8 @@ private theorem piHom_two_word_length_one_mem_span (k : ℂ) (hk : k + 2 ≠ 0)
         · subst r
           have hstate : correctedWordState k hk [(Generator.sugawara, 0)] =
               (affineSl2VOA_closed k hk).conformalVector := by
-            simpa only [correctedWordState, generatorState] using
+            simpa only [correctedWordState, generatorState, Nat.cast_zero, neg_zero,
+              zero_sub] using
               (affineSl2VOA_closed k hk).smul_vacuum_neg_one
                 (affineSl2VOA_closed k hk).conformalVector
           rw [hstate, piHom_of_mem (affineSl2VOA_closed k hk)

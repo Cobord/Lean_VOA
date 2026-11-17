@@ -71,9 +71,9 @@ theorem isDefectBlock_zero_iff {S : M →ₗ[ℂ] FormalQSeries} :
     IsDefectBlock A S 0 ↔ IsInsertionFormalBlock A S := by
   constructor
   · intro h
-    exact ⟨h.vanish, h.negTwo, fun w => by simpa using h.omega w⟩
+    exact ⟨h.vanish, h.negTwo, fun w => by simpa using! h.omega w⟩
   · intro h
-    exact ⟨h.vanish, h.negTwo, fun w => by simpa using h.omega w⟩
+    exact ⟨h.vanish, h.negTwo, fun w => by simpa using! h.omega w⟩
 
 theorem IsDefectBlock.add {S T E F : M →ₗ[ℂ] FormalQSeries} {b : ℂ}
     (hSb : ∀ w, S w ∈ QSeriesAt b) (hTb : ∀ w, T w ∈ QSeriesAt b)
@@ -133,7 +133,7 @@ theorem IsDefectBlock.sub_formal {S T E : M →ₗ[ℂ] FormalQSeries} {b : ℂ}
     IsDefectBlock A (S - T) E := by
   have hT' := (isDefectBlock_zero_iff.mpr hT).smul (-1)
   have h := hS.add hSb (fun w => (QSeriesAt b).smul_mem (-1) (hTb w)) hT'
-  simpa only [smul_zero, add_zero, neg_one_smul, ← sub_eq_add_neg] using h
+  simpa only [smul_zero, add_zero, neg_one_smul, ← sub_eq_add_neg] using! h
 
 theorem isInsertionFormalBlock_sum {κ : Type*} (s : Finset κ)
     (T : κ → M →ₗ[ℂ] FormalQSeries) {b : ℂ} (hTb : ∀ i ∈ s, ∀ w, T i w ∈ QSeriesAt b)
@@ -157,7 +157,7 @@ theorem isInsertionFormalBlock_sum {κ : Type*} (s : Finset κ)
         rw [LinearMap.coe_sum, Finset.sum_apply]
         exact Submodule.sum_mem _ fun i hi => hTb i (Finset.mem_insert_of_mem hi) w)
       (isDefectBlock_zero_iff.mpr hih)
-    simpa only [add_zero] using h
+    simpa only [add_zero] using! h
 
 /-! ## Leading coefficients of defect blocks -/
 
@@ -176,7 +176,6 @@ theorem leading_fzRes_pos (hsupp : ∀ w, S w ∈ QSeriesAt b)
     by_contra hn
     exact hm (by rw [hK m (by omega), map_zero, qConv_zero_right, smul_zero])
   have hev := congrArg (fun f : FormalQSeries => f b) hr
-  dsimp only at hev
   rw [Pi.add_apply, finsum_apply hfin] at hev
   simp only [Pi.smul_apply, smul_eq_mul, Pi.zero_apply, Cusp.qConv_leading hsupp] at hev
   rw [← Cusp.fullNegTwo_cusp A hp a w, map_add,
@@ -221,7 +220,6 @@ theorem leading_conformal (hsupp : ∀ w, S w ∈ QSeriesAt b)
     by_contra hn
     exact hm (by rw [hK m (by omega), map_zero, qConv_zero_right])
   have hv := congrArg (fun f : FormalQSeries => f b) (hS.omega w)
-  dsimp only at hv
   rw [Pi.add_apply, Pi.add_apply, finsum_apply hfin] at hv
   simp only [Cusp.qConv_leading hsupp, qDeriv] at hv
   have htail : (Function.support fun m : ℕ =>

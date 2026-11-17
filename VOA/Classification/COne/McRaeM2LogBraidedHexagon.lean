@@ -41,7 +41,7 @@ theorem hexAB_mem {s : ℝ} (hs : s = 1 ∨ s = -1) {r : ℤ}
     (hre : u.re < -2) (him : 0 < s * u.im) : -hexL2 r u∈overlapDomain := by
   have he : -hexL2 r u = ellK s u := by rw [hexL2, hrs, ellK]; ring
   rw [he]
-  have him1 : 0 < s * (1 + u).im := by simpa using him
+  have him1 : 0 < s * (1 + u).im := by simpa using! him
   have hre1 : (1 + u).re < 0 := by simp; linarith
   have hn : 1 < ‖1 + u‖ := by
     have := Complex.abs_re_le_norm (1 + u)
@@ -80,7 +80,7 @@ theorem hexCD_mem {s : ℝ} (hs : s = 1 ∨ s = -1) {r : ℤ}
   have hreneg : u.re < 0 := by
     have := Complex.normSq_nonneg u
     linarith
-  have him1 : 0 < s * (1 + u).im := by simpa using him
+  have him1 : 0 < s * (1 + u).im := by simpa using! him
   have hre1 : 0 < (1 + u).re := by simp; linarith
   refine ⟨?_, ?_⟩
   · rw [ellM_re]
@@ -274,7 +274,7 @@ theorem hexagon_weak (r : ℤ) (hr : r = 0 ∨ r = -1) :
   -- elementary facts on the half plane
   have hsl_of : ∀ {w : ℂ}, 0 < s * w.im → w∈Complex.slitPlane := fun h =>
     mem_slitPlane_of_sim' h
-  have h1im : ∀ {u : ℂ}, 0 < s * u.im → 0 < s * (1+u).im := fun h => by simpa using h
+  have h1im : ∀ {u : ℂ}, 0 < s * u.im → 0 < s * (1+u).im := fun h => by simpa using! h
   have hdiv : ∀ {u : ℂ}, 0 < s * u.im → 1 + Complex.exp (-hexL2 r u) = u/(1+u) := by
     intro u hu
     exact one_add_exp_neg_hexL2 r (Complex.slitPlane_ne_zero (hsl_of (h1im hu)))
@@ -373,7 +373,7 @@ theorem hexagon_weak (r : ℤ) (hr : r = 0 ∨ r = -1) :
       (tensorModule_finGen hC2 _ N₃ (tensorModule_finGen hC2 N₁ N₂ h₁ h₂) h₃)
       (tensorModule_finGen hC2 N₁ N₂ h₁ h₂) _ _ hx hy hz _ _ (ℓ₀ := fun t => t)
       (ℓ₂ := fun _ => 0) differentiableAt_id (differentiableAt_const _)
-      (by simpa using ht.1)
+      (by simpa using! ht.1)
   have hO : IsOpen (overlapDomain ∩ {t : ℂ | t.re < -1}) :=
     isOpen_overlapDomain.inter (isOpen_lt Complex.continuous_re continuous_const)
   refine eqOn_of_convex_open convex_overlapDomain isOpen_overlapDomain
@@ -394,6 +394,7 @@ theorem hexagon_weak (r : ℤ) (hr : r = 0 ∨ r = -1) :
       rw [inv_lt_comm₀ (Real.exp_pos 1) (by norm_num)]
       linarith
     linarith
+  beta_reduce
   rw [hexLeft_iterate hC2 N₁ N₂ N₃ h₁ h₂ h₃ r f β hx hy hz J hJL ht1,
     hexRight_iterate hC2 N₁ N₂ N₃ h₁ h₂ h₃ r f β hx hy hz ht1 hsmall]
   exact hglue _ (re_exp_pos_of_overlap ht1)

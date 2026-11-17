@@ -106,13 +106,17 @@ theorem frame_complete (hA : antisym X (n + 1) = 0)
       pairG (sqZero G Xᘁ) (incl _ g) y = (pairG G g y.1,
         (G.map ((α_ Xᘁ X Xᘁ).inv ≫ (ε_ X Xᘁ ▷ Xᘁ))).hom ((μ G Xᘁ (X ⊗ Xᘁ)).hom (g ⊗ₜ y.2))) := by
     intro g y
-    simp only [pairG, sqZero_μ_apply, sqZero_map_fst, mulSnd, incl, TensorProduct.zero_tmul, map_zero,
-      add_zero, map_comp_apply]
+    simp only [pairG, sqZero_map_fst, incl]
+    erw [sqZero_μ_apply]
+    simp only [mulSnd, TensorProduct.zero_tmul, map_zero, add_zero, map_comp_apply]
+    rfl
   have horthH : ∀ i j, pairG (sqZero G Xᘁ) (incl _ (f i)) (incl _ (e j)) = if i = j then (ε (sqZero G Xᘁ)).hom 1 else 0 := by
     intro i j
     rw [hpair]
     simp only [incl, TensorProduct.tmul_zero, map_zero, horth, sqZero_ε_apply]
-    split_ifs <;> rfl
+    by_cases hij : i = j
+    · simp only [if_pos hij]; exact (if_pos hij).symm
+    · simp only [if_neg hij]; exact (if_neg hij).symm
   have hy : ∀ i, pairG (sqZero G Xᘁ) (incl _ (f i)) ((0 : G.obj X), defect G e f) = 0 := by
     intro i
     rw [hpair]

@@ -20,7 +20,7 @@ theorem fThree_source_mode_zero
     0 1 s (by omega)
       (by simp [VOA.DeligneAudit.A3Sector.weightABC])
   simpa [VOA.DeligneAudit.LeviConversion.fCurrent, leviCurrent,
-    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using hh
+    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using! hh
 
 /-- The f₃ current changes X into minus U'. -/
 theorem fThree_x_comm (r s : ℕ) :
@@ -37,7 +37,7 @@ theorem fThree_x_comm (r s : ℕ) :
   have hcoef (c : Fin 28) :
       fD4 (lowerColour 0) (radicalColour 1) c =
         if c = radicalColour 3 then (-1 : ℂ) else 0 := by
-    simpa [lowerAction] using lower_coefficient 0 1 c
+    simpa [lowerAction] using! lower_coefficient 0 1 c
   simp only [hcoef, ite_smul, neg_one_smul, zero_smul,
     Finset.sum_ite_eq', Finset.mem_univ, if_true]
   simp [radicalColour]
@@ -57,7 +57,7 @@ theorem fThree_u_comm (r s : ℕ) :
   have hcoef (c : Fin 28) :
       fD4 (lowerColour 0) (radicalColour 2) c =
         if c = radicalColour 4 then (-1 : ℂ) else 0 := by
-    simpa [lowerAction] using lower_coefficient 0 2 c
+    simpa [lowerAction] using! lower_coefficient 0 2 c
   simp only [hcoef, ite_smul, neg_one_smul, zero_smul,
     Finset.sum_ite_eq', Finset.mem_univ, if_true]
   simp [radicalColour]
@@ -84,7 +84,7 @@ theorem fThree_uup_polarization
       ρ.op (22 : Fin 28) t
         (ρ.op (17 : Fin 28) r (ρ.op (24 : Fin 28) u w)) =
       -ρ.op (25 : Fin 28) (r + t) (ρ.op (24 : Fin 28) u w) := by
-    simpa [LinearMap.sub_apply, Module.End.mul_apply] using hx
+    simpa [LinearMap.sub_apply, Module.End.mul_apply] using! hx
   rw [hu'] at hx'
   simp only [map_neg] at hx'
   simp only [sub_neg_eq_add] at hx'
@@ -115,7 +115,7 @@ theorem uup_pair_higher
       (wordKey [(1, t), (2, u)]) hxu
       (keyLayer_le_orbit ρ w _
         (radicalWord_mem_key ρ w [(1, t), (2, u)]))
-    simpa [N, radicalWord, wordOp, radicalColour] using hh
+    simpa [N, radicalWord, wordOp, radicalColour] using! hh
   have hf : ρ.op (17 : Fin 28) r
       (ρ.op (22 : Fin 28) t (ρ.op (24 : Fin 28) u w)) ∈ N := by
     exact higherOrbit_full_levi_inv ρ w m K (17 : Fin 28)
@@ -126,7 +126,7 @@ theorem uup_pair_higher
       (wordKey [(1, t), (4, r + u)]) hxy
       (keyLayer_le_orbit ρ w _
         (radicalWord_mem_key ρ w [(1, t), (4, r + u)]))
-    simpa [N, radicalWord, wordOp, radicalColour] using hh
+    simpa [N, radicalWord, wordOp, radicalColour] using! hh
   rw [fThree_uup_polarization ρ w m h r t u]
   exact N.sub_mem (N.neg_mem hf) hxy_mem
 

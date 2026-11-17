@@ -16,7 +16,7 @@ theorem matching_center_quintic_power_cases (m : ℕ) (hm : 2 ≤ m)
   have hp := matching_source_power_le m 5 (2 * m - 3) i e hmatch
   have hc := matching_source_current_sum_le m 5 (2 * m - 3) i e hmatch
   have hs : 2 * m < i.seed.val.2.1 + i.seed.val.2.2 := by
-    simpa only [AllM.seedThreshold,hb,if_true] using i.seed.property.2
+    simpa only [AllM.seedThreshold,hb,if_true] using! i.seed.property.2
   omega
 
 theorem matching_center_quintic_mode_budget (m : ℕ) (hm : 2 ≤ m)
@@ -28,7 +28,7 @@ theorem matching_center_quintic_mode_budget (m : ℕ) (hm : 2 ≤ m)
   have hp := matching_source_power_le m 5 (2 * m - 3) i e hmatch
   have hc := matching_source_current_sum_le m 5 (2 * m - 3) i e hmatch
   have hs : 2 * m < i.seed.val.2.1 + i.seed.val.2.2 := by
-    simpa only [AllM.seedThreshold,hb,if_true] using i.seed.property.2
+    simpa only [AllM.seedThreshold,hb,if_true] using! i.seed.property.2
   omega
 
 theorem matching_center_quartic_static_budget (m : ℕ) (hm : 2 ≤ m)
@@ -39,7 +39,7 @@ theorem matching_center_quartic_static_budget (m : ℕ) (hm : 2 ≤ m)
     i.seed.val.2.2 = 2 * m - 3 ∧ i.shifts.sum = 0 ∧ (i.outer.map Prod.snd).sum = 0 := by
   have hc := matching_source_current_sum_le m 5 (2 * m - 3) i e hmatch
   have hs : 2 * m < i.seed.val.2.1 + i.seed.val.2.2 := by
-    simpa only [AllM.seedThreshold,hb,if_true] using i.seed.property.2
+    simpa only [AllM.seedThreshold,hb,if_true] using! i.seed.property.2
   omega
 
 /-- A fifth-power source already exhausts the PBW budget, so its matching

@@ -128,7 +128,7 @@ theorem wardSourceAt_top (c h b t a : ℂ) (N : ℕ)
     vermaTopCoordinate c h r ((wardSourceAt c h b t a N f).val r)=
       wardBSATopSource h b t a N N (fun j => vermaTopCoordinate c h j (f.val j)) r := by
   have hh := wardBSASourceOperator_top c h b t a N N (wardFieldLift c h a f) r
-  simpa [wardSourceAt,wardFieldLift] using hh
+  simpa [wardSourceAt,wardFieldLift] using! hh
 
 /-- At seed index three, the complete projected source has just one
 subdiagonal. Its coefficient is explicit; no lower coefficients enter. -/
@@ -169,7 +169,7 @@ noncomputable def fusionKernelTop (A N : ℕ) (t : ℂ) (him : t.im≠0) (hN : 2
 theorem vermaTopCoordinate_highest (c h : ℂ) :
     vermaTopCoordinate c h 0 (highestVector c h)=1 := by
   have hh := vermaTopCoordinate_sorted c h 0 [] (sortedWord_replicate_zero 0)
-  simpa [negWord] using hh
+  simpa [negWord] using! hh
 
 /-- The actual coefficient construction starts the scalar recursion at one. -/
 @[simp] theorem fusionKernelTop_zero (A N : ℕ) (t : ℂ) (him : t.im≠0) (hN : 2≤N) :

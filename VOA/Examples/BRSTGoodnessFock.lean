@@ -253,12 +253,12 @@ theorem tensorDeg_map_shift (dV : ι → Submodule ℂ V) (dW : ι → Submodule
     ∀ z ∈ tensorDeg dV dW a, TensorProduct.map T S z ∈ tensorDeg dV dW (a + (δ₁ + δ₂)) := by
   refine tensorDeg_induction dV dW a
     (fun z => TensorProduct.map T S z ∈ tensorDeg dV dW (a + (δ₁ + δ₂)))
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_
   intro b x hx y hy
   rw [TensorProduct.map_tmul]
   have e : b + δ₁ + (a - b + δ₂) = a + (δ₁ + δ₂) := by abel
-  simpa only [e] using tmul_mem_tensorDeg dV dW (hT b x hx) (hS _ y hy)
+  simpa only [e] using! tmul_mem_tensorDeg dV dW (hT b x hx) (hS _ y hy)
 
 end TensorShift
 
@@ -343,7 +343,7 @@ theorem ghostMode_zero_mem (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}
       (fun i x hx => ghField_mem_fockDeg e _ hx)
       (fun i y hy => by rw [add_zero]; exact hy))
     (fun i y hy => by rw [add_zero]; exact hy) i x hx
-  simpa only [add_zero] using this
+  simpa only [add_zero] using! this
 
 theorem ghostMode_one_mem (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}
     {x : Sl2GhostSpace} (hx : x ∈ ghostDeg i) :
@@ -355,7 +355,7 @@ theorem ghostMode_one_mem (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}
       (fun i x hx => by rw [add_zero]; exact bcKoszul_mem_fockDeg 1 hx)
       (fun i y hy => ghField_mem_fockDeg e _ hy))
     (fun i y hy => by rw [add_zero]; exact hy) i x hx
-  simpa only [add_zero, zero_add] using this
+  simpa only [add_zero, zero_add] using! this
 
 theorem ghostMode_two_mem (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}
     {x : Sl2GhostSpace} (hx : x ∈ ghostDeg i) :
@@ -364,7 +364,7 @@ theorem ghostMode_two_mem (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}
   have := tensorDeg_map_shift (tensorDeg fockDeg fockDeg) fockDeg _ _ 0 (ghShift e (-m - 1))
     (fun i x hx => by rw [add_zero]; exact pairKoszul_mem 1 hx)
     (fun i y hy => ghField_mem_fockDeg e _ hy) i x hx
-  simpa only [zero_add] using this
+  simpa only [zero_add] using! this
 
 /-- **Every ghost mode shifts the three-pair `R`-grading** by `ghShift`. -/
 theorem ghostMode_mem_ghostDeg (a : Fin 3) (e : Fin 2) (m : ℤ) {i : (ℤ × ℤ) × ℂ}

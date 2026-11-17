@@ -105,7 +105,7 @@ theorem bY_shifts (s : BSpace) (j : ℤ) :
     refine mem_shiftTarget (δ := ((0, 0), h - i.2)) rfl ?_
     unfold bDeg trivialDeg
     rw [if_pos (by simp [hi])]
-    simpa using hz
+    simpa using! hz
   · rw [Submodule.mem_bot] at hx
     rw [hx, map_zero]; exact Submodule.zero_mem _
 
@@ -138,8 +138,8 @@ theorem G1_shifts (hA : GradedUnitary affineForm affineRealStructure affineFlag)
       intro i x hx
       refine tensorDeg_induction aDeg bDeg i
         (fun x => abYCoeff j (sA ⊗ₜ[ℂ] sB) x ∈ shiftTarget (tensorDeg aDeg bDeg) UpTwo i)
-        (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-        (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ x hx
+        (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+        (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ x hx
       intro b a ha y hy
       rw [abYCoeff_apply]
       change TensorVA.tenY ASVA BSVA (sA ⊗ₜ[ℂ] sB) j (a ⊗ₜ[ℂ] y) ∈ _
@@ -357,8 +357,8 @@ theorem omegaB_even : omegaB ∈ brstSVA.parity 0 := by
     TensorVA.tenParity matterSVA sl2GhostSVA 0
   refine TensorVA.tmul_mem_tenParity matterSVA sl2GhostSVA (p₁ := 0) ?_ ?_
   · exact TensorVA.tmul_mem_tenParity abSVA USVA (p₁ := 0) cosetOmega_even
-      (by simpa using USVA.vacuum_parity)
-  · simpa using sl2GhostSVA.vacuum_parity
+      (by simpa using! USVA.vacuum_parity)
+  · simpa using! sl2GhostSVA.vacuum_parity
 
 /-- `Q` commutes with every mode of `ω_C`. -/
 theorem Q_omegaB_mode (m : ℤ) (v : BRSTSpace) :
@@ -568,7 +568,7 @@ theorem interpretedCreation_proved (hZ : ZeroModesPreserve (ghostRGrading w))
     have h2 := creation_shift w hA p (-(-(i : ℤ) - 1) - 1) h1
     have h3 := brst_to_degOn w hw hA hB hZ hD hK (n + i + 2) (hp (n + i + 2)) (p + 1)
       (creationOp n i v) (by rw [creationOp_coe, mode_apply]; exact h2)
-    simpa only [Nat.cast_add, Nat.cast_one] using h3
+    simpa only [Nat.cast_add, Nat.cast_one] using! h3
   · have h1 : ((modelUniversalCycles S n (hp n) x : LinearMap.ker (S.model n (hp n)).D) :
         relativeWeight n) = universalWeightRepresentative n x := cyclesCongr_coe _ _ _ _
     have h2 : ((modelUniversalCycles S (n + i + 2) (hp (n + i + 2)) (universalCreation n i x) :

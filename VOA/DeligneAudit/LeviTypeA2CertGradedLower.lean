@@ -62,11 +62,11 @@ theorem coeff_bWord_graded_mem (a b : ℕ → A)
       rw [hb, PowerSeries.coeff_mul]
       have heq :
           (aWord a zs * (pref.map b).prod *
-            (∑ q ∈ Finset.antidiagonal s,
+            (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
               PowerSeries.coeff q.1 (bTail b x) *
                 PowerSeries.coeff q.2 (bWord b l)) * (ys.map b).prod) •
             (R • v) =
-          ∑ q ∈ Finset.antidiagonal s,
+          ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
             (aWord a zs * ((pref ++ [x + q.1]).map b).prod *
               PowerSeries.coeff q.2 (bWord b l) * (ys.map b).prod) •
               (R • v) := by
@@ -77,7 +77,7 @@ theorem coeff_bWord_graded_mem (a b : ℕ → A)
       rw [heq]
       apply (gradedLowerModeSpan a b xs ys k d R v).sum_mem
       intro q hq
-      have hqsum := Finset.mem_antidiagonal.mp hq
+      have hqsum := Finset.HasAntidiagonal.mem_antidiagonal.mp hq
       have hlen' : (pref ++ [x + q.1]).length + l.length = k := by
         simp only [List.length_append, List.length_cons, List.length_nil] at hlenB ⊢
         omega

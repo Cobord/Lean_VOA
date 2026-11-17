@@ -63,7 +63,7 @@ theorem fusionN_eq (i j c : D.ι) :
   letI := monoidalCategoryOfStronglyRational_pbw M.F M.stronglyRational
   letI := M.monoidalFunctor
   change mult (F.simple i ⊗ F.simple j) c = _
-  rw [mult_eq_finrank_hom_to]
+  rw [mult_eq_finrank_hom_to (F.simple i ⊗ F.simple j) c]
   let e1 : (F.simple i ⊗ F.simple j ⟶ F.simple c) ≃ₗ[ℂ]
       (M.E.functor.obj (F.simple i ⊗ F.simple j) ⟶ M.E.functor.obj (F.simple c)) :=
     LinearEquiv.ofBijective (M.E.functor.mapLinearMap ℂ)
@@ -89,10 +89,9 @@ theorem qDimTensorInput_of_qDimMatch (P : PivotalStructure M.C) (hq : M.QDimMatc
   have h := qdim_tensor_eq_sum P a b
   change P.qdim (F.simple a ⊗ F.simple b) = _
   rw [h]
-  simp_rw [fusionN_eq hW M D hD]
   have hq' : ∀ c, P.qdim (F.simple c) = (D.d c : ℂ) := hq
-  simp_rw [hq']
-  exact sum_fusion_d hW D hD a b
+  refine Eq.trans (Finset.sum_congr rfl fun c _ => ?_) (sum_fusion_d hW D hD a b)
+  rw [fusionN_eq hW M D hD a b c, hq' c]
 
 theorem star_twistOf (x : ℝ) : star (twistOf (x : ℂ)) = (twistOf (x : ℂ))⁻¹ := by
   simp only [twistOf]
@@ -114,14 +113,18 @@ theorem sMatchInput_of_qDimMatch (P : PivotalStructure M.C) (hdual : M.RibbonDua
   have hT : ∀ x, R.T x = twistOf (D.h x : ℂ) := fun x => M.ribbon_T D hD P hdual x
   have hq' : ∀ c, R.qdim (F.simple c) = (D.d c : ℂ) := hq
   have hcat := sTilde_mul_T R a b
-  simp_rw [fusionN_eq hW M D hD, hT, hq'] at hcat
+  have hsum : ∑ c, ((FusionCategory.N (F := F) a b c : ℕ) : ℂ) * (R.T c * R.qdim (F.simple c)) =
+      ∑ c : D.ι, (fus D a b c : ℂ) * (twistOf (D.h c : ℂ) * (D.d c : ℂ)) :=
+    Finset.sum_congr rfl fun c _ => by rw [fusionN_eq hW M D hD a b c, hT c, hq' c]
+  replace hcat := hcat.trans hsum
+  rw [hT a, hT b] at hcat
   have hc := congrArg star hcat
   simp only [star_mul', star_sum, star_natCast, Complex.star_def, Complex.conj_ofReal] at hc
   simp only [← Complex.star_def] at hc
   have hh : ∀ x : D.ι, star (twistOf ((D.h x : ℚ) : ℂ)) = (twistOf ((D.h x : ℚ) : ℂ))⁻¹ := by
     intro x
     have := star_twistOf ((D.h x : ℚ) : ℝ)
-    simpa using this
+    simpa using! this
   simp only [hh] at hc
   have hb := balancing_S hW D hD hsym a b
   have hc' : star (R.sTilde a b) * ((twistOf ((D.h a : ℚ) : ℂ))⁻¹ * (twistOf ((D.h b : ℚ) : ℂ))⁻¹)
@@ -144,7 +147,11 @@ theorem qDimMatchInput_of_sMatch (P : PivotalStructure M.C) (hdual : M.RibbonDua
   set R := M.ribbon P hdual
   -- `S̃_{a,vac} T_a T_vac = Σ_c N_{a,vac}^c T_c dim X_c = T_a dim X_a`
   have hcat := sTilde_mul_T R a D.vac
-  simp_rw [fusionN_eq hW M D hD] at hcat
+  have hsum : ∑ c, ((FusionCategory.N (F := F) a D.vac c : ℕ) : ℂ) *
+      (R.T c * R.qdim (F.simple c)) =
+      ∑ c : D.ι, (fus D a D.vac c : ℂ) * (R.T c * R.qdim (F.simple c)) :=
+    Finset.sum_congr rfl fun c _ => by rw [fusionN_eq hW M D hD a D.vac c]
+  replace hcat := hcat.trans hsum
   obtain ⟨-, hunit, -⟩ := zhu_facts hW D hD
   simp only [hunit, Nat.cast_ite, Nat.cast_one, Nat.cast_zero, ite_mul, one_mul, zero_mul,
     Finset.sum_ite_eq', Finset.mem_univ, if_true] at hcat

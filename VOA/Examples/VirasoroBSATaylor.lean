@@ -28,7 +28,7 @@ noncomputable def bsaTaylor (c : ℂ) (k : ℕ) : Module.End ℂ (VirUniv c) :=
 theorem bsaTranslation_mem (c : ℂ) {j : ℤ} {v : VirUniv c}
     (hv : v ∈ gradingVir c j) (k : ℕ) :
     ((Lop c (-1))^k) v ∈ gradingVir c (j+(k:ℤ)) := by
-  simpa only [virasoroVOA_L_eq_Lop] using Lneg1_pow_mem (virasoroVOA c) hv k
+  simpa only [virasoroVOA_L_eq_Lop] using! Lneg1_pow_mem (virasoroVOA c) hv k
 
 /-- On a homogeneous vector the L₁ commutator with an arbitrary translation
 power consists of the translated L₁ image and one lower translation power. -/
@@ -39,11 +39,11 @@ theorem bsaL1_translation_power (c : ℂ) {j : ℤ} {v : VirUniv c}
         (((k:ℂ)+1)*(2*(j:ℂ)+(k:ℂ))) • (((Lop c (-1))^k) v) := by
   have hcomm {q : ℤ} {w : VirUniv c} (hw : w ∈ gradingVir c q) :
       Lop c 1 (Lop c (-1) w) = Lop c (-1) (Lop c 1 w)+(2*(q:ℂ)) • w := by
-    simpa only [virasoroVOA_L_eq_Lop] using L1_Lneg1_grading (virasoroVOA c) hw
+    simpa only [virasoroVOA_L_eq_Lop] using! L1_Lneg1_grading (virasoroVOA c) hw
   have hp (m : ℕ) (w : VirUniv c) : Lop c (-1) (((Lop c (-1))^m) w) =
       ((Lop c (-1))^(m+1)) w := by rw [pow_succ', Module.End.mul_apply]
   induction k with
-  | zero => simpa using hcomm hv
+  | zero => simpa using! hcomm hv
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply, hcomm (bsaTranslation_mem c hv (k+1)),
       ih, map_add, map_smul]
@@ -286,7 +286,7 @@ theorem canB_positive_right_zero_of_one_two (c : ℂ) (v : VirUniv c)
   have hall : ∀ k : ℕ, ∀ x, (VirGram4.canB c).form x (Lop c ((k:ℤ)+2) v)=0 := by
     intro k
     induction k with
-    | zero => simpa using h2
+    | zero => simpa using! h2
     | succ k ih =>
       intro x
       have hh := congrArg ((VirGram4.canB c).form x) (LeeYang.Lop_apply_comm c 1 ((k:ℤ)+2) v)
@@ -303,10 +303,10 @@ theorem canB_positive_right_zero_of_one_two (c : ℂ) (v : VirUniv c)
       convert he using 1 <;> push_cast <;> congr 2 <;> ring
   intro n hn
   by_cases he : n=1
-  · simpa [he] using h1
+  · simpa [he] using! h1
   · obtain ⟨k,hk⟩ := Int.eq_ofNat_of_zero_le (show 0≤n-2 by omega)
     have he : n=(k:ℤ)+2 := by omega
-    simpa [he] using hall k
+    simpa [he] using! hall k
 
 /-- Positive weight and radical-valued L₁/L₂ images force the whole state
 into the right radical. Adjointness handles nonempty creation words;
@@ -348,7 +348,7 @@ theorem bsaReflectedState_mem (c : ℂ) (N r : ℕ) :
   apply Submodule.smul_mem
   have hh := bsaTranslation_mem c (bsaState_mem_grading c N j) (r-j.val)
   have he : (j:ℤ)+((r-j.val:ℕ):ℤ)=(r:ℤ) := by have := j.isLt; omega
-  simpa only [he] using hh
+  simpa only [he] using! hh
 
 /-- The reflection difference is homogeneous, so its vacuum pairing
 vanishes at every positive level. -/

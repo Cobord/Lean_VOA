@@ -62,7 +62,7 @@ theorem map_lineR_colSer_one :
 
 theorem map_lineR_dS (f : JetSer) :
     PowerSeries.map (lineR R) (dS f) =
-      PowerSeries.derivative (Polynomial R) (PowerSeries.map (lineR R) f) := by
+      PowerSeries.derivative (R := Polynomial R) (PowerSeries.map (lineR R) f) := by
   refine PowerSeries.ext fun n => ?_
   rw [PowerSeries.coeff_map, PowerSeries.coeff_derivative, PowerSeries.coeff_derivative,
     PowerSeries.coeff_map, map_mul]
@@ -153,7 +153,7 @@ theorem evV_mword_line (w : List (Generator × ℕ)) :
     ∃ (a : ℕ) (c : R), a ≤ w.length ∧ c ∈ tMonW R t (w.length - a) (wordWt w - w.length) ∧
       evV R (mword R t w) = Polynomial.C c * Polynomial.X ^ (2 * a) := by
   induction w with
-  | nil => exact ⟨0, 1, le_rfl, by simpa [wordWt] using one_mem_tMonW t, by simp⟩
+  | nil => exact ⟨0, 1, le_rfl, by simpa [wordWt] using! one_mem_tMonW t, by simp⟩
   | cons l w ih =>
     obtain ⟨a, c, ha, hc, he⟩ := ih
     obtain ⟨g, m⟩ := l
@@ -177,7 +177,7 @@ theorem evV_mword_line (w : List (Generator × ℕ)) :
           have hb : b = 0 ∨ b = 1 ∨ b = 2 := by fin_cases b <;> simp
           rcases hb with rfl | rfl | rfl
           · exact lineR_letterSym_current_zero R m
-          · rw [lineR_letterSym_current_one, if_neg (by simpa using hz)]
+          · rw [lineR_letterSym_current_one, if_neg (by simpa using! hz)]
           · exact lineR_letterSym_current_two R m
         rw [this, zero_mul]
     | sugawara =>

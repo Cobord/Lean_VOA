@@ -25,8 +25,8 @@ variable {R : CurrentModule bracketTable V} {w : V} {ν ϱ : Weight}
 /-- The unique final first-root part one gives its actual top square relation. -/
 theorem first_descendant_square (h : CV3Rel R w (1, 0) ν ϱ 0) :
     (R.op 3 (ν.1 + ϱ.1) ^ 2) w = 0 := by
-  have hCV : CVRel (R.op 3) (parts ϱ.1 ν.1 1) w := by simpa using h.first
-  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.1 ν.1] using
+  have hCV : CVRel (R.op 3) (parts ϱ.1 ν.1 1) w := by simpa using! h.first
+  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.1 ν.1] using!
     top_square_of_cvrel (CVRoots.sl2_first R).hFF (by omega : 1 ≤ 1) hCV
 
 /-- The opposite-root highest-weight relation needs no first-root weight subtraction. -/
@@ -38,7 +38,7 @@ theorem first_descendant_second_raising (h : CV3Rel R w (1, 0) ν ϱ 0) (s : ℕ
 theorem first_descendant_second_cartan (h : CV3Rel R w (1, 0) ν ϱ 0)
     (s : ℕ) (hs : 1 ≤ s) :
     R.op 7 s (R.op 3 (ν.1 + ϱ.1) w) = 0 := by
-  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using
+  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using!
     CVKernelGeneralHW.first_cartan_pos h 7 (by decide) s hs
 
 theorem first_descendant_second_nil (h : CV3Rel R w (1, 0) ν ϱ 0) :
@@ -91,7 +91,7 @@ theorem coefficient_zero_of_cvrel_parts {F : ℕ → Module.End ℂ V} {u : V}
     (hs : clippedSum (parts r n e) m < s + m) : Q F m s u = 0 := by
   by_cases hm : m = 0
   · subst m
-    have hs0 : 0 < s := by simpa [clippedSum] using hs
+    have hs0 : 0 < s := by simpa [clippedSum] using! hs
     simp [Q, hs0.ne']
   · obtain ⟨k, hk⟩ := parts_region_optimizer r n e m (by omega)
     exact hCV m s k (by omega) (by omega)
@@ -104,7 +104,7 @@ theorem second_descendant_coefficient_zero (h : CV3Rel R w (1, 0) ν ϱ 0)
     Q (R.op 4) m s (R.op 3 (ν.1 + ϱ.1) w) = 0 := by
   apply coefficient_zero_of_cvrel_parts (second_cv_first_descendant h) m s
   simpa only [clippedSum_parts, Nat.mul_zero, Nat.mul_one, Nat.min_eq_right hm,
-    Nat.one_mul, Nat.zero_mul, Nat.add_zero] using hs
+    Nat.one_mul, Nat.zero_mul, Nat.add_zero] using! hs
 
 end
 end VOA.DeligneAudit.A2.CVRectPBWBoundary

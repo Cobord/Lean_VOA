@@ -32,22 +32,22 @@ theorem pairXZCoeff_adjoint_full
     pairAdjoint (ρ.op (17 : Fin 28))
         ((List.range b).map (pairYExponent b d))
         (pairXZRecolourOperator ρ a b c 0
-          (coeff d (pairSplitAlgebra a b c P))) w =
+          ((pairSplitAlgebra a b c P).coeff d)) w =
       ((-1 : ℂ) ^ b * (Nat.descFactorial (a + b) b : ℂ)) •
         xyzEvaluation ρ w (pairRecolourTargetShape a b c)
           (pairRestriction a b c
             (pairYFinsuppMonomial a b c d *
               rename (pairXZSource a b c)
-                (coeff d (pairSplitAlgebra a b c P)))) := by
+                ((pairSplitAlgebra a b c P).coeff d))) := by
   have hQ (s t : Fin b ⊕ Fin a) :=
     pairYCoeff_swap_xz a b c s t P hP d
   have h := congrArg (fun A : Module.End ℂ V => A w)
     (pairXZRecolour_adjoint_full ρ a b c (pairYExponent b d)
-      (coeff d (pairSplitAlgebra a b c P)) hQ)
+      ((pairSplitAlgebra a b c P).coeff d) hQ)
   simpa only [LinearMap.smul_apply, pairXZRecolourOperator_apply,
     pairYExponent_at, pairXZEarlierFactor_full,
     pairXZRecolourShape_final,
-    pairRestriction_yFinsupp_evaluation] using h
+    pairRestriction_yFinsupp_evaluation] using! h
 
 /-- The sum of all Y-coefficient transfers is the restriction polynomial
     evaluated at the paired XZ shape. -/
@@ -59,7 +59,7 @@ theorem pairXZCoeff_adjoint_sum
       pairAdjoint (ρ.op (17 : Fin 28))
         ((List.range b).map (pairYExponent b d))
         (pairXZRecolourOperator ρ a b c 0
-          (coeff d (pairSplitAlgebra a b c P))) w) =
+          ((pairSplitAlgebra a b c P).coeff d)) w) =
       ((-1 : ℂ) ^ b * (Nat.descFactorial (a + b) b : ℂ)) •
         xyzEvaluation ρ w (pairRecolourTargetShape a b c)
           (pairRestriction a b c P) := by
@@ -67,7 +67,7 @@ theorem pairXZCoeff_adjoint_sum
   simp only [map_sum, Finset.smul_sum]
   apply Finset.sum_congr rfl
   intro d hd
-  simpa only [pairRestriction_yFinsupp_xz] using
+  simpa only [pairRestriction_yFinsupp_xz] using!
     pairXZCoeff_adjoint_full ρ w a b c P hP d
 
 theorem pairXZCoeff_adjoint_sum_zero
@@ -78,10 +78,10 @@ theorem pairXZCoeff_adjoint_sum_zero
       pairAdjoint (ρ.op (17 : Fin 28))
         ((List.range b).map (pairYExponent b d))
         (pairXZRecolourOperator ρ a b c 0
-          (coeff d (pairSplitAlgebra a b c P))) w) = 0 := by
+          ((pairSplitAlgebra a b c P).coeff d)) w) = 0 := by
   rw [pairXZCoeff_adjoint_sum ρ w a b c P P.property]
   have hr : pairRestriction a b c P = 0 := by
-    simpa only [pairSymmetricRestriction_apply, Subalgebra.coe_zero] using
+    simpa only [pairSymmetricRestriction_apply, Subalgebra.coe_zero] using!
       congrArg Subtype.val hP
   rw [hr, map_zero, smul_zero]
 
@@ -95,9 +95,9 @@ theorem pairXZCoeff_adjoint_sum_operator_zero
       pairAdjoint (ρ.op (17 : Fin 28))
         ((List.range b).map (pairYExponent b d))
         (pairXZRecolourOperator ρ a b c 0
-          (coeff d (pairSplitAlgebra a b c P)))) = 0 := by
+          ((pairSplitAlgebra a b c P).coeff d))) = 0 := by
   ext v
-  simpa only [LinearMap.sum_apply, LinearMap.zero_apply] using
+  simpa only [LinearMap.sum_apply, LinearMap.zero_apply] using!
     pairXZCoeff_adjoint_sum_zero ρ v a b c P hP
 
 end VOA.DeligneAudit.D4Levi

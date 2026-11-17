@@ -40,13 +40,13 @@ theorem determinant_columns_span_mem {j : ℕ} {ι : Type*} (I : Ideal A)
   have he : p = fun b => ∑ n ∈ (c b).support, c b n • v n := by
     funext b
     exact (hc b).symm
-  rw [← Matrix.det_transpose]
+  rw [← Matrix.det_transpose (fun a b => p b a : Matrix (Fin j) (Fin j) A)]
   change Matrix.det p ∈ I
   rw [he]
   have h := determinant_row_sum_mem I (fun b => (c b).support) (fun b n => c b n) v
     (fun d => by
       have h := hv d
-      rw [← Matrix.det_transpose] at h
+      rw [← Matrix.det_transpose (fun a b => v (d b) a : Matrix (Fin j) (Fin j) A)] at h
       exact h)
   convert h using 1
   congr 1

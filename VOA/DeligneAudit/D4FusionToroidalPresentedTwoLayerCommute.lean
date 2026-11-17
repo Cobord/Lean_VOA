@@ -42,7 +42,7 @@ theorem two_one_on_pure : ∀ (l : List (TLtr 28)), twoUDeg l = 0 →
             ∑ e : Fin 28, D4sector.f c x.1 e •
               (ρPTE 2).op e 1 (s + x.2.2) w else 0) +
             (ρPTE 2).op x.1 0 x.2.2 ((ρPTE 2).op c 1 s w) := by
-        simpa only [Nat.add_zero] using (sub_eq_iff_eq_add.mp hcomm)
+        simpa only [Nat.add_zero] using! (sub_eq_iff_eq_add.mp hcomm)
       have hleft : (ρPTE 2).op x.1 0 x.2.2
           ((ρPTE 2).op c 1 s w) ∈ twoPositiveSpan :=
         twoPositiveSpan_op_zero x.1 x.2.2 (ih hl' c s)

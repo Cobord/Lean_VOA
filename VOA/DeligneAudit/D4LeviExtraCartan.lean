@@ -30,7 +30,7 @@ theorem extra_coefficient (j : Fin 6) (z : Fin 28) :
     VOA.DeligneAudit.DeligneSector.D4.fD4 0 (radicalColour j) z =
       if z = radicalColour j then (extraWeight j : ℂ) else 0 := by
   simpa only [VOA.DeligneAudit.DeligneSector.D4.fD4, fC,
-    Int.cast_ite, Int.cast_zero] using
+    Int.cast_ite, Int.cast_zero] using!
       congrArg (fun n : ℤ => (n : ℂ)) (extra_coefficient_int j z)
 
 theorem extraLabel_cons (j : Fin 6) (s : ℕ)

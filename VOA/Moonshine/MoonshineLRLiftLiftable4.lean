@@ -19,6 +19,11 @@ The construction supplies signed permutations by unique row support, rather than
 bit-coordinate formulas. It does not treat the nonmonomial Conway generator `ξ`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -49,17 +54,25 @@ theorem liftSpinCharge_intertwine (ι : leech.carrier →ₗ[ℤ] leech.carrier)
       (liftMonoWeight ι α : ℂ) •
         ((liftMonoQmat (ι α)).map (Rat.castHom ℂ) *ᵥ liftSpinCharge ι hι s) := by
   have h := liftLiftableChargeIntertwine ι hι α s
-  rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.smul_mulVec] at h
+  first
+  | rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.smul_mulVec] at h
+  | erw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.smul_mulVec] at h
   change (liftWSpinCharge ι hι)
       (signRefinement (coordOfRed (red leech α)) • (_ *ᵥ s) : SpinRep) = _ at h
   erw [LinearEquiv.map_smul] at h
   rw [smul_smul, ← liftMonoWeight_phase ι hι, mul_comm,
     ← smul_smul] at h
   have h' := (smul_right_injective _ (liftMonoRefinement_ne_zero α)) h
-  simp only [liftSpinCharge_apply, liftMonoQmat_map, h']
-  funext i
-  change (liftWScalar ι hι : ℂ) * ((liftMonoWeight ι α : ℂ) * ∑ j, _ * _) =
-    (liftMonoWeight ι α : ℂ) * ∑ j, _ * ((liftWScalar ι hι : ℂ) * _)
+  first
+  | (simp only [liftSpinCharge_apply, liftMonoQmat_map, h']
+     funext i
+     change (liftWScalar ι hι : ℂ) * ((liftMonoWeight ι α : ℂ) * ∑ j, _ * _) =
+       (liftMonoWeight ι α : ℂ) * ∑ j, _ * ((liftWScalar ι hι : ℂ) * _))
+  | (simp only [liftSpinCharge_apply, liftMonoQmat_map]
+     refine (congrArg (fun v : SpinRep => (liftWScalar ι hι : ℂ) • v) h').trans ?_
+     funext i
+     change (liftWScalar ι hι : ℂ) * ((liftMonoWeight ι α : ℂ) * ∑ j, _ * _) =
+       (liftMonoWeight ι α : ℂ) * ∑ j, _ * ((liftWScalar ι hι : ℂ) * _))
   simp only [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j _
@@ -442,7 +455,12 @@ theorem liftSpinSigned_intertwine (α : leech.carrier) :
   rw [Matrix.map_mul (f := Rat.castHom ℂ), hmap, Matrix.map_mul (f := Rat.castHom ℂ)]
   ext i j
   have h := liftSpinCharge_intertwine ι hι α (Pi.single j 1)
-  rw [liftSpinSigned_spec ι hι hframe, liftSpinSigned_spec ι hι hframe] at h
+  first
+  | rw [liftSpinSigned_spec ι hι hframe, liftSpinSigned_spec ι hι hframe] at h
+  | replace h := (liftSpinSigned_spec ι hι hframe _).symm.trans (h.trans
+      (congrArg (fun v : SpinIdx → ℂ =>
+        (liftMonoWeight ι α : ℂ) • ((liftMonoQmat (ι α)).map (Rat.castHom ℂ) *ᵥ v))
+        (liftSpinSigned_spec ι hι hframe _)))
   have hi := congrFun h i
   change (R.map (Rat.castHom ℂ) *ᵥ
       ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ Pi.single j 1)) i =

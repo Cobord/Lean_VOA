@@ -70,9 +70,9 @@ theorem first (h : MabRel ρ w 0 N) (hN : 0 < N) :
   apply tw_cvrel (sl2_first ρ) (fun s => h.raising 0 (by decide) s)
     (fun p hp => h.cartan_pos 6 (by decide) p hp) hN
   · rw [Module.End.pow_apply]
-    simpa using h.lowering_f1
+    simpa using! h.lowering_f1
   · intro j hj
-    exact mab_f1_trunc h j (by simpa using hj)
+    exact mab_f1_trunc h j (by simpa using! hj)
 
 /-- The second simple root has CV partition `1^N`. -/
 theorem second (h : MabRel ρ w 0 N) (hN : 0 < N) :
@@ -81,9 +81,9 @@ theorem second (h : MabRel ρ w 0 N) (hN : 0 < N) :
   apply tw_cvrel (sl2_second ρ) (fun s => h.raising 1 (by decide) s)
     (fun p hp => h.cartan_pos 7 (by decide) p hp) hN
   · rw [Module.End.pow_apply]
-    simpa using h.lowering_f2
+    simpa using! h.lowering_f2
   · intro j hj
-    exact mab_f2_trunc h j (by simpa using hj)
+    exact mab_f2_trunc h j (by simpa using! hj)
 
 /-- The highest root has CV partition `2^N`. -/
 theorem highest (h : MabRel ρ w 0 N) (hN : 0 < N) :
@@ -92,9 +92,9 @@ theorem highest (h : MabRel ρ w 0 N) (hN : 0 < N) :
   refine tw_cvrel (sl2_highest ρ) (fun s => h.raising 2 (by decide) s)
     (fun p hp => ?_) hN ?_ ?_
   · simp [h.cartan_pos 6 (by decide) p hp, h.cartan_pos 7 (by decide) p hp]
-  · simpa using ftheta_pow h
+  · simpa using! ftheta_pow h
   · intro j hj
-    exact mab_ftheta_trunc h j (by simpa using hj)
+    exact mab_ftheta_trunc h j (by simpa using! hj)
 
 /-- Rootwise CV presentation data supplied by `MabRel 0 N`, for positive `N`. -/
 theorem mabRel_zero_cv (h : MabRel ρ w 0 N) (hN : 0 < N) :

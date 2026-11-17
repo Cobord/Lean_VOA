@@ -14,7 +14,7 @@ open VOA.DeligneAudit.LeviConversion
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
 noncomputable def rzTwoComplete (s : ℕ) : MvPolynomial (Fin 2) ℂ :=
-  ∑ p ∈ Finset.antidiagonal s, X (0 : Fin 2) ^ p.1 * X (1 : Fin 2) ^ p.2
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s, X (0 : Fin 2) ^ p.1 * X (1 : Fin 2) ^ p.2
 
 theorem rzTwoComplete_symmetric (s : ℕ) :
     rzTwoComplete s ∈ symmetricSubalgebra (Fin 2) ℂ := by
@@ -33,7 +33,7 @@ theorem rzTwoComplete_symmetric (s : ℕ) :
 
 theorem rz_two_topSum (ρ : CurrentModule D4sector.f V) (s : ℕ) :
     topSum (yOp ρ) (zOp ρ) 2 s [0, 0] =
-      ∑ p ∈ Finset.antidiagonal s, zOp ρ p.1 * zOp ρ p.2 := by
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s, zOp ρ p.1 * zOp ρ p.2 := by
   simp [topSum, choices, aWord, bWord, bTail, PowerSeries.coeff_mul]
 
 theorem rzTwoComplete_source_eval
@@ -41,7 +41,7 @@ theorem rzTwoComplete_source_eval
     xyzEvaluation ρ w (pairSourceShape 0 0 2)
         (rename (fun z : Fin 2 =>
           (Sum.inr (Sum.inr z) : PairSource 0 0 2)) (rzTwoComplete s)) =
-      ∑ p ∈ Finset.antidiagonal s, zOp ρ p.1 (zOp ρ p.2 w) := by
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s, zOp ρ p.1 (zOp ρ p.2 w) := by
   rw [rzTwoComplete, map_sum]
   simp only [map_mul, map_pow, rename_X, map_sum]
   apply Finset.sum_congr rfl
@@ -76,7 +76,7 @@ theorem rzTwoComplete_source_eval
   have hword : (shapedModes (pairSourceShape 0 0 2)
       Finset.univ.toList d).Perm
       [(5, p.1), (5, p.2)] := by
-    simpa [shapedModes, pairSourceShape, d] using
+    simpa [shapedModes, pairSourceShape, d] using!
       hperm.map (fun t : PairSource 0 0 2 => (pairSourceShape 0 0 2 t, d t))
   exact (radicalWord_perm ρ w hword).trans (by
     simp [radicalWord, wordOp, zOp, radicalColour])
@@ -103,11 +103,11 @@ theorem rz_target_two_complete_mem_ker
   · apply Subtype.ext
     exact pairRestriction_Z_embedding 0 0 2 (rzTwoComplete s)
   · have hk : keyEnum m ⟨i, hi⟩ = rzKey [] [] [] 2 s := by
-      simpa [pairFinalKey, rzKey] using hkey
+      simpa [pairFinalKey, rzKey] using! hkey
     have hr := rz_top_prefix ρ w m h [] [] [] 2 s i
-      (by omega) hs hi (by simpa using hk)
+      (by omega) hs hi (by simpa using! hk)
     rw [rzTwoComplete_source_eval]
-    simpa [rz_two_topSum, Finset.sum_smul, Module.End.mul_apply] using hr
+    simpa [rz_two_topSum, Finset.sum_smul, Module.End.mul_apply] using! hr
 
 theorem rz_target_two_complete_mul_mem_ker
     (ρ : CurrentModule D4sector.f V) (w : V) (m i s : ℕ)

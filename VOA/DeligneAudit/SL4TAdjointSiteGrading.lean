@@ -59,7 +59,7 @@ theorem mixedE_mem_grading (i : Fin 5) (j : ℕ) : mixedE i j ∈ mixedPolyGradi
   | succ n =>
       simp only [mixedE, mixedAlphabet, elementary_succ, MvPolynomial.rename_X]
       have h := MvPolynomial.isWeightedHomogeneous_X ℂ mixedPolyWeight (i, n)
-      simpa [mixedPolyWeight] using h
+      simpa [mixedPolyWeight] using! h
 
 theorem mixedH_mem_grading (i : Fin 5) (j : ℕ) : mixedH i j ∈ mixedPolyGrading j := by
   induction j using Nat.strong_induction_on with
@@ -397,15 +397,15 @@ theorem mixedEvaluation_elementary_isNilpotent (q : MixedParams) (hq : MixedVali
   have hjl : j ≤ mixedLengths q i := not_lt.mp htail
   fin_cases i
   · have hjl' : j ≤ (mixedBaseLength q 0).toNat := by
-      simpa [mixedLengths, mixedBaseLength] using hjl
+      simpa [mixedLengths, mixedBaseLength] using! hjl
     exact hcoeff _ _ (mixedBase_series_units q hq 0).1 hjl' rfl
   · have hjl' : j ≤ (mixedBaseLength q 1).toNat := by
-      simpa [mixedLengths, mixedBaseLength] using hjl
+      simpa [mixedLengths, mixedBaseLength] using! hjl
     exact hcoeff _ _ (mixedBase_series_units q hq 1).1 hjl' rfl
   · have hjl' : j ≤ (mixedBaseLength q 2).toNat := by
-      simpa [mixedLengths, mixedBaseLength] using hjl
+      simpa [mixedLengths, mixedBaseLength] using! hjl
     exact hcoeff _ _ (mixedBase_series_units q hq 2).1 hjl' rfl
-  · have hjl' : j ≤ q.e1.toNat := by simpa [mixedLengths] using hjl
+  · have hjl' : j ≤ q.e1.toNat := by simpa [mixedLengths] using! hjl
     exact hcoeff _ _ (mixedRelative_series_units q hq).1 hjl' rfl
   · have hlen : q.e2.toNat + (mixedQ q - q.e2).toNat =
         q.d2.toNat + (q.A - q.d3).toNat := by simp only [mixedQ]; omega
@@ -417,7 +417,7 @@ theorem mixedEvaluation_elementary_isNilpotent (q : MixedParams) (hq : MixedVali
           (mixedQ q - q.e2).toNat) := by
       rw [ht]
       exact hu
-    have hjl' : j ≤ q.e2.toNat := by simpa [mixedLengths] using hjl
+    have hjl' : j ≤ q.e2.toNat := by simpa [mixedLengths] using! hjl
     exact hcoeff _ _ (isUnit_of_mul_isUnit_left h2) hjl' rfl
 
 /-- A valid block ring is finite dimensional. -/
@@ -567,7 +567,7 @@ theorem adjointSitePowerSum_mem_grading (q : MixedParams) (h : ℕ) (s : ℕ) :
   rw [mixedCoefficientSeries, coeff_mul, map_sum]
   apply Submodule.sum_mem
   intro x hx
-  have hn := Finset.mem_antidiagonal.mp hx
+  have hn := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
   rw [coefficientPoly_coeff, coefficientPoly_coeff, map_mul]
   have h₁ : Ideal.Quotient.mkₐ ℂ (adjointSiteKernelIdeal q h)
       (if x.1 ≤ q.e1.toNat then (-1) ^ x.1 * mixedEvaluation q (mixedE 3 x.1) else 0) ∈
@@ -575,7 +575,7 @@ theorem adjointSitePowerSum_mem_grading (q : MixedParams) (h : ℕ) (s : ℕ) :
     split_ifs
     · have := adjointSiteEvaluation_mem_grading q h
         (signed_mem_grading _ (mixedE_mem_grading 3) x.1)
-      simpa [adjointSiteEvaluation, mixedStateEvaluation] using this
+      simpa [adjointSiteEvaluation, mixedStateEvaluation] using! this
     · rw [map_zero]
       exact Submodule.zero_mem _
   have h₂ : Ideal.Quotient.mkₐ ℂ (adjointSiteKernelIdeal q h)
@@ -585,7 +585,7 @@ theorem adjointSitePowerSum_mem_grading (q : MixedParams) (h : ℕ) (s : ℕ) :
     split_ifs
     · have := adjointSiteEvaluation_mem_grading q h
         (signed_mem_grading _ mixedG2prime_mem_grading x.2)
-      simpa [adjointSiteEvaluation, mixedStateEvaluation] using this
+      simpa [adjointSiteEvaluation, mixedStateEvaluation] using! this
     · rw [map_zero]
       exact Submodule.zero_mem _
   have hm := SetLike.mul_mem_graded h₁ h₂

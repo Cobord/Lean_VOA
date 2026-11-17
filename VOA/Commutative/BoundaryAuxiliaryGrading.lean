@@ -53,7 +53,8 @@ theorem casimir_homogeneous :
   have hx := MvPolynomial.isWeightedHomogeneous_X R (fun _ : Fin 3 => (1 : ℕ))
   have hh := (hx 1).pow 2
   have hef := ((hx 0).mul (hx 2)).C_mul (4 : R)
-  simpa [casimir, mul_assoc] using hh.add hef
+  have h4 : (MvPolynomial.C (4 : R) : BasePoly R) = 4 := map_ofNat MvPolynomial.C 4
+  simpa [casimir, mul_assoc, h4] using hh.add hef
 
 /-- All three original relations have weight `2*m+1`. -/
 theorem baseRelation_homogeneous (m : ℕ) (i : Fin 3) :

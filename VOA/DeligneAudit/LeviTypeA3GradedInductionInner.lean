@@ -30,10 +30,10 @@ theorem a3_boxed_first_word_effective (a b c : ℕ)
         ⟨d₁, ys.length, zs.length, r + ys.sum + zs.sum⟩ := by
   let fs := VOA.DeligneAudit.CLAssembly.lst f
   have hlenf : fs.length = d₁ := by
-    simpa [fs, a2_lst_length, a3_box_weight_first] using
+    simpa [fs, a2_lst_length, a3_box_weight_first] using!
       congrArg Prod.fst hwf
   have hsumf : fs.sum = r := by
-    simpa [fs, a2_lst_sum] using congrArg Prod.snd hwf
+    simpa [fs, a2_lst_sum] using! congrArg Prod.snd hwf
   have h₁ : d₁ ≤ a := by
     have hd := a3_box_degree_le a f hf
     have hw := congrArg Prod.fst hwf
@@ -74,8 +74,8 @@ theorem a3_boxed_first_word_effective (a b c : ℕ)
           (by
             intro ys' zs' hy hz hd hs
             have hh := ih ys'.sum (by omega) ys' zs' rfl
-            simpa only [hy, hz, hlenf, hsumf, hd, Nat.add_assoc] using hh)
-        simpa only [k, hlenf, hsumf, Nat.add_assoc] using hle
+            simpa only [hy, hz, hlenf, hsumf, hd, Nat.add_assoc] using! hh)
+        simpa only [k, hlenf, hsumf, Nat.add_assoc] using! hle
       have hhigher : a3HigherLeviClosure ρ w b c k ≤
           a3EffectiveTarget ρ w a b c k :=
         a3_higher_le_effective ρ w a b c k
@@ -88,7 +88,7 @@ theorem a3_boxed_first_word_effective (a b c : ℕ)
               (ys.sum + zs.sum) ys.sum ⊔
               a3HigherLeviClosure ρ w b c k) := by
         simpa only [a3ConvA, a3ConvB, a3ConvSpectator,
-          k, mul_assoc, Module.End.mul_apply] using ht
+          k, mul_assoc, Module.End.mul_apply] using! ht
       have hle : a3EffectiveTarget ρ w a b c k ⊔
           (a3PairModeLowerSpan ρ w 1 fs ys.length zs.length
             (ys.sum + zs.sum) ys.sum ⊔
@@ -96,15 +96,15 @@ theorem a3_boxed_first_word_effective (a b c : ℕ)
             a3EffectiveTarget ρ w a b c k :=
         sup_le le_rfl (sup_le hlower hhigher)
       simpa only [a3ConvA, a3ConvB, a3ConvSpectator,
-        mul_assoc, Module.End.mul_apply] using hle ht'
+        mul_assoc, Module.End.mul_apply] using! hle ht'
     have hlower : a3PairModeLowerSpan ρ w 0 zs d₁ ys.length
         (r + ys.sum) r ≤ a3EffectiveTarget ρ w a b c k := by
       have hle := a3_first_lower_le_effective ρ w a b c zs d₁
         ys.length (r + ys.sum) r (by
           intro xs' ys' hx hy hd hs
           have hh := houter xs' ys' zs hs
-          simpa only [hx, hy, hd, Nat.add_assoc] using hh)
-      simpa only [k, Nat.add_assoc] using hle
+          simpa only [hx, hy, hd, Nat.add_assoc] using! hh)
+      simpa only [k, Nat.add_assoc] using! hle
     have hhigher : a3HigherLeviClosure ρ w b c k ≤
         a3EffectiveTarget ρ w a b c k :=
       a3_higher_le_effective ρ w a b c k

@@ -10,12 +10,12 @@ noncomputable section
 variable {R : Type*} [CommSemiring R]
 
 def jetDerivative (a : ℕ) (f : PowerSeries R) : PowerSeries R :=
-  ((PowerSeries.derivative R : PowerSeries R → PowerSeries R)^[a]) f
+  ((PowerSeries.derivative (R := R) : PowerSeries R → PowerSeries R)^[a]) f
 
 @[simp] theorem jetDerivative_zero (f : PowerSeries R) : jetDerivative 0 f = f := rfl
 
 theorem jetDerivative_succ (a : ℕ) (f : PowerSeries R) :
-    jetDerivative (a + 1) f = jetDerivative a (PowerSeries.derivative R f) :=
+    jetDerivative (a + 1) f = jetDerivative a (PowerSeries.derivative (R := R) f) :=
   Function.iterate_succ_apply _ _ _
 
 theorem coeff_jetDerivative (f : PowerSeries R) (a n : ℕ) :

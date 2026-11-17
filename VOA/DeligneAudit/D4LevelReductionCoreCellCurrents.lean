@@ -22,21 +22,21 @@ theorem coreGrassmannianPowerSum_nilpotent (d T s : ℕ) (hs : 0 < s) :
   have ht : ∀ k, d < k → (-1 : SL4T.GrassRing d T) ^ k * SL4T.eClass d T k = 0 := by
     intro k hk
     rw [SL4T.eClass_eq_zero d T k hk, mul_zero]
-  simpa only [SL4T.grassSeries, SL4T.coefficientPoly_coeff_of_tail _ d ht] using hn
+  simpa only [SL4T.grassSeries, SL4T.coefficientPoly_coeff_of_tail _ d ht] using! hn
 
 theorem coreComplementPowerSum_nilpotent (a b c s : ℕ) (hs : 0 < s) :
     IsNilpotent (coreComplementPowerSum a b c s) := by
   have h := (coreGrassmannianPowerSum_nilpotent (a + b) (a + b + c - (a + b)) s hs).map
     (SL4T.biLeft (a + b) (a + b + c - (a + b)) a (a + b + c - a))
   simpa only [SL4T.powerSumOfCoeff_map, map_mul, map_pow, map_neg, map_one,
-    coreComplementPowerSum, SL4T.leftE] using h
+    coreComplementPowerSum, SL4T.leftE] using! h
 
 theorem coreAdjointPowerSum_nilpotent (a b c s : ℕ) (hs : 0 < s) :
     IsNilpotent (coreAdjointPowerSum a b c s) := by
   have h := (coreGrassmannianPowerSum_nilpotent a (a + b + c - a) s hs).map
     (SL4T.biRight (a + b) (a + b + c - (a + b)) a (a + b + c - a))
   simpa only [SL4T.powerSumOfCoeff_map, map_mul, map_pow, map_neg, map_one,
-    coreAdjointPowerSum, SL4T.rightE] using h
+    coreAdjointPowerSum, SL4T.rightE] using! h
 
 /-- Every positive Cartan symbol lowers every one-dimensional ideal cell. -/
 theorem coreCartanSymbol_nilpotent (a b c : ℕ) (i : Fin 3) (s : ℕ) (hs : 0 < s) :

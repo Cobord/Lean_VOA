@@ -49,7 +49,7 @@ theorem Good.smul {χ : FormalQSeries} (hχ : Good b χ) (c : ℂ) : Good b (c �
     fun n => (qTerm_smul c χ n z).symm⟩
 
 theorem Good.sub {χ ψ : FormalQSeries} (hχ : Good b χ) (hψ : Good b ψ) : Good b (χ - ψ) := by
-  simpa [sub_eq_add_neg] using hχ.add (hψ.smul (-1))
+  simpa [sub_eq_add_neg] using! hχ.add (hψ.smul (-1))
 
 theorem Good.finsetSum {κ : Type*} (s : Finset κ) (g : κ → FormalQSeries)
     (hg : ∀ i ∈ s, Good b (g i)) : Good b (∑ i ∈ s, g i) :=

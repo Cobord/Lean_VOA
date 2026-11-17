@@ -505,8 +505,8 @@ theorem bigSub_eq_top : bigSub = ⊤ := by
   intro p _
   rw [← MvPolynomial.support_sum_monomial_coeff p]
   refine Submodule.sum_mem _ (fun d _ => ?_)
-  have hs : (MvPolynomial.coeff d p) • (monomial d 1 : SymSl2)
-      = monomial d (MvPolynomial.coeff d p) := by
+  have hs : (p.coeff d) • (monomial d 1 : SymSl2)
+      = monomial d (p.coeff d) := by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
   rw [← hs, monomial_one_eq]
   exact Submodule.smul_mem _ _ (monomial_mem_bigSub (d 0 + d 2) (d 0) (d 1) (d 2) rfl)
@@ -738,7 +738,7 @@ theorem not_C2Cofinite (hex : S.IsExact) : ¬ C2Cofinite W := by
   haveI : Module.Finite ℂ (A₂ W) := hfin
   have hind : LinearIndependent ℂ (fun n : ℕ => S.map (eSym ^ n)) := by
     have := tower_linearIndependent.map' S.nilpLift (S.nilpLift_ker hex)
-    simpa [Function.comp, nilpLift_nmk] using this
+    exact this
   haveI : Finite ℕ := hind.finite
   exact not_finite ℕ
 

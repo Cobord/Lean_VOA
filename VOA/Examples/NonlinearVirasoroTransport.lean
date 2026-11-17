@@ -90,6 +90,8 @@ No `sorry`, no `admit`, no `native_decide`, no new axiom; `VOA.pbw` is not used.
 -/
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirModule
 
 open VOA
@@ -464,7 +466,7 @@ theorem gv_linearIndependent (c : ℂ) :
     have := congrArg Subtype.val hab
     simpa using this
   have h := (sortedWordSt_linearIndependent c).comp _ hinj
-  convert h using 1
+  convert h using 1 <;> rfl
 
 /-! ## §8  Deliverable B, bundled: a `PreVertexAlgebra` structure on `T(R)/M` -/
 

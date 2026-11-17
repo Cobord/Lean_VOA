@@ -119,7 +119,7 @@ theorem mixedLabelModule_finite_and_local_bound (a b : ℕ) :
   haveI : FiniteDimensional ℂ (⊤ : Submodule ℂ (MixedLabelModule a b)) := hf
   haveI : FiniteDimensional ℂ (MixedLabelModule a b) :=
     Module.Finite.of_surjective (Submodule.topEquiv.toLinearMap) (Submodule.topEquiv.surjective)
-  exact ⟨inferInstance, by simpa only [finrank_top] using hr⟩
+  exact ⟨inferInstance, by simpa only [finrank_top] using! hr⟩
 
 end
 

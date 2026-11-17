@@ -41,7 +41,7 @@ theorem analyticAt_lambertTail_zero (c : ℕ → ℂ) {r : ℝ}
   have hd : DifferentiableOn ℂ (lambertTail c) (Metric.ball 0 r) := by
     apply Complex.differentiableOn_tsum_of_summable_norm (hc.div_const (1 - r))
     · intro n q hq
-      have hqr : ‖q‖ < r := by simpa [Metric.mem_ball, dist_zero_right] using hq
+      have hqr : ‖q‖ < r := by simpa [Metric.mem_ball, dist_zero_right] using! hq
       have hn : 1 - q ^ (n + 1) ≠ 0 := by
         have hpow : ‖q ^ (n + 1)‖ < 1 := by
           rw [norm_pow]
@@ -55,8 +55,8 @@ theorem analyticAt_lambertTail_zero (c : ℕ → ℂ) {r : ℝ}
     · exact Metric.isOpen_ball
     · intro n q hq
       apply lambertTerm_bound c hr0.le hr1
-      exact (by simpa [Metric.mem_ball, dist_zero_right] using hq : ‖q‖ < r).le
-  exact hd.analyticAt (Metric.isOpen_ball.mem_nhds (by simpa using hr0))
+      exact (by simpa [Metric.mem_ball, dist_zero_right] using! hq : ‖q‖ < r).le
+  exact hd.analyticAt (Metric.isOpen_ball.mem_nhds (by simpa using! hr0))
 
 /-- The total series definition is an actual sum throughout the bounded disc. -/
 theorem hasSum_lambertTail (c : ℕ → ℂ) {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1)
@@ -78,8 +78,8 @@ theorem summable_ellipticCoeff (m : ℕ) (x : ℂ) {r : ℝ} (hr : 0 ≤ r)
   have hg (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t < 1) :
       Summable (fun n : ℕ => (n + 1 : ℝ) ^ m * t ^ (n + 1)) := by
     have h := summable_pow_mul_geometric_of_norm_lt_one (r := t) m
-      (by simpa only [Real.norm_eq_abs, abs_of_nonneg ht0] using ht1)
-    simpa only [Nat.cast_add, Nat.cast_one] using (summable_nat_add_iff 1).mpr h
+      (by simpa only [Real.norm_eq_abs, abs_of_nonneg ht0] using! ht1)
+    simpa only [Nat.cast_add, Nat.cast_one] using! (summable_nat_add_iff 1).mpr h
   have hs := (hg (r * ‖x‖) (by positivity) hx).add
     (hg (r * ‖x⁻¹‖) (by positivity) hxi)
   refine Summable.of_nonneg_of_le (fun n => by positivity) (fun n => ?_) hs
@@ -87,7 +87,7 @@ theorem summable_ellipticCoeff (m : ℕ) (x : ℂ) {r : ℝ} (hr : 0 ≤ r)
       (n + 1 : ℝ) ^ m * (‖x‖ ^ (n + 1) + ‖x⁻¹‖ ^ (n + 1)) := by
     unfold ellipticCoeff
     rw [norm_mul, norm_pow, show ‖(n + 1 : ℂ)‖ = (n + 1 : ℝ) by
-      simpa using Complex.norm_natCast (n + 1)]
+      simpa using! Complex.norm_natCast (n + 1)]
     apply mul_le_mul_of_nonneg_left _ (by positivity)
     simpa only [norm_pow, norm_mul, norm_neg, norm_one, one_pow, one_mul]
       using norm_sub_le (x ^ (n + 1)) ((-1 : ℂ) ^ m * (x⁻¹) ^ (n + 1))

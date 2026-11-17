@@ -50,6 +50,9 @@ namespace VOA
 open VertexOperatorAlgebra
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -356,7 +359,7 @@ theorem MBL_zero_ell (ρ : VHatRep W M) (htr : ActModeTruncated ρ) (u v : 𝒱)
       = ∑ᶠ i : ℕ, (gBinom m i) • ρ.actMode (W.smul u i v) (m + n - i) x := by
     have hbr := ρ.actMode_bracket u v m n
     have happ := congrArg (fun T : Module.End ℂ M => T x) hbr
-    simp only at happ
+    try simp only at happ
     rw [happ]
     -- push `(· x)` through the finite OPE finsum
     have hfin : (Function.support fun i : ℕ =>
@@ -430,7 +433,7 @@ theorem module_borcherds (ρ : VHatRep W M) (htr : ActModeTruncated ρ) (hit : M
       have key := antidiag_pin
         (fun ℓ' n' => MBL ρ u v x ℓ' (-(k : ℤ) - 1) n' - MBR ρ u v x ℓ' (-(k : ℤ) - 1) n')
         (fun ℓ' n' => by
-          dsimp only
+          try dsimp only
           have hbl := MBL_rec ρ htr u v x ℓ' (-(k : ℤ) - 1) n'
           have hbr := MBR_rec ρ u v x ℓ' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) from by ring] at hbl hbr
@@ -438,7 +441,7 @@ theorem module_borcherds (ρ : VHatRep W M) (htr : ActModeTruncated ρ) (hit : M
           rw [hbl, hbr] at hih
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
-        (fun n' => by dsimp only; rw [MBL_zero_ell ρ htr u v x (-(k : ℤ) - 1) n', sub_self])
+        (fun n' => by (try dsimp only); rw [MBL_zero_ell ρ htr u v x (-(k : ℤ) - 1) n', sub_self])
         ℓ n
       exact sub_eq_zero.mp key
 

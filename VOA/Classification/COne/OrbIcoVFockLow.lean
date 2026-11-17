@@ -40,10 +40,10 @@ theorem exists_local_low_first_row_basis (N : ℕ) (hN : N < 13) :
   have hcols (j : J) : familyColumns N a 1 j = fockCoordinates N (B j).val := by
     funext d
     rw [familyColumns, ← familyLevelCoefficient_sound N (a j) 1 one_ne_zero d.val]
-    change coeff d.val (familyMap 1 (vermaLevelState _ _ N
-      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))) = _
+    change (familyMap 1 (vermaLevelState _ _ N
+      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))).coeff d.val = _
     rw [vermaLevelState_coordinates]
-    exact congrArg (fun v : gradingWN 1 N => coeff d.val v.val) (hu j)
+    exact congrArg (fun v : gradingWN 1 N => (v.val).coeff d.val) (hu j)
   let K : LinearMap.range F →ₗ[ℂ] (FockOccupations N → ℂ) :=
     (fockCoordinates N).comp (LinearMap.range F).subtype
   have hK : Function.Injective K :=
@@ -70,7 +70,7 @@ theorem exists_local_low_first_row_basis (N : ℕ) (hN : N < 13) :
       have hb := (chargedFockLevelMap (familyBackground s.val) (familyMomentum s.val) N).finrank_range_le
       rw [vermaLevel_finrank] at hb
       change Module.finrank ℂ (LinearMap.range (chargedFockLevelMap (familyBackground s.val) (familyMomentum s.val) N)) ≤ Fintype.card (Fin (fockBasisSize N))
-      simpa only [Fintype.card_fin, family_fock_low_dimension_one N hN] using hb)
+      simpa only [Fintype.card_fin, family_fock_low_dimension_one N hN] using! hb)
 
 
 theorem exists_local_self_fock_basis (N : ℕ) :
@@ -104,7 +104,7 @@ theorem family_uniformProbe_kills_low_kernel_near (N : ℕ) (hN : N < 13) :
     omega
   intro v hv hz
   have hvz : (⟨v,hv⟩ : sortedSpan (familyCharge s.val) (familyWeight s.val) N) = 0 :=
-    hi (Subtype.ext (by simpa only [map_zero] using hz))
+    hi (Subtype.ext (by simpa only [map_zero] using! hz))
   have he : v=0 := congrArg Subtype.val hvz
   rw [he, map_zero]
 

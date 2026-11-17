@@ -75,13 +75,13 @@ theorem split_rename {m d : ℕ} (f : Fin m → Fin m) (h : Fin d → Fin d)
 def auxiliaryCoefficient {m d : ℕ} (a : Fin d →₀ ℕ)
     (p : TensorPolynomial (K := K) (σ := σ) m d) :
     TensorPolynomial (K := K) (σ := σ) m 0 :=
-  fun t => MvPolynomial.coeff a (split m d (p t))
+  fun t => (split m d (p t)).coeff a
 
 /-- Coefficient extraction commutes with every current-root substitution. -/
 theorem coefficient_current_rename {m d : ℕ} (a : Fin d →₀ ℕ)
     (f : Fin m → Fin m) (p : MvPolynomial (Particle m d) K) :
-    MvPolynomial.coeff a (split m d (MvPolynomial.rename (particleMap f id) p)) =
-      MvPolynomial.rename f (MvPolynomial.coeff a (split m d p)) := by
+    (split m d (MvPolynomial.rename (particleMap f id) p)).coeff a =
+      MvPolynomial.rename f ((split m d p).coeff a) := by
   rw [split_rename]
   simp [MvPolynomial.coeff_map]
 
@@ -126,9 +126,9 @@ theorem particleMap_update {m d : ℕ} (i j : Fin m) :
 /-- Auxiliary coefficients commute with literal current-current collisions. -/
 theorem coefficient_diagonalEnd {m d : ℕ} (a : Fin d →₀ ℕ)
     (i j : Fin m) (p : MvPolynomial (Particle m d) K) :
-    MvPolynomial.coeff a (split m d (diagonalEnd (i.castAdd d) (j.castAdd d) p)) =
-      diagonalEnd i j (MvPolynomial.coeff a (split m d p)) := by
-  simpa only [diagonalEnd, particleMap_update] using
+    (split m d (diagonalEnd (i.castAdd d) (j.castAdd d) p)).coeff a =
+      diagonalEnd i j ((split m d p).coeff a) := by
+  simpa only [diagonalEnd, particleMap_update] using!
     coefficient_current_rename a (Function.update id i j) p
 
 /-- Contract a pair of tensor slots against a quadratic relation, before
@@ -159,7 +159,7 @@ theorem currentReadback_eq_zero_iff {m d : ℕ} (q : σ × σ → K)
 theorem coefficient_contraction {m d : ℕ} (a : Fin d →₀ ℕ)
     (q : σ × σ → K) (ij : IncreasingPair (Fin m)) (t : Fin m → σ)
     (p : TensorPolynomial (K := K) (σ := σ) m d) :
-    MvPolynomial.coeff a (split m d (contraction q ij t p)) =
+    (split m d (contraction q ij t p)).coeff a =
       contraction q ij t (auxiliaryCoefficient a p) := by
   simp [contraction, auxiliaryCoefficient, split, MvPolynomial.coeff_sum,
     MvPolynomial.coeff_C_mul]
@@ -173,9 +173,10 @@ theorem currentEquations_iff_coefficients {m d : ℕ} (Q : ρ → σ × σ → K
   · intro hp a r ij t
     apply (currentReadback_eq_zero_iff (Q r) ij t _).mpr
     have hr := (currentReadback_eq_zero_iff (Q r) ij t p).mp (hp r ij t)
-    have hc := congrArg (fun f => MvPolynomial.coeff a (split m d f)) hr
-    simpa only [map_zero, MvPolynomial.coeff_zero, coefficient_diagonalEnd,
-      coefficient_contraction] using hc
+    have hc := congrArg (fun f => (split m d f).coeff a) hr
+    simp only [map_zero, AddMonoidAlgebra.coeff_zero, coefficient_diagonalEnd,
+      coefficient_contraction, Finsupp.coe_zero, Pi.zero_apply] at hc
+    exact hc
   · intro hp r ij t
     apply (currentReadback_eq_zero_iff (Q r) ij t p).mpr
     apply (split (K := K) m d).injective
@@ -219,14 +220,14 @@ theorem exists_particlePermutation_of_extends {m d : ℕ}
     intro i
     have hx := congrArg (fun f : Equiv.Perm (Fin m ⊕ Fin d) =>
       finSumFinEquiv (f (finSumFinEquiv.symm i))) hEq
-    simpa [E, particlePermutation, Equiv.Perm.sumCongrHom_apply] using hx.symm
+    simpa [E, particlePermutation, Equiv.Perm.sumCongrHom_apply] using! hx.symm
   have hg : g' = g := by
     apply Equiv.ext
     intro i
     apply Fin.castAdd_injective m d
     have hi := he i
     rw [heq] at hi
-    simpa only [particlePermutation_coe, particleMap_current] using hi
+    simpa only [particlePermutation_coe, particleMap_current] using! hi
   exact ⟨h, hg ▸ heq⟩
 
 /-- Scalar symmetry in just the auxiliary variables. -/
@@ -246,7 +247,7 @@ theorem auxiliaryCoefficient_symmetric {m d : ℕ}
   subst e
   have hs := hp (particlePermutation g (Equiv.refl (Fin d))) g
     (particlePermutation_extends g (Equiv.refl _)) t
-  have hc := congrArg (fun f => MvPolynomial.coeff a (split m d f)) hs
+  have hc := congrArg (fun f => (split m d f).coeff a) hs
   simpa only [particlePermutation_coe, Equiv.coe_refl,
     coefficient_current_rename, auxiliaryCoefficient] using hc
 
@@ -268,7 +269,7 @@ theorem symmetric_iff_coefficients {m d : ℕ}
   · intro hp
     refine ⟨?_, auxiliaryCoefficient_symmetric p hp⟩
     intro h t
-    simpa using hp (particlePermutation (Equiv.refl _) h) (Equiv.refl _)
+    simpa using! hp (particlePermutation (Equiv.refl _) h) (Equiv.refl _)
       (particlePermutation_extends (Equiv.refl _) h) t
   · rintro ⟨haux, hcoeff⟩ e g he t
     obtain ⟨h, rfl⟩ := exists_particlePermutation_of_extends e g he
@@ -283,7 +284,7 @@ theorem symmetric_iff_coefficients {m d : ℕ}
       exact hcoeff a g g (fun _ => rfl) t
     rw [hcurrent]
     have haux' := congrArg (split (K := K) m d) (haux h (t ∘ g.symm))
-    simpa [particlePermutation_coe, split_rename, MvPolynomial.map_id] using haux'
+    simpa [particlePermutation_coe, split_rename, MvPolynomial.map_id] using! haux'
 
 /-- Exact coefficientwise characterization of the carrier with auxiliary
 variables. In particular no additional current relations appear after adjoining

@@ -71,7 +71,7 @@ theorem remainderTopMinor_shift_of_nilpotent (ys zs : List A) (z : A) (N k j : �
             rw [show N + k - 1 - e = N + (k - 1 - e) by omega]
           rw [hs] at h
           simpa only [Pi.smul_apply, Pi.neg_apply, Finset.sum_apply, smul_eq_mul,
-            M, hb, Nat.add_zero] using eq_neg_of_add_eq_zero_left h
+            M, hb, Nat.add_zero] using! eq_neg_of_add_eq_zero_left h
         rw [hcol]
         apply Submodule.neg_mem
         apply Submodule.sum_mem
@@ -120,16 +120,16 @@ theorem remainderTopMinor_shift_mem (ys zs : List A) (z : A) (N k j : ℕ)
   have hq : D4Levi.ksEPoly ((ys.map q ++ zs.map q) ++ [q z]) = 1 := by
     have h := congrArg (Polynomial.map q) he
     simpa only [alphabetElementary_map, List.map_append, List.map_cons,
-      List.map_nil, Polynomial.map_one] using h
+      List.map_nil, Polynomial.map_one] using! h
   have hz : q z ^ (k + 1) = 0 := by
     rw [← map_pow]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span rfl)
   have h := remainderTopMinor_shift_of_nilpotent (ys.map q) (zs.map q) (q z) N k j hN
-    (by simpa only [List.length_append, List.length_map] using hlen) hq hz cols
+    (by simpa only [List.length_append, List.length_map] using! hlen) hq hz cols
   rw [← remainderTopIdeal_map q ys N j] at h
   have hm : z ^ k * remainderTopMinor ys (N - 1) j cols ∈
       ((remainderTopIdeal ys N j).map q).comap q := by
-    simpa only [Ideal.mem_comap, map_mul, map_pow, remainderTopMinor_map] using h
+    simpa only [Ideal.mem_comap, map_mul, map_pow, remainderTopMinor_map] using! h
   rw [Ideal.comap_map_of_surjective q (Ideal.Quotient.mk_surjective)] at hm
   change z ^ k * remainderTopMinor ys (N - 1) j cols ∈
     remainderTopIdeal ys N j ⊔ RingHom.ker (Ideal.Quotient.mk I) at hm
@@ -164,7 +164,6 @@ theorem remainderTopIdeal_later_layer (ys zs : List A) (z : A) (N k j i : ℕ)
   refine ⟨z ^ (i - k) * a, Ideal.mul_mem_left _ _ ha,
     z ^ (i + 1) * c, Ideal.mem_span_singleton.mpr ⟨c, rfl⟩, ?_⟩
   have ht := congrArg (fun t => z ^ (i - k) * t) hab
-  dsimp only at ht
   rw [hc, mul_add, ← mul_assoc, ← pow_add,
     show i - k + (k + 1) = i + 1 by omega] at ht
   convert ht using 1

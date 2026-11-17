@@ -72,7 +72,7 @@ theorem convex_overlapDomain : Convex ℝ overlapDomain := by
   · simp only [Complex.add_re, Complex.real_smul, Complex.mul_re, Complex.ofReal_re,
       Complex.ofReal_im, zero_mul, sub_zero]
     rcases eq_or_lt_of_le ha with rfl | ha'
-    · simp only [zero_add] at hab; subst hab; simpa using hy1
+    · simp only [zero_add] at hab; subst hab; simpa using! hy1
     · nlinarith [mul_lt_mul_of_pos_left hx1 ha']
   · simp only [Complex.add_im, Complex.real_smul, Complex.mul_im, Complex.ofReal_re,
       Complex.ofReal_im, zero_mul, add_zero]
@@ -92,7 +92,7 @@ theorem overlapDomain_subset : overlapDomain ⊆ halfPlane := fun _ ht => ht.1
 
 theorem log_mem_overlapDomain {u : ℝ} (hu0 : 0 < u) (hu1 : u < 1) :
     ((Real.log u : ℝ) : ℂ) ∈ overlapDomain := by
-  refine ⟨by simpa using Real.log_neg hu0 hu1, ?_⟩
+  refine ⟨by simpa using! Real.log_neg hu0 hu1, ?_⟩
   simp only [Complex.ofReal_im, abs_zero]
   positivity
 
@@ -138,7 +138,7 @@ theorem exists_fuchsianEq_pos {lam : ℂ} {s : ℕ} {c : ℕ → PowerSeries ℂ
     ∃ s' c', 1 ≤ s' ∧ (∀ i < s', c' i ∈ SubexpPS) ∧ FuchsianEq lam s' c' G := by
   rcases Nat.eq_zero_or_pos s with rfl | hs
   · refine ⟨1, fun _ => 0, le_rfl, fun _ _ => SubexpPS.zero_mem, ?_⟩
-    have hG : G = 0 := by simpa [FuchsianEq] using h
+    have hG : G = 0 := by simpa [FuchsianEq] using! h
     simp [FuchsianEq, hG]
   · exact ⟨s, c, hs, hc, h⟩
 

@@ -79,7 +79,7 @@ theorem exists_finite_lwGenerated_of_C1Graded (P : LWModule W) {B : ℕ}
       rintro _ ⟨d, u, w', hd1, hdN, hu, hw', rfl⟩
       have hw'G : w' ∈ Gfil A S 0 := IH (N - d) (by omega) w' hw'
       have h := Gfil_prepend A S (c := u) (b := d) (n := 0) hu hw'G
-      simpa using h
+      simpa using! h
   rw [LWGenerated, eq_top_iff]
   intro x _
   refine induction_lev (lwAdmissible P) (motive := fun x => x ∈ Gfil A S 0) x
@@ -89,7 +89,7 @@ theorem exists_finite_lwGenerated_of_C1Graded (P : LWModule W) {B : ℕ}
   · rw [weight_neg_eq_bot P hk, Submodule.mem_bot] at hy
     rw [hy]; exact Submodule.zero_mem _
   · obtain ⟨K, rfl⟩ : ∃ K : ℕ, k = (K : ℤ) := ⟨k.toNat, by omega⟩
-    exact hlev K y (by simpa using hy)
+    exact hlev K y (by simpa using! hy)
 
 /-- **Over a `C₂`-cofinite `𝒱`, a lowest-weight module is `C₂`-cofinite iff it is graded
 `C₁`-cofinite.** -/

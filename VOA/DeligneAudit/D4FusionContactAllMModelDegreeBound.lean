@@ -76,11 +76,15 @@ theorem exists_weighted_polyEval {m : ℕ} (hm : 1 ≤ m) (h : LocalWeylRelG D4s
           exact (MvPolynomial.isWeightedHomogeneous_X ℂ (modeCurrentWeight m)
             (x.1, ⟨x.2, hx⟩)).mul hp
         · have hj : modeLetter m (x.1, ⟨x.2, hx⟩) = (x.1, x.2) := rfl
-          rw [polyEval_X_mul, hj, hpe, grOp_grWord]
+          refine (polyEval_X_mul R w (modeLetter m) (x.1, ⟨x.2, hx⟩) p).trans ?_
+          refine (congrArg (grOp R w x.1 x.2) hpe).trans ?_
+          exact grOp_grWord R w x.1 x.2 l
       · refine ⟨0, Submodule.zero_mem _, ?_⟩
-        rw [map_zero, ← grOp_grWord, grOp_zero_of_source_zero R w x.1 x.2
-          (localWeyl_high_kills hm h (radIndex x.1) x.2 (by omega))]
-        rfl
+        have hz := grOp_zero_of_source_zero R w x.1 x.2
+          (localWeyl_high_kills hm h (radIndex x.1) x.2 (by omega))
+        rw [map_zero]
+        refine Eq.trans ?_ (grOp_grWord R w x.1 x.2 l)
+        exact (LinearMap.congr_fun hz _).symm
 
 /-- The model's degree-d piece covers the degree-d word symbols. -/
 theorem GrDeg_le_modelDegree_map {m : ℕ} (hm : 1 ≤ m) (h : LocalWeylRelG D4sector R w m)
@@ -150,7 +154,7 @@ theorem total_of_degree_le {m : ℕ}
       ∑ b ∈ Finset.range (max B B0), PowerSeries.coeff b (D4Wp.d4FusionFZ m) := by
     apply Finset.sum_subset (Finset.range_subset_range.mpr (le_max_right B B0))
     intro b _ hb
-    exact hz b (by simpa using hb)
+    exact hz b (by simpa using! hb)
   have h4 : (∑ b ∈ Finset.range B, (Module.finrank ℂ (cycDeg R w b) : ℚ)) ≤
       ((28 : ℕ) : ℚ) ^ m := by
     rw [← hs, h3]
@@ -184,7 +188,7 @@ theorem d4_hilbInt_one (N : ℕ) :
     D4K.hilbInt 1 N = if N = 0 then 28 else if N = 1 then 1 else 0 := by
   unfold D4K.hilbInt
   rw [cartanD4, VOA.DeligneAudit.DeligneCharacter.thetaD4, wordD4, D4Small.charOne_eq]
-  simpa using D4Small.charOne_coeff N
+  simpa using! D4Small.charOne_coeff N
 
 theorem d4FusionFZ_one_eq :
     D4Wp.d4FusionFZ 1 = D4Wp.hilbSeriesZ 1 - PowerSeries.X * D4Wp.d4FusionFZ 0 := by

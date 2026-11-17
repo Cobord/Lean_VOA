@@ -20,6 +20,6 @@ theorem iterateS_value (n : ℤ) (i : ℕ) (S A B C D E F G H T : SectorVector)
   have h := vector_eq_of_certificate _ _ hT
   simp only [evaluate_scaleVector, evaluate_append] at h
   simpa only [iterateS, evaluate_compact, evaluate_scaleVector, evaluate_append,
-    evaluate_neutralS, evaluate_eS, hA, hB, hC, hD, hE, hF, hG, hH] using h
+    evaluate_neutralS, evaluate_eS, hA, hB, hC, hD, hE, hF, hG, hH] using! h
 
 end VOA.Classification.COne.OrbC2h

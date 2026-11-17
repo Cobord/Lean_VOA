@@ -45,7 +45,7 @@ theorem laurent_zero_unique {u : ℤ → ℂ} {n₁ : ℤ} (hu : ∀ n, n < n₁
     have h1 := VOA.Huang.HKLLoc.hasSum_shift hζ0 (h ζ hζ0 hζ1) i
     have h2 := VOA.Huang.HKLLoc.hasSum_nat_of_int (α := fun k : ℤ => u (k - i)) 0
       (fun k _ => hu _ (by omega)) h1
-    simpa using h2
+    simpa using! h2
   funext n
   rcases lt_or_ge n (-(i : ℤ)) with hn | hn
   · exact hu n (by omega)
@@ -68,7 +68,7 @@ theorem laurent_inf_unique {u : ℤ → ℂ} {n₀ : ℤ} (hu : ∀ n, n₀ < n 
     simp only [Function.comp_apply, Equiv.neg_apply, inv_zpow', neg_neg]
   funext n
   have := congrFun hv (-n)
-  simpa using this
+  simpa using! this
 
 /-! ## The three binomial expansions -/
 
@@ -84,7 +84,7 @@ theorem hasSum_einf (A B : ℤ) {ζ : ℂ} (hζ : 1 < ‖ζ‖) :
     field_simp
   rw [hval] at h
   let g : ℕ → ℤ := fun i => A + B - i
-  have hg : Function.Injective g := fun i j hij => by simpa [g] using hij
+  have hg : Function.Injective g := fun i j hij => by simpa [g] using! hij
   have hf : ∀ n ∉ Set.range g, einf A B n * ζ ^ n = 0 := by
     intro n hn
     have : A + B < n := by
@@ -106,7 +106,7 @@ theorem hasSum_ezero (A B : ℤ) {ζ : ℂ} (hζ0 : ζ ≠ 0) (hζ1 : ‖ζ‖ <
     rw [mul_assoc, ← mul_zpow, show (-1 : ℂ) * (1 + -ζ) = ζ - 1 by ring]
   rw [hval] at h
   let g : ℕ → ℤ := fun i => A + i
-  have hg : Function.Injective g := fun i j hij => by simpa [g] using hij
+  have hg : Function.Injective g := fun i j hij => by simpa [g] using! hij
   have hf : ∀ n ∉ Set.range g, ezero A B n * ζ ^ n = 0 := by
     intro n hn
     have : n < A := by
@@ -124,7 +124,7 @@ theorem hasSum_eone (A B : ℤ) {r : ℂ} (hr0 : r ≠ 0) (hr1 : ‖r‖ < 1) :
   have h := (VOA.Huang.AssocAssociator.hasSum_cbz_pow A hr1).mul_left (r ^ B)
   rw [mul_comm] at h
   let g : ℕ → ℤ := fun j => B + j
-  have hg : Function.Injective g := fun i j hij => by simpa [g] using hij
+  have hg : Function.Injective g := fun i j hij => by simpa [g] using! hij
   have hf : ∀ m ∉ Set.range g, eone A B m * r ^ m = 0 := by
     intro m hm
     have : m < B := by
@@ -193,7 +193,7 @@ theorem residue_of_glue {s t q : ℤ → ℂ} {n₀ n₁ m₁ : ℤ}
     have h1 := VOA.Huang.HKLLoc.hasSum_shift hr0 (hQ r hr0 hr1) N
     have h2 := VOA.Huang.HKLLoc.hasSum_nat_of_int (α := fun k : ℤ => q (k - N)) 0
       (fun k _ => hq0 _ (by omega)) h1
-    simpa using h2
+    simpa using! h2
   have hsum : ∀ r : ℂ, ‖r‖ < 1 → Summable fun k : ℕ => q ((k : ℤ) - N) * r ^ k := by
     intro r hr
     rcases eq_or_ne r 0 with rfl | hr0
@@ -266,7 +266,6 @@ theorem residue_of_glue {s t q : ℤ → ℂ} {n₀ n₁ m₁ : ℤ}
   have hsE : s = Einf S c (-(N : ℤ)) := by
     have hu := laurent_inf_unique (u := fun n => s n - Einf S c (-(N : ℤ)) n) (n₀ := n₀)
       (fun n hn => by
-        dsimp only
         rw [hs0 n hn, zero_sub, neg_eq_zero]
         refine Finset.sum_eq_zero fun k hk => ?_
         rw [Finset.mem_Icc] at hk
@@ -282,7 +281,6 @@ theorem residue_of_glue {s t q : ℤ → ℂ} {n₀ n₁ m₁ : ℤ}
   have htE : t = Ezero S c (-(N : ℤ)) := by
     have hu := laurent_zero_unique (u := fun n => t n - Ezero S c (-(N : ℤ)) n) (n₁ := n₁)
       (fun n hn => by
-        dsimp only
         rw [ht0 n hn, zero_sub, neg_eq_zero]
         refine Finset.sum_eq_zero fun k hk => ?_
         rw [Finset.mem_Icc] at hk
@@ -298,7 +296,6 @@ theorem residue_of_glue {s t q : ℤ → ℂ} {n₀ n₁ m₁ : ℤ}
     have hu := laurent_zero_unique (u := fun m => q m - Eone S c (-(N : ℤ)) m)
       (n₁ := min m₁ (-(N : ℤ)))
       (fun m hm => by
-        dsimp only
         rw [hq0 m (by omega), zero_sub, neg_eq_zero]
         refine Finset.sum_eq_zero fun k _ => ?_
         rw [eone_eq_zero (by omega), mul_zero])

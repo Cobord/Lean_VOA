@@ -37,7 +37,7 @@ theorem characterEvaluation_bijective (χ : ι → R →ₐ[K] K)
   have hli := (linearIndependent_algHom_toLinearMap K R K).comp χ hχ
   have hcard : Fintype.card ι = Module.finrank K (Module.Dual K R) := by
     apply le_antisymm hli.fintype_card_le_finrank
-    simpa using hdim
+    simpa using! hdim
   have hspan := hli.span_eq_top_of_card_eq_finrank' hcard
   simp only [Function.comp_def] at hspan
   have hinj : Function.Injective (characterEvaluation χ) := by
@@ -59,7 +59,7 @@ theorem characterEvaluation_bijective (χ : ι → R →ₐ[K] K)
   refine ⟨hinj, ?_⟩
   apply (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
     (f := (characterEvaluation χ).toLinearMap) ?_).mp hinj
-  simpa using hcard.symm
+  simpa using! hcard.symm
 
 /-- A finite algebra with enough distinct characters is a product of fields. -/
 noncomputable def characterAlgEquiv (χ : ι → R →ₐ[K] K)
@@ -103,7 +103,7 @@ theorem zhuV2mPlusSemisimple_of_dimension_characters
   letI := instAlgebraA (V2mPlus m hm)
   letI := finiteDimensional_A_of_C2Cofinite _ (V2mPlus_c2Cofinite m hm)
   obtain ⟨χ, hχ⟩ := hchar m hm hm2
-  exact isSemisimpleRing_of_characters χ hχ (by simpa using hdim m hm hm2)
+  exact isSemisimpleRing_of_characters χ hχ (by simpa using! hdim m hm hm2)
 
 theorem generalizedGeneratorSplitting_of_dimension_characters_lifting_resonant
     (hdim : V2mPlusZhuDimensionBound) (hchar : V2mPlusZhuDistinctCharacters)

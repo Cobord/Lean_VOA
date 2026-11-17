@@ -32,7 +32,7 @@ theorem coeff_diagS (G : PowerSeries (PowerSeries A)) (n : ℕ) :
 
 /-- The coefficient as a sum over pairs `(k, e)` with `k + e = n`. -/
 theorem coeff_diagS' (G : PowerSeries (PowerSeries A)) (n : ℕ) :
-    coeff n (diagS G) = ∑ p ∈ Finset.antidiagonal n, coeff p.2 (coeff p.1 G) := by
+    coeff n (diagS G) = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, coeff p.2 (coeff p.1 G) := by
   rw [coeff_diagS, Finset.Nat.sum_antidiagonal_eq_sum_range_succ (fun a b => coeff b (coeff a G))]
 
 theorem diagS_add (G H : PowerSeries (PowerSeries A)) : diagS (G + H) = diagS G + diagS H := by
@@ -55,17 +55,17 @@ theorem diagS_mul (G H : PowerSeries (PowerSeries A)) : diagS (G * H) = diagS G 
     (fun y => ⟨(y.2.1.1 + y.2.2.1, y.2.1.2 + y.2.2.2), ((y.2.1.1, y.2.2.1), (y.2.1.2, y.2.2.2))⟩)
     ?_ ?_ ?_ ?_ ?_
   · rintro ⟨⟨a, b⟩, ⟨⟨c, d⟩, ⟨e, f⟩⟩⟩ hx
-    simp only [Finset.mem_sigma, Finset.mem_product, Finset.mem_antidiagonal] at hx ⊢
+    simp only [Finset.mem_sigma, Finset.mem_product, Finset.HasAntidiagonal.mem_antidiagonal] at hx ⊢
     exact ⟨by omega, trivial, trivial⟩
   · rintro ⟨⟨a, b⟩, ⟨⟨c, d⟩, ⟨e, f⟩⟩⟩ hx
-    simp only [Finset.mem_sigma, Finset.mem_product, Finset.mem_antidiagonal] at hx ⊢
+    simp only [Finset.mem_sigma, Finset.mem_product, Finset.HasAntidiagonal.mem_antidiagonal] at hx ⊢
     exact ⟨by omega, trivial, trivial⟩
   · rintro ⟨⟨a, b⟩, ⟨⟨c, d⟩, ⟨e, f⟩⟩⟩ hx
-    simp only [Finset.mem_sigma, Finset.mem_product, Finset.mem_antidiagonal] at hx
+    simp only [Finset.mem_sigma, Finset.mem_product, Finset.HasAntidiagonal.mem_antidiagonal] at hx
     obtain ⟨-, h1, h2⟩ := hx
     subst h1; subst h2; rfl
   · rintro ⟨⟨a, b⟩, ⟨⟨c, d⟩, ⟨e, f⟩⟩⟩ hx
-    simp only [Finset.mem_sigma, Finset.mem_product, Finset.mem_antidiagonal] at hx
+    simp only [Finset.mem_sigma, Finset.mem_product, Finset.HasAntidiagonal.mem_antidiagonal] at hx
     obtain ⟨-, h1, h2⟩ := hx
     subst h1; subst h2; rfl
   · rintro ⟨⟨a, b⟩, ⟨⟨c, d⟩, ⟨e, f⟩⟩⟩ _

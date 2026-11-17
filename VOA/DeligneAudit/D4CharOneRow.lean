@@ -59,7 +59,7 @@ theorem mem_gtRows_oneRow (N k : ℕ) (μ : Fin (N + 1) → ℤ) :
   constructor
   · intro hμ
     have hm := (mem_gtRows _ _).mp hμ
-    have h0 : 0 ≤ μ 0 ∧ μ 0 ≤ k := by simpa [gtOneRow] using hm 0
+    have h0 : 0 ≤ μ 0 ∧ μ 0 ≤ k := by simpa [gtOneRow] using! hm 0
     refine ⟨(μ 0).toNat, by omega, ?_⟩
     funext i
     refine Fin.cases ?_ (fun j => ?_) i
@@ -69,12 +69,12 @@ theorem mem_gtRows_oneRow (N k : ℕ) (μ : Fin (N + 1) → ℤ) :
         have ht := hm j.succ
         simp only [gtOneRow, Fin.castSucc_succ, Fin.cons_succ] at ht
         omega
-      simpa [gtOneRow] using hj
+      simpa [gtOneRow] using! hj
   · rintro ⟨j, hj, rfl⟩
     apply (mem_gtRows _ _).mpr
     intro i
     refine Fin.cases ?_ (fun t => ?_) i
-    · simpa [gtOneRow] using And.intro (Int.natCast_nonneg j) (Int.ofNat_le.mpr hj)
+    · simpa [gtOneRow] using! And.intro (Int.natCast_nonneg j) (Int.ofNat_le.mpr hj)
     · simp [gtOneRow, Fin.castSucc_succ]
 
 theorem sum_gtRows_oneRow {A : Type*} [AddCommMonoid A] (N k : ℕ)
@@ -86,9 +86,9 @@ theorem sum_gtRows_oneRow {A : Type*} [AddCommMonoid A] (N k : ℕ)
     ?_ ?_ ?_ ?_ ?_
   · intro μ hμ
     obtain ⟨j, hj, rfl⟩ := (mem_gtRows_oneRow N k μ).mp hμ
-    simpa [gtOneRow] using hj
+    simpa [gtOneRow] using! hj
   · intro j hj
-    exact (mem_gtRows_oneRow N k _).mpr ⟨j, by simpa using hj, rfl⟩
+    exact (mem_gtRows_oneRow N k _).mpr ⟨j, by simpa using! hj, rfl⟩
   · intro μ hμ
     obtain ⟨j, _, rfl⟩ := (mem_gtRows_oneRow N k μ).mp hμ
     simp [gtOneRow]
@@ -110,7 +110,7 @@ theorem gtEval_oneRow_branching (q : R) (u : ℕ → Rˣ) (N k : ℕ) :
   rw [gtEval, sum_gtRows_oneRow]
   apply Finset.sum_congr rfl
   intro j hj
-  have hle : j ≤ k := by simpa using hj
+  have hle : j ≤ k := by simpa using! hj
   rw [gtPsi_oneRow, gtOneRow_sum, gtOneRow_sum, ← Int.natCast_sub hle, zpow_natCast]
   rfl
 

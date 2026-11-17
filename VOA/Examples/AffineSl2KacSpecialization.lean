@@ -88,7 +88,7 @@ theorem weightDeterminant_eq_affineKacProduct_all (t : ℂ) (n : ℕ) (c : ℤ) 
     (hc.continuousAt.tendsto.mono_left nhdsWithin_le_nhds)
   filter_upwards [self_mem_nhdsWithin] with z hz
   have he := congrArg (Polynomial.eval h) (weightDeterminant_eq_affineKacProduct z hz n c)
-  simpa only [Polynomial.eval_mul,Polynomial.eval_C] using he
+  simpa only [Polynomial.eval_mul,Polynomial.eval_C] using! he
 
 end
 end VOA.Wak.Charged

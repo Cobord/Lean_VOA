@@ -96,7 +96,7 @@ theorem weighted_modes_support_finite
   simp only [Finset.mem_coe, Finset.mem_range]
   by_contra h
   have hrK : K ≤ (r : ℤ) := by omega
-  exact hr (by simpa using congrArg (c r • ·) (hK r hrK))
+  exact hr (by simpa using! congrArg (c r • ·) (hK r hrK))
 
 /-- Formal substitution on a single ordinary weight, extended bilinearly in
 the vectors. The weight label is used only in the scalar coefficient. -/
@@ -225,7 +225,7 @@ theorem normalizedIntertwinerSubstitution_iff_sandwich
   · intro h n w x
     rw [h, transportedModes_apply, LinearEquiv.symm_apply_apply]
   · intro h n w x
-    simpa using (h n ((normalizedCoordinateChange P).symm w) x).symm
+    simpa using! (h n ((normalizedCoordinateChange P).symm w) x).symm
 
 /-- The precise remaining comparison with the integrated geometric
 jets suffices for substitution. Cutoffs may depend on the fixed mode and vectors. -/
@@ -265,7 +265,7 @@ theorem bracketModes_derivative_of_substitution
     bracketModes Y n (sqL P.isMod (-1) w) = (-n) • bracketModes Y (n - 1) w := by
   unfold NormalizedIntertwinerSubstitution at h
   ext x
-  simpa only [h, LinearMap.smul_apply] using
+  simpa only [h, LinearMap.smul_apply] using!
     congrArg (fun f : Q.carrier →ₗ[ℂ] N.carrier => f x) (transportedModes_derivative Y n w)
 
 /-- Square-weight grading of the explicit bracket field, conditional precisely
@@ -277,7 +277,7 @@ theorem bracketModes_weight_of_substitution
     (hw : sqL P.isMod 0 w = α • w) (hx : sqL Q.isMod 0 x = β • x) (n : ℂ) :
     sqL N.isMod 0 (bracketModes Y n w x) = (α + β - n - 1) • bracketModes Y n w x := by
   unfold NormalizedIntertwinerSubstitution at h
-  simpa only [h] using transportedModes_weight Y hw hx n
+  simpa only [h] using! transportedModes_weight Y hw hx n
 
 /-- Square commutator for the explicit bracket field, conditional precisely on
 the normalized coordinate identity. -/
@@ -290,7 +290,7 @@ theorem bracketModes_commutator_of_substitution
     ∑ᶠ i : ℤ, cbz m i • bracketModes Y (m + n - i)
       (SquareModule.sqMode P.isMod i a w) x := by
   unfold NormalizedIntertwinerSubstitution at h
-  simpa only [h] using transportedModes_commutator Y a w x m n
+  simpa only [h] using! transportedModes_commutator Y a w x m n
 
 /-- Full square Jacobi for the explicit substituted field, with the same
 single coordinate hypothesis as the derivative and commutator consumers. -/
@@ -305,6 +305,6 @@ theorem bracketModes_jacobi_of_substitution
     ∑ᶠ i : ℤ, cbz m i • bracketModes Y (m + n - i)
       (SquareModule.sqMode P.isMod (l + i) a w) x := by
   unfold NormalizedIntertwinerSubstitution at h
-  simpa only [h] using transportedModes_jacobi Y a w x l m n
+  simpa only [h] using! transportedModes_jacobi Y a w x l m n
 
 end VOA.Huang.GenusOne.IntCoord

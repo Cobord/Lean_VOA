@@ -43,8 +43,8 @@ theorem symbolFamily_incoming (s : ℂ) (hs : s≠0) :
 theorem symbolColumns_sound {J : Type*} (self : Bool) (N : ℕ)
     (a : J → VermaPartitions N → ℂ) (s : ℂ) (hs : s≠0)
     (j : J) (d : FockOccupations N) :
-    coeff d.val (symbolFamilyMap self s
-      (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N (a j)))=
+    (symbolFamilyMap self s
+      (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N (a j))).coeff d.val =
         symbolColumns self N a s j d := by
   cases self
   · exact vacLevelCoefficient_sound N (a j) s hs d.val

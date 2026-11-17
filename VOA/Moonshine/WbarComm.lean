@@ -83,7 +83,7 @@ theorem WbarMode_comm_qp (hVo : GradedOrth W BV) (hVnd : GradedNondeg W BV) (hVi
       = (-1 : ℂ) ^ p • BM a (N.act u (2 * p - m - 2) (Wdag N n t φ)) := by
     rw [form_WbarMode hVo hVnd, WeakModule.act_def, hMinv p u hu m a, sum_L1_qp hqp _
       (fun j v => BM a (mode (N.YM v) (2 * p - m - 2 - (j : ℤ)) (Wdag N n t φ)))
-      (fun j => by dsimp only; rw [map_zero, mode_zero, LinearMap.zero_apply, map_zero])]
+      (fun j => by (try dsimp only); rw [map_zero, mode_zero, LinearMap.zero_apply, map_zero])]
     simp
   rw [map_sub, LinearMap.sub_apply, h1, h2, ← smul_sub, ← map_sub, ← map_smul,
     Wdag_comm_qp N hu hqp ht m n J hJ φ, map_sum, map_sum, LinearMap.sum_apply]

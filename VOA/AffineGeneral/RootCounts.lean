@@ -40,11 +40,13 @@ theorem image_normEq_eq {n : ℕ} (G : Matrix (Fin n) (Fin n) ℤ) (hG : G.IsSym
   constructor
   · rintro ⟨v, hv, rfl⟩
     rw [mem_normEq] at hv
-    have h2 : tailSum rows (List.ofFn v) = 2 := by
-      rw [← hid]; exact_mod_cast hv
+    have hv0 : Matrix.toBilin' G (v : Fin n → ℤ) v = 2 := hv
+    have h2 : tailSum rows (List.ofFn v) = 2 :=
+      (hid v).symm.trans (by exact_mod_cast hv0)
     unfold rootList
     rw [List.mem_filter]
-    exact ⟨mem_enum 2 rows hadm _ (by rw [List.length_ofFn, hlen]) h2.le, decide_eq_true h2⟩
+    exact ⟨mem_enum 2 rows hadm _ (by exact List.length_ofFn.trans hlen.symm) h2.le,
+      decide_eq_true h2⟩
   · intro hs
     unfold rootList at hs
     rw [List.mem_filter] at hs
@@ -52,7 +54,8 @@ theorem image_normEq_eq {n : ℕ} (G : Matrix (Fin n) (Fin n) ℤ) (hG : G.IsSym
     have hl : s.length = n := (length_of_mem_enum 2 rows s hs1).trans hlen
     subst hl
     refine ⟨fun i => s[i], ?_, List.ofFn_getElem⟩
-    rw [mem_normEq]
+    refine (mem_normEq (ofCartan G hG) hPos).2 ?_
+    change Matrix.toBilin' G (fun i => s[i]) (fun i => s[i]) = 2
     have h2 : tailSum rows s = 2 := of_decide_eq_true hs2
     have hs : List.ofFn (fun i : Fin s.length => s[i]) = s := List.ofFn_getElem
     have := hid (fun i => s[i])

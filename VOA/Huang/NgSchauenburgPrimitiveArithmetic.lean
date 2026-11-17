@@ -96,8 +96,8 @@ theorem principal_first_row (N : ℕ) (γ : SL(2, ℤ))
   · have h := γ.property
     rw [Matrix.det_fin_two] at h
     nlinarith
-  · simpa using hγ 0 0
-  · simpa using hγ 0 1
+  · simpa using! hγ 0 0
+  · simpa using! hγ 0 1
 
 /-- Only primitive rescaling of (b,-1) is required for uniform (1,0) invariance.
 This is an arithmetic implication, not a categorical equivariance assumption
@@ -118,7 +118,7 @@ theorem one_zero_invariant_of_primitive_rescaling
     have hS (a b : ℤ) : I b (-a) (σ ModularGroup.S w) = I a b w := by
       have h := he a b ModularGroup.S (σ ModularGroup.S w)
       rw [rowAction_S, modularInvolution_S, map_inv] at h
-      simpa using h
+      simpa using! h
     rw [← hS (δ 0 0) (δ 0 1), hscale _ _ hab ha, hS 1 (δ 0 1)]
     obtain ⟨q, hq⟩ := (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp hb
     have hp : σ (ModularGroup.T ^ (δ 0 1)) = 1 := by
@@ -131,11 +131,11 @@ theorem one_zero_invariant_of_primitive_rescaling
       rw [modularInvolution_T, inv_zpow]
     have h := he 1 0 (ModularGroup.T ^ (δ 0 1)) w
     rw [hi, map_inv, hp, inv_one] at h
-    simpa [rowAction, ModularGroup.coe_T_zpow] using h
+    simpa [rowAction, ModularGroup.coe_T_zpow] using! h
   have h := he 1 0 (modularInvolution γ) z
   rw [modularInvolution_involutive] at h
   rw [← h]
-  simpa [rowAction] using hrow (modularInvolution γ)
+  simpa [rowAction] using! hrow (modularInvolution γ)
     (modularInvolution_inPrincipalCongruence hγ) z
 
 end Rows

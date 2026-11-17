@@ -98,7 +98,7 @@ theorem vacuumObject_id_ne_zero (hv : W.vacuum ≠ 0) :
   intro h
   apply hv
   have := congrArg (fun f : (vacuumObject : Ordinary W) ⟶ vacuumObject => f.val W.vacuum) h
-  simpa using this
+  simpa using! this
 
 /-- **`Y^π = μ Ω₀(Y^ε)` with `μ ≠ 0`.** -/
 theorem piInt_eq_smul_skew (hV : Nice W) (F : FusionChoice W) {D : VOA.ModularData W ι} {a b : ι}
@@ -176,14 +176,18 @@ theorem coordinateChange_Lm1_pow (hv : W.vacuum ≠ 0) (j : ℕ) (y : 𝒱) :
   induction j generalizing y with
   | zero => rfl
   | succ j ih =>
-    rw [pow_succ', Module.End.mul_apply, pow_succ', Module.End.mul_apply, ← ih]
+    rw [pow_succ', Module.End.mul_apply, pow_succ',
+      Module.End.mul_apply (sqL (adjointModule W) (-1)) (sqL (adjointModule W) (-1) ^ j)
+        (normalizedCoordinateChange (vacuumLW W hv) y), ← ih y]
     have h := inverse_square_translation (vacuumLW W hv)
       (normalizedCoordinateChange (vacuumLW W hv)
         (((VOA.SkewIntertwiner.Lm1 (adjointModule W).toWeakModule) ^ j) y))
-    rw [LinearEquiv.symm_apply_apply] at h
-    have h2 := congrArg (normalizedCoordinateChange (vacuumLW W hv)) h
-    rw [LinearEquiv.apply_symm_apply] at h2
-    exact h2.symm
+    exact (congrArg (fun w => normalizedCoordinateChange (vacuumLW W hv)
+        ((vacuumLW W hv).isMod.Lm1 w))
+      ((normalizedCoordinateChange (vacuumLW W hv)).symm_apply_apply
+        (((VOA.SkewIntertwiner.Lm1 (adjointModule W).toWeakModule) ^ j) y))).symm.trans
+      ((congrArg (normalizedCoordinateChange (vacuumLW W hv)) h).symm.trans
+        ((normalizedCoordinateChange (vacuumLW W hv)).apply_symm_apply _))
 
 /-- Traces as a linear functional on the insertion. -/
 theorem traceFun_linear (hV : Nice W) (D : VOA.ModularData W ι) (x : ι)
@@ -192,7 +196,6 @@ theorem traceFun_linear (hV : Nice W) (D : VOA.ModularData W ι) (x : ι)
     (isSimple_iff_adjointModule_isIrreducible W).mp hV.1.simple
   refine ⟨VOA.Huang.GenusOneG1e.tfLin hV.1.c2Cofinite hA (moduleIntertwiner (lwOf D x).isMod)
     (D.hasWeight x) τ, fun v => ?_⟩
-  rw [VOA.Huang.GenusOneG1e.tfLin_apply]
   exact VOA.Huang.GenusOne.IntCoord.vacuum_traceFunction_eq D x v τ
 
 /-- **Trace-level skew-symmetry of bracket modes**, for any pair of vacuum pairings related by
@@ -207,9 +210,12 @@ theorem traceFun_bracketModes_skew (hV : Nice W) (D : VOA.ModularData W ι) (hv 
       μ * exp ((Real.pi : ℂ) * I * (-n - 1)) *
         traceFun D.Mfam D.h x (bracketModes (N := vacuumLW W hv) Y n wp wq) τ := by
   obtain ⟨ℓ, hℓ⟩ := traceFun_linear hV D x τ
-  rw [← hℓ, ← hℓ, normalizedIntertwinerSubstitution_holds (N := vacuumLW W hv) Y' n wq wp,
-    normalizedIntertwinerSubstitution_holds (N := vacuumLW W hv) Y n wp wq, transportedModes_apply,
-    transportedModes_apply, hY']
+  rw [← hℓ (bracketModes (N := vacuumLW W hv) Y' n wq wp),
+    ← hℓ (bracketModes (N := vacuumLW W hv) Y n wp wq),
+    normalizedIntertwinerSubstitution_holds (N := vacuumLW W hv) Y' n wq wp,
+    normalizedIntertwinerSubstitution_holds (N := vacuumLW W hv) Y n wp wq,
+    transportedModes_apply (N := vacuumLW W hv) Y' n wq wp,
+    transportedModes_apply (N := vacuumLW W hv) Y n wp wq, hY']
   set wp' := (normalizedCoordinateChange P).symm wp
   set wq' := (normalizedCoordinateChange Q).symm wq
   have hT : BraidingSkew.Trunc Y.val :=
@@ -221,7 +227,9 @@ theorem traceFun_bracketModes_skew (hV : Nice W) (D : VOA.ModularData W ι) (hv 
   let ℓC : 𝒱 →ₗ[ℂ] ℂ :=
     ℓ.comp ((normalizedCoordinateChange (vacuumLW W hv)).toLinearMap : 𝒱 →ₗ[ℂ] 𝒱)
   have hC : ∀ v : 𝒱, ℓ (normalizedCoordinateChange (vacuumLW W hv) v) = ℓC v := fun v => rfl
-  rw [hC, hC]
+  change ℓC (μ • BraidingSkew.skewModes
+      (VOA.SkewIntertwiner.Lm1 (adjointModule W).toWeakModule) BraidingSkew.omegaPhase Y.val
+        n wq' wp') = μ * exp ((Real.pi : ℂ) * I * (-n - 1)) * ℓC (Y.val n wp' wq')
   rw [BraidingSkew.skewModes_apply hT,
     BraidingSkew.sSum_eq_sum (K + 1) (fun j hj => hK j (by omega)), Finset.sum_range_succ',
     map_smul, map_smul, map_add, map_sum]
@@ -229,14 +237,14 @@ theorem traceFun_bracketModes_skew (hV : Nice W) (D : VOA.ModularData W ι) (hv 
       (BraidingSkew.sTerm (VOA.SkewIntertwiner.Lm1 (adjointModule W).toWeakModule) Y.val n wp' wq'
         (j + 1)) = 0 := by
     intro j _
-    rw [BraidingSkew.sTerm, map_smul, ← hC, coordinateChange_Lm1_pow, hℓ,
-      traceFun_sqL_negOne_pow, smul_zero]
+    rw [BraidingSkew.sTerm, map_smul, ← hC, coordinateChange_Lm1_pow, hℓ]
+    exact (congrArg (fun t => BraidingSkew.sc (j + 1) • t)
+      (traceFun_sqL_negOne_pow D x _ τ j)).trans (smul_zero _)
   rw [Finset.sum_eq_zero hz, zero_add, BraidingSkew.sTerm, pow_zero, Module.End.one_apply,
     map_smul, Nat.cast_zero, add_zero]
   simp only [BraidingSkew.sc, BraidingSkew.omegaPhase, Nat.factorial_zero, Nat.cast_one, inv_one,
     pow_zero, mul_one, smul_eq_mul, one_mul]
   rw [show -(↑Real.pi * I) * (n + 1) = (Real.pi : ℂ) * I * (-n - 1) by ring, ← mul_assoc]
-  rfl
 
 /-- **`TraceSkewInput` is discharged** (given the proved substitution identity). -/
 theorem traceSkewInput_holds : VOA.Huang.GenusOneG1e.TraceSkewInput.{u, w} := by

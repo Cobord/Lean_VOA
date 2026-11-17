@@ -139,9 +139,14 @@ theorem mulBySubPow_map' {𝒲 𝒲' : Type*} [AddCommGroup 𝒲] [Module ℂ �
   induction N with
   | zero => rfl
   | succ N ih =>
-    rw [mulBySubPow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ, LinearMap.comp_apply]
-    funext m n
-    simp only [mulBySub_apply, map_sub]
+    first
+    | (rw [mulBySubPow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ, LinearMap.comp_apply]
+       funext m n
+       simp only [mulBySub_apply, map_sub])
+    | (funext m n
+       show mulBySub (mulBySubPow N ((fun m n => f (G m n)) : FormalDist₂ 𝒲')) m n =
+         f (mulBySub (mulBySubPow N G) m n)
+       rw [mulBySub_apply, mulBySub_apply, ih, map_sub])
 
 /-! ## The vacuum step -/
 
@@ -284,11 +289,11 @@ theorem VPBlockLocal_homog {a b : ℤ} {t₁ t₂ : TP} (ht₁ : t₁ ∈ plusMo
 
 theorem leechWbar_add (t t' : TP) (m : ℤ) : leechWbar (t + t') m = leechWbar t m + leechWbar t' m := by
   have := congrArg (fun F => F m) (leechWbarLin.map_add t t')
-  simpa using this
+  first | simpa using this | exact this
 
 theorem leechWsk_add (t t' : TP) (m : ℤ) : leechWsk (t + t') m = leechWsk t m + leechWsk t' m := by
   have := congrArg (fun F => F m) (leechWskLin.map_add t t')
-  simpa [leechWskLin] using this
+  first | simpa [leechWskLin] using this | exact this
 
 theorem VPfun_add_left (t t' s : TP) : VPfun (t + t') s = VPfun t s + VPfun t' s := by
   funext m n

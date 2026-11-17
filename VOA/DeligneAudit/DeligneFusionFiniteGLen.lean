@@ -141,7 +141,7 @@ theorem length_le_of_neG {w : V} {N0 : ℕ} (hwt : ∀ c, LowG S c → S.wt c �
       have hTrep : T = List.replicate T.length x :=
         List.eq_replicate_iff.mpr ⟨rfl, fun y hy => by
           have := List.all_eq_true.mp (List.all_takeWhile (p := p) (l := x :: rest)) y hy
-          simpa [hp] using this⟩
+          simpa [hp] using! this⟩
       have hTlen : 1 ≤ T.length := by
         rw [hT, List.takeWhile_cons_of_pos (by simp [hp])]; simp
       have hpw : (T ++ D).Pairwise (fun a c => keyG S a ≤ keyG S c) := hTD ▸ hs
@@ -155,8 +155,8 @@ theorem length_le_of_neG {w : V} {N0 : ℕ} (hwt : ∀ c, LowG S c → S.wt c �
         | cons y D' =>
           have hy : p y = false := by
             have := List.head_dropWhile_not p (l := x :: rest) (by rw [← hD, hDc]; simp)
-            simpa [← hD, hDc] using this
-          have hyx : y ≠ x := by simpa [hp] using hy
+            simpa [← hD, hDc] using! this
+          have hyx : y ≠ x := by simpa [hp] using! hy
           rw [hDc] at hxD
           rcases List.mem_cons.mp hxD with h | h
           · exact hyx h.symm
@@ -222,7 +222,7 @@ theorem finite_bounded_listsG (L b : ℕ) :
   refine ((List.finite_length_le {x : Fin S.n × ℕ // x.2 ≤ b} L).image
     (List.map Subtype.val)).subset ?_
   rintro l ⟨hl, hb⟩
-  refine ⟨l.pmap Subtype.mk hb, by simpa using hl, ?_⟩
+  refine ⟨l.pmap Subtype.mk hb, by simpa using! hl, ?_⟩
   simp [List.map_pmap]
 
 /-- **The finiteness clause**, type-generic. -/

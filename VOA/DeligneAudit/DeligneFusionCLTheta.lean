@@ -52,7 +52,7 @@ theorem box_mod {E1 : Module.End ℂ V} {H : ℕ → Module.End ℂ V}
       Submodule.mapQ_apply, ← Submodule.Quotient.mk_sub]
     congr 1
     have := congrArg (fun T => T v) (hEF k)
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply] using this
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply] using! this
   have hHFQ : ∀ m k, HQ (m + 1) * FQ k - FQ k * HQ (m + 1) = (-2 : ℂ) • FQ (m + 1 + k) := by
     intro m k; rw [hHQ]; refine qext _ _ fun v => ?_
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply, FQ,
@@ -60,7 +60,7 @@ theorem box_mod {E1 : Module.End ℂ V} {H : ℕ → Module.End ℂ V}
       ← Submodule.Quotient.mk_smul]
     congr 1
     have := congrArg (fun T => T v) (hHF m k)
-    simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply] using this
+    simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply] using! this
   have hE' : EQ (S.mkQ y) = 0 := by
     simp only [EQ, Submodule.mkQ_apply, Submodule.mapQ_apply]
     exact (Submodule.Quotient.mk_eq_zero S).mpr hE
@@ -108,7 +108,7 @@ theorem eθ_f2w (m : ℕ) (c : List ℕ) : ρ.op 2 m (Fx ρ 4 c w) = 0 := by
   have := push ρ 4 (ρ.op 2 m) _ (fun s => c_eθf4 ρ m s) c w ⊥ (by rw [e_w hR (by decide) m]; simp)
     (fun c1 s c2 _ => by
       rw [comm_block_apply ρ 4 _ (fun t => c_e1f4 ρ (m + s) t), e_w hR (by decide) (m + s)]; simp)
-  simpa using this
+  simpa using! this
 
 
 omit hR in

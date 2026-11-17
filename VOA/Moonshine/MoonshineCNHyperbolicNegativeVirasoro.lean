@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton
 open MvPolynomial
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem hypNegativePotential_constantCoeff (κ ell : ℂ) (j : ℕ) :
     constantCoeff (hypNegativePotential κ ell j) = 0 := by
   simp [hypNegativePotential, map_sum]
@@ -60,7 +63,7 @@ theorem hypSugawara_negative_comm (κ ell : ℂ) (i j : ℕ) :
       hypOscillator a (if a = 0 then κ else ell) n * D := by
     intro a n _
     exact sub_eq_zero.mp (hypNegativeVirasoroDefect_commutes κ ell i j a n)
-  have hc : coeff 0 (D 1) = 0 := by
+  have hc : (D 1).coeff 0 = 0 := by
     change constantCoeff (D 1) = 0
     simp only [D, Ring.lie_def, LinearMap.sub_apply, Module.End.mul_apply,
       LinearMap.smul_apply, map_sub, constantCoeff_smul]

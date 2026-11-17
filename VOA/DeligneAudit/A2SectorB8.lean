@@ -75,7 +75,10 @@ theorem psumS_mem_stab (m r : ℕ) : psumS m r ∈ stab m := by
       show applyWord bracketTable m (l ++ [(6, r)]) (deltaVec m 5) = _
       rw [applyWord_append]
       rfl
-  | zero => rw [smul_zero]; exact Submodule.zero_mem _
+  | zero =>
+      have h0 : psumS m r • (0 : TensorPolynomial (K := ℂ) (σ := Fin 8) m 0) = 0 :=
+        funext fun _ => mul_zero (psumS m r).1
+      rw [h0]; exact Submodule.zero_mem _
   | add a b _ _ ha hb => rw [smul_add]; exact Submodule.add_mem _ ha hb
   | smul c a _ ha => rw [smul_comm]; exact Submodule.smul_mem _ c ha
 
@@ -90,7 +93,7 @@ theorem esymmS_mem_stab (m : ℕ) : ∀ k, esymmS m k ∈ stab m := by
         have hN := mul_esymm_eq_sum (Fin (m + 0)) ℂ k
         have hkC : (k : ℂ) ≠ 0 := by exact_mod_cast hk.ne'
         have heq : esymmS m k = (k : ℂ)⁻¹ • (((-1 : ℂ) ^ (k + 1)) •
-            ∑ a ∈ Finset.antidiagonal k with a.1 < k,
+            ∑ a ∈ Finset.HasAntidiagonal.antidiagonal k with a.1 < k,
               ((-1 : ℂ) ^ a.1) • (esymmS m a.1 * psumS m a.2)) := by
           apply Subtype.ext
           simp only [Subalgebra.coe_smul, Subalgebra.coe_mul, esymmS, psumS,
@@ -102,7 +105,7 @@ theorem esymmS_mem_stab (m : ℕ) : ∀ k, esymmS m k ∈ stab m := by
           refine Finset.sum_congr rfl fun a _ => ?_
           ring
         rw [heq]
-        have hterm : ∀ a ∈ (Finset.antidiagonal k).filter (fun a => a.1 < k),
+        have hterm : ∀ a ∈ (Finset.HasAntidiagonal.antidiagonal k).filter (fun a => a.1 < k),
             ((-1 : ℂ) ^ a.1) • (esymmS m a.1 * psumS m a.2) ∈ stab m := by
           intro a ha
           have h1 : esymmS m a.1 * psumS m a.2 ∈ stab m :=

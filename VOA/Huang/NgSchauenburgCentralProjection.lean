@@ -26,6 +26,9 @@ def centralForgetHom (X Y : Center C) : (X ⟶ Y) →ₗ[ℂ] (X.1 ⟶ Y.1) wher
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
+private theorem centralForgetHom_apply_cp (X Y : Center C) (f : X ⟶ Y) :
+    centralForgetHom X Y f = f.f := rfl
+
 /-- The transpose of forgetting reverse morphisms, using the two perfect
 categorical trace pairings. Compatibility is needed for the retraction theorem. -/
 def centralTraceRetraction (F : SphericalFusion C) (Z : SphericalFusion (Center C))
@@ -40,7 +43,7 @@ theorem centralTraceRetraction_pair (F : SphericalFusion C)
     Z.scalarTrace Y (g ≫ centralTraceRetraction F Z X Y f) =
       F.scalarTrace Y.1 (g.f ≫ f) := by
   change Z.tracePairingEquiv Y X (centralTraceRetraction F Z X Y f) g = _
-  simp [centralTraceRetraction, centralForgetHom]
+  simp [centralTraceRetraction, centralForgetHom_apply_cp]
 
 /-- The pairing characterization uniquely determines the central lift. -/
 theorem centralTraceRetraction_unique (F : SphericalFusion C)
@@ -130,7 +133,7 @@ theorem centralTraceRetraction_precomp (F : SphericalFusion C)
   intro g
   have h := centralTraceRetraction_pair F Z f (g ≫ a)
   change Z.scalarTrace Y ((g ≫ a) ≫ _) = F.scalarTrace Y.1 ((g.f ≫ a.f) ≫ f) at h
-  simpa only [Category.assoc] using h
+  simpa only [Category.assoc] using! h
 
 /-- The projection also commutes with postcomposition by central morphisms. -/
 theorem centralTraceRetraction_postcomp (F : SphericalFusion C)
@@ -142,12 +145,12 @@ theorem centralTraceRetraction_postcomp (F : SphericalFusion C)
   intro g
   calc
     _ = Z.scalarTrace Y ((b ≫ g) ≫ centralTraceRetraction F Z X Y f) := by
-      simpa only [Category.assoc] using
+      simpa only [Category.assoc] using!
         Z.scalarTrace_comp_comm (g ≫ centralTraceRetraction F Z X Y f) b
     _ = F.scalarTrace Y.1 ((b.f ≫ g.f) ≫ f) :=
       centralTraceRetraction_pair F Z f (b ≫ g)
     _ = _ := by
-      simpa only [Category.assoc] using F.scalarTrace_comp_comm b.f (g.f ≫ f)
+      simpa only [Category.assoc] using! F.scalarTrace_comp_comm b.f (g.f ≫ f)
 
 /-- The retraction has the expected dual-basis expression using the underlying
 categorical trace. The expression is independent of the chosen central basis. -/

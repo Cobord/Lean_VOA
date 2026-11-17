@@ -5,6 +5,8 @@ import Mathlib.Algebra.Lie.UniversalEnveloping
 
 noncomputable section
 namespace VOA.Moonshine.ConwayNorton
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {g : Type*} [LieRing g] [LieAlgebra ℂ g]
 
@@ -15,7 +17,12 @@ theorem envelopingAlgebra_induction {P : UniversalEnvelopingAlgebra ℂ g → Pr
     (hmul : ∀ a b, P a → P b → P (a * b))
     (hadd : ∀ a b, P a → P b → P (a + b))
     (a : UniversalEnvelopingAlgebra ℂ g) : P a := by
-  obtain ⟨t, rfl⟩ := RingQuot.mkAlgHom_surjective ℂ (UniversalEnvelopingAlgebra.Rel ℂ g) a
+  -- Lean 4.35 port: the enveloping algebra is now a `RingCon` quotient rather than a `RingQuot`;
+  -- the first branch is the 4.35 proof of surjectivity, the second the 4.30 one.
+  obtain ⟨t, rfl⟩ : ∃ t, UniversalEnvelopingAlgebra.mkAlgHom ℂ g t = a := by
+    first
+      | exact RingCon.mkₐ_surjective _ a
+      | exact RingQuot.mkAlgHom_surjective ℂ _ a
   induction t using TensorAlgebra.induction with
   | algebraMap c => simpa using hscalar c
   | ι x => exact hlie x
@@ -41,7 +48,8 @@ theorem enveloping_lieSpan_mem_generatorIdeal (S : Submodule ℂ g)
   | zero => simp
   | add x y _ _ hx hy => simpa only [map_add] using I.add_mem hx hy
   | smul c x _ hx =>
-      simpa only [map_smul] using (I.restrictScalars ℂ).smul_mem c hx
+      simp only [map_smul]
+      exact (I.restrictScalars ℂ).smul_mem c hx
   | lie x y _ _ hx hy =>
       rw [LieHom.map_lie, LieRing.of_associative_ring_bracket]
       exact I.sub_mem (I.smul_mem (UniversalEnvelopingAlgebra.ι ℂ x) hy)
@@ -84,6 +92,7 @@ theorem enveloping_augmentationIdeal_eq (S : Submodule ℂ g)
   · intro a ha
     have h := enveloping_sub_augmentation_mem S hS a
     have ha' : envelopingAugmentation a = 0 := ha
+    show a ∈ envelopingGeneratorLeftIdeal S
     simpa only [ha', map_zero, sub_zero] using h
   · intro a ha
     induction ha using Submodule.span_induction with
@@ -120,7 +129,8 @@ theorem positiveGeneratorSpace_lieSpan (e f : g)
   intro x _
   obtain ⟨y, hy, hxy⟩ := hle x.property
   have hyx : y = x := Subtype.ext hxy
-  simpa only [hyx] using hy
+  rw [← hyx]
+  exact hy
 
 /-- The positive augmentation ideal is generated on the left by U. -/
 theorem positive_augmentationIdeal_eq (e f : g)

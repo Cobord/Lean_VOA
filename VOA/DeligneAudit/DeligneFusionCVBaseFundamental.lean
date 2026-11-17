@@ -47,9 +47,9 @@ theorem quotient_rel (h : CV3Rel R w (1, 0) ν ϱ 1)
     apply cvrel_merge_last_two_ones ϱ.1 ν.1 0 (CVRoots.sl2_first R)
       (fun s => h.raising 0 (by decide) s)
       (fun p hp => h.cartan_pos 6 (by decide) p hp)
-    · simpa only [Nat.zero_add] using h.first
-    · simpa only [Nat.add_zero, Nat.add_comm ϱ.1 ν.1] using htop
-  · simpa only [Nat.add_zero, Nat.zero_add] using h.second
+    · simpa only [Nat.zero_add] using! h.first
+    · simpa only [Nat.add_zero, Nat.add_comm ϱ.1 ν.1] using! htop
+  · simpa only [Nat.add_zero, Nat.zero_add] using! h.second
   · change CVRel (R.op 5)
       (parts (ϱ.1 + ϱ.2) ((ν.1 + 1) + (ν.2 + 0) + 0) (0 + 1)) w
     rw [show (ν.1 + 1) + (ν.2 + 0) + 0 = ν.1 + ν.2 + 1 by omega]
@@ -66,7 +66,7 @@ theorem quotient_rel_iff :
       (fun s => h.raising 0 (by decide) s)
       (fun p hp => h.cartan_pos 6 (by decide) p hp) h.first
     have htop : R.op 3 (ν.1 + ϱ.1 + 1) w = 0 := by
-      simpa only [Nat.add_zero, Nat.add_comm ϱ.1 ν.1] using h1.2
+      simpa only [Nat.add_zero, Nat.add_comm ϱ.1 ν.1] using! h1.2
     refine ⟨⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, htop⟩
     · change R.op 6 0 w = ((1 + 2 * ν.1 + 3 * ϱ.1 + 1 : ℕ) : ℂ) • w
       rw [show 1 + 2 * ν.1 + 3 * ϱ.1 + 1 =
@@ -84,8 +84,8 @@ theorem quotient_rel_iff :
       rw [show 0 + 2 * ν.2 + 3 * ϱ.2 + 1 + 1 =
         1 + 2 * (ν.2 + 0) + 3 * ϱ.2 + 0 + 1 by omega]
       exact h.lowering_second
-    · simpa only [Nat.zero_add] using h1.1
-    · simpa only [Nat.add_zero, Nat.zero_add] using h.second
+    · simpa only [Nat.zero_add] using! h1.1
+    · simpa only [Nat.add_zero, Nat.zero_add] using! h.second
     · change CVRel (R.op 5) (parts (ϱ.1 + ϱ.2) (ν.1 + ν.2 + 1) (1 + 0)) w
       rw [show ν.1 + ν.2 + 1 = (ν.1 + 1) + (ν.2 + 0) + 0 by omega]
       exact h.highest
@@ -96,7 +96,7 @@ theorem quotient_rel_iff :
 presentation, also without a dimension assumption. -/
 theorem kernel_rel (h : CV3Rel R w (1, 0) ν ϱ 1) :
     CV3Rel R (R.op 3 (ν.1 + ϱ.1 + 1) w) (0, 0) (ν + (0, 1)) ϱ 0 := by
-  simpa only [Nat.sub_self] using
+  simpa only [Nat.sub_self] using!
     CVKernelFundamental.first_kernel_rel_fundamental h (by decide)
 
 open VOA.DeligneAudit.A2.CVUniv

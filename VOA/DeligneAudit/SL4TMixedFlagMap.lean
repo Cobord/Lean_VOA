@@ -49,7 +49,7 @@ theorem SpanningChain.map_surjective (ρ : R →ₐ[ℂ] T) (hρ : Function.Surj
       have hm := Ideal.mem_map_of_mem (Polynomial.mapRingHom ρ.toRingHom) hr
       rw [Ideal.map_sup, ideal_map_constant_polynomials] at hm
       simpa only [Polynomial.coe_mapRingHom, Polynomial.map_mul, Polynomial.map_C,
-        Polynomial.map_pow, Polynomial.map_X] using hm
+        Polynomial.map_pow, Polynomial.map_X] using! hm
 
 /-- A reduced-ring surjection is sufficient to transport a flag through a Thom step. -/
 theorem SpanningChain.of_surjective_state (K : Ideal R) (ψ : T →ₐ[ℂ] R ⧸ K)
@@ -77,7 +77,7 @@ theorem SpanningChain.of_zero_state (K I : Ideal R) (A : Ideal R[X]) (t : R)
     SpanningChain A I (I ⊔ Ideal.span {t}) [] := by
   letI := hzero
   have hk : (1 : R) ∈ K := Ideal.Quotient.eq_zero_iff_mem.mp (Subsingleton.elim _ _)
-  have ht : t ∈ I := by simpa only [mul_one] using hK 1 hk
+  have ht : t ∈ I := by simpa only [mul_one] using! hK 1 hk
   have hle : Ideal.span {t} ≤ I := Ideal.span_le.mpr (by rintro x rfl; exact ht)
   rw [sup_eq_left.mpr hle]
   exact .nil _
@@ -88,10 +88,10 @@ theorem SpanningChain.join_range (A : Ideal R[X]) (J : ℕ → Ideal R)
     (h : ∀ i < n, SpanningChain A (J i) (J (i + 1)) (ns i)) :
     SpanningChain A (J 0) (J n) ((List.range n).flatMap ns) := by
   induction n with
-  | zero => simpa using SpanningChain.nil (A := A) (J 0)
+  | zero => simpa using! SpanningChain.nil (A := A) (J 0)
   | succ n ih =>
       rw [List.range_succ, List.flatMap_append]
-      simpa using (ih (fun i hi => h i (by omega))).append (h n (by omega))
+      simpa using! (ih (fun i hi => h i (by omega))).append (h n (by omega))
 
 /-- Mapping a divided polynomial is determined by the removed zero root. -/
 theorem polynomial_map_divX_of_zero_root (ρ : R →ₐ[ℂ] T) (p : R[X]) (q : T[X])
@@ -100,7 +100,7 @@ theorem polynomial_map_divX_of_zero_root (ρ : R →ₐ[ℂ] T) (p : R[X]) (q : 
   have hc := congrArg (fun f : T[X] => f.coeff (n + 1)) h
   dsimp at hc
   rw [coeff_map, coeff_X_mul] at hc
-  simpa only [coeff_map, coeff_divX] using hc
+  simpa only [coeff_map, coeff_divX] using! hc
 
 /-- Dividing by a single zero root changes the generator relation only by a constant term. -/
 theorem characteristic_divX_mem (p : R[X]) (t : R) (I : Ideal R) (A : Ideal R[X])
@@ -130,9 +130,9 @@ theorem SpanningChain.of_state_without_root (K : Ideal R) (ψ : T →ₐ[ℂ] R 
     (h : SpanningChain (Ideal.span {p} ⊔ Ideal.span {X ^ m}) ⊥ ⊤ ns) :
     SpanningChain A I (I ⊔ Ideal.span {t}) ns := by
   have ht := SpanningChain.of_surjective_state K ψ hψ t I A p q m 0 hK hpoly
-    (by simpa using ((show A ≤ I.map Polynomial.C ⊔ A from le_sup_right)
-      (A.mul_mem_left (Polynomial.C t) hq))) (by simpa using hm) h
-  simpa using ht
+    (by simpa using! ((show A ≤ I.map Polynomial.C ⊔ A from le_sup_right)
+      (A.mul_mem_left (Polynomial.C t) hq))) (by simpa using! hm) h
+  simpa using! ht
 
 /-- Transport a state with one removed root, increasing each cell level by one. -/
 theorem SpanningChain.of_state_with_root (K : Ideal R) (ψ : T →ₐ[ℂ] R ⧸ K)
@@ -143,11 +143,11 @@ theorem SpanningChain.of_state_with_root (K : Ideal R) (ψ : T →ₐ[ℂ] R ⧸
     (h : SpanningChain (Ideal.span {p} ⊔ Ideal.span {X ^ m}) ⊥ ⊤ ns) :
     SpanningChain A I (I ⊔ Ideal.span {t}) (ns.map (fun n => n + 1)) := by
   have hc := congrArg (fun f : (R ⧸ K)[X] => f.coeff 0) hpoly
-  have hzero : Ideal.Quotient.mk K (q.coeff 0) = 0 := by simpa using hc
+  have hzero : Ideal.Quotient.mk K (q.coeff 0) = 0 := by simpa using! hc
   have hconst := hK (q.coeff 0) (Ideal.Quotient.eq_zero_iff_mem.mp hzero)
   apply SpanningChain.of_surjective_state K ψ hψ t I A p q.divX m 1 hK
     (polynomial_map_divX_of_zero_root _ q _ hpoly) _ _ h
-  · simpa only [pow_one] using characteristic_divX_mem q t I A hq hconst
+  · simpa only [pow_one] using! characteristic_divX_mem q t I A hq hconst
   · exact (show A ≤ I.map Polynomial.C ⊔ A from le_sup_right) (A.mul_mem_left _ hm)
 
 end

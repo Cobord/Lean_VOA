@@ -2368,7 +2368,7 @@ last input discharged before the headline.
 \begin{example}[The singular vector has vanishing degree-two symbol]\label{l28:ex:singular}
 At $k=-4/3$, $V^k$ has the weight-3 singular vector
 $20e_{-3}-12e_{-2}h_{-1}-6h_{-2}e_{-1}+36e_{-1}e_{-1}f_{-1}+9e_{-1}h_{-1}h_{-1}$ (on $\ltwentyeightvac$; Chapter~\ref{ch:L08}, Theorem~\ref{l08:thm:sing43}).
-Rewriting $2e_{-1}f_{-1}-h_{-2}+\tfrac12h_{-1}^2=\tfrac43L_{-2}$ (the Sugawara relation at $k=-4/3$; a hand computation, not formalized) gives the corrected
+Rewriting $2e_{-1}f_{-1}-h_{-2}+\tfrac12h_{-1}^2=\tfrac43L_{-2}$ (the Sugawara relation at $k=-4/3$, Theorem~\ref{l28:thm:sugrel} below) gives the corrected
 form $20e_{-3}-12e_{-2}h_{-1}-6h_{-2}e_{-1}+24e_{-1}L_{-2}+18e_{-1}h_{-2}$, whose length-two part must have zero symbol if descent holds. It does:
 \par\noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak AdamovicSymbolDescent.lean}.
 \begin{leancode}
@@ -2380,6 +2380,48 @@ theorem singular_symbol_vanishes :
 \end{leancode}
 In jet terms this is the identity $XJ=X'Y-XY'$ at $s=0$. A sanity check, proved by computation.
 \end{example}
+
+\begin{theorem}[The Sugawara relation in the $e,f,h$ basis]\label{l28:thm:sugrel}
+For every level $k\ne-2$, in $V^k(\ltwentyeightsl)$,
+$2(k+2)\,\omega = 2e_{-1}f_{-1}\ltwentyeightvac - h_{-2}\ltwentyeightvac + \tfrac12h_{-1}h_{-1}\ltwentyeightvac$, where $\omega=L_{-2}\ltwentyeightvac$ is the
+Sugawara conformal vector. At $k=-4/3$ this reads $2e_{-1}f_{-1}\ltwentyeightvac-h_{-2}\ltwentyeightvac+\tfrac12h_{-1}^2\ltwentyeightvac=\tfrac43L_{-2}\ltwentyeightvac$.
+\end{theorem}
+\noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak AffineSl2SugawaraRelation.lean} (namespace \lean{VOA.AffineVOA.Vir}).
+\begin{leancode}
+theorem sugawara_relation (k : ℂ) (hk : k + dualCoxeter ≠ 0) :
+    (2 * (k + dualCoxeter)) • omegaA k
+      = (2 : ℂ) • J k 0 (-1) (J k 1 (-1) (vacuumA k)) - J k 2 (-2) (vacuumA k)
+        + (1 / 2 : ℂ) • J k 2 (-1) (J k 2 (-1) (vacuumA k)) := by
+
+theorem sugawara_relation_neg_four_thirds :
+    (2 : ℂ) • J (-4/3) 0 (-1) (J (-4/3) 1 (-1) (vacuumA (-4/3))) - J (-4/3) 2 (-2) (vacuumA (-4/3))
+        + (1 / 2 : ℂ) • J (-4/3) 2 (-1) (J (-4/3) 2 (-1) (vacuumA (-4/3)))
+      = (4 / 3 : ℂ) • omegaA (-4/3) := by
+\end{leancode}
+\begin{dictionary}
+\lean{J k a m} is the current mode $J^a_m$ on the vacuum module $V^k(\ltwentyeightsl)$ with $a=0,1,2$ read as $e,f,h$, \lean{vacuumA k} is
+$\ltwentyeightvac$, \lean{omegaA k} $=L_{-2}\ltwentyeightvac$ is the Sugawara vector, and \lean{dualCoxeter} is the constant $2$ (all from
+Chapter~\ref{ch:L08}, Section~\ref{l08:sec:sugawara}, and \leanpath{VOA/\allowbreak Examples/\allowbreak AffineSl2VOA.lean}). So the left side of
+\lean{sugawara_relation} is $2(k+2)\omega$ and the right side is $2e_{-1}f_{-1}\ltwentyeightvac-h_{-2}\ltwentyeightvac+\frac12h_{-1}h_{-1}\ltwentyeightvac$. The
+hypothesis \lean{hk : k + dualCoxeter ≠ 0} is the non-critical condition $k\ne-2$; it cannot be dropped, since at $k=-2$ the library's
+$\omega$ is $0$ ($0^{-1}=0$, see the dictionary of Definition~\ref{l08:def:sugawara}) while the right side is the Segal--Sugawara
+vector, which is nonzero by the PBW basis (standard; the docstring says so, it is not a separate Lean statement). The second theorem is the first at $k=-4/3$, divided by $2(k+2)=\frac43$; it is the exact form used in
+Example~\ref{l28:ex:singular}. Same as the textbook statement.
+\end{dictionary}
+\textbf{Proof on paper.} By definition $\omega=\frac1{2(k+2)}\sum_{a,b}\kappa^{ab}J^a_{-1}J^b_{-1}\ltwentyeightvac
+=\frac1{2(k+2)}\bigl(e_{-1}f_{-1}+f_{-1}e_{-1}+\frac12h_{-1}h_{-1}\bigr)\ltwentyeightvac$. The commutator $[e_{-1},f_{-1}]=h_{-2}$ has no
+central term because $-1+(-1)\ne0$, so $f_{-1}e_{-1}\ltwentyeightvac=e_{-1}f_{-1}\ltwentyeightvac-h_{-2}\ltwentyeightvac$; substituting and multiplying by
+$2(k+2)\ne0$ gives the relation. At $k=-4/3$, $2(k+2)=\frac43$. \qed
+\begin{physics}
+The Sugawara stress tensor is a normal-ordered quadratic in the currents; rewriting it in the Chevalley basis trades the
+symmetrised product ${:}J^eJ^f{:}+{:}J^fJ^e{:}$ for $2{:}J^eJ^f{:}$ minus a derivative $\partial J^h$, the usual normal-ordering
+correction. On the vacuum this expresses $L_{-2}\ltwentyeightvac$ through current descendants, which is what lets the singular vector
+be written with $L_{-2}$ in place of a quadratic current word.
+\end{physics}
+\begin{status}
+Proved; axioms standard (\lean{[propext, Classical.choice, Quot.sound]}). \lean{sugawara_relation} assumes only
+$k+2\ne0$; \lean{sugawara_relation_neg_four_thirds} is unconditional.
+\end{status}
 
 \begin{definition}[The jet character bound and the fermionic series]\label{l28:def:jetbound}
 The \emph{jet character bound} asks, for every $N$, that $[q^N]\bigl((q^3;q^3)_\infty/(q;q)_\infty\bigr)^3\le\sum_{r\le N}\dim A_{r,N}$. The \emph{fermionic jet
@@ -2708,6 +2750,12 @@ generic line is too weak: a generic line overshoots by $\dim(M(7)+M(13))$; the s
 essential. (iii) A 5-adic leading-order argument fails at $N=10$, and a modular-ODE route was not completed. (Project records; not machine-checked.)
 \end{warning}
 
+%HELDLABEL{l28:sec:converse}
+%HELDLABEL{l28:def:converse43}
+%HELDLABEL{l28:thm:levels}
+%HELDLABEL{l28:thm:sector}
+%HELDLABEL{l28:def:converse85}
+%HELDLABEL{l28:thm:layerpos}
 
 %======================================================================
 \section{The files of this chapter, described collectively}\label{l28:sec:infra}

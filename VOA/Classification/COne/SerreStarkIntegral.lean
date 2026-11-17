@@ -49,7 +49,7 @@ theorem isIntegral_of_pow_mul_mem {L : Submodule ℤ ℂ} (hL : L.FG) {x y : ℂ
   · intro hbot
     have : x ^ 0 * y ∈ S := Submodule.subset_span ⟨0, rfl⟩
     rw [hbot, Submodule.mem_bot] at this
-    exact hy (by simpa using this)
+    exact hy (by simpa using! this)
   · intro n hn
     refine Submodule.span_induction (p := fun n _ => x • n ∈ S) ?_ ?_ ?_ ?_ hn
     · rintro _ ⟨k, rfl⟩
@@ -189,7 +189,7 @@ theorem eigenvalue_of_fg (hpN : Nat.Coprime p N) {a : ℕ → ℂ} {L : Submodul
     intro k
     have := hc (p ^ (2 * (k + 1)) * m)
     rw [heckeCoeff_step χ p a m k] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   -- the roots `β, γ` of `X² − cX + x²/p`
   obtain ⟨β, hβ⟩ : ∃ β : ℂ, β * β - c * β + x ^ 2 / p = 0 := by
     obtain ⟨s, hs⟩ := IsAlgClosed.exists_eq_mul_self (discrim 1 (-c) (x ^ 2 / p))
@@ -329,7 +329,7 @@ theorem jordan_coeff_zero (hpN : Nat.Coprime p N) {a b : ℕ → ℂ} {La Lb : S
       intro k
       have := ha (p ^ (2 * (k + 1)) * m)
       rw [heckeCoeff_step χ p a m k] at this
-      simpa [hA, hB] using this
+      simpa [hA, hB] using! this
     have rB0 : B 1 + ε / p * B 0 = c * B 0 := by
       have := hb m
       rw [heckeCoeff_base χ p b hm] at this
@@ -340,7 +340,7 @@ theorem jordan_coeff_zero (hpN : Nat.Coprime p N) {a b : ℕ → ℂ} {La Lb : S
       intro k
       have := hb (p ^ (2 * (k + 1)) * m)
       rw [heckeCoeff_step χ p b m k] at this
-      simpa [hB] using this
+      simpa [hB] using! this
     -- `B_{k+1} = ε B_k`
     have hBs : ∀ k, B (k + 1) = ε * B k := by
       intro k
@@ -423,7 +423,7 @@ theorem jordan_coeff_zero (hpN : Nat.Coprime p N) {a b : ℕ → ℂ} {La Lb : S
           exact ih _ ((Nat.div_le_self _ _).trans_lt hlt) hq
         · rfl
       rw [h2] at e1
-      simpa using e1
+      simpa using! e1
     · exact step1 n hdvd
 
 end Jordan
@@ -447,7 +447,7 @@ theorem eq_zero_of_mCoeff_pos {N : ℕ} (hN : 0 < N) (h4 : 4 ∣ N) {χ : Dirich
       refine hasSum_single 0 fun n hn => ?_
       rw [hg n (Nat.pos_of_ne_zero hn), zero_mul]
     have := hs.unique hs'
-    simpa using this
+    simpa using! this
   have ha0 : a0 = 0 := by
     by_contra h0
     have hI : (0 : ℝ) < (I : ℂ).im := by simp

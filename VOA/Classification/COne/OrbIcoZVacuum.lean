@@ -45,7 +45,7 @@ theorem Xico_zeroBottom {M : Type} [AddCommGroup M] [Module ℂ M]
   apply Xico_zeroFiber
   intro z
   have h := actA_omegaL_pow N hl 1 z
-  simpa using h
+  simpa using! h
 
 private abbrev adj := adjointModule Wi
 private theorem adj_low : IsLowestWeight adj 0 := isLowestWeight_adjoint Wi
@@ -59,11 +59,11 @@ theorem ico_zeroBottom_scalar {M : Type} [AddCommGroup M] [Module ℂ M]
   have hs (b : Bool) : mk Wi (icoSeeds b) ∈ S := by
     cases b
     · exact ⟨1, by simpa only [icoSeeds, Bool.false_eq_true, if_false, one_smul]
-          using actA_one N hl,
+          using! actA_one N hl,
         by simpa only [icoSeeds, Bool.false_eq_true, if_false, one_smul]
-          using actA_one adj adj_low⟩
-    · exact ⟨0, by simpa only [icoSeeds, if_true, zero_smul] using Xico_zeroBottom N hl,
-        by simpa only [icoSeeds, if_true, zero_smul] using Xico_zeroBottom adj adj_low⟩
+          using! actA_one adj adj_low⟩
+    · exact ⟨0, by simpa only [icoSeeds, if_true, zero_smul] using! Xico_zeroBottom N hl,
+        by simpa only [icoSeeds, if_true, zero_smul] using! Xico_zeroBottom adj adj_low⟩
   have hp (n : ℕ) {a : A Wi} (ha : a ∈ S) : (omegaL Wi ^ n) a ∈ S := by
     obtain ⟨c, hc, hc'⟩ := ha
     exact ⟨(0 : ℂ) ^ n * c, by rw [actA_omegaL_pow, hc, smul_smul],

@@ -123,7 +123,7 @@ theorem towers_span_truncated (hT : TetraSixteenTruncation) :
   · exact hin 0 a (by simp [nR])
   · exact hin 1 a (by simp [nR])
   · by_cases ha : (a : ℕ) < 2
-    · exact hin 2 a (by simpa [nR] using ha)
+    · exact hin 2 a (by simpa [nR] using! ha)
     · obtain ⟨c, hc⟩ : ∃ c, (a : ℕ) = c + 2 := ⟨a - 2, by omega⟩
       have hv : mk₂ Wt (((Wt.L (-2)) ^ (a : ℕ)) (gSeed 2)) =
           γ • mk₂ Wt (((Wt.L (-2)) ^ (c + 10)) Wt.vacuum) := by
@@ -152,10 +152,10 @@ theorem tetra_finrank_zhu_le (hT : TetraSixteenTruncation) (hO : TetraOddZhuRela
     (towers_span_truncated hT) (by
       intro i a ha
       fin_cases i
-      · exact pow_mem_towerSub Wt _ (by simpa [nR, mA] using ha)
-      · exact towerSub_mono Wt _ (by simpa [mA] using hPd)
+      · exact pow_mem_towerSub Wt _ (by simpa [nR, mA] using! ha)
+      · exact towerSub_mono Wt _ (by simpa [mA] using! hPd)
           (pow_mem_towerSub_of_monic Wt _ hPm hP a)
-      · exact pow_mem_towerSub Wt _ (by simpa [nR, mA] using ha))
+      · exact pow_mem_towerSub Wt _ (by simpa [nR, mA] using! ha))
   refine ⟨h.1, h.2.trans ?_⟩
   simp [mA, Fin.sum_univ_three]
 

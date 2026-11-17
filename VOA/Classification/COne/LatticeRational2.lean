@@ -295,11 +295,30 @@ variable {m : ℕ} {hm : 1 ≤ m} {M : Type*} [AddCommGroup M] [Module ℂ M]
 
 theorem V2m_vacuum : (V2m m hm).vacuum = latVacuumGen (latP m) := rfl
 
+/-! Integer-charge forms of generic lattice lemmas (Lean 4.35: an argument of type `ℤ` in a slot of
+type `(latP m).carrier` blocks `rw` with the generic lemma, so these restate them at `ℤ`). -/
+
+theorem vSchur_succZ (β : ℤ) (N : ℕ) :
+    vSchur (latP m) β (N + 1) = ((N + 1 : ℂ))⁻¹ •
+      ∑ k ∈ Finset.range (N + 1), vVar (latP m) β k * vSchur (latP m) β (N - k) :=
+  vSchur_succ (latP m) β N
+
+theorem vSchur_zeroZ (α : ℤ) : vSchur (latP m) α 0 = 1 := vSchur_zero (latP m) α
+
+theorem EEVec_vacuumZ (α t : ℤ) :
+    EEVec (latP m) α t (vacuumN (rank (latP m))) =
+      if 0 ≤ t then vSchur (latP m) α t.toNat else 0 :=
+  EEVec_vacuum (latP m) α t
+
+theorem latticeCocycle_inv_mulZ (a c : ℤ) :
+    (latticeCocycle (latP m) a c)⁻¹ * latticeCocycle (latP m) a c = 1 :=
+  inv_mul_cancel₀ (LatMod.latticeCocycle_ne_zero (latP m) a c)
+
 theorem vSchur_one_rankOne (β : ℤ) :
     vSchur (latP m) β 1 = chargeCoord (latP m) β (a0 m) • (X ((0 : ℕ), a0 m) : FockN (rank (latP m))) := by
-  rw [vSchur_succ]
+  rw [vSchur_succZ]
   simp only [Nat.cast_zero, zero_add, inv_one, one_smul, Finset.range_one, Finset.sum_singleton,
-    Nat.sub_self, vSchur_zero, mul_one, vVar]
+    Nat.sub_self, vSchur_zeroZ, mul_one, vVar]
   refine Finset.sum_eq_single (a0 m) (fun b _ hb => ?_) (fun h => absurd (Finset.mem_univ _) h)
   exfalso
   apply hb
@@ -310,15 +329,20 @@ theorem vSchur_one_rankOne (β : ℤ) :
 theorem V2m_smul_charge_neg_two (β : ℤ) :
     (V2m m hm).smul (latChargeGen (latP m) β) (-2) (V2m m hm).vacuum
       = chargeCoord (latP m) β (a0 m) • (V2m m hm).smul (hb m) (-1) (latChargeGen (latP m) β) := by
-  rw [V2m_vacuum, latVacuumGen, V2m, latVOA_smul_latChargeGen_state, latticeCocycle_zero_right,
-    one_smul, latP_form]
-  have e1 : ((- -2 - 1 - 2 * (m : ℤ) * β * 0 : ℤ)) = ((1 : ℕ) : ℤ) := by ring
+  rw [V2m_vacuum, latVacuumGen, V2m,
+    latVOA_smul_latChargeGen_state (latP m) (latP_even m) (latP_posDef m hm) β 0,
+    latticeCocycle_zero_right (latP m) β, one_smul]
+  have hf : (latP m).form β (0 : (latP m).carrier) = 0 := map_zero _
+  have e1 : ((- -2 - 1 - 0 : ℤ)) = ((1 : ℕ) : ℤ) := by norm_num
   have e2 : ((show (latP m).carrier from β) + (0 : (latP m).carrier)) = β := add_zero _
+  rw [hf]
   erw [e1, e2]
-  rw [EEVec_vacuum, if_pos (by norm_num),
+  rw [EEVec_vacuumZ, if_pos (by norm_num),
     show ((1 : ℕ) : ℤ).toNat = 1 from rfl, vSchur_one_rankOne, hb,
-    show (-1 : ℤ) = -((0 : ℕ) : ℤ) - 1 by norm_num, latChargeGen,
-    latVOA_smul_bosonState, vacuumN, mul_one, latStateGen_csmul]
+    show (-1 : ℤ) = -((0 : ℕ) : ℤ) - 1 by norm_num,
+    show latChargeGen (latP m) β = latStateGen (latP m) (vacuumN _) β from rfl,
+    latVOA_smul_bosonState (latP m) (latP_even m) (latP_posDef m hm) (a0 m) 0 _ β, vacuumN, mul_one,
+    latStateGen_csmulZ]
 
 /-- `e^{-β}_(n) e^{β}` in `V_{2m}`. -/
 theorem V2m_smul_neg_charge (β n : ℤ) :
@@ -326,7 +350,7 @@ theorem V2m_smul_neg_charge (β n : ℤ) :
       = latticeCocycle (latP m) (-β) β • latStateGen (latP m)
           (EEVec (latP m) (-β) (-n - 1 + 2 * m * β * β) (vacuumN _)) 0 := by
   rw [V2m, show latChargeGen (latP m) β = latStateGen (latP m) (vacuumN _) β from rfl,
-    latVOA_smul_latChargeGen_state, latP_form]
+    latVOA_smul_latChargeGen_state (latP m) (latP_even m) (latP_posDef m hm) (-β) β n, latP_form]
   have e2 : (-β + β : (latP m).carrier) = 0 := neg_add_cancel β
   have e1 : (-n - 1 - 2 * (m : ℤ) * -β * β : ℤ) = -n - 1 + 2 * m * β * β := by ring
   erw [e1, e2]
@@ -443,8 +467,8 @@ theorem vac_le_eigSpan (N : AdmissibleModule (V2m m hm) M) :
     · rw [cbz_apply_nonneg _ le_rfl, add_zero, sub_zero,
         show p + (-1 - p) = -1 by ring, V2m_smul_neg_charge (m := m) (hm := hm) 1 ℓ]
       have h0 : -ℓ - 1 + 2 * (m : ℤ) * 1 * 1 = ((0 : ℕ) : ℤ) := by simp only [ℓ]; push_cast; ring
-      rw [h0, EEVec_vacuum, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast,
-        vSchur_zero]
+      rw [h0, EEVec_vacuumZ, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast,
+        vSchur_zeroZ]
       rw [show latStateGen (latP m) (1 : FockN (rank (latP m))) 0 = (V2m m hm).vacuum from rfl,
         map_smul, N.vacuum_YM, mode_smul, mode_one]
       simp [gBinom]
@@ -453,7 +477,7 @@ theorem vac_le_eigSpan (N : AdmissibleModule (V2m m hm) M) :
       rcases lt_or_gt_of_ne hi with hneg | hpos
       · rw [cbz_apply_neg _ hneg, zero_smul]
       · rw [V2m_smul_neg_charge (m := m) (hm := hm) 1 (ℓ + i),
-          EEVec_vacuum, if_neg (by simp [ℓ]; omega)]
+          EEVec_vacuumZ, if_neg (by simp [ℓ]; omega)]
         simp [latStateGen]
   rw [hR] at hJ
   -- every left-hand term lies in `π⁻¹(eigSpan)`
@@ -634,8 +658,8 @@ theorem charge_rel (β : ℤ) (hβ : β ≠ 0) (ω : M) (hω : ∀ i : ℤ, 0 < 
       cbz_apply_nonneg _ le_rfl, add_zero, sub_zero, sub_zero, add_zero,
       show -N₁ + (N₁ - 1) = -1 by ring, V2m_smul_neg_charge,
       show -(2 * (m : ℤ) * β * β - 1) - 1 + 2 * m * β * β = ((0 : ℕ) : ℤ) by push_cast; ring,
-      EEVec_vacuum, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast,
-      vSchur_zero, show latStateGen (latP m) (1 : FockN (rank (latP m))) 0 = (V2m m hm).vacuum from rfl,
+      EEVec_vacuumZ, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast,
+      vSchur_zeroZ, show latStateGen (latP m) (1 : FockN (rank (latP m))) 0 = (V2m m hm).vacuum from rfl,
       map_smul, A.vacuum_YM, mode_smul, mode_one] at hJ
     simp only [negOnePow, gBinom, Finset.range_zero, Finset.prod_empty, Nat.factorial_zero,
       Nat.cast_one, div_one, Int.toNat_zero, mul_one, one_smul, LinearMap.smul_apply] at hJ
@@ -645,7 +669,7 @@ theorem charge_rel (β : ℤ) (hβ : β ≠ 0) (ω : M) (hω : ∀ i : ℤ, 0 < 
   · intro i hi
     rcases lt_or_gt_of_ne hi with hneg | hpos
     · rw [cbz_apply_neg _ hneg, zero_smul]
-    · rw [V2m_smul_neg_charge, EEVec_vacuum, if_neg (by omega)]
+    · rw [V2m_smul_neg_charge, EEVec_vacuumZ, if_neg (by omega)]
       simp [latStateGen]
   · intro i hi
     rcases lt_or_gt_of_ne hi with hneg | hpos
@@ -857,7 +881,7 @@ theorem upSeq_spec {j : ℤ} {w : M} (hw : VacEig N j w) :
     ∀ k : ℕ, VacEig N (j + 2 * m * k) (upSeq N j w k) := by
   intro k
   induction k with
-  | zero => simpa using hw
+  | zero => simpa [upSeq] using hw
   | succ k ih =>
     obtain ⟨h1, h2, -, -⟩ := vac_raise N (j + 2 * m * k) _ ih.1 ih.2
     refine ⟨h1, h2.trans ?_⟩
@@ -868,7 +892,7 @@ theorem downSeq_spec {j : ℤ} {w : M} (hw : VacEig N j w) :
     ∀ k : ℕ, VacEig N (j - 2 * m * k) (downSeq N j w k) := by
   intro k
   induction k with
-  | zero => simpa using hw
+  | zero => simpa [downSeq] using hw
   | succ k ih =>
     obtain ⟨h1, h2, -, -⟩ := vac_lower N (j - 2 * m * k) _ ih.1 ih.2
     refine ⟨h1, h2.trans ?_⟩
@@ -1125,7 +1149,7 @@ theorem V2m_smul_charge_charge (a c n : ℤ) :
       = latticeCocycle (latP m) a c • latStateGen (latP m)
           (EEVec (latP m) a (-n - 1 - 2 * m * a * c) (vacuumN _)) (a + c) := by
   rw [V2m, show latChargeGen (latP m) c = latStateGen (latP m) (vacuumN _) c from rfl,
-    latVOA_smul_latChargeGen_state, latP_form]
+    latVOA_smul_latChargeGen_state (latP m) (latP_even m) (latP_posDef m hm) a c n, latP_form]
   rfl
 
 /-- `e^a_(-1-⟨a,c⟩) e^c = ε(a,c) e^{a+c}`. -/
@@ -1134,7 +1158,7 @@ theorem V2m_smul_charge_charge_top (a c : ℤ) :
       = latticeCocycle (latP m) a c • latChargeGen (latP m) (a + c) := by
   rw [V2m_smul_charge_charge,
     show -(-1 - 2 * (m : ℤ) * a * c) - 1 - 2 * m * a * c = ((0 : ℕ) : ℤ) by push_cast; ring,
-    EEVec_vacuum, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast, vSchur_zero]
+    EEVec_vacuumZ, if_pos (by norm_num : (0 : ℤ) ≤ ((0 : ℕ) : ℤ)), Int.toNat_natCast, vSchur_zeroZ]
   rfl
 
 section Preserve
@@ -1190,14 +1214,14 @@ theorem presSub_orbitSpan_eq_top {j : ℤ} {w : M} (hw : VacEig N j w) :
       have h := presSub_smul N.toWeakModule _ h1 ih (-1 - 2 * m * 1 * k)
       rw [V2m_smul_charge_charge_top] at h
       have h2 := S.smul_mem (latticeCocycle (latP m) (1 : ℤ) (k : ℤ))⁻¹ h
-      rw [smul_smul, inv_mul_cancel₀ (LatMod.latticeCocycle_ne_zero _ _ _), one_smul] at h2
+      rw [smul_smul, latticeCocycle_inv_mulZ, one_smul] at h2
       rw [show ((k : ℤ) + 1) = 1 + k by ring]
       exact h2
     | pred k ih =>
       have h := presSub_smul N.toWeakModule _ hm1 ih (-1 - 2 * m * (-1) * (-(k : ℤ)))
       rw [V2m_smul_charge_charge_top] at h
       have h2 := S.smul_mem (latticeCocycle (latP m) (-1 : ℤ) (-(k : ℤ)))⁻¹ h
-      rw [smul_smul, inv_mul_cancel₀ (LatMod.latticeCocycle_ne_zero _ _ _), one_smul] at h2
+      rw [smul_smul, latticeCocycle_inv_mulZ, one_smul] at h2
       rw [show (-(k : ℤ) - 1) = -1 + -(k : ℤ) by ring]
       exact h2
   exact latVOA_generated (latP m) (latP_even m) (latP_posDef m hm) S

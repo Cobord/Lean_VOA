@@ -102,14 +102,12 @@ theorem ctFun_pi0Str (θf : ℤ → Kq) (v : V) :
 
 theorem ctFun_piR (θf : ℤ → Kq) (α : V) (hα : α 0 = 0) :
     ctFun θf ∘ₗ piR α = piR α ∘ₗ ctFun θf := by
-  apply Finsupp.lhom_ext
-  intro v c
+  refine AddMonoidAlgebra.lhom_ext' fun v => LinearMap.ext fun c => ?_
   change ctFun θf (piR α (mon v c)) = piR α (ctFun θf (mon v c))
   rw [piR_mon, map_smul, ctFun_piStr θf α v hα, ctFun_mon, piR_mon, smul_smul]
 
 theorem ctFun_pi0R (θf : ℤ → Kq) : ctFun θf ∘ₗ pi0R = pi0R ∘ₗ ctFun θf := by
-  apply Finsupp.lhom_ext
-  intro v c
+  refine AddMonoidAlgebra.lhom_ext' fun v => LinearMap.ext fun c => ?_
   change ctFun θf (pi0R (mon v c)) = pi0R (ctFun θf (mon v c))
   rw [pi0R_mon, map_smul, ctFun_pi0Str θf v, ctFun_mon, pi0R_mon, smul_smul]
 

@@ -46,7 +46,7 @@ theorem formal_products_zero_of_values_zero {ι : Type v} [Fintype ι]
       ⟨α₁, α₂, α₃, h₄, x, y, z, f, hx, hy, hz, hf, 1 / 2, by norm_num, by norm_num⟩
     have hh := product_coefficients_zero_of_values_zero hV i₁ i₂ i₃ i₄ R A B d
       (fun s hs hs' => hv { d with x := s, xpos := hs, xlt := hs' }) p q
-    simpa only [F, map_sum, prodCoeff, d] using hh
+    simpa only [F, map_sum, prodCoeff, d] using! hh
   have hxy (α : ℂ) (z : P₃.carrier) (hz : z ∈ P₃.isMod.weight α) :
       ∀ x y, F x y z = 0 :=
     eq_zero_of_homog (fun x y => F x y z) (fun x x' y => h1 x x' y z)
@@ -75,13 +75,13 @@ theorem productCoefficientUniqueness_holds {ι : Type v} [Fintype ι]
     change (∑ j, productTensorMap hV i₁ i₂ i₃ i₄ (R j) (t j)) d = 0 at hh
     simp only [hrep, map_sum, Finset.sum_apply] at hh
     simpa only [J, Fintype.sum_sigma, productTensorMap, TensorProduct.lift.tmul,
-      productBilinear, LinearMap.coe_mk, AddHom.coe_mk] using hh
+      productBilinear, LinearMap.coe_mk, AddHom.coe_mk] using! hh
   have hf := formal_products_zero_of_values_zero hV i₁ i₂ i₃ i₄
     (fun s : J => R s.1) (fun s => A s.1 s.2) (fun s => B s.1 s.2) hv
   funext d
   change (∑ j, formalProductTensorMap P₁ P₂ P₃ P₄ (R j) (t j)) d = 0
   simp only [hrep, map_sum, Finset.sum_apply, formalProductTensorMap_tmul]
-  simpa only [J, Fintype.sum_sigma] using hf d.1 d.2.1 d.2.2.1 d.2.2.2.1 d.2.2.2.2
+  simpa only [J, Fintype.sum_sigma] using! hf d.1 d.2.1 d.2.2.1 d.2.2.2.1 d.2.2.2.2
 
 /-- Analytic product channels are faithful for a finite irredundant family. -/
 theorem productChannelFaithful_of_irredundant {ι : Type v} [Fintype ι]

@@ -15,10 +15,10 @@ open MvPolynomial
 
 /-- Polynomials all of whose monomials contain at least one b variable. -/
 def hypBPositive : Submodule ℂ hypFock :=
-  Finsupp.supported ℂ ℂ {e : (ℕ × Fin 2) →₀ ℕ | Finsupp.weight hypBCountWeight e ≠ 0}
+  restrictSupport ℂ {e : (ℕ × Fin 2) →₀ ℕ | Finsupp.weight hypBCountWeight e ≠ 0}
 
 theorem hypOneFamily_eq_countZero : hypOneFamily 0 =
-    (Finsupp.supported ℂ ℂ {e : (ℕ × Fin 2) →₀ ℕ |
+    (restrictSupport ℂ {e : (ℕ × Fin 2) →₀ ℕ |
       Finsupp.weight hypBCountWeight e = 0} : Submodule ℂ hypFock) := by
   apply Submodule.ext
   intro p
@@ -43,17 +43,30 @@ theorem hypOneFamily_eq_countZero : hypOneFamily 0 =
 
 theorem hypBPositive_isCompl : IsCompl hypBPositive (hypOneFamily 0) := by
   rw [hypOneFamily_eq_countZero]
-  change IsCompl (Finsupp.supported ℂ ℂ {e | Finsupp.weight hypBCountWeight e ≠ 0})
-    (Finsupp.supported ℂ ℂ {e | Finsupp.weight hypBCountWeight e = 0})
-  exact ⟨Finsupp.disjoint_supported_supported (Set.disjoint_left.mpr fun _ hne he => hne he),
-    Finsupp.codisjoint_supported_supported (by
-      rw [codisjoint_iff, eq_top_iff]
-      intro e _
-      exact em (Finsupp.weight hypBCountWeight e ≠ 0) |>.elim Or.inl
-        (fun h => Or.inr (not_ne_iff.mp h)))⟩
+  constructor
+  · rw [Submodule.disjoint_def]
+    intro p hp hq
+    rw [hypBPositive, mem_restrictSupport_iff] at hp
+    rw [mem_restrictSupport_iff] at hq
+    have hs : p.support = ∅ := by
+      apply Finset.eq_empty_of_forall_notMem
+      intro e he
+      exact (hp he : Finsupp.weight hypBCountWeight e ≠ 0) (hq he)
+    exact support_eq_empty.mp hs
+  · rw [codisjoint_iff, eq_top_iff]
+    intro p _
+    rw [p.as_sum]
+    apply Submodule.sum_mem
+    intro e _
+    by_cases he : Finsupp.weight hypBCountWeight e = 0
+    · apply Submodule.mem_sup_right
+      exact (monomial_mem_restrictSupport (R := ℂ)).mpr (Or.inl he)
+    · apply Submodule.mem_sup_left
+      exact (monomial_mem_restrictSupport (R := ℂ)).mpr (Or.inl he)
 
 theorem hypBPositive_of_homogeneous {d w : ℕ} {p : hypFock}
     (hp : p ∈ hypBHomogeneous d w) (hd : d ≠ 0) : p ∈ hypBPositive := by
+  rw [hypBPositive, mem_restrictSupport_iff]
   intro e he
   change Finsupp.weight hypBCountWeight e ≠ 0
   rwa [hp.1 (mem_support_iff.mp he)]
@@ -74,7 +87,8 @@ theorem hypPBWMap_positive_le_spurious (κ ell : ℂ) :
     intro h
     have hlen := (hypCanonicalBWord_degrees e).1
     rw [h, List.length_nil] at hlen
-    exact hp he hlen.symm
+    exact ((mem_restrictSupport_iff (R := ℂ)).mp hp he :
+      Finsupp.weight hypBCountWeight e ≠ 0) hlen.symm
   cases hw : hypCanonicalBWord e with
   | nil => exact (hn hw).elim
   | cons j v =>

@@ -221,7 +221,7 @@ theorem leftProd_On_of_gen (W : VertexOperatorAlgebra 𝒱) (n : ℕ) (a : 𝒱)
   have hle : On W n ≤ (On W n).comap (leftProdR W n a) := by
     rw [On_eq_span, Submodule.span_le]
     rintro g ⟨c, d, rfl⟩
-    simpa [Submodule.mem_comap] using hgen c d
+    exact (show leftProdR W n a (circ W n c d) ∈ On W n from hgen c d)
   have : x ∈ (On W n).comap (leftProdR W n a) := hle hx
   simpa [Submodule.mem_comap] using this
 
@@ -234,7 +234,7 @@ theorem rightProd_On_of_gen (W : VertexOperatorAlgebra 𝒱) (n : ℕ) (a : 𝒱
   have hle : On W n ≤ (On W n).comap (rightProdL W n a) := by
     rw [On_eq_span, Submodule.span_le]
     rintro g ⟨c, d, rfl⟩
-    simpa [Submodule.mem_comap] using hgen c d
+    exact (show rightProdL W n a (circ W n c d) ∈ On W n from hgen c d)
   have : x ∈ (On W n).comap (rightProdL W n a) := hle hx
   simpa [Submodule.mem_comap] using this
 

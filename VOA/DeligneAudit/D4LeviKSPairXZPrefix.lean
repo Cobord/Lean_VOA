@@ -15,7 +15,7 @@ theorem pairXZShape_zero_x_count (a b c : ℕ) (d : PairXZ a b c →₀ ℕ) :
       Finset.univ.toList d).countP (fun p => p.1 = 1) = a + b := by
   simp only [shapedModes, List.countP_map, Function.comp_def]
   rw [List.countP_eq_length_filter]
-  simpa [Nat.add_comm] using pairXZRemainingX_length a b c 0
+  simpa [Nat.add_comm] using! pairXZRemainingX_length a b c 0
 
 theorem pairXZShape_zero_y_count (a b c : ℕ) (d : PairXZ a b c →₀ ℕ) :
     (shapedModes (pairXZRecolourShape a b c 0)
@@ -95,7 +95,7 @@ theorem pairXZPolynomial_prefix
         (keyLayer_le_orbit ρ w _
           (radicalWord_mem_key ρ w _))
   | add P Q ihP ihQ =>
-      simpa only [map_add] using
+      simpa only [map_add] using!
         (higherOrbit ρ w m (pairFinalKey a b c deg)).add_mem ihP ihQ
 
 end VOA.DeligneAudit.D4Levi

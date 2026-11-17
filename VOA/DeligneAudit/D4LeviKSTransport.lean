@@ -19,7 +19,7 @@ theorem eTransport_source_zero
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0)) (r : ℕ) :
     eTransportOp ρ r w = 0 := by
   have he := radicalWord_zero_of_E ρ w m h [(0, r)] (by simp)
-  simpa [eTransportOp, radicalWord, wordOp, radicalColour] using
+  simpa [eTransportOp, radicalWord, wordOp, radicalColour] using!
     congrArg Neg.neg he
 
 /-- E transports the f₂ current into the X current. -/
@@ -40,14 +40,14 @@ theorem eTransport_fTwo_comm (r s : ℕ) :
     have hcoef (c : Fin 28) :
         fD4 (lowerColour 2) (radicalColour 0) c =
           if c = radicalColour 1 then (1 : ℂ) else 0 := by
-      simpa [lowerAction] using lower_coefficient 2 0 c
+      simpa [lowerAction] using! lower_coefficient 2 0 c
     change (∑ c : Fin 28,
       fD4 (lowerColour 2) (radicalColour 0) c • ρ.op c (s + r) v) =
         ρ.op (radicalColour 1) (r + s) v
     simp only [hcoef, ite_smul, one_smul, zero_smul,
       Finset.sum_ite_eq', Finset.mem_univ, if_true, Nat.add_comm]
   simpa [eTransportOp, fOp, xOp, sub_eq_add_neg, add_comm, add_left_comm,
-    add_assoc] using hc
+    add_assoc] using! hc
 
 /-- E transports the signed f₂₃₄ current into the Y current. -/
 theorem eTransport_fTop_comm (r s : ℕ) :
@@ -68,7 +68,7 @@ theorem eTransport_fTop_comm (r s : ℕ) :
     have hcoef (c : Fin 28) :
         fD4 (lowerColour 5) (radicalColour 0) c =
           if c = radicalColour 4 then (-1 : ℂ) else 0 := by
-      simpa [lowerAction] using lower_coefficient 5 0 c
+      simpa [lowerAction] using! lower_coefficient 5 0 c
     change (∑ c : Fin 28,
       fD4 (lowerColour 5) (radicalColour 0) c • ρ.op c (s + r) v) =
         -ρ.op (radicalColour 4) (r + s) v
@@ -79,7 +79,7 @@ theorem eTransport_fTop_comm (r s : ℕ) :
         yOp ρ (r + s) := by
     rw [← neg_sub, hc]
     simp
-  simpa [eTransportOp, fTopOp] using hs
+  simpa [eTransportOp, fTopOp] using! hs
 
 /-- Transport is square-zero on every radical current, since the radical is abelian. -/
 theorem eTransport_radical_comm (j : Fin 6) (r s : ℕ) :
@@ -89,7 +89,7 @@ theorem eTransport_radical_comm (j : Fin 6) (r s : ℕ) :
   have hc := radical_ops_comm ρ 0 j r s v
   change ρ.op (19 : Fin 28) r (ρ.op (radicalColour j) s v) =
     ρ.op (radicalColour j) s (ρ.op (19 : Fin 28) r v) at hc
-  simpa [eTransportOp] using congrArg Neg.neg hc
+  simpa [eTransportOp] using! congrArg Neg.neg hc
 
 theorem eTransport_fTwo_second (r q s : ℕ) :
     eTransportOp ρ r *

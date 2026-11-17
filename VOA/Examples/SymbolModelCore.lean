@@ -58,7 +58,8 @@ theorem cartanGens_comm (hc : CartanCommute ρ hpos) :
 def cartanCalc (hc : CartanCommute ρ hpos) : MvPolynomial ℕ ℂ →ₐ[ℂ] Module.End ℂ M :=
   letI : CommRing (Algebra.adjoin ℂ (cartanGens ρ hpos)) :=
     { (Algebra.adjoin ℂ (cartanGens ρ hpos)).toRing with
-      mul_comm := (Algebra.isMulCommutative_adjoin ℂ (cartanGens_comm ρ hpos hc)).is_comm.comm }
+      mul_comm := (Algebra.isMulCommutative_adjoin ℂ
+        (fun a ha b hb _ => cartanGens_comm ρ hpos hc a ha b hb)).is_comm.comm }
   (Algebra.adjoin ℂ (cartanGens ρ hpos)).val.comp
     (MvPolynomial.aeval fun i => ⟨-ρ (hpos i), Algebra.subset_adjoin ⟨i, rfl⟩⟩)
 
@@ -74,7 +75,7 @@ theorem cartanCommute_of_algHom (π : MvPolynomial ℕ ℂ →ₐ[ℂ] Module.En
   intro i j
   have h : Commute (π (X i)) (π (X j)) := (Commute.all (X i) (X j)).map π
   rw [hπ, hπ] at h
-  simpa using h.neg_left.neg_right
+  simpa using! h.neg_left.neg_right
 
 /-- An algebra map is determined by the generators: it equals `cartanCalc`. -/
 theorem eq_cartanCalc (hc : CartanCommute ρ hpos) (π : MvPolynomial ℕ ℂ →ₐ[ℂ] Module.End ℂ M)

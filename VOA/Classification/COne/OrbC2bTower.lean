@@ -20,7 +20,7 @@ def restrictAut (S : VOASubalgebra W) (g : Aut W)
   toLinearEquiv :=
     { toFun := fun x => ⟨g x, (h x).mpr x.2⟩
       invFun := fun x => ⟨g.toLinearEquiv.symm x,
-        (h _).mp (by simpa only [Aut.coe_toLinearEquiv, LinearEquiv.apply_symm_apply] using x.2)⟩
+        (h _).mp (by simpa only [Aut.coe_toLinearEquiv, LinearEquiv.apply_symm_apply] using! x.2)⟩
       left_inv := fun x => Subtype.ext (g.toLinearEquiv.symm_apply_apply x)
       right_inv := fun x => Subtype.ext (g.toLinearEquiv.apply_symm_apply x)
       map_add' := fun x y => Subtype.ext (map_add g.toLinearEquiv x.val y.val)
@@ -47,7 +47,7 @@ theorem restrictAut_pow_eq_one (S : VOASubalgebra W) (g : Aut W)
   apply LinearEquiv.ext
   intro x
   apply Subtype.ext
-  simpa [hn] using restrictAut_pow_val S g h n x
+  simpa [hn] using! restrictAut_pow_val S g h n x
 
 /-- Fixed by a generated extension iff fixed at both steps. -/
 theorem mem_join_fixed_iff (K : Subgroup (Aut W)) (g : Aut W) (x : V) :

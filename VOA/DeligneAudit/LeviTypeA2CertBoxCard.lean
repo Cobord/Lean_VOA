@@ -17,7 +17,7 @@ theorem mem_a2BoxModeSet (m a : ℕ) (ha : a ≤ m) (f : ℕ →₀ ℕ) :
   constructor
   · rintro ⟨hdegree, hsupp⟩
     have hd : Finsupp.degree f = a := by
-      simpa [Finsupp.degree_apply] using hdegree
+      simpa [Finsupp.degree_apply] using! hdegree
     refine ⟨hd, ?_⟩
     intro i hi
     have hir := hsupp hi
@@ -25,7 +25,7 @@ theorem mem_a2BoxModeSet (m a : ℕ) (ha : a ≤ m) (f : ℕ →₀ ℕ) :
     omega
   · rintro ⟨hd, hbox⟩
     constructor
-    · simpa [Finsupp.degree_apply] using hd
+    · simpa [Finsupp.degree_apply] using! hd
     · intro i hi
       have h := hbox i hi
       simp only [Finset.mem_range]

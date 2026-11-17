@@ -4,6 +4,7 @@ Released under the Apache 2.0 license; see the LICENSE file.
 Authors: Fedor K. Popov
 -/
 import VOA.Examples.LatticeGenBosonCharge
+import Mathlib.RingTheory.MvPolynomial.Basic
 import VOA.Moonshine.LatticeInvolution
 
 /-!
@@ -47,12 +48,13 @@ noncomputable def uWt (d : (ℕ × Fin r) →₀ ℕ) : ℂ :=
 
 /-- **The invariant form on the untwisted Fock space** `FockN r`. -/
 noncomputable def uForm (r : ℕ) : LinearMap.BilinForm ℂ (FockN r) :=
-  Finsupp.lsum ℂ fun d => LinearMap.smulRight LinearMap.id (uWt d • lcoeff ℂ d)
+  (basisMonomials (ℕ × Fin r) ℂ).constr ℂ fun d => uWt d • lcoeff ℂ d
 
 theorem uForm_monomial (d : (ℕ × Fin r) →₀ ℕ) (a : ℂ) (q : FockN r) :
-    uForm r (monomial d a) q = a * (uWt d * coeff d q) := by
-  rw [uForm]
-  erw [Finsupp.lsum_single]
+    uForm r (monomial d a) q = a * (uWt d * q.coeff d) := by
+  have hm : monomial d a = a • (basisMonomials (ℕ × Fin r) ℂ) d := by
+    rw [coe_basisMonomials, smul_monomial, smul_eq_mul, mul_one]
+  rw [uForm, hm, map_smul, Module.Basis.constr_basis]
   simp
 
 theorem uForm_monomial_monomial (d e : (ℕ × Fin r) →₀ ℕ) (a b : ℂ) :
@@ -79,7 +81,7 @@ theorem uForm_symm (p q : FockN r) : uForm r p q = uForm r q p := by
 theorem uWt_zero : uWt (0 : (ℕ × Fin r) →₀ ℕ) = 1 := by
   simp [uWt]
 
-theorem uForm_one (q : FockN r) : uForm r 1 q = coeff 0 q := by
+theorem uForm_one (q : FockN r) : uForm r 1 q = q.coeff 0 := by
   rw [show (1 : FockN r) = monomial 0 1 from rfl, uForm_monomial, uWt_zero, one_mul, one_mul]
 
 theorem uWt_add_single (d : (ℕ × Fin r) →₀ ℕ) (v : ℕ × Fin r) :
@@ -162,6 +164,7 @@ theorem uForm_sigmaN (p q : FockN r) : uForm r (sigmaN r p) (sigmaN r q) = uForm
     rw [h, show (MvPolynomial.C a : FockN r) = a • (1 : FockN r) by rw [smul_eq_C_mul, mul_one],
       map_smul, LinearMap.smul_apply, LinearMap.smul_apply, uForm_one, uForm_one,
       ← constantCoeff_eq, constantCoeff_sigmaN]
+    try (first | rw [constantCoeff_eq] | rfl)
   | add p₁ p₂ h₁ h₂ => rw [map_add, map_add, LinearMap.add_apply, h₁, h₂, map_add,
       LinearMap.add_apply]
   | mul_X p v hp =>
@@ -180,7 +183,7 @@ theorem uForm_orth_gradingWN {w w' : ℕ} (hww : w ≠ w') {p q : FockN r} (hp :
   rw [p.as_sum, map_sum, LinearMap.coe_sum, Finset.sum_apply]
   refine Finset.sum_eq_zero fun d hd => ?_
   have hdw : Finsupp.weight weightFnN d = w := hp (mem_support_iff.mp hd)
-  have hq0 : coeff d q = 0 := by
+  have hq0 : q.coeff d = 0 := by
     by_contra hc
     exact hww (hdw.symm.trans (hq hc))
   rw [uForm_monomial, hq0, mul_zero, mul_zero]
@@ -234,7 +237,7 @@ theorem constantCoeff_vSchur_succ (γ : L.carrier) (N : ℕ) :
   simp [constantCoeff_vVar]
 
 theorem coeff_zero_EEVec_one (γ : L.carrier) (t : ℤ) :
-    coeff 0 (EEVec L γ t 1) = if t = 0 then 1 else 0 := by
+    (EEVec L γ t 1).coeff 0 = if t = 0 then 1 else 0 := by
   have h := EEVec_vacuum L γ t
   rw [vacuumN] at h
   rw [h, ← constantCoeff_eq]

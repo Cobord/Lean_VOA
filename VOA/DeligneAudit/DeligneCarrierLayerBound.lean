@@ -68,7 +68,7 @@ theorem exists_perm_pat {m d : ℕ} (t' : Fin (m + d) → (AuxVar D))
   let t : Fin m → Fin D.n := fun i => (t' (e1.symm i).1).getLeft (by
     have h := (e1.symm i).2
     simp only [S] at h
-    simpa using h)
+    simpa using! h)
   refine ⟨π, t, ?_⟩
   funext k
   simp only [Function.comp, pat]
@@ -107,7 +107,7 @@ theorem eq_zero_of_auxPoly_eq_zero {p m d : ℕ} (F : (JetVar (AuxVar D) p →�
   rw [Equiv.symm_symm, hπ] at hrel
   apply he
   rw [← hrel, ← coeff_tensorPolynomial F ((pat D) m d t)]
-  change MvPolynomial.coeff _ ((auxPoly D) p m d F t) = 0
+  change ((auxPoly D) p m d F t).coeff _ = 0
   rw [h0]
   simp
 

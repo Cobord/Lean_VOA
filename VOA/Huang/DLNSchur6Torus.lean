@@ -21,24 +21,32 @@ a nonsquare. Both are negatives of nonzero squares. -/
 theorem exists_nonsquares_add_one_prime {p : ℕ} (hp : p.Prime) (hp4 : p % 4 = 3) :
     ∃ u v : ZMod p, u + v = 1 ∧ u ≠ 0 ∧ v ≠ 0 ∧
       (¬ ∃ a, a ^ 2 = u) ∧ (¬ ∃ a, a ^ 2 = v) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  -- The `Fact` instance is kept local so that the arithmetic below is elaborated through a
+  -- single instance path on `ZMod p` (mixed paths broke `rw`/`ring` under Lean 4.35).
   have hn : ¬ ∃ a : ZMod p, a ^ 2 = -1 := by
+    haveI : Fact p.Prime := ⟨hp⟩
     rintro ⟨a, ha⟩
     exact (ZMod.exists_sq_eq_neg_one_iff.mp
       ((isSquare_iff_exists_sq _).mpr ⟨a, ha.symm⟩)) hp4
-  obtain ⟨a, b, hab⟩ := ZMod.sq_add_sq p (-1)
+  obtain ⟨a, b, hab₀⟩ := @ZMod.sq_add_sq p ⟨hp⟩ (-1)
+  have hab : a ^ 2 + b ^ 2 = -1 := hab₀
   have ha : a ≠ 0 := by
-    intro h; apply hn; exact ⟨b, by simpa [h] using hab⟩
+    intro h; apply hn; exact ⟨b, by simpa [h] using! hab⟩
   have hb : b ≠ 0 := by
-    intro h; apply hn; exact ⟨a, by simpa [h] using hab⟩
+    intro h; apply hn; exact ⟨a, by simpa [h] using! hab⟩
   have hns : ∀ c : ZMod p, c ≠ 0 → ¬ ∃ d, d ^ 2 = -(c ^ 2) := by
+    haveI : Fact p.Prime := ⟨hp⟩
     intro c hc
     rintro ⟨d, hd⟩
     apply hn
     refine ⟨d / c, ?_⟩
-    rw [div_pow, hd, neg_div, div_self (pow_ne_zero _ hc)]
-  refine ⟨-(a ^ 2), -(b ^ 2), ?_, neg_ne_zero.mpr (pow_ne_zero _ ha),
-    neg_ne_zero.mpr (pow_ne_zero _ hb), hns a ha, hns b hb⟩
+    rw [div_pow, hd]
+    exact (neg_div _ _).trans (congrArg Neg.neg (div_self (pow_ne_zero _ hc)))
+  have hsq : ∀ c : ZMod p, c ≠ 0 → -(c ^ 2) ≠ 0 := by
+    haveI : Fact p.Prime := ⟨hp⟩
+    intro c hc
+    exact neg_ne_zero.mpr (pow_ne_zero _ hc)
+  refine ⟨-(a ^ 2), -(b ^ 2), ?_, hsq a ha, hsq b hb, hns a ha, hns b hb⟩
   linear_combination -hab
 
 /-- The nonsquare additive pair lifts to every positive prime power.
@@ -63,12 +71,12 @@ theorem exists_nonsquare_units_add_one_primePower {p k : ℕ}
     apply hna
     refine ⟨r (z : ZMod (p ^ k)), ?_⟩
     have he := congrArg (fun w : (ZMod (p ^ k))ˣ => r (w : ZMod (p ^ k))) hz
-    simpa only [Units.val_pow_eq_pow_val, map_pow, IsUnit.unit_spec, hx] using he
+    simpa only [Units.val_pow_eq_pow_val, map_pow, IsUnit.unit_spec, hx] using! he
   · rintro ⟨z, hz⟩
     apply hnb
     refine ⟨r (z : ZMod (p ^ k)), ?_⟩
     have he := congrArg (fun w : (ZMod (p ^ k))ˣ => r (w : ZMod (p ^ k))) hz
-    simpa only [Units.val_pow_eq_pow_val, map_pow, IsUnit.unit_spec, hy] using he
+    simpa only [Units.val_pow_eq_pow_val, map_pow, IsUnit.unit_spec, hy] using! he
 
 /-- Unconditional generator vanishing for the remaining congruence class. -/
 theorem torusGeneratorRelations_primePower_mod_four_three {p k : ℕ}

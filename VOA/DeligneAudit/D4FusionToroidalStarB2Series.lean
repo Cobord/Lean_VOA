@@ -75,7 +75,7 @@ theorem HS_recurrence (S : Finset (Fin m)) (N : ℕ) (hN : m < S.card + N) :
     ∑ p ∈ antidiagonal N, coeff p.1 (HS z S) * coeff p.2 (ES z univ) = 0 := by
   rw [← coeff_mul, ES_univ_eq z S, ← mul_assoc, mul_comm (HS z S), ES_mul_HS, one_mul]
   apply coeff_ES_high
-  have hS : S.card ≤ m := by simpa using Finset.card_le_univ S
+  have hS : S.card ≤ m := by simpa using! Finset.card_le_univ S
   rw [card_compl, Fintype.card_fin]
   omega
 

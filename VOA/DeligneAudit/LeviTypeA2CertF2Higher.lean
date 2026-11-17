@@ -39,7 +39,7 @@ theorem a2_f2_lower_wick_summand (q k : ℕ) (xs ys : List ℕ)
   let N := a2LeviClosure ρ (a2HigherKeySpan ρ w q K)
   have hys : (ys.map fun i => ρ.op 5 i).prod w ∈
       a2CountSpan ρ w 0 ys.length := by
-    simpa using a2CountSpan_second_word ρ w ys 0 0 (a2CountSpan_zero ρ w)
+    simpa using! a2CountSpan_second_word ρ w ys 0 0 (a2CountSpan_zero ρ w)
   have hb := a2_bWord_coeff_count ρ w t.2 z.2 0 ys.length hys
   have ha := a2CountSpan_first_word ρ w t.1 0
     (ys.length + t.2.length) hb
@@ -50,13 +50,13 @@ theorem a2_f2_lower_wick_summand (q k : ℕ) (xs ys : List ℕ)
         PowerSeries.coeff z.2 (bWord (fun i => ρ.op 5 i) t.2)) •
           ((ys.map fun i => ρ.op 5 i).prod • w) ∈
         a2CountSpan ρ w t.1.length (ys.length + t.2.length) := by
-      simpa [aWord, mul_smul] using ha
+      simpa [aWord, mul_smul] using! ha
     exact a2LeviClosure_contains ρ _
       (a2CountSpan_le_higher ρ w q K _ _
         (lower_choice_height q k xs ys t ht hlt d) hmem)
   have hf := a2_fCurrent_pow_preserves ρ
     (a2HigherKeySpan ρ w q K) (k - t.2.length) z.1 hbase
-  simpa [N, K, mul_assoc, mul_smul] using hf
+  simpa [N, K, mul_assoc, mul_smul] using! hf
 
 end VOA.DeligneAudit.A3Sector
 

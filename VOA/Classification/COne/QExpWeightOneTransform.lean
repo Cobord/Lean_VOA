@@ -39,7 +39,7 @@ theorem weightOneNormalized_eq_theta {N : ℕ} [NeZero N]
     weightOneNormalized a b τ =
       weightOneThetaValue ((a.val : ℂ) / N - 1 / 2) ((b.val : ℂ) / N - 1 / 2) τ := by
   have h := (hf (weightOneIndex a) (weightOneIndex b)
-    (by simpa [weightOneIndex, ZMod.val_eq_zero] using hab) τ).2
+    (by simpa [weightOneIndex, ZMod.val_eq_zero] using! hab) τ).2
   unfold weightOneNormalized
   rw [h, mul_div_cancel_left₀ _ (weightOneScale_ne_zero (NeZero.pos N)
     (show IsPrimitiveRoot (weightOneStandardRoot N) N from
@@ -54,7 +54,7 @@ theorem weightOneNormalized_S {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N
   by_cases hab : a = 0 ∧ b = 0
   · rcases hab with ⟨rfl, rfl⟩
     simp
-  have hba : ¬(b = 0 ∧ -a = 0) := by simpa [and_comm] using hab
+  have hba : ¬(b = 0 ∧ -a = 0) := by simpa [and_comm] using! hab
   rw [weightOneNormalized_eq_theta hf a b hab,
     weightOneNormalized_eq_theta hf b (-a) hba]
   have hS : ((ModularGroup.S • τ : ℍ) : ℂ) = -1 / (τ : ℂ) := by
@@ -62,7 +62,7 @@ theorem weightOneNormalized_S {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N
     simp only [inv_neg, neg_div, one_div]
   rw [hS]
   have hz := (hf (weightOneIndex b) (weightOneIndex (-a))
-    (by simpa [weightOneIndex, ZMod.val_eq_zero] using hba) τ).1
+    (by simpa [weightOneIndex, ZMod.val_eq_zero] using! hba) τ).1
   dsimp [weightOneIndex] at hz
   by_cases ha : a = 0
   · subst a
@@ -84,7 +84,7 @@ theorem weightOneNormalized_S {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N
       field_simp
       ring
     rw [hn] at hz ⊢
-    exact weightOneThetaValue_S _ _ _ τ.ne_zero (by simpa [sub_eq_add_neg] using hz)
+    exact weightOneThetaValue_S _ _ _ τ.ne_zero (by simpa [sub_eq_add_neg] using! hz)
 
 /-- T covariance, with reduction of the second residue modulo N. -/
 theorem weightOneNormalized_T {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N)
@@ -93,7 +93,7 @@ theorem weightOneNormalized_T {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N
   by_cases hab : a = 0 ∧ b = 0
   · rcases hab with ⟨rfl, rfl⟩
     simp
-  have hab' : ¬(a = 0 ∧ a + b = 0) := by simpa +contextual using hab
+  have hab' : ¬(a = 0 ∧ a + b = 0) := by simpa +contextual using! hab
   rw [weightOneNormalized_eq_theta hf a b hab,
     weightOneNormalized_eq_theta hf a (a + b) hab']
   have hT : ((ModularGroup.T • τ : ℍ) : ℂ) = (τ : ℂ) + 1 := by
@@ -114,14 +114,14 @@ theorem weightOneNormalized_slash_S {N : ℕ} [NeZero N] (hf : WeightOneThetaFou
     (a b : ZMod N) :
     weightOneNormalized a b ∣[(1 : ℤ)] ModularGroup.S = weightOneNormalized b (-a) := by
   funext τ
-  rw [SL_slash_apply, weightOneNormalized_S hf]
-  simp [denom, ModularGroup.S, mul_comm, τ.ne_zero]
+  rw [SL_slash_apply, weightOneNormalized_S hf, ModularGroup.denom_S, zpow_neg_one,
+    mul_comm (τ : ℂ), mul_inv_cancel_right₀ τ.ne_zero]
 
 theorem weightOneNormalized_slash_T {N : ℕ} [NeZero N] (hf : WeightOneThetaFourier N)
     (a b : ZMod N) :
     weightOneNormalized a b ∣[(1 : ℤ)] ModularGroup.T = weightOneNormalized a (a + b) := by
   funext τ
-  rw [SL_slash_apply, weightOneNormalized_T hf]
-  simp [denom, ModularGroup.T]
+  rw [SL_slash_apply, weightOneNormalized_T hf, ModularGroup.denom_apply]
+  simp [ModularGroup.T]
 
 end VOA.Classification.COne.SSHecke

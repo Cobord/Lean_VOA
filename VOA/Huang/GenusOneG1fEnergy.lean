@@ -90,7 +90,7 @@ theorem intertwiner_nat_bound (Y : IntertwiningOperator P.isMod Q.isMod N.isMod)
   obtain ⟨K, hK⟩ := Y.property.truncation w x n
   refine ⟨K.toNat, fun s hs => ?_⟩
   have := hK (s : ℤ) (by omega)
-  simpa using this
+  simpa using! this
 
 theorem module_nat_bound {M : Type u} [AddCommGroup M] [Module ℂ M] (A : OrdVModule W M)
     (a : V) (x : M) : ∃ K : ℕ, ∀ k : ℕ, K ≤ k → mode (A.YM a) (k : ℤ) x = 0 := by

@@ -100,19 +100,22 @@ theorem tetra_eq_join : tetra = klein ⊔ Subgroup.zpowers rotC := by
   apply le_antisymm
   · rintro g ⟨s, hs, rfl⟩
     obtain ⟨i, j, rfl⟩ := even_decomposition s hs
-    simp only [map_mul, map_pow]
-    apply Subgroup.mul_mem
-    · apply Subgroup.mem_sup_left
-      fin_cases i
-      · change octHom 1 ∈ klein
-        rw [map_one]
-        exact klein.one_mem
-      · exact half_images_mem.1
-      · exact half_images_mem.2.1
-      · exact half_images_mem.2.2
-    · apply Subgroup.pow_mem
-      apply Subgroup.mem_sup_right
-      exact octHom_cycleThree.symm ▸ Subgroup.mem_zpowers rotC
+    -- 4.35: state the membership at the native carrier `Aut V1` of `octHom`, so that
+    -- `map_mul`/`map_pow` rewrite a target that is type-correct at implicit transparency.
+    have key : ∀ (a : Perm (Fin 4)) (n : ℕ), octHom a ∈ klein →
+        octHom (a * cycleThree ^ n) ∈ klein ⊔ Subgroup.zpowers rotC := by
+      intro a n ha
+      rw [map_mul, map_pow, octHom_cycleThree]
+      exact Subgroup.mul_mem _ (Subgroup.mem_sup_left ha)
+        (Subgroup.pow_mem _ (Subgroup.mem_sup_right (Subgroup.mem_zpowers rotC)) n)
+    apply key
+    fin_cases i
+    · change octHom 1 ∈ klein
+      rw [map_one]
+      exact klein.one_mem
+    · exact half_images_mem.1
+    · exact half_images_mem.2.1
+    · exact half_images_mem.2.2
   · apply sup_le
     · rw [klein_eq_join]
       apply sup_le <;> apply Subgroup.zpowers_le.mpr

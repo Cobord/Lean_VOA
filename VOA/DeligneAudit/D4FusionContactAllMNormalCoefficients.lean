@@ -23,23 +23,23 @@ theorem action_mode (m r : ℕ) (j : Fin 12) :
 theorem oppositeCubic_eq (m s : ℕ) :
     oppositeCubic m s = 216 * cubeCoeff (modeX m 7) s := by
   have h0 (r : ℕ) : g0Deriv m 7 0 (modeX m 0 r) = modeX m 1 r := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 0
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 0
   have h3 (r : ℕ) : g0Deriv m 8 0 (modeX m 1 r) = -modeX m 4 r := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 3
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 3
   have h4 (r : ℕ) : g0Deriv m 7 0 (modeX m 1 r) = 0 := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 4
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 4
   have h5 (r : ℕ) : g0Deriv m 8 0 (modeX m 4 r) = 0 := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 5
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 5
   have h6 (r : ℕ) : g0Deriv m 9 0 (modeX m 4 r) = modeX m 7 r := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 6
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 6
   have h7 (r : ℕ) : g0Deriv m 9 0 (modeX m 7 r) = 0 := by
-    simpa [direction, sourceColor, targetColor, actionCoeff] using action_mode m r 7
+    simpa [direction, sourceColor, targetColor, actionCoeff] using! action_mode m r 7
   have hfirst := third_deriv_cubeCoeff_nsmul (g0Deriv m 7 0) (modeX m 0) (modeX m 1) h0 h4 s
   have hsecond : g0Deriv m 8 0 (g0Deriv m 8 0 (g0Deriv m 8 0
       (cubeCoeff (modeX m 1) s))) = (6 : ℕ) • (-cubeCoeff (modeX m 4) s) := by
     have hh := third_deriv_cubeCoeff_nsmul (g0Deriv m 8 0) (modeX m 1)
       (fun r => -modeX m 4 r) h3 (fun r => by rw [map_neg, h5, neg_zero]) s
-    simpa only [cubeCoeff_neg] using hh
+    simpa only [cubeCoeff_neg] using! hh
   have hthird := third_deriv_cubeCoeff_nsmul (g0Deriv m 9 0) (modeX m 4) (modeX m 7) h6 h7 s
   change -(g0Deriv m 9 0 (g0Deriv m 9 0 (g0Deriv m 9 0
     (g0Deriv m 8 0 (g0Deriv m 8 0 (g0Deriv m 8 0
@@ -64,7 +64,7 @@ def directBackRow (m s t : ℕ) : Poly m :=
 
 theorem backRow_eq (m s t : ℕ) : backRow m s t = 216 * directBackRow m s t := by
   have he : oppositeCubic m s = (216 : ℕ) • cubeCoeff (modeX m 7) s := by
-    simpa only [nsmul_eq_mul] using oppositeCubic_eq m s
+    simpa only [nsmul_eq_mul] using! oppositeCubic_eq m s
   simp only [backRow, directBackRow, he, map_nsmul]
   simp only [nsmul_eq_mul]
   ring

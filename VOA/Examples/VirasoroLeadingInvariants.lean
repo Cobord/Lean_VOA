@@ -20,8 +20,8 @@ open scoped Classical
 exponent in each coefficient. This finite identity avoids analytic arguments. -/
 theorem vermaSymbol_euler_coeff {σ : Type*} (f : MvPolynomial σ ℂ)
     (i : σ) (d : σ →₀ ℕ) :
-    MvPolynomial.coeff d (MvPolynomial.X i * MvPolynomial.pderiv i f)=
-      (d i:ℂ)*MvPolynomial.coeff d f := by
+    (MvPolynomial.X i * MvPolynomial.pderiv i f).coeff d=
+      (d i:ℂ)*f.coeff d := by
   induction f using MvPolynomial.induction_on' with
   | add f g hf hg => simp only [map_add,mul_add,MvPolynomial.coeff_add,hf,hg]
   | monomial e a =>
@@ -54,7 +54,7 @@ theorem vermaLeadingDerivation_at_max (f : MvPolynomial (ℕ × Fin 1) ℂ) (a :
     (D₁ := vermaLeadingDerivation a)
     (D₂ := (((2*a+1:ℕ):ℂ) • (MvPolynomial.X (0,0) : MvPolynomial (ℕ × Fin 1) ℂ)) • MvPolynomial.pderiv (a,0))
     (f := f) (fun i hi => ?_)
-  · simpa only [Derivation.smul_apply,smul_eq_mul] using he
+  · simpa only [Derivation.smul_apply,smul_eq_mul] using! he
   · by_cases he : i=(a,0)
     · subst i
       simp [vermaLeadingDerivation,MvPolynomial.mkDerivation_X,two_mul]

@@ -84,10 +84,10 @@ theorem sourceWord_outer_length_le (m : ℕ) (j : AllM.SeedIndex m) (modes : Lis
   cases hj : j.val.1 with
   | false =>
       apply u_sourceWord_length_le m j hj modes l _ hne
-      simpa only [branchCategory,hj,Bool.false_eq_true,if_false] using hl
+      simpa only [branchCategory,hj,Bool.false_eq_true,if_false] using! hl
   | true =>
       have hc : ∀ x ∈ l, category x.1 = 0 := by
-        simpa only [branchCategory,hj,if_true] using hl
+        simpa only [branchCategory,hj,if_true] using! hl
       have hh := c_sourceWord_length_le m j hj modes l hc hne
       omega
 
@@ -104,7 +104,7 @@ theorem boundedOuterLists_finite (m r : ℕ) (b : Bool) : (boundedOuterLists m r
     l.attach.map (fun x => (x.val.1,⟨x.val.2,(hl.2 x.val x.property).1⟩))
   refine ⟨v,?_,?_⟩
   · change v.length ≤ 3*r
-    simpa only [v,List.length_map,List.length_attach] using hl.1
+    simpa only [v,List.length_map,List.length_attach] using! hl.1
   · change (v.map (fun x => (x.1,x.2.val))) = l
     simp only [v,List.map_map,Function.comp_def]
     exact List.attach_map_subtype_val l

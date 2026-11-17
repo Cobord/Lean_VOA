@@ -33,7 +33,7 @@ theorem fullCoset_eq_sum_log {K : ℕ} {Y₁ : LogModes M₁ M₅ M₄} (Y₂ : 
       ∑ k∈Finset.range K,logProductIntegerCosetFun Y₁ Y₂ f x y z a b k 0 t := by
   unfold logProductFullCosetFun
   refine tsum_eq_sum (s := Finset.range K) fun k hk => ?_
-  have hk' : K≤k := by simpa only [Finset.mem_range,not_lt] using hk
+  have hk' : K≤k := by simpa only [Finset.mem_range,not_lt] using! hk
   simp only [logProductIntegerCosetFun,VOA.Huang.AssocCoeffRules.prodFunZ,
     prodValueZ,prodTermZ,prodCoeff,hK _ k hk',LinearMap.zero_apply,map_zero,
     zero_mul,tsum_zero,mul_zero]
@@ -82,7 +82,7 @@ theorem log_product_fullCoset_hasLogExp_all (hC2 : C2Cofinite W)
         (C2Rigid.cmp N₁.toGW α x) (C2Rigid.cmp N₂.toGW β y)
         (C2Rigid.cmp N₃.toGW γ z) (a+b) b (1+Complex.exp t) 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ f _ _ _ (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using one_lt_norm ht)
+      Y₁ Y₂ f _ _ _ (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using! one_lt_norm ht)
   simp_rw [← Summable.tsum_finsetSum (fun γ _ => hsum _ _ γ)]
   simp_rw [← Summable.tsum_finsetSum (fun β _ => summable_sum fun γ _ => hsum _ β γ)]
   rw [← Summable.tsum_finsetSum (fun α _ => summable_sum fun β _ =>

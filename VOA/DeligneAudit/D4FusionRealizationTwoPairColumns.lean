@@ -49,7 +49,7 @@ theorem coeff_pairColumn (c k i j i' j' : ℕ) (hc : c < 28)
   have hidiv : (i * 29 + j) / 29 = i := by omega
   have hjmod : (i * 29 + j) % 29 = j := by omega
   have hr : ∀ p ∈ rawColumn c j, p.1 < 29 := by
-    simpa only [rangeCheck, List.all_eq_true, decide_eq_true_eq] using
+    simpa only [rangeCheck, List.all_eq_true, decide_eq_true_eq] using!
       rawColumn_range c j hc hj
   have hleft : 28 * 29 + j = i' * 29 + j' ↔ i' = 28 ∧ j' = j := by omega
   have hright : i * 29 + 28 = i' * 29 + j' ↔ i' = i ∧ j' = 28 := by omega
@@ -59,7 +59,7 @@ theorem coeff_pairColumn (c k i j i' j' : ℕ) (hc : c < 28)
         if k = 0 then if j = j' then coeff (rawColumn c i) i' else 0
         else if k = 1 ∧ i = c then if i' = 28 ∧ j' = j then 1 else 0 else 0 := by
     by_cases hk0 : k = 0
-    · simpa only [if_pos hk0] using coeff_map_left (rawColumn c i) j i' j' hj hj'
+    · simpa only [if_pos hk0] using! coeff_map_left (rawColumn c i) j i' j' hj hj'
     · simp only [if_neg hk0]
       by_cases hk1 : k = 1 ∧ i = c
       · simp only [if_pos hk1, coeff_cons, coeff_nil, add_zero, hleft]

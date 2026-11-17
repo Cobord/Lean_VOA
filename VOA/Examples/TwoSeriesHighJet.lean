@@ -53,16 +53,18 @@ theorem jg_isWH (a b : ℕ) : ∀ n j : ℕ,
   | 0, j => by
     simp only [jg, pow_zero, PowerSeries.coeff_one]
     split_ifs with h
-    · subst h; simpa using isWeightedHomogeneous_one ℂ (fun m => a + b * m)
+    · subst h; simpa using! isWeightedHomogeneous_one ℂ (fun m => a + b * m)
     · exact isWeightedHomogeneous_zero ℂ _ _
   | n + 1, j => by
     rw [jg, pow_succ, PowerSeries.coeff_mul]
     refine IsWeightedHomogeneous.sum _ _ _ fun p hp => ?_
-    have hpj := Finset.mem_antidiagonal.mp hp
+    have hpj := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     rw [tSer, PowerSeries.coeff_mk]
     have := (jg_isWH a b n p.1).mul (isWeightedHomogeneous_X ℂ (fun m => a + b * m) p.2)
     convert this using 1
-    rw [← hpj]; ring
+    all_goals first
+      | rfl
+      | (rw [← hpj]; ring)
 
 /-! ### Weighted components preserve the jet ideal -/
 
@@ -71,7 +73,7 @@ theorem wc_mul_mem {w : ℕ → ℕ} {v : TPoly} {dv : ℕ} (hv : IsWeightedHomo
     weightedHomogeneousComponent w E (c * v) ∈ I := by
   rw [as_sum c, Finset.sum_mul, map_sum]
   refine Ideal.sum_mem _ fun s _ => ?_
-  have h := (isWeightedHomogeneous_monomial w s (coeff s c) rfl).mul hv
+  have h := (isWeightedHomogeneous_monomial w s (c.coeff s) rfl).mul hv
   by_cases hE : E = Finsupp.weight w s + dv
   · rw [hE, h.weightedHomogeneousComponent_same]; exact I.mul_mem_left _ hvI
   · rw [h.weightedHomogeneousComponent_ne E hE]; exact I.zero_mem
@@ -128,21 +130,21 @@ theorem wc_pderiv (w : ℕ → ℕ) (m E : ℕ) (F : TPoly) :
   by_cases hs : s m = 0
   · rw [hs, Nat.cast_zero, mul_zero, monomial_zero, map_zero]
     by_cases hE : Finsupp.weight w s = E + w m
-    · rw [(isWeightedHomogeneous_monomial w s (coeff s F) hE).weightedHomogeneousComponent_same,
+    · rw [(isWeightedHomogeneous_monomial w s (F.coeff s) hE).weightedHomogeneousComponent_same,
         pderiv_monomial, hs, Nat.cast_zero, mul_zero, monomial_zero]
-    · rw [(isWeightedHomogeneous_monomial w s (coeff s F) rfl).weightedHomogeneousComponent_ne
+    · rw [(isWeightedHomogeneous_monomial w s (F.coeff s) rfl).weightedHomogeneousComponent_ne
         (E + w m) (Ne.symm hE), map_zero]
   · have hs1 : 1 ≤ s m := Nat.one_le_iff_ne_zero.mpr hs
     have hw := weight_sub_single (w := w) hs1
     by_cases hE : Finsupp.weight w s = E + w m
     · have hE' : Finsupp.weight w (s - Finsupp.single m 1) = E := by omega
       rw [(isWeightedHomogeneous_monomial w _ _ hE').weightedHomogeneousComponent_same,
-        (isWeightedHomogeneous_monomial w s (coeff s F) hE).weightedHomogeneousComponent_same,
+        (isWeightedHomogeneous_monomial w s (F.coeff s) hE).weightedHomogeneousComponent_same,
         pderiv_monomial]
     · have hE' : Finsupp.weight w (s - Finsupp.single m 1) ≠ E := by omega
       rw [(isWeightedHomogeneous_monomial w _ _ rfl).weightedHomogeneousComponent_ne E
           (Ne.symm hE'),
-        (isWeightedHomogeneous_monomial w s (coeff s F) rfl).weightedHomogeneousComponent_ne
+        (isWeightedHomogeneous_monomial w s (F.coeff s) rfl).weightedHomogeneousComponent_ne
           (E + w m) (Ne.symm hE), map_zero]
 
 /-! ### Derivatives of the jets -/
@@ -224,7 +226,7 @@ theorem X_mul_pderiv_monomial (m : ℕ) (s : ℕ →₀ ℕ) (c : ℂ) :
 /-- **The weighted Euler identity** over any finite set of variables containing `vars F`. -/
 theorem euler_sum (w : ℕ → ℕ) (F : TPoly) (S : Finset ℕ) (hS : F.vars ⊆ S) :
     ∑ m ∈ S, ((w m : ℕ) : TPoly) * (MvPolynomial.X m * pderiv m F) =
-      ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (coeff s F) := by
+      ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (F.coeff s) := by
   conv_lhs => rw [as_sum F]
   simp only [map_sum, Finset.mul_sum]
   rw [Finset.sum_comm]
@@ -252,7 +254,7 @@ theorem euler_isWH {w : ℕ → ℕ} {F : TPoly} {d : ℕ} (hF : IsWeightedHomog
 theorem isWH_listProd_aff (a b : ℕ) : ∀ l : List ℕ,
     IsWeightedHomogeneous (fun m => a + b * m) ((l.map MvPolynomial.X).prod : TPoly)
       (l.length * a + b * l.sum)
-  | [] => by simpa using isWeightedHomogeneous_one (R := ℂ) (fun m : ℕ => a + b * m)
+  | [] => by simpa using! isWeightedHomogeneous_one (R := ℂ) (fun m : ℕ => a + b * m)
   | x :: l => by
     rw [List.map_cons, List.prod_cons, List.length_cons, List.sum_cons]
     have := (isWeightedHomogeneous_X ℂ (fun m => a + b * m) x).mul (isWH_listProd_aff a b l)
@@ -285,7 +287,7 @@ theorem homogeneous_of_tMonW {k E : ℕ} {F : TPoly}
   have h := tMonW_isWH 1 0 hF
   have hw : (fun m : ℕ => 1 + 0 * m) = (1 : ℕ → ℕ) := by funext m; simp
   rw [hw] at h
-  simpa using h
+  simpa using! h
 
 /-! ### Monomials as list products -/
 

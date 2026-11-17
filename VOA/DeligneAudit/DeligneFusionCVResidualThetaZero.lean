@@ -39,9 +39,9 @@ private theorem positive_generator (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1)
   have hd : d.val < 3 ∨ d = 3 ∨ d = 4 ∨ d = 5 ∨ 6 ≤ d.val := by omega
   rcases hd with hd | rfl | rfl | rfl | hd
   · exact h.raising d hd q
-  · exact trunc_of_cvrel h.first q (by simpa [parts] using hq)
-  · exact trunc_of_cvrel h.second q (by simpa [parts] using hq)
-  · exact trunc_of_cvrel h.highest q (by simpa [parts] using hq)
+  · exact trunc_of_cvrel h.first q (by simpa [parts] using! hq)
+  · exact trunc_of_cvrel h.second q (by simpa [parts] using! hq)
+  · exact trunc_of_cvrel h.highest q (by simpa [parts] using! hq)
   · exact h.cartan_pos d hd q hq
 
 /-- Positive modes kill every zero-mode word, not just the cyclic generator. -/
@@ -61,7 +61,7 @@ private theorem mixed_first (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1)
   have hp := theta_cvrel_mixed R (h.raising 1 (by decide) 0) h.highest p q 0 0
     (by omega) (by simp [parts, T]; omega)
   simpa [mixedCoeff, PowerSeries.coeff_zero_eq_constantCoeff_apply,
-    Garland.Fs, Module.End.mul_apply] using hp
+    Garland.Fs, Module.End.mul_apply] using! hp
 
 private theorem second_theta_square (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1) :
     R.op 4 0 (R.op 5 0 (R.op 5 0 w)) = 0 := by
@@ -78,7 +78,7 @@ private theorem second_theta_square (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1) :
         simp [Fin.sum_univ_eight, bracketTable])
     (by simp [h.raising 0 (by decide) 0]) hQ 1 2 (by omega)
   simpa [mixedCoeff, PowerSeries.coeff_zero_eq_constantCoeff_apply,
-    Garland.Fs, Module.End.mul_apply, pow_succ] using hp
+    Garland.Fs, Module.End.mul_apply, pow_succ] using! hp
 
 /-- The lowering operators preserve the explicit eight-vector span. -/
 theorem lowering_stable (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1)
@@ -91,14 +91,14 @@ theorem lowering_stable (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1)
     intro v; rw [comm_apply]; simp [X, Y, Z, Fin.sum_univ_eight, bracketTable]
   have hZX : ∀ v, Z (X v) = X (Z v) := fun v => (op3_op5 0 0 v).symm
   have hYZ : ∀ v, Y (Z v) = Z (Y v) := op4_op5 0 0
-  have hX2 : X (X w) = 0 := by simpa [X, Function.iterate_succ_apply'] using h.lowering_first
-  have hY2 : Y (Y w) = 0 := by simpa [Y, Function.iterate_succ_apply'] using h.lowering_second
+  have hX2 : X (X w) = 0 := by simpa [X, Function.iterate_succ_apply'] using! h.lowering_first
+  have hY2 : Y (Y w) = 0 := by simpa [Y, Function.iterate_succ_apply'] using! h.lowering_second
   have hX2Z : X (X (Z w)) = 0 := by
-    simpa [X, Z, pow_two, Module.End.mul_apply] using mixed_first h 2 1 (by decide)
+    simpa [X, Z, pow_two, Module.End.mul_apply] using! mixed_first h 2 1 (by decide)
   have hXZ2 : X (Z (Z w)) = 0 := by
-    simpa [X, Z, pow_two, Module.End.mul_apply] using mixed_first h 1 2 (by decide)
+    simpa [X, Z, pow_two, Module.End.mul_apply] using! mixed_first h 1 2 (by decide)
   have hZ3 : Z (Z (Z w)) = 0 := by
-    simpa [Z, pow_succ, Module.End.mul_apply] using mixed_first h 0 3 (by decide)
+    simpa [Z, pow_succ, Module.End.mul_apply] using! mixed_first h 0 3 (by decide)
   have hYZ2 : Y (Z (Z w)) = 0 := second_theta_square h
   have hX2Y : X (X (Y w)) = -(2 : ℂ) • X (Z w) := by
     rw [neg_smul]
@@ -200,7 +200,7 @@ theorem adjoint_bound (h : CV3Rel R w (0, 0) (0, 0) (0, 0) 1) :
     FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   haveI : FiniteDimensional ℂ (cycSub R w) := Submodule.finiteDimensional_of_le hle
   refine ⟨inferInstance, (Submodule.finrank_mono hle).trans ?_⟩
-  simpa using finrank_range_le_card (adjointVector R w)
+  simpa using! finrank_range_le_card (adjointVector R w)
 
 /-- The actual universal residual module at rho zero is bounded by eight. -/
 theorem universal_adjoint_bound :
@@ -214,7 +214,7 @@ theorem universal_adjoint_bound :
   haveI : FiniteDimensional ℂ (CVMod (0, 0) (0, 0) (0, 0) 1) :=
     Module.Finite.of_surjective (⊤ : Submodule ℂ _).subtype
       (fun v => ⟨⟨v, Submodule.mem_top⟩, rfl⟩)
-  exact ⟨inferInstance, by simpa using hb.2⟩
+  exact ⟨inferInstance, by simpa using! hb.2⟩
 
 end
 end VOA.DeligneAudit.A2.CVResidualThetaZero

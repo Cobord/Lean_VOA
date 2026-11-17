@@ -85,7 +85,7 @@ theorem pairXZRecolourShape_succ (a b c k : ℕ) (hk : k < b) :
   funext t
   have h := pairRecolourShape_step a b c k hk (pairXZSource a b c t)
   rcases t with (y | x) | z <;>
-    simpa [pairXZRecolourShape, pairXZSource, Function.update] using h
+    simpa [pairXZRecolourShape, pairXZSource, Function.update] using! h
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 

@@ -49,7 +49,7 @@ theorem latticePolynomial_natDegree (m : ℕ) : (latticePolynomial m).natDegree 
     (f := fun i : ℕ => (X - Polynomial.C ((i : ℂ)^2 / (4 * m))))
     (fun i _ => monic_X_sub_C _)
   simpa only [natDegree_X_sub_C, Finset.sum_const, Finset.card_range, nsmul_eq_mul,
-    mul_one, latticePolynomial] using h
+    mul_one, latticePolynomial] using! h
 
 theorem heisenbergPolynomial_monic : heisenbergPolynomial.Monic :=
   ((monic_X_sub_C _).mul (monic_X_sub_C _)).mul (monic_X_sub_C _)
@@ -138,7 +138,7 @@ theorem heisenberg_annihilates_deviation :
     Algebra.algebraMap_eq_smul_one, sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm,
     smul_smul, mul_one, one_mul, pow_succ, pow_zero, mul_assoc] at h ⊢
   convert congrArg Neg.neg h using 1
-  module
+  all_goals first | exact neg_zero.symm | module
 
 include hm2 in
 theorem charged_annihilates_E :

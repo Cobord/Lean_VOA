@@ -129,7 +129,7 @@ theorem evalGraph_single {r : ℕ} (hdet : Detects R t L.kA L.aNoncritical (Imax
   have h1 : y1 + b.1 = y := congrArg Prod.fst hab
   have h2 : evR R Q + b.2 = z := by
     have := congrArg Prod.snd hab
-    simpa using this
+    simpa using! this
   rw [hy0] at h1
   have hy1 : y1 ∈ ImaxL L := by
     have : y1 = -b.1 := eq_neg_of_add_eq_zero_left h1
@@ -151,11 +151,11 @@ theorem evalFunctional_of_detects {r : ℕ} (hdet : Detects R t L.kA L.aNoncriti
     have hmem := Submodule.mem_graph_toLinearPMap hs ⟨y, hdom⟩
     have h1 : Λ y = G.toLinearPMap ⟨y, hdom⟩ := by
       have := LinearMap.congr_fun hΛ ⟨y, hdom⟩
-      simpa using this
+      simpa using! this
     rw [h1]
     have hsub := G.sub_mem hmem hyz
     have := hs _ hsub (by simp)
-    simpa [sub_eq_zero] using this
+    simpa [sub_eq_zero] using! this
   refine ⟨Λ, ?_, ?_, ?_⟩
   · intro y hy
     exact key y 0 (Submodule.mem_sup_right ⟨hy, Submodule.zero_mem _⟩)
@@ -228,7 +228,7 @@ theorem evalFunctional_of_coinv (h : CoinvEvalFamily L R t) : ∀ r, EvalFunctio
         · rw [show (-((m + 1 : ℕ) : ℤ) - 1) = -(m : ℤ) - 2 by push_cast; ring, hfj]
           simp
       · refine hword _ fun m h => hl ⟨m, ?_⟩
-        simpa using h
+        simpa using! h
   intro r
   exact ⟨Λ r, hI r, hlow r, fun w hw => hw ▸ key w⟩
 

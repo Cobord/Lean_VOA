@@ -46,7 +46,7 @@ theorem vPow_mem_grading {x : 𝒱} {p : ℤ} (hx : x ∈ W.grading p) :
   | zero => simpa [vPow] using hx
   | succ j ih =>
       have := W.smul_mem_grading hx ih (-1)
-      convert this using 2; push_cast; ring
+      convert this using 2 <;> first | rfl | (push_cast; ring)
 
 variable (A : WeakModule W M) (x : 𝒱)
 

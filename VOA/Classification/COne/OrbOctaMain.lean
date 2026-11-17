@@ -45,7 +45,7 @@ theorem L_neg_two_pow_vacuum_mem {V : Type*} [AddCommGroup V] [Module ℂ V]
     (W : VertexOperatorAlgebra V) (n : ℕ) :
     ((W.L (-2)) ^ n) W.vacuum ∈ W.grading (2 * (n : ℤ)) := by
   induction n with
-  | zero => simpa using W.vacuum_mem
+  | zero => simpa using! W.vacuum_mem
   | succ n ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := OrbSpan.L_mem_grading_aux W ih (-2)

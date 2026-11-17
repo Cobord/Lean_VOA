@@ -56,7 +56,7 @@ theorem ghost_weight_zero_le_nonnegative :
     exact_mod_cast (show (Ghost.ghWeight l : ℂ) = 0 from hl)
   have hn := ghNum_nonneg_of_weight_zero l hweight
   apply Submodule.mem_iSup_of_mem (Ghost.ghNum l).toNat
-  simpa only [Int.toNat_of_nonneg hn] using Ghost.stWordSF_mem_ghostGrading l
+  simpa only [Int.toNat_of_nonneg hn] using! Ghost.stWordSF_mem_ghostGrading l
 
 /-- Weight zero of two nonnegatively supported algebras is the tensor of their
 weight-zero spaces. No choice of bases is needed. -/
@@ -85,7 +85,7 @@ theorem tenGrading_zero_eq {A B : Type*}
       exact bot_le
   · have h := le_iSup (fun h : ℂ =>
       TensorVA.tenSub (V.grading h) (W.grading (0 - h))) 0
-    simpa [TensorVA.tenGrading] using h
+    simpa [TensorVA.tenGrading] using! h
 
 /-- Nonnegative ghost-number support is preserved by tensor products. -/
 theorem tmul_mem_nonnegativeGhostPart {A B : Type*}
@@ -103,15 +103,13 @@ theorem tmul_mem_nonnegativeGhostPart {A B : Type*}
       _ ?_ ?_ ?_ hy
     · intro m y hy
       apply Submodule.mem_iSup_of_mem (n + m)
-      simpa only [Nat.cast_add] using tmul_mem_tensorGhostGrading P Q hx hy
-    · dsimp only
-      rw [TensorProduct.tmul_zero]
+      simpa only [Nat.cast_add] using! tmul_mem_tensorGhostGrading P Q hx hy
+    · rw [TensorProduct.tmul_zero]
       exact Submodule.zero_mem _
     · intro y z _ _ hy hz
       rw [TensorProduct.tmul_add]
       exact Submodule.add_mem _ hy hz
-  · dsimp only
-    rw [TensorProduct.zero_tmul]
+  · rw [TensorProduct.zero_tmul]
     exact Submodule.zero_mem _
   · intro x z _ _ hx hz
     rw [TensorProduct.add_tmul]
@@ -161,8 +159,7 @@ theorem matterGhost_weight_zero_le_nonnegative
     _ ?_ ?_ ?_ hy'
   · intro n y hy
     exact Submodule.mem_iSup_of_mem n (tmul_mem_matterGhostGrading M x hy)
-  · dsimp only
-    rw [TensorProduct.tmul_zero]
+  · rw [TensorProduct.tmul_zero]
     exact Submodule.zero_mem _
   · intro y z _ _ hy hz
     rw [TensorProduct.tmul_add]
@@ -178,8 +175,7 @@ theorem negative_homogProj_eq_zero {K : Type*} [AddCommGroup K] [Module ℂ K]
     (motive := fun x _ => homogProj G g x = 0) _ ?_ ?_ ?_ hx
   · intro n x hx
     exact homogProj_of_mem_ne G (by omega) hx
-  · dsimp only
-    exact map_zero _
+  · exact map_zero _
   · intro x y _ _ hx hy
     simp only [map_add, hx, hy, add_zero]
 
@@ -198,7 +194,7 @@ theorem vacuum_not_mem_imQ_of_weight_zero_nonnegative
   have hw : C.Q (homogProj S.grading 0 a) = S.vacuum := by
     have h := BRST.homogProj_shift S.grading C.Q (Equiv.refl ℂ)
       (fun h x hx => C.Q_wt h x hx) 0 a
-    simpa only [Equiv.refl_apply, ha, homogProj_of_mem S.grading S.vacuum_mem] using h.symm
+    simpa only [Equiv.refl_apply, ha, homogProj_of_mem S.grading S.vacuum_mem] using! h.symm
   have hz : homogProj C.ghost (-1) (homogProj S.grading 0 a) = 0 :=
     negative_homogProj_eq_zero C.ghost (by norm_num)
       (hwt (homogProj_mem S.grading 0 a))

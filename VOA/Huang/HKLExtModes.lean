@@ -72,7 +72,10 @@ theorem ext_unit_left (m : tensorObj F A A ⟶ A) (η : vacuumObject ⟶ A)
   rw [extIntertwiner_val]
   have h1 := tensorHom_intertwiner F η (𝟙 A) n v b
   rw [Ordinary.id_apply] at h1
-  rw [← h1, ← Ordinary.comp_apply, hl, leftUnitor_intertwiner]
+  rw [← h1]
+  exact (congrArg (fun g : tensorObj F vacuumObject A ⟶ A =>
+      g.val ((F vacuumObject A).intertwiner.val n v b)) hl).trans
+    (leftUnitor_intertwiner F A n v b)
 
 /-- On the image of the unit, integral modes are the module modes: `(η v)_k b = v_k b`. -/
 theorem ext_unit_left_int (m : tensorObj F A A ⟶ A) (η : vacuumObject ⟶ A)
@@ -106,7 +109,10 @@ theorem ext_unit_right (m : tensorObj F A A ⟶ A) (η : vacuumObject ⟶ A)
   rw [extIntertwiner_val]
   have h1 := tensorHom_intertwiner F (𝟙 A) η n a v
   rw [Ordinary.id_apply] at h1
-  rw [← h1, ← Ordinary.comp_apply, hr, rightUnitor_intertwiner]
+  rw [← h1]
+  exact (congrArg (fun g : tensorObj F A vacuumObject ⟶ A =>
+      g.val ((F A vacuumObject).intertwiner.val n a v)) hr).trans
+    (rightUnitor_intertwiner F A n a v)
 
 /-- Module modes on the vacuum at a shifted integer: `𝟙_{k+j} a = δ_{k+j,-1} a`. -/
 theorem moduleModes_vacuum_shift (A : Ordinary V) (k : ℤ) (j : ℕ) (a : A.carrier) :

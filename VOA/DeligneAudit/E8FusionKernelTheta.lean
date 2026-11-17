@@ -315,7 +315,7 @@ theorem rootSl2_of {e γ : Fin 248} (hE : 8 ≤ e.val ∧ e.val < 128)
       ∑ c ∈ Finset.range 8, sget (brK e γ) c * sget (brK c γ) γ = 2) : RootSl2E8 e γ := by
   obtain ⟨h1, h2, h3, h4⟩ := h
   refine ⟨hE, fun c hc => ?_, h2, fun d => ?_⟩
-  · simpa using mem_of_suppIn h1 hc
+  · simpa using! mem_of_suppIn h1 hc
   rw [Fin.sum_univ_eq_sum_range (fun i => if i < 8 then fZ brK e γ i * fZ brK i γ d else 0) 248,
     show Finset.range 248 = Finset.range (8 + 240) from rfl, Finset.sum_range_add]
   rw [Finset.sum_eq_zero (s := Finset.range 240) (fun i _ => by simp)]
@@ -551,7 +551,7 @@ theorem op_comm_end8 (a b : Fin 248) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 /-- One Heisenberg step. -/
 theorem heis_step8 {a b z : Fin 248} {c : ℤ} (hc : c ≠ 0)
@@ -604,12 +604,12 @@ theorem root_sharpen8 {e γ : Fin 248} (hs : RootSl2E8 e γ) {w : V} {k : ℕ}
         rw [this]; simp
     rw [Finset.sum_congr rfl fun c _ => hpt c, ← Int.cast_sum, h3d]
     split_ifs <;> simp
-  have hin : ∀ c x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
-      ∑ d : Fin 248, E8sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using ρ.comm c γ 0 0 x
+  have hin : ∀ (c : Fin 248) x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
+      ∑ d : Fin 248, E8sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using! ρ.comm c γ 0 0 x
   refine sl2_sharpen (-ρ.op e 0) (ρ.op γ 0) H ?_ ?_ w k ?_ ?_ hN
   · intro x
     have : ρ.op e 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op e 0 x) =
-        ∑ c : Fin 248, E8sector.f e γ c • ρ.op c 0 x := by simpa using ρ.comm e γ 0 0 x
+        ∑ c : Fin 248, E8sector.f e γ c • ρ.op c 0 x := by simpa using! ρ.comm e γ 0 0 x
     simp only [LinearMap.neg_apply, map_neg, hH, LinearMap.coe_sum, Finset.sum_apply,
       LinearMap.smul_apply]
     rw [← this]; abel
@@ -660,7 +660,7 @@ theorem e8_thetaNil : ThetaNilG E8sector := by
   have hL128 : (ρ.op (128 : Fin 248) 0)^[k + 1] w = 0 := by
     have := hL (128 : Fin 248) (show ((128 : Fin 248) : ℕ) ∈ [135, 134, 133, 132, 131, 130, 129, 128] by decide)
     change (ρ.op (128 : Fin 248) 0)^[k * lowExpE8 128 + 1] w = 0 at this
-    simpa [lowExpE8] using this
+    simpa [lowExpE8] using! this
   have hz : ∀ i : Fin 248, 129 ≤ i.val ∧ i.val < 136 → (ρ.op i 0)^[k + 1] w = 0 := by
     intro i hi
     have := hL i (show i.val ∈ [135, 134, 133, 132, 131, 130, 129, 128] by

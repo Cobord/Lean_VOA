@@ -106,7 +106,7 @@ theorem lowering_square_of_label_one (w : V) (weight : Fin 3 → ℕ)
   have hl := h.lowering i
   rw [hi] at hl
   simpa only [Function.iterate_succ, Function.comp_apply, Function.iterate_zero,
-    id_eq] using hl
+    id_eq] using! hl
 
 /-- **Transported relations.** If `v` satisfies the local Weyl relations of weight `(1, B, 1)`
 and `f₂(h) v = 0`, then `q(h) F v = 0` and `z(h) x F v = 0`. -/
@@ -119,7 +119,7 @@ theorem adjointSite_transported_relations (w : V) (B h : ℕ)
     lowering_square_of_label_one ρ w _ hW 0 rfl
   -- `F g(h) = g(h) F + q(h)` and `F q(h) = q(h) F`.
   have hFg (u : V) : ρ.op 11 0 (ρ.op 9 h u) = ρ.op 9 h (ρ.op 11 0 u) + ρ.op 10 h u := by
-    simpa only [zero_add, Int.cast_one, one_smul] using
+    simpa only [zero_add, Int.cast_one, one_smul] using!
       op_comm_of_single_bracket ρ bracket_last_middle 0 h u
   have hFq (u : V) : ρ.op 11 0 (ρ.op 10 h u) = ρ.op 10 h (ρ.op 11 0 u) :=
     op_comm_of_zero_bracket ρ bracket_last_lastPair 0 h u

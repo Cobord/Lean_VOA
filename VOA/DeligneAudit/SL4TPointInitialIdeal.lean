@@ -22,7 +22,7 @@ theorem pointDegreeFiltration_mul (x : ι → σ → ℂ) (n m : ℕ)
       rw [← map_mul]
       exact Submodule.subset_span ⟨p * q,
         (totalDegree_mul p q).trans_lt (Nat.add_lt_add_of_le_of_lt hp hq), rfl⟩
-  | zero => simpa using (pointDegreeFiltration x (m + n)).zero_mem
+  | zero => simpa using! (pointDegreeFiltration x (m + n)).zero_mem
   | add f g _ _ hf hg =>
       rw [mul_add]
       exact Submodule.add_mem _ hf hg
@@ -84,12 +84,12 @@ theorem pointInitialSubmodule_homogeneous (x : ι → σ → ℂ)
   constructor
   · intro h
     have hn := h n
-    simpa only [homogeneousComponent_of_mem hp, if_pos rfl] using hn
+    simpa only [homogeneousComponent_of_mem hp, if_pos rfl] using! hn
   · intro h a
     rw [homogeneousComponent_of_mem hp]
     by_cases ha : a = n
     · subst a
-      simpa only [if_pos rfl] using h
+      simpa only [if_pos rfl] using! h
     · rw [if_neg ha, map_zero]
       exact Submodule.zero_mem _
 

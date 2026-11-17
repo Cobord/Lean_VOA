@@ -233,6 +233,7 @@ theorem e46E4_pow_weight (a : ℕ) : E46Weight (4 * (a : ℤ)) (e46E4 ^ a) := by
   | succ a ha =>
       rw [pow_succ]
       convert ha.mul e46E4_weight using 1
+      push_cast; ring
 
 theorem e46E6_pow_weight (b : ℕ) : E46Weight (6 * (b : ℤ)) (e46E6 ^ b) := by
   induction b with
@@ -240,6 +241,7 @@ theorem e46E6_pow_weight (b : ℕ) : E46Weight (6 * (b : ℤ)) (e46E6 ^ b) := by
   | succ b hb =>
       rw [pow_succ]
       convert hb.mul e46E6_weight using 1
+      push_cast; ring
 
 /-- The `E₄^a E₆^b` monomial, with its weight visible in the type-level interface below. -/
 noncomputable def e46Monomial (a b : ℕ) : E46 := e46E4 ^ a * e46E6 ^ b

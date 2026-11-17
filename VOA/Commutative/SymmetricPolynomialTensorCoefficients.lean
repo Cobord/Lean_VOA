@@ -40,7 +40,8 @@ theorem isSymmetric_iff_coefficients {d : ℕ} (p : MvPolynomial (Fin d) K) :
       p.coeff (a.mapDomain h) = p.coeff a := by
   constructor
   · intro hp h a
-    have hc := congrArg (MvPolynomial.coeff (a.mapDomain h)) (hp h)
+    have hc := congrArg (fun q : MvPolynomial _ _ => q.coeff (a.mapDomain h)) (hp h)
+    beta_reduce at hc
     rw [MvPolynomial.coeff_rename_mapDomain h h.injective] at hc
     exact hc.symm
   · intro hp h
@@ -61,7 +62,7 @@ def transpose (b : Basis ι K W) (d : ℕ) :
 
 @[simp] theorem transpose_coeff (b : Basis ι K W) (d : ℕ)
     (c : Exponent d →₀ W) (i : ι) (a : Exponent d) :
-    MvPolynomial.coeff a (transpose b d c i) = b.repr (c a) i := by
+    (transpose b d c i).coeff a = b.repr (c a) i := by
   rfl
 
 /-- Vector invariance is equivalent to symmetry of every basis-coordinate
@@ -173,9 +174,9 @@ theorem tensorEquivOfBasis_symm_tmul (b : Basis ι K W) (d : ℕ)
   intro i
   have hi := congrArg
     (fun f : ι →₀ MvPolynomial.symmetricSubalgebra (Fin d) K =>
-      MvPolynomial.coeff a (f i).1) hc
+      (f i).1.coeff a) hc
   change b.repr (((tensorEquivOfBasis b d).symm (w ⊗ₜ[K] s)).1 a) i =
-    MvPolynomial.coeff a (T (w ⊗ₜ[K] s) i).1 at hi
+    (T (w ⊗ₜ[K] s) i).1.coeff a at hi
   simpa [T, MvPolynomial.coeff_smul, mul_comm] using hi
 
 theorem tensorEquiv_symm_tmul (d : ℕ)

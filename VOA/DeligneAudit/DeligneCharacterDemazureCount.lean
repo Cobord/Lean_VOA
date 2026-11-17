@@ -79,22 +79,30 @@ def strD (v : Wt r) : R1 r :=
   else -∑ k ∈ range ((-ρ.n v).toNat - 1), mono (v + ((k : ℤ) + 1) • ρ.α)
 
 /-- The Demazure operator, extended linearly. -/
-def DR : R1 r →ₗ[ℤ] R1 r := Finsupp.linearCombination ℤ ρ.strD
+def DR : R1 r →ₗ[ℤ] R1 r :=
+  (Finsupp.linearCombination ℤ ρ.strD).comp (AddMonoidAlgebra.coeffLinearEquiv ℤ).toLinearMap
 
 /-- The affine reflection on the group ring. -/
-def sAff : R1 r →ₗ[ℤ] R1 r := Finsupp.lmapDomain ℤ ℤ ρ.aff
+def sAff : R1 r →ₗ[ℤ] R1 r :=
+  (AddMonoidAlgebra.coeffLinearEquiv ℤ).symm.toLinearMap.comp
+    ((Finsupp.lmapDomain ℤ ℤ ρ.aff).comp (AddMonoidAlgebra.coeffLinearEquiv ℤ).toLinearMap)
 
 /-- The linear reflection as a ring map. -/
 def sLin : R1 r →+* R1 r := AddMonoidAlgebra.mapDomainRingHom ℤ ρ.lin
 
-theorem DR_single (v : Wt r) (c : ℤ) : ρ.DR (single v c) = c • ρ.strD v :=
-  Finsupp.linearCombination_single ℤ c v
+theorem DR_single (v : Wt r) (c : ℤ) : ρ.DR (single v c) = c • ρ.strD v := by
+  change Finsupp.linearCombination ℤ ρ.strD (Finsupp.single v c) = _
+  exact Finsupp.linearCombination_single ℤ c v
 
-theorem sAff_single (v : Wt r) (c : ℤ) : ρ.sAff (single v c) = single (ρ.aff v) c :=
-  Finsupp.mapDomain_single
+theorem sAff_single (v : Wt r) (c : ℤ) : ρ.sAff (single v c) = single (ρ.aff v) c := by
+  apply AddMonoidAlgebra.coeff_injective
+  change Finsupp.mapDomain ρ.aff (Finsupp.single v c) = Finsupp.single (ρ.aff v) c
+  exact Finsupp.mapDomain_single
 
 theorem sLin_single (v : Wt r) (c : ℤ) : ρ.sLin (single v c) = single (ρ.lin v) c := by
-  simp [sLin, AddMonoidAlgebra.mapDomainRingHom_apply, Finsupp.mapDomain_single]
+  first
+  | simp [sLin, AddMonoidAlgebra.mapDomainRingHom_apply, AddMonoidAlgebra.mapDomain_single]
+  | simp [sLin, AddMonoidAlgebra.mapDomainRingHom_apply, Finsupp.mapDomain_single]
 
 /-- Division formula on one monomial. -/
 theorem div_strD (v : Wt r) :
@@ -144,9 +152,13 @@ theorem div_formula (f : R1 r) :
   | single v c =>
     rw [DR_single, sAff_single, mul_smul_comm, div_strD]
     have e1 : (single v c : R1 r) = c • mono v := by
-      rw [mono]; exact (Finsupp.smul_single_one _ c).symm
+      apply AddMonoidAlgebra.coeff_injective
+      change Finsupp.single v c = c • Finsupp.single v (1 : ℤ)
+      exact (Finsupp.smul_single_one _ c).symm
     have e2 : (single (ρ.aff v) c : R1 r) = c • mono (ρ.aff v) := by
-      rw [mono]; exact (Finsupp.smul_single_one _ c).symm
+      apply AddMonoidAlgebra.coeff_injective
+      change Finsupp.single (ρ.aff v) c = c • Finsupp.single (ρ.aff v) (1 : ℤ)
+      exact (Finsupp.smul_single_one _ c).symm
     rw [e1, e2]
     simp only [zsmul_eq_mul]
     ring
@@ -166,7 +178,8 @@ theorem sAff_mul (f g : R1 r) : ρ.sAff (f * g) = ρ.sLin f * ρ.sAff g := by
 theorem one_sub_mono_ne_zero (hα : ρ.α ≠ 0) : (1 - mono (-ρ.α) : R1 r) ≠ 0 := by
   intro h
   have h1 : mono (-ρ.α) = (mono 0 : R1 r) := by rw [mono_zero]; exact (sub_eq_zero.mp h).symm
-  have : -ρ.α = 0 := Finsupp.single_left_injective one_ne_zero h1
+  have : -ρ.α = 0 := Finsupp.single_left_injective one_ne_zero
+    (congrArg (fun f : R1 r => f.coeff) h1)
   exact hα (neg_eq_zero.mp this)
 
 /-- **Twisted Leibniz**: `D(f g) = f D(g)` when `s(f) = f`. -/
@@ -220,7 +233,9 @@ def vec (r : ℕ) (l : List ℤ) : Wt r := fun j => l.getD j 0
 def toR1 (r : ℕ) (f : LPoly) : R1 r := (f.map fun t => single (vec r t.1.1) t.2).sum
 
 theorem single_eq_smul_mono (v : Wt r) (c : ℤ) : (single v c : R1 r) = c • mono v := by
-  rw [mono]; exact (Finsupp.smul_single_one _ c).symm
+  apply AddMonoidAlgebra.coeff_injective
+  change Finsupp.single v c = c • Finsupp.single v (1 : ℤ)
+  exact (Finsupp.smul_single_one _ c).symm
 
 theorem toR1_nil : toR1 r [] = 0 := rfl
 
@@ -426,7 +441,7 @@ theorem Good_flatMap_fin (A : List (List ℤ)) (i : ℕ) (f : LPoly) (hf : Good 
   intro x hx
   obtain ⟨t, ht, hx⟩ := List.mem_flatMap.mp hx
   unfold demazureFinTerm at hx
-  dsimp only at hx
+  try dsimp only at hx
   split_ifs at hx <;>
   · obtain ⟨k, -, rfl⟩ := List.mem_map.mp hx
     simp [shiftAt, hf t ht]
@@ -436,7 +451,7 @@ theorem Good_flatMap_zero (A : List (List ℤ)) (θ : List ℤ) (hθ : θ.length
   intro x hx
   obtain ⟨t, ht, hx⟩ := List.mem_flatMap.mp hx
   unfold demazureZeroTerm at hx
-  dsimp only at hx
+  try dsimp only at hx
   split_ifs at hx <;>
   · obtain ⟨k, -, rfl⟩ := List.mem_map.mp hx
     simp [shiftTheta, hf t ht, hθ]
@@ -531,16 +546,17 @@ theorem demazureChar_total (A : List (List ℤ)) (θ : List ℤ) (hθ : θ.lengt
 /-! ## A computable invariance criterion -/
 
 theorem toR1_apply (f : LPoly) (w : Wt r) :
-    (toR1 r f : Wt r →₀ ℤ) w = ((f.filter fun s => decide (vec r s.1.1 = w)).map (·.2)).sum := by
+    (toR1 r f).coeff w = ((f.filter fun s => decide (vec r s.1.1 = w)).map (·.2)).sum := by
   induction f with
   | nil => rfl
   | cons t f ih =>
     rw [toR1_cons]
-    erw [Finsupp.add_apply]
+    rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
     rw [ih, List.filter_cons]
+    change Finsupp.single (vec r t.1.1) t.2 w + _ = _
     by_cases h : vec r t.1.1 = w
-    · simp [h, AddMonoidAlgebra.single, Finsupp.single_apply]
-    · simp [h, AddMonoidAlgebra.single, Finsupp.single_apply]
+    · simp [h, Finsupp.single_apply]
+    · simp [h, Finsupp.single_apply]
 
 /-- `∑` of the coefficients of `f` at the weight list `μ`. -/
 def cnt (f : LPoly) (μ : List ℤ) : ℤ := ((f.filter fun s => decide (s.1.1 = μ)).map (·.2)).sum
@@ -549,7 +565,7 @@ def cnt (f : LPoly) (μ : List ℤ) : ℤ := ((f.filter fun s => decide (s.1.1 =
 def sameChar (f g : LPoly) : Bool := (f ++ g).all fun t => decide (cnt f t.1.1 = cnt g t.1.1)
 
 theorem cnt_eq_apply (f : LPoly) (hf : Good r f) (μ : List ℤ) (hμ : μ.length = r) :
-    cnt f μ = (toR1 r f : Wt r →₀ ℤ) (vec r μ) := by
+    cnt f μ = (toR1 r f).coeff (vec r μ) := by
   rw [toR1_apply, cnt]
   congr 2
   apply List.filter_congr
@@ -559,6 +575,7 @@ theorem cnt_eq_apply (f : LPoly) (hf : Good r f) (μ : List ℤ) (hμ : μ.lengt
 
 theorem toR1_eq_of_sameChar (f g : LPoly) (hf : Good r f) (hg : Good r g)
     (h : sameChar f g = true) : toR1 r f = toR1 r g := by
+  apply AddMonoidAlgebra.coeff_injective
   apply Finsupp.ext
   intro w
   by_cases hw : ∃ t ∈ f ++ g, vec r t.1.1 = w

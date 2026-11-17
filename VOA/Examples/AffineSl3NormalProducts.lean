@@ -22,6 +22,8 @@ noncomputable section
 open scoped BigOperators
 open Classical
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- A `ℤ`-indexed family of operators is **locally finite** when, on each vector, only finitely
 many members are nonzero. -/
 def LocFin (T : ℤ → Module.End ℂ Fock) : Prop :=

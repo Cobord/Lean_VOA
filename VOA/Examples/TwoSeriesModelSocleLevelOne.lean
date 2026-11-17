@@ -43,7 +43,7 @@ theorem serH_colSer (b : Fin 2) : SerH (colSer b) := fun j => by
 theorem serH_dS {f : JetSer} (hf : SerH f) : SerH (dS f) := fun j => by
   rw [PowerSeries.coeff_derivative]
   have h := (hf (j + 1)).mul (isHomogeneous_C (Fin 2 × ℕ) ((j : ℂ) + 1))
-  simpa [MvPolynomial.C_add] using h
+  simpa [MvPolynomial.C_add] using! h
 
 theorem coeff_mul_isHomogeneous {f g : JetSer} (hf : SerH f) (hg : SerH g) (j : ℕ) :
     (PowerSeries.coeff j (f * g)).IsHomogeneous 2 := by
@@ -70,7 +70,7 @@ theorem genSpan_le_homogeneous : genSpan ≤ homogeneousSubmodule (Fin 2 × ℕ)
 theorem wordSym_isHomogeneous (w : List (Generator × ℕ)) :
     (wordSym w).IsHomogeneous (2 * w.length) := by
   induction w with
-  | nil => simpa using isHomogeneous_one (Fin 2 × ℕ) ℂ
+  | nil => simpa using! isHomogeneous_one (Fin 2 × ℕ) ℂ
   | cons l w ih =>
     rw [wordSym_cons, List.length_cons, show 2 * (w.length + 1) = 2 + 2 * w.length by ring]
     exact ((mem_homogeneousSubmodule _ _).mp
@@ -119,7 +119,7 @@ theorem vMem_one_ne_bot {r : ℕ} {d : ℤ} {N : ℕ} {τ : Rn 1}
     rw [SetLike.mem_coe, mem_homogeneousSubmodule, hPe'] at hP
     have h2 := isHomogeneous_C_mul_X_pow c ((1 : Fin 2), 0) (2 * N)
     have hne : (MvPolynomial.C c * X (1, 0) ^ (2 * N) : JetPoly) ≠ 0 :=
-      mul_ne_zero (fun h => hc0 (by simpa using h)) (pow_ne_zero _ (X_ne_zero _))
+      mul_ne_zero (fun h => hc0 (by simpa using! h)) (pow_ne_zero _ (X_ne_zero _))
     have := h2.inj_right hP hne
     omega
   · have h1 := Module.End.mem_eigenspace_iff.mp (Θ_modelDeg (Rn 1) (tn 1) (θn 1) (θn_tn 1) r d hQ)

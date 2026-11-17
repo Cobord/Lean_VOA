@@ -218,12 +218,12 @@ theorem vacuumFourContinuant_actual_terminal (p : ℂ) (hp : p≠0) (u : ℕ →
       wardBSAVacuumSource (vacuumFourWeight p) (4/p) (vacuumFourWeight p) 4 4 u (2*(k+2))=
       -vacuumFourContinuant p (k+2) := by
   let v : ℕ → ℂ := fun j => u (2*j)
-  have hv0 : v 0=1 := by simpa [v] using h0
+  have hv0 : v 0=1 := by simpa [v] using! h0
   have hv1 : 1<k+2 → vacuumFourStep p 1*v 1+vacuumFourMiddleNumerator p 2*v 0=0 := by
     intro hk
     have hh := vacuumFour_source_two_cleared p hp u
     rw [hbelow 1 (by omega) hk] at hh
-    simpa [v,vacuumFourStep] using hh.symm
+    simpa [v,vacuumFourStep] using! hh.symm
   have hvs : ∀ j : ℕ, j+2<k+2 →
       vacuumFourStep p (j+2)*v (j+2)+
       vacuumFourMiddleNumerator p (2*((j:ℂ)+2))*v (j+1)-(9*p/4)*v j=0 := by
@@ -234,7 +234,7 @@ theorem vacuumFourContinuant_actual_terminal (p : ℂ) (hp : p≠0) (u : ℕ →
     rw [hi,hbelow (j+2) (by omega) hj] at hh
     simp only [mul_zero] at hh
     have hjc : (2:ℂ)*(j:ℂ)+4=2*((j:ℂ)+2) := by ring
-    simpa only [v,vacuumFourStep,hi',Nat.cast_add,Nat.cast_mul,Nat.cast_ofNat,hjc] using hh.symm
+    simpa only [v,vacuumFourStep,hi',Nat.cast_add,Nat.cast_mul,Nat.cast_ofNat,hjc] using! hh.symm
   have hc := vacuumFourContinuant_terminal p hp v k hv0 hv1 hvs
   have hh := vacuumFour_source_cleared p hp u (2*k)
   have hi : 2*k+4=2*(k+2) := by omega
@@ -265,7 +265,7 @@ theorem vacuumFourContinuant_operator_terminal (c p : ℂ) (hp : p≠0)
   apply vacuumFourContinuant_actual_terminal p hp _ k hterm h0
   intro j hj hjk
   have hh := congrArg (vermaVacuumSurvival c) (hbelow j hj hjk)
-  simpa only [wardSourceAt_vacuum,map_zero] using hh
+  simpa only [wardSourceAt_vacuum,map_zero] using! hh
 
 /-- A nonzero integer continuant certifies survival of the actual terminal
 source in the vacuum module. This criterion still requires that explicit

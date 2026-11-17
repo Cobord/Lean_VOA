@@ -60,7 +60,8 @@ def modelLinear :
     Linear ℂ S := by
   letI := modelPreadditive E
   exact
-    { homModule := fun X Y => Equiv.module ℂ (E.fullyFaithfulFunctor.homEquiv (X := X) (Y := Y))
+    { homModule := fun X Y =>
+        AddEquiv.module ℂ (E.fullyFaithfulFunctor.homEquiv (X := X) (Y := Y)).addEquiv
       smul_comp := fun X Y Z c f g => E.functor.map_injective (by
         simp [Equiv.smul_def])
       comp_smul := fun X Y Z f c g => E.functor.map_injective (by

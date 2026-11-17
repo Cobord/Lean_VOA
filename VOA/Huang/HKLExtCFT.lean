@@ -122,7 +122,7 @@ theorem hklCFTTypeInput_holds : HKLCFTTypeInput.{u} := by
     hV.1.toStronglyFinite.vacuum_ne_zero (hinj (h0.trans (map_zero η.val).symm))
   have hmem : η.val V.vacuum ∈ A.isMod.weight 0 := by
     have := hom_mem_weight (M₂ := 𝒱) (A₂ := adjointModule V) η.property vacuum_mem_adj
-    simpa using this
+    simpa using! this
   -- `dim A_0 = 1`
   have hV0 : finrank ℂ (V.grading 0) = 1 := by
     rw [V.vacuum_grade, finrank_span_singleton hV.1.toStronglyFinite.vacuum_ne_zero]

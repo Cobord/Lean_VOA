@@ -19,6 +19,11 @@ Headline statements (first block): `tauB_gmul`, `isAlgAut_tauB : IsAlgAut tauB`,
 `tauB_mem_AutO : tauB ∈ AutO`, `Generated.Gmat_le_AutO : Generated.Gmat ≤ AutO`.
 -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess
 
 /-! ## Headline statements -/

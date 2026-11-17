@@ -19,12 +19,12 @@ theorem mixedConv_signed_coefficient_product (φ : MixedPoly →+* R)
         coefficientPoly (fun j => (-1) ^ j * φ (g j)) e =
       coefficientPoly (fun j => (-1) ^ j * φ (mixedConv f g j)) (d + e) := by
   have hfc := coefficientPoly_coeff_of_tail (fun j => (-1) ^ j * φ (f j)) d
-    (fun j hj => by dsimp; rw [hf j hj, mul_zero])
+    (fun j hj => by rw [hf j hj, mul_zero])
   have hgc := coefficientPoly_coeff_of_tail (fun j => (-1) ^ j * φ (g j)) e
-    (fun j hj => by dsimp; rw [hg j hj, mul_zero])
+    (fun j hj => by rw [hg j hj, mul_zero])
   have hcc := coefficientPoly_coeff_of_tail
     (fun j => (-1) ^ j * φ (mixedConv f g j)) (d + e)
-    (fun j hj => by dsimp; rw [mixedConv_tail φ f g d e hf hg j hj, mul_zero])
+    (fun j hj => by rw [mixedConv_tail φ f g d e hf hg j hj, mul_zero])
   ext n : 1
   rw [coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   simp only [hfc, hgc, hcc]

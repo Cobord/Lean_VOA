@@ -90,7 +90,7 @@ theorem Candidate.baseIdeal_eq_simpleSymbol_kernel
   have he : MvPolynomial.aeval (fun i => mk₂ (BoundaryArcLiMap.simpleVOA C)
       (BoundaryArcLiMap.gen C i)) = simpleSymbol C := BoundaryArcLiMap.c2Eval_eq_simpleSymbol C
   apply le_antisymm
-  · simpa only [he] using C.baseC2Relations
+  · simpa only [he] using! C.baseC2Relations
   · intro f hf
     have hz : Ideal.Quotient.mkₐ ℂ (BoundaryAuxiliary.baseIdeal m) f = 0 := by
       apply (C.baseC2AlgEquiv hinj).injective

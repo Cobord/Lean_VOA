@@ -158,7 +158,7 @@ noncomputable def principalHalfAutFactor (Γ : Subgroup SL(2, ℤ)) : HalfAutFac
   sq := principalHalfRoot
   sq_sq := by
     intro A _ τ
-    simpa using principalHalfRoot_sq A τ
+    simpa using! principalHalfRoot_sq A τ
   sq_ne_zero := fun A _ τ => principalHalfRoot_ne_zero A τ
   mult := principalHalfMultiplier
   cocycle := fun A _ B _ τ => principalHalfRoot_cocycle A B τ

@@ -56,11 +56,11 @@ theorem wordL_E_mem (l : List (Ltr D)) {G : ℕ} {d : ℤ} {y : M}
     (hy : y ∈ E D A B G d) :
     wordL D A l y ∈ E D A B (G + grade D l) (d + degree D l) := by
   induction l with
-  | nil => simpa using hy
+  | nil => simpa using! hy
   | cons a l ih =>
     have h := gen_act_mem_E a.1 a.2 ih
     simpa only [wordL_cons, grade_cons, degree_cons, Nat.add_left_comm,
-      Nat.add_assoc, add_left_comm, add_assoc, add_comm] using h
+      Nat.add_assoc, add_left_comm, add_assoc, add_comm] using! h
 
 theorem smulNegTwo_act_mem_E {a b : 𝒱} {q r : ℕ}
     (ha : ∀ (k : ℤ) (G : ℕ) (d : ℤ) (y : M), y ∈ E D A B G d →
@@ -99,7 +99,7 @@ theorem act_mem_E : ∀ (p : ℕ) (u : 𝒱), u ∈ W.grading (p : ℤ) →
           simp only [WeakModule.act_def] at hv
           rw [hv]
           split_ifs with hk
-          · subst k; simpa using hy
+          · subst k; simpa using! hy
           · exact Submodule.zero_mem _
     | zero => simp
     | add x z _ _ hx hz => rw [mode_YM_add]; exact Submodule.add_mem _ hx hz

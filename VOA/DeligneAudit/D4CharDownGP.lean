@@ -149,7 +149,7 @@ theorem gtDownTwo_transform_diagonal (q : R) (h : PochhammerUnits q)
         rw [if_pos (by omega)]
       · intro k hk hn
         have hk := Finset.mem_range.mp hk
-        have hn : ¬ k < min n m + 1 := by simpa using hn
+        have hn : ¬ k < min n m + 1 := by simpa using! hn
         rw [if_neg (by omega)]
 
 end

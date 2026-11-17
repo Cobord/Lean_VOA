@@ -167,8 +167,8 @@ theorem TB_brstDeg {j g : ℤ} {w : ℂ} {u : (BRSTSpace L)} (hu : u ∈ (brstDe
     (TB L) u = ((-1 : ℂ) ^ g) • u := by
   refine tensorDeg_induction (matterDeg L) ghostDeg ((j, g), w) (fun u => (TB L) u = ((-1 : ℂ) ^ g)
       • u)
-    (by simp) (fun x y hx hy => by simp only at hx hy ⊢; rw [map_add, hx, hy, smul_add])
-    (fun c x hx => by simp only at hx ⊢; rw [map_smul, hx, smul_comm]) ?_ u hu
+    (by simp) (fun x y hx hy => by rw [map_add, hx, hy, smul_add])
+    (fun c x hx => by rw [map_smul, hx, smul_comm]) ?_ u hu
   intro b x hx y hy
   by_cases hb : ghIndex b = 0
   · have hyg := ghostDeg_le_ghost _ hy
@@ -464,7 +464,6 @@ theorem rhoQ_grading (n : ℤ) {x : (BRSTSpace L)} (hx : x ∈ (brstSVA L).gradi
     (motive := fun x => (ghConjBRST L) ((brstQ L) x) = (Rop L) n.toNat ((ghConjBRST L) x)) (by simp)
     (fun x y hx hy => by simp only [map_add] at hx hy ⊢; rw [hx, hy])
     (fun c x hx => by
-      simp only at hx ⊢
       rw [map_smul, LinearMap.map_smulₛₗ, hx, LinearMap.map_smulₛₗ, map_smul]) ?_ hx
   intro h1 a ha b hb
   rcases (tmul_weights L) ha hb with h0 | ⟨k1, k2, hk1, hk2, ha', hb'⟩
@@ -511,7 +510,6 @@ theorem cubic_lift (hC : GhostCubicConj) (n : ℤ) {x : (BRSTSpace L)}
     (motive := fun x => (cubicDefect L) n.toNat ((P0B L) ((ghConjBRST L) x)) = 0) (by simp)
     (fun x y hx hy => by simp only [map_add] at hx hy ⊢; rw [hx, hy, add_zero])
     (fun c x hx => by
-      simp only at hx ⊢
       rw [LinearMap.map_smulₛₗ, map_smul, map_smul, hx, smul_zero]) ?_ hx
   intro h1 a ha b hb
   rcases (tmul_weights L) ha hb with h0 | ⟨k1, k2, hk1, hk2, ha', hb'⟩

@@ -68,7 +68,6 @@ theorem pointEvaluationBlock_shift_transport (N₁ : LogVModule W M₁) (N₂ : 
         ⟨L0exp N₂ (-s) y,L0exp_mem_weight N₂ (-s) y.2⟩) := by
   have hh := congrArg (fun q : Completion N₃ => (q c : M₃))
     (evaluatePoint_shift_transport N₁ N₂ N₃ Y ell s x y)
-  dsimp only at hh
   rw [completionL0exp_apply,evaluatePoint_eq_block N₁ N₂ N₃ Y (ell+s) x.2 y.2 c,
     evaluatePoint_eq_block N₁ N₂ N₃ Y ell (L0exp_mem_weight N₁ (-s) x.2)
       (L0exp_mem_weight N₂ (-s) y.2) c] at hh

@@ -55,7 +55,7 @@ theorem aeval_omittedPointGenerators {A : Type*} [CommRing A] [Algebra ℂ A] {n
     congr 1
     have h := groupSubtopCoefficient_map (aeval x).toRingHom
       (X : Fin n → MvPolynomial (Fin n) ℂ) Yᶜ
-    simpa using h
+    simpa using! h
 
 theorem deletedGroup_inter {n : ℕ} (u : Fin (n + 1)) (S T : Finset (Fin (n + 1))) :
     deletedGroup u (S ∩ T) = deletedGroup u S ∩ deletedGroup u T := by

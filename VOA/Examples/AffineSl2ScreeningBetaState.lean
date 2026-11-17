@@ -72,7 +72,6 @@ theorem beta_product_error (r D n : ℕ) :
     (fun i => single ((n : ℤ) • unitExponent r i) 1)
     (fun i _ => betaFactor_lower r D i) (by
       intro i hi
-      dsimp only
       rw [betaShiftDerivative_factor]
       have h := (betaShiftFactor_error_lower r D n i).neg
       convert h using 1 <;> ring)
@@ -97,27 +96,25 @@ theorem betaShiftDerivative_integrand (r q M n : ℕ) :
 /-- Extracting a coefficient of the finite beta derivation gives the
 actual finite sum of beta creation variables times oscillator partials. -/
 theorem betaShiftDerivative_coefficient (r D n : ℕ) (P : Auxiliary r)
-    (g : Fin r → ℤ) : betaShiftDerivative r D n P g=
-      ∑ j∈Finset.range (D+1), X (0,j)*pderiv (0,j+n) (P g) := by
+    (g : Fin r → ℤ) : (betaShiftDerivative r D n P).coeff g=
+      ∑ j∈Finset.range (D+1), X (0,j)*pderiv (0,j+n) (P.coeff g) := by
   classical
   rw [betaShiftDerivative_apply]
   have h (S : Finset ℕ) :
-      (∑ j∈S,(single 0 (X (0,j)) : Auxiliary r)*oscillatorPartial r (0,j+n) P) g=
-        ∑ j∈S,X (0,j)*pderiv (0,j+n) (P g) := by
+      (∑ j∈S,(single 0 (X (0,j)) : Auxiliary r)*oscillatorPartial r (0,j+n) P).coeff g=
+        ∑ j∈S,X (0,j)*pderiv (0,j+n) (P.coeff g) := by
     induction S using Finset.induction_on with
     | empty => simp only [Finset.sum_empty]; rfl
     | @insert j S hj ih =>
         rw [Finset.sum_insert hj,Finset.sum_insert hj]
-        change ((single 0 (X (0,j)) : Auxiliary r)*oscillatorPartial r (0,j+n) P) g+
-          (∑ l∈S,(single 0 (X (0,l)) : Auxiliary r)*oscillatorPartial r (0,l+n) P) g=_
-        rw [ih,AddMonoidAlgebra.single_zero_mul_apply,oscillatorPartial_apply]
+        rw [AddMonoidAlgebra.coeff_add,Finsupp.add_apply,ih,AddMonoidAlgebra.coeff_single_zero_mul,oscillatorPartial_apply]
   exact h _
 
 /-- The actual finite beta lowering sum on the whole state is exactly the
 auxiliary power-sum insertion, including its finite boundary cancellations. -/
 theorem state_beta_shift (r q M n : ℕ) (hq : 0<q) :
     (∑ j∈Finset.range (r*(q-1)+1), X (0,j)*pderiv (0,j+n) (state r q M))=
-      (auxiliaryPowerSum r n*integrand r q M)
+      (auxiliaryPowerSum r n*integrand r q M).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   let B := ∏ i : Fin r,betaFactor r (r*(q-1)) i
   let E := ∏ j∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (j+1)
@@ -136,7 +133,7 @@ theorem state_beta_shift (r q M n : ℕ) (hq : 0<q) :
     dsimp only [B,E]
     ring
   rw [← ha] at hz
-  change (D (integrand r q M)) _-(auxiliaryPowerSum r n*integrand r q M) _=0 at hz
+  rw [AddMonoidAlgebra.coeff_sub,Finsupp.sub_apply] at hz
   rw [betaShiftDerivative_coefficient] at hz
   exact sub_eq_zero.mp hz
 

@@ -60,7 +60,7 @@ theorem a3_radicalWord_split_colour (i : Fin 3)
             (List.map (fun p => radicalOp ρ p.1 p.2)
               (l.filter fun x => !decide (x.1 = i))).prod *
               radicalOp ρ i s := by
-          simpa only [radicalWord, ne_eq, decide_not] using hc
+          simpa only [radicalWord, ne_eq, decide_not] using! hc
         rw [← mul_assoc, hc', mul_assoc]
       · simp only [radicalWord, List.map_cons, List.prod_cons] at *
         simp only [List.filter_cons, a3ColourModes] at *
@@ -80,15 +80,15 @@ theorem a3_radicalWord_zero_of_count (a b c : ℕ)
   have hzero :
       ((a3ColourModes i l).map fun s => radicalOp ρ i s).prod w = 0 := by
     fin_cases i
-    · simpa [radicalOp, F, simpleF, weightABC] using
+    · simpa [radicalOp, F, simpleF, weightABC] using!
         a3_simple_word_length_zero ρ w a b c h 0 (a3ColourModes 0 l)
-          (by simpa using hlen)
-    · simpa [radicalOp, F] using
+          (by simpa using! hlen)
+    · simpa [radicalOp, F] using!
         a3_compound_word_length_zero ρ w a b c h (a3ColourModes 1 l)
-          (by simpa using hlen)
-    · simpa [radicalOp, F] using
+          (by simpa using! hlen)
+    · simpa [radicalOp, F] using!
         a3_highest_word_length_zero ρ w a b c h (a3ColourModes 2 l)
-          (by simpa using hlen)
+          (by simpa using! hlen)
   rw [a3_radicalWord_split_colour ρ i l, mul_smul]
   change radicalWord (radicalOp ρ) (l.filter fun x => x.1 ≠ i) •
     ((a3ColourModes i l).map fun s => radicalOp ρ i s).prod w = 0

@@ -13,7 +13,7 @@ variable {R : Type*} [CommRing R]
 /-- A shorter GT polynomial has no monomial in the deleted last variable. -/
 theorem gtPoly_last_shift_zero (q : R) (N : ℕ) (μ : Fin N → ℤ)
     (p : ℕ →₀ ℤ) (hp : p N = 0) (d : ℤ) (hd : d ≠ 0) :
-    gtPoly q N μ (-Finsupp.single N d + p) = 0 := by
+    (gtPoly q N μ).coeff (-Finsupp.single N d + p) = 0 := by
   by_contra hn
   have hh := (gtPoly_support_bounds q N μ _ hn).1 N le_rfl
   simp only [Finsupp.add_apply, Finsupp.neg_apply, Finsupp.single_eq_same, hp, add_zero] at hh
@@ -22,9 +22,9 @@ theorem gtPoly_last_shift_zero (q : R) (N : ℕ) (μ : Fin N → ℤ)
 /-- Extracting the last-variable constant term retains exactly equal-size GT branches. -/
 theorem gtPoly_last_zero_coeff (q : R) (N : ℕ) (lam : Fin (N + 1) → ℤ)
     (p : ℕ →₀ ℤ) (hp : p N = 0) :
-    gtPoly q (N + 1) lam p =
+    (gtPoly q (N + 1) lam).coeff p =
       ∑ μ ∈ gtRows lam, if (∑ i, lam i) = ∑ i, μ i then
-        gtPsi q lam μ * gtPoly q N μ p else 0 := by
+        gtPsi q lam μ * (gtPoly q N μ).coeff p else 0 := by
   rw [gtPoly_coeff_succ]
   apply Finset.sum_congr rfl
   intro μ _
@@ -35,11 +35,11 @@ theorem gtPoly_last_zero_coeff (q : R) (N : ℕ) (lam : Fin (N + 1) → ℤ)
 /-- The mixed fifth-variable constant term has equal positive and negative size gains. -/
 theorem gtMixedFive_last_zero_coeff (q : R) (a b c d : ℤ) (p : ℕ →₀ ℤ)
     (hp : p 4 = 0) :
-    gtPoly q 5 (gtMixedFiveRow a b c d) p =
+    (gtPoly q 5 (gtMixedFiveRow a b c d)).coeff p =
       ∑ α ∈ gtRows ![a, b, 0], ∑ β ∈ gtRows ![c, d, 0],
         if a + b - ∑ i, α i = c + d - ∑ i, β i then
           (gtPsi q ![a, b, 0] α * gtPsi q ![c, d, 0] β) *
-            gtPoly q 4 (gtMixedFourRow (α 0) (α 1) (β 0) (β 1)) p else 0 := by
+            (gtPoly q 4 (gtMixedFourRow (α 0) (α 1) (β 0) (β 1))).coeff p else 0 := by
   rw [gtPoly_last_zero_coeff q 4 _ p hp, sum_gtMixedFiveRows]
   apply Finset.sum_congr rfl
   intro α _

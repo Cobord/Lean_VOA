@@ -115,7 +115,7 @@ theorem threeMovingExpression_finite (t : ℂ) (r : ℕ) :
   have he := congrArg chargeWordExpression
     (threeLevelReconstruct_eq r (threeMovingSource 0 t r) (threeMovingSource_level 0 t r))
   simpa only [threeLevelReconstruct,LinearMap.sum_apply,LinearMap.smulRight_apply,
-    map_sum,map_smul,threeMovingExpression] using he.symm
+    map_sum,map_smul,threeMovingExpression] using! he.symm
 
 /-- The actual moving norm is differentiable at the minimal parameter,
 and radical cancellation identifies its derivative with charge velocity
@@ -140,6 +140,6 @@ theorem threeMovingNorm_hasDerivAt (p : ℕ) (hp : 2≤p) (hcop : Nat.Coprime p 
     (fun w => _root_.deriv (v w) ((3:ℂ)/(p:ℂ))) c c' ((3:ℂ)/(p:ℂ))
     (fun w => (hv w).hasDerivAt) hc hc0
     ((threeMovingExpression_finite _ R).symm.trans (threeMovingExpression_at_minimal p hp hcop))
-  simpa only [v,← threeMovingExpression_finite,threeMovingExpression_eval] using he
+  simpa only [v,← threeMovingExpression_finite,threeMovingExpression_eval] using! he
 
 end VOA.InverseDS.VirasoroVerma

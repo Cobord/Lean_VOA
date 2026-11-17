@@ -243,7 +243,7 @@ theorem fuchsian_halfPlane_continuation {lam : ℂ} {s₀ b : ℕ} {c : ℕ → 
     ∃ Ψ : ℂ → ℂ, AnalyticOnNhd ℂ Ψ (Lhs s) ∧
       ∀ x ∈ Lhs s, ‖x‖ < 1 → Ψ x = psEval G x := by
   have hc : ∀ i < s₀, c i ∈ SubexpPS := fun i hi =>
-    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using hcp i hi)
+    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using! hcp i hi)
   have hGsub : G ∈ SubexpPS := mem_subexpPS.2 (subexponential_of_fuchsianEq hc hG)
   choose! Ψt hΨd ε hε hΨeq using fun (t : ℝ) (ht : 0 < t) => chart_x hcp hG hs ht
   -- a point near `0` in every chart

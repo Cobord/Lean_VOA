@@ -32,20 +32,20 @@ theorem twoGen_raising (s : ℕ) (c : Fin 28) (hc : D4sector.raising c)
       change (ρPTE 2).op c 0 r
         ((ρPTE 2).op D4sector.c₀ 1 s (pTE 2)) = 0
       rw [sub_eq_zero.mp hz, hv, map_zero]
-    simpa [twoCurrent, hr] using hzero
+    simpa [twoCurrent, hr] using! hzero
   · have hr' : ¬ r ≤ 1 := hr
     simp [twoCurrent, hr']
 
 private theorem twoGen_cartan_table : ∀ c e : Fin 28,
-    c.val < 4 → D4sector.f c D4sector.c₀ e =
-      if e = D4sector.c₀ then -(thetaD4 c : ℂ) else 0 := by
+    c.val < 4 → fD4 c (27 : Fin 28) e =
+      if e = (27 : Fin 28) then -(thetaD4 c : ℂ) else 0 := by
   intro c e hc
   change (fZ br c 27 e : ℂ) = _
   have ht : ∀ h e : Fin 28, h.val < 4 →
       fZ br h 27 e = if e = 27 then -(thetaD4 h : ℤ) else 0 := by
     decide +kernel
   rw [ht c e hc]
-  simp [D4sector]
+  split_ifs <;> simp
 
 theorem twoGen_cartan_zero (s : ℕ) (c : Fin 28)
     (hc : D4sector.cartan c) :
@@ -57,7 +57,10 @@ theorem twoGen_cartan_zero (s : ℕ) (c : Fin 28)
         (ρPTE 2).op e 1 s (pTE 2) else 0) =
       -(thetaD4 c : ℂ) • twoGen s := by
     by_cases hs : s < 2
-    · simp only [if_pos hs, twoGen_cartan_table c _ hc, ite_smul,
+    · rw [if_pos hs]
+      change (∑ e : Fin 28, fD4 c (27 : Fin 28) e • (ρPTE 2).op e 1 s (pTE 2)) =
+        -(thetaD4 c : ℂ) • twoGen s
+      simp only [twoGen_cartan_table c _ hc, ite_smul,
         zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
       rfl
     · have hz : twoGen s = 0 := by
@@ -71,7 +74,7 @@ theorem twoGen_cartan_zero (s : ℕ) (c : Fin 28)
         (if s < 2 then
           ∑ e : Fin 28, D4sector.f c D4sector.c₀ e •
             (ρPTE 2).op e 1 s (pTE 2) else 0) := by
-    simpa only [Nat.zero_add] using hcomm
+    simpa only [Nat.zero_add] using! hcomm
   have hz := hcomm'.trans hsum
   have hv := two_seed_cartan_v c hc
   have heq : (ρPTE 2).op c 0 0 (twoGen s) =
@@ -81,7 +84,7 @@ theorem twoGen_cartan_zero (s : ℕ) (c : Fin 28)
       (2 * thetaD4 c : ℂ) • twoGen s =
         (thetaD4 c : ℂ) • twoGen s
     module
-  simpa [twoCurrent, D4sector] using heq
+  simpa [twoCurrent, D4sector] using! heq
 
 end
 

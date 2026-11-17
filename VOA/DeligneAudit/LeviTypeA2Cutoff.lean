@@ -45,10 +45,10 @@ theorem a2_simple_mode_zero (w : V) (p q : ℕ)
     exact h.cartan_pos (a2H i) (by fin_cases i <;> decide) _ (by omega)
   have hN : (Fm 0 ^ (a2Weight p q i + 1)) w = 0 := by
     fin_cases i
-    · simpa [Fm, a2F, a2Weight, Module.End.pow_apply] using h.lowering_first
-    · simpa [Fm, a2F, a2Weight, Module.End.pow_apply] using h.lowering_second
+    · simpa [Fm, a2F, a2Weight, Module.End.pow_apply] using! h.lowering_first
+    · simpa [Fm, a2F, a2Weight, Module.End.pow_apply] using! h.lowering_second
   have hg := Garland.garland hEF hHF hFF hE hH 1 (by omega) hN s (by omega)
-  simpa [Garland.Fs, Fm] using hg
+  simpa [Garland.Fs, Fm] using! hg
 
 /-- The compound lowering current has cutoff `p + q`. -/
 theorem a2_compound_mode_zero (w : V) (p q : ℕ)
@@ -83,9 +83,9 @@ theorem a2_radicalLayer_finite (w : V) (p q j : ℕ)
   · exact fun i s j t => a2RadicalOp_comm ρ i j s t
   · intro i s hs
     fin_cases i
-    · simpa [a2RadicalOp, a2F] using
+    · simpa [a2RadicalOp, a2F] using!
         a2_simple_mode_zero ρ w p q h 0 s (by simp [a2Weight]; omega)
-    · simpa [a2RadicalOp] using a2_compound_mode_zero ρ w p q h s hs
+    · simpa [a2RadicalOp] using! a2_compound_mode_zero ρ w p q h s hs
 
 end VOA.DeligneAudit.LeviTypeA
 

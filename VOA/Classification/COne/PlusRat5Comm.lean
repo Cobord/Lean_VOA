@@ -192,8 +192,8 @@ theorem m1plus_chain {u : M}
     | succ k ih =>
       rcases Nat.lt_or_ge k 2 with hk2 | hk2
       · interval_cases k
-        · simpa [← hy] using hy0
-        · simpa using hL2
+        · simpa [← hy] using! hy0
+        · simpa using! hL2
       · have hv := vir2 m hm hm2 A ((k : ℤ) + 1) u
         rw [HP_one] at ih
         rw [HP_one]
@@ -220,7 +220,7 @@ theorem m1plus_chain {u : M}
   | succ k ih =>
     rcases Nat.lt_or_ge k 1 with hk1 | hk1
     · interval_cases k
-      simpa using hH40
+      simpa using! hH40
     · have h6 := comm_H41_L m hm A (k : ℤ) u
       have hLk : mode (A.YM (HP m hm 1)) ((k : ℤ) + 2) u = 0 := by
         have := hL (k + 1) (by omega)

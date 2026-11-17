@@ -271,7 +271,7 @@ noncomputable def conformalSign (hhalf : IsHalfIntegerGraded W) : SuperAut W whe
   map_vacuum := by
     have hv : W.vacuum ∈ W.toSuperNearVOA.halfGrading 0 := by
       change W.vacuum ∈ W.grading (((0 : ℤ) : ℂ) / 2)
-      simpa using W.vacuum_mem
+      simpa using! W.vacuum_mem
     rw [conformalSignLinearEquiv_apply,
       W.conformalSignEnd_of_mem_halfGrading hhalf hv, conformalPhase_zero, one_smul]
   map_omega := by
@@ -287,9 +287,9 @@ noncomputable def conformalSign (hhalf : IsHalfIntegerGraded W) : SuperAut W whe
     · intro hx
       have hx' := W.conformalSignEnd_mem_parity hhalf hx
       simpa [conformalSignLinearEquiv_apply,
-        W.conformalSignEnd_involutive hhalf x] using hx'
+        W.conformalSignEnd_involutive hhalf x] using! hx'
     · intro hx
-      simpa [conformalSignLinearEquiv_apply] using
+      simpa [conformalSignLinearEquiv_apply] using!
         W.conformalSignEnd_mem_parity hhalf hx
 
 @[simp] theorem conformalSign_apply (hhalf : IsHalfIntegerGraded W) (x : VType) :

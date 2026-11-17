@@ -59,7 +59,7 @@ theorem mixedSecondLeviEvaluation_cartan (s : ℕ) (hs : 0 < s)
     (mixedLabelBlockParams_dominant a b d e₁ e₂ hv) 1 s hs
     (mixedToRadicalRelative a b d e₁ e₂ hv P)
   simpa only [mixedSecondLeviEvaluation, LinearMap.comp_apply, AlgHom.toLinearMap_apply,
-    map_mul, mixedToRadicalRelative_powerSum a b d e₁ e₂ hv s hs] using he
+    map_mul, mixedToRadicalRelative_powerSum a b d e₁ e₂ hv s hs] using! he
 
 end
 

@@ -42,8 +42,7 @@ theorem pointDegreeFiltration_eventually_top [Fintype ι] (x : ι → σ → ℂ
   classical
   have hc : IsCompactElement (⊤ : Submodule ℂ (ι → ℂ)) :=
     (Submodule.fg_iff_compact _).mp (Module.Finite.iff_fg.mp inferInstance)
-  obtain ⟨s, hs⟩ := CompleteLattice.IsCompactElement.exists_finset_of_le_iSup
-    (Submodule ℂ (ι → ℂ)) hc (pointDegreeFiltration x)
+  obtain ⟨s, hs⟩ := hc.exists_finset_of_le_iSup (pointDegreeFiltration x)
     (by rw [pointDegreeFiltration_exhaustive x hx])
   refine ⟨s.sup id, top_unique (hs.trans ?_)⟩
   exact iSup_le fun n => iSup_le fun hn =>

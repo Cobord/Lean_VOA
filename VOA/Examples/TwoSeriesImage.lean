@@ -136,8 +136,8 @@ theorem cosetToComplex_mem_weight (n : ℤ) (x : CosetSpace L)
   · change x.val ⊗ₜ[ℂ] (USVA L).vacuum ∈ TensorVA.tenGrading (abSVA L) (USVA L) (n : ℂ)
     apply TensorVA.tmul_mem_tenGrading (abSVA L) (USVA L) (h₁ := (n : ℂ))
     · exact hx
-    · simpa only [sub_self] using (USVA L).vacuum_mem
-  · simpa only [sub_self] using sl2GhostSVA.vacuum_mem
+    · simpa only [sub_self] using! (USVA L).vacuum_mem
+  · simpa only [sub_self] using! sl2GhostSVA.vacuum_mem
 
 /-! ### Universal weight spaces and their simple projections -/
 

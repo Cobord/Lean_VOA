@@ -56,14 +56,12 @@ noncomputable def CompatibleMap.toMaximalHom (hpsi : CompatibleMap N₁ N₂ N p
     · intro d u hu
       rw [CompatibleSpace.mode_field,CompatibleSpace.action_homogeneous _ p hu]
       exact hpsi.map_mode d u hu p r
-    · dsimp only
-      have h₁ : mode (N.YM (0:V)) p = 0 := by rw [map_zero]; rfl
+    · have h₁ : mode (N.YM (0:V)) p = 0 := by rw [map_zero]; rfl
       have h₂ : mode ((maximalCompatibleSpace N₁.toWeakModule N₂.toWeakModule).field (0:V)) p = 0 := by
         rw [map_zero]; rfl
       rw [h₁,h₂]
       simp only [LinearMap.zero_apply,map_zero,Submodule.coe_zero]
     · intro u v hu hv
-      dsimp only at hu hv ⊢
       have h₁ : mode (N.YM (u+v)) p r = mode (N.YM u) p r + mode (N.YM v) p r := by
         rw [map_add]; rfl
       have h₂ : mode ((maximalCompatibleSpace N₁.toWeakModule N₂.toWeakModule).field (u+v)) p

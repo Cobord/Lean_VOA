@@ -35,7 +35,7 @@ theorem traceDualBasis_rightBend (F : SphericalFusion C) (A Y X : C)
       ((rightBendEquiv F.toPivotal A Y X).symm f ≫ Y ◁ (F.j X).hom) = f := by
     simp [rightBendEquiv, homCongr]
   rw [he] at h
-  simpa [Module.Basis.map_repr] using h
+  simpa [Module.Basis.map_repr] using! h
 
 /-- Open right sewing of the two composition-dual maps. -/
 theorem sum_rightBend_compositionDual (F : SphericalFusion C) (X : C)
@@ -65,8 +65,12 @@ theorem rightBend_factor (P : Pivotal C) {A Y X : C} (p : A ⟶ Y ⊗ X) :
       rightBendEquiv P A Y X p ▷ X := by
   conv_lhs => rw [← (rightBendEquiv P A Y X).symm_apply_apply p]
   dsimp [rightBendEquiv, homCongr, rightDuality, tensorRightHomEquiv]
-  simp only [Category.assoc, id_whiskerRight, Category.comp_id, Category.id_comp]
-  rw [whisker_exchange]
+  simp only [Category.assoc, id_whiskerRight, Category.comp_id, Category.id_comp,
+    whiskerLeftIso_inv]
+  first
+    | exact congrArg (fun t => (ρ_ A).inv ≫ A ◁ η_ Xᘁ Xᘁᘁ ≫ (α_ A Xᘁ Xᘁᘁ).inv ≫ t)
+        (whisker_exchange _ _).symm
+    | rw [whisker_exchange]
 
 /-- Pull the adjoint bent map through the right evaluation cap. -/
 theorem rightDuality_factor (A Y X : C) (q : Y ⊗ X ⟶ A) :
@@ -88,7 +92,7 @@ theorem rightDuality_factor (A Y X : C) (q : Y ⊗ X ⟶ A) :
     ((mixedCenter X Y).2.β U).hom ≫ U ◁ (f ▷ Y) at h
   apply (cancel_epi ((mixedCenter X Y).2.β U).hom).mp
   simpa only [Category.assoc, Iso.hom_inv_id_assoc, Iso.hom_inv_id,
-    Category.comp_id] using congrArg (fun k => k ≫ ((mixedCenter Z Y).2.β U).inv) h.symm
+    Category.comp_id] using! congrArg (fun k => k ≫ ((mixedCenter Z Y).2.β U).inv) h.symm
 
 /-- Attach the negative factor to an endomorphism of the right bent strand. -/
 def inverseSewingMap (F : SphericalFusion C) (Y : C) (i j : F.Label) :

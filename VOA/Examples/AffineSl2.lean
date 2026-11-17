@@ -71,6 +71,8 @@ namespace VOA.AffineVOA
 open scoped BigOperators
 open VOA.AffineLie
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 /-! ## §1  The `𝔰𝔩₂` structure constants and normalised Killing form -/

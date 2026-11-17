@@ -26,16 +26,16 @@ theorem gammaFree_pderiv (P : WakFock) (hP : P ∈ gammaFree) (v : Fin 3 × ℕ)
   rw [pderiv_comm', hP j, map_zero]
 
 private theorem gamma_exponent_zero (P : WakFock) (hP : P ∈ gammaFree)
-    (d : Fin 3 × ℕ →₀ ℕ) (hd : coeff d P ≠ 0) (j : ℕ) : d (1,j) = 0 := by
+    (d : Fin 3 × ℕ →₀ ℕ) (hd : P.coeff d ≠ 0) (j : ℕ) : d (1,j) = 0 := by
   have h := coeff_X_mul_pderiv (1,j) d P
-  rw [hP j, mul_zero, coeff_zero] at h
+  rw [hP j, mul_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h
   exact Nat.cast_eq_zero.mp ((mul_eq_zero.mp h.symm).resolve_right hd)
 
 private def betaCount (d : Fin 3 × ℕ →₀ ℕ) : ℕ :=
   d.sum (fun v n => if v.1 = 0 then n else 0)
 
 private theorem charge_eq_betaCount (P : WakFock) (hP : P ∈ gammaFree)
-    (d : Fin 3 × ℕ →₀ ℕ) (hd : coeff d P ≠ 0) :
+    (d : Fin 3 × ℕ →₀ ℕ) (hd : P.coeff d ≠ 0) :
     Finsupp.weight chFn d = (betaCount d : ℂ) := by
   classical
   simp only [Finsupp.weight_apply, Finsupp.sum, betaCount, Nat.cast_sum]
@@ -51,21 +51,22 @@ private theorem charge_eq_betaCount (P : WakFock) (hP : P ∈ gammaFree)
 theorem beta_derivative_zero_of_charge_zero (P : WakFock) (hP : P ∈ gammaFree)
     (hch : Dch P = 0) (j : ℕ) : pderiv (0,j) P = 0 := by
   classical
-  have hexp : ∀ d, coeff d P ≠ 0 → d (0,j) = 0 := by
+  have hexp : ∀ d, P.coeff d ≠ 0 → d (0,j) = 0 := by
     intro d hd
-    have hc := congrArg (coeff d) hch
-    rw [Dch, Charged.coeff_Eul, charge_eq_betaCount P hP d hd, coeff_zero] at hc
+    have hc : (Dch P).coeff d = (0 : WakFock).coeff d := by rw [hch]
+    rw [Dch, Charged.coeff_Eul, charge_eq_betaCount P hP d hd,
+      AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at hc
     have hb : betaCount d = 0 := Nat.cast_eq_zero.mp ((mul_eq_zero.mp hc).resolve_right hd)
     by_cases hmem : (0,j) ∈ d.support
     · have hle : d (0,j) ≤ betaCount d := by
-        simpa [betaCount, Finsupp.sum] using
+        simpa [betaCount, Finsupp.sum] using!
           (Finset.single_le_sum (f := fun v => if v.1 = 0 then d v else 0)
             (fun v _ => Nat.zero_le _) hmem)
       omega
     · exact Finsupp.notMem_support_iff.mp hmem
   ext d
-  rw [VOA.VirasoroScreening.screening_pderiv_coeff, coeff_zero]
-  by_cases hd : coeff (d + Finsupp.single (0,j) 1) P = 0
+  rw [VOA.VirasoroScreening.screening_pderiv_coeff, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+  by_cases hd : P.coeff (d + Finsupp.single (0,j) 1) = 0
   · simp [hd]
   · have hh := hexp _ hd
     simp at hh
@@ -97,7 +98,7 @@ theorem beta_coefficient_cartan (k : ℂ) (P : WakFock) (hP : P ∈ gammaFree)
     omega
   have hc := H_positive_explicit_cutoff k 0 P hP n D hn hD
   have hHz : Charged.H k 0 (n : ℤ) P = 0 := by
-    simpa [Charged.H] using hH n hn
+    simpa [Charged.H] using! hH n hn
   rw [hHz] at hc
   have hc' := congrArg (pderiv (0,j)) hc
   simp only [map_zero, map_add, Derivation.map_smul, map_sum] at hc'
@@ -107,7 +108,7 @@ theorem beta_coefficient_cartan (k : ℂ) (P : WakFock) (hP : P ∈ gammaFree)
     rw [Finset.sum_eq_single j]
     · simp
     · intro i hi hij
-      rw [pderiv_X_of_ne (by simpa using hij), zero_mul]
+      rw [pderiv_X_of_ne (by simpa using! hij), zero_mul]
     · exact fun hnot => (hnot hj).elim
   rw [hsum, pderiv_comm'] at hc'
   have hc2 := congrArg (fun x : WakFock => (1/2 : ℂ) • x) hc'
@@ -149,13 +150,13 @@ theorem beta_zero_ne_zero (k : ℂ) (P : WakFock) (hP : P ∈ gammaFree)
   apply hne
   rw [← hch]
   ext d
-  rw [Dch, Charged.coeff_Eul, coeff_zero]
-  by_cases hd : coeff d P = 0
+  rw [Dch, Charged.coeff_Eul, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+  by_cases hd : P.coeff d = 0
   · simp [hd]
   have hb : ∀ j, d (0,j) = 0 := by
     intro j
     have h := coeff_X_mul_pderiv (0,j) d P
-    rw [hall j, mul_zero, coeff_zero] at h
+    rw [hall j, mul_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h
     exact Nat.cast_eq_zero.mp ((mul_eq_zero.mp h.symm).resolve_right hd)
   have hc : Finsupp.weight chFn d = 0 := by
     classical
@@ -180,8 +181,8 @@ theorem beta_zero_triangular (k : ℂ) (hk : k+2 ≠ 0) (P : WakFock)
         c • ((pderiv (2,0))^[r] (pderiv (0,0) P)) := by
   rcases v with ⟨a,j⟩
   fin_cases a
-  · exact ⟨2, 0, le_rfl, by simpa only [zero_smul] using beta_second_derivative_zero P hP hch j 0⟩
-  · exact ⟨2, 0, le_rfl, by simpa only [zero_smul] using (gammaFree_pderiv P hP (0,0)) j⟩
+  · exact ⟨2, 0, le_rfl, by simpa only [zero_smul] using! beta_second_derivative_zero P hP hch j 0⟩
+  · exact ⟨2, 0, le_rfl, by simpa only [zero_smul] using! (gammaFree_pderiv P hP (0,0)) j⟩
   · have hj : 0 < j := by
       by_contra hh
       have hj0 : j = 0 := by omega
@@ -195,14 +196,14 @@ theorem beta_zero_triangular (k : ℂ) (hk : k+2 ≠ 0) (P : WakFock)
     rw [beta_coefficient_iterate k P hP hch hH (j+1)] at h
     have hh := congrArg (fun x : WakFock => s⁻¹ • x) h
     change s⁻¹ • (s • _) = _ at hh
-    simpa only [smul_smul, inv_mul_cancel₀ hs, one_smul, smul_neg, neg_smul] using hh
+    simpa only [smul_smul, inv_mul_cancel₀ hs, one_smul, smul_neg, neg_smul] using! hh
 
 /-- A nonzero gamma-independent charge-one polynomial killed by actual positive
 Cartan modes contains a nonzero beta-zero, boson-zero monomial. -/
 theorem exists_depth_zero_coefficient (k : ℂ) (hk : k+2 ≠ 0) (P : WakFock)
     (hP : P ∈ gammaFree) (hch : Dch P = P)
     (hH : ∀ n : ℕ, 0 < n → Hcur k (n : ℤ) P = 0) (hne : P ≠ 0) :
-    ∃ d : ℕ, coeff (Finsupp.single (2,0) d + Finsupp.single (0,0) 1) P ≠ 0 := by
+    ∃ d : ℕ, P.coeff (Finsupp.single (2,0) d + Finsupp.single (0,0) 1) ≠ 0 := by
   obtain ⟨d, hd⟩ := DerivativeLeadingCoefficient.exists_pure_coefficient_ne_zero
     (pderiv (0,0) P) (2,0) (beta_zero_ne_zero k P hP hch hH hne)
     (beta_zero_triangular k hk P hP hch hH)

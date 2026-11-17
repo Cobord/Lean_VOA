@@ -76,7 +76,7 @@ theorem radicalSecondLeviClosure_map_zero (d : Fin 3 → ℕ)
   · exact ⟨fun _ => by simp, fun _ => by simp, fun _ => by simp⟩
 
 /-- Counts at a fixed total form a finite fiber, ordered by decreasing first count. -/
-def secondLeviCountFiber (e : ℕ × ℕ) : Finset (ℕ × ℕ) := Finset.antidiagonal (e.1 + e.2)
+def secondLeviCountFiber (e : ℕ × ℕ) : Finset (ℕ × ℕ) := Finset.HasAntidiagonal.antidiagonal (e.1 + e.2)
 
 /-- The earlier second closure only uses smaller positions in its finite count fiber. -/
 theorem higherSecondLeviCountClosure_le_fiber {B W : Type}
@@ -96,7 +96,7 @@ theorem higherSecondLeviCountClosure_le_fiber {B W : Type}
   apply iSup_le
   intro hv
   exact le_iSup_of_le (u, v)
-    (le_iSup_of_le (Finset.mem_antidiagonal.mpr hv.1)
+    (le_iSup_of_le (Finset.HasAntidiagonal.mem_antidiagonal.mpr hv.1)
       (le_iSup_of_le (by omega) le_rfl))
 
 set_option synthInstance.maxHeartbeats 100000 in
@@ -128,9 +128,9 @@ theorem mixedSecondLeviFiltration_rank_le [FiniteDimensional ℂ V]
     fin_cases j <;> simp [a3KeyLabelInt] <;> omega
   have hb := finiteFiberFiltration_finrank_le S N secondLeviCountFiber
     (fun e => -(e.1 : ℤ)) c t
-    (fun i => Finset.mem_antidiagonal.mpr rfl)
+    (fun i => Finset.HasAntidiagonal.mem_antidiagonal.mpr rfl)
     (fun i j hj => by
-      have he := Finset.mem_antidiagonal.mp hj
+      have he := Finset.HasAntidiagonal.mem_antidiagonal.mp hj
       simp only [secondLeviCountFiber, he])
     (higherSecondLeviCountClosure_le_fiber Q β)
     (fun e => by
@@ -143,7 +143,7 @@ theorem mixedSecondLeviFiltration_rank_le [FiniteDimensional ℂ V]
         rw [show (S e).map (N e).mkQ = secondLeviOrbit Q β e.1 e.2 from
           secondLeviClosure_map_eq_orbit Q β e.1 e.2
             (radicalSecondLeviMultiplicity_otherCartan ρ w a b h d (hm 0) e.1 e.2)]
-        simpa only [c, if_pos he] using (mixedSecondLeviOrbit_bound ρ w a b h ht d
+        simpa only [c, if_pos he] using! (mixedSecondLeviOrbit_bound ρ w a b h ht d
           e.1 e.2 hv).2
       · have he' : p < e.1 ∨ q < e.2 := by
           simp only [t, Finset.mem_product, Finset.mem_range] at he
@@ -152,7 +152,7 @@ theorem mixedSecondLeviFiltration_rank_le [FiniteDimensional ℂ V]
           radicalSecondLeviClosure_map_zero ρ w a b h d hm e.1 e.2 he']
         simp [c, he])
     (fun e he => by simp [c, he])
-  simpa only [c, Finset.sum_ite_mem, Finset.inter_self] using hb
+  simpa only [c, Finset.sum_ite_mem, Finset.inter_self] using! hb
 
 end
 

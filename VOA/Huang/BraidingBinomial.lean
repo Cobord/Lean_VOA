@@ -63,7 +63,9 @@ theorem choose_real_eq (r : ℝ) (j : ℕ) :
 theorem hasSum_bc (b : ℂ) {t : ℂ} (ht : ‖t‖ < 1) :
     HasSum (fun j : ℕ => bc (b + j - 1) j * t ^ j) (1 / (1 - t) ^ b) := by
   have h := (Complex.one_div_one_sub_cpow_hasFPowerSeriesOnBall_zero b).hasSum (y := t)
-    (by simpa [enorm_eq_nnnorm] using ht)
+    (by
+      have : ‖t‖₊ < 1 := by rw [← NNReal.coe_lt_coe, coe_nnnorm]; exact ht
+      simpa [enorm_eq_nnnorm] using this)
   simp only [FormalMultilinearSeries.ofScalars_apply_eq, zero_add, smul_eq_mul] at h
   simpa [bc_eq_choose] using h
 
@@ -84,7 +86,7 @@ theorem norm_bc_le (c : ℂ) (p j : ℕ) :
   rw [choose_real_eq, bc, norm_div, Complex.norm_natCast, norm_prod]
   have hf : (0 : ℝ) < j.factorial := by exact_mod_cast Nat.factorial_pos j
   refine div_le_div_of_nonneg_right ?_ hf.le
-  refine Finset.prod_le_prod (fun i _ => norm_nonneg _) (fun i hi => ?_)
+  refine Finset.prod_le_prod₀ (fun i _ => norm_nonneg _) (fun i hi => ?_)
   rw [Finset.mem_range] at hi
   have hpos : (0 : ℝ) ≤ (p : ℝ) + j - i := by
     have : (i : ℝ) ≤ j := by exact_mod_cast hi.le
@@ -167,7 +169,8 @@ theorem hasSum_skewTerm_fiber (d : ℕ → ℂ) (a ν : ℂ) {x y : ℝ} (hx : 0
       (d p * ((y + x : ℝ) : ℂ) ^ (-(a + p) - 1) * (-(x : ℂ)) ^ (-(ν - p) - 1)) := by
   have h := (hasSum_inner (a + p) hx hxy).mul_left (d p * (-(x : ℂ)) ^ (-(ν - p) - 1))
   convert h using 1
-  ring
+  · rfl
+  · ring
 
 theorem re_aux (a : ℂ) (p : ℕ) : (-(a + (p : ℂ)) - 1).re = -a.re - p - 1 := by simp; ring
 
@@ -285,7 +288,7 @@ theorem tsum_skew_translate {d : ℕ → ℂ} {a ν : ℂ} {x y : ℝ} (hx : 0 <
   have hfib := hT.hasSum.prod_fiberwise (fun p => hasSum_skewTerm_fiber d a ν hx hxy' p)
   have hanti : HasSum (fun k => ∑ q ∈ Finset.antidiagonal k, skewTerm d a ν x y q)
       (∑' q, skewTerm d a ν x y q) := by
-    have h := (Finset.sigmaAntidiagonalEquivProd.hasSum_iff
+    have h := (Finset.HasAntidiagonal.sigmaAntidiagonalEquivProd.hasSum_iff
       (f := skewTerm d a ν x y)).mpr hT.hasSum
     refine h.sigma fun k => ?_
     have := hasSum_fintype (fun c : Finset.antidiagonal k => skewTerm d a ν x y c.1)

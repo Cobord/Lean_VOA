@@ -1,5 +1,6 @@
 import VOA.DeligneAudit.D4FusionContactAllMCountResearchCubeGrading
 import Mathlib.Algebra.MvPolynomial.Rename
+import Mathlib.Algebra.MvPolynomial.CommRing
 import Mathlib.Algebra.BigOperators.Fin
 
 /-! The projected-chain remainder is supported in strictly lower color weight. -/
@@ -48,7 +49,7 @@ def remainder (p : P8 K) : P8 K := p - chainEmbed K (chainProj K p)
 /-- No nested-chain coefficient survives in this whole-polynomial remainder. -/
 theorem remainder_coeff_zero (p : P8 K) (d : Fin 8 →₀ ℕ)
     (hs : (d.support : Set (Fin 8)) ⊆ Set.range chainIndex) :
-    MvPolynomial.coeff d (remainder K p) = 0 := by
+    (remainder K p).coeff d = 0 := by
   let e := d.comapDomain chainIndex chainIndex_injective.injOn
   have he : e.mapDomain chainIndex = d := d.mapDomain_comapDomain chainIndex chainIndex_injective hs
   rw [remainder,chainEmbed,chainProj_eq_killCompl,← he,MvPolynomial.coeff_sub,
@@ -58,12 +59,12 @@ theorem remainder_coeff_zero (p : P8 K) (d : Fin 8 →₀ ℕ)
 
 /-- Subtraction of the chain part cannot introduce any new monomial. -/
 theorem remainder_coeff_source (p : P8 K) (d : Fin 8 →₀ ℕ)
-    (hd : MvPolynomial.coeff d (remainder K p) ≠ 0) : MvPolynomial.coeff d p ≠ 0 := by
+    (hd : (remainder K p).coeff d ≠ 0) : p.coeff d ≠ 0 := by
   intro hp
   have hs : (chainEmbed K (chainProj K p)).support ⊆ p.support := by
     rw [chainEmbed,chainProj_eq_killCompl]
     exact MvPolynomial.support_rename_killCompl_subset chainIndex_injective
-  have hz : MvPolynomial.coeff d (chainEmbed K (chainProj K p)) = 0 := by
+  have hz : (chainEmbed K (chainProj K p)).coeff d = 0 := by
     by_contra hn
     exact (MvPolynomial.mem_support_iff.mp (hs (MvPolynomial.mem_support_iff.mpr hn))) hp
   apply hd
@@ -80,7 +81,7 @@ theorem weights_counts (d : Fin 8 →₀ ℕ) :
     cubeWeight,length,first,second,third,add_assoc]
 
 theorem orbit_support_data (r a b c : ℕ) (d : Fin 8 →₀ ℕ)
-    (hd : MvPolynomial.coeff d (orbit K r a b c) ≠ 0) :
+    (hd : (orbit K r a b c).coeff d ≠ 0) :
     length d = r ∧ first d = a ∧ second d = b ∧ third d = c := by
   obtain ⟨h0,h1,h2,h3⟩ := weights_counts d
   have e0 := orbit_weighted K r a b c (0:Fin 4) hd
@@ -99,7 +100,7 @@ theorem orbit_support_data (r a b c : ℕ) (d : Fin 8 →₀ ℕ)
 
 /-- The exact remainder of the whole orbit has strictly lower color weight. -/
 theorem orbit_remainder_energy (r a b c : ℕ) (d : Fin 8 →₀ ℕ)
-    (hd : MvPolynomial.coeff d (remainder K (orbit K r a b c)) ≠ 0) :
+    (hd : (remainder K (orbit K r a b c)).coeff d ≠ 0) :
     energy d < a + 3 * b + 5 * c := by
   have hp := remainder_coeff_source K (orbit K r a b c) d hd
   obtain ⟨hr,ha,hb,hc⟩ := orbit_support_data K r a b c d hp

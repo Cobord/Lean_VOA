@@ -133,7 +133,13 @@ theorem vnatZeroNoGhostEquiv_isometry
   induction v using Submodule.Quotient.induction_on with | _ v =>
   have h := vnatZeroWeightEquiv_isometry (vnatZeroWeightEquiv.symm u.val)
     (vnatZeroWeightEquiv.symm v.val)
-  simpa only [LinearEquiv.apply_symm_apply] using h
+  first
+    | simpa only [LinearEquiv.apply_symm_apply] using h
+    | (rw [show vnatZeroWeightEquiv (vnatZeroWeightEquiv.symm u.val) = u.val from
+          vnatZeroWeightEquiv.apply_symm_apply _,
+        show vnatZeroWeightEquiv (vnatZeroWeightEquiv.symm v.val) = v.val from
+          vnatZeroWeightEquiv.apply_symm_apply _] at h
+       exact h)
 
 theorem vnatZeroSectorAction_trivial (g : AutVnat) (u : vnatSectorWeight 0 0 1) :
     vnatSectorAction g u.val = u.val := by

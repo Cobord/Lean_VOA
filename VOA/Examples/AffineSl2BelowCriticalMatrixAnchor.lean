@@ -278,7 +278,7 @@ theorem schur_diagonal (D : ι → ℂ) (r : ℕ) :
     schur ℓ (diagonal D) r = diagonal fun i : {i // ℓ i = r} => D i := by
   have hEL : blkEL ℓ (diagonal D) r = 0 := by
     ext i j
-    simp only [blkEL, submatrix_apply, diagonal_apply, zero_apply]
+    simp only [blkEL, submatrix_apply, diagonal_apply, Matrix.zero_apply]
     rw [if_neg]
     intro h
     have h1 := i.2
@@ -337,7 +337,7 @@ theorem matrixLayerSign_eventually (P : Matrix ι ι ℂ[X]) (d : ι → ℝ) (h
       have : ((-1 : ℂ) ^ r • diagonal fun i : {i // ℓ i = r} => D i) =
           diagonal fun i : {i // ℓ i = r} => ((d i : ℝ) : ℂ) := by
         ext i j
-        simp only [smul_apply, diagonal_apply, hD, smul_eq_mul]
+        simp only [Matrix.smul_apply, diagonal_apply, hD, smul_eq_mul]
         split_ifs
         · rw [i.2, ← mul_assoc, ← pow_add, ← two_mul, pow_mul]; simp
         · simp
@@ -365,7 +365,7 @@ theorem matrixLayerSign_eventually (P : Matrix ι ι ℂ[X]) (d : ι → ℝ) (h
     filter_upwards [hAll, eventually_gt_atTop (0 : ℝ)] with μ hμ hμ0 r
     have hcong := matrixLayerSign_congr (M := rescaled ℓ P μ) (fun i => μ ^ ℓ i)
       (fun i => pow_pos hμ0 _) r (hμ r)
-    convert hcong using 1
+    refine Eq.mpr (congrArg (fun M => MatrixLayerSign ℓ M r) ?_) hcong
     ext i j
     have hμc : (μ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hμ0.ne'
     simp only [map_apply, rescaled]

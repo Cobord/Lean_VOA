@@ -39,7 +39,7 @@ theorem vermaPolynomialLift_eval (ell p z : ℂ)
   have he : (PolynomialModule.eval z).comp (vermaPolynomialLift ell p)=vermaFockFamilyMap ell p z := by
     apply (vermaSortedBasis (3-24*ell^2) (p^2-2*ell*p)).ext
     intro w
-    simpa [vermaSortedBasis_apply,vermaPolynomialLift_sorted] using
+    simpa [vermaSortedBasis_apply,vermaPolynomialLift_sorted] using!
       vermaWordPolynomial_eval ell p z w.val
   exact LinearMap.congr_fun he v
 
@@ -84,11 +84,11 @@ theorem vermaPolynomialLift_negative (ell p : ℂ) (i : ℕ)
 and the previous coefficient acted on by the momentum creation operator. -/
 theorem vermaPolynomialLift_negative_coeff (ell p : ℂ) (i k : ℕ)
     (v : Verma (3-24*ell^2) (p^2-2*ell*p)) :
-    vermaPolynomialLift ell p (vermaMode _ _ (-(i:ℤ)-1) v) k=
-      (vermaFockFamilyData ell p 0).L (-(i:ℤ)-1) (vermaPolynomialLift ell p v k)+
-      if 0<k then vermaMomentumMode i (vermaPolynomialLift ell p v (k-1)) else 0 := by
-  rw [vermaPolynomialLift_negative,PolynomialModule.add_apply,polynomialModule_X_coeff,
-    polynomialModule_map_coeff]
+    (vermaPolynomialLift ell p (vermaMode _ _ (-(i:ℤ)-1) v)).coeff k=
+      (vermaFockFamilyData ell p 0).L (-(i:ℤ)-1) ((vermaPolynomialLift ell p v).coeff k)+
+      if 0<k then vermaMomentumMode i ((vermaPolynomialLift ell p v).coeff (k-1)) else 0 := by
+  rw [vermaPolynomialLift_negative,PolynomialModule.coeff_add,Finsupp.add_apply,
+    polynomialModule_X_coeff,polynomialModule_map_coeff]
   split_ifs <;> simp [polynomialModule_map_coeff]
 
 
@@ -96,7 +96,7 @@ theorem vermaPolynomialLift_negative_coeff (ell p : ℂ) (i k : ℕ)
 /-- Extract one free-momentum coefficient as a linear map on actual states. -/
 noncomputable def vermaMomentumCoefficient (ell p : ℂ) (k : ℕ) :
     Verma (3-24*ell^2) (p^2-2*ell*p) →ₗ[ℂ] VermaFockFamily where
-  toFun v := vermaPolynomialLift ell p v k
+  toFun v := (vermaPolynomialLift ell p v).coeff k
   map_add' a b := by rw [map_add]; rfl
   map_smul' a v := by simp only [map_smul,RingHom.id_apply]; rfl
 
@@ -110,8 +110,8 @@ theorem vermaBSAState_momentum_above (ell p t : ℂ) (N r k : ℕ) (hk : r<k) :
     by_cases hr : r=0
     · subst r
       rw [vermaBSAState_zero]
-      change vermaPolynomialLift ell p (negWord _ _ []) k=0
-      rw [vermaPolynomialLift_word,vermaWordPolynomial_coeff_above ell p [] k (by simpa using hk)]
+      change (vermaPolynomialLift ell p (negWord _ _ [])).coeff k=0
+      rw [vermaPolynomialLift_word,vermaWordPolynomial_coeff_above ell p [] k (by simpa using! hk)]
     · rw [vermaBSAState_eq_source _ _ _ N r (by omega),map_smul,vermaBSASource,map_sum]
       have he : (∑ j : Fin r, vermaMomentumCoefficient ell p k
           (vermaMode _ _ ((j:ℤ)-(r:ℤ)) (vermaBSAState _ _ t N j)))=0 := by
@@ -119,12 +119,12 @@ theorem vermaBSAState_momentum_above (ell p t : ℂ) (N r k : ℕ) (hk : r<k) :
         intro j hj
         have hi : (j:ℤ)-(r:ℤ)=-((r-j-1:ℕ):ℤ)-1 := by omega
         rw [hi]
-        change vermaPolynomialLift ell p (vermaMode _ _ _ _) k=0
+        change (vermaPolynomialLift ell p (vermaMode _ _ _ _)).coeff k=0
         rw [vermaPolynomialLift_negative_coeff,if_pos (by omega)]
         have h1 := ih j j.isLt k (by omega)
         have h2 := ih j j.isLt (k-1) (by omega)
-        change vermaPolynomialLift ell p _ k=0 at h1
-        change vermaPolynomialLift ell p _ (k-1)=0 at h2
+        change (vermaPolynomialLift ell p _).coeff k=0 at h1
+        change (vermaPolynomialLift ell p _).coeff (k-1)=0 at h2
         rw [h1,h2,map_zero,map_zero,add_zero]
       rw [he,smul_zero]
 
@@ -142,7 +142,7 @@ theorem vermaBSALeading_ne_zero (t : ℂ) (N r : ℕ) (ht : t≠0) (hr : r<N) :
   | succ r ih =>
     rw [vermaBSALeading]
     apply mul_ne_zero (div_ne_zero (neg_ne_zero.mpr ht) ?_) (ih (by omega))
-    simpa using bsa_denominator_ne_zero N (r+1) (by omega) hr
+    simpa using! bsa_denominator_ne_zero N (r+1) (by omega) hr
 
 /-- At the source's highest possible momentum degree, only its last term
 survives. Projection turns that final L₋₁ into multiplication by X₀. -/
@@ -159,22 +159,22 @@ theorem vermaBSASource_momentum_top_step (ell p t : ℂ) (N r : ℕ) :
     intro j hj
     have hi : (j:ℤ)-((r:ℤ)+1)=-((r-j:ℕ):ℤ)-1 := by omega
     rw [hi]
-    change vermaSymbolProjection (vermaPolynomialLift ell p (vermaMode _ _ _ _) (r+1))=0
+    change vermaSymbolProjection ((vermaPolynomialLift ell p (vermaMode _ _ _ _)).coeff (r+1))=0
     rw [vermaPolynomialLift_negative_coeff,if_pos (by omega),Nat.add_sub_cancel]
     have h1 := vermaBSAState_momentum_above ell p t N j (r+1) (by omega)
     have h2 := vermaBSAState_momentum_above ell p t N j r j.isLt
-    change vermaPolynomialLift ell p _ (r+1)=0 at h1
-    change vermaPolynomialLift ell p _ r=0 at h2
+    change (vermaPolynomialLift ell p _).coeff (r+1)=0 at h1
+    change (vermaPolynomialLift ell p _).coeff r=0 at h2
     rw [h1,h2,map_zero,map_zero,add_zero,map_zero]
   simp only [Fin.val_castSucc,Fin.val_last,Nat.cast_add,Nat.cast_one] at *
   rw [hz,zero_add,show (r:ℤ)-((r:ℤ)+1)=-(0:ℤ)-1 by omega]
-  change vermaSymbolProjection (vermaPolynomialLift ell p (vermaMode _ _ _ _) (r+1))=_
+  change vermaSymbolProjection ((vermaPolynomialLift ell p (vermaMode _ _ _ _)).coeff (r+1))=_
   have hc := vermaPolynomialLift_negative_coeff ell p 0 (r+1)
     (vermaBSAState (3-24*ell^2) (p^2-2*ell*p) t N r)
   simp only [Nat.cast_zero] at hc
   rw [hc,if_pos (by omega),Nat.add_sub_cancel]
   have hh := vermaBSAState_momentum_above ell p t N r (r+1) (by omega)
-  change vermaPolynomialLift ell p _ (r+1)=0 at hh
+  change (vermaPolynomialLift ell p _).coeff (r+1)=0 at hh
   rw [hh,map_zero,zero_add,vermaSymbolProjection_momentum]
   rfl
 
@@ -187,9 +187,9 @@ theorem vermaBSAState_momentum_top (ell p t : ℂ) (N r : ℕ) :
   induction r with
   | zero =>
     rw [vermaBSAState_zero]
-    change vermaSymbolProjection (vermaPolynomialLift ell p (negWord _ _ []) 0)=_
+    change vermaSymbolProjection ((vermaPolynomialLift ell p (negWord _ _ [])).coeff 0)=_
     rw [vermaPolynomialLift_word]
-    simp [vermaWordPolynomial,PolynomialModule.single_apply,vermaSymbolProjection_vacuum,
+    simp [vermaWordPolynomial,PolynomialModule.coeff_single,vermaSymbolProjection_vacuum,
       vermaBSALeading]
   | succ r ih =>
     rw [vermaBSAState_eq_source _ _ _ N (r+1) (by omega),map_smul,map_smul,

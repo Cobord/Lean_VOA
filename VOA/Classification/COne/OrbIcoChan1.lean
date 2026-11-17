@@ -62,7 +62,7 @@ theorem fo_chargeGen (b : ℕ) (hb : 1 ≤ b) :
   rw [fo_eq]
   change V2v.smul (latChargeGen (latP 1) (-1 : ℤ)) 0
     (latStateGen (latP 1) (vacuumN _) (b : ℤ)) = _
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_pos (by push_cast; omega)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) (-1 : ℤ), latP_form, if_pos (by push_cast; omega)]
   congr 2
   congr 1
   push_cast
@@ -92,7 +92,8 @@ theorem wa0_wb0 (a b : ℕ) (ha : 1 ≤ a) (hb : 1 ≤ b) :
   rw [wv_zero, wv_zero]
   change V2v.smul (latChargeGen (latP 1) (a : ℤ)) (firstIdx a b)
     (latStateGen (latP 1) (vacuumN _) (b : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, firstIdx, if_neg (by push_cast; nlinarith)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) (a : ℤ), latP_form, firstIdx,
+    if_neg (by push_cast; nlinarith)]
   simp [latStateGen]
 
 /-- The base coefficient `e^{aα}₍ₙ₎ f₀ e^{bα}`. -/
@@ -124,8 +125,9 @@ theorem EEVec_vSchur_bottom (a N : ℕ) :
     (Screen.vSchur_mem_gradingWN (latP 1) (-1 : ℤ) N)]
   rw [show max (0 : ℤ) (-(N : ℤ)) = 0 by omega, show ((N : ℕ) : ℤ) + (-(N : ℤ)) = 0 by ring,
     Finset.Icc_self, Finset.sum_singleton, show ((0 : ℤ) - (-(N : ℤ))).toNat = N by omega,
-    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero, one_mul,
-    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ N N le_rfl, Nat.sub_self, vSchur_zero]
+    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero (latP 1) (a : ℤ), one_mul,
+    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) (-1 : ℤ) (a : ℤ) N N le_rfl, Nat.sub_self,
+    vSchur_zero (latP 1) (-1 : ℤ)]
   rfl
 
 theorem wa0_wb1 (a b : ℕ) (ha : 1 ≤ a) (hb : 1 ≤ b) :
@@ -147,7 +149,8 @@ theorem wa0_wb1 (a b : ℕ) (ha : 1 ≤ a) (hb : 1 ≤ b) :
     congr 1
     push_cast [show 1 ≤ 2 * a by omega]
     ring
-  rw [hg, latStateGen_csmul, smul_smul, smul_smul]
+  rw [hg, latStateGen_csmul (L := latP 1) (γ := ((a : ℤ) + ((b : ℤ) - 1) : ℤ)), smul_smul,
+    smul_smul]
   have hq : (a : ℤ) + (((b : ℤ) - 1 : ℤ)) = (((a + b - 1 : ℕ)) : ℤ) := by
     push_cast [show 1 ≤ a + b by omega]; ring
   rw [hq]

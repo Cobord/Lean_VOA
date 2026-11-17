@@ -34,7 +34,7 @@ theorem modesMap_currentMap_coeff (m s : ℕ) (p : P8 ℂ) :
       PowerSeries.mapAlgHom_apply]
     exact modeCurrent_map m c
   have h := congrArg (PowerSeries.coeff s) (AlgHom.congr_fun he p)
-  simpa only [AlgHom.comp_apply,PowerSeries.mapAlgHom_apply,PowerSeries.coeff_map] using h
+  simpa only [AlgHom.comp_apply,PowerSeries.mapAlgHom_apply,PowerSeries.coeff_map] using! h
 
 theorem modesMap_iterate_lower (m : ℕ) (d : Fin 3) (k n : ℕ)
     (p : ModePoly ℂ m) :

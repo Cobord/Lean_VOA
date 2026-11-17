@@ -97,10 +97,10 @@ theorem psEval_X (y : ℂ) : psEval PowerSeries.X y = y := by
   simp
 
 theorem X_mem_subexp : (PowerSeries.X : PowerSeries ℂ) ∈ SubexpPS := by
-  simpa [Polynomial.coe_X] using polynomial_mem_subexpPS Polynomial.X
+  simpa [Polynomial.coe_X] using! polynomial_mem_subexpPS Polynomial.X
 
 theorem C_mem_subexp (a : ℂ) : PowerSeries.C a ∈ SubexpPS := by
-  simpa [Polynomial.coe_C] using polynomial_mem_subexpPS (Polynomial.C a)
+  simpa [Polynomial.coe_C] using! polynomial_mem_subexpPS (Polynomial.C a)
 
 theorem one_sub_X_mem_subexp : (1 - PowerSeries.X : PowerSeries ℂ) ∈ SubexpPS :=
   SubexpPS.sub_mem SubexpPS.one_mem X_mem_subexp
@@ -138,7 +138,7 @@ theorem mem_ratRing_zero {r : PowerSeries ℂ} (hr : r ∈ ratRing 0) :
     ∃ p : Polynomial ℂ, r = (p : PowerSeries ℂ) := by
   obtain ⟨b, p, hp⟩ := exists_poly_of_mem_ratRing hr
   refine ⟨p, ?_⟩
-  simpa using hp
+  simpa using! hp
 
 theorem subexp_of_mem_ratRing_zero {r : PowerSeries ℂ} (hr : r ∈ ratRing 0) : r ∈ SubexpPS := by
   obtain ⟨p, rfl⟩ := mem_ratRing_zero hr
@@ -209,7 +209,7 @@ theorem DOp_mem (κ σ : ℂ) {Z : PowerSeries ℂ} (hZ : Z ∈ SubexpPS) : DOp 
 theorem DOp_iterate_mem (κ σ : ℂ) {Z : PowerSeries ℂ} (hZ : Z ∈ SubexpPS) (i : ℕ) :
     (DOp κ σ)^[i] Z ∈ SubexpPS := by
   induction i with
-  | zero => simpa using hZ
+  | zero => simpa using! hZ
   | succ i ih => rw [Function.iterate_succ_apply']; exact DOp_mem κ σ ih
 
 theorem psEval_DOp (κ σ : ℂ) {Z : PowerSeries ℂ} (hZ : Z ∈ SubexpPS) {y : ℂ} (hy : ‖y‖ < 1) :
@@ -230,7 +230,7 @@ theorem hasDerivAt_Ev (κ σ : ℂ) {Z : PowerSeries ℂ} (hZ : Z ∈ SubexpPS) 
   have h1 : HasDerivAt (fun t => Complex.exp (-(σ * t))) (Complex.exp (-(σ * t)) * (-(σ * 1)))
       t := ((hasDerivAt_id t).const_mul σ).neg.cexp
   have hd : HasDerivAt (fun t => 1 + Complex.exp t) (Complex.exp t) t := by
-    simpa using (Complex.hasDerivAt_exp t).const_add 1
+    simpa using! (Complex.hasDerivAt_exp t).const_add 1
   have h2 : HasDerivAt (fun t => (1 + Complex.exp t) ^ (-κ))
       ((-κ) * (1 + Complex.exp t) ^ (-κ - 1) * Complex.exp t) t :=
     hd.cpow_const (one_add_exp_mem_slitPlane ht)
@@ -248,11 +248,12 @@ theorem hasDerivAt_Ev (κ σ : ℂ) {Z : PowerSeries ℂ} (hZ : Z ∈ SubexpPS) 
     simp only [Function.comp, xt]
     rw [Complex.exp_log (inv_ne_zero (one_add_exp_ne_zero hy))]
   have h3' := h3.congr_of_eventuallyEq heq
-  have hE := h1.mul (h2.mul h3')
+  have hE := h1.fun_mul (h2.fun_mul h3')
   have hy := norm_xt_lt_one ht
   rw [Complex.exp_log (inv_ne_zero hz)] at hE
-  convert hE using 1
-  simp only [Pi.mul_apply]
+  have hE' : HasDerivAt (Ev κ σ Z) _ t := hE
+  convert hE' using 1
+  try beta_reduce
   rw [Ev, psEval_DOp κ σ hZ hy, Complex.cpow_sub _ _ hz, Complex.cpow_one]
   simp only [xt]
   field_simp
@@ -355,7 +356,7 @@ theorem productODEAtIterPoint_holds (hV : StronglyRational W) : ProductODEAtIter
       (∀ k, r' k ∈ ratRing 0) ∧ 1 ≤ m' ∧
       (DOp κ b)^[m'] H = ∑ k ∈ Finset.range m', r' k * (DOp κ b)^[k] H := by
     rcases Nat.eq_zero_or_pos m with rfl | hpos
-    · have H0 : H = 0 := by simpa using hm
+    · have H0 : H = 0 := by simpa using! hm
       exact ⟨1, fun _ => 0, fun _ => Subalgebra.zero_mem _, le_rfl, by simp [H0]⟩
     · exact ⟨m, r, hr, hpos, hm⟩
   choose c hc hcev using fun k => exists_subexp_of_mem_ratRing_zero (hr' k)

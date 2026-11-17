@@ -113,8 +113,9 @@ theorem topIdeal_two_power_eq_sq (Y : Finset (Fin n)) (hY2 : 2 ≤ Y.card) (hZ :
     · intro u hu
       obtain ⟨c₀, hc₀⟩ := hu 0
       obtain ⟨c₁, hc₁⟩ := hu 1
-      simp only [Matrix.det_fin_two, topRowFunctional_apply, Fin.val_zero, Fin.val_one,
-        Nat.add_zero]
+      rw [Matrix.det_fin_two
+        (fun i b => topRowFunctional (alphabetCharacteristic (Y.toList.map x)) Y.card 2 i (u b))]
+      simp only [topRowFunctional_apply, Fin.val_zero, Fin.val_one, Nat.add_zero]
       rw [hc₀, hc₁, ← pow_add, ← pow_add,
         (topRow_pair_entries x hE Y hY2 (c₀ + (h + 1)) (by omega)).1,
         (topRow_pair_entries x hE Y hY2 (c₀ + (h + 1)) (by omega)).2,
@@ -132,8 +133,9 @@ theorem topIdeal_two_power_eq_sq (Y : Finset (Fin n)) (hY2 : 2 ≤ Y.card) (hZ :
         rw [pow_add (X : C[X]) (h + 1) b.val]
         exact Ideal.mul_mem_right ((X : C[X]) ^ b.val) _
           (Ideal.mem_span_singleton_self ((X : C[X]) ^ (h + 1))))
-    simp only [Matrix.det_fin_two, topRowFunctional_apply, Fin.val_zero, Fin.val_one,
-      Nat.add_zero] at hmem
+    rw [Matrix.det_fin_two (fun i b => topRowFunctional (alphabetCharacteristic (Y.toList.map x))
+      Y.card 2 i ((X : C[X]) ^ (h + 1 + b.val)))] at hmem
+    simp only [topRowFunctional_apply, Fin.val_zero, Fin.val_one, Nat.add_zero] at hmem
     rw [(topRow_pair_entries x hE Y hY2 (h + 1) (by omega)).1,
       (topRow_pair_entries x hE Y hY2 (h + 1) (by omega)).2,
       (topRow_pair_entries x hE Y hY2 (h + 1 + 1) (by omega)).1,

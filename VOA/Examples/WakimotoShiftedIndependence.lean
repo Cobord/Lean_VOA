@@ -66,7 +66,7 @@ theorem shiftedOccupationWord_two (k : ℂ) (d : Occupation) :
       wakimotoWordState k (relabelledWord doubleDepth d) := by
   rw [shiftedWord_lower 2 k _ (occupationWord_lower d),occupationWord,List.map_map]
   simp only [Function.comp_def,shifted_lowerLetter_two]
-  simpa only [relabelledWord,List.map_map,Function.comp_def] using
+  simpa only [relabelledWord,List.map_map,Function.comp_def] using!
     negativeWord_eq_wakimoto k (relabelledWord doubleDepth d)
 
 /-- General highest-weight occupation words, including F_0, are ACTUALLY

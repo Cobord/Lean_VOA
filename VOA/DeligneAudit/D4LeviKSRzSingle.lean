@@ -18,10 +18,10 @@ theorem fTwo_source_mode_zero
     (s : ℕ) (hs : m ≤ s) : ρ.op (18 : Fin 28) s w = 0 := by
   have hh := VOA.DeligneAudit.A3Sector.a3_simple_conversion_kill
     (leviCurrent ρ) w 0 m 0 (source_localWeyl ρ w m h)
-    1 1 s (by omega) (by simpa [VOA.DeligneAudit.A3Sector.weightABC] using
+    1 1 s (by omega) (by simpa [VOA.DeligneAudit.A3Sector.weightABC] using!
       (show m < 1 + s by omega))
   simpa [VOA.DeligneAudit.LeviConversion.fCurrent, leviCurrent,
-    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using hh
+    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using! hh
 
 private def oneZKey (d : ℕ) : RadicalKey := ⟨0, 0, 0, 0, 0, 1, d⟩
 private def oneYKey (d : ℕ) : RadicalKey := ⟨0, 0, 0, 0, 1, 0, d⟩
@@ -39,11 +39,11 @@ theorem rz_single_z_higher
   have hy : ρ.op (26 : Fin 28) r w ∈ N := by
     have hmem : radicalWord ρ w [(4, r)] ∈
         keyLayer ρ w (oneYKey r) := by
-      simpa [oneYKey, wordKey] using radicalWord_mem_key ρ w [(4, r)]
+      simpa [oneYKey, wordKey] using! radicalWord_mem_key ρ w [(4, r)]
     have horbit := keyLayer_le_orbit ρ w (oneYKey r) hmem
     have hh := keyOrbit_le_higher ρ w m (oneZKey (r + s))
       (oneYKey r) hless horbit
-    simpa [N, radicalWord, wordOp, radicalColour] using hh
+    simpa [N, radicalWord, wordOp, radicalColour] using! hh
   have hf : ρ.op (18 : Fin 28) s (ρ.op (26 : Fin 28) r w) ∈ N := by
     exact higherOrbit_full_levi_inv ρ w m (oneZKey (r + s))
       (18 : Fin 28) ⟨10, rfl⟩ s hy
@@ -55,7 +55,7 @@ theorem rz_single_z_higher
   have hbr : ρ.op (18 : Fin 28) s (ρ.op (26 : Fin 28) r w) -
       ρ.op (26 : Fin 28) r (ρ.op (18 : Fin 28) s w) =
         ρ.op (27 : Fin 28) (r + s) w := by
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.add_comm] using hcomm
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.add_comm] using! hcomm
   rw [fTwo_source_mode_zero ρ w m h s hs, map_zero, sub_zero] at hbr
   exact hbr ▸ hf
 

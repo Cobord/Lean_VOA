@@ -27,13 +27,13 @@ theorem a3_radicalWord_zero_of_depth_gt (a b c : ℕ)
   have hsum := a3_radical_counts_sum l
   by_cases h₀ : a < l.countP (fun x => x.1 = 0)
   · exact a3_radicalWord_zero_of_count ρ w a b c h 0 l
-      (by simpa using h₀)
+      (by simpa using! h₀)
   by_cases h₁ : a + b < l.countP (fun x => x.1 = 1)
   · exact a3_radicalWord_zero_of_count ρ w a b c h 1 l
-      (by simpa using h₁)
+      (by simpa using! h₁)
   have h₂ : a + b + c < l.countP (fun x => x.1 = 2) := by omega
   exact a3_radicalWord_zero_of_count ρ w a b c h 2 l
-    (by simpa using h₂)
+    (by simpa using! h₂)
 
 /-- No radical layer survives above depth `3a+2b+c`. -/
 theorem a3_radicalLayer_eq_bot_of_depth_gt (a b c j : ℕ)

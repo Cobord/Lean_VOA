@@ -102,7 +102,7 @@ theorem functionsInput_of_vacuumChannelTransportInput
   · rw [Submodule.mem_bot] at hf
     funext z
     have := congrFun hf z
-    simpa [e, Pi.single_apply] using this
+    simpa [e, Pi.single_apply] using! this
 
 /-- The function-space form is exactly (G1). -/
 theorem functionsInput_iff : VacuumChannelFunctionsInput.{u, w} ↔

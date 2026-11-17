@@ -53,13 +53,16 @@ theorem analyticAt_cuspFunction_modularForm {k : ℤ} (F : ModularForm 𝒮ℒ k
 theorem cuspFunction_one_eq (h : ℝ) : cuspFunction h (1 : UpperHalfPlane → ℂ) = 1 := by
   ext q
   rcases eq_or_ne q 0 with rfl | hq
-  · simpa [cuspFunction, Function.Periodic.cuspFunction] using tendsto_const_nhds.limUnder_eq
+  · have h : Filter.limUnder (nhdsWithin (0 : ℂ) {0}ᶜ) (1 : ℂ → ℂ) = 1 :=
+      tendsto_const_nhds.limUnder_eq
+    simpa [cuspFunction, Function.Periodic.cuspFunction] using h
   · simp [cuspFunction, Function.Periodic.cuspFunction_eq_of_nonzero h _ hq]
 
 /-- The cusp function of the constant function `0`. -/
 theorem cuspFunction_zero_eq (h : ℝ) : cuspFunction h (0 : UpperHalfPlane → ℂ) = 0 := by
-  simpa [cuspFunction, Function.Periodic.cuspFunction]
-    using (tendsto_const_nhds.mono_left nhdsWithin_le_nhds).limUnder_eq
+  have h : Filter.limUnder (nhdsWithin (0 : ℂ) {0}ᶜ) (0 : ℂ → ℂ) = 0 :=
+    (tendsto_const_nhds.mono_left nhdsWithin_le_nhds).limUnder_eq
+  simpa [cuspFunction, Function.Periodic.cuspFunction] using h
 
 /-! ## The subalgebra on which `q`-expansion is multiplicative -/
 

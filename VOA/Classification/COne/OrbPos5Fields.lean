@@ -16,6 +16,17 @@ open scoped TensorProduct
 
 noncomputable abbrev Modes := ℤ → Module.End ℂ Space
 
+/-! `ℤ`-charge specializations: an `ℤ` charge at a `(latP 1).carrier` position blocks
+`simp`/`rw` with the generic `L.carrier`-stated lemmas. -/
+
+private theorem latStateGen_add_boson_Z (p q : Osc) (β : ℤ) :
+    latStateGen (latP 1) (p + q) β = latStateGen (latP 1) p β + latStateGen (latP 1) q β :=
+  latStateGen_add_boson (latP 1) p q β
+
+private theorem latStateGen_smul_boson_Z (c : ℂ) (p : Osc) (β : ℤ) :
+    latStateGen (latP 1) (c • p) β = c • latStateGen (latP 1) p β :=
+  latStateGen_smul_boson (latP 1) c p β
+
 /-- Insert one coefficient `p w^d` of Δ in a fixed lattice charge sector. -/
 noncomputable def coefficientField (n : ℕ) (a j β : ℤ) (d : ℕ) : Osc →ₗ[ℂ] Modes where
   toFun p ℓ := if (ℓ - a * β) % (n : ℤ) = 0 then
@@ -24,11 +35,11 @@ noncomputable def coefficientField (n : ℕ) (a j β : ℤ) (d : ℕ) : Osc →�
     else 0
   map_add' p q := by
     funext ℓ
-    simp only [Pi.add_apply, latStateGen_add_boson, map_add, mode_add]
+    simp only [Pi.add_apply, latStateGen_add_boson_Z, map_add, mode_add]
     split_ifs <;> simp only [add_zero]
   map_smul' c p := by
     funext ℓ
-    simp only [Pi.smul_apply, latStateGen_smul_boson, map_smul, mode_smul,
+    simp only [Pi.smul_apply, latStateGen_smul_boson_Z, map_smul, mode_smul,
       RingHom.id_apply]
     split_ifs <;> simp only [smul_zero]
 
@@ -43,7 +54,6 @@ noncomputable def shiftedY (n : ℕ) (a j : ℤ) : Space →ₗ[ℂ] Modes :=
 
 theorem shiftedY_latState (n : ℕ) (a j β : ℤ) (p : Osc) :
     shiftedY n a j (latStateGen (latP 1) p β) = sectorField n a j β p := by
-  rw [latStateGen, shiftedY, TensorProduct.lift.tmul]
   change (Finsupp.lsum ℂ (fun γ : ℤ =>
     LinearMap.toSpanSingleton ℂ (Osc →ₗ[ℂ] Modes) (sectorField n a j γ)))
       (eGen (latP 1) β) p = _
@@ -55,7 +65,8 @@ theorem shiftedY_latState (n : ℕ) (a j β : ℤ) (p : Osc) :
 /-- This recovers the previous charged generators from an all-state linear map. -/
 theorem shiftedY_charge (n : ℕ) (a j β ℓ : ℤ) :
     shiftedY n a j (latChargeGen (latP 1) β) ℓ = fractionalChargeMode n a j β ℓ := by
-  rw [latChargeGen, shiftedY_latState]
+  rw [show latChargeGen (latP 1) β =
+      latStateGen (latP 1) (HeisenbergN.vacuumN (rank (latP 1))) β from rfl, shiftedY_latState]
   change ((Finsupp.lsum ℂ (coefficientField n a j β))
     (deltaCoeffs ((a : ℂ) / (2*n)) 1)) ℓ = _
   rw [deltaCoeffs_one, Finsupp.lsum_single]
@@ -130,7 +141,7 @@ theorem shiftedY_truncation {n : ℕ} (hn : 0 < n) (a j : ℤ) (u x : Space) :
     apply Submodule.span_le.mpr
     rintro _ ⟨⟨p, β⟩, rfl⟩
     change shiftedY n a j (latStateGen (latP 1) p β) ∈ truncatedAt x
-    rw [shiftedY_latState]
+    rw [shiftedY_latState n a j β p]
     exact sectorField_truncation hn a j β p x
   have hu : u ∈ (truncatedAt x).comap (shiftedY n a j) := by rw [ht]; trivial
   exact hu
@@ -138,7 +149,7 @@ theorem shiftedY_truncation {n : ℕ} (hn : 0 < n) (a j : ℤ) (u x : Space) :
 /-- The vacuum axiom is verified for the constructed full field map. -/
 theorem shiftedY_vacuum {n : ℕ} (hn : 0 < n) (a j : ℤ) (ℓ : ℤ) :
     shiftedY n a j (V2m 1 le_rfl).vacuum ℓ = if ℓ = -(n : ℤ) then 1 else 0 := by
-  change shiftedY n a j (latChargeGen (latP 1) 0) ℓ = _
+  change shiftedY n a j (latChargeGen (latP 1) (0 : ℤ)) ℓ = _
   rw [shiftedY_charge]
   unfold fractionalChargeMode
   change (if (ℓ - a * (0 : ℤ)) % (n : ℤ) = 0 then

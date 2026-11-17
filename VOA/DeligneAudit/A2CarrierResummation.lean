@@ -112,7 +112,7 @@ theorem demazure_term_eq (F : ℕ → PowerSeries ℚ) (n : ℕ) :
 
 /-- Conformal-weight-`N` coefficient of the auxiliary-carrier series, truncated at `m + d ≤ N`. -/
 def sectorCoeff (F : ℕ → PowerSeries ℚ) (N : ℕ) : ℚ :=
-  ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n, coeff N (sectorTerm F md.1 md.2)
+  ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n, coeff N (sectorTerm F md.1 md.2)
 
 /-- Conformal-weight-`N` coefficient of `Σ_n q^n Dem_n / (q)_n`, truncated at `n ≤ N`. -/
 def demazureCoeffOf (Dem : ℕ → PowerSeries ℚ) (N : ℕ) : ℚ :=

@@ -319,7 +319,7 @@ theorem Hop_Fop (v : WakModule 1) : Hop (Fop v) = Fop (Hop v) - (2 : ℂ) • Fo
 theorem Fop_pow_mem_joint (j : ℕ) {n μ : ℤ} {y : WakModule 1}
     (hy : y ∈ jointSpace 1 hk n μ) : (Fop ^ j) y ∈ jointSpace 1 hk (n - j) (μ - 2 * j) := by
   induction j with
-  | zero => simpa using hy
+  | zero => simpa using! hy
   | succ j ih =>
       rw [pow_succ', Module.End.mul_apply]
       have h := J_F_mem_joint hk 1 ih
@@ -387,7 +387,7 @@ theorem charge_sq_le {R : RealStructure (universal 1 hk)} (hR : IsCompactRealStr
       · exact charge_sq_le_step hk hlow h2 hy hyI
       rcases le_or_gt μ (-2) with h3 | h3
       · have hρy := rho_mem_joint hk hR hy
-        have hρI' : R.rho y ∉ Imax := fun h => hyI (by simpa [hρρ] using hρI _ h)
+        have hρI' : R.rho y ∉ Imax := fun h => hyI (by simpa [hρρ] using! hρI _ h)
         have := charge_sq_le_step hk hlow (by omega) hρy hρI'
         nlinarith
       · have h1 : 1 ≤ n := by omega

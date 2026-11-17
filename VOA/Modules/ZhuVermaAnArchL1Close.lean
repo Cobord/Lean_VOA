@@ -447,9 +447,9 @@ theorem ASumLn_eq_kFinsum (M P n j : ℕ) (γ μ : ℤ) :
         (fun a : ℤ => cbz ((M : ℤ) + n) a
             * (cbz ((P : ℤ) + 2 * n + 1) (((P : ℤ) - n - 2 - μ - γ - j) + a)
                 * cbz ((a : ℤ) - μ - 1) ((a : ℤ) - 2 * n - 2 - μ)))
-        (fun p hp => by dsimp only; rw [cbz_apply_neg ((M : ℤ) + n) hp, zero_mul])
+        (fun p hp => by (try dsimp only); rw [cbz_apply_neg ((M : ℤ) + n) hp, zero_mul])
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_lt (by positivity) (by
             have : (M + n + 1 : ℤ) ≤ p := by exact_mod_cast hp
             omega), zero_mul])).symm
@@ -629,9 +629,9 @@ theorem VASumLn_eq_kFinsum (M P n j : ℕ) (γ μ : ℤ) :
         (fun a : ℤ => cbz ((P : ℤ) + 2 * n + 1) ((P : ℤ) - n - 2 - μ - γ - j + a)
             * (cbz ((M : ℤ) + n) a
                 * cbz (γ + 2 * (n : ℤ) + 1 - a) (γ - a)))
-        (fun p hp => by dsimp only; rw [cbz_apply_neg ((M : ℤ) + n) hp]; ring)
+        (fun p hp => by (try dsimp only); rw [cbz_apply_neg ((M : ℤ) + n) hp]; ring)
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_lt (by positivity) (by
             have : (M + n + 1 : ℤ) ≤ p := by exact_mod_cast hp
             omega : (M : ℤ) + n < p)]; ring)).symm
@@ -685,9 +685,9 @@ theorem VInnerILn_eq_GvLnFinsum (M P n j : ℕ) (γ μ : ℤ) :
           finsumZ_eq_range_sum (N := n + 1 + 1)
             (fun t : ℤ => cbz ((n : ℤ) + 1) t * cbz ((P : ℤ) + n) ((((μ : ℤ) + 2 * n + 2) + k) - t)
                 * VHkerLn M n j γ k)
-            (fun p hp => by dsimp only; rw [cbz_apply_neg ((n : ℤ) + 1) hp, zero_mul, zero_mul])
+            (fun p hp => by (try dsimp only); rw [cbz_apply_neg ((n : ℤ) + 1) hp, zero_mul, zero_mul])
             (fun p hp => by
-              dsimp only
+              try dsimp only
               rw [cbz_lt (by positivity) (by
                 have : (n + 1 + 1 : ℤ) ≤ p := by exact_mod_cast hp
                 omega : (n : ℤ) + 1 < p), zero_mul, zero_mul])]
@@ -708,7 +708,7 @@ theorem VInnerILn_eq_GvLnFinsum (M P n j : ℕ) (γ μ : ℤ) :
       rw [Set.mem_Icc]
       by_contra hcon
       apply hk
-      simp only []
+      (try simp only [])
       rcases not_and_or.mp hcon with h | h
       · rw [VHkerLn_lo M n j γ (by omega : k < (n : ℤ) + 1 + j), mul_zero, mul_zero]
       · rw [VHkerLn_hi M n j γ (by omega : γ + (n : ℤ) + 1 + j < k), mul_zero, mul_zero]]

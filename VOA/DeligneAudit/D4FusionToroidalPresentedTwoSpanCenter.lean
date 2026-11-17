@@ -39,7 +39,7 @@ theorem two_sl2_negative_three_of_nilpotent {V : Type*}
     (hN : ∃ N : ℕ, F^[N] u = 0) : u = 0 := by
   obtain ⟨N, hN⟩ := hN
   induction N with
-  | zero => simpa using hN
+  | zero => simpa using! hN
   | succ n ih =>
       by_cases hp : F^[n] u = 0
       · exact ih hp
@@ -84,7 +84,7 @@ theorem twoGen_center_lowering (s : ℕ) :
     change 4 ≤ (twoSeedRootE 2).val ∧ (twoSeedRootE 2).val < 16
     decide
   have hE : E u = 0 := by
-    simpa [E, u, hsign, twoCurrent] using
+    simpa [E, u, hsign, twoCurrent] using!
       twoGen_raising s (twoSeedRootE 2) hraise 0
   have hcartan : D4sector.cartan (1 : Fin 28) := by
     change (1 : Fin 28).val < 4
@@ -92,10 +92,10 @@ theorem twoGen_center_lowering (s : ℕ) :
   have hH : H u = (1 : ℂ) • u := by
     change twoSeedRootH 2 (twoGen s) = (1 : ℂ) • twoGen s
     rw [two_center_rootH_eq]
-    simpa [twoCurrent, D4sector, thetaD4] using
+    simpa [twoCurrent, D4sector, thetaD4] using!
       twoGen_cartan_zero s (1 : Fin 28) hcartan
   have hv : F^[3] (pTE 2) = 0 := by
-    simpa [F, D4sector, lowExpD4, negativeIndex] using
+    simpa [F, D4sector, lowExpD4, negativeIndex] using!
       two_seed_lowering_v_nil 2 (by decide)
   have hu : F^[3] u = 0 := by
     change F^[3] ((ρPTE 2).op D4sector.c₀ 1 s (pTE 2)) = 0
@@ -103,23 +103,23 @@ theorem twoGen_center_lowering (s : ℕ) :
       center_commute_iter, hv, map_zero]
   have he : E (F^[2] u) = 0 := by
     have ht := sl2_E_Fpow E F H hEF hHF u 1 hE hH 1
-    simpa using ht
+    simpa using! ht
   have hh : H (F^[2] u) = (-3 : ℂ) • F^[2] u := by
     have ht := sl2_H_Fpow F H hHF u 1 hH 2
     convert ht using 1
     norm_num
   have hn : ∃ N : ℕ, F^[N] (F^[2] u) = 0 := by
     refine ⟨1, ?_⟩
-    simpa [Function.iterate_succ_apply'] using hu
+    simpa [Function.iterate_succ_apply'] using! hu
   have hz := two_sl2_negative_three_of_nilpotent E F H
     hEF hHF (F^[2] u) he hh hn
-  simpa [twoCurrent, F, u] using hz
+  simpa [twoCurrent, F, u] using! hz
 
 theorem twoOne_center_lowering :
     (twoOneCurrent.op (negativeIndex 2) 0)^[2] twoOneGen = 0 := by
   have hz : (twoCurrent.op (negativeIndex 2) 0)
       ((twoCurrent.op (negativeIndex 2) 0) (twoGen 0)) = 0 := by
-    simpa [Function.iterate_succ_apply'] using twoGen_center_lowering 0
+    simpa [Function.iterate_succ_apply'] using! twoGen_center_lowering 0
   change (twoM 1).mkQ
     ((twoCurrent.op (negativeIndex 2) 0)
       ((twoCurrent.op (negativeIndex 2) 0) (twoGen 0))) = 0

@@ -315,7 +315,7 @@ theorem eq_zero_of_coeff_lt (h4 : 4 ∣ N) [NeZero N] (hf : IsThetaTypeForm N f)
       rw [norm_one] at h'
       linarith
     have hP : ∏ q ∈ Finset.univ.erase q₀, ‖SlashInvariantForm.quotientFunc F q τ‖ ≤ P :=
-      Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
+      Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
     have hf' := hK τ hτ1
     have hP0 : 0 ≤ ∏ q ∈ Finset.univ.erase q₀, ‖SlashInvariantForm.quotientFunc F q τ‖ :=
       Finset.prod_nonneg fun _ _ => norm_nonneg _

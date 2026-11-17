@@ -119,7 +119,7 @@ theorem reconstruction_injective : Function.Injective (reconstruction N₁ N₂ 
     have hh := congrArg (fun Y : LogIntertwiningOperator N₁.toWeakModule N₂.toWeakModule
       (contraLog N).toWeakModule => Y.1 n 0) h
     change compatibleLogModes N₁ N₂ N psi.1 n 0 = compatibleLogModes N₁ N₂ N phi.1 n 0 at hh
-    simpa only [compatibleLogModes,logLift_zero] using hh
+    simpa only [compatibleLogModes,logLift_zero] using! hh
   apply Subtype.ext
   apply LinearMap.ext
   intro r
@@ -129,11 +129,10 @@ theorem reconstruction_injective : Function.Injective (reconstruction N₁ N₂ 
     intro a b x y hx hy
     have hh := congrArg (fun F : M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] C2Rigid.RestrictedDual N.toGW =>
       C2Rigid.dualPairing N.toGW r (F x y)) (hzero (a+b-c-1))
-    dsimp only at hh
     rw [pair_baseModes N₁ N₂ N psi.1 (a+b-c-1) hx hy hr,
       pair_baseModes N₁ N₂ N phi.1 (a+b-c-1) hx hy hr] at hh
     have hc : c = a+b-(a+b-c-1)-1 := by ring
-    simpa only [if_pos hc] using hh
+    simpa only [if_pos hc] using! hh
   · intro r s hr hs
     rw [map_add,map_add,hr,hs]
 

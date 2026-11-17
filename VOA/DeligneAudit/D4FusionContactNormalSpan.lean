@@ -78,12 +78,12 @@ private theorem two_root_mem_normal
     R.op (radIndex i.castSucc) 0 (R.op (radIndex j.castSucc) 0 w) ∈ normalSpan R w := by
   by_cases hij : (radIndex i.castSucc).val ≤ (radIndex j.castSucc).val
   · obtain ⟨k, hk⟩ := pair_coverage i j hij
-    simpa only [quadraticColumn, hk] using column_mem_normal hrows k
+    simpa only [quadraticColumn, hk] using! column_mem_normal hrows k
   · have hji : (radIndex j.castSucc).val ≤ (radIndex i.castSucc).val := by omega
     obtain ⟨k, hk⟩ := pair_coverage j i hji
     have hs : R.op (radIndex j.castSucc) 0 (R.op (radIndex i.castSucc) 0 w) ∈
         normalSpan R w := by
-      simpa only [quadraticColumn, hk] using column_mem_normal hrows k
+      simpa only [quadraticColumn, hk] using! column_mem_normal hrows k
     have hc : R.op (radIndex i.castSucc) 0 (R.op (radIndex j.castSucc) 0 w) -
         R.op (radIndex j.castSucc) 0 (R.op (radIndex i.castSucc) 0 w) =
         (contactCoeff i.castSucc j.castSucc : ℂ) • center R w := by

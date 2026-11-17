@@ -227,7 +227,10 @@ theorem hSt_nsmul (n : ℕ) (α : L.carrier) : hSt L (n • α) = (n : ℂ) • 
 theorem coordR_basis (i : Fin (latRank L)) : coordR L (latticeBasis L i) = Pi.single i 1 := by
   funext j
   simp only [coordR, coord, Module.Basis.repr_self, Finsupp.single_apply, Pi.single_apply]
-  split_ifs with h1 h2 h2 <;> simp_all [eq_comm]
+  split_ifs with h1 h2 h2 <;> first
+    | (simp_all [eq_comm]; done)
+    | (subst h1; erw [Module.Basis.repr_self, Finsupp.single_eq_same]; simp)
+    | (erw [Module.Basis.repr_self, Finsupp.single_eq_of_ne h1]; simp)
 
 include hPos in
 /-- The Heisenberg states `h_a(−1)𝟙` lie in the span of the `α(−1)𝟙`, `α ∈ L`. -/

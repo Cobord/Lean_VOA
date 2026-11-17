@@ -172,7 +172,7 @@ theorem tco_isHomogeneous (m : ℕ) : (tco m).IsHomogeneous 2 := by
 
 theorem aeval_listProd_isHomogeneous :
     ∀ l : List ℕ, (aeval tco (l.map (X : ℕ → TPoly)).prod).IsHomogeneous (2 * l.length)
-  | [] => by simpa using isHomogeneous_one (Fin 2 × ℕ) ℂ
+  | [] => by simpa using! isHomogeneous_one (Fin 2 × ℕ) ℂ
   | x :: l => by
     rw [List.map_cons, List.prod_cons, map_mul, aeval_X, List.length_cons,
       show 2 * (l.length + 1) = 2 + 2 * l.length by ring]
@@ -224,7 +224,7 @@ theorem testSer_pow_isHomogeneous : ∀ n j : ℕ,
 /-- The degree-`m` component of `f * g` for `g` homogeneous of degree `m`. -/
 theorem homogeneousComponent_mul_of_isHomogeneous {f g : JetPoly} {m : ℕ}
     (hg : g.IsHomogeneous m) :
-    homogeneousComponent m (f * g) = MvPolynomial.C (coeff 0 f) * g := by
+    homogeneousComponent m (f * g) = MvPolynomial.C (f.coeff 0) * g := by
   conv_lhs => rw [← sum_homogeneousComponent f]
   rw [Finset.sum_mul, map_sum, Finset.sum_eq_single 0]
   · rw [homogeneousComponent_zero, homogeneousComponent_of_mem

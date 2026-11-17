@@ -93,7 +93,10 @@ theorem EEVec_expand (α : L.carrier) {w : ℕ} {p : FockN (rank L)}
       · rw [Module.End.mul_apply, EminusVecField_neg L α (by omega), LinearMap.zero_apply,
           map_zero]
     simp only [Finset.coe_map, Set.mem_image, Finset.mem_coe, Finset.mem_range]
-    exact ⟨(m - d).toNat, by omega, by simp [emb]; omega⟩
+    exact ⟨(m - d).toNat, by omega, by
+      first
+        | (show (d : ℤ) + (((m - d).toNat : ℕ) : ℤ) = m; omega)
+        | (simp [emb]; omega)⟩
   rw [finsum_eq_sum_of_support_subset f hsupp, Finset.sum_map]
   exact Finset.sum_congr rfl fun r _ => hval r
 

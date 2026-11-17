@@ -28,8 +28,8 @@ theorem trace_mul_nilExp {X : Type u} [AddCommGroup X] [Module ℂ X]
       (show (s•J) ∘ₗ E=E ∘ₗ (s•J) from (hE.smul_right s).eq.symm)
     exact hc.symm
   have hn : IsNilpotent (IsNilpotent.exp (s•J)-algebraMap ℂ (End ℂ X) 1) := by
-    simpa only [map_one] using IsNilpotent.isNilpotent_exp_sub_one hS
-  simpa only [Module.End.mul_eq_comp,one_mul] using
+    simpa only [map_one] using! IsNilpotent.isNilpotent_exp_sub_one hS
+  simpa only [Module.End.mul_eq_comp,one_mul] using!
     LinearMap.trace_comp_eq_mul_of_commute_of_isNilpotent (1 : ℂ) he hn
 
 variable {V M : Type u} [AddCommGroup V] [Module ℂ V]
@@ -64,7 +64,8 @@ def moduleZeroModePiece (N : LogVModule W M) {d : ℤ} {v : V}
     (hv : v∈W.grading d) (b : ℂ) : End ℂ (N.weight b) :=
   ((mode (N.YM v) (d-1)).comp (N.weight b).subtype).codRestrict (N.weight b) (fun y => by
     have h := N.mode_mem_weight hv y.2 (d-1)
-    convert h using 1 <;> push_cast <;> ring)
+    rw [show b + (d : ℂ) - ((d - 1 : ℤ) : ℂ) - 1 = b by push_cast; ring] at h
+    exact h)
 
 @[simp] theorem moduleZeroModePiece_coe (N : LogVModule W M) {d : ℤ} {v : V}
     (hv : v∈W.grading d) (b : ℂ) (y : N.weight b) :

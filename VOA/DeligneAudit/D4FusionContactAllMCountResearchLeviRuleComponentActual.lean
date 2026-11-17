@@ -19,10 +19,10 @@ theorem u_sourceWord_c_degree (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = f
   have hcolor : cWeight (sourceColor j.val.1) = 0 := by rw [hj]; rfl
   simp only [hcolor,mul_zero,zero_mul,add_zero] at hp
   have hh := word_graded ℂ m cWeight 0 (fun _ => 0) l (fun x hx i => ?_) hp
-  · simpa only [wordGrade,zero_mul,add_zero,List.map_const',List.sum_replicate,nsmul_zero] using hh
+  · simpa only [wordGrade,zero_mul,add_zero,List.map_const',List.sum_replicate,nsmul_zero] using! hh
   · rcases negative_c_rule x.1 i ((category_one_iff x.1).mp (hl x hx)) with hz | hw
     · exact Or.inl hz
-    · exact Or.inr (by simpa only [add_zero] using hw)
+    · exact Or.inr (by simpa only [add_zero] using! hw)
 
 /-- Syntactic sources retain their proved grade even when the polynomial is zero. -/
 structure OrbitSourceIndex (m : ℕ) where
@@ -57,14 +57,14 @@ theorem orbitSourcePoly_c_degree (m : ℕ) (i : OrbitSourceIndex m) :
   | false =>
       have hl : ∀ x ∈ i.outer, category x.1 = 1 := by
         intro x hx
-        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using i.branch x hx
-      simpa only [hb,Bool.false_eq_true,if_false] using
+        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using! i.branch x hx
+      simpa only [hb,Bool.false_eq_true,if_false] using!
         u_sourceWord_c_degree m i.seed hb i.shifts i.outer hl
   | true =>
       have hl : ∀ x ∈ i.outer, category x.1 = 0 := by
         intro x hx
-        simpa only [branchCategory,hb,if_true] using i.branch x hx
-      simpa only [hb,if_true] using c_sourceWord_degree m i.seed hb i.shifts i.outer hl
+        simpa only [branchCategory,hb,if_true] using! i.branch x hx
+      simpa only [hb,if_true] using! c_sourceWord_degree m i.seed hb i.shifts i.outer hl
 
 /-- Every original syntactic orbit source has its exact simultaneous grade. -/
 theorem orbitSourcePoly_graded (m : ℕ) (i : OrbitSourceIndex m) :

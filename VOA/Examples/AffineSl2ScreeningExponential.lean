@@ -24,7 +24,7 @@ def oscillatorPartial (r : ℕ) (v : Fin 3 × ℕ) :
 
 /-- Oscillator partials act on the selected actual polynomial coefficient. -/
 theorem oscillatorPartial_apply (r : ℕ) (v : Fin 3 × ℕ) (P : Auxiliary r)
-    (g : Fin r → ℤ) : oscillatorPartial r v P g=pderiv v (P g) :=
+    (g : Fin r → ℤ) : (oscillatorPartial r v P).coeff g=pderiv v (P.coeff g) :=
   auxiliaryDerivative_apply r (pderiv v) P g
 
 /-- Partial differentiation of a single auxiliary monomial. -/
@@ -65,10 +65,9 @@ theorem oscillatorPartial_betaFactor_boson (r N m : ℕ) (i : Fin r) :
 /-- The rational Vandermonde has no oscillator dependence at all. -/
 theorem oscillatorPartial_delta (r : ℕ) (v : Fin 3 × ℕ) :
     oscillatorPartial r v (delta r)=0 := by
-  ext g : 1
+  ext g : 2
   rw [oscillatorPartial_apply]
   simp [delta,rationalConstants]
-  rfl
 
 /-- The finite exponential has its exact matching-mode derivative plus
 an explicit final factorial term. The correction has not yet been dropped. -/
@@ -78,7 +77,7 @@ theorem exponentialFactor_boson_derivative (r N M m : ℕ) :
         exponentialTerm r (-(M : ℂ)/m) (bosonPower r m) N) =
       (-(M : ℂ)/m) • (auxiliaryPowerSum r m * exponentialFactor r N M m) := by
   rw [exponentialFactor_eq_finiteExponential]
-  simpa only [oscillatorPartial_bosonPower] using
+  simpa only [oscillatorPartial_bosonPower] using!
     finiteExponential_derivative r (oscillatorPartial r (2,m-1))
       (-(M : ℂ)/m) (bosonPower r m) N
 
@@ -90,15 +89,14 @@ theorem exponentialFactor_boson_derivative_ne (r N M m n : ℕ)
   have h := finiteExponential_derivative r (oscillatorPartial r (2,m-1))
     (-(M : ℂ)/n) (bosonPower r n) N
   simpa only [oscillatorPartial_bosonPower_ne r m n hm hn hne,
-    zero_mul,smul_zero,add_zero] using h
+    zero_mul,smul_zero,add_zero] using! h
 
 /-- Multiplying oscillator coefficients by a scalar cannot lower their
 auxiliary-degree support. -/
 theorem LowerDegree.smul {r : ℕ} {d : ℤ} {P : Auxiliary r}
     (hP : LowerDegree d P) (c : ℂ) : LowerDegree d (c • P) := by
   intro g hg
-  change c • P g=0
-  rw [hP g hg,smul_zero]
+  rw [AddMonoidAlgebra.coeff_smul_apply,hP g hg,smul_zero]
 
 /-- The auxiliary power sum has lower degree equal to its mode index. -/
 theorem auxiliaryPowerSum_lower (r m : ℕ) :
@@ -126,7 +124,7 @@ vanishes even with arbitrary remaining nonnegative-degree factors. -/
 theorem exponential_derivative_error_zero (r q M m : ℕ) (hq : 0<q) (hm : 0<m)
     (Q : Auxiliary r) (hQ : LowerDegree 0 Q) :
     (delta r^(2*M)*(((-(M : ℂ)/m) • (auxiliaryPowerSum r m *
-      exponentialTerm r (-(M : ℂ)/m) (bosonPower r m) (r*(q-1))))*Q))
+      exponentialTerm r (-(M : ℂ)/m) (bosonPower r m) (r*(q-1))))*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   apply screening_high_degree_product_zero r q M hq _ Q _ hQ
   apply (exponential_derivative_error_lower r (r*(q-1)) M m).mono
@@ -142,25 +140,24 @@ terminal correction is proved to vanish here, not assumed away. -/
 theorem selected_exponential_boson_derivative (r q M m : ℕ) (hq : 0<q) (hm : 0<m)
     (Q : Auxiliary r) (hQ : LowerDegree 0 Q) :
     (delta r^(2*M)*(oscillatorPartial r (2,m-1)
-      (exponentialFactor r (r*(q-1)) M m)*Q))
+      (exponentialFactor r (r*(q-1)) M m)*Q)).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) =
     (delta r^(2*M)*(((-(M : ℂ)/m) •
-      (auxiliaryPowerSum r m * exponentialFactor r (r*(q-1)) M m))*Q))
+      (auxiliaryPowerSum r m * exponentialFactor r (r*(q-1)) M m))*Q)).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
-  have h := congrArg (fun P : Auxiliary r => (delta r^(2*M)*(P*Q))
+  have h := congrArg (fun P : Auxiliary r => (delta r^(2*M)*(P*Q)).coeff
     (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)))
     (exponentialFactor_boson_derivative r (r*(q-1)) M m)
-  dsimp only at h
   rw [add_mul,mul_add] at h
   change
     (delta r^(2*M)*(oscillatorPartial r (2,m-1)
-      (exponentialFactor r (r*(q-1)) M m)*Q))
+      (exponentialFactor r (r*(q-1)) M m)*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) +
     (delta r^(2*M)*(((-(M : ℂ)/m) • (auxiliaryPowerSum r m *
-      exponentialTerm r (-(M : ℂ)/m) (bosonPower r m) (r*(q-1))))*Q))
+      exponentialTerm r (-(M : ℂ)/m) (bosonPower r m) (r*(q-1))))*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) = _ at h
   rw [exponential_derivative_error_zero r q M m hq hm Q hQ,add_zero] at h
-  simpa only [mul_assoc] using h
+  simpa only [mul_assoc] using! h
 
 end
 end VOA.Wak.Screening

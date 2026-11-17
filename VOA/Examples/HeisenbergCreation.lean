@@ -305,7 +305,7 @@ theorem Ymon_creation_zero (k : ℂ) (a : ℕ →₀ ℕ) :
 
 /-! ## §F  VA3 for EVERY state, by linearity, and the final mode form
 
-`Y k` is the `ℂ`-linear extension `Finsupp.linearCombination (Ymon k)` of the monomial fields,
+`Y k` is the `ℂ`-linear extension of the monomial fields off the monomial basis,
 so the two creation clauses extend off the monomial basis: the `z`-evaluation-then-vacuum map
 `f ↦ f j 1` is `ℂ`-linear, and on the basis `monomial a 1` it gives `0` (for `j < 0`) resp.
 `monomial a 1` (for `j = 0`).  Together: `Y(u,z)1` is regular and `Y(u,0)1 = u`. -/
@@ -320,34 +320,29 @@ noncomputable def evalVacAt (j : ℤ) : FormalDist (End ℂ Fock) →ₗ[ℂ] Fo
 @[simp] theorem evalVacAt_apply (j : ℤ) (f : FormalDist (End ℂ Fock)) :
     evalVacAt j f = f j vacuum := rfl
 
-/-- `Y k u j vacuum` expanded as the `Finsupp` sum over the monomial support of `u`. -/
+/-- `Y k u j vacuum` expanded as the sum over the monomial support of `u`. -/
 theorem Y_apply_vacuum_sum (k : ℂ) (u : Fock) (j : ℤ) :
-    Y k u j vacuum = u.sum (fun a c => c • (Ymon k a j vacuum)) := by
+    Y k u j vacuum = ∑ a ∈ u.support, u.coeff a • (Ymon k a j vacuum) := by
   show evalVacAt j (Y k u) = _
-  show evalVacAt j (Finsupp.linearCombination ℂ (Ymon k) u) = _
-  rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum, Finsupp.sum]
+  conv_lhs => rw [MvPolynomial.as_sum u]
+  rw [map_sum, map_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
-  rw [map_smul, evalVacAt_apply]
+  rw [Y_monomial, map_smul, evalVacAt_apply]
 
 /-- **VA3 / general creation, `j < 0`, every state**: `Y(u,z)_j 1 = 0` for `j < 0`. -/
 theorem Y_creation_lt (k : ℂ) (u : Fock) {j : ℤ} (hj : j < 0) :
     Y k u j vacuum = 0 := by
-  rw [Y_apply_vacuum_sum, Finsupp.sum]
+  rw [Y_apply_vacuum_sum]
   refine Finset.sum_eq_zero fun a _ => ?_
   rw [Ymon_creation_lt k a hj, smul_zero]
 
 /-- **VA3 / the `z⁰`-coefficient creates `u`, every state**: `Y(u,0)1 = u`. -/
 theorem Y_creation_zero (k : ℂ) (u : Fock) : Y k u 0 vacuum = u := by
   rw [Y_apply_vacuum_sum]
-  -- replace `Ymon a 0 1` by `monomial a 1`, then `cₐ • monomial a 1 = monomial a cₐ`, then sum = u
-  rw [show u.sum (fun a c => c • (Ymon k a 0 vacuum))
-        = u.sum (fun a c => monomial a c) from
-      Finsupp.sum_congr fun a _ => by
-        rw [Ymon_creation_zero, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]]
-  -- `u.sum (monomial · ·) = u` is the canonical monomial decomposition
-  conv_rhs => rw [← MvPolynomial.support_sum_monomial_coeff u]
-  rw [Finsupp.sum]
-  rfl
+  -- `Ymon a 0 1 = monomial a 1`, `cₐ • monomial a 1 = monomial a cₐ`; the sum is `u`
+  conv_rhs => rw [MvPolynomial.as_sum u]
+  refine Finset.sum_congr rfl fun a _ => ?_
+  rw [Ymon_creation_zero, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
 
 /-! ## §G  The VA3 mode form — `u₍ₙ₎1 = 0` for `n ≥ 0`, `u₍₋₁₎1 = u` — for every state
 

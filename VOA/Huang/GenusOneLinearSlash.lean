@@ -86,8 +86,7 @@ theorem differentiableOn_insertionSlash (D : DirectSum.IsInternal (insertionSqWe
   · intro α x hx
     exact (differentiableOn_sSlash α (hF.holo x)).congr
       (fun z hz => insertionSlash_of_weight D hF hx hz)
-  · dsimp only
-    rw [map_zero]; exact differentiableOn_const 0
+  · rw [map_zero]; exact differentiableOn_const 0
   · intro x y hx hy
     rw [map_add]; exact hx.add hy
 

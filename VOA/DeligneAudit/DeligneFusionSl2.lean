@@ -308,7 +308,10 @@ theorem mapDomain_succ_zero (f : ℕ →₀ ℕ) : Finsupp.mapDomain (· + 1) f 
   Finsupp.mapDomain_notin_range _ _ (by simp)
 
 theorem mapDomain_succ_apply (f : ℕ →₀ ℕ) (i : ℕ) : Finsupp.mapDomain (· + 1) f (i + 1) = f i :=
-  Finsupp.mapDomain_apply (fun a b h => by simpa using h) f i
+  -- `mapDomain_apply` (v4.30) was renamed `mapDomain_apply_of_injective` in later Mathlib
+  by first
+    | exact Finsupp.mapDomain_apply_of_injective (fun a b h => by simpa using h) f i
+    | exact Finsupp.mapDomain_apply (fun a b h => by simpa using h) f i
 
 /-- `z₀^k σ(box monomial of J_{m−k−1})` is a box monomial of `J_m` with `k` zeros. -/
 theorem shift_box {m k : ℕ} (hk : k < m) {f : ℕ →₀ ℕ} (hf : BoxP (m - k - 1) f) :
@@ -505,14 +508,18 @@ theorem xx_hom (r s : ℕ) : MvPolynomial.IsWeightedHomogeneous om (xx r s) (r, 
       rw [xx, pow_succ, PowerSeries.coeff_mul]
       refine (MvPolynomial.mem_weightedHomogeneousSubmodule _ _ _ _).mp (Submodule.sum_mem _ fun x hx => ?_)
       rw [MvPolynomial.mem_weightedHomogeneousSubmodule]
-      rw [Finset.mem_antidiagonal] at hx
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       have h1 := ih x.1
       have h2 : MvPolynomial.IsWeightedHomogeneous om (PowerSeries.coeff x.2 Zs) (1, x.2) := by
         simp only [Zs, PowerSeries.coeff_mk, z]
         exact MvPolynomial.isWeightedHomogeneous_X ℂ om x.2
       have := h1.mul h2
       convert this using 1
-      simp [Prod.ext_iff]; omega
+      -- later Mathlib's `convert` also leaves the polynomial identity (closed by `rfl`)
+      all_goals first
+        | rfl
+        | (simp [Prod.ext_iff]; omega)
+        | (ext <;> simp <;> omega)
 
 theorem comp_mem_J (m : ℕ) (n : ℕ × ℕ) {x : R} (hx : x ∈ J m) :
     MvPolynomial.weightedHomogeneousComponent om n x ∈ J m := by

@@ -131,8 +131,9 @@ theorem Fw_neg (α : L.carrier) (l : List (ℕ × Fin (rank L))) (e : ℤ) :
 
 noncomputable def FLB (e : ℤ) :
     FockN (rank L) →ₗ[ℂ] (L.carrier →₀ ℂ) →ₗ[ℂ] Fld (MT L hEven C) :=
-  Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
-    Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven C α (monoWordN m) e))
+  (Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
+    Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven C α (monoWordN m) e))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 noncomputable def FL (e : ℤ) : LatModuleGen L →ₗ[ℂ] Fld (MT L hEven C) :=
   TensorProduct.lift (FLB L hEven C e)
@@ -143,8 +144,11 @@ theorem FL_monomial (e : ℤ) (m : (ℕ × Fin (rank L)) →₀ ℕ) (a : ℂ) (
       = (a * c) • Fw L hEven C α (monoWordN m) e := by
   rw [FL, TensorProduct.lift.tmul]
   have h1 : FLB L hEven C e (monomial m a)
-      = a • Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven C α (monoWordN m) e) :=
-    Finsupp.linearCombination_single ℂ a m
+      = a • Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven C α (monoWordN m) e) := by
+    show Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
+      Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven C α (monoWordN m) e))
+        (Finsupp.single m a) = _
+    exact Finsupp.linearCombination_single ℂ a m
   rw [h1, LinearMap.smul_apply, Finsupp.linearCombination_single, smul_smul]
 
 omit hPos in

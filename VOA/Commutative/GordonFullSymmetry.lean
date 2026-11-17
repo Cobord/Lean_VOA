@@ -113,8 +113,14 @@ theorem rename_cluster_clusterEval (m D : ℕ) (f : ρ → τ)
     rcases j with j | (j | (j | j)) <;> rfl
   rw [hp]
   change residualEval e (residualEval f (pairEval F)) = residualEval f (pairEval F)
-  apply (sumRingEquiv K τ (Residual α β γ)).injective
-  change sumToIter K τ (Residual α β γ) _ = sumToIter K τ (Residual α β γ) _
+  have hinj : Function.Injective (sumToIter K τ (Residual α β γ)) := by
+    have h : sumToIter K τ (Residual α β γ) = (sumRingEquiv K τ (Residual α β γ)).toRingHom := by
+      apply MvPolynomial.ringHom_ext
+      · intro c; simp [sumToIter_C]
+      · rintro (i | i) <;> simp [sumToIter_Xl, sumToIter_Xr]
+    rw [h]
+    exact (sumRingEquiv K τ (Residual α β γ)).injective
+  apply hinj
   simp only [sumToIter_residualEval]
   change rename e (rename f (sumToIter K ρ (Residual α β γ) (pairEval F))) = _
   rw [rename_rename]
@@ -123,7 +129,7 @@ theorem rename_cluster_clusterEval (m D : ℕ) (f : ρ → τ)
   intro j
   have hh := blockSize_equiv_comp f e (e.symm j)
   simp only [Equiv.apply_symm_apply] at hh
-  exact hh.trans (by simpa using (he (e.symm j)).symm)
+  exact hh.trans (by simpa using! (he (e.symm j)).symm)
 
 /-- All separate symmetries of the actual evaluated model. -/
 theorem rename_full_clusterEval (m D : ℕ) (f : ρ → τ)

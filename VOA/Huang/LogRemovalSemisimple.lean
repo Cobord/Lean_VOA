@@ -176,7 +176,6 @@ theorem logs_vanish {H : Type*} (T : (H → ℂ) →ₗ[ℂ] (H → ℂ)) (n : �
     by_cases h0 : r = 0
     · rw [h0, zero_pow (by omega), mul_zero]
     · have h' := hc r hr h0
-      simp only at h'
       rw [h', zero_mul]
   rw [hz] at hk'
   have hf : (k.factorial : ℂ) ≠ 0 := by exact_mod_cast (Nat.factorial_pos k).ne'

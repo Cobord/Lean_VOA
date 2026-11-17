@@ -25,6 +25,8 @@ the `a = 1` commutator formula with no side condition on the locality bound.
 
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open Module (End)
@@ -208,13 +210,13 @@ theorem W0H_lat : (V2m m hm).smul (Wlat m) 0 (bosonState (latP m) (a0 m)) =
     latStateGen (latP m) (evR (a0 m) [(60, [3])]) 0 := by
   have := W_smul_H m hm 0
   rw [show (-((0 : ℕ) : ℤ) - 1) = -1 by norm_num, W0H_cert] at this
-  simpa using this
+  simpa using! this
 
 theorem W1H_lat : (V2m m hm).smul (Wlat m) 1 (bosonState (latP m) (a0 m)) =
     latStateGen (latP m) (evR (a0 m) [(40, [2])]) 0 := by
   have := W_smul_H m hm 1
   rw [show (-((1 : ℕ) : ℤ) - 1) = -2 by norm_num, W1H_cert] at this
-  simpa using this
+  simpa using! this
 
 /-- Modes of the one-particle state `c·x_j` on charge-`0` states. -/
 theorem onePart_smul (c : ℚ) (j : ℕ) (n : ℤ) (p : FockN (rank (latP m))) :

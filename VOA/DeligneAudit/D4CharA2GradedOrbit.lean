@@ -49,7 +49,7 @@ theorem a2GradedKey_word_mem (p q : ℕ) (h : A2LocalWeylRel ρ w p q)
             ((a2LeviClosure ρ (a2HigherKeySpan ρ w q k)).mkQ v)
             (SectorGraded.wordDeg l + r) at hh
       simpa only [wordOp, SectorGraded.wordDeg, List.map_cons, List.sum_cons,
-        Nat.add_comm] using hh
+        Nat.add_comm] using! hh
 
 def gradedA2LeviOrbit (v : V) (d : ℕ) : Submodule ℂ V :=
   Submodule.span ℂ {z | ∃ l : List (Fin 8 × ℕ),
@@ -64,7 +64,7 @@ theorem a2GradedKey_orbit_le_lower (p q : ℕ) (h : A2LocalWeylRel ρ w p q)
   apply Submodule.map_le_iff_le_comap.mpr
   apply Submodule.span_le.mpr
   rintro z ⟨l, hl, hd, rfl⟩
-  simpa only [← hd] using a2GradedKey_word_mem ρ w p q h k hv l hl
+  simpa only [← hd] using! a2GradedKey_word_mem ρ w p q h k hv l hl
 
 /-- Graded replacement for `a2_key_levi_orbit_rank`, retaining the full Levi action. -/
 theorem a2GradedKey_orbit_bound (p q : ℕ) (h : A2LocalWeylRel ρ w p q)

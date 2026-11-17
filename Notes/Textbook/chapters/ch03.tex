@@ -450,7 +450,7 @@ noncomputable def YmonN (r : ℕ) (k : ℂ) (a : (ℕ × Fin r) →₀ ℕ) :
     FormalDist (End ℂ (FockN r)) := YwordN r k (monoWordN a)
 
 noncomputable def YN (r : ℕ) (k : ℂ) : FockN r →ₗ[ℂ] FormalDist (End ℂ (FockN r)) :=
-  Finsupp.linearCombination ℂ (YmonN r k)
+  (MvPolynomial.basisMonomials (ℕ × Fin r) ℂ).constr ℂ (YmonN r k)
 \end{leancode}
 
 \begin{dictionary}
@@ -1126,8 +1126,8 @@ noncomputable def YeαvecFam (α : L.carrier) (t : ℤ) (β : L.carrier) :
       (((TensorProduct.mk ℂ (FockN (rank L)) (L.carrier →₀ ℂ)).flip (eGen L (α + β))).comp
         (EEVec L α (t - L.form α β))))
 
-noncomputable def Yeαvec (α : L.carrier) (t : ℤ) : LatModuleGen L →ₗ[ℂ] LatModuleGen L :=
-  TensorProduct.lift (Finsupp.lsum ℂ (YeαvecFam L α t)).flip
+noncomputable def Yeαvec (α : L.carrier) : FormalDist (Module.End ℂ (LatModuleGen L)) :=
+  fun t => TensorProduct.lift (Finsupp.lsum ℂ (YeαvecFam L α t)).flip
 
 theorem Yeαvec_tmul (α β : L.carrier) (t : ℤ) (p : FockN (rank L)) :
     Yeαvec L α t (latStateGen L p β)

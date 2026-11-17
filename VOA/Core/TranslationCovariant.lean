@@ -301,7 +301,7 @@ theorem jacobi_fails :
 theorem translation_fails : VA.Y (VA.T xx) ≠ deriv (VA.Y xx) := by
   intro h
   have h1 := congrArg (fun F : FormalDist (End ℂ V) => F 1 vac 2) h
-  simp only at h1
+  try simp only at h1
   have hT : VA.T xx = 0 := by
     funext i
     show VA.smul xx (-2) vac i = 0

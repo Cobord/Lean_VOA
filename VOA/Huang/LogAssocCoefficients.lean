@@ -76,16 +76,14 @@ noncomputable def coefficientBlock (f : M₄ →ₗ[ℂ] ℂ) (z : M₃) (c β �
     have he := logCoeff_congr isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty
       (fun t ht => spectrum_add_left hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
         Y₁ Y₂ f x x' y z a b c β ht) (hF (x+x') y) (γ-a-b) k
-    dsimp only
     simp only [Submodule.coe_add,Submodule.coe_smul,F]
     rw [he]
-    simpa only [F,Pi.add_apply] using logCoeff_add isOpen_overlapDomain overlapDomain_subset
+    simpa only [F,Pi.add_apply] using! logCoeff_add isOpen_overlapDomain overlapDomain_subset
       overlapDomain_nonempty (hF x y) (hF x' y) (γ-a-b) k
   · intro s x y
     have he := logCoeff_congr isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty
       (fun t _ => spectrum_smul_left hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
         Y₁ Y₂ f x y z s a b c β t) (hF (s•x) y) (γ-a-b) k
-    dsimp only
     simp only [Submodule.coe_add,Submodule.coe_smul,F]
     rw [he,logCoeff_smul isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty s (hF x y)]
     rfl
@@ -93,16 +91,14 @@ noncomputable def coefficientBlock (f : M₄ →ₗ[ℂ] ℂ) (z : M₃) (c β �
     have he := logCoeff_congr isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty
       (fun t ht => spectrum_add_right hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
         Y₁ Y₂ f x y y' z a b c β ht) (hF x (y+y')) (γ-a-b) k
-    dsimp only
     simp only [Submodule.coe_add,Submodule.coe_smul,F]
     rw [he]
-    simpa only [F,Pi.add_apply] using logCoeff_add isOpen_overlapDomain overlapDomain_subset
+    simpa only [F,Pi.add_apply] using! logCoeff_add isOpen_overlapDomain overlapDomain_subset
       overlapDomain_nonempty (hF x y) (hF x y') (γ-a-b) k
   · intro s x y
     have he := logCoeff_congr isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty
       (fun t _ => spectrum_smul_right hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
         Y₁ Y₂ f x y z s a b c β t) (hF x (s•y)) (γ-a-b) k
-    dsimp only
     simp only [Submodule.coe_add,Submodule.coe_smul,F]
     rw [he,logCoeff_smul isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty s (hF x y)]
     rfl

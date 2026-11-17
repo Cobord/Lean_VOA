@@ -319,7 +319,6 @@ theorem dj23Comm_of_dj51 (W : VertexOperatorAlgebra 𝒱) (h51 : DJ51CoeffD) : D
     · intro x y hx hy
       show anmGen W N m p₁ a (x + y) - anmGen W N m p₂ (x + y) a
           - resExp W ((Kn : ℤ) - 1 + (m : ℤ) - (p₂ : ℤ)) a (x + y) ∈ Onm W N m
-      simp only at hx hy
       rw [anmGen_add_right, anmGen_add_left, resExp_add_right]
       have : anmGen W N m p₁ a x + anmGen W N m p₁ a y
           - (anmGen W N m p₂ x a + anmGen W N m p₂ y a)

@@ -61,7 +61,7 @@ theorem HasFiniteCoeffLattice.smul (c : ℂ) {f : PowerSeries ℂ}
 theorem HasFiniteCoeffLattice.sub {f g : PowerSeries ℂ}
     (hf : HasFiniteCoeffLattice f) (hg : HasFiniteCoeffLattice g) :
     HasFiniteCoeffLattice (f - g) := by
-  simpa only [neg_one_smul, sub_eq_add_neg] using hf.add (hg.smul (-1))
+  simpa only [neg_one_smul, sub_eq_add_neg] using! hf.add (hg.smul (-1))
 
 theorem HasFiniteCoeffLattice.mul {f g : PowerSeries ℂ}
     (hf : HasFiniteCoeffLattice f) (hg : HasFiniteCoeffLattice g) :
@@ -75,8 +75,8 @@ theorem HasFiniteCoeffLattice.mul {f g : PowerSeries ℂ}
 theorem HasFiniteCoeffLattice.pow {f : PowerSeries ℂ}
     (hf : HasFiniteCoeffLattice f) (n : ℕ) : HasFiniteCoeffLattice (f ^ n) := by
   induction n with
-  | zero => simpa using HasFiniteCoeffLattice.C 1
-  | succ n ih => simpa only [pow_succ] using ih.mul hf
+  | zero => simpa using! HasFiniteCoeffLattice.C 1
+  | succ n ih => simpa only [pow_succ] using! ih.mul hf
 
 /-- The explicit divisor-sum formula bounds all coefficients of a fixed Eisenstein series. -/
 theorem eisenstein_hasFiniteCoeffLattice {k : ℕ} (hk : 3 ≤ k) (hk2 : Even k) :
@@ -91,7 +91,7 @@ theorem eisenstein_hasFiniteCoeffLattice {k : ℕ} (hk : 3 ≤ k) (hk2 : Even k)
     rw [mul_comm]
     have h := L.smul_mem ((ArithmeticFunction.sigma (k - 1) n : ℕ) : ℤ)
       (Submodule.subset_span (show β ∈ ({1, β} : Set ℂ) by simp))
-    simpa only [zsmul_eq_mul, Int.cast_natCast] using h
+    simpa only [zsmul_eq_mul, Int.cast_natCast] using! h
 
 theorem discriminant_hasFiniteCoeffLattice :
     HasFiniteCoeffLattice (qExpansion 1 ModularForm.discriminant) := by

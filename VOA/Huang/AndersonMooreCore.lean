@@ -344,7 +344,7 @@ theorem conj_fixed_of_sClosed {n : ℕ} {ν : Fin n → ℂ} {U : Fin n → Powe
     simp only [w]; field_simp
   have hwk : ∀ k : ℕ, w + k ∈ imGT 0 := fun k => by
     change (0 : ℝ) < (w + k).im
-    simpa using hw
+    simpa using! hw
   have hδ := eq_zero_of_expPoly_eq_exp_mul (fun j => S i j * famF ν U j w) (tvec ν)
     (fun j => S' i j * famF ν' U j w) (tvec ν') (fun _ => Complex.exp_ne_zero _)
     (fun _ => Complex.exp_ne_zero _) (w := w) (δ := σ (ν i) - ν i) hw

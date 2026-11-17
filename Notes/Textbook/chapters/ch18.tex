@@ -1054,8 +1054,8 @@ $B_F(a^\alpha b^\beta,a^{\alpha'}b^{\beta'})=\delta_{\alpha\beta'}\delta_{\beta\
 in Lean \lean{hypForm} (\leanpath{VOA/Moonshine/MoonshineCNHyperbolicForm.lean}):
 \begin{leancode}
 def hypForm : LinearMap.BilinForm ℂ hypFock :=
-  Finsupp.lsum ℂ fun d =>
-    LinearMap.smulRight LinearMap.id (hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d))
+  (basisMonomials (ℕ × Fin 2) ℂ).constr ℂ fun d =>
+    hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d)
 \end{leancode}
 where \lean{hypSwapExponent} exchanges the two families and \lean{hypMonomialNorm d} is
 $\prod_v(\text{level of }v)^{d_v}\,d_v!$.  Chapter~\ref{ch:17} proves that $L^F$ satisfies the
@@ -1340,7 +1340,7 @@ $\mathrm{ev}_0:\Vnat\otimes F\to\Vnat$ be ``take the coefficient of the constant
 def vnatSectorEval : (Vnat ⊗[ℂ] hypFock) →ₗ[ℂ] Vnat :=
   (Finsupp.lapply 0).comp hypTensorCoordinates.toLinearMap
 theorem vnatSectorEval_tmul (v : Vnat) (p : hypFock) :
-    vnatSectorEval (v ⊗ₜ[ℂ] p) = coeff 0 p • v := hypTensorCoordinates_tmul v p 0
+    vnatSectorEval (v ⊗ₜ[ℂ] p) = p.coeff 0 • v := hypTensorCoordinates_tmul v p 0
 \end{leancode}
 (\leanpath{VOA/Moonshine/MoonshineCNVnatSectorEvaluation.lean}.)
 

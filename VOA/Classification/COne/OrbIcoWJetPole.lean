@@ -19,7 +19,7 @@ theorem JetApprox.pivot_factor {d v : ℕ} {den : ℂ → ℂ} {D : ℂ[X]}
   have ha0 : a.eval 0=D.coeff v := by
     rw [ha]
     exact a.coeff_zero_eq_eval_zero.symm.trans
-      (by simpa only [zero_add] using (Polynomial.coeff_X_pow_mul a v 0).symm)
+      (by simpa only [zero_add] using! (Polynomial.coeff_X_pow_mul a v 0).symm)
   obtain ⟨r,hr,hden⟩ := hden
   let u : ℂ → ℂ := fun t => a.eval (t-1)+(t-1)^(d-v)*r t
   have hu : ContinuousAt u 1 := by dsimp [u]; fun_prop
@@ -46,7 +46,7 @@ theorem JetApprox.cancel_pivot {d v : ℕ} {den f : ℂ → ℂ} {D J : ℂ[X]}
     (hu.eventually_ne hu0).filter_mono nhdsWithin_le_nhds
   have htn : ∀ᶠ t in 𝓝[≠] (1 : ℂ), t≠1 := by
     filter_upwards [self_mem_nhdsWithin] with t ht
-    simpa only [Set.mem_compl_iff,Set.mem_singleton_iff] using ht
+    simpa only [Set.mem_compl_iff,Set.mem_singleton_iff] using! ht
   filter_upwards [hden,herr,hun,htn] with t hd he hu ht
   have he' : u t*(f t-J.eval (t-1))=(t-1)^(d-v)*r t := by
     have htv : (t-1)^v≠0 := pow_ne_zero _ (sub_ne_zero.mpr ht)
@@ -55,7 +55,7 @@ theorem JetApprox.cancel_pivot {d v : ℕ} {den f : ℂ → ℂ} {D J : ℂ[X]}
     rw [he,Polynomial.eval_zero,zero_add]
     rw [← mul_assoc,← pow_add,show v+(d-v)=d by omega]
   have hdiv : f t-J.eval (t-1)=((t-1)^(d-v)*r t)/u t :=
-    (eq_div_iff hu).mpr (by simpa only [mul_comm] using he')
+    (eq_div_iff hu).mpr (by simpa only [mul_comm] using! he')
   calc
     f t=J.eval (t-1)+(f t-J.eval (t-1)) := by ring
     _=J.eval (t-1)+(t-1)^(d-v)*(r t/u t) := by rw [hdiv]; ring

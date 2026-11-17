@@ -39,11 +39,11 @@ theorem a2_f2_explicit_defect_reduces (p q : ℕ)
   have hlen : ys.length + k = b := by
     dsimp [ys]
     rw [a2_lst_length]
-    simpa using congrArg Prod.fst hw
+    simpa using! congrArg Prod.fst hw
   have hsum : ys.sum + s = d₂ := by
     dsimp [ys]
     rw [a2_lst_sum]
-    simpa using congrArg Prod.snd hw
+    simpa using! congrArg Prod.snd hw
   have hconvert := a2_f2_box_conversion_graded ρ w p q h
     k s hk hks xs ys
   have htarget :
@@ -54,7 +54,7 @@ theorem a2_f2_explicit_defect_reduces (p q : ℕ)
       (fun i => ρ.op 3 i) F hFF xs f k s w).symm
   rw [htarget] at hconvert
   have hdegree : xs.sum + ys.sum + s = xs.sum + d₂ := by omega
-  simpa only [F, hlen, hdegree] using hconvert
+  simpa only [F, hlen, hdegree] using! hconvert
 
 end VOA.DeligneAudit.A3Sector
 

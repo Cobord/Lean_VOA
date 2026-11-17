@@ -187,7 +187,7 @@ theorem Xico_grading : Xico ∈ Wi.grading 36 := by
   have h := T2_grad J6_hom
   change (TavI J6).val ∈ (V2m 1 le_rfl).grading _ 
   rw [TavI_coe icoInv_J6]
-  simpa using h
+  simpa using! h
 
 /-! ## The two channel eliminations in the orbifold -/
 
@@ -265,9 +265,9 @@ theorem mono_mem (a b c : ℕ) :
       exact Submodule.mem_sup_left (Submodule.mem_sup_right (Submodule.subset_span
         (by simp [Xico])))
     · simp only [pow_one, pow_zero, mul_one, one_mul]
-      exact O2_low_le_tgt (by simpa using TavI_J10_mem)
+      exact O2_low_le_tgt (by simpa using! TavI_J10_mem)
     · simp only [pow_one, pow_zero, mul_one, one_mul]
-      exact O2_low_le_tgt (by simpa using TavI_J15_mem)
+      exact O2_low_le_tgt (by simpa using! TavI_J15_mem)
   -- products
   apply O2_low_le_tgt
   by_cases ha : 1 ≤ a

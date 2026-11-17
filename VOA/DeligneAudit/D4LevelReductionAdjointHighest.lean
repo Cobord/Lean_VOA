@@ -59,7 +59,7 @@ theorem adjointKey_all_raise_zero (m a d : ℕ)
   apply positive_zero_of_simple (leviCurrent ρ) v _ e he s
   intro i r
   have hz := adjointKey_simple_raise_zero ρ w m a d h i r hv
-  fin_cases i <;> simpa [leviCurrent, leviSign, A3Sector.simpleE] using hz
+  fin_cases i <;> simpa [leviCurrent, leviSign, A3Sector.simpleE] using! hz
 
 /-- Positive simple Cartan currents increase the adjoint-key degree. -/
 theorem adjointKey_cartan_pos_mem (m a d : ℕ)
@@ -67,7 +67,7 @@ theorem adjointKey_cartan_pos_mem (m a d : ℕ)
     (s : ℕ) (hs : 0 < s) {v : V} (hv : v ∈ keyLayer ρ w (adjointLetterKey a d)) :
     ρ.op (leviColour (A3Sector.simpleH i)) s v ∈
       keyLayer ρ w (adjointLetterKey a (d + s)) := by
-  simpa [keyShift, adjointLetterKey] using
+  simpa [keyShift, adjointLetterKey] using!
     cartan_pos_maps_key ρ w m h i s hs (adjointLetterKey a d) hv
 
 /-- Positive modes of the extra reductive Cartan also increase degree. -/
@@ -75,7 +75,7 @@ theorem adjointKey_extra_pos_mem (m a d : ℕ)
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (s : ℕ) (hs : 0 < s) {v : V} (hv : v ∈ keyLayer ρ w (adjointLetterKey a d)) :
     ρ.op (0 : Fin 28) s v ∈ keyLayer ρ w (adjointLetterKey a (d + s)) := by
-  simpa [keyShift, adjointLetterKey] using
+  simpa [keyShift, adjointLetterKey] using!
     extra_pos_key ρ w m h s hs (adjointLetterKey a d) hv
 
 /-- The adjoint edge has the symmetric outer labels required by the mixed sl₄ bound. -/
@@ -87,7 +87,7 @@ theorem adjointKey_cartan_weight (a b d : ℕ)
   have hw := cartan_weight_key ρ w (a + b) h i (adjointLetterKey a d) hv
   fin_cases i <;>
     simpa [leviCurrent, leviSign, A3Sector.simpleH, A3Sector.weightABC,
-      keyLabel, adjointLetterKey, Nat.cast_add, Int.cast_add, Int.cast_sub] using hw
+      keyLabel, adjointLetterKey, Nat.cast_add, Int.cast_add, Int.cast_sub] using! hw
 
 end VOA.DeligneAudit.D4LevelReduction
 

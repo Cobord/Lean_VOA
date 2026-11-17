@@ -59,7 +59,7 @@ theorem dualC1_term_mem (N : LogVModule W M) (α : ℂ) {d : ℤ} (hd : 1 ≤ d)
     have hi : 2*(d : ℤ)-(-1)-2-(j : ℤ) = 2*(d : ℤ)-1-j := by ring
     rw [hi]
     rfl
-  · have h0 : (W.L 1 ^ j) a ∈ W.grading 0 := by simpa using hv
+  · have h0 : (W.L 1 ^ j) a ∈ W.grading 0 := by simpa using! hv
     rw [W.vacuum_grade,Submodule.mem_span_singleton] at h0
     obtain ⟨c,hc⟩ := h0
     have hz : C2Rigid.restrictToWeight N.toGW α
@@ -70,6 +70,7 @@ theorem dualC1_term_mem (N : LogVModule W M) (α : ℂ) {d : ℤ} (hd : 1 ≤ d)
         LinearMap.coe_mk,AddHom.coe_mk,LinearMap.zero_apply]
       rw [← hc,map_smul,N.toGW.vacuum_YM,mode_smul,mode_one,if_neg (by omega)]
       simp
+      exact map_zero g₀
     rw [hz]
     exact Submodule.zero_mem _
 
@@ -95,12 +96,31 @@ theorem component_mem_dualC1 (N : LogVModule W M) (α : ℂ)
     change DirectSum.component ℂ ℂ (fun β => Module.Dual ℂ (N.weight β)) α
       (DirectSum.lof ℂ ℂ (fun β => Module.Dual ℂ (N.weight β)) α
         (C2Rigid.restrictToWeight N.toGW α (C2Rigid.dualCompMap N.toGW d a (-1) (α-d) g₀))) ∈ _
-    rw [DirectSum.component.lof_self]
-    simp only [C2Rigid.dualCompMap,LinearMap.smul_apply,LinearMap.coeFn_sum,Finset.sum_apply,
-      map_smul,map_sum]
-    refine Submodule.smul_mem _ _ (Submodule.sum_mem _ fun j hj => Submodule.smul_mem _ _ ?_)
-    simp only [Finset.mem_range] at hj
-    exact dualC1_term_mem N α hd ha _ g₀ (by omega)
+    have e := DirectSum.component.lof_self (R := ℂ) (ι := ℂ)
+      (M := fun β => Module.Dual ℂ (N.weight β)) α
+      (C2Rigid.restrictToWeight N.toGW α (C2Rigid.dualCompMap N.toGW d a (-1) (α-d) g₀))
+    refine Eq.mpr (congrArg (· ∈ dualC1Part N α) e) ?_
+    have key : ∀ j ∈ Finset.range (d.toNat + 1),
+        ((j.factorial : ℂ)⁻¹) • C2Rigid.restrictToWeight N.toGW α
+          (LinearMap.lcomp ℂ ℂ (C2Rigid.dualTargetOp N.toGW d a (-1) (α - d) j) g₀) ∈
+            dualC1Part N α :=
+      fun j hj => Submodule.smul_mem _ _
+        (dualC1_term_mem N α hd ha _ g₀ (by have := Finset.mem_range.mp hj; omega))
+    have hmem := Submodule.smul_mem (dualC1Part N α) ((-1 : ℂ) ^ d)
+      (Submodule.sum_mem (dualC1Part N α) key)
+    refine (Iff.of_eq (congrArg (· ∈ dualC1Part N α) ?_)).mpr hmem
+    -- State the expansion for a functional typed via `N.toGW.weight` (the
+    -- domain of `dualCompMap`), so the rewrites see a well-typed target.
+    have h1 : ∀ g : Module.Dual ℂ (N.toGW.weight (α - d)),
+        C2Rigid.restrictToWeight N.toGW α (C2Rigid.dualCompMap N.toGW d a (-1) (α - d) g) =
+          (-1 : ℂ) ^ d • ∑ j ∈ Finset.range (d.toNat + 1), ((j.factorial : ℂ)⁻¹) •
+            C2Rigid.restrictToWeight N.toGW α
+              (LinearMap.lcomp ℂ ℂ (C2Rigid.dualTargetOp N.toGW d a (-1) (α - d) j) g) := by
+      intro g
+      rw [C2Rigid.dualCompMap, LinearMap.smul_apply, LinearMap.sum_apply, map_smul, map_sum]
+      refine congrArg _ (Finset.sum_congr rfl fun j _ => ?_)
+      rw [LinearMap.smul_apply, map_smul]
+    exact h1 g₀
   | zero => erw [map_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => erw [map_add]; exact Submodule.add_mem _ hx hy
   | smul c x _ hx => erw [map_smul]; exact Submodule.smul_mem _ c hx
@@ -117,6 +137,6 @@ theorem dualC1_generalized_cutoff (hC2 : C2Cofinite W) (N : LogVModule W M)
     (f.domRestrict (N.weight α))
   have hφ : φ ∈ (contraLog N).weight α := ⟨_,rfl⟩
   have hc := component_mem_dualC1 N α (hb α hα hφ)
-  simpa only [φ,DirectSum.component.lof_self] using hc
+  simpa only [φ,DirectSum.component.lof_self] using! hc
 
 end VOA.LogTensor.ModuleC2

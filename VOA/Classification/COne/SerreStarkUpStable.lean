@@ -94,7 +94,7 @@ theorem thetaSq_law [hpf : Fact p.Prime] {N : ℕ} (hN : 0 < N) (h24 : 24 ∣ N)
     refine Int.modEq_iff_dvd.2 ⟨g 0 1 * g 0 1 * m, ?_⟩
     rw [hm] at hdet
     linear_combination (g 0 1) * hdet
-  have hu' : 0 < (u + k).im := by simpa using hu
+  have hu' : 0 < (u + k).im := by simpa using! hu
   have hlaw := thetaSq_law_diag h24 ℓ hℓcop (g 1 1) hℓℓ g₂ h00 h11 h01 h10 hu'
   have hmob : mobius g₂ (u + k) = mobius g u := by
     simp only [mobius, e00, e01, e10, e11]
@@ -121,7 +121,7 @@ theorem upCoprime (hpN : (p : ℤ) ∣ N) {γ : SL(2, ℤ)} (hγ : γ ∈ Congru
   have hpc : (p : ℤ) ∣ γ 1 0 := hpN.trans hc
   have hpa : (p : ℤ) ∣ γ 0 0 := by
     have := dvd_sub h (dvd_mul_of_dvd_right hpc b)
-    simpa using this
+    simpa using! this
   have h1 : (p : ℤ) ∣ γ 0 0 * γ 1 1 - γ 0 1 * γ 1 0 :=
     dvd_sub (dvd_mul_of_dvd_left hpa _) (dvd_mul_of_dvd_right hpc _)
   rw [det_SL' γ] at h1

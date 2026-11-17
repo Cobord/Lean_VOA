@@ -142,9 +142,9 @@ theorem summable_cbz_pow (a : ℤ) {y : ℂ} (hy : ‖y‖ < 1) :
       rw [e]
       have h0 : Tendsto (fun r : ℕ => ((a : ℂ) + 1) / ((r : ℂ) + 1)) atTop (𝓝 0) := by
         have := tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℂ)
-        simpa [div_eq_mul_one_div ((a : ℂ) + 1)] using this.const_mul ((a : ℂ) + 1)
-      simpa using h0.sub_const 1
-    simpa using h1.norm
+        simpa [div_eq_mul_one_div ((a : ℂ) + 1)] using! this.const_mul ((a : ℂ) + 1)
+      simpa using! h0.sub_const 1
+    simpa using! h1.norm
   have hpos : ‖y‖ < q := by rw [hq]; linarith
   rcases eq_or_ne y 0 with hy0 | hy0
   · have hq0 : 0 ≤ q := by rw [hq]; positivity
@@ -193,7 +193,7 @@ theorem hasSum_cbz_pow (a : ℤ) {y : ℂ} (hy : ‖y‖ < 1) :
     have hs2 : Summable fun r : ℕ =>
         (if r = 0 then 0 else y * (cbz (a - 1) (r - 1 : ℕ) * y ^ (r - 1))) := by
       rw [← summable_nat_add_iff 1]
-      simpa using hs.mul_left y
+      simpa using! hs.mul_left y
     rw [tsum_congr e, hs.tsum_add hs2, hs2.tsum_eq_zero_add]
     simp only [if_true, zero_add, Nat.add_sub_cancel, Nat.add_one_ne_zero, if_false]
     rw [tsum_mul_left]
@@ -322,15 +322,14 @@ theorem prodCoeff_assoc_left {Y₁ : IntertwiningModes M₁ M₅ M₄}
   have J := hY₁.jacobi u w₁ q ℓ 0 n
   have hRHS := finsum_eq_single (fun i : ℤ =>
       cbz 0 i • Y₁ (((0 : ℤ) : ℂ) + n - i) (mode (A₁.YM u) (ℓ + i) w₁) q) 0
-    (fun i hi => by simp only; rw [cbz_zero_left, if_neg hi, zero_smul])
+    (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])
   have hLHS := finsum_eq_sum_range (R := R) (g := fun i : ℤ => (negOnePow i * cbz ℓ i) •
       (mode (A₄.YM u) (ℓ + 0 - i) (Y₁ (n + i) w₁ q)
         - negOnePow ℓ • Y₁ (ℓ + n - i) w₁ (mode (A₅.YM u) (0 + i) q)))
-    (fun i hi => by simp only; rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
+    (fun i hi => by rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
     (fun i hi => by
       have e1 : Y₁ (n + i) w₁ q = 0 := hR₁ i (by omega)
       have e2 : mode (A₅.YM u) (0 + i) q = 0 := hR₂ _ (by omega)
-      simp only
       rw [e1, e2, map_zero, map_zero, smul_zero, sub_zero, smul_zero])
   rw [hRHS, hLHS] at J
   have J' := congrArg f J
@@ -600,17 +599,16 @@ theorem prodCoeff_assoc_right {Y₁ : IntertwiningModes M₁ M₅ M₄}
   have J := hY₂.jacobi u w₂ w₃ ℓ 0 n₂
   have hRHS := finsum_eq_single (fun i : ℤ =>
       cbz 0 i • Y₂ (((0 : ℤ) : ℂ) + n₂ - i) (mode (A₂.YM u) (ℓ + i) w₂) w₃) 0
-    (fun i hi => by simp only; rw [cbz_zero_left, if_neg hi, zero_smul])
+    (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])
   have hLHS := finsum_eq_sum_range (R := R) (g := fun i : ℤ => (negOnePow i * cbz ℓ i) •
       (mode (A₅.YM u) (ℓ + 0 - i) (Y₂ (n₂ + i) w₂ w₃)
         - negOnePow ℓ • Y₂ (ℓ + n₂ - i) w₂ (mode (A₃.YM u) (0 + i) w₃)))
-    (fun i hi => by simp only; rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
+    (fun i hi => by rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
     (fun i hi => by
       have e1 : Y₂ (n₂ + i) w₂ w₃ = 0 := hR₁ i (by omega)
       obtain ⟨i', rfl⟩ : ∃ i' : ℕ, i = i' := ⟨i.toNat, by omega⟩
       have e2 : mode (A₃.YM u) (0 + (i' : ℤ)) w₃ = 0 := by
         rw [zero_add]; exact h₃ i' (by omega)
-      simp only
       rw [e1, e2, map_zero, map_zero, smul_zero, sub_zero, smul_zero])
   rw [hRHS, hLHS] at J
   have J' := congrArg (fun x => f (Y₁ n w₁ x)) J

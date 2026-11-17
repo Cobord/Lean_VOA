@@ -153,7 +153,8 @@ theorem spectralDecomposition_apply_of_mem (A : Module.End ℂ B) (l : ℂ)
       (fun t => A.maxGenEigenspace t) l ⟨x, hx⟩ := by
   classical
   apply (spectralDecomposition A).symm.injective
-  simp [spectralDecomposition]
+  rw [LinearEquiv.symm_apply_apply]
+  exact (DirectSum.coeLinearMap_of (A := fun t => A.maxGenEigenspace t) l ⟨x, hx⟩).symm
 
 /-- The operator acting by an arbitrary scalar on each generalized eigenspace. -/
 noncomputable def spectralWeight (A : Module.End ℂ B) (c : ℂ → ℂ) : Module.End ℂ B := by
@@ -441,7 +442,7 @@ theorem polynomialCurve_eq_zero_value_of_rigid (mul : B →ₗ[ℂ] B →ₗ[ℂ
       simp only [Polynomial.eval_sub, Polynomial.eval_smul, curvePairPolynomial_eval,
         curveLinearPolynomial_eval, he k, map_smul, sub_self]
     have hd := congrArg (fun q : Polynomial ℂ => q.derivative.eval (n : ℂ)) hid
-    dsimp only at hd
+    try dsimp only at hd
     rw [curvePairPolynomial_derivative, Polynomial.eval_add,
       curvePairPolynomial_eval, curvePairPolynomial_eval, Polynomial.derivative_smul,
       Polynomial.eval_smul, curveLinearPolynomial_derivative, curveLinearPolynomial_eval] at hd
@@ -540,8 +541,8 @@ theorem unipotent_fix_of_rigid (mul : B →ₗ[ℂ] B →ₗ[ℂ] B)
     (fun k => by rw [horbit k, ← equiv_pow_mul mul U hU, he, map_smul])
     (fun k => by rw [horbit k]; exact rigid_image mul (U ^ k) (equiv_pow_mul mul U hU k) e hrig)
     1
-  simpa only [← Nat.cast_one (R := ℂ), ← Nat.cast_zero (R := ℂ), horbit, pow_one, pow_zero] using
-    hcurve
+  simpa only [← Nat.cast_one (R := ℂ), ← Nat.cast_zero (R := ℂ), horbit, pow_one, pow_zero,
+    LinearEquiv.coe_one, id_eq] using hcurve
 
 /-- Taking a power of an operator raises each generalized eigenvalue to that power. -/
 theorem maxGenEigenspace_pow_mem (A : Module.End ℂ B) (l : ℂ) (k : ℕ) {x : B}

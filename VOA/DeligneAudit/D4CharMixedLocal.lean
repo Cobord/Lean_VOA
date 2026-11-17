@@ -90,7 +90,7 @@ theorem gtMixedSeed_bits (q : R) (h : PochhammerUnits q) (c : ℤ) (N : ℕ)
           gtMixedTailAction q f (fun i => lam i.succ.succ.succ) else 0) := by
   have hs := gtMixedSeed_path q h c N f lam
   simpa only [gtCauchyPath_eq_bitCoeff, gtCauchyBond, Bool.not_true,
-    Bool.and_false, Bool.false_eq_true, ↓reduceIte, one_mul] using hs
+    Bool.and_false, Bool.false_eq_true, ↓reduceIte, one_mul] using! hs
 
 /-- The exact finite-subset form consumed by e-Pieri at rank five (take N = 2). -/
 theorem gtMixedSeed_subsets (q : R) (h : PochhammerUnits q) (c : ℤ) (N : ℕ)

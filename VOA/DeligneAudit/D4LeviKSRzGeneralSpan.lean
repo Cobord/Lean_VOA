@@ -38,7 +38,7 @@ theorem rzOrbitRelationSpan_le_ker
           ((Finset.univ.toList : List (Fin l)).map β).sum + s) := by
     rw [hdeg]
     exact hkey
-  simpa [hdeg] using rzTargetGenerator_mem_ker ρ w m i a b k l s
+  simpa [hdeg] using! rzTargetGenerator_mem_ker ρ w m i a b k l s
     α β h hk hks hi hkey'
 
 end VOA.DeligneAudit.D4Levi

@@ -109,7 +109,7 @@ theorem hhState_mem_grading : hhState ∈ WU.grading 2 := by
   have h0 : vacuumA 1 ∈ WU.grading 0 := vacuum_mem_grading_zero bNoncritical
   have h1 := J_mem_grading bNoncritical colH (-1) h0
   have h2 := J_mem_grading bNoncritical colH (-1) h1
-  simpa [hhState] using h2
+  simpa [hhState] using! h2
 
 theorem sugawaraDefect_mem_grading : sugawaraDefect ∈ WU.grading 2 :=
   Submodule.sub_mem _ WU.conformal_mem (Submodule.smul_mem _ _ hhState_mem_grading)

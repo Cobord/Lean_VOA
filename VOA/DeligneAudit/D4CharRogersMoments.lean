@@ -21,7 +21,7 @@ theorem rsMon_zero (c : D4K.Kq) : D4K.mon 0 c = algebraMap D4K.Kq D4K.R c := rfl
 
 theorem rsKillX (a : ℤ) : D4K.killX (a • D4K.xv) = 0 := by
   have h := D4K.killX_add_xv 0 a
-  simpa [D4K.killX] using h
+  simpa [D4K.killX] using! h
 
 /-- The actual theta map on H_n is the finite Gaussian theta convolution. -/
 theorem ctTheta_rsH_sum (n : ℕ) :

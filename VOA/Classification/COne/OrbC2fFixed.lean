@@ -108,15 +108,25 @@ theorem plusCubic_ne_one : plusCubic ≠ 1 := by
   simp only [map_add, map_smul, Submodule.coe_add, Submodule.coe_smul,
     plusToKlein_E, plusToKlein_J] at he'
   rw [cubicE_eq_charges, cubicJ_eq_neutral] at he'
+  -- 4.35: `coordEα_apply` no longer fires inside `norm_num` on ℤ-typed charges; evaluate
+  -- the three coordinates explicitly.
+  have hA : coordEα (latP 1) ((2 : ℤ) : (latP 1).carrier) (latChargeGen (latP 1) (2 : ℤ)) =
+      vacuumN (latP 1).rank :=
+    (coordEα_apply (latP 1) _ _ _).trans (if_pos rfl)
+  have hB : coordEα (latP 1) ((2 : ℤ) : (latP 1).carrier) (latChargeGen (latP 1) (-2 : ℤ)) =
+      0 :=
+    (coordEα_apply (latP 1) _ _ _).trans
+      (if_neg (by intro h; have hh : (2 : ℤ) = -2 := h; omega))
+  have hC : coordEα (latP 1) ((2 : ℤ) : (latP 1).carrier) (ls 1 JR) = 0 :=
+    (coordEα_apply (latP 1) _ _ _).trans
+      (if_neg (by intro h; have hh : (2 : ℤ) = 0 := h; omega))
   have hc := congrArg (coordEα (latP 1) ((2 : ℤ) : (latP 1).carrier)) he'
-  simp only [map_add, map_smul] at hc
-  norm_num [ls, latChargeGen, latStateGen, coordEα_apply] at hc
-  split_ifs at hc with h₁ h₂
-  all_goals first
-    | assumption
-    | (rename_i hz; have hh : (2 : ℤ) = 0 := hz; omega)
-    | (have hh : (2 : ℤ) = -2 := h₁; omega)
-    | (have hd := congrArg MvPolynomial.constantCoeff hc; norm_num [vacuumN] at hd)
+  simp only [map_add, map_smul, hA, hB, hC, smul_zero, add_zero, zero_add] at hc
+  have h3 : (3 / 2 : ℂ) • vacuumN (latP 1).rank = 0 := by
+    linear_combination (norm := module) hc
+  have h0 : vacuumN (latP 1).rank = 0 :=
+    (smul_eq_zero.mp h3).resolve_left (by norm_num)
+  exact (one_ne_zero : vacuumN (latP 1).rank ≠ 0) h0
 
 theorem plusCubic_order : orderOf plusCubic = 3 :=
   orderOf_eq_prime plusCubic_cube plusCubic_ne_one

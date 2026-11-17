@@ -113,7 +113,7 @@ theorem fiberEdge12 (N P Q R : LogModuleCat W)
   have he := associator_block_fiber hC2 N (tensorObject hC2 P Q) R a γ d β
     x u w (s+r) 1 (add_pos hs hD.1) one_pos (by linarith [hD.2.2]) f
   simp only [Complex.ofReal_one,Complex.log_one,Complex.ofReal_add,← add_assoc] at he
-  simpa only [fivePointTerm,fiveEdge12,u] using he.symm
+  simpa only [fivePointTerm,fiveEdge12,u] using! he.symm
 
 -- Actual fixed-weight fourfold block types require a larger elaboration budget.
 set_option maxHeartbeats 3000000 in
@@ -130,7 +130,7 @@ theorem fiberEdge04 (N P Q R : LogModuleCat W)
   have he := associator_block_fiber hC2 (tensorObject hC2 N P) Q R γ c d β
     u z w s 1 hs one_pos (by linarith [hD.2.2,hD.1]) f
   simp only [Complex.ofReal_one,Complex.log_one] at he
-  simpa only [fivePointTerm,fiveEdge04,u,pointTensor_eq_block hC2 Q R 0 c d] using he.symm
+  simpa only [fivePointTerm,fiveEdge04,u,pointTensor_eq_block hC2 Q R 0 c d] using! he.symm
 
 -- Actual fixed-weight fourfold block types require a larger elaboration budget.
 set_option maxHeartbeats 3000000 in
@@ -148,7 +148,7 @@ theorem fiberEdge43 (N P Q R : LogModuleCat W)
   have he := associator_block_fiber hC2 N P (tensorObject hC2 Q R) a b δ β
     x y u r (1+s) hD.1 (by linarith) (by linarith [hD.2.1]) f
   simp only [Complex.ofReal_add,Complex.ofReal_one] at he
-  simpa only [fivePointTerm,fiveEdge43,u,pointTensor_eq_block hC2 N P (Complex.log r) a b] using he.symm
+  simpa only [fivePointTerm,fiveEdge43,u,pointTensor_eq_block hC2 N P (Complex.log r) a b] using! he.symm
 
 
 -- Actual fixed-weight fourfold block types require a larger elaboration budget.

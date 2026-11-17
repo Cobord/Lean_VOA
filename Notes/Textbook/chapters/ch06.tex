@@ -716,9 +716,31 @@ field
 quantified over \emph{every} $k$, with no coset hypothesis (its support field uses the opposite
 sign convention, \texttt{(k - j) \% (N : ℤ) ≠ 0}).  The same choice $u=w=\mathbf 1$ (even, $p=q=0$,
 Koszul sign $1$), $\ell=-1$, $k=1$, $m=-N-1$ gives $0=x$ by the identical computation, so for
-$N\ge2$ no nonzero module satisfies it.  This certificate is argued on paper; no Lean theorem
-states it for \lean{SuperTwistedModule}.  The name occurs in eleven files of the library (its own
-file included).  \textbf{Any theorem whose hypotheses include a \lean{SuperTwistedModule} with
+$N\ge2$ no nonzero module satisfies it.  This is now a library theorem.  File
+\leanpath{VOA/\allowbreak Modules/\allowbreak SuperTwistedModuleZero.lean}:
+\begin{leancode}
+theorem superTwistedModule_eq_zero {W : SuperVertexOperatorAlgebra 𝒱} {g : SuperAut W}
+    {N : ℕ} (hN : 2 ≤ N) {M : Type v} [AddCommGroup M] [Module ℂ M]
+    (T : SuperTwistedModule W g N M) (x : M) : x = 0 := by
+
+theorem superTwistedModule_subsingleton {W : SuperVertexOperatorAlgebra 𝒱} {g : SuperAut W}
+    {N : ℕ} (hN : 2 ≤ N) {M : Type v} [AddCommGroup M] [Module ℂ M]
+    (T : SuperTwistedModule W g N M) : Subsingleton M :=
+
+theorem superTwistedModule_weight_eq_bot {W : SuperVertexOperatorAlgebra 𝒱} {g : SuperAut W}
+    {N : ℕ} (hN : 2 ≤ N) {M : Type v} [AddCommGroup M] [Module ℂ M]
+    (T : SuperTwistedModule W g N M) (α : ℂ) : T.weight α = ⊥ := by
+
+theorem parityTwistedModule_eq_zero {W : SuperVertexOperatorAlgebra 𝒱} {M : Type v}
+    [AddCommGroup M] [Module ℂ M] (T : W.ParityTwistedModule M) (x : M) : x = 0 :=
+\end{leancode}
+(namespace \lean{VOA.SuperTwistedModule}).  The only hypothesis is \lean{hN : 2 ≤ N}; the conclusion
+\lean{x = 0} for every \lean{x : M} says that the carrier is the zero space, \lean{T.weight α = ⊥}
+that every weight space is zero, and \lean{W.ParityTwistedModule M} abbreviates
+\lean{SuperTwistedModule W W.parityAut 2 M} (the Ramond sector).  The proof is exactly the
+instance of \lean{jacobi} described above.  Status: proved; axioms standard
+(\texttt{\#print axioms}: \lean{[propext, Classical.choice, Quot.sound]}).  The name occurs in thirteen files of the library (its own
+file and \leanpath{SuperTwistedModuleZero.lean} included, the import umbrella \leanpath{VOA/Modules.lean} not counted).  \textbf{Any theorem whose hypotheses include a \lean{SuperTwistedModule} with
 $N\ge 2$ may be vacuously true.}  The repair is a decision left to the maintainers.  The Moonshine
 construction does not use \lean{SuperTwistedModule}.
 \end{warning}
@@ -1055,12 +1077,12 @@ theorem thetaT_modeT (r : ℕ) (i : Fin r) (k : ℤ) (p : FockT r) :
 \noindent File \leanpath{VOA/Moonshine/TwistedHeisenberg.lean}.
 \begin{leancode}
 theorem thetaT_eq_self_iff (r : ℕ) (p : FockT r) :
-    thetaT r p = p ↔ ∀ m, coeff m p ≠ 0 → Even m.degree
+    thetaT r p = p ↔ ∀ m, p.coeff m ≠ 0 → Even m.degree
 \end{leancode}
 \noindent File \leanpath{VOA/Moonshine/TwistedHeisenberg.lean}.
 \begin{leancode}
 theorem thetaT_eq_neg_iff (r : ℕ) (p : FockT r) :
-    thetaT r p = -p ↔ ∀ m, coeff m p ≠ 0 → Odd m.degree
+    thetaT r p = -p ↔ ∀ m, p.coeff m ≠ 0 → Odd m.degree
 \end{leancode}
 \noindent File \leanpath{VOA/Moonshine/TwistedHeisenberg.lean}.
 \begin{leancode}
@@ -2039,6 +2061,7 @@ Lean declaration & Intended meaning & Hypotheses & Fidelity\\
 \lean{jacobiAllIndices_eq_zero} & old all-indices Jacobi forces $M=0$ for $N\ge2$ & $N\ge2$, vacuum & Thm.~\ref{ch06:thm:defect}\\
 \lean{twistedJacobi_of_twistedModule} & repaired field $=$ \lean{TwistedJacobi} & uncond. & Prop.~\ref{ch06:prop:twjac}\\
 \lean{SuperTwistedModule.jacobi} & same defect, \textbf{not repaired} & --- & warning, \S\ref{ch06:sec:nothinglost}\\
+\lean{SuperTwistedModule.}\allowbreak\lean{superTwistedModule_eq_zero} & it forces $M=0$ for $N\ge2$ & $N\ge2$ & warning, \S\ref{ch06:sec:nothinglost}\\
 \lean{modeT_comm} & $[h_i(\frac k2),h_j(\frac l2)]=\frac k2\delta_{ij}\delta_{k+l,0}$ & $k,l$ odd & Thm.~\ref{ch06:thm:modeTcomm}\\
 \lean{weightT_isInternal}, \lean{weightT_vacuum}, \lean{finrank_weightT_half}, \lean{weightT_eq_bot_of_lt} & $S[\theta]=\bigoplus S_q$, ground state $r/16$, next level dim $r$ & uncond. & Thm.~\ref{ch06:thm:gradingT}\\
 \lean{thetaT_modeT}, \lean{thetaT_eq_self_iff} & $\theta$ anticommutes with modes; fixed $=$ even oscillator number & uncond. & Thm.~\ref{ch06:thm:thetaT}\\

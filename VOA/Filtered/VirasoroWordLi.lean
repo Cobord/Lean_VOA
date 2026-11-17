@@ -280,8 +280,9 @@ private theorem wordAct_mem_virWordPiece :
       exact negWordVir_mem_virWordPiece c 0 [] (Nat.zero_le _)
   | cons a rest ih =>
       rw [wordAct_cons, wordLevel_cons]
-      simpa only [PreVertexAlgebra.smul_def, Nat.add_comm] using
-        virWordNegativeModeClosed c (wordLevel rest) a.2.2 a.1 ih
+      have h := virWordNegativeModeClosed c (wordLevel rest) a.2.2 a.1 ih
+      simp only [PreVertexAlgebra.smul_def, Nat.add_comm] at h ⊢
+      exact h
 
 /-- Hard inclusion: every Li-filtration vector is a combination of creation words of at least
 the same depth. -/

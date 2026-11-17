@@ -216,8 +216,9 @@ theorem whc_jetLi_eq_zero (p N : ℕ) (h : N < p) (φ : JetPoly ℂ (Fin 8) p) :
     weightedHomogeneousComponent (jetLiBidegree (fun _ : Fin 8 => 1) p) (p, N) φ = 0 := by
   classical
   ext e
-  rw [coeff_weightedHomogeneousComponent, CarrierEmbedding.weight_jetLiBidegree_one, coeff_zero]
+  rw [coeff_weightedHomogeneousComponent, CarrierEmbedding.weight_jetLiBidegree_one]
   rw [if_neg]
+  · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   intro h1
   have h2 := Prod.ext_iff.mp h1
   simp only at h2
@@ -417,7 +418,7 @@ theorem auxLift_count (p : ℕ) (f : JetPoly ℂ (Fin 8) p) :
     rw [map_mul, auxLift, rename_X, ← auxLift]
     have := hf.mul (isWeightedHomogeneous_X ℂ (auxCnt p)
       (⟨Sum.inl v.generator, v.order⟩ : JetVar AuxVar p))
-    simpa [auxCnt, auxCount] using this
+    simpa [auxCnt, auxCount] using! this
 
 theorem casI_lift (p : ℕ) (b : JetPoly ℂ (Fin 8) p) (hb : b ∈ casI p) :
     ∃ F : JetPoly ℂ AuxVar p, F.IsWeightedHomogeneous (auxCnt p) 1 ∧ auxJetSubst p F = b := by
@@ -444,7 +445,7 @@ theorem casI_lift (p : ℕ) (b : JetPoly ℂ (Fin 8) p) (hb : b ∈ casI p) :
   | smul a x _ hx =>
     obtain ⟨F, hF, rfl⟩ := hx
     refine ⟨auxLift p a * F, ?_, ?_⟩
-    · simpa using (auxLift_count p a).mul hF
+    · simpa using! (auxLift_count p a).mul hF
     · rw [map_mul, auxJetSubst_auxLift, smul_eq_mul]
 
 theorem casI_pow_lift (p : ℕ) : ∀ (d : ℕ) (g : JetPoly ℂ (Fin 8) p), g ∈ casI p ^ d →

@@ -284,7 +284,7 @@ def liftHom (r : ℕ) : MvPolynomial (Fin r) ℂ →+* MvPowerSeries (Fin r) Jet
   (MvPowerSeries.map (algebraMap ℂ JetPoly)).comp MvPolynomial.coeToMvPowerSeries.ringHom
 
 theorem coeff_liftHom (r : ℕ) (γ : MvPolynomial (Fin r) ℂ) (a : Fin r →₀ ℕ) :
-    MvPowerSeries.coeff a (liftHom r γ) = algebraMap ℂ JetPoly (MvPolynomial.coeff a γ) := by
+    MvPowerSeries.coeff a (liftHom r γ) = algebraMap ℂ JetPoly (γ.coeff a) := by
   simp [liftHom, MvPowerSeries.coeff_map, MvPolynomial.coeff_coe]
 
 theorem serDM_liftHom_mul {r : ℕ} (T : JetPoly →ₗ[ℂ] JetPoly) (γ : MvPolynomial (Fin r) ℂ)
@@ -374,7 +374,7 @@ theorem jetCalc_zprod (r : ℕ) {F : MvPolynomial ℕ ℂ} (hF : F ∈ cartanIde
     (cartanCalc_zSeries r F)
   have hF' : cartanEval r F = 0 := hF
   rw [hF', map_zero, zero_mul, map_zero, coeff_serDM, coeff_zSeries] at h
-  simpa using h
+  simpa using! h
 
 theorem jetCalc_span_zprod (r : ℕ) {F : MvPolynomial ℕ ℂ} (hF : F ∈ cartanIdeal r) :
     ∀ x ∈ Submodule.span ℂ (Set.range (zprod (r := r))), jetCalc F x = 0 := by

@@ -57,11 +57,11 @@ theorem completedLogProduct_eq_canonical_iterate_supported
       hfg₁ hfg₂ hfg₃ hfg₄ hfgT Υ η hx hy f z c β γ k
     have hm : f (Υ.1 (γ+c-β-1) 0 (η.1 (a+b-γ-1) k x y) z)=
         coefficient hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ f z c β γ k x y := by
-      simpa only [Υ,η,tensorOuterIntertwiner_zero] using
+      simpa only [Υ,η,tensorOuterIntertwiner_zero] using!
         tensorOuterModes_innerPair hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
           Y₁ Y₂ hx hy hz f hf γ k
     have he := hpc.symm.trans (hm.symm.trans hic.symm)
-    simpa only [P,I,hγ] using he
+    simpa only [P,I,hγ] using! he
   have hfun := eqOn_of_logCoeff_eq isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty hP hI hcoeff t ht
   have heP := completedLogProduct_eq_spectrum hC2 N₁ N₂ N₃ N₄ N₅
     hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ hx hy hz f β ht

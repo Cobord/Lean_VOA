@@ -340,7 +340,7 @@ theorem tau_PiM : tau PiM = Qa * Qb * etaR := by
 
 theorem Qc_eq : Qc = (1 + PowerSeries.C (mono (-1)) * X) * Qb := by
   rw [Qc, infProd_succ (pfA' _), Qb]
-  congr 1
+  refine congrArg₂ (· * ·) ?_ ?_
   all_goals first | ring | exact infProd_congr fun k => by ring_nf
 
 theorem Denm_eq : Denm = Qa * Qc := by

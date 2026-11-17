@@ -47,36 +47,36 @@ theorem jetVarNat_base (i : Fin 8) : jetVarNat i.val = jetBase (MvPolynomial.X i
 variable {A : Type*} [CommRing A] [Algebra ℂ A]
 
 def seriesJetDerivation : Derivation ℂ (PowerSeries A) (PowerSeries A) :=
-  (PowerSeries.derivative A).restrictScalars ℂ
+  (PowerSeries.derivative (R := A)).restrictScalars ℂ
 
 def jetEvaluate (v : Fin 8 → PowerSeries A) : JetRing →ₐ[ℂ] PowerSeries A :=
   MvPolynomial.aeval (fun x =>
-    ((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[x.2]) (v x.1))
+    ((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[x.2]) (v x.1))
 
 theorem jetEvaluate_X (v : Fin 8 → PowerSeries A) (x : JetVar) :
     jetEvaluate v (MvPolynomial.X x) =
-      ((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[x.2]) (v x.1) :=
+      ((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[x.2]) (v x.1) :=
   MvPolynomial.aeval_X _ _
 
 theorem jetEvaluate_jetVarNat (v : Fin 8 → PowerSeries A) (n : ℕ) :
     jetEvaluate v (jetVarNat n) =
-      ((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[n/8])
+      ((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[n/8])
         (v ⟨n%8,by omega⟩) := jetEvaluate_X v _
 
 /-- Every polynomial jet, not only a bounded jet image, intertwines. -/
 theorem jetEvaluate_raise (v : Fin 8 → PowerSeries A) (p : JetRing) :
-    jetEvaluate v (jetRaise p) = PowerSeries.derivative A (jetEvaluate v p) := by
+    jetEvaluate v (jetRaise p) = PowerSeries.derivative (R := A) (jetEvaluate v p) := by
   apply map_derivation_to (jetEvaluate v) jetRaise seriesJetDerivation
   intro x
   rw [jetRaise_X,jetEvaluate_X,jetEvaluate_X]
-  change ((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[x.2+1]) (v x.1) =
-    PowerSeries.derivative A
-      (((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[x.2]) (v x.1))
+  change ((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[x.2+1]) (v x.1) =
+    PowerSeries.derivative (R := A)
+      (((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[x.2]) (v x.1))
   exact Function.iterate_succ_apply' _ _ _
 
 theorem jetEvaluate_iterate (v : Fin 8 → PowerSeries A) (p : JetRing) (a : ℕ) :
     jetEvaluate v (((jetRaise : JetRing → JetRing)^[a]) p) =
-      ((PowerSeries.derivative A : PowerSeries A → PowerSeries A)^[a]) (jetEvaluate v p) := by
+      ((PowerSeries.derivative (R := A) : PowerSeries A → PowerSeries A)^[a]) (jetEvaluate v p) := by
   induction a with
   | zero => rfl
   | succ a ih =>
@@ -100,7 +100,7 @@ theorem currentJetEvaluate_base (m : ℕ) (p : P8 ℂ) :
 /-- Exact transfer of every whole ordinary derivative of every color polynomial. -/
 theorem currentJetEvaluate_iterate_base (m a : ℕ) (p : P8 ℂ) :
     currentJetEvaluate m (((jetRaise : JetRing → JetRing)^[a]) (jetBase p)) =
-      ((PowerSeries.derivative (MvPolynomial (Vars m) ℂ) : _ → _)^[a]) (currentMap m p) := by
+      ((PowerSeries.derivative (R := MvPolynomial (Vars m) ℂ) : _ → _)^[a]) (currentMap m p) := by
   rw [currentJetEvaluate,jetEvaluate_iterate]
   rw [← currentJetEvaluate_base m p]
   rfl

@@ -20,7 +20,7 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] [RightRigidCategory 
 theorem halfBraiding_unit (X : Center C) :
     (X.2.β (𝟙_ C)).hom = (ρ_ X.1).hom ≫ (λ_ X.1).inv := by
   simpa only [Center.comp_f, Center.braiding_hom_f, Center.rightUnitor_hom_f,
-    Center.leftUnitor_inv_f] using congrArg Center.Hom.f (braiding_tensorUnit_right X)
+    Center.leftUnitor_inv_f] using! congrArg Center.Hom.f (braiding_tensorUnit_right X)
 
 /-- Sliding a half-braiding across a coevaluation, including the unitors. -/
 theorem halfBraiding_coevaluation (X : Center C) (U : C) :
@@ -51,6 +51,7 @@ theorem generalizedRotation_zero_apply (P : Pivotal C) (X : Center C) (V : C)
     (λ_ V).hom = _
   dsimp [centerRotation, homCongr, leftDuality, rightDuality,
     tensorLeftHomEquiv, tensorRightHomEquiv]
+  simp only [whiskerLeftIso_hom, Iso.symm_hom, Category.id_comp]
   monoidal
 
 @[reassoc]
@@ -114,8 +115,8 @@ theorem generalizedRotation_one_scalar (P : Pivotal C) (X : Center C) (V : C)
     have hh : t • (centralDrinfeldMorphism X ≫ (P.j X.1).inv) = 𝟙 X.1 := by
       rw [← Linear.smul_comp, ← hj, Iso.hom_inv_id]
     rw [← hh, smul_smul, inv_mul_cancel₀ ht, one_smul]
-  rw [generalizedRotation_one_centralDrinfeld, ← Category.assoc, hu]
-  simp
+  rw [generalizedRotation_one_centralDrinfeld, ← Category.assoc, hu, Linear.smul_comp,
+    Category.id_comp]
 
 /-- Degree-one generalized indicators, including negative integer powers. -/
 theorem generalizedIndicatorInt_one_scalar (F : SphericalFusion C) (X : Center C) (V : C)

@@ -396,8 +396,8 @@ theorem djLU_bottom_U_apply (y : (djLU Pr U hU h hL0).weight h)
   have hsymm : (djLU_bottom_equiv Pr U hU h hL0).symm y = ⟨z, hzw⟩ :=
     LU_bottom_equiv_symm_eq (djGradedLW_of_pbwDatum Pr U hU h hL0) ⟨z, hzw⟩ y hy
   rw [djLU_bottom_U]
-  simp only [LinearEquiv.trans_apply, hsymm]
-  rfl
+  exact (congrArg (fun v => djCarrierWeak_bottom_equiv Pr U
+    (LinearEquiv.ofEq _ _ (djCWeight_zero U h) v)) hsymm).trans rfl
 
 /-- **`L(U)(0) ≅ U` AS `A₀(𝒱)`-MODULES** — the round trip `forwardMap [L(U)] = [U]` at the level
 of the underlying bundled `A₀(𝒱)`-modules.  The equivalence `djLU_bottom_U` intertwines the module

@@ -130,7 +130,9 @@ exponential fields `E⁻`/`E⁺` of the oscillator part.  All act *only on the l
 /-- The **group-algebra shift** `e^{mα}` on `ℂ{ℤ}`: `e^{nα} ↦ ε(m,n)·e^{(m+n)α}`, i.e.
 `single n c ↦ ε(m,n)·single (m+n) c` (the cocycle-twisted left translation by `m`). -/
 noncomputable def eL (m : ℤ) : LatGrp →ₗ[ℂ] LatGrp :=
-  Finsupp.lsum ℂ (fun (n : ℤ) => (cocycle m n) • (AddMonoidAlgebra.lsingle (m + n) : ℂ →ₗ[ℂ] LatGrp))
+  (Finsupp.lsum ℂ (fun (n : ℤ) => (cocycle m n) •
+    (AddMonoidAlgebra.lsingle (m + n) : ℂ →ₗ[ℂ] LatGrp))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- The value of the group-algebra shift on a generator:
 `e^{mα}(e^{nα}) = ε(m,n)·e^{(m+n)α}`. -/
@@ -169,7 +171,9 @@ theorem eShift_comp_latState (m m' n : ℤ) :
 /-- The **grading operator** `α₀ = ⟨α,·⟩` on `ℂ{ℤ}`: diagonal, acting by `⟨α,nα⟩ = 2n` on the
 lattice point `e^{nα}` (`single n c ↦ (2n)·single n c`). -/
 noncomputable def zGradeL : LatGrp →ₗ[ℂ] LatGrp :=
-  Finsupp.lsum ℂ (fun (n : ℤ) => ((2 * n : ℤ) : ℂ) • (AddMonoidAlgebra.lsingle n : ℂ →ₗ[ℂ] LatGrp))
+  (Finsupp.lsum ℂ (fun (n : ℤ) => ((2 * n : ℤ) : ℂ) •
+    (AddMonoidAlgebra.lsingle n : ℂ →ₗ[ℂ] LatGrp))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem zGradeL_eVec (n : ℤ) : zGradeL (eVec n) = ((2 * n : ℤ) : ℂ) • eVec n := by
   rw [zGradeL]

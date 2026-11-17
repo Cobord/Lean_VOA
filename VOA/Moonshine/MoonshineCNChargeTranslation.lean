@@ -208,7 +208,8 @@ theorem frameTranslation_canonicalChargedField_on_state  (β : L.carrier) (s : �
             - dressingField F β (s - L.form β γ) (HeisenbergN.LvirN (rank L) 1 (-1) p)
             + frameOscillator F (β + γ) (-1) (dressingField F β (s - L.form β γ) p)
             - dressingField F β (s - L.form β γ) (frameOscillator F γ (-1) p) from by abel,
-      hp, show s + 1 - L.form β γ = (s - L.form β γ) + 1 from by ring, LinearMap.smul_apply]
+      hp, show s + 1 - L.form β γ = (s - L.form β γ) + 1 from by ring]
+    try rw [LinearMap.smul_apply]
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply, canonicalChargedField_tmul, map_smul,
     frameTranslation_tmul, frameTranslation_tmul, map_add, canonicalChargedField_tmul, canonicalChargedField_tmul, smul_add,
     ← latStateGen_smul_boson, ← latStateGen_smul_boson, ← latStateGen_smul_boson,

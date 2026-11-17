@@ -68,7 +68,7 @@ theorem isPreconnected_outside {s : ℝ} (hs : s = 1 ∨ s = -1) : IsPreconnecte
     ext r
     constructor
     · rintro ⟨him, hn⟩
-      have him1 : 0 < s * (1 + r).im := by simpa using him
+      have him1 : 0 < s * (1 + r).im := by simpa using! him
       have harg := sign_arg_mem hs him1
       refine ⟨(‖1 + r‖, s * Complex.arg (1 + r)), ⟨hn, harg.1, harg.2⟩, ?_⟩
       simp only [hφ]
@@ -210,7 +210,7 @@ theorem exists_halfPlane_glue {s : ℝ} (hs : s = 1 ∨ s = -1) {p : Phase} (hp 
   have S3 : Set.EqOn (fA F s K d N) (PhiT s d N Φ) {r | 1 < s * r.im} := by
     obtain ⟨hz1, hz2⟩ := point_mem s hs (-3) 2
     refine eqOn_of_convex (convex_sim_gt s 1) ?_ ?_
-      ((isOpen_re_lt (-2)).inter (isOpen_sim_gt s 1)) Set.inter_subset_right
+      ((HexagonClose.isOpen_re_lt (-2)).inter (isOpen_sim_gt s 1)) Set.inter_subset_right
       (z₀ := (-3 : ℝ) + ((2 * s : ℝ) : ℂ) * Complex.I) ⟨?_, ?_⟩ ?_
     · refine DifferentiableOn.analyticOnNhd (fun r hr' => ?_) (isOpen_sim_gt s 1)
       have hr' : 1 < s * r.im := hr'
@@ -278,18 +278,18 @@ theorem exists_halfPlane_glue {s : ℝ} (hs : s = 1 ∨ s = -1) {p : Phase} (hp 
     obtain ⟨hz1, hz2⟩ := point_mem s hs (-1 / 4) (1 / 4)
     refine eqOn_of_convex ((convex_re_gt _).inter (convex_Lh s)) ?_ ?_
       (O := (Metric.ball (-1 / 2 : ℂ) (1 / 2) ∩ {r : ℂ | -1 / 2 < r.re}) ∩ Lh s)
-      ((Metric.isOpen_ball.inter (isOpen_re_gt _)).inter (isOpen_Lh s))
+      ((Metric.isOpen_ball.inter (HexagonClose.isOpen_re_gt _)).inter (isOpen_Lh s))
       (fun r hr' => ⟨hr'.1.2, hr'.2⟩)
       (z₀ := ((-1 / 4 : ℝ) : ℂ) + (((1 / 4) * s : ℝ) : ℂ) * Complex.I)
       ⟨⟨?_, ?_⟩, ?_⟩ ?_
     · refine DifferentiableOn.analyticOnNhd (fun r hr' => ?_)
-        ((isOpen_re_gt _).inter (isOpen_Lh s))
+        ((HexagonClose.isOpen_re_gt _).inter (isOpen_Lh s))
       have hre : -1 / 2 < r.re := hr'.1
       have him : 0 < s * r.im := hr'.2
       exact (differentiableAt_fD F hV s K d (mem_slitPlane_of_sim hs him)
         (mem_slitPlane_of_sim hs (by rwa [sim_one_add])) (norm_lt_norm_one_add hre)
         ).differentiableWithinAt
-    · exact hPhi _ ((isOpen_re_gt _).inter (isOpen_Lh s)) Set.inter_subset_right
+    · exact hPhi _ ((HexagonClose.isOpen_re_gt _).inter (isOpen_Lh s)) Set.inter_subset_right
     · rw [Metric.mem_ball, dist_eq_norm]
       have : ((-1 / 4 : ℝ) : ℂ) + (((1 / 4) * s : ℝ) : ℂ) * Complex.I - -1 / 2 =
           ((1 / 4 : ℝ) : ℂ) + (((1 / 4) * s : ℝ) : ℂ) * Complex.I := by push_cast; ring
@@ -335,7 +335,9 @@ theorem exists_halfPlane_glue {s : ℝ} (hs : s = 1 ∨ s = -1) {p : Phase} (hp 
     have hb : r ∈ Metric.ball (-1 : ℂ) 1 ∩ Lh s := by
       refine ⟨?_, him⟩
       rw [Metric.mem_ball, dist_eq_norm, sub_neg_eq_add, add_comm]; exact hn
-    rw [← S6 hb, fC, hGcG, one_add_exp_ellM hs hr0 h10]
+    rw [← S6 hb]
+    unfold fC
+    rw [hGcG, one_add_exp_ellM hs hr0 h10]
     rfl
   · -- the `b`-outermost channel
     intro r him hre

@@ -30,9 +30,9 @@ theorem keyVectorOrbit_inv (v : V) (a : Fin 28) (r : ℕ)
         (by simp only [List.forall_cons]; exact ⟨ha, hl⟩)
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (keyVectorOrbit ρ v).add_mem hx hy
+      simpa using! (keyVectorOrbit ρ v).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (keyVectorOrbit ρ v).smul_mem c hx
+      simpa using! (keyVectorOrbit ρ v).smul_mem c hx
 
 private theorem signed_word_mem (v : V) :
     ∀ l : List (Fin 15 × ℕ),

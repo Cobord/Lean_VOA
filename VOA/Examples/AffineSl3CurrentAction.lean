@@ -13,6 +13,8 @@ The eight actual currents are assembled using the proved matrix
 coordinates. Their bracket is the actual matrix commutator plus the
 trace cocycle, with no Lie-representation hypothesis.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical
@@ -34,7 +36,7 @@ theorem currentBasis_bracket (k : ℂ) (a b : Fin 8) (m n : ℤ) :
   fin_cases a <;> fin_cases b
   all_goals
     simp only [bracketTable,formTable,currentBasis,Fin.sum_univ_succ]
-    norm_num only [Matrix.cons_val_zero,Matrix.cons_val_succ,Matrix.cons_val_zero',
+    norm_num only [Matrix.cons_val,Matrix.cons_val_zero,Matrix.cons_val_succ,Matrix.cons_val_zero',
       Matrix.cons_val_succ',Matrix.head_cons,
       Matrix.tail_cons,Fin.reduceFinMk,zero_smul,one_smul,neg_smul,zero_add,add_zero,
       mul_zero,mul_one,Fin.sum_univ_zero]

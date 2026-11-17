@@ -20,9 +20,13 @@ theorem matrixFirst_det_check :
 
 theorem matrixFirst_det_sum :
     Matrix.det (fun i j => zp (matrixFirst i j)) = zp detSumFirst := by
-  rw [det_fin_four_formula]
+  rw [det_fin_four_formula (fun i j => zp (matrixFirst i j) : Matrix (Fin 4) (Fin 4) (Polynomial ℂ))]
   simp only [detSumFirst, zp_paddL, detTermFirst0_sound, detTermFirst1_sound, detTermFirst2_sound, detTermFirst3_sound,
-    commonMinor0_sound, commonMinor1_sound, commonMinor2_sound, commonMinor3_sound, Matrix.det_fin_three]
+    commonMinor0_sound, commonMinor1_sound, commonMinor2_sound, commonMinor3_sound,
+    Matrix.det_fin_three (fun i k => zp (commonMinorMatrix0 i k) : Matrix (Fin 3) (Fin 3) (Polynomial ℂ)),
+    Matrix.det_fin_three (fun i k => zp (commonMinorMatrix1 i k) : Matrix (Fin 3) (Fin 3) (Polynomial ℂ)),
+    Matrix.det_fin_three (fun i k => zp (commonMinorMatrix2 i k) : Matrix (Fin 3) (Fin 3) (Polynomial ℂ)),
+    Matrix.det_fin_three (fun i k => zp (commonMinorMatrix3 i k) : Matrix (Fin 3) (Fin 3) (Polynomial ℂ))]
   simp [matrixFirst, commonMinorMatrix0, commonMinorMatrix1, commonMinorMatrix2, commonMinorMatrix3,
     Matrix.cons_val_two, Matrix.cons_val_three]
   ring
@@ -32,7 +36,7 @@ theorem matrixFirst_det_factorization :
       Polynomial.C (detScalarFirst : ℂ) * zp icoCandidateList * zp icoExtra9 := by
   rw [matrixFirst_det_sum]
   have hh := zp_eq_of_trim matrixFirst_det_check
-  simpa only [zp_pscaleL, zp_pmulL, mul_assoc] using hh
+  simpa only [zp_pscaleL, zp_pmulL, mul_assoc] using! hh
 
 theorem detScalarFirst_nonzero : detScalarFirst ≠ 0 := by
   decide +kernel

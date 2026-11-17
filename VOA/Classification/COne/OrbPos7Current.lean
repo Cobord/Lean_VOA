@@ -33,7 +33,7 @@ theorem rescaledField_sector_off {n : ℕ} (hn : 0 < n) (a j β e : ℤ)
   rw [shiftedY_latState]
   apply sectorField_support
   simpa only [show (n : ℤ)*(-t-1)+e-a*β = (n : ℤ)*(-t-1)+(e - a * β) by ring,
-    Int.add_emod, Int.mul_emod_right, zero_add, Int.emod_emod] using he
+    Int.add_emod, Int.mul_emod_right, zero_add, Int.emod_emod] using! he
 
 /-- Creation recursion for every state and every residue offset. -/
 theorem current_creation {n : ℕ} (hn : 0 < n) (a j e : ℤ) (k : ℕ) (v : Space) :
@@ -57,11 +57,12 @@ theorem current_creation {n : ℕ} (hn : 0 < n) (a j e : ℤ) (k : ℕ) (v : Spa
       rfl
     rw [hs]
     by_cases he : (e - a * β) % (n : ℤ) = 0
-    · unfold rescaledField
-      dsimp only [LinearMap.coe_mk, AddHom.coe_mk]
-      rw [resc_sector_polynomial hn a j β e he p,
-        resc_sector_polynomial hn a j β e he (MvPolynomial.X (k, a0 1) * p),
-        prod_fzmul_right, delta_creation]
+    · have h1 := resc_sector_polynomial hn a j β e he p
+      have h2 := resc_sector_polynomial hn a j β e he (MvPolynomial.X (k, a0 1) * p)
+      change Fld.prod _ _ (rescFld hn (shiftedY_truncation hn a j (latStateGen (latP 1) p β)) e) =
+        rescFld hn (shiftedY_truncation hn a j
+          (latStateGen (latP 1) (MvPolynomial.X (k, a0 1) * p) β)) e
+      rw [h1, h2, prod_fzmul_right, delta_creation]
     · rw [rescaledField_sector_off hn a j β e he, rescaledField_sector_off hn a j β e he,
         prod_zero_right]
   exact congrArg (fun f : Space →ₗ[ℂ] Fld Space => f v) hh
@@ -132,7 +133,7 @@ theorem rescaledField_vacuum_zero {n : ℕ} (hn : 0 < n) (a j : ℤ) :
 theorem h_product_nonneg (ℓ : ℤ) (hℓ : 0 ≤ ℓ) :
     (V2m 1 le_rfl).smul h ℓ h =
       if ℓ = 1 then (V2m 1 le_rfl).vacuum else 0 := by
-  simpa only [and_true] using Moonshine.LatticeTwistedGeneral.smul_hgen_hgen_nonneg
+  simpa only [and_true] using! Moonshine.LatticeTwistedGeneral.smul_hgen_hgen_nonneg
     (latP 1) (latP_even 1) (latP_posDef 1 le_rfl) (a0 1) (a0 1) hℓ
 
 theorem word_cons (c : ℕ × Fin (rank (latP 1)))

@@ -30,12 +30,12 @@ theorem a2KeyLayer_homogeneous (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
   have hr (l : List (Fin 2 × ℕ)) :
       radicalWord (a2RadicalOp ρ) l • w ∈ g.piece (l.map Prod.snd).sum := by
     induction l with
-    | nil => simpa [radicalWord] using hw
+    | nil => simpa [radicalWord] using! hw
     | cons x l ih =>
         exact g.op_piece (if x.1 = 0 then 3 else 5) x.2 _ _ ih
   apply Submodule.span_le.mpr
   rintro z ⟨l, _, _, hd, _, rfl⟩
-  simpa only [hd] using hr l
+  simpa only [hd] using! hr l
 
 theorem a2KeyPrefix_projection (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
     (p q N i : ℕ) (hi : i ≤ (a2KeyBox p q).card) :
@@ -55,7 +55,7 @@ theorem a2KeyEnum_first_le (p q : ℕ) (i : Fin (a2KeyBox p q).card) :
   simp only [a2KeyBox, Finset.mem_biUnion, Finset.mem_image] at hmem
   obtain ⟨a, ha, b, _, d, _, hkey⟩ := hmem
   have heq : a = (a2KeyEnum p q i).d₁ := by
-    simpa using congrArg A2RadicalKey.d₁ hkey
+    simpa using! congrArg A2RadicalKey.d₁ hkey
   have := Finset.mem_range.mp ha
   omega
 
@@ -109,7 +109,7 @@ theorem a2ProjectedStep_bound (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
         omega
       refine ⟨hh.1, ?_⟩
       simpa only [L, if_pos hd, gl2Hilb_remove_shift (q + k.d₁) k.d₂ _
-        (by have := hb j; omega), he] using hh.2
+        (by have := hb j; omega), he] using! hh.2
     · have hp := colourOrbit_projection_zero g a2Levi k.degree N (hgrade j)
         (by omega)
       change (a2LeviClosure ρ (ℂ ∙ (v j : V))).map (g.proj N) = ⊥ at hp
@@ -121,7 +121,7 @@ theorem a2ProjectedStep_bound (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
     (fun j => (horbit j).1) (fun j => (horbit j).2)
   refine ⟨hs.1, hs.2.trans ?_⟩
   have hm' := Nat.mul_le_mul_left L hm
-  simpa only [L, a2GradedKeyContribution, ite_mul, zero_mul] using hm'
+  simpa only [L, a2GradedKeyContribution, ite_mul, zero_mul] using! hm'
 
 end
 

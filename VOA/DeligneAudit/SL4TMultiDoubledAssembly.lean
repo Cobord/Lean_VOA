@@ -64,7 +64,7 @@ theorem truncatedWeyl_sl4_multiDoubledSite_rank_le_of_flags (B k : ℕ) (hk : 2 
       Module.finrank ℂ (TruncatedLabelModule 0 B 0 (B - k)) ≤ 20 ^ k * 6 ^ (B - 2 * k) := by
   by_cases hk0 : k = 0
   · subst k
-    simpa using truncatedLabelModule_finite_and_local_bound 0 B 0 B
+    simpa using! truncatedLabelModule_finite_and_local_bound 0 B 0 B
   let R := truncatedWeylSpec (weightABC 0 B 0) (B - k)
   let ρ := univRepG bracketTable R
   let w := wUG bracketTable R

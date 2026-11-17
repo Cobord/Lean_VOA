@@ -108,7 +108,7 @@ theorem word_transfer (A : WeakModule W M) (B : WeakModule W N) (χ : VOA.A W �
     Module.End.eigenspace_le_maxGenEigenspace (Module.End.mem_eigenspace_iff.mpr hxL)
   by_cases hd0 : d = 0
   · subst hd0
-    obtain ⟨c, h1, h2⟩ := evalW_zero_scalar A B χ hx he hχx hχe hxL heL F (by simpa using hF)
+    obtain ⟨c, h1, h2⟩ := evalW_zero_scalar A B χ hx he hχx hχe hxL heL F (by simpa using! hF)
     rw [hFe] at h2
     have hc : c = 0 := (smul_eq_zero.mp h2.symm).resolve_right he0
     rw [h1, hc, zero_smul]

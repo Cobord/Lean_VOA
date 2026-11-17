@@ -33,7 +33,7 @@ theorem prodSeries_log_mem (S ν : ℂ) (k l : ℕ) :
   intro t ht
   have hs := summable_log_product hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
     Y₁ Y₂ f x y z (S-ν) ν k l ht
-  simpa only [coeff_prodSeries,prodCoeff] using hs
+  simpa only [coeff_prodSeries,prodCoeff] using! hs
 
 /-- Differentiation of the literal complete integer coset is the source L(-1) insertion. -/
 theorem hasDerivAt_fullCoset (a b : ℂ) {t : ℂ} (ht : t∈overlapDomain) :

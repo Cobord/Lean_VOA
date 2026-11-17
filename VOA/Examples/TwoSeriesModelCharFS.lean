@@ -105,13 +105,13 @@ variable {s : ℕ}
 open Classical in
 /-- The value of `ψ_F` on a monomial. -/
 def cF (F : MvPolynomial (Fin s) ℂ) (e : ℕ →₀ ℕ) : ℂ :=
-  if h : ∃ j : Fin s → ℕ, monoOf j = e then coeff (toF h.choose) F else 0
+  if h : ∃ j : Fin s → ℕ, monoOf j = e then F.coeff (toF h.choose) else 0
 
 /-- Symmetry of a polynomial. -/
 def Symm (F : MvPolynomial (Fin s) ℂ) : Prop := ∀ σ : Equiv.Perm (Fin s), rename σ F = F
 
 theorem coeff_toF_perm {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (j : Fin s → ℕ)
-    (σ : Equiv.Perm (Fin s)) : coeff (toF (fun i => j (σ i))) F = coeff (toF j) F := by
+    (σ : Equiv.Perm (Fin s)) : F.coeff (toF (fun i => j (σ i))) = F.coeff (toF j) := by
   have h := coeff_rename_mapDomain σ σ.injective F (toF (fun i => j (σ i)))
   rw [hF σ] at h
   rw [← h]
@@ -121,7 +121,7 @@ theorem coeff_toF_perm {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (j : Fin s �
   simp
 
 theorem cF_monoOf {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (j : Fin s → ℕ) :
-    cF F (monoOf j) = coeff (toF j) F := by
+    cF F (monoOf j) = F.coeff (toF j) := by
   have h : ∃ j' : Fin s → ℕ, monoOf j' = monoOf j := ⟨j, rfl⟩
   rw [cF, dif_pos h]
   obtain ⟨σ, hσ⟩ := exists_perm_of_monoOf_eq h.choose_spec
@@ -135,23 +135,23 @@ theorem cF_eq_zero {F : MvPolynomial (Fin s) ℂ} {e : ℕ →₀ ℕ} (he : e.d
   exact he (degree_monoOf j)
 
 /-- The Feigin–Stoyanovsky functional `ψ_F` on `ℂ[T_j]`. -/
-def ψF (F : MvPolynomial (Fin s) ℂ) : TPoly →ₗ[ℂ] ℂ := Finsupp.linearCombination ℂ (cF F)
+def ψF (F : MvPolynomial (Fin s) ℂ) : TPoly →ₗ[ℂ] ℂ :=
+  (Finsupp.linearCombination ℂ (cF F)).comp (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem ψF_monomial (F : MvPolynomial (Fin s) ℂ) (e : ℕ →₀ ℕ) (a : ℂ) :
     ψF F (monomial e a) = a * cF F e := by
-  rw [ψF, ← single_eq_monomial]
-  erw [Finsupp.linearCombination_single]
-  rw [smul_eq_mul]
+  change Finsupp.linearCombination ℂ (cF F) (Finsupp.single e a) = a * cF F e
+  rw [Finsupp.linearCombination_single, smul_eq_mul]
 
 theorem ψF_apply (F : MvPolynomial (Fin s) ℂ) (p : TPoly) :
-    ψF F p = ∑ e ∈ p.support, coeff e p * cF F e := by
+    ψF F p = ∑ e ∈ p.support, p.coeff e * cF F e := by
   conv_lhs => rw [p.as_sum]
   rw [map_sum]
   exact Finset.sum_congr rfl fun e _ => ψF_monomial F e _
 
 /-- The generating function: `ψ_F (T_{j_1} ⋯ T_{j_s}) = [x^j] F`. -/
 theorem ψF_prod_X {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (j : Fin s → ℕ) :
-    ψF F (∏ i, X (j i)) = coeff (toF j) F := by
+    ψF F (∏ i, X (j i)) = F.coeff (toF j) := by
   rw [prod_X_eq_monomial, ψF_monomial, one_mul, cF_monoOf hF]
 
 /-! ### Lower bounds on the `T`-degree -/
@@ -217,10 +217,10 @@ theorem ψF_eq_zero_of_lowDeg (F : MvPolynomial (Fin s) ℂ) {p : TPoly} (hp : l
 /-! ### Lower bounds on the `T`-degree of the coefficients -/
 
 /-- Every coefficient (in `u_j, v_j`) has `T`-degree `≥ k`. -/
-def LowM (k : ℕ) (Q : MPoly TPoly) : Prop := ∀ m, lowDeg k (coeff m Q)
+def LowM (k : ℕ) (Q : MPoly TPoly) : Prop := ∀ m, lowDeg k (Q.coeff m)
 
 theorem LowM.add {k : ℕ} {P Q : MPoly TPoly} (hP : LowM k P) (hQ : LowM k Q) : LowM k (P + Q) :=
-  fun m => by rw [coeff_add]; exact lowDeg_add (hP m) (hQ m)
+  fun m => by rw [MvPolynomial.coeff_add]; exact lowDeg_add (hP m) (hQ m)
 
 theorem LowM.sub {k : ℕ} {P Q : MPoly TPoly} (hP : LowM k P) (hQ : LowM k Q) : LowM k (P - Q) :=
   fun m => by rw [coeff_sub]; exact lowDeg_sub (hP m) (hQ m)
@@ -229,7 +229,7 @@ theorem LowM.smul {k : ℕ} {P : MPoly TPoly} (c : ℂ) (hP : LowM k P) : LowM k
   fun m => by rw [coeff_smul]; exact lowDeg_smul c (hP m)
 
 theorem LowM.zero (k : ℕ) : LowM k (0 : MPoly TPoly) := fun m => by
-  rw [coeff_zero]; exact lowDeg_zero k
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]; exact lowDeg_zero k
 
 theorem LowM.sum {k : ℕ} {ι : Type*} (S : Finset ι) (f : ι → MPoly TPoly)
     (h : ∀ i ∈ S, LowM k (f i)) : LowM k (∑ i ∈ S, f i) := fun m => by
@@ -254,8 +254,8 @@ theorem LowM.C {k : ℕ} {p : TPoly} (hp : lowDeg k p) : LowM k (MvPolynomial.C 
 
 theorem LowM.C_mul_ι {k : ℕ} {p : TPoly} (hp : lowDeg k p) (P : JetPoly) :
     LowM k (MvPolynomial.C p * ι TPoly P) := by
-  have h := LowM.mul (LowM.C hp) (fun m => lowDeg_zero_left (coeff m (ι TPoly P)))
-  simpa using h
+  have h := LowM.mul (LowM.C hp) (fun m => lowDeg_zero_left ((ι TPoly P).coeff m))
+  simpa using! h
 
 theorem LowM.ι (P : JetPoly) : LowM 0 (ι TPoly P) := fun _ => lowDeg_zero_left _
 
@@ -263,13 +263,14 @@ theorem LowM.ι (P : JetPoly) : LowM 0 (ι TPoly P) := fun _ => lowDeg_zero_left
 theorem Φ_ψF_eq_zero (F : MvPolynomial (Fin s) ℂ) {Q : MPoly TPoly} (hQ : LowM (s + 1) Q) :
     VOA.TwoSeries.StrictModel.Φ TPoly (ψF F) Q = 0 := by
   ext m
-  rw [VOA.TwoSeries.StrictModel.coeff_Φ, coeff_zero]
+  rw [VOA.TwoSeries.StrictModel.coeff_Φ]
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   exact ψF_eq_zero_of_lowDeg F (hQ m)
 
 /-! ### The jet ideal -/
 
 theorem coeff_tSer_sq (m : ℕ) :
-    PowerSeries.coeff m (tSer ^ 2) = ∑ p ∈ Finset.antidiagonal m, X p.1 * X p.2 := by
+    PowerSeries.coeff m (tSer ^ 2) = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal m, X p.1 * X p.2 := by
   rw [pow_two, PowerSeries.coeff_mul]
   simp [tSer]
 
@@ -303,8 +304,8 @@ theorem toF_cons_cons_sub' (a b : ℕ) {s' : ℕ} (j : Fin s' → ℕ) :
 
 /-- The coefficient of `x_0 · G` and `x_1 · G` at a cons-exponent. -/
 theorem coeff_X0_mul (G : MvPolynomial (Fin (s + 2)) ℂ) (a b : ℕ) (j : Fin s → ℕ) :
-    coeff (toF (Fin.cons a (Fin.cons b j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ)) (X 0 * G) =
-      if 1 ≤ a then coeff (toF (Fin.cons (a - 1) (Fin.cons b j : Fin (s + 1) → ℕ))) G
+    (X 0 * G).coeff (toF (Fin.cons a (Fin.cons b j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ)) =
+      if 1 ≤ a then G.coeff (toF (Fin.cons (a - 1) (Fin.cons b j : Fin (s + 1) → ℕ)))
       else 0 := by
   classical
   rw [coeff_X_mul']
@@ -320,8 +321,8 @@ theorem coeff_X0_mul (G : MvPolynomial (Fin (s + 2)) ℂ) (a b : ℕ) (j : Fin s
   · rfl
 
 theorem coeff_X1_mul (G : MvPolynomial (Fin (s + 2)) ℂ) (a b : ℕ) (j : Fin s → ℕ) :
-    coeff (toF (Fin.cons a (Fin.cons b j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ)) (X 1 * G) =
-      if 1 ≤ b then coeff (toF (Fin.cons a (Fin.cons (b - 1) j : Fin (s + 1) → ℕ))) G
+    (X 1 * G).coeff (toF (Fin.cons a (Fin.cons b j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ)) =
+      if 1 ≤ b then G.coeff (toF (Fin.cons a (Fin.cons (b - 1) j : Fin (s + 1) → ℕ)))
       else 0 := by
   classical
   rw [coeff_X_mul']
@@ -339,9 +340,9 @@ theorem coeff_X1_mul (G : MvPolynomial (Fin (s + 2)) ℂ) (a b : ℕ) (j : Fin s
 
 /-- The telescoping core of the kernel property. -/
 theorem sum_antidiagonal_X01 (G : MvPolynomial (Fin (s + 2)) ℂ) (m : ℕ) (j : Fin s → ℕ) :
-    ∑ p ∈ Finset.antidiagonal m,
-      coeff (toF (Fin.cons p.1 (Fin.cons p.2 j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ))
-        ((X 0 - X 1) * G) = 0 := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal m,
+      ((X 0 - X 1) * G).coeff
+        (toF (Fin.cons p.1 (Fin.cons p.2 j : Fin (s + 1) → ℕ) : Fin (s + 2) → ℕ)) = 0 := by
   simp only [sub_mul, coeff_sub, Finset.sum_sub_distrib, coeff_X0_mul, coeff_X1_mul]
   cases m with
   | zero => simp
@@ -374,14 +375,14 @@ theorem ψF_jet_mul_eq_zero {F : MvPolynomial (Fin s) ℂ} (hF : Symm F)
   rw [coeff_tSer_sq, Finset.sum_mul, map_sum]
   by_cases he : e.degree = s'
   · obtain ⟨j, rfl⟩ := exists_monoOf s' e he
-    have hterm : ∀ q ∈ Finset.antidiagonal m,
-        ψF F (X q.1 * X q.2 * monomial (monoOf j) (coeff (monoOf j) p)) =
-          coeff (monoOf j) p * coeff (toF (Fin.cons q.1 (Fin.cons q.2 j : Fin (s' + 1) → ℕ) :
-            Fin (s' + 2) → ℕ)) F := by
+    have hterm : ∀ q ∈ Finset.HasAntidiagonal.antidiagonal m,
+        ψF F (X q.1 * X q.2 * monomial (monoOf j) (p.coeff (monoOf j))) =
+          p.coeff (monoOf j) * F.coeff (toF (Fin.cons q.1 (Fin.cons q.2 j : Fin (s' + 1) → ℕ) :
+            Fin (s' + 2) → ℕ)) := by
       intro q _
-      have hm : X q.1 * X q.2 * monomial (monoOf j) (coeff (monoOf j) p) =
+      have hm : X q.1 * X q.2 * monomial (monoOf j) (p.coeff (monoOf j)) =
           monomial (monoOf (Fin.cons q.1 (Fin.cons q.2 j : Fin (s' + 1) → ℕ) :
-            Fin (s' + 2) → ℕ)) (coeff (monoOf j) p) := by
+            Fin (s' + 2) → ℕ)) (p.coeff (monoOf j)) := by
         rw [monoOf_cons, monoOf_cons, X, X, monomial_mul, monomial_mul, one_mul, one_mul,
           add_assoc]
       rw [hm, ψF_monomial, cF_monoOf hF]
@@ -403,7 +404,7 @@ theorem ψF_jetIdeal_two {F : MvPolynomial (Fin s) ℂ} (hF : Symm F)
     · intro y; rw [mul_zero, map_zero]
     · intro a b _ _ ha hb y; rw [mul_add, map_add, ha, hb, add_zero]
     · intro a b _ hb y; rw [smul_eq_mul, ← mul_assoc]; exact hb _
-  simpa using key 1
+  simpa using! key 1
 
 /-- The descended functional `ψbar : R_n → ℂ` (`n ≥ 2`). -/
 def ψbar {n : ℕ} (hn : 2 ≤ n) (F : MvPolynomial (Fin s) ℂ) (hF : Symm F)

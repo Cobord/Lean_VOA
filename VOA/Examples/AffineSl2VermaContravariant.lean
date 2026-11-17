@@ -122,7 +122,7 @@ theorem contravariant_highest_right (k h : ℂ) (v : Verma k h) :
     | nil => simp only [currentWord,Module.End.one_apply,contravariant_normalized,highestCoordinate_highest]
     | cons an w =>
       have hl : IsLower an.1 an.2 := Wak.Charged.occupationWord_lower d an (by rw [hw]; simp)
-      rw [highestCoordinate_lower_word k h _ (by simpa only [hw] using Wak.Charged.occupationWord_lower d) (by simp)]
+      rw [highestCoordinate_lower_word k h _ (by simpa only [hw] using! Wak.Charged.occupationWord_lower d) (by simp)]
       change contravariant k h (mode k h an.1 an.2 _) (highestVector k h)=0
       rw [contravariant_adj,adjoint_creation_highest k h _ _ hl,map_zero]
   exact LinearMap.congr_fun he v
@@ -147,7 +147,7 @@ theorem contravariant_symm (k h : ℂ) (u v : Verma k h) :
     intro d
     apply LinearMap.ext
     intro v
-    simpa only [occupationBasis_apply,LinearMap.flip_apply] using hw (occupationWord d) v
+    simpa only [occupationBasis_apply,LinearMap.flip_apply] using! hw (occupationWord d) v
   exact LinearMap.congr_fun (LinearMap.congr_fun he u) v
 
 /-- The actual radical is stable under every current, using its opposite

@@ -24,7 +24,7 @@ noncomputable section
 
 private theorem coeff_zero_of_freeLiAtLeast {P : Wak.WakFock} {p : ℕ}
     (hP : P ∈ freeLiAtLeast p) (d : Fin 3 × ℕ →₀ ℕ)
-    (hd : Finsupp.weight freeLiWeight d < p) : coeff d P = 0 := by
+    (hd : Finsupp.weight freeLiWeight d < p) : P.coeff d = 0 := by
   induction hP using Submodule.span_induction with
   | mem P hP =>
     obtain ⟨e, he, rfl⟩ := hP
@@ -44,17 +44,17 @@ theorem charge_two_highest_symbol_ne_zero (k : ℂ) (hk : k+2 ≠ 0)
     mk₂ (affineSl2VOA_closed k hk) x ≠ 0 := by
   let P := vacuumToWak k hk x
   have hPn : P ≠ 0 := fun hh => hne ((vacuumToWak_injective k hk)
-    (by simpa [P] using hh))
+    (by simpa [P] using! hh))
   have hgamma : P ∈ Wak.Screening.gammaFree := by
     intro j
     have he : J k colE (j : ℤ) x = 0 := by
       by_cases hj : j = 0
-      · simpa [hj] using hE
+      · simpa [hj] using! hE
       · exact hpos colE (j : ℤ) (by omega)
     have hh := congrArg (vacuumToWak k hk) he
     rw [vacuumToWak_J, map_zero] at hh
     simpa [P, colE, Wak.Jw_E, Wak.Ecur, Wak.Bet_of_nonneg (Int.natCast_nonneg j),
-      Wak.cD_of_nonneg (Int.natCast_nonneg j), Wak.dV_apply] using hh
+      Wak.cD_of_nonneg (Int.natCast_nonneg j), Wak.dV_apply] using! hh
   have hcharge : Wak.Dch P = P := by
     have hh := congrArg (vacuumToWak k hk) hH
     rw [vacuumToWak_J, map_smul] at hh

@@ -25,7 +25,7 @@ theorem monodromyLoop_iso (F : SphericalFusion C) {U V : C} (e : U ≅ V) (X : C
     (Center.ofBraidedObj X) U (𝟙 X) =
     halfBraidingLoop F.toPivotal (oppositeBraidedCenter X)
       (Center.ofBraidedObj X) V (𝟙 X) at h
-  simpa only [halfBraidingLoop_braided_id] using h
+  simpa only [halfBraidingLoop_braided_id] using! h
 
 /-- Tensoring loop labels composes their monodromy operators. -/
 theorem monodromyLoop_tensor (F : SphericalFusion C) (U V X : C) :
@@ -39,7 +39,7 @@ theorem monodromyLoop_tensor (F : SphericalFusion C) (U V X : C) :
       (halfBraidingLoop F.toPivotal (oppositeBraidedCenter X) (Center.ofBraidedObj X) U
         (𝟙 X)) at h
   simpa only [LinearMap.comp_apply, halfBraidingLoop_braided_id,
-    halfBraidingLoop_opposite_braided, Category.comp_id] using h
+    halfBraidingLoop_opposite_braided, Category.comp_id] using! h
 
 /-- The loop decomposes by the genuine multiplicities of its label. -/
 theorem monodromyLoop_decomposition (F : SphericalFusion C) (U X : C) :
@@ -54,15 +54,17 @@ theorem monodromyLoop_decomposition (F : SphericalFusion C) (U X : C) :
     (∑ i, (Module.finrank ℂ (F.simple i ⟶ U) : ℂ) •
       halfBraidingLoop F.toPivotal (oppositeBraidedCenter X)
         (Center.ofBraidedObj X) (F.simple i)) (𝟙 X) at h
-  simpa only [LinearMap.sum_apply, LinearMap.smul_apply,
-    halfBraidingLoop_braided_id] using h
+  rw [halfBraidingLoop_braided_id] at h
+  refine h.trans ((LinearMap.sum_apply _ _ _).trans (Finset.sum_congr rfl fun i _ => ?_))
+  exact (LinearMap.smul_apply _ _ _).trans
+    (congrArg (fun f => _ • f) (halfBraidingLoop_braided_id F X (F.simple i)))
 
 /-- The simple-label form of the loop eigenvalue, with the dual convention explicit. -/
 theorem monodromyLoop_simple_label (F : SphericalFusion C) (i k : F.Label) :
     monodromyLoop F.toPivotal (F.simple i) (F.simple k) =
       (categoricalS F (F.dualLabel i) k / F.dimension (F.simple k)) • 𝟙 (F.simple k) := by
   rw [← monodromyLoop_simple]
-  simpa only [F.dualLabel_involutive i] using
+  simpa only [F.dualLabel_involutive i] using!
     (monodromyLoop_iso F (F.dualLabelIso (F.dualLabel i)) (F.simple k)).symm
 
 namespace SphericalFusion
@@ -145,8 +147,7 @@ theorem categorical_verlinde (F : SphericalFusion C) (M : Modular F)
   classical
   have h := congrArg (fun A : Matrix F.Label F.Label ℂ => A j r)
     (categorical_verlinde_matrix F M i)
-  dsimp only at h
   rw [Matrix.mul_apply] at h
-  simpa only [fusionMatrix, Matrix.mul_diagonal] using h
+  simpa only [fusionMatrix, Matrix.mul_diagonal] using! h
 
 end VOA.Huang.NgSchauenburg

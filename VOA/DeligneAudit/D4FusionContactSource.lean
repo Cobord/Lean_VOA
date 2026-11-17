@@ -31,7 +31,7 @@ theorem localWeyl_simple_square (h : LocalWeylRelG D4sector R w 1) :
     change 16 ≤ (18 : Fin 28).val ∧ (18 : Fin 28).val < 20
     decide
   have he : D4sector.lowExp (18 : Fin 28) = 1 := rfl
-  simpa only [he, Nat.mul_one, Module.End.pow_apply] using h.lowering (18 : Fin 28) hi
+  simpa only [he, Nat.mul_one, Module.End.pow_apply] using! h.lowering (18 : Fin 28) hi
 
 /-- Every actual multiplicity-one zero-mode radical word reduces to
 length at most two, with no additional source relation or FD premise. -/

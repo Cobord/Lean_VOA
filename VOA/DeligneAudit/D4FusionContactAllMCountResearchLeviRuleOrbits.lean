@@ -93,7 +93,7 @@ theorem noPositive_le_orbit (m : ℕ) : noPositiveIdeal m ≤ orbitIdeal m := by
         have hmax := hn x hx
         have hne : category x.1 ≠ 0 := fun he => hp ⟨x,hx,he⟩
         have hc : category x.1 = 1 ∨ category x.1 = 2 := by omega
-        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using hc
+        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using! hc
   | true =>
       by_cases hp : ∃ x ∈ l, category x.1 = 1
       · rw [c_negative_word_zero m j hb l hs hn hp]
@@ -103,7 +103,7 @@ theorem noPositive_le_orbit (m : ℕ) : noPositiveIdeal m ≤ orbitIdeal m := by
         have hmax := hn x hx
         have hne : category x.1 ≠ 1 := fun he => hp ⟨x,hx,he⟩
         have hc : category x.1 = 0 ∨ category x.1 = 2 := by omega
-        simpa only [branchCategory,hb,if_true] using hc
+        simpa only [branchCategory,hb,if_true] using! hc
 
 theorem orbit_le_candidate (m : ℕ) : orbitIdeal m ≤ AllM.candidateIdeal m := by
   apply Ideal.span_le.mpr

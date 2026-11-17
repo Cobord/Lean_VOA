@@ -45,10 +45,9 @@ theorem universalAction_sugawara (k : ℂ) (hk : k + 2 ≠ 0) :
 theorem simpleAction_sugawara (k : ℂ) (hk : k + 2 ≠ 0) :
     sugawaraState (simpleAction k hk).toAffineSl2Action =
       (AffineSl2GeneralRigidity.simple k hk).conformalVector := by
-  change sugawaraState (maxQuotientAffineAction
-    (AffineSl2GeneralRigidity.universal k hk) (affineAction k hk)) = _
-  rw [maxQuotientAffineAction_sugawara]
-  exact congrArg (QuotVOA.maxGradedIdeal (AffineSl2GeneralRigidity.universal k hk)).mkQ
-    (sugawaraState_affineAction k hk)
+  exact (maxQuotientAffineAction_sugawara (AffineSl2GeneralRigidity.universal k hk)
+    (affineAction k hk)).trans
+      (congrArg (QuotVOA.maxGradedIdeal (AffineSl2GeneralRigidity.universal k hk)).mkQ
+        (sugawaraState_affineAction k hk))
 
 end VOA.Sl2CosetConcrete

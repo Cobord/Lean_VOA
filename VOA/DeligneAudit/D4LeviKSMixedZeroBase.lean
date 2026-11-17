@@ -23,7 +23,7 @@ theorem mixedTop_zero_base (a z : ℕ → Module.End ℂ V)
   simp only [mul_assoc]
   rw [← Finset.mul_sum]
   have hsum :
-      (∑ q ∈ Finset.antidiagonal s,
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         (aWord a (List.replicate n 0) *
           PowerSeries.coeff q.1 (fCurrent z ^ c)) *
           PowerSeries.coeff q.2 B) =

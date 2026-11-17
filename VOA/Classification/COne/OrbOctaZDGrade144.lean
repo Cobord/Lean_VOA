@@ -37,14 +37,14 @@ theorem q24_grading_lt100 : ∀ N : ℤ, 0 < N → N < 100 →
       interval_cases b <;> interval_cases c <;> interval_cases d <;> omega
     rcases he with ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ |
       ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩
-    · simpa [genMon] using q24_seed16
-    · simpa [genMon, pow_two] using q24_seed_two
-    · simpa [genMon, pow_two] using q24_I4sq
-    · simpa [genMon] using q24_seed_three
+    · simpa [genMon] using! q24_seed16
+    · simpa [genMon, pow_two] using! q24_seed_two
+    · simpa [genMon, pow_two] using! q24_I4sq
+    · simpa [genMon] using! q24_seed_three
 
 theorem q24_I4I3sq : q24L (mk W (Tav (I4 * (I3 * I3)))) = 0 :=
   q24_top inv_I4 inv_I3sq I4_hom (I3_hom.mul I3_hom) q24_grading_lt100
-    (by simpa using q24_XY_negative 48)
+    (by simpa using! q24_XY_negative 48)
 
 theorem q24_grading_lt144 : ∀ N : ℤ, 0 < N → N < 144 →
     ∀ y ∈ W.grading N, q24L (mk W y) = 0 := by
@@ -69,11 +69,11 @@ theorem q24_grading_lt144 : ∀ N : ℤ, 0 < N → N < 144 →
       interval_cases b <;> interval_cases c <;> interval_cases d <;> omega
     rcases he with ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ |
       ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩
-    · simpa [genMon] using q24_seed16
-    · simpa [genMon, pow_two] using q24_seed_two
-    · simpa [genMon, pow_two] using q24_I4sq
-    · simpa [genMon] using q24_seed_three
-    · simpa [genMon, pow_two, mul_comm] using q24_I4I3sq
+    · simpa [genMon] using! q24_seed16
+    · simpa [genMon, pow_two] using! q24_seed_two
+    · simpa [genMon, pow_two] using! q24_I4sq
+    · simpa [genMon] using! q24_seed_three
+    · simpa [genMon, pow_two, mul_comm] using! q24_I4I3sq
 
 theorem q24_XI4sq_negative (m : ℕ) :
     q24L (mk W (W.smul X (-((m : ℤ) + 1)) (Tav (I4 * I4)))) = 0 := by
@@ -82,6 +82,7 @@ theorem q24_XI4sq_negative (m : ℕ) :
   have hg : W.smul X k (Tav (I4 * I4)) ∈ W.grading (79 - k) := by
     convert W.grading_mode _ X_grading _
       (Tav_grading (inv_mul inv_I4 inv_I4) (I4_hom.mul I4_hom)) k using 2 ; norm_num ; ring
+    rfl
   exact q24_grading_lt81 _ (by omega) (by omega) _ hg
 
 theorem q24_YY_negative (m : ℕ) :
@@ -91,14 +92,15 @@ theorem q24_YY_negative (m : ℕ) :
   intro k hk hk36
   have hg : W.smul (octaSeeds 2) k (octaSeeds 2) ∈ W.grading (71 - k) := by
     convert W.grading_mode _ hg36 _ hg36 k using 2 ; ring
+    rfl
   exact q24_grading_lt81 _ (by omega) (by omega) _ hg
 
 theorem q24_I4cube : q24L (mk W (Tav (I4 * (I4 * I4)))) = 0 :=
   q24_top inv_I4 (inv_mul inv_I4 inv_I4) I4_hom (I4_hom.mul I4_hom) q24_grading_lt144
-    (by simpa using q24_XI4sq_negative 64)
+    (by simpa using! q24_XI4sq_negative 64)
 
 theorem q24_I3four : q24L (mk W (Tav ((I3 * I3) * (I3 * I3)))) = 0 :=
   q24_top inv_I3sq inv_I3sq (I3_hom.mul I3_hom) (I3_hom.mul I3_hom) q24_grading_lt144
-    (by simpa using q24_YY_negative 72)
+    (by simpa using! q24_YY_negative 72)
 
 end VOA.Classification.COne.OrbOctaZD

@@ -108,7 +108,8 @@ theorem negWordVir_mem_virFil_length (w : List ℕ) :
   | cons a w ih =>
       have h := Lop_mem_virFil_succ c a ih
       rw [show energyVir w + a + 2 = energyVir (a :: w) by rw [energyVir_cons]; omega] at h
-      simpa using h
+      rw [negWordVir_cons, List.length_cons]
+      exact h
 
 /-- A word of length at most `ℓ` lies in `virFil c ℓ` at its energy. -/
 theorem negWordVir_mem_virFil {w : List ℕ} {ℓ N : ℕ} (hl : w.length ≤ ℓ)

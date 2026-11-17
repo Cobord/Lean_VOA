@@ -84,12 +84,23 @@ theorem zhuGaloisTwistInput_of_NS (h : NSGaloisTwistAll.{0, 0}) : ZhuGaloisTwist
   let ρ' : SL2Z →* Matrix (modelSphericalFusion hV D hD).Label
       (modelSphericalFusion hV D hD).Label ℂ :=
     { toFun := fun γ => D'.rep γ
-      map_one' := by convert D'.rep.map_one
+      map_one' := by
+        have key : ∀ i1 i2 : DecidableEq D.ι,
+            (letI := i1; (1 : Matrix D.ι D.ι ℂ)) = (letI := i2; (1 : Matrix D.ι D.ι ℂ)) := by
+          intro i1 i2
+          obtain rfl : i1 = i2 := Subsingleton.elim _ _
+          rfl
+        exact (D'.rep.map_one).trans (key _ _)
       map_mul' := fun γ δ => D'.rep.map_mul γ δ }
   obtain ⟨σ, G, hG, h1, h2, h3, β, h4⟩ := h (canonicalModel hV D hD).C
     (modelSphericalFusion hV D hD) (modelModular hV D hD) ρ' (Units.mk0 _ hS0)
     (Units.mk0 _ hb0) hS hT hT' N hN.1 (matrix_pow_eq_one_of_inst _ _ _ N hTN) x y hxy
-  exact ⟨σ, G, by convert hG, h1, h2, h3, β, h4⟩
+  have key2 : ∀ (i1 i2 : DecidableEq D.ι) (G : Matrix D.ι D.ι ℂ),
+      @IsSignedPermutation D.ι i1 G → @IsSignedPermutation D.ι i2 G := by
+    intro i1 i2 G hG
+    obtain rfl : i1 = i2 := Subsingleton.elim _ _
+    exact hG
+  exact ⟨σ, G, key2 _ _ G hG, h1, h2, h3, β, h4⟩
 
 /-- **Both classification inputs from three VOA-free contracts**: Ng–Schauenburg 6.8
 (`NSProjectiveCongruenceAll`), DLN 2.3 (`MatrixDLNLifting`) and the categorical Galois twist law

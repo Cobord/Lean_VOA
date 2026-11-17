@@ -93,7 +93,8 @@ def insertExponent (N : ℕ) (e : JetVar σ N →₀ ℕ)
 /-- A monomial-valued coefficient family extends uniquely by linearity. -/
 def coefficientFunctional {N : ℕ} (F : (JetVar σ N →₀ ℕ) → K) :
     JetPoly K σ N →ₗ[K] K :=
-  Finsupp.lsum K (fun e => LinearMap.mulRight K (F e))
+  Finsupp.lsum K (fun e => LinearMap.mulRight K (F e)) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv K).toLinearMap
 
 omit [Fintype σ] in
 @[simp]
@@ -221,8 +222,7 @@ theorem coefficientFunctional_dualCoefficients {Q : ρ → σ × σ → K} {N : 
     (L : PresentedJet (R := K) N (quadraticIdeal Q) →ₗ[K] K) :
     coefficientFunctional (dualCoefficients L) =
       L.comp (presentedJetMk (R := K) N (quadraticIdeal Q)).toLinearMap := by
-  apply Finsupp.lhom_ext
-  intro e c
+  refine MvPolynomial.linearMap_ext fun e => LinearMap.ext fun c => ?_
   change coefficientFunctional (dualCoefficients L) (MvPolynomial.monomial e c) =
     L (presentedJetMk (R := K) N (quadraticIdeal Q) (MvPolynomial.monomial e c))
   rw [coefficientFunctional_monomial]

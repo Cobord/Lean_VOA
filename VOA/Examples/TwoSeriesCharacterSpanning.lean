@@ -43,7 +43,7 @@ noncomputable section
 /-- Words of `m` letters with letter sum `k`. -/
 def comps : ℕ → ℕ → Finset (List ℕ)
   | 0, k => if k = 0 then {[]} else ∅
-  | m + 1, k => (Finset.antidiagonal k).biUnion
+  | m + 1, k => (Finset.HasAntidiagonal.antidiagonal k).biUnion
       (fun p => (comps m p.2).map ⟨List.cons p.1, List.cons_injective⟩)
 
 theorem mem_comps : ∀ (m k : ℕ) (e : List ℕ), e ∈ comps m k ↔ e.length = m ∧ e.sum = k
@@ -61,7 +61,7 @@ theorem mem_comps : ∀ (m k : ℕ) (e : List ℕ), e ∈ comps m k ↔ e.length
   | m + 1, k, e => by
       rcases e with _ | ⟨a, e⟩
       · simp [comps]
-      · simp only [comps, Finset.mem_biUnion, Finset.mem_map, Finset.mem_antidiagonal,
+      · simp only [comps, Finset.mem_biUnion, Finset.mem_map, Finset.HasAntidiagonal.mem_antidiagonal,
           Function.Embedding.coeFn_mk, List.cons.injEq, List.length_cons, List.sum_cons]
         constructor
         · rintro ⟨⟨p1, p2⟩, hp, e', he', h1, h2⟩
@@ -93,8 +93,8 @@ theorem jetSum_eq_sum : ∀ (m k : ℕ), jetSum c m k = ∑ e ∈ comps m k, neg
         obtain ⟨e, -, rfl⟩ := hx
         obtain ⟨e', -, he⟩ := hx'
         have h1 : q.1 = p.1 := (List.cons.inj he).1
-        have hp' := Finset.mem_antidiagonal.mp (Finset.mem_coe.mp hp)
-        have hq' := Finset.mem_antidiagonal.mp (Finset.mem_coe.mp hq)
+        have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp (Finset.mem_coe.mp hp)
+        have hq' := Finset.HasAntidiagonal.mem_antidiagonal.mp (Finset.mem_coe.mp hq)
         exact hpq (Prod.ext h1.symm (by omega))
 
 /-! ## §2  Gordon-good words and violating windows -/
@@ -356,7 +356,7 @@ theorem sorted_mem_goodSpanG (hJ : HasJetRelations c n) : ∀ ℓ : ℕ, ∀ u :
         (by rw [length_sortDesc, hwl]) rfl
       rw [hsE] at hmem
       have := Submodule.add_mem _ hdiff' hmem
-      simpa using this
+      simpa using! this
   have hsum := Submodule.sum_mem (goodSpanG c n ℓ N) hterm
   rw [Finset.sum_sub_distrib, ← Finset.sum_smul, Finset.sum_boole] at hsum
   set m : ℂ := (((comps (n + 1) k).filter (fun e => e.Perm W)).card : ℂ) with hm

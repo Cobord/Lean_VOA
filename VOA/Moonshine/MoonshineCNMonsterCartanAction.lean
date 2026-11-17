@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton
 open AutMonster LatGen IntegralLattice HeisenbergN MvPolynomial
 open scoped TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] vnatStringWeightAddCommGroup vnatStringSliceAddCommGroup
 attribute [local instance] monsterPhysicalAddCommGroup
 
@@ -105,7 +108,12 @@ theorem moonshineMatter_zeroBasis_zeroMode (a : Fin 2) (β : lorentzianLattice.c
     {v : moonshineMatterSpace} (hv : v ∈ moonshineMatterMomentum β) :
     moonshineMatterNearVOA.Y (moonshineMatterSectorMap ![0, 0] (vnatZeroBasisVector a)) (-1) v =
       ((β a : ℤ) : ℂ) • v := by
-  rw [vnatZeroBasisVector, moonshineMatterSectorMap_tmul, lorentzianZero_eq_vector]
+  first
+    | rw [vnatZeroBasisVector, moonshineMatterSectorMap_tmul, lorentzianZero_eq_vector]
+    | refine (congrArg (fun w => moonshineMatterNearVOA.Y w (-1) v)
+        ((moonshineMatterSectorMap_tmul ![0, 0] VnatVOA.vacuum (X (0, a))).trans
+          (congrArg (fun α => VnatVOA.vacuum ⊗ₜ latStateGen lorentzianLattice
+            (hypLorentzianPolynomialEquiv (X (0, a))) α) lorentzianZero_eq_vector))).trans ?_
   refine TensorVA.tenSub_induction (P := ⊤) (Q := latticeMomentumGrading lorentzianLattice β)
     (motive := fun v => moonshineMatterNearVOA.Y (VnatVOA.vacuum ⊗ₜ latStateGen lorentzianLattice
       (hypLorentzianPolynomialEquiv (X (0, a))) 0) (-1) v = ((β a : ℤ) : ℂ) • v)

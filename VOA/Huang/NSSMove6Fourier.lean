@@ -18,7 +18,7 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] [RightRigidCategory 
 theorem monodromyLoop_dualLabel_dual (F : SphericalFusion C) (b : F.Label) (X : C) :
     monodromyLoop F.toPivotal (F.simple (F.dualLabel b))ᘁ X =
       monodromyLoop F.toPivotal (F.simple b) X := by
-  simpa only [F.dualLabel_involutive b] using
+  simpa only [F.dualLabel_involutive b] using!
     monodromyLoop_iso F (F.dualLabelIso (F.dualLabel b)) X
 
 /-- The first-label Fourier sum is the normalized projector once its loop
@@ -91,7 +91,7 @@ theorem categoricalS_smul_sum_injective (F : SphericalFusion C) (M : Modular F)
         (∑ a, (categoricalS F)⁻¹ k a * categoricalS F a r) = if k = r then 1 else 0 := by
       have hm := congrArg (fun A : Matrix F.Label F.Label ℂ => A k r)
         (Matrix.nonsing_inv_mul (categoricalS F) (isUnit_iff_ne_zero.mpr M.nondegenerate))
-      simpa only [Matrix.mul_apply, Matrix.one_apply] using hm
+      simpa only [Matrix.mul_apply, Matrix.one_apply] using! hm
     simp_rw [hm]
     simp
   funext k
@@ -114,7 +114,7 @@ theorem mixedMugerExchange_iff_loopTranspose (F : SphericalFusion C) (M : Modula
         inverseChannelCrossing_eq_loopSum F M] at ha
       simp_rw [monodromyLoop_dualLabel_dual] at ha
       have hc := congrArg (fun f => F.globalDimension • f) ha.symm
-      simpa only [smul_smul, mul_inv_cancel₀ F.globalDimension_ne_zero, one_smul] using hc
+      simpa only [smul_smul, mul_inv_cancel₀ F.globalDimension_ne_zero, one_smul] using! hc
     exact congrFun (categoricalS_smul_sum_injective F M _ _ hs) r
   · exact mixedMugerExchange_of_loopTranspose F M
 

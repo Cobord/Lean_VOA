@@ -138,7 +138,7 @@ theorem exists_fusion_minimal_three_partial_kernel (p : ℕ) (hp : 2≤p)
         (vermaBSAWeight 3 ((3:ℂ)/(p:ℂ))+3)) ((p-1)*2) ?_ ?_ ?_ ?_ (fusionLeadingState _ _)
   · exact fun r f hf => wardSourceAt_diagonal _ _ _ _ _ _ r f hf
   · exact fun r f hf => wardSourceAt_below _ _ _ _ _ _ r f hf
-  · simpa using wardBSASourceDiagonal_label_initial (p-1) 3 ((3:ℂ)/(p:ℂ)) (by omega) ht
+  · simpa using! wardBSASourceDiagonal_label_initial (p-1) 3 ((3:ℂ)/(p:ℂ)) (by omega) ht
   · exact fun r hr hrN => wardBSASourceDiagonal_minimal_three p r hp hcop hr hrN
 
 end VOA.InverseDS.VirasoroVerma

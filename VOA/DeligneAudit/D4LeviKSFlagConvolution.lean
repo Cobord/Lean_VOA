@@ -20,18 +20,26 @@ noncomputable def ksTargetZAlphabet (a b c : ℕ) :
 
 theorem ksTargetXAlphabet_coeff (a b c s : ℕ) :
     PowerSeries.coeff s (ksHSeries (ksTargetXAlphabet a b c)) =
-      ksTargetXMap a b c (hsymm (Fin a) ℂ s) :=
-  ksHSeries_coeff_aeval a s _
+      ksTargetXMap a b c (hsymm (Fin a) ℂ s) := by
+  -- Lean 4.35 Mathlib: `rename` is no longer definitionally `aeval (X ∘ f)`
+  rw [show ksTargetXMap a b c = rename Sum.inl from rfl, rename_eq_aeval]
+  exact ksHSeries_coeff_aeval a s _
 
 theorem ksTargetYAlphabet_coeff (a b c s : ℕ) :
     PowerSeries.coeff s (ksHSeries (ksTargetYAlphabet a b c)) =
-      ksTargetYMap a b c (hsymm (Fin b) ℂ s) :=
-  ksHSeries_coeff_aeval b s _
+      ksTargetYMap a b c (hsymm (Fin b) ℂ s) := by
+  -- Lean 4.35 Mathlib: `rename` is no longer definitionally `aeval (X ∘ f)`
+  rw [show ksTargetYMap a b c = rename (fun y => Sum.inr (Sum.inl y)) from rfl,
+    rename_eq_aeval]
+  exact ksHSeries_coeff_aeval b s _
 
 theorem ksTargetZAlphabet_coeff (a b c s : ℕ) :
     PowerSeries.coeff s (ksHSeries (ksTargetZAlphabet a b c)) =
-      ksTargetZMap a b c (hsymm (Fin c) ℂ s) :=
-  ksHSeries_coeff_aeval c s _
+      ksTargetZMap a b c (hsymm (Fin c) ℂ s) := by
+  -- Lean 4.35 Mathlib: `rename` is no longer definitionally `aeval (X ∘ f)`
+  rw [show ksTargetZMap a b c = rename (fun z => Sum.inr (Sum.inr z)) from rfl,
+    rename_eq_aeval]
+  exact ksHSeries_coeff_aeval c s _
 
 theorem ksTargetYZAlphabet_coeff (a b c s : ℕ) :
     PowerSeries.coeff s
@@ -83,7 +91,7 @@ theorem ksTargetXYZAlphabet_coeff (a b c s : ℕ) :
           (ksTargetYAlphabet a b c ++ ksTargetZAlphabet a b c))) =
       (rxMixedTarget a b c s : MvPolynomial (PairTarget a b c) ℂ) := by
   rw [← ksTargetEnumeration_list, rxMixedTarget_eq_hsymm]
-  simpa only [aeval_X_left_apply] using
+  simpa only [aeval_X_left_apply] using!
     ksHSeries_coeff_equiv (a + (b + c)) s (ksTargetEnumeration a b c) (X (R := ℂ))
 
 theorem ksFlagY_convolution (a b c s : ℕ) :

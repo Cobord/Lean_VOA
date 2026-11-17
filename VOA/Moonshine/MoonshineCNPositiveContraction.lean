@@ -71,8 +71,8 @@ theorem shiftedRangeSum_reindex (L : IntegralLattice) (P T : ℕ) (g : ℕ → E
       simp only [Finset.mem_filter, Finset.mem_range]; omega
     · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj
       simp only [Finset.mem_range]; omega
-    · intro r hr; simp only [Finset.mem_range] at hr; simp only []; omega
-    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; simp only []; omega
+    · intro r hr; simp only [Finset.mem_range] at hr; (try simp only []); omega
+    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; (try simp only []); omega
     · intro r _; rfl
   rw [Finset.sum_congr rfl (fun i hi => by rw [hinner i hi])]
   rw [show (∑ i ∈ Finset.range (T + 1),
@@ -123,7 +123,7 @@ theorem annihilation_creation_positive_contraction (α β : L.carrier) (P : ℕ)
       set op : ℤ → End ℂ (FockN (rank L)) :=
         fun j => (creationField F α (b - j)).comp (annihilationCoefficientZ F β (N - j)) with hop
       have hopvanish : ∀ j : ℤ, N.toNat < j → op j = 0 := fun j hj => by
-        rw [hop]; dsimp only
+        rw [hop]; try dsimp only
         rw [annihilationCoefficientZ_neg F β (show N - j < 0 by omega), LinearMap.comp_zero]
       have hLHS : (annihilationCoefficientZ F β N).comp (creationField F α b)
           = (N : ℂ)⁻¹ • ∑ r ∈ Finset.range N.toNat,
@@ -186,7 +186,7 @@ theorem annihilation_creation_positive_contraction (α β : L.carrier) (P : ℕ)
           rw [← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun r _ => ?_
           rw [smul_sub, smul_comm (wC P i) (P : ℂ)]
-          rw [hop]; dsimp only
+          rw [hop]; try dsimp only
           rw [show b - (i : ℤ) - ((r : ℤ) + 1) = b - ((i : ℤ) + r + 1) from by ring,
             show N - 1 - (r : ℤ) - (i : ℤ) = N - ((i : ℤ) + r + 1) from by ring]]
         rw [← Finset.smul_sum, ← endomorphism_comp_sum, hMain i hi, ← Finset.smul_sum, ← Finset.smul_sum]
@@ -241,11 +241,11 @@ theorem positiveFieldContraction (α β : L.carrier) (P : ℕ) (hP : (P : ℤ) =
     fun i => wC P i • (creationField F α (b - (i : ℤ))).comp (annihilationField F β (a + (i : ℤ)))
     with hterm
   have hvanA : ∀ i, (-a).toNat < i → term i = 0 := fun i hi => by
-    rw [hterm]; dsimp only
+    rw [hterm]; try dsimp only
     rw [annihilationField_eq_annihilationCoefficientZ F β (a + (i : ℤ)),
       annihilationCoefficientZ_neg F β (show -(a + (i : ℤ)) < 0 by omega), LinearMap.comp_zero, smul_zero]
   have hvanP : ∀ i, P < i → term i = 0 := fun i hi => by
-    rw [hterm]; dsimp only; rw [wC_vanish hi, zero_smul]
+    rw [hterm]; (try dsimp only); rw [wC_vanish hi, zero_smul]
   set K := max (P + 1) ((-a).toNat + 1) with hK
   rw [show (∑ i ∈ Finset.range ((-a).toNat + 1), term i) = ∑ i ∈ Finset.range K, term i from
       (Finset.sum_subset (by intro x hx; simp only [Finset.mem_range] at hx ⊢; omega)
@@ -445,7 +445,7 @@ theorem dressingComposition_positive_contraction (α β : L.carrier) (P : ℕ) (
             ) (fun i _ => (dressingReorder_left_support_finite F α β c d (i : ℤ) q x).subset
               (fun p hp => by
                 rw [Function.mem_support] at hp ⊢
-                simp only [] at hp ⊢
+                (try simp only [] at hp ⊢)
                 exact fun h => hp (by rw [h, smul_zero])))]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [smul_finsum' (wC P i) (dressingReorder_left_support_finite F α β c d (i : ℤ) q x)]]
@@ -455,7 +455,7 @@ theorem dressingComposition_positive_contraction (α β : L.carrier) (P : ℕ) (
         ) (fun i _ => (dressingReorder_right_support_finite F α β c d (i : ℤ) x).subset
           (fun q hq => by
             rw [Function.mem_support] at hq ⊢
-            simp only [] at hq ⊢
+            (try simp only [] at hq ⊢)
             exact fun h => hq (by rw [h, smul_zero])))]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [← smul_finsum' (wC P i) (dressingReorder_right_support_finite F α β c d (i : ℤ) x), dressingReorder_summand]
@@ -475,8 +475,8 @@ theorem dressingComposition_positive_swap (α β : L.carrier) (P : ℕ) (hP : (P
       (Finset.sum_nbij' (i := fun i => P - i) (j := fun i => P - i)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
         (fun i _ => rfl)).symm]
   refine Finset.sum_congr rfl fun i hi => ?_
   simp only [Finset.mem_range] at hi

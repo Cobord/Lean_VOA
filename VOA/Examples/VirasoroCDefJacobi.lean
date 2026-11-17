@@ -27,7 +27,7 @@ theorem sorted_sum {ι : Type*} (s : Finset ι) (f : ι → PV) (hf : ∀ i ∈ 
     Sorted (∑ i ∈ s, f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using Sorted.zero
+  | empty => simpa using! Sorted.zero
   | insert a s ha ih =>
       rw [Finset.sum_insert ha]
       exact (hf a (Finset.mem_insert_self a s)).add (ih fun i hi => hf i (Finset.mem_insert_of_mem hi))

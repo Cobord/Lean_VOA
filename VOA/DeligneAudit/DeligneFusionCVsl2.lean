@@ -33,7 +33,7 @@ def Fspan (F : ℕ → Module.End ℂ V) (v : V) : Submodule ℂ V :=
 
 theorem Fw_mem (v : V) (l : List ℕ) : ECalc.Fw F l v ∈ Fspan F v := Submodule.subset_span ⟨l, rfl⟩
 
-theorem self_mem (v : V) : v ∈ Fspan F v := by simpa [ECalc.Fw] using Fw_mem (F := F) v []
+theorem self_mem (v : V) : v ∈ Fspan F v := by simpa [ECalc.Fw] using! Fw_mem (F := F) v []
 
 theorem Fspan_F (v : V) (k : ℕ) : Fspan F v ≤ (Fspan F v).comap (F k) := by
   rw [Fspan, Submodule.span_le]
@@ -194,7 +194,7 @@ variable (F) in
 /-- `Q(r,s) = [u^s] F(u)^r = Σ_{k₁+⋯+k_r = s} F_{k₁}⋯F_{k_r}`. -/
 def Q (r s : ℕ) : Module.End ℂ V := PowerSeries.coeff s (Garland.Fs F ^ r)
 
-theorem Q_succ (r s : ℕ) : Q F (r + 1) s = ∑ x ∈ Finset.antidiagonal s, F x.1 * Q F r x.2 := by
+theorem Q_succ (r s : ℕ) : Q F (r + 1) s = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, F x.1 * Q F r x.2 := by
   simp only [Q, pow_succ', PowerSeries.coeff_mul, Garland.Fs, PowerSeries.coeff_mk]
 
 theorem Q_zero_r (s : ℕ) : Q F 0 s = if s = 0 then 1 else 0 := by
@@ -246,7 +246,7 @@ theorem Q_high : ∀ r s, (L - 1) * r < s → Q F r s w = 0
   | r + 1, s, hs => by
       rw [Q_succ, LinearMap.coe_sum, Finset.sum_apply]
       refine Finset.sum_eq_zero fun x hx => ?_
-      rw [Finset.mem_antidiagonal] at hx
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       rw [Module.End.mul_apply]
       by_cases hi : L ≤ x.1
       · rw [← Q_F hFF, hL _ hi, map_zero]
@@ -260,7 +260,7 @@ theorem Q_top : ∀ r, Q F r ((L - 1) * r) w = (F (L - 1) ^ r) w
         Finset.sum_eq_single ((L - 1), (L - 1) * r)]
       · rw [Module.End.mul_apply, Q_top r, pow_succ', Module.End.mul_apply]
       · rintro ⟨i, j⟩ hx hne
-        rw [Finset.mem_antidiagonal] at hx
+        rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
         simp only at hx
         rw [Module.End.mul_apply]
         by_cases hi : L ≤ i
@@ -271,18 +271,18 @@ theorem Q_top : ∀ r, Q F r ((L - 1) * r) w = (F (L - 1) ^ r) w
           · refine absurd ?_ hne
             have : j = (L - 1) * r := by rw [Nat.mul_succ] at hx; omega
             rw [this]
-      · intro h; exact absurd (Finset.mem_antidiagonal.mpr (by ring)) h
+      · intro h; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by ring)) h
 
 /-- (P2) Divisibility: `Q(r,s) w ∈ F-span of F_{L−1}^m w` once `s ≥ (L−2) r + m`. -/
 theorem Q_div : ∀ r m s, (L - 2) * r + m ≤ s → Q F r s w ∈ Fspan F ((F (L - 1) ^ m) w)
   | 0, m, s, hs => by
       rcases Nat.eq_zero_or_pos m with rfl | hm
-      · simpa using Q_mem_Fspan w 0 s
+      · simpa using! Q_mem_Fspan w 0 s
       · rw [Q_zero_r, if_neg (by omega)]; exact Submodule.zero_mem _
   | r + 1, m, s, hs => by
       rw [Q_succ, LinearMap.coe_sum, Finset.sum_apply]
       refine Submodule.sum_mem _ fun x hx => ?_
-      rw [Finset.mem_antidiagonal] at hx
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       rw [Module.End.mul_apply]
       by_cases hi : L ≤ x.1
       · rw [← Q_F hFF, hL _ hi, map_zero]; exact Submodule.zero_mem _
@@ -291,7 +291,7 @@ theorem Q_div : ∀ r m s, (L - 2) * r + m ≤ s → Q F r s w ∈ Fspan F ((F (
         · have hx1 : x.1 = L - 1 := by omega
           rcases Nat.eq_zero_or_pos m with rfl | hm
           · simp only [pow_zero, Module.End.one_apply]
-            exact Fspan_F _ _ (by simpa using Q_mem_Fspan w r x.2)
+            exact Fspan_F _ _ (by simpa using! Q_mem_Fspan w r x.2)
           · have ih := Q_div r (m - 1) x.2 (by rw [Nat.mul_succ] at hs; omega)
             have := F_Fspan hFF (L - 1) _ (Submodule.mem_map_of_mem ih)
             rw [← Module.End.mul_apply, ← pow_succ', show m - 1 + 1 = m by omega] at this
@@ -356,7 +356,7 @@ theorem shift_iter (k T b : ℕ) (hb : k + 1 ≤ b) : ∀ n (v : V), (∀ s, E s
     (∀ p, 1 ≤ p → H p v = 0) → (∀ q, b + 1 ≤ q → F q v = 0) →
     (∀ r s, 1 ≤ r → 1 + r * k + T ≤ s + r → X E F r s v = 0) →
     ∀ r s, 1 ≤ r → 1 + r * k + T ≤ s + r + 2 * n → X E F r s ((F b ^ n) v) = 0
-  | 0, v, _, _, _, hrel, r, s, hr, hs => by simpa using hrel r s hr hs
+  | 0, v, _, _, _, hrel, r, s, hr, hs => by simpa using! hrel r s hr hs
   | n + 1, v, hE, hH, hF, hrel, r, s, hr, hs => by
       have ih := shift_iter k T b hb n v hE hH hF hrel
       obtain ⟨hE', hH', hF'⟩ : (∀ s, E s ((F b ^ n) v) = 0) ∧ (∀ p, 1 ≤ p → H p ((F b ^ n) v) = 0) ∧

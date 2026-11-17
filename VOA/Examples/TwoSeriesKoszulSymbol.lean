@@ -375,7 +375,7 @@ theorem bAnB_NTp (c : Fin 3) {kk : ℕ} (hkk : 1 ≤ kk) {T : (ℤ × ℤ) × �
   intro hj z hz
   refine Submodule.mem_iSup_of_mem _ (Submodule.mem_iSup_of_mem ?_ ((bAnB_mem_blockB L) c kk j z hz))
   rcases hj with h | h
-  · left; rw [bIdx_bAn hkk]; intro e; exact h (by simpa using e)
+  · left; rw [bIdx_bAn hkk]; intro e; exact h (by simpa using! e)
   · right; rw [c0_bAn hkk]; exact h
 
 /-! ### The antighost modes on `d_CE` -/
@@ -466,7 +466,7 @@ theorem blk_vacForm {n : ℤ} {a : ℤ × ℤ} (ha : a.2 = 0) (x : (relativeWeig
         rw [map_add]; exact Submodule.add_mem _ hx.2 hy.2⟩) ?_
     intro j hb hw hc z hz
     have h1 : j.1.1.1 = a := congrArg Prod.fst hb
-    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using this
+    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using! this
     have h := (vacForm_blockB L) h2 (by rw [h1]; exact ha) z hz
     refine ⟨h.1, ?_⟩
     have e : j.1.1 = (a, (n : ℂ)) := Prod.ext h1 hw
@@ -491,7 +491,7 @@ theorem blk_oneC {n : ℤ} {a : ℤ × ℤ} (ha : a.2 = 1) (x : (relativeWeight 
       (map_zero _) (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [map_add, hx, hy]) ?_ _ hg
     intro j hb hw hc z hz
     have h1 : j.1.1.1 = a := congrArg Prod.fst hb
-    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using this
+    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using! this
     exact (oneC_blockB L) n.toNat h2 (by rw [h1]; exact ha) hw (le_toNat n) z hz
   · refine (goodSup_induction L) (fun v =>
       TensorProduct.map LinearMap.id Pvac (TensorProduct.map LinearMap.id (bAn c kk) v) =
@@ -502,7 +502,7 @@ theorem blk_oneC {n : ℤ} {a : ℤ × ℤ} (ha : a.2 = 1) (x : (relativeWeight 
         rw [map_add, map_add]; exact Submodule.add_mem _ hx.2 hy.2⟩) ?_ _ hg
     intro j hb hw hc z hz
     have h1 : j.1.1.1 = a := congrArg Prod.fst hb
-    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using this
+    have h2 : j.2 = 0 := by have := congrArg Prod.snd hb; simpa using! this
     have h := (bAn_blockB L) c hkk h2 (by rw [h1]; exact ha) z hz
     have e : j.1.1 = (a, (n : ℂ)) := Prod.ext h1 hw
     rw [e] at h
@@ -528,11 +528,11 @@ theorem EVB_tmul_gvac (m : (MatterSpace L)) : (EVB L) hA (m ⊗ₜ[ℂ] gvac) = 
 theorem eq_zero_of_tmul_gvac {w : (ASpace L) ⊗[ℂ] BSpace} (h : w ⊗ₜ[ℂ] gvac = 0) : w = 0 := by
   have := congrArg (fun v => (TensorProduct.rid ℂ ((ASpace L) ⊗[ℂ] BSpace))
     (TensorProduct.map LinearMap.id vacφ v)) h
-  simpa [vacφ_gvac] using this
+  simpa [vacφ_gvac] using! this
 
 theorem eq_zero_of_tmul_gvac' {m : (MatterSpace L)} (h : m ⊗ₜ[ℂ] gvac = 0) : m = 0 := by
   have := congrArg (extM L) h
-  simpa [extM_tmul, vacφ_gvac] using this
+  simpa [extM_tmul, vacφ_gvac] using! this
 
 end Blocks
 

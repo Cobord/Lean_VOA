@@ -57,24 +57,24 @@ instance [G.LaxMonoidal] : (liftFG G hfin).LaxMonoidal where
   μ X Y := ObjectProperty.homMk (μ G X Y)
   μ_natural_left f X' := by
     apply ObjectProperty.hom_ext
-    simp
+    exact Functor.LaxMonoidal.μ_natural_left (F := G) f X'
   μ_natural_right X' f := by
     apply ObjectProperty.hom_ext
-    simp
+    exact Functor.LaxMonoidal.μ_natural_right (F := G) X' f
   associativity X Y Z := by
     apply ObjectProperty.hom_ext
-    simp
+    exact Functor.LaxMonoidal.associativity (F := G) X Y Z
   left_unitality X := by
     apply ObjectProperty.hom_ext
-    simp
+    exact Functor.LaxMonoidal.left_unitality (F := G) X
   right_unitality X := by
     apply ObjectProperty.hom_ext
-    simp
+    exact Functor.LaxMonoidal.right_unitality (F := G) X
 
 instance [G.LaxBraided] : (liftFG G hfin).LaxBraided where
   braided X Y := by
     apply ObjectProperty.hom_ext
-    simpa using Functor.LaxBraided.braided (F := G) X Y
+    simpa using! Functor.LaxBraided.braided (F := G) X Y
 
 theorem isIso_liftFG_ε [G.LaxMonoidal] (h : IsIso (ε G)) : IsIso (ε (liftFG G hfin)) := by
   have : IsIso ((ModuleCat.isFG ℂ).ι.map (ε (liftFG G hfin))) := h

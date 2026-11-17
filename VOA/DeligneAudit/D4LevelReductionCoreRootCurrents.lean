@@ -45,7 +45,7 @@ theorem coreHighest_lowering_nilpotent [FiniteDimensional ℂ V]
     intro x
     exact congrArg (fun T : Module.End ℂ V => T x) (hS.hHF 0 0)
   obtain ⟨N, hN⟩ := coreLowering_locally_nilpotent (F 0) (H 0) hHF v d hH
-  simpa only [Module.End.pow_apply] using sl2_sharpen (E 0) (F 0) (H 0)
+  simpa only [Module.End.pow_apply] using! sl2_sharpen (E 0) (F 0) (H 0)
     hEF hHF v d hE hH hN
 
 /-- The commutator formula in the endomorphism algebra of an arbitrary core current module. -/

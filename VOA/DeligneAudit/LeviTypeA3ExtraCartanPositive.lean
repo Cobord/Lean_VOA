@@ -32,7 +32,7 @@ theorem a3_extra_cartan_pos_word_key (a b c : ℕ)
   induction l with
   | nil =>
       have hz : ρ.op 12 r w = 0 := by
-        simpa [simpleH] using h.cartan_pos 0 r hr
+        simpa [simpleH] using! h.cartan_pos 0 r hr
       simp [radicalWord, hz]
   | cons x l ih =>
       rcases x with ⟨j, s⟩
@@ -55,7 +55,7 @@ theorem a3_extra_cartan_pos_word_key (a b c : ℕ)
           (a3ExtraWeight j : ℂ) • radicalOp ρ j (r + s) u +
             radicalOp ρ j s (ρ.op 12 r u) := by
         have hc' := sub_eq_iff_eq_add.mp hc
-        simpa only [add_comm] using hc'
+        simpa only [add_comm] using! hc'
       rw [heq]
       exact (a3KeyLayer ρ w _).add_mem
         ((a3KeyLayer ρ w _).smul_mem _ hsecond) hfirst
@@ -75,9 +75,9 @@ theorem a3_extra_cartan_pos_maps_key (a b c : ℕ)
       exact a3_extra_cartan_pos_word_key ρ w a b c h r hr l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (a3KeyLayer ρ w (a3KeyShift r k)).add_mem hx hy
+      simpa using! (a3KeyLayer ρ w (a3KeyShift r k)).add_mem hx hy
   | smul d x _ hx =>
-      simpa using (a3KeyLayer ρ w (a3KeyShift r k)).smul_mem d hx
+      simpa using! (a3KeyLayer ρ w (a3KeyShift r k)).smul_mem d hx
 
 theorem a3_extra_cartan_pos_mem_higher (a b c : ℕ)
     (h : LocalWeylRel ρ w (weightABC a b c))

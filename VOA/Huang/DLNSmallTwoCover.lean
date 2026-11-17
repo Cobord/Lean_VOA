@@ -168,14 +168,15 @@ theorem phiTwo_conj (ha : 1 ≤ a) (b : SLT a) {n : SLT a} (hn : n ∈ (rhoTwo a
     simp only [X, map_mul, hFb, hFbi]
   have hdiff : q * ((X 0 0 + X 0 1 + X 1 0) - (W 0 0 + W 0 1 + W 1 0)) = 0 := by
     apply (two_pow_mul_eq_zero_iff _).mpr
-    simp only [map_sub, map_add]
+    rw [map_sub, map_add, map_add, map_add, map_add]
     have h00 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (X 0 0) = F X 0 0 := rfl
     have h01 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (X 0 1) = F X 0 1 := rfl
     have h10 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (X 1 0) = F X 1 0 := rfl
     have g00 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (W 0 0) = F W 0 0 := rfl
     have g01 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (W 0 1) = F W 0 1 := rfl
     have g10 : ZMod.castHom (dvd_pow_self 2 (Nat.succ_ne_zero a)) (ZMod 2) (W 1 0) = F W 1 0 := rfl
-    rw [h00, h01, h10, g00, g01, g10, hFX, key, sub_self]
+    rw [h00, h01, h10, g00, g01, g10, hFX, key]
+    exact sub_self _
   linear_combination hdiff
 
 /-- `V = ker φ ∩ N`. -/
@@ -215,6 +216,7 @@ theorem epsTwo_eq (ha : 2 ≤ a) :
     rw [sq]; exact two_pow_mul_self (by omega)
   have h4 := two_mul_two_pow a
   rw [commutatorElement_def]
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, upperRoot, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two]
@@ -319,7 +321,7 @@ theorem twoPowerMultAtMostTwo_of_base_layer (hbase : TwoBaseMult) (hL : TwoLayer
     TwoPowerMultAtMostTwo := by
   intro a ha
   induction a, ha using Nat.le_induction with
-  | base => simpa using hbase
+  | base => simpa using! hbase
   | succ a ha ih =>
     exact multAtMostTwo_of_inflation_layer (rhoTwo a) (rhoTwo_surjective a)
       (inflationTrivial_rhoTwo_of_mult ha ih) (hL a ha)

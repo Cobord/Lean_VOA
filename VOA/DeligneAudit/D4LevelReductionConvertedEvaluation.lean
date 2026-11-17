@@ -22,7 +22,7 @@ theorem middleRaisingCurrent_commute (Q : CurrentModule A3Sector.bracketTable V)
     simp [A3Sector.bracketTable, A3Sector.bracketInt, A3Sector.commEntry]
   apply LinearMap.ext
   intro v
-  exact sub_eq_zero.mp (by simpa [hz] using Q.comm 3 3 r s v)
+  exact sub_eq_zero.mp (by simpa [hz] using! Q.comm 3 3 r s v)
 
 variable (ρ : CurrentModule D4sector.f V) (w : V)
 

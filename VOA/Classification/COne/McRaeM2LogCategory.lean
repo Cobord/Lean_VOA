@@ -93,6 +93,6 @@ def swapIso (N P : LogModuleCat W) (r : ℤ) :
     apply hom_ext
     intro q
     have h := tensorBraid_inverse_comp hC2 P.act N.act P.finiteGeneration N.finiteGeneration (-r-1)
-    simpa only [show -(-r-1)-1=r by ring] using congrArg (fun f => f q) h
+    simpa only [show -(-r-1)-1=r by ring] using! congrArg (fun f => f q) h
 
 end VOA.LogTensor.LogModuleCat

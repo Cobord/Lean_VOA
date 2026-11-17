@@ -24,11 +24,11 @@ variable (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m)
 
 /-- The letter `o(H⁴) = H⁴₍₃₎`. -/
 def aL : HomogeneousLetter (V2mPlus m hm) :=
-  ⟨HP m hm 2, 4, 3, by simpa using HP_mem_grading m hm 2 (by norm_num) (by norm_num)⟩
+  ⟨HP m hm 2, 4, 3, by simpa using! HP_mem_grading m hm 2 (by norm_num) (by norm_num)⟩
 
 /-- The letter `o(H⁶) = H⁶₍₅₎`. -/
 def bL : HomogeneousLetter (V2mPlus m hm) :=
-  ⟨HP m hm 3, 6, 5, by simpa using HP_mem_grading m hm 3 (by norm_num) (by norm_num)⟩
+  ⟨HP m hm 3, 6, 5, by simpa using! HP_mem_grading m hm 3 (by norm_num) (by norm_num)⟩
 
 theorem aL_deg : (aL m hm).weight - (aL m hm).modeIndex - 1 = 0 := rfl
 theorem bL_deg : (bL m hm).weight - (bL m hm).modeIndex - 1 = 0 := rfl
@@ -311,8 +311,8 @@ theorem adj_weight_mem_span (w : ℂ) {v : LatModuleGen (latP m)} (hv : v ∈ ad
   refine Submodule.sum_mem _ (fun d hd => ?_)
   have hdw : Finsupp.weight HeisenbergN.weightFnN d = (k - LatGen.halfNorm (latP m) α).toNat :=
     hq' (MvPolynomial.mem_support_iff.mp hd)
-  rw [show MvPolynomial.monomial d (MvPolynomial.coeff d q) =
-      MvPolynomial.coeff d q • MvPolynomial.monomial d (1 : ℂ) by
+  rw [show MvPolynomial.monomial d (q.coeff d) =
+      q.coeff d • MvPolynomial.monomial d (1 : ℂ) by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one], map_smul]
   apply Submodule.smul_mem
   apply Submodule.subset_span
@@ -339,10 +339,12 @@ theorem adj_specSpan (w : ℂ) (Q : ℕ → ℕ → Prop)
     have h3 := h2.trans (Nat.le_ceil w.re)
     exact_mod_cast h3)
   refine ⟨wtE m 3 s, wtE m 5 s, hQ s α k hk hks, hb.1, hb.2, ?_, ?_⟩
-  · rw [AP_A, oH4_mono m hm (adjointWeakModule (V2m m hm)) (fun γ => chargeCoord (latP m) γ (a0 m))
-      (adj_h_mode m hm)]
-  · rw [AP_B, oH6_mono m hm (adjointWeakModule (V2m m hm)) (fun γ => chargeCoord (latP m) γ (a0 m))
-      (adj_h_mode m hm)]
+  · rw [AP_A]
+    exact oH4_mono m hm (adjointWeakModule (V2m m hm)) (fun γ => chargeCoord (latP m) γ (a0 m))
+      (adj_h_mode m hm) s (α : (latP m).carrier)
+  · rw [AP_B]
+    exact oH6_mono m hm (adjointWeakModule (V2m m hm)) (fun γ => chargeCoord (latP m) γ (a0 m))
+      (adj_h_mode m hm) s (α : (latP m).carrier)
 
 include hm2 in
 /-- **The sign model** (`V_L`, top `h(-1)𝟙`). -/

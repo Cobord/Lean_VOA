@@ -68,10 +68,12 @@ theorem qExpansion_eq_sum_products {N : ℕ} (hN : 0 < N) {d : ℕ}
     ∑ i, c i • (f i).mul (g i)
   have hFH : (F : ℍ → ℂ) = H := by
     funext τ
-    change F τ = (ModularForm.coeHom (∑ i, c i • (f i).mul (g i))) τ
+    change F τ = (FunLike.coeAddMonoidHom
+      (ModularForm (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2) ℍ ℂ
+      (∑ i, c i • (f i).mul (g i))) τ
     rw [map_sum]
-    simpa [ModularForm.coeHom, ModularForm.coe_smul, ModularForm.coe_mul,
-      Finset.sum_apply, smul_eq_mul] using heq τ
+    simpa [FunLike.coeAddMonoidHom_apply, FunLike.coe_smul, ModularForm.coe_mul,
+      Finset.sum_apply, smul_eq_mul] using! heq τ
   change qExpansion (N : ℝ) (F : ℍ → ℂ) = _
   rw [hFH]
   change qExpansion (N : ℝ) (∑ i, c i • (f i).mul (g i) : ModularForm

@@ -38,7 +38,7 @@ theorem levi_sum (x y : Fin 15) (r s : ℕ) (v : V) :
   have hsub : ∑ z ∈ Finset.univ.image leviColour, F z = ∑ z, F z := by
     apply Finset.sum_subset (Finset.subset_univ _)
     intro z _ hz
-    have hnot : z ∉ Set.range leviColour := by simpa using hz
+    have hnot : z ∉ Set.range leviColour := by simpa using! hz
     simp [F, levi_bracket_outside x y z hnot]
   rw [← hsub]
   rw [Finset.sum_image]
@@ -51,7 +51,7 @@ theorem levi_sum (x y : Fin 15) (r s : ℕ) (v : V) :
     exact leviColour_injective heq
 
 /-- The signed restriction of any D4 current module is an sl4 current module. -/
-def leviCurrent : CurrentModule VOA.DeligneAudit.A3Sector.bracketTable V where
+noncomputable def leviCurrent : CurrentModule VOA.DeligneAudit.A3Sector.bracketTable V where
   op x r := (leviSign x : ℂ) • ρ.op (leviColour x) r
   comm x y r s v := by
     have h := ρ.comm (leviColour x) (leviColour y) r s v

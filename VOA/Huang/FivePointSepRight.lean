@@ -290,7 +290,7 @@ theorem RightPresentations.rowBound (hs : OrdinaryFourPointSummability F)
     (h + j₀)
   have hinj : Function.Injective (fun m : ℕ => (h' - k₀) + (m : ℂ)) := by
     intro a b hab
-    have : (a : ℂ) = b := by simpa using hab
+    have : (a : ℂ) = b := by simpa using! hab
     exact_mod_cast this
   have hsum := hsl.comp_injective hinj
   obtain ⟨K, hK⟩ := (hsum.tendsto_atTop_zero.norm).bddAbove_range

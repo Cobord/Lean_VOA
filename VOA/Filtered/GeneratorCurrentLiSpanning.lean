@@ -137,8 +137,9 @@ private theorem wordAct_mem_genWordPiece (htrack : GeneratorModeTracked W gen wt
       exact genWordState_mem_genWordPiece W gen wt 0 [] (Nat.zero_le _)
   | cons a rest ih =>
       rw [wordAct_cons, wordLevel_cons]
-      simpa only [PreVertexAlgebra.smul_def, Nat.add_comm] using
-        genWordNegativeModeClosed htrack hspan (wordLevel rest) a.2.2 a.1 ih
+      have h := genWordNegativeModeClosed htrack hspan (wordLevel rest) a.2.2 a.1 ih
+      simp only [PreVertexAlgebra.smul_def, Nat.add_comm] at h ⊢
+      exact h
 
 /-- **Li filtration = generator-word filtration**, from spanning plus the tracked estimate. -/
 theorem generatorWordsSpanLiFiltration_of_tracked (htrack : GeneratorModeTracked W gen wt)

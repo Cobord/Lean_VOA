@@ -47,7 +47,7 @@ theorem prepared_inverse_coordinate (ell q : ℂ) (j : ℕ) (x : M₁) (y : M₂
   rw [first_nil_coordinate]
   have h := nilExp_logShift N₁ N₂ N₃ Y (-ell) q
     ((L1w N₁.toGW.toWeakModule ^ j) (nilExp N₁ (phase 0-2*ell) x)) y
-  simpa only [neg_neg] using h
+  simpa only [neg_neg] using! h
 
 /-- Genuine A0 at every logarithm branch has the full FHL opposite-coordinate pairing.
 No ordinary grading, finite-generation, or C2 assumption is imposed. -/

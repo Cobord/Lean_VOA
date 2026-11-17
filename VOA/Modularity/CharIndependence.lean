@@ -67,7 +67,7 @@ theorem offDiag_eq_zero (hsimp : ∀ k, IsSimpleModule R (U k))
   rcases LinearMap.bijective_or_eq_zero g with hbij | h0
   · exact ((hne k l (Ne.symm hkl)).false (LinearEquiv.ofBijective g hbij)).elim
   · have := congrArg (fun (t : U k →ₗ[R] U l) => t y) h0
-    simpa [hg] using this
+    simpa [hg] using! this
 
 /-- **The projection is `End R M`-linear** — the content of Schur's lemma here. -/
 theorem piProj_comm (hsimp : ∀ k, IsSimpleModule R (U k))
@@ -120,7 +120,7 @@ theorem exists_smul_eq_one_and_zero (hsimp : ∀ k, IsSimpleModule R (U k))
       · simp [Pi.single_eq_of_ne hlk]
     rw [hsm, piProj_apply] at h
     have := congrFun h k
-    simpa using this
+    simpa using! this
   · intro l hlk y
     have h := hact (Pi.single l y)
     have hsm : a • (Pi.single l y : ∀ m, U m) = Pi.single l (a • y) := by

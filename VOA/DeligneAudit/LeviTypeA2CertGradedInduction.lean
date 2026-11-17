@@ -60,7 +60,7 @@ theorem a2_radical_word_two_boxes (p q : ℕ)
               a2LeviClosure ρ
                 (a2HigherKeySpan ρ w q
                   ⟨xs.length, ys.length, xs.sum + ys.sum⟩)) := by
-        simpa only [VOA.DeligneAudit.CLAssembly.evAlg_mono] using hstep
+        simpa only [VOA.DeligneAudit.CLAssembly.evAlg_mono] using! hstep
       have hbox : a2TwoBoxSpan ρ w p q xs.length ys.length xs.sum ys.sum ≤ C :=
         (a2TwoBoxSpan_le_key ρ w p q xs.length ys.length
           (xs.sum + ys.sum) xs.sum ys.sum rfl).trans le_sup_left
@@ -70,7 +70,7 @@ theorem a2_radical_word_two_boxes (p q : ℕ)
         intro v hv
         obtain ⟨zs, bs, hza, hbs, hd, hsmall, rfl⟩ := hv
         have hz := ih zs.sum (by omega) zs bs rfl
-        simpa only [C, hza, hbs, hd] using hz
+        simpa only [C, hza, hbs, hd] using! hz
       have hhigher : a2LeviClosure ρ
           (a2HigherKeySpan ρ w q
             ⟨xs.length, ys.length, xs.sum + ys.sum⟩) ≤ C := le_sup_right

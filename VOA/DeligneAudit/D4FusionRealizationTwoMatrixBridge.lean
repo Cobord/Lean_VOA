@@ -29,7 +29,7 @@ theorem rawColumn_coeff (c i j : ℕ) (hc : c < 28) (hi : i < 29) (hj : j < 29) 
     coeff (rawColumn c j) i =
       if i < 28 ∧ j < 28 then -DeligneSector.Sparse.fZ DeligneSector.D4.br c i j else 0 := by
   have h := List.all_eq_true.mp column_checks_all c
-    (List.mem_range'_1.mpr ⟨Nat.zero_le _, by simpa using hc⟩)
+    (List.mem_range'_1.mpr ⟨Nat.zero_le _, by simpa using! hc⟩)
   simp only [columnCheck, List.all_eq_true, List.mem_range, beq_iff_eq] at h
   have hh := h i hi j hj
   rw [rawBracket_eq] at hh

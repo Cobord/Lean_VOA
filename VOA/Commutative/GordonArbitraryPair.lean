@@ -117,7 +117,7 @@ theorem difference_pow_dvd_of_size_le (f : σ → τ) (u v : τ) (huv : u ≠ v)
   change MvPolynomial.rename et _ ∣
     MvPolynomial.rename et (blockEval g (MvPolynomial.rename es F)) at hout
   rw [heval] at hout
-  simpa only [map_pow, map_sub, MvPolynomial.rename_X, labelEquiv_true, labelEquiv_false] using hout
+  simpa only [et, map_pow, map_sub, MvPolynomial.rename_X, labelEquiv_true, labelEquiv_false] using hout
 
 /-- Lemma 4.3 for every distinct pair in an arbitrary labeled finite block partition. -/
 theorem difference_pow_two_min_dvd (f : σ → τ) (u v : τ) (huv : u ≠ v)

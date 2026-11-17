@@ -52,7 +52,7 @@ theorem ksFlagBoxSpan_le_finite (m a b c d : ℕ) :
   apply Finset.mem_image.mpr
   refine ⟨((fx, fy), fz), Finset.mem_filter.mpr ⟨?_, ?_⟩, rfl⟩
   · exact Finset.mem_product.mpr ⟨Finset.mem_product.mpr ⟨hfx, hfy⟩, hfz⟩
-  · simpa only [ksBoxDegree, hdx, hdy, hdz] using hd
+  · simpa only [ksBoxDegree, hdx, hdy, hdz] using! hd
 
 set_option maxHeartbeats 800000 in
 -- Comparing the mapped submodules unfolds several nested finite box images.
@@ -69,7 +69,7 @@ theorem ksFlag_homogeneous_finite_span (m a b c d : ℕ)
     rw [ksFlagRelationImage, ← Submodule.map_sup] at hh
     obtain ⟨Q, hQ, heq⟩ := hh
     have he : Q = P := Subtype.ext heq
-    simpa only [he] using hQ
+    simpa only [he] using! hQ
   · rw [ksFlagMaximalRelationSpan_eq_top_of_overfull m a b c d (by omega)]
     simp
 

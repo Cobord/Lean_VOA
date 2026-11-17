@@ -22,11 +22,11 @@ theorem a2_key_quot_finrank_le_effective (p q : ℕ)
     Module.finrank ℂ (S ⧸ F.comap S.subtype) ≤
       a2EffectiveMultiplicity p q k := by
   by_cases hb : k.d₂ ≤ q
-  · simpa only [a2EffectiveMultiplicity, if_pos hb] using
+  · simpa only [a2EffectiveMultiplicity, if_pos hb] using!
       a2_key_quot_finrank_le_boxPairs ρ w p q h k ha hb
   · have hzero := a2_key_quot_finrank_zero_of_second_gt ρ w p q h k
       (by omega)
-    simpa only [a2EffectiveMultiplicity, if_neg hb, hzero] using
+    simpa only [a2EffectiveMultiplicity, if_neg hb, hzero] using!
       (Nat.le_refl 0)
 
 /-- The effective multiplicities over all keys of fixed counts fit

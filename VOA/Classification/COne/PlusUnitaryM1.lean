@@ -53,10 +53,10 @@ noncomputable def lcE (L : MonoList) : (m1Sub m hm).carrier :=
 def lcR (L : MonoList) : List (ℚ × RawPoly ℕ) := L.map fun t => (t.1, monoR t.2.1 t.2.2)
 
 theorem hasPoly_lcE : ∀ L : MonoList, HasPoly m hm (lcE m hm L) (lc (lcR L))
-  | [] => by simpa [lcE, lcR, lc] using hasPoly_zero m hm
+  | [] => by simpa [lcE, lcR, lc] using! hasPoly_zero m hm
   | t :: L => by
     have := hasPoly_add m hm (hasPoly_smul m hm (hasPoly_monoE m hm t.2.1 t.2.2) t.1) (hasPoly_lcE L)
-    simpa [lcE, lcR, lc] using this
+    simpa [lcE, lcR, lc] using! this
 
 theorem oMod_lcE {M : Type} [AddCommGroup M] [Module ℂ M] (N : OrdVModule (V2mPlus m hm) M)
     {h w : ℂ} (hcw : IsLowestWeight N h) {x : M} (hx : x ∈ N.weight h)

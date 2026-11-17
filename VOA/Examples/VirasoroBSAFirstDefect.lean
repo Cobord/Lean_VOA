@@ -82,7 +82,7 @@ theorem transportState_L0 {c h : ℂ} (A : System V c h) (t : ℂ) (N r : ℕ) :
   | h r ih =>
     by_cases hr : r=0
     · subst r
-      simpa using A.seed_zero
+      simpa using! A.seed_zero
     · rw [transportState_eq_source A t N r (by omega),map_smul,
         transportSource_L0 A t N r (fun j => ih j j.isLt),smul_comm]
 
@@ -257,7 +257,7 @@ noncomputable def wardDefectSystem (c h b a : ℂ) (f : ℂ → wardSequenceSpac
       (wardTransportMode_comm c h b m n hm hm2 hn)
     change wardTransportMode c h b m (wardTransportMode c h b n v)-
       wardTransportMode c h b n (wardTransportMode c h b m v)=_ at hh
-    simpa only [LinearMap.add_apply,LinearMap.smul_apply,LinearMap.id_apply,add_assoc] using
+    simpa only [LinearMap.add_apply,LinearMap.smul_apply,LinearMap.id_apply,add_assoc] using!
       (sub_eq_iff_eq_add.mp hh).trans (add_comm _ _)
 
 /-- The unrestricted defect transport uses the existing actual BSA operator. -/

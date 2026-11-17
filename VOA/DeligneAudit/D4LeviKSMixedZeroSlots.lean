@@ -54,13 +54,13 @@ theorem xyzEvaluation_sum_zero_slots {σ τ : Type*}
                 (shape (Sum.inr t), 0)) := by
         have hinl (i : σ) :
             (d.mapDomain (Sum.inl : σ → σ ⊕ τ)) (Sum.inl i) = d i := by
-          rw [Finsupp.mapDomain_apply Sum.inl_injective]
+          rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
         have hinr (i : τ) :
             (d.mapDomain (Sum.inl : σ → σ ⊕ τ)) (Sum.inr i) = 0 := by
           apply Finsupp.mapDomain_notin_range
           simp
         simpa only [shapedModes, List.map_append, List.map_map,
-          Function.comp_def, hinl, hinr] using hp
+          Function.comp_def, hinl, hinr] using! hp
       rw [radicalWord_perm ρ w hword]
       simp only [radicalWord_eq_prod, List.map_append, List.prod_append,
         List.map_map, Function.comp_def, Module.End.mul_apply]
@@ -81,8 +81,8 @@ theorem xyzEvaluation_sum_zero_slots {σ τ : Type*}
               (shape (Sum.inr t), 0)))
         rw [radicalWord_eq_prod, radicalWord_eq_prod] at h
         simpa only [List.map_append, List.prod_append, List.map_map,
-          Function.comp_def, Module.End.mul_apply] using h
-      simpa only [Function.comp_def, Module.End.mul_apply] using
+          Function.comp_def, Module.End.mul_apply] using! h
+      simpa only [Function.comp_def, Module.End.mul_apply] using!
         congrArg (z • ·) (congrArg (· w) hc)
   | add P Q ihP ihQ =>
       simp only [map_add, ihP, ihQ, LinearMap.add_apply]

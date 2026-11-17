@@ -96,7 +96,7 @@ theorem fockDataStep_sound (s : ℂ) (r : ℕ) (hr : 0 < r) (hmax : r < 13) :
     (rawPrepend 0 (fockBSAData r)) ++ fockBSASourceData r) = 0 at h
   rw [fockRawEval_append, eval_rawScale, fockRawEval_prepend] at h
   simpa only [Rat.cast_mul, Rat.cast_sub, Rat.cast_natCast, Rat.cast_ofNat,
-    fockRawVar, ← smul_eq_C_mul, evalSparse, List.map_nil, List.sum_nil] using h
+    fockRawVar, ← smul_eq_C_mul, evalSparse, List.map_nil, List.sum_nil] using! h
 
 theorem fockBSASourceData_sound (s : ℂ) (hs : s ≠ 0) (r : ℕ)
     (ih : ∀ j : Fin r, fockRawEval s (fockBSAData j) = familyBSAState s j) :
@@ -135,8 +135,8 @@ theorem fockBSAData_sound (s : ℂ) (hs : s ≠ 0) (r : ℕ) (hmax : r < 13) :
       rw [familyBSAState_source s r hrpos, smul_smul]
       have he : (((r : ℂ) * (13-(r : ℂ))) * (s⁻¹^2)) *
           (-s^2 / ((r : ℂ)*(13-(r : ℂ)))) = -1 := by
-        field_simp [hs, hd]
-        rw [div_self hd]
+        have h13 : (13 - (r : ℂ)) ≠ 0 := right_ne_zero_of_mul hd
+        field_simp [hs, hd, h13]
       rw [he, neg_one_smul]
       exact eq_neg_of_add_eq_zero_left hstep
 

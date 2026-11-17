@@ -41,7 +41,7 @@ theorem part_Q_zero_of_clipped (F : ℕ → Module.End ℂ V) {w : V} {r n e : �
     (hs : clippedSum (parts r n e) p < s + p) : Q F p s w = 0 := by
   by_cases hp : p = 0
   · subst p
-    have hs0 : 0 < s := by simpa [clippedSum] using hs
+    have hs0 : 0 < s := by simpa [clippedSum] using! hs
     simp [Q, hs0.ne']
   · obtain ⟨k, hk⟩ := parts_region_optimizer r n e p (by omega)
     exact hCV p s k (by omega) (by omega)
@@ -52,7 +52,7 @@ theorem Q_symbol (a : Fin 3) (p s : ℕ) :
     ((Q (grOp R w a) p s (grGenerator R w)) : AmbientGr R w) =
       symbol R w p (Q (R.op (negRoot a)) p s w) := by
   have hh := currentProduct_symbol R w (List.replicate p a) s
-  simpa only [currentProduct_replicate, List.length_replicate, Q, Garland.Fs] using hh
+  simpa only [currentProduct_replicate, List.length_replicate, Q, Garland.Fs] using! hh
 
 theorem gradedQ_zero_of_source (a : Fin 3) (p s : ℕ)
     (hQ : Q (R.op (negRoot a)) p s w = 0) :
@@ -74,15 +74,15 @@ theorem orderedCoeff_zero_theta_mem {ε ν ϱ : Weight} (h : CV3Rel R w ε ν ϱ
   rw [PowerSeries.coeff_mul, LinearMap.coe_sum, Finset.sum_apply]
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  have hij' : i + j = s := Finset.mem_antidiagonal.mp hij
+  have hij' : i + j = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
   change Q (grOp R w 0) p i (Q (grOp R w 2) r j (grGenerator R w)) = 0
   by_cases hZ : clippedSum (parts ϱ.2 ν.2 ε.2) r < j + r
   · have hz := part_Q_zero_of_clipped (R.op 4)
-      (by simpa only [Nat.add_zero] using h.second) r j hZ
+      (by simpa only [Nat.add_zero] using! h.second) r j hZ
     rw [gradedQ_zero_of_source R w 2 r j hz, map_zero]
   · have hX : clippedSum (parts ϱ.1 ν.1 ε.1) p < i + p := by omega
     have hx := part_Q_zero_of_clipped (R.op 3)
-      (by simpa only [Nat.add_zero] using h.first) p i hX
+      (by simpa only [Nat.add_zero] using! h.first) p i hX
     rw [← Module.End.mul_apply,
       Q_commute_of_modes (grOp R w 0) (grOp R w 2)
         (fun a b => grOp_commute R w 0 2 a b) p i r j,

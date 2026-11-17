@@ -13,6 +13,8 @@ The kernel of the actual vacuum projection lies in the canonical radical.
 The same horizontal vector at variable highest weight has norm exactly h,
 which fixes the normalization of the future first-order restricted form.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open HighestNormalOrdering
@@ -73,14 +75,13 @@ theorem horizontal_norm (k h : ℂ) :
       (mode k h 1 0 (highestVector k h))=h := by
   rw [contravariant_adj]
   have hh : mode k h 0 0 (highestVector k h)=0 := by
-    simpa using mode_highest k h 0 0 (by simp [IsLower])
+    simpa using! mode_highest k h 0 0 (by simp [IsLower])
   have hc := congrArg (fun T : End ℂ (Verma k h) => T (highestVector k h))
     (mode_comm k h 0 1 0 0)
-  dsimp only at hc
   simp only [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,hh,map_zero,sub_zero] at hc
   have hz := mode_highest k h 2 0 (by simp [IsLower])
   have hm : mode k h 0 0 (mode k h 1 0 (highestVector k h))=h • highestVector k h := by
-    simpa [Fin.sum_univ_three,fabc,kappa,hz] using hc
+    simpa [Fin.sum_univ_three,fabc,kappa,hz] using! hc
   change contravariant k h (highestVector k h)
     (mode k h 0 0 (mode k h 1 0 (highestVector k h)))=h
   rw [hm,map_smul,contravariant_normalized,smul_eq_mul,mul_one]

@@ -65,7 +65,7 @@ theorem summable_log_product_twoVar
   have hh := summable_log_coset_twoVar h₂ h₁₂ hs (-a-1) (-b-1) k l
   have ha (n : ℕ) : -a-(n : ℂ)-1=(-a-1)-n := by ring
   have hb (n : ℕ) : -b+(n : ℂ)-1=(-b-1)+n := by ring
-  simpa only [ha,hb] using hh
+  simpa only [ha,hb] using! hh
 
 /-- Actual iterates converge absolutely in the iterate region, at every log degree. -/
 theorem summable_log_iterate_twoVar
@@ -87,6 +87,6 @@ theorem summable_log_iterate_twoVar
   have hh := summable_log_coset_twoVar h₀ h₀₂ hs (-a-1) (-b-1) k l
   have ha (n : ℕ) : -a-(n : ℂ)-1=(-a-1)-n := by ring
   have hb (n : ℕ) : -b+(n : ℂ)-1=(-b-1)+n := by ring
-  simpa only [ha,hb] using hh
+  simpa only [ha,hb] using! hh
 
 end VOA.Huang.LogHuangODEConvergence

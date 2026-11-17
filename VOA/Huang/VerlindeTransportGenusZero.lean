@@ -123,9 +123,11 @@ theorem tensorHom_smul_left (F : FusionChoice W) {X X' Y Y' : Ordinary W} (c : �
     (f : X ⟶ X') (g : Y ⟶ Y') : tensorHom F (c • f) g = c • tensorHom F f g := by
   apply tensor_hom_ext F
   intro n x y
-  rw [tensorHom_intertwiner, Ordinary.smul_val_apply, Ordinary.smul_val_apply,
-    tensorHom_intertwiner, map_smul, LinearMap.smul_apply]
-  rfl
+  refine (tensorHom_intertwiner F (c • f) g n x y).trans ?_
+  refine (congrArg (fun z => (F X' Y').intertwiner.val n z (g.val y))
+    (Ordinary.smul_val_apply c f x)).trans ?_
+  refine (LinearMap.congr_fun (map_smul ((F X' Y').intertwiner.val n) c (f.val x)) (g.val y)).trans ?_
+  exact congrArg (c • ·) (tensorHom_intertwiner F f g n x y).symm
 
 end Module
 
@@ -140,7 +142,7 @@ theorem famObj_id_ne_zero (D : VOA.ModularData W ι) (y : ι) : (𝟙 (famObj D 
   intro h
   apply hv
   have := congrArg (fun f : famObj D y ⟶ famObj D y => f.val v) h
-  simpa using this
+  simpa using! this
 
 /-- **Schur** for family members. -/
 theorem endo_scalar (D : VOA.ModularData W ι) (y : ι) (f : famObj D y ⟶ famObj D y) :
@@ -162,7 +164,7 @@ theorem smul_id_cancel (D : VOA.ModularData W ι) (y : ι) {p q : ℂ}
   apply famObj_id_ne_zero D y
   have h2 : (p - q) • 𝟙 (famObj D y) = 0 := by rw [sub_smul, h, sub_self]
   have h3 := congrArg (fun f => (p - q)⁻¹ • f) h2
-  simpa [smul_smul, inv_mul_cancel₀ (sub_ne_zero.mpr hpq)] using h3
+  simpa [smul_smul, inv_mul_cancel₀ (sub_ne_zero.mpr hpq)] using! h3
 
 /-- `Hom(M_y, M_z)` has dimension `δ_{yz}` for an irredundant family. -/
 theorem finrank_hom_fam (D : VOA.ModularData W ι) (hirr : Irredundant D.Mfam) (y z : ι) :

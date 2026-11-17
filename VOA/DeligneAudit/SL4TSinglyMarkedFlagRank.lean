@@ -163,7 +163,7 @@ theorem singlyMarkedLayer_lower_le_ker (n : ℕ) (V : Finset (Fin (n + 1))) (h k
       rw [hc]
       have hb := pair_boundary_mem_of_card r hE (u.succAbove j) u hau (h + 1) k (by omega)
         (by omega) (singlyMarkedFlag_marked_cutoff _ _ _ _ hj)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
     · have hc : singlyMarkedCutoff (deletedGroup u V) (h - 1) j = h - 1 := by
         simp only [singlyMarkedCutoff, mem_deletedGroup, if_neg hj]
       rw [hc]
@@ -230,11 +230,11 @@ theorem singlyMarkedFlag_finrank_le (B k : ℕ) (hk : 2 * k ≤ B) (V : Finset (
         simp only [Finset.mem_univ, iff_true]
         rwa [show i = a from Fin.ext (by have := i.isLt; have := a.isLt; omega)]
       subst hU
-      simpa using singlyMarkedFlag_univ_finrank_le 0 0 le_rfl
+      simpa using! singlyMarkedFlag_univ_finrank_le 0 0 le_rfl
   | succ B ih =>
       by_cases hU : V = Finset.univ
       · subst hU
-        simpa using singlyMarkedFlag_univ_finrank_le (B + 1) k hk
+        simpa using! singlyMarkedFlag_univ_finrank_le (B + 1) k hk
       obtain ⟨u, hu⟩ : ∃ u, u ∉ V := by
         by_contra hn
         apply hU

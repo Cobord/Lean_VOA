@@ -29,22 +29,19 @@ theorem cartan_beta_sum_reindex (P : WakFock) (n : ℕ) (hn : 0<n) :
   · intro p hp
     have hp' := Finset.mem_Icc.mp hp
     apply Finset.mem_range.mpr
-    dsimp only
     omega
   · intro p hp q hq he
     have hp' := Finset.mem_Icc.mp hp
     have hq' := Finset.mem_Icc.mp hq
-    dsimp only at he
     omega
   · intro j hj
     have hj' := Finset.mem_range.mp hj
     refine ⟨-(j : ℤ)-1,?_,?_⟩
     · apply Finset.mem_Icc.mpr; constructor <;> omega
-    · dsimp only; omega
+    · omega
   · intro p hp
     have hp' := Finset.mem_Icc.mp hp
     rw [bV_of_pos (by omega),bD_of_pos (by omega),dV_apply]
-    dsimp only
     have hi : ((n : ℤ)-p-1).toNat=(-p-1).toNat+n := by omega
     rw [hi]
 
@@ -61,14 +58,14 @@ theorem cartan_beta_sum_cutoff (P : WakFock) (n D : ℕ) (hn : 0<n)
       ∑ j∈Finset.range (max (NB P-1).toNat (D+1)),F j := by
     apply Finset.sum_subset (Finset.range_mono (le_max_left _ _))
     intro j hj hjnot
-    have hj' : (NB P-1).toNat≤j := by simpa using hjnot
+    have hj' : (NB P-1).toNat≤j := by simpa using! hjnot
     dsimp only [F]
     rw [pderiv_eq_zero_of_NB_le (by omega),mul_zero]
   have hright : (∑ j∈Finset.range (D+1),F j)=
       ∑ j∈Finset.range (max (NB P-1).toNat (D+1)),F j := by
     apply Finset.sum_subset (Finset.range_mono (le_max_right _ _))
     intro j hj hjnot
-    have hj' : D+1≤j := by simpa using hjnot
+    have hj' : D+1≤j := by simpa using! hjnot
     dsimp only [F]
     rw [hD (j+n) (by omega),mul_zero]
   exact hleft.trans hright.symm

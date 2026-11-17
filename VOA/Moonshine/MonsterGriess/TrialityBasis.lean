@@ -57,6 +57,11 @@ import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 set_option linter.style.longLine false
 set_option linter.style.show false
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess
 
 open VOA.Moonshine.MonsterGriess.Code VOA.Moonshine.MonsterGriess.Spin

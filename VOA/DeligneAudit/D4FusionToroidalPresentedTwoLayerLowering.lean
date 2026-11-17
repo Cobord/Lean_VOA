@@ -14,7 +14,7 @@ theorem two_generator_cartan_mode_one (c : Fin 28) (hc : D4sector.cartan c) :
     (ρPTE 2).op c 0 1 (pTE 2) = 0 := by
   have ht : [(c, 1)] ∈ (ravFam D4sector 2 0).tails :=
     Or.inr (Or.inl ⟨c, 1, hc, by omega, rfl⟩)
-  simpa [symbolLetters, wordOpT] using two_syntax_tail [(c, 1)] ht
+  simpa [symbolLetters, wordOpT] using! two_syntax_tail [(c, 1)] ht
 
 private theorem two_negative_fusion :
     ∀ i : Fin 12, D4sector.fusion (negativeIndex i) := by
@@ -34,7 +34,7 @@ theorem two_generator_negative_one_one (i : Fin 12)
   have hsum : (∑ c : Fin 28,
       D4sector.f (negativeCartan i) (negativeIndex i) c •
         (ρPTE 2).op c 1 1 (pTE 2)) = 0 := by
-    simpa [hq, hh] using hcomm.symm
+    simpa [hq, hh] using! hcomm.symm
   have htable : (∑ c : Fin 28,
       D4sector.f (negativeCartan i) (negativeIndex i) c •
         (ρPTE 2).op c 1 1 (pTE 2)) =

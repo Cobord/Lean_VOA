@@ -33,7 +33,7 @@ theorem finite_ward_sequence_unique (P : Submodule ℂ (orbifold ico).carrier)
   | h n ih =>
     intro hn
     by_cases hz : n=0
-    · simpa [hz] using hzero
+    · simpa [hz] using! hzero
     · have hnpos : 0 < n := by omega
       apply sub_eq_zero.mp
       apply rigid n hnpos hn (f n - g n) (P.sub_mem (hfP n hn) (hgP n hn))
@@ -61,9 +61,9 @@ theorem vacuum_ward_sequence_unique (R : ℕ) (hR : R < 100)
   apply finite_ward_sequence_unique vacuumChannel 0 R c₁ c₂ _ f g
     (fun n hn => hfC n hn) (fun n hn => hgC n hn) _ _ hf₁ hg₁ hf₂ hg₂ hzero
   · intro n hn hnR x hx hg h₁ h₂
-    exact vacuum_channel_positive_rigidity (n : ℤ) (by exact_mod_cast hn) (by omega) x (by simpa using hg) hx h₁ h₂
-  · simpa using hfg
-  · simpa using hgg
+    exact vacuum_channel_positive_rigidity (n : ℤ) (by exact_mod_cast hn) (by omega) x (by simpa using! hg) hx h₁ h₂
+  · simpa using! hfg
+  · simpa using! hgg
 
 set_option maxHeartbeats 1000000 in
 theorem sixth_ward_sequence_unique (R : ℕ) (hR : R < 64)
@@ -81,6 +81,6 @@ theorem sixth_ward_sequence_unique (R : ℕ) (hR : R < 64)
     (by intro n hn; exact Submodule.mem_top) (by intro n hn; exact Submodule.mem_top)
     hfg hgg hf₁ hg₁ hf₂ hg₂ hzero
   intro n hn hnR x _ hg h₁ h₂
-  exact sixth_channel_positive_rigidity (36+n) (by omega) (by omega) x (by simpa only [Nat.cast_add, Nat.cast_ofNat] using hg) h₁ h₂
+  exact sixth_channel_positive_rigidity (36+n) (by omega) (by omega) x (by simpa only [Nat.cast_add, Nat.cast_ofNat] using! hg) h₁ h₂
 
 end VOA.Classification.COne.OrbIcoV

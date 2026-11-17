@@ -19,7 +19,7 @@ theorem a2_cyc_lowering_locally_nilpotent (p q : ℕ)
   | mem z hz =>
       obtain ⟨l, rfl⟩ := hz
       have hw : (ρ.op 4 0 ^ (q + 1)) w = 0 := by
-        simpa [Module.End.pow_apply] using h.lowering_second
+        simpa [Module.End.pow_apply] using! h.lowering_second
       have hwt : A2sector.wt (4 : Fin 8) ≠ 0 := by decide
       refine ⟨q + 1 + adK A2sector * l.length, ?_⟩
       exact pow_kill_word (S := A2sector) ρ

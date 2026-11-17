@@ -78,9 +78,9 @@ theorem a3_raising_maps_key (a b c : ℕ)
       exact a3_raising_word_key ρ w a b c h i r l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (a3KeyLayer ρ w (a3RaiseKey i r k)).add_mem hx hy
+      simpa using! (a3KeyLayer ρ w (a3RaiseKey i r k)).add_mem hx hy
   | smul d x _ hx =>
-      simpa using (a3KeyLayer ρ w (a3RaiseKey i r k)).smul_mem d hx
+      simpa using! (a3KeyLayer ρ w (a3RaiseKey i r k)).smul_mem d hx
 
 end VOA.DeligneAudit.A3Sector
 

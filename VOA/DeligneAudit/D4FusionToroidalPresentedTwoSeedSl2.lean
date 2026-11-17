@@ -17,7 +17,7 @@ theorem two_sl2_negative_two_of_nilpotent (E F H : V →ₗ[ℂ] V)
     (hN : ∃ N : ℕ, F^[N] u = 0) : u = 0 := by
   obtain ⟨N, hN⟩ := hN
   induction N with
-  | zero => simpa using hN
+  | zero => simpa using! hN
   | succ n ih =>
       by_cases hp : F^[n] u = 0
       · exact ih hp

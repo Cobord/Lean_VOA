@@ -32,7 +32,7 @@ theorem source_generator_mem_flag : sourceGenerator ∈ flag actualBasis wordLev
     exact Nat.zero_le _
   · apply (flatCoordinates 28).injective
     rw [actualBasis_apply]
-    simpa only [wordVector,LinearEquiv.apply_symm_apply] using flat_source_generator
+    simpa only [wordVector,LinearEquiv.apply_symm_apply] using! flat_source_generator
 
 theorem actualBasis_words (i : Fin 841) :
     ∃ l : List (Fin 28 × ℕ), degree l = wordLevel i ∧

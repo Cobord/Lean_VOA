@@ -37,6 +37,12 @@ theorem sum_split_diag {m : ℕ} {R : Type*} [AddCommMonoid R] (F : Fin m → R)
   ext j; simp [Finset.mem_erase, and_comm]
 
 omit [DecidableEq σ] in
+private theorem loopOp_apply' (m : ℕ) (x : σ) (r : ℕ)
+    (p : TensorPolynomial (K := K) (σ := σ) m 0) (t : Fin m → σ) :
+    loopOp f m x r p t = -∑ i, zr i ^ r * ∑ c, C (f x (t i) c) * p (Function.update t i c) :=
+  rfl
+
+omit [DecidableEq σ] in
 /-- Double application of loop operators, pointwise. -/
 theorem loopOp_loopOp_apply (m : ℕ) (a b : σ) (r s : ℕ)
     (p : TensorPolynomial (K := K) (σ := σ) m 0) (t : Fin m → σ) :
@@ -46,13 +52,12 @@ theorem loopOp_loopOp_apply (m : ℕ) (a b : σ) (r s : ℕ)
       ∑ i, ∑ j, if j = i then 0 else
         zr i ^ r * zr j ^ s * ∑ c, ∑ d, C (f a (t i) c) * C (f b (t j) d) *
           p (Function.update (Function.update t i c) j d) := by
-  simp only [loopOp, LinearMap.coe_mk, AddHom.coe_mk, mul_neg, Finset.sum_neg_distrib,
-    neg_neg, Finset.mul_sum]
+  simp only [loopOp_apply', mul_neg, Finset.sum_neg_distrib, neg_neg, Finset.mul_sum]
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_comm]
   rw [sum_split_diag _ i]
-  congr 1
+  refine congrArg₂ (· + ·) ?_ ?_
   · simp only [Function.update_self, Function.update_idem, pow_add]
     refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
     ring

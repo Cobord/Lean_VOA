@@ -30,11 +30,12 @@ variable {V : Type u} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra
 
 /-- `Res_x φ(x) Y(a, x)` for a Laurent test function: `Σₙ φₙ aₙ`. -/
 noncomputable def nres (A : WeakModule W M) (a : V) (φ : ℂ[T;T⁻¹]) : Module.End ℂ M :=
-  Finsupp.linearCombination ℂ (fun n => mode (A.YM a) n) φ
+  (Finsupp.linearCombination ℂ (fun n => mode (A.YM a) n) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) φ
 
 theorem nres_CT (A : WeakModule W M) (a : V) (c : ℂ) (n : ℤ) :
     nres A a (LaurentPolynomial.C c * T n) = c • mode (A.YM a) n := by
-  rw [nres, ← single_eq_C_mul_T, Finsupp.linearCombination_single]
+  rw [nres, ← single_eq_C_mul_T]; exact Finsupp.linearCombination_single ℂ _ _
 
 theorem nres_add (A : WeakModule W M) (a : V) (φ ψ : ℂ[T;T⁻¹]) :
     nres A a (φ + ψ) = nres A a φ + nres A a ψ := map_add _ _ _
@@ -47,7 +48,7 @@ theorem nres_sub (A : WeakModule W M) (a : V) (φ ψ : ℂ[T;T⁻¹]) :
   rw [sub_eq_add_neg, ← neg_one_smul ℂ ψ, nres_add, nres_smul, neg_one_smul, ← sub_eq_add_neg]
 
 theorem nres_T (A : WeakModule W M) (a : V) (n : ℤ) : nres A a (T n) = mode (A.YM a) n := by
-  simpa using nres_CT A a 1 n
+  simpa using! nres_CT A a 1 n
 
 theorem nres_sum (A : WeakModule W M) (a : V) {ι : Type*} (s : Finset ι) (f : ι → ℂ[T;T⁻¹]) :
     nres A a (∑ i ∈ s, f i) = ∑ i ∈ s, nres A a (f i) := map_sum _ _ _
@@ -224,7 +225,7 @@ theorem tdiff_low {k : ℤ} (hk : k ≤ 0) {b : V} (hb : b ∈ W.grading k) (ψ 
   rcases lt_or_eq_of_le hk with hk | rfl
   · have : b = 0 := by
       have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W hb (j := 0) (by omega)
-      simpa using h
+      simpa using! h
     subst this; exact tdiff_zero_a A Q H ψ g w
   · rw [W.vacuum_grade, Submodule.mem_span_singleton] at hb
     obtain ⟨c, rfl⟩ := hb
@@ -235,7 +236,7 @@ theorem sdiff_eq_tdiff {K : ℕ} {a : V} (ha : a ∈ W.grading K) (φ : ℂ[T;T�
     sdiff A Q H a φ g w = -((-1 : ℂ) ^ K * ∑ j ∈ Finset.range (K + 1),
       (j.factorial : ℂ)⁻¹ * tdiff A Q H ((W.L 1 ^ j) a) (inv (2 * (K : ℤ) - 2 - j) φ) g w) := by
   rw [sdiff, oppBres_twist A ha, nres_twist Q ha]
-  simp only [tdiff, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply, map_smul,
+  simp only [tdiff, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, map_smul,
     map_sum, LinearMap.smul_apply, smul_eq_mul, Finset.mul_sum,
     ← Finset.sum_sub_distrib, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun j _ => ?_

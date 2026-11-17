@@ -38,10 +38,10 @@ theorem exists_local_vac_ground_basis (N : ℕ) (hN : N < 1) :
   have hcols (j : J) : vacColumns N a 1 j = fockCoordinates N (B j).val := by
     funext d
     rw [vacColumns, ← vacLevelCoefficient_sound N (a j) 1 one_ne_zero d.val]
-    change coeff d.val (vacFamilyMap 1 (vermaLevelState _ _ N
-      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))) = _
+    change (vacFamilyMap 1 (vermaLevelState _ _ N
+      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))).coeff d.val = _
     rw [vermaLevelState_coordinates]
-    exact congrArg (fun v : gradingWN 1 N => coeff d.val v.val) (hu j)
+    exact congrArg (fun v : gradingWN 1 N => (v.val).coeff d.val) (hu j)
   let K : LinearMap.range F →ₗ[ℂ] (FockOccupations N → ℂ) :=
     (fockCoordinates N).comp (LinearMap.range F).subtype
   have hK : Function.Injective K :=
@@ -68,7 +68,7 @@ theorem exists_local_vac_ground_basis (N : ℕ) (hN : N < 1) :
       have hb := (chargedFockLevelMap (familyBackground s.val) (vacFamilyMomentum s.val) N).finrank_range_le
       rw [vermaLevel_finrank] at hb
       change Module.finrank ℂ (LinearMap.range (chargedFockLevelMap (familyBackground s.val) (vacFamilyMomentum s.val) N)) ≤ Fintype.card (Fin (vacBasisSize N))
-      simpa only [Fintype.card_fin, vac_fock_ground_dimension_one N hN] using hb)
+      simpa only [Fintype.card_fin, vac_fock_ground_dimension_one N hN] using! hb)
 
 
 theorem exists_local_vac_fock_basis (N : ℕ) :
@@ -102,7 +102,7 @@ theorem vac_uniformProbe_kills_ground_kernel_near (N : ℕ) (hN : N < 1) :
     omega
   intro v hv hz
   have hvz : (⟨v,hv⟩ : sortedSpan (familyCharge s.val) (vacFamilyWeight s.val) N) = 0 :=
-    hi (Subtype.ext (by simpa only [map_zero] using hz))
+    hi (Subtype.ext (by simpa only [map_zero] using! hz))
   have he : v=0 := congrArg Subtype.val hvz
   rw [he, map_zero]
 

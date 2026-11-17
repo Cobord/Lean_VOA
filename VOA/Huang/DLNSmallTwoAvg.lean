@@ -85,8 +85,8 @@ theorem layerTwo_c3_average (ha : 1 ≤ a)
     ext i j
     rw [Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul, ← sub_eq_zero, ← mul_sub]
     apply (two_pow_mul_eq_zero_iff _).mpr
-    rw [map_sub, sub_eq_zero]
-    exact congrFun (congrFun hST i) j
+    rw [map_sub]
+    exact sub_eq_zero.mpr (congrFun (congrFun hST i) j)
   rcases c3_average_aux (F W) htr with h0 | h1
   · have : q • (c3Finset.toList.map Wf).sum = q • (0 : Matrix (Fin 2) (Fin 2) (ZMod (2 ^ (a + 1)))) :=
       hentry _ _ (by rw [hsum, h0, map_zero])

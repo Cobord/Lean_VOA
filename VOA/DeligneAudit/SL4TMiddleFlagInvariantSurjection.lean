@@ -53,7 +53,7 @@ theorem middleFlagElementary_generates (q : MixedParams) (hq : MixedValid q) (hA
     rcases v with ⟨i, n⟩
     rw [map_mul]
     apply S.mul_mem hp
-    simpa only [mixedE, mixedAlphabet, elementary_succ, MvPolynomial.rename_X] using hgen i n
+    simpa only [mixedE, mixedAlphabet, elementary_succ, MvPolynomial.rename_X] using! hgen i n
 
 /-- Finite block elementary coordinates surject onto the concrete middle multiplicity ring. -/
 theorem middleFlagCoordinateEvaluation_surjective (q : MixedParams) (hq : MixedValid q)

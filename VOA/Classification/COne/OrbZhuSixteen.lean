@@ -134,10 +134,14 @@ theorem coordEα_two_of_lt {k : ℤ} (hk : k < 16) {x : LatModuleGen (latP 4)}
     refine iSup_le fun α => ?_
     by_cases hα : α = ((2 : ℤ) : (latP 4).carrier)
     · subst hα
-      rw [bigradα_eq_bot_of_neg (latP 4) _ (by rw [halfNorm_two]; omega)]
+      rw [bigradα_eq_bot_of_neg (latP 4)
+        (w := k - LatGen.halfNorm (latP 4) ((2 : ℤ) : (latP 4).carrier))
+        ((2 : ℤ) : (latP 4).carrier)
+        (by rw [halfNorm_two]; omega)]
       exact bot_le
     · rintro x ⟨p, -, rfl⟩
-      rw [LinearMap.mem_ker, mkEα_apply, coordEα_apply, if_neg (Ne.symm hα)]
+      rw [LinearMap.mem_ker, mkEα_apply,
+        coordEα_apply (latP 4) ((2 : ℤ) : (latP 4).carrier) _ p, if_neg (Ne.symm hα)]
   exact hle hx
 
 /-- Weight-16 lower descendants of `V₈` have no `e^{2β}` coordinate. -/
@@ -146,7 +150,8 @@ theorem coordEα_two_lowerDesc {y : LatModuleGen (latP 4)} (hy : y ∈ lowerDesc
   induction hy using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨m, z, hz, rfl⟩ := hy
-    rw [coordEα_V8_L, coordEα_two_of_lt (by omega) hz, map_zero, map_zero, map_zero]
+    rw [coordEα_V8_L ((2 : ℤ) : (latP 4).carrier), coordEα_two_of_lt (by omega) hz, map_zero,
+      map_zero, map_zero]
   | zero => simp
   | add x y _ _ hx hy => rw [map_add, hx, hy, add_zero]
   | smul c x _ hx => rw [map_smul, hx, smul_zero]
@@ -160,7 +165,7 @@ theorem weightSixteen_not_lowerDesc :
   have h1 := coordEα_two_lowerDesc h
   rw [coord_weightSixteen] at h1
   have : (1 : FockN (rank (latP 4))) ≠ 0 := one_ne_zero
-  exact this (by simpa using h1)
+  exact this (by simpa using! h1)
 
 /-- The certified weight-16 state is not a lower descendant in the cubic model. -/
 theorem fixedSixteen_not_lowerDesc : fixedSixteen ∉ lowerDesc FF 16 := by
@@ -247,7 +252,7 @@ theorem mk₂_lowerDesc_sixteen {y : (orbifold tetra).carrier} (hy : y ∈ lower
   | mem y hy =>
     obtain ⟨m, z, hz, rfl⟩ := hy
     rcases m with _ | _ | m
-    · have h0 : Wt.L (-((0 : ℕ) : ℤ) - 1) z ∈ O₂ Wt := by simpa using L_neg_one_mem_O₂ Wt z
+    · have h0 : Wt.L (-((0 : ℕ) : ℤ) - 1) z ∈ O₂ Wt := by simpa using! L_neg_one_mem_O₂ Wt z
       rw [(mk₂_eq_zero_iff Wt).mpr h0]
       exact Submodule.zero_mem _
     · have hL : Wt.L (-(((0 + 1 : ℕ)) : ℤ) - 1) z = Wt.L (-2) z := by norm_num
@@ -273,8 +278,8 @@ theorem mk₂_lowerDesc_sixteen {y : (orbifold tetra).carrier} (hy : y ∈ lower
       rw [(mk₂_eq_zero_iff Wt).mpr hO]
       exact Submodule.zero_mem _
   | zero => simp
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 /-! ## Assembly -/
 
@@ -331,7 +336,7 @@ theorem tetraSixteenTruncation_holds : TetraSixteenTruncation := by
     have hωs : e.symm (orbifoldVOA tetra).conformalVector = (FF).conformalVector := by
       rw [← hω, LinearEquiv.symm_apply_apply]
     have := map_lowerDesc_le hs hωs 16 (Submodule.mem_map_of_mem (hyl ▸ hl))
-    simpa using this
+    simpa using! this
   obtain ⟨d, hd⟩ := Submodule.mem_span_singleton.mp (mk₂_lowerDesc_sixteen hl)
   have hv : mk₂ Wt tetraV = a⁻¹ • mk₂ Wt (e fixedSixteen) +
       (-(a⁻¹ * d)) • mk₂ Wt (((Wt.L (-2)) ^ 8) Wt.vacuum) := by

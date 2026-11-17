@@ -54,7 +54,7 @@ theorem charTable_idempotents (hC2 : C2Cofinite W) {n : ℕ}
   letI := instRingA W
   letI := instAlgebraA W
   letI := finiteDimensional_A_of_C2Cofinite W hC2
-  let e := characterAlgEquiv χ hχ (by simpa using hdim)
+  let e := characterAlgEquiv χ hχ (by simpa using! hdim)
   have he : ∀ a j, e a j = χ j a := fun _ _ => rfl
   refine ⟨fun i => e.symm (Pi.single i 1), ?_, ?_, ?_⟩
   · apply e.injective
@@ -182,7 +182,7 @@ theorem zeroWeightAdjoint_of_charTable (hC2 : C2Cofinite W) (hS : W.IsSimple) {n
       linarith
     have hk0' : k = 0 := by exact_mod_cast hk0
     subst hk0'
-    simpa using hk.symm
+    simpa using! hk.symm
   subst hh
   obtain ⟨x, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   obtain ⟨j, y, hy0, hy⟩ := exists_eigen_character hC2 hdim χ hχ O hlow
@@ -360,7 +360,7 @@ theorem pairSplit_one_zero_of_telescope (hC2 : C2Cofinite W)
       exact (W.creation _).2 0 le_rfl
     · apply Module.End.eigenspace_le_maxGenEigenspace
       apply Module.End.mem_eigenspace_iff.mpr
-      simpa only [one_smul] using ht1
+      simpa only [one_smul] using! ht1
   have htel := translation_telescope A π 1 hb (by norm_num) hx he ha hb' N J hN hN1 hJ
   rw [telescope_eq_topEvaluation A ha hb' hyΩ N J hN hN1 hJ hβ] at htel
   exact top_eq_zero_of_table hC2 hdim χ hχ hω A hyΩ (c := 1)
@@ -383,7 +383,7 @@ theorem tetra_unique_zero : ∀ i, tetraWeight i = 0 → i = 0 := by
   have h : ∀ i : Fin 21, tetraWeightQ i = 0 → i = 0 := by decide +kernel
   intro i hi
   apply h i
-  have : ((tetraWeightQ i : ℚ) : ℂ) = ((0 : ℚ) : ℂ) := by simpa [tetraWeight] using hi
+  have : ((tetraWeightQ i : ℚ) : ℂ) = ((0 : ℚ) : ℂ) := by simpa [tetraWeight] using! hi
   exact_mod_cast this
 
 theorem tetra_nonneg : ∀ i, 0 ≤ (tetraWeight i).re := by

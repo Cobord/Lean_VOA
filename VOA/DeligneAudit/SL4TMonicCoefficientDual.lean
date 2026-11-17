@@ -44,7 +44,7 @@ theorem monic_remainder_coefficient_shift (P p : Polynomial A) (r i : ℕ)
     exact dvd_mul_of_dvd_right (dvd_mul_right P _) X
   rw [hm, monic_remainder_variable_mul P (p %ₘ P) r hP hr hrpos]
   · simp only [coeff_sub, coeff_X_mul, coeff_C_mul, coeff_mul_C, mul_comm]
-  · simpa only [degree_eq_natDegree hP.ne_zero, hr] using degree_modByMonic_lt p hP
+  · simpa only [degree_eq_natDegree hP.ne_zero, hr] using! degree_modByMonic_lt p hP
 
 /-- Monic polynomials representing the coefficient functionals from highest to lowest. -/
 def monicCoefficientDual (P : Polynomial A) (r : ℕ) : ℕ → Polynomial A

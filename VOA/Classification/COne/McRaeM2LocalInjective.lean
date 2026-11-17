@@ -201,10 +201,10 @@ theorem extend_submodule (hC2 : C2Cofinite W) (B : WeakModule W M) (BI : WeakMod
     { toLinearMap :=
         { toFun := fun x => p.toLinearPMap ⟨x,htop ▸ Submodule.mem_top⟩
           map_add' := fun x y => by
-            simpa using p.toFun.map_add (⟨x,htop ▸ Submodule.mem_top⟩ : p.domain)
+            simpa using! p.toFun.map_add (⟨x,htop ▸ Submodule.mem_top⟩ : p.domain)
               (⟨y,htop ▸ Submodule.mem_top⟩ : p.domain)
           map_smul' := fun c x => by
-            simpa using p.toFun.map_smul c (⟨x,htop ▸ Submodule.mem_top⟩ : p.domain) }
+            simpa using! p.toFun.map_smul c (⟨x,htop ▸ Submodule.mem_top⟩ : p.domain) }
       map_act := fun a n x => p.map_act a n ⟨x,htop ▸ Submodule.mem_top⟩ }
   refine ⟨g,fun x => ?_⟩
   exact (hp.2 (x := x) (y := ⟨x,htop ▸ Submodule.mem_top⟩) rfl).symm
@@ -234,7 +234,7 @@ theorem embed_of_essential_submodule (hC2 : C2Cofinite W)
     have he : f.toLinearMap (⟨x,hx.1⟩ : S.carrier) = 0 := by
       rw [← hg]
       exact hx.2
-    have hz : (⟨x,hx.1⟩ : S.carrier) = 0 := hf (by simpa using he)
+    have hz : (⟨x,hx.1⟩ : S.carrier) = 0 := hf (by simpa using! he)
     exact congrArg Subtype.val hz
   have hker : g.toLinearMap.ker = ⊥ := hess K hSK
   exact ⟨g,LinearMap.ker_eq_bot.mp hker,hg⟩

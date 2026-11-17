@@ -107,7 +107,6 @@ theorem assoc_revHom_decomp (c : TransferChoice F D a b) {β : ∀ x, Fin (c.r x
       (evalAssoc F H (famObj D b) (famObj D a) (famObj D (c.lab x j))).hom ≫
         revHom F H c x j = β x j • (leftUnitor F (famObj D (c.lab x j))).hom := by
     have h2 := congrArg (fun f => (leftUnitor F (famObj D (c.lab x j))).hom ≫ f) hb
-    simp only at h2
     rw [Iso.hom_inv_id_assoc] at h2
     rw [h2, Linear.comp_smul, Category.comp_id]
   have h1 : 𝟙 (tensorObj F (famObj D b) (famObj D a)) = π ≫ c.η + nonVac F c π := by
@@ -150,8 +149,7 @@ theorem iterate_tensorHom_dictionary {P₁ P₂ P₃ P₄ : LWModule W} (Q : LWM
       (((F (Ordinary.of P₁.isMod) (Ordinary.of P₂.isMod)).lift Q.isMod
         (postcompose _ Q.isMod g)).val u) m)
   erw [hl]
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
-  rfl
+  exact congrArg h.val (tensorHom_intertwiner F g (𝟙 (Ordinary.of P₃.isMod)) n u m)
 
 /-- The vacuum pairing `π` as an intertwiner (Huang's `Y^e_{a' a}` for the reversed pair). -/
 def piInt (π : tensorObj F (famObj D b) (famObj D a) ⟶ vacuumObject) :
@@ -175,8 +173,10 @@ theorem vacuumPart_dictionary (hv : W.vacuum ≠ 0)
       ((F (tensorObj F (famObj D b) (famObj D a)) (famObj D y)).intertwiner.val n u m) =
     (moduleIntertwiner (lwOf D y).isMod).val n
       (((F (famObj D b) (famObj D a)).lift (vacuumLW W hv).isMod (piInt F π)).val u) m
-  rw [hl, Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply, leftUnitor_intertwiner]
-  rfl
+  rw [hl]
+  exact (congrArg (leftUnitor F (famObj D y)).hom.val
+    (tensorHom_intertwiner F π (𝟙 (famObj D y)) n u m)).trans
+    (leftUnitor_intertwiner F (famObj D y) n (π.val u) m)
 
 /-- The product channel of `ν_j ∘ (M_b ◁ μ_j)` is the represented product
 `ν_j(·, z₁) μ_j(·, z₂)`. -/
@@ -195,8 +195,9 @@ theorem revProduct_dictionary (c : TransferChoice F D a b) (x : ι) (j : Fin (c.
       ((F (famObj D b) (tensorObj F (famObj D a) (famObj D (c.lab x j)))).intertwiner.val n u v) =
     (nuInt F c x j).val n u
       (((F (famObj D a) (famObj D (c.lab x j))).lift (lwOf D x).isMod (muInt F H c x j)).val v)
-  rw [hl, Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
-  rfl
+  rw [hl]
+  exact congrArg (c.proj x j).val
+    (tensorHom_intertwiner F (𝟙 (famObj D b)) (muHom F H c x j) n u v)
 
 /-! ## §3 The reversed four-point identity -/
 
@@ -247,7 +248,7 @@ theorem remHom_split (c : TransferChoice F D a b)
     intro s
     classical
     induction s using Finset.induction_on with
-    | empty => simpa using tensorHom_zero_left' F
+    | empty => simpa using! tensorHom_zero_left' F
     | insert k s hk ih =>
       rw [Finset.sum_insert hk, Finset.sum_insert hk, TensorCat.tensorHom_add_left, ih]
   unfold remHom
@@ -358,8 +359,9 @@ theorem reversed_fourPoint (hV : StronglyRational W) (hv : W.vacuum ≠ 0)
     conv_lhs => rw [assoc_revHom_decomp F H c hβ π x j, remHom_split F H c π x j lab' i p htot]
     exact (postcompose_cat_add F _ _).trans
       (congrArg₂ (· + ·) (postcompose_cat_smul F _ _) (postcompose_cat_sum F _ _))
-  rw [hdec, iterateEvaluation_add F hs, iterateEvaluation_smul F hs,
-    iterateEvaluation_sum F _ _ (fun k => (hs _ _ _ _ _).1 _), hP] at h4
+  rw [hdec, iterateEvaluation_add F hs (β x j • A) (∑ k, B k) (TensorCat.ordinaryTest d),
+    iterateEvaluation_smul F hs (β x j) A (TensorCat.ordinaryTest d),
+    iterateEvaluation_sum F B (TensorCat.ordinaryTest d) (fun k => (hs _ _ _ _ _).1 _), hP] at h4
   rw [← h4, hA, hI0, hB]
   exact congrArg _ (Finset.sum_congr rfl fun k _ => hIk k)
 

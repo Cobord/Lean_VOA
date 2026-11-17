@@ -55,12 +55,12 @@ theorem pairYCoeff_rename_x (a b c : ℕ)
     (P : MvPolynomial (PairSource a b c) ℂ)
     (hP : P ∈ pairSourceSymmetric a b c) (d : Fin b →₀ ℕ) :
     rename (pairXZXPerm a b c e)
-        (coeff d (pairSplitAlgebra a b c P)) =
-      coeff d (pairSplitAlgebra a b c P) := by
-  have h := congrArg (fun Q => coeff d (pairSplitAlgebra a b c Q))
+        ((pairSplitAlgebra a b c P).coeff d) =
+      (pairSplitAlgebra a b c P).coeff d := by
+  have h := congrArg (fun Q => (pairSplitAlgebra a b c Q).coeff d)
     (pairSourceSymmetric_rename_x a b c e P hP)
-  change coeff d (pairSplitAlgebra a b c
-      (rename (pairSourceXPerm a b c e) P)) = _ at h
+  change (pairSplitAlgebra a b c
+      (rename (pairSourceXPerm a b c e) P)).coeff d = _ at h
   rw [pairSplitAlgebra_rename_x a b c e P] at h
   rw [MvPolynomial.coeff_map] at h
   exact h

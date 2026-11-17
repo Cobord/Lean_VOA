@@ -42,8 +42,8 @@ theorem symbolLemma_of_presentation (m : ℕ) (hm : 1 ≤ m)
     | nil => exact hψgen
     | cons a l ih =>
         change ψ (ρP.op a.1 a.2.1 a.2.2 _) = _
-        rw [hψeq, ih]
-        rfl
+        exact (hψeq a.1 a.2.1 a.2.2 _).trans
+          (congrArg ((grToroidal_D4 m hm).op a.1 a.2.1 a.2.2) ih)
   have hψsurj : Function.Surjective ψ := by
     apply LinearMap.range_eq_top.mp
     apply top_unique
@@ -59,8 +59,8 @@ theorem symbolLemma_of_presentation (m : ℕ) (hm : 1 ≤ m)
     | nil => exact hχgen
     | cons a l ih =>
         change χ (ρP.op a.1 a.2.1 a.2.2 _) = _
-        rw [hχeq, ih]
-        rfl
+        exact (hχeq a.1 a.2.1 a.2.2 _).trans
+          (congrArg ((D4Fusion.gradedAction m).op a.1 a.2.1 a.2.2) ih)
   have hχsurj : Function.Surjective χ := by
     apply LinearMap.range_eq_top.mp
     apply top_unique

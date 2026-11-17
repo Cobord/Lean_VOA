@@ -35,13 +35,15 @@ theorem actionIntertwiner_fixed (ha : ActionLaws G hSR E X a) (z : ℂ)
   change IsLeftAct a at ha
   have hunit : tensorHom (fusionChoice_pbw hSR) (unitInclusion G) (𝟙 X) ≫ a =
       (leftUnitor (fusionChoice_pbw hSR) X).hom := by
-    simpa only [E.one_eq] using ha.one_act
+    simpa only [E.one_eq] using! ha.one_act
   have ht := tensorHom_intertwiner (fusionChoice_pbw hSR) (unitInclusion G) (𝟙 X) z v x
   rw [Ordinary.id_apply] at ht
   change a.val (((fusionChoice_pbw hSR) (ambient G) X).intertwiner.val z
     ((unitInclusion G).val v) x) = _
-  rw [← ht, ← Ordinary.comp_apply, hunit, leftUnitor_intertwiner]
-  rfl
+  rw [← ht]
+  exact (congrArg (fun f : tensorObj (fusionChoice_pbw hSR) vacuumObject X ⟶ X =>
+      f.val (((fusionChoice_pbw hSR) vacuumObject X).intertwiner.val z v x)) hunit).trans
+    (leftUnitor_intertwiner (fusionChoice_pbw hSR) X z v x)
 
 /-- Restriction at integer modes, with arbitrary positive denominator. -/
 theorem actionModes_fixed (ha : ActionLaws G hSR E X a) {N : ℕ} (hN : 0 < N)

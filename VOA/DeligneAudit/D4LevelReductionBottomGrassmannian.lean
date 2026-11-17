@@ -48,7 +48,7 @@ theorem bottomCentral_grassIdeal :
         levelFiltration ρ w (a + b + c) b (2 * a + b + 1)
     rw [bottomElementaryModes_central, elementarySpecialization_elementary]
     have he : esymm (Fin c) ℂ n = 0 := by
-      have hc : (Finset.univ : Finset (Fin c)).card < n := by simpa using hn
+      have hc : (Finset.univ : Finset (Fin c)).card < n := by simpa using! hn
       simp only [esymm, Finset.powersetCard_eq_empty.mpr hc, Finset.sum_empty]
     rw [he, map_zero, map_zero]
     exact Submodule.zero_mem _
@@ -85,7 +85,7 @@ theorem bottomAdjoint_grassIdeal :
         levelFiltration ρ w (a + b + c) b (2 * a + b + 1)
     rw [bottomElementaryModes_adjoint, elementarySpecialization_elementary]
     have he : esymm (Fin a) ℂ n = 0 := by
-      have hc : (Finset.univ : Finset (Fin a)).card < n := by simpa using hn
+      have hc : (Finset.univ : Finset (Fin a)).card < n := by simpa using! hn
       simp only [esymm, Finset.powersetCard_eq_empty.mpr hc, Finset.sum_empty]
     rw [he, map_zero, map_zero]
     exact Submodule.zero_mem _

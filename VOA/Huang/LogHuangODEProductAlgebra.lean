@@ -25,7 +25,7 @@ theorem theta_iter_mem_coupled {ι : Type*} {a : ℂ}
     ∀ i t j, (thetaShift μ)^[i] (Q t j) ∈ NN := by
   intro i
   induction i with
-  | zero => intro t j; simpa using hmem t j
+  | zero => intro t j; simpa using! hmem t j
   | succ i ih =>
     intro t j
     rw [Function.iterate_succ_apply]
@@ -53,7 +53,7 @@ theorem ratFuchsian_of_coupled_fg {ι : Type*} {a : ℂ}
     RatFuchsian a ν (Q t 0) := by
   apply ratFuchsian_of_fg NN hfg (K := 0) (μ := 0)
   intro i
-  simpa only [pow_zero, one_mul] using
+  simpa only [pow_zero, one_mul] using!
     theta_iter_mem_coupled NN Q next d lam hQ hmem 0 i t 0
 
 /-- Finite-prefix offsets in the chosen mode coset preserve absolute convergence. -/
@@ -64,6 +64,6 @@ theorem summable_shifted_coeff_of_ratFuchsian {a ν : ℂ} (ha : ‖a‖ ≤ 1)
   have hg := (subexponential_of_ratFuchsian ha hQ).shift K
   have hs := summable_of_subexponential (fun n => norm_nonneg (coeff (n+K) Q))
     hg (norm_nonneg t) ht
-  simpa only [norm_mul, norm_pow] using hs
+  simpa only [norm_mul, norm_pow] using! hs
 
 end VOA.Huang.LogHuangODEProduct

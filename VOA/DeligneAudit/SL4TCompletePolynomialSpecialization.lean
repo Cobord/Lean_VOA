@@ -52,7 +52,7 @@ theorem finiteAlphabet_complete_relation (n k : ℕ) (hk : 0 < k) :
   have hc := congrArg (PowerSeries.coeff k) hprod
   rw [PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] at hc
   simpa only [Polynomial.coeff_coe, elementaryProduct_coeff,
-    D4Levi.ksHSeries_coeff_hsymm, PowerSeries.coeff_one, if_neg (Nat.ne_of_gt hk)] using hc
+    D4Levi.ksHSeries_coeff_hsymm, PowerSeries.coeff_one, if_neg (Nat.ne_of_gt hk)] using! hc
 
 /-- The abstract inverse-series recursion gives the usual complete homogeneous polynomial. -/
 theorem elementarySpecialization_complete (n j : ℕ) :

@@ -28,6 +28,11 @@ spanned by its minimal vectors (`LeechSpan.leech_induction`), every `(x_β, 0)` 
 * ⭐⭐⭐ `vnatGriessRestrict_injective` — **`Aut V♮` acts faithfully on the Griess algebra `V♮₂`.**
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.AutMonster

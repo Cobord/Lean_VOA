@@ -74,8 +74,7 @@ theorem isIntertwiningOperator_act {M : Type u} [AddCommGroup M] [Module ℂ M]
     exact hW.L_neg_one a n
   · intro u a x ℓ k n
     have h := hW.jacobi (η.val u) a x ℓ k n
-    convert h using 3
-    rw [adj_mode_eta]
+    convert h using 3 <;> first | rw [adj_mode_eta] | rfl
 
 /-- The `A`-action intertwiner of an ordinary `W`-module. -/
 def actIntertwiner {M : Type u} [AddCommGroup M] [Module ℂ M]
@@ -120,9 +119,11 @@ theorem act_unit {M : Type u} [AddCommGroup M] [Module ℂ M]
     tensorHom F η (𝟙 (actObj N)) ≫ act N = (leftUnitor F (actObj N)).hom := by
   apply tensor_hom_ext F
   intro n v x
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply, act_intertwiner,
-    leftUnitor_intertwiner]
+  refine ((Ordinary.comp_apply _ _ _).trans ((congrArg (fun y => (act N).val y)
+    (tensorHom_intertwiner F η (𝟙 (actObj N)) n v x)).trans ?_)).trans
+    (leftUnitor_intertwiner F (actObj N) n v x).symm
+  refine (act_intertwiner N n (η.val v) x).trans ?_
   change _ = moduleModes (restrictOrd N) n v x
-  rw [moduleModes_restrict]
+  exact (LinearMap.congr_fun (moduleModes_restrict N n v) x).symm
 
 end VOA.Huang.HKLRational

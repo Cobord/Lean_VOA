@@ -35,12 +35,12 @@ theorem a3_key_A2_localWeyl (a b c : ℕ)
     have hcast : ((a3KeyLabelInt b c 0 k).toNat : ℂ) =
         (a3KeyLabelInt b c 0 k : ℂ) := by
       exact_mod_cast (Int.toNat_of_nonneg hp)
-    simpa [a3KeyLabel_eq_int, hcast] using hc
+    simpa [a3KeyLabel_eq_int, hcast] using! hc
   · have hc := a3_key_cartan_zero_quot ρ w a b c h 1 k hv
     have hcast : ((a3KeyLabelInt b c 1 k).toNat : ℂ) =
         (a3KeyLabelInt b c 1 k : ℂ) := by
       exact_mod_cast (Int.toNat_of_nonneg hq)
-    simpa [a3KeyLabel_eq_int, hcast] using hc
+    simpa [a3KeyLabel_eq_int, hcast] using! hc
   · exact hsharp0.2 hp
   · exact hsharp1.2 hq
 

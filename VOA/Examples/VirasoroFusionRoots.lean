@@ -42,7 +42,7 @@ theorem fusionSum_ne_zero_of_no_resonance (b t y ell : ℂ) (N : ℕ) (hN : 0<N)
   rw [fusionHyperOperator_coeff] at hh
   simp only [Nat.cast_add,Nat.cast_one,sub_self,mul_zero,zero_mul,zero_sub,neg_eq_zero] at hh
   apply (mul_ne_zero (hfac n (by omega)) (hnz n (by omega)))
-  simpa only [Nat.cast_succ] using hh
+  simpa only [Nat.cast_succ] using! hh
 
 /-- Every zero of the terminal scalar must kill one of the finitely many
 explicit resonance factors. This is a necessary root classification. -/

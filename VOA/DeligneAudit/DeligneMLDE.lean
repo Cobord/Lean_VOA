@@ -168,7 +168,7 @@ structure A2ProductMLDE : Prop where
 /-- The product identity in coefficient form: `[q^N]∏(1+q^r)^8 = mldeCoeff 3 N`. -/
 theorem productCoeff_eq_mldeCoeff (hprod : A2ProductMLDE) (N : ℕ) :
     (productCoeff N : ℚ) = mldeCoeff 3 N := by
-  simpa using eq_mldeCoeff_of_isAKSolution hprod.sol N
+  simpa using! eq_mldeCoeff_of_isAKSolution hprod.sol N
 
 /-- **The Kac–Wakimoto lower bound from the AK recurrence.**  If the graded dimensions of
 `L_{-3/2}(sl₃)` solve the `h∨ = 3` AK recurrence and `∏(1+q^r)^8` does too, then

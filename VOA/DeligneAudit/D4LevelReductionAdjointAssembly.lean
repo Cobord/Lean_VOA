@@ -47,7 +47,7 @@ theorem adjointEdge_coinvariants_rank_le (a b : ℕ)
       by_cases hd : d ∈ degrees
       · exact le_iSup_of_le d (le_iSup_of_le hd le_rfl)
       · rw [adjointOrbit_eq_bot_of_degree_gt ρ w (a + b) a d h (by
-          simpa only [degrees, Finset.mem_range, not_lt, Nat.add_one_le_iff] using hd)]
+          simpa only [degrees, Finset.mem_range, not_lt, Nat.add_one_le_iff] using! hd)]
         exact bot_le
     · exact iSup_le fun d => iSup_le fun _ =>
         le_iSup (fun e : ℕ => keyOrbit ρ w (adjointLetterKey a e)) d
@@ -89,7 +89,7 @@ theorem adjointEdge_coinvariants_rank_le (a b : ℕ)
     (E ⧸ (levelFiltration ρ w (a + b) b (2 * (a : ℤ) + b + 1) ⊔ T).comap
       E.subtype) ≤ _
   rw [hnext, bot_sup_eq, ksKey_quot_finrank_eq_image]
-  simpa only [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hbound
+  simpa only [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using! hbound
 
 /-- Every level with zero central count satisfies the required truncation bound. -/
 theorem levelTruncationBound_adjoint_edge (a b : ℕ) :

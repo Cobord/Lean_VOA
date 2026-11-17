@@ -104,7 +104,7 @@ theorem charged_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m)
       · change oMod N (V2mPlus m hm).conformalVector _ = h • _
         rw [oMod_conformalVector]; exact N.L0_weight _ _ hx
       · exact hW
-      · simpa using hE)
+      · simpa using! hE)
   refine ⟨χ, ?_, ?_, ?_⟩
   · convert hχ 0 using 1; simp [values, h, j]
   · convert hχ 1 using 1; simp [values, h, j, Complex.ofReal_mul]
@@ -122,7 +122,7 @@ theorem vacuum_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
     (fun hz => latVacuumGen_ne_zero' m hm (congrArg Subtype.val hz))
     (fun _ => 0) (by
       intro i
-      simpa using oMod_adjoint_vacuum (V2mPlus m hm)
+      simpa using! oMod_adjoint_vacuum (V2mPlus m hm)
         (show 1 ≤ (wtP m i : ℤ) by fin_cases i <;> simp [wtP]; omega)
         (gP_mem_grading m hm i))
   exact ⟨χ, hχ 0, hχ 1, hχ 2⟩

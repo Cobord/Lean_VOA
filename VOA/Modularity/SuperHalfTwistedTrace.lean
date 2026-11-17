@@ -254,7 +254,7 @@ theorem twistedHalfSuperOnePoint_eq_zero_of_total_odd
   have hphi := phi.weightBlock_isParityHomogeneous alpha
   have hu := T.twistedHalfZeroModeAction_isParityHomogeneous
     hhalf huWeight huParity alpha
-  simpa only [hodd] using hphi.mul hu
+  simpa only [hodd] using! hphi.mul hu
 
 /-! ## Vacuum coefficients -/
 
@@ -262,7 +262,7 @@ theorem twistedHalfSuperOnePoint_eq_zero_of_total_odd
 theorem twistedHalfZeroModeBlock_vacuum (alpha : Complex) :
     T.twistedHalfZeroModeBlock W.vacuum 0 (by
       change W.vacuum ∈ W.grading (((0 : Int) : Complex) / 2)
-      simpa using W.vacuum_mem) alpha = 1 := by
+      simpa using! W.vacuum_mem) alpha = 1 := by
   apply LinearMap.ext
   intro x
   apply Subtype.ext
@@ -288,7 +288,7 @@ theorem twistedHalfPlainOnePoint_vacuum
   letI := T.weight_finite alpha
   have hv : W.vacuum ∈ W.toSuperNearVOA.halfGrading 0 := by
     change W.vacuum ∈ W.grading (((0 : Int) : Complex) / 2)
-    simpa using W.vacuum_mem
+    simpa using! W.vacuum_mem
   change LinearMap.trace Complex (T.weight alpha)
       (T.halfInsertedZeroModeBlock phi hhalf W.vacuum alpha) =
     LinearMap.trace Complex (T.weight alpha) (phi.weightBlock alpha)
@@ -306,7 +306,7 @@ theorem twistedHalfSuperOnePoint_vacuum
   letI := T.weight_finite alpha
   have hv : W.vacuum ∈ W.toSuperNearVOA.halfGrading 0 := by
     change W.vacuum ∈ W.grading (((0 : Int) : Complex) / 2)
-    simpa using W.vacuum_mem
+    simpa using! W.vacuum_mem
   change supertrace (T.twistedWeightParityGrading alpha)
       (T.halfInsertedZeroModeBlock phi hhalf W.vacuum alpha) =
     supertrace (T.twistedWeightParityGrading alpha) (phi.weightBlock alpha)
@@ -340,7 +340,7 @@ theorem twistedHalfPlainOnePoint_apply_eq_zero_of_weight_eq_bot
     have hxbot : (x : M) ∈ (⊥ : Submodule Complex M) := by
       rw [← hz]
       exact x.2
-    have hx : (x : M) = 0 := by simpa using hxbot
+    have hx : (x : M) = 0 := by simpa using! hxbot
     have hxsub : x = 0 := Subtype.ext hx
     rw [hxsub, map_zero]
     rfl
@@ -363,7 +363,7 @@ theorem twistedHalfSuperOnePoint_apply_eq_zero_of_weight_eq_bot
     have hxbot : (x : M) ∈ (⊥ : Submodule Complex M) := by
       rw [← hz]
       exact x.2
-    have hx : (x : M) = 0 := by simpa using hxbot
+    have hx : (x : M) = 0 := by simpa using! hxbot
     have hxsub : x = 0 := Subtype.ext hx
     rw [hxsub, map_zero]
     rfl
@@ -420,7 +420,7 @@ theorem qShiftN_two_of_mem_QHalfSeriesAt {chi : FormalQSeries} {base : Complex}
         ring,
         Complex.exp_add, Complex.exp_nat_mul_two_pi_mul_I, mul_one]
     rw [hexp]
-  · have hz : chi e = 0 := hchi e (by simpa only [not_exists] using he)
+  · have hz : chi e = 0 := hchi e (by simpa only [not_exists] using! he)
     rw [hz, mul_zero, mul_zero]
 
 /-- The actual ordinary trace family obeys the expected `T^2` coefficient phase. -/

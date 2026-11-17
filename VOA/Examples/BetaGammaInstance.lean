@@ -1179,7 +1179,8 @@ theorem finsum_beta_deriv_gamma_reindex (n : ℤ) (x : Fock) :
   have h : normalOrdered betaZ (deriv gammaZ) (-j - 1) (-n - 2 - (-j - 1)) =
       ((j : ℂ) - n) • BGVir.bgOp n j :=
     normalOrdered_beta_deriv_gamma_reindex n j
-  simpa only [betaDerivGammaEquiv, LinearMap.smul_apply] using LinearMap.congr_fun h x
+  rw [betaDerivGammaEquiv_apply]
+  simpa only [LinearMap.smul_apply] using LinearMap.congr_fun h x
 
 /-- The second normal-ordering coefficient, globally reindexed from the field exponent to the
 `BGVir` mode index.  The pointwise lemma has already absorbed the exceptional `j=-1` term. -/
@@ -1192,7 +1193,8 @@ theorem finsum_deriv_beta_gamma_reindex (n : ℤ) (x : Fock) :
   have h : normalOrdered (deriv betaZ) gammaZ (-j - 2) (-n - 2 - (-j - 2)) =
       (-(j : ℂ) - 1) • BGVir.bgOp n j :=
     normalOrdered_deriv_beta_gamma_reindex n j
-  simpa only [derivBetaGammaEquiv, LinearMap.smul_apply] using LinearMap.congr_fun h x
+  rw [derivBetaGammaEquiv_apply]
+  simpa only [LinearMap.smul_apply] using LinearMap.congr_fun h x
 
 /-- The reconstructed conformal field has exactly the finite-sum Virasoro modes.  This is an
 ordinary (purely even) normal-ordering calculation: the two affine reindexings above account
@@ -1341,6 +1343,6 @@ noncomputable def bgSNVOA : SuperNearVOA Fock where
 /-- The beta--gamma system is a CFT-type super VOA, with half-integral weights but trivial
 parity.  This is deliberately not a spin-statistics assertion. -/
 noncomputable def bgSVOA : SuperVertexOperatorAlgebra Fock :=
-  bgSNVOA.toSVOA (by simpa only using gradingBG_zero) (fun h hh => gradingBG_eq_bot_of_re_neg hh)
+  bgSNVOA.toSVOA gradingBG_zero (fun h hh => gradingBG_eq_bot_of_re_neg hh)
 
 end VOA.BGInst

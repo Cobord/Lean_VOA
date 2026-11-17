@@ -64,7 +64,7 @@ theorem fusion_mul_first_coefficient (F G : PowerSeries ℂ) (N : ℕ)
     (hG : ∀ n<N, coeff n G=0) : coeff N (F*G)=coeff 0 F*coeff N G := by
   rw [coeff_mul,Finset.sum_eq_single (0,N)]
   · intro p hp hne
-    have hp' := Finset.mem_antidiagonal.mp hp
+    have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     have hlt : p.2<N := by
       by_contra hn
       have hp0 : p.1=0 := by omega

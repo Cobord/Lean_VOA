@@ -25,6 +25,8 @@ namespace VOA.VirModule
 open VOA
 open Module (End)
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable (c : ℂ)
 
 /-! ## §A  The Virasoro modes and their abstract relation. -/

@@ -44,11 +44,11 @@ def highBaseT (s : List (TLtr n)) (x : TLtr n) : FreeT n := swT (x :: s)
 /-- The Garland polynomial as a formal combination of words. -/
 def gpowSyntax (c₀ : Fin n) : ℕ → ℕ → FreeT n
   | 0, s => if s = 0 then swT [] else 0
-  | j + 1, s => ∑ p ∈ Finset.antidiagonal s,
+  | j + 1, s => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
       consT (c₀, 1, p.1) (gpowSyntax c₀ j p.2)
 
 def psymSyntax (c₀ : Fin n) (j N : ℕ) : FreeT n :=
-  ∑ p ∈ Finset.antidiagonal N, consT (c₀, 0, p.1) (gpowSyntax c₀ j p.2)
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, consT (c₀, 0, p.1) (gpowSyntax c₀ j p.2)
 
 /-- The explicit word forms of the `Jprime` generator relations. -/
 def JprimeSyntax (m : ℕ) : Set (FreeT 28) :=

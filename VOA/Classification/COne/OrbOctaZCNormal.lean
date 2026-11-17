@@ -81,6 +81,6 @@ theorem equalRelCheck_sound (a : ℤ → A W) {r s : ModeRel}
     (h : equalRelCheck r s = true) : evalRel W a r = evalRel W a s := by
   have h' := evalRel_zero_of_check W a h
   rw [evalRel_normalize, evalRel_append, evalRel_scalar] at h'
-  simpa only [Rat.cast_neg, Rat.cast_one, neg_one_smul, add_neg_eq_zero] using h'
+  simpa only [Rat.cast_neg, Rat.cast_one, neg_one_smul, add_neg_eq_zero] using! h'
 end General
 end VOA.Classification.COne.OrbOctaZC

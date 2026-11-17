@@ -134,8 +134,8 @@ end ExpMap
 theorem root_pos : (glueLat 1 1).form (glueIota 1 1 (a1 1)) (glueIota 1 1 (a1 1)) = 2 := by
   rw [glueIota_isometry]; exact latP1_root
 
-theorem root_neg : (glueLat 1 1).form (glueIota 1 1 (-a1 1)) (glueIota 1 1 (-a1 1)) = 2 := by
-  rw [glueIota_isometry]; exact latP1_root'
+theorem root_neg : (glueLat 1 1).form (glueIota 1 1 (-a1 1)) (glueIota 1 1 (-a1 1)) = 2 :=
+  (glueIota_isometry 1 1 _ _).trans latP1_root'
 
 /-- The module zero mode of `e^{±β}`. -/
 abbrev Dpm (k : (latP 1).carrier) : Module.End ℂ Sp := mode (Mo.YM (latChargeGen (latP 1) k)) 0
@@ -246,7 +246,7 @@ theorem GC_Phi (u : ℂˣ) (v : Sp) : GC u (Phi v) = Phi (charU 1 le_rfl u v) :=
     refine LinearMap.ext_on_range (latStateGen_span (latP 1)) fun q => ?_
     obtain ⟨p, γ⟩ := q
     simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
-    rw [charU_latStateGen, map_smul, latMorph_latStateGen, map_smul, GC_latStateGen, iota_zero',
+    rw [charU_latStateGen, map_smul, latMorph_latStateGen, map_smul, GC_latStateGen, iota_zero' γ,
       smul_smul, smul_smul, mul_comm]
     rfl
   exact LinearMap.congr_fun h v
@@ -271,7 +271,9 @@ theorem presR_GC (u : ℂˣ) : PresR (GC u) := by
 theorem lift_GC (u : ℂˣ) (p : FockN (rank (latP 1))) (n : ℤ) :
     lift (GC u) (latStateGen (latP 1) p n) = ((u ^ n : ℂˣ) : ℂ) • latStateGen (latP 1) p n := by
   change PsiInv (GC u (Psi (latStateGen (latP 1) p n))) = _
-  rw [shiftEmb_latStateGen, GC_latStateGen, iota_zero, ← shiftEmb_latStateGen, map_smul,
+  rw [shiftEmb_latStateGen (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) p n,
+    GC_latStateGen, iota_zero,
+    ← shiftEmb_latStateGen (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) p n, map_smul,
     PsiInv_Psi]
 
 /-! ## §6 The cubic rotation and the Klein involution -/

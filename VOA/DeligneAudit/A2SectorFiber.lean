@@ -102,7 +102,7 @@ theorem gradedAction : GradedAction (symDeg (K := K) m) (carrierDeg Q m) where
 theorem finrank_symDeg_le (n : ℕ) : finrank K (symDeg (K := K) m n) ≤ partitionsLe m n := by
   classical
   let f : symDeg (K := K) m n →ₗ[K] (Idx m n → K) :=
-    { toFun := fun s i => MvPolynomial.coeff (expOf i) s.1.1
+    { toFun := fun s i => s.1.1.coeff (expOf i)
       map_add' := fun _ _ => by funext i; simp
       map_smul' := fun _ _ => by funext i; simp }
   have hinj : Function.Injective f := by

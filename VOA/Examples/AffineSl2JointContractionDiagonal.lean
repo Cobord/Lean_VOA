@@ -41,7 +41,7 @@ theorem orderedPBW_multiset_injective : Function.Injective
   intro mu nu h
   ext q
   have he := congrArg (fun s : Multiset NormalOrdering.Letter => s.count (ofLex q)) h
-  simpa only [orderedPBW_count, toLex_ofLex] using he
+  simpa only [orderedPBW_count, toLex_ofLex] using! he
 
 /-- The opposite index swaps precisely the creation multiset, without making
 any assertion about the sorted order of the resulting word. -/
@@ -60,12 +60,12 @@ theorem orderedPBW_flip_multiset (mu : CurrentIndex) :
   change (Finsupp.mapDomain flipCurrentLetter mu) (toLex a) = _
   have hx : toLex a = flipCurrentLetter (toLex (oppositeLetter a)) := by
     simp [flipCurrentLetter, oppositeLetter]
-  rw [hx, Finsupp.mapDomain_apply flipCurrentLetter_involutive.injective]
+  rw [hx, Finsupp.mapDomain_apply_of_injective flipCurrentLetter_involutive.injective]
 
 /-- Swapping colours preserves word length as well as energy and charge sign. -/
 theorem orderedPBW_flip_length (mu : CurrentIndex) :
     (orderedPBWColorWord (flipCurrentIndex mu)).length = (orderedPBWColorWord mu).length := by
-  simpa using congrArg Multiset.card (orderedPBW_flip_multiset mu)
+  simpa using! congrArg Multiset.card (orderedPBW_flip_multiset mu)
 
 /-- Each column has the same length as its unflipped index word. -/
 theorem jointColumnLength_eq (n h : ℤ) (j : JointIndex n h) :

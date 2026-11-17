@@ -136,7 +136,8 @@ theorem homogeneous_split_of_sup_eq_top (U W : Submodule ℂ H)
     ⟨M.weightComponent N w, M.weightComponent_mem N w⟩, hW N w hw, ?_⟩
   apply Subtype.ext
   have h := congrArg (M.weightComponent N) he
-  simpa only [map_add, M.weightComponent_of_mem N x x.property] using h
+  simpa only [map_add, M.weightComponent_of_mem N x x.property, Submodule.coe_add,
+    Submodule.coe_mk] using h
 
 /-- The light-cone splitting restricts to a complementary pair in every finite weight space. -/
 theorem lightConeSplit_weight (hF : M.LightConeSplit) (N : ℤ) :

@@ -154,7 +154,7 @@ theorem coinvariant_powerSum_zero {n : ℕ} (x : Fin n → A)
     ∑ i, x i ^ s = 0 := by
   have h := fullFlagSymmetricIdeal_le_ker n x he (psum_mem_fullFlagSymmetricIdeal n s hs)
   have h' : aeval x (psum (Fin n) ℂ s) = 0 := h
-  simpa only [psum, map_sum, map_pow, aeval_X] using h'
+  simpa only [psum, map_sum, map_pow, aeval_X] using! h'
 
 /-- The universal property of the generic marked full-flag ideal. -/
 theorem markedFlagIdeal_le_ker (n : ℕ) (marked : Set (Finset (Fin n))) (cut : Fin n → ℕ)

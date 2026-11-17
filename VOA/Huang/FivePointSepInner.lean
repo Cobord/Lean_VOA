@@ -57,7 +57,6 @@ theorem skew_expand {Y : IntertwiningModes M₁ M₂ M₃} (hY : IsIntertwiningO
     (c' := fun n => (omegaPhase n)⁻¹) omegaPhase_succ
     (fun n => inv_mul_cancel₀ (omegaPhase_ne_zero n)) hT
   have e := congrArg (fun Z : IntertwiningModes M₁ M₂ M₃ => Z p w₁ w₂) hinv
-  simp only at e
   rw [← e, skewModes_apply (trunc_skewModes _ _), sSum_eq_sum J hJ]
   rfl
 
@@ -116,7 +115,7 @@ theorem Lm1_pow_mem_weight {M : Type u} [AddCommGroup M] [Module ℂ M] (A : Ord
     {β : ℂ} {x : M} (hx : x ∈ A.weight β) (j : ℕ) :
     (Lm1 A.toWeakModule ^ j) x ∈ A.weight (β + j) := by
   induction j with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ j ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := mode_mem_weight A W.conformalVector_mem_grading_two ih (0 : ℤ)
@@ -200,7 +199,9 @@ theorem inner_rowBound (hs : OrdinaryFourPointSummability F)
       (tensorObj F Y Z).isMod.weight (h + j₀) := by
     have := mem_weight (F Y Z).intertwiner.property (hom_mem_weight πc.property d.hy)
       (hom_mem_weight πd.property d.hz) (d.β + d.γ - h - 1 - j₀)
-    convert this using 2; ring
+    have e : d.β + d.γ - (d.β + d.γ - h - 1 - (j₀ : ℂ)) - 1 = h + j₀ := by ring
+    rw [e] at this
+    exact this
   let d₄ : FourPointTest T X (tensorObj F Y Z) O :=
     { α := d.δ, β := d.α, γ := h + j₀, δ := d.ε - j
       x := πa.val d.t, y := πb.val d.x
@@ -214,7 +215,7 @@ theorem inner_rowBound (hs : OrdinaryFourPointSummability F)
   have hsum := (hs T X (tensorObj F Y Z) O d₄).2 ⟨innerΩ F X Y Z T, isInnerΩ F X Y Z T⟩
   have hinj : Function.Injective (fun m : ℕ => (h' - k₀) + (m : ℂ)) := by
     intro a b hab
-    have : (a : ℂ) = b := by simpa using hab
+    have : (a : ℂ) = b := by simpa using! hab
     exact_mod_cast this
   obtain ⟨K, hK⟩ := ((hsum.comp_injective hinj).tendsto_atTop_zero.norm).bddAbove_range
   have hc : (0 : ℝ) < 1 + c₄ := by linarith

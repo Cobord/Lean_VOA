@@ -62,7 +62,7 @@ theorem mixedQuotientRingImage_bound_of_subspaceFlag
   have hHq (s : ℕ) (hs : 1 ≤ s) (x : MixedRing q ⧸ J) :
       H s (ψ x) = ψ (p s * x) := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ J x
-    simpa only [p, ← map_mul, heval] using hH s hs x
+    simpa only [p, ← map_mul, heval] using! hH s hs x
   have hFq (x : MixedRing q ⧸ J) :
       (F 0 ^ ((mixedWeight q).toNat + 1)) (ψ x) = 0 := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ J x

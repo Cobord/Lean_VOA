@@ -41,7 +41,7 @@ theorem third_deriv_cubeCoeff (D : Derivation ℂ A A) (U V : ℕ → A)
 theorem third_deriv_cubeCoeff_nsmul (D : Derivation ℂ A A) (U V : ℕ → A)
     (hU : ∀ r, D (U r) = V r) (hV : ∀ r, D (V r) = 0) (s : ℕ) :
     D (D (D (cubeCoeff U s))) = (6 : ℕ) • cubeCoeff V s := by
-  simpa only [nsmul_eq_mul] using third_deriv_cubeCoeff D U V hU hV s
+  simpa only [nsmul_eq_mul, Nat.cast_ofNat] using third_deriv_cubeCoeff D U V hU hV s
 
 omit [Algebra ℂ A] in
 theorem cubeCoeff_neg (U : ℕ → A) (s : ℕ) :

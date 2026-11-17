@@ -10,6 +10,9 @@ opposite field and the zero modes of weight-one primaries are skew-adjoint. -/
 noncomputable section
 namespace VOA.Moonshine.ConwayNorton
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- The opposite iterate identity of the actual matter near-VOA. -/
 theorem moonshineMatterNearVOA_oppositeIterateIdentity :
     moonshineMatterNearVOA.OppositeIterateIdentity

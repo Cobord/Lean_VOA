@@ -95,7 +95,7 @@ theorem length_le_of_lower_nil {N0 : ℕ}
       have hTrep : T = List.replicate T.length x :=
         List.eq_replicate_iff.mpr ⟨rfl, fun y hy => by
           have := List.all_eq_true.mp (List.all_takeWhile (p := p) (l := x :: rest)) y hy
-          simpa [hp] using this⟩
+          simpa [hp] using! this⟩
       have hTlen : 1 ≤ T.length := by
         rw [hT, List.takeWhile_cons_of_pos (by simp [hp])]; simp
       have hpw : (T ++ D).Pairwise (fun a c => keyFin a ≤ keyFin c) := hTD ▸ hs
@@ -109,8 +109,8 @@ theorem length_le_of_lower_nil {N0 : ℕ}
         | cons y D' =>
           have hy : p y = false := by
             have := List.head_dropWhile_not p (l := x :: rest) (by rw [← hD, hDc]; simp)
-            simpa [← hD, hDc] using this
-          have hyx : y ≠ x := by simpa [hp] using hy
+            simpa [← hD, hDc] using! this
+          have hyx : y ≠ x := by simpa [hp] using! hy
           rw [hDc] at hxD
           rcases List.mem_cons.mp hxD with h | h
           · exact hyx h.symm

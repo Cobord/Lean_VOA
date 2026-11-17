@@ -39,7 +39,7 @@ theorem sym7_hw : E7.sym (∑ i, (cz i : ℂ) • (X (ta i) * X (tb i))) = 0 := 
   refine sym_singular e7CertData (-4) hk7 (fun i => (cz i : ℂ)) ta tb ?_ ?_ ?_
   · have h := simpleProjection_sv
     rw [sv] at h
-    simpa [w2] using h
+    simpa [w2] using! h
   · intro e
     have h := hw7_bracket_shadowZ e
     simp only [structureConstant_eq]

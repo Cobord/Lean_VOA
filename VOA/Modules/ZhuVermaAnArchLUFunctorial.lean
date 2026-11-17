@@ -150,7 +150,7 @@ theorem djFunctorEquiv_natural_homog (U₁ U₂ : AmMod W 0) (e : AmModHom U₁ 
     simp only [LinearMap.comp_apply]
     exact djFunctorEquiv_natural_tmul U₁ U₂ e k p ha n v w
   have := LinearMap.congr_fun hcomp x
-  simpa only [LinearMap.comp_apply] using this
+  simpa only [LinearMap.comp_apply] using! this
 
 /-- **`M(e)` intertwines the `𝒱`-action** (`djModeZero`) — the DJ-track `MUActionNatural`. -/
 theorem djFunctorEquiv_natural (U₁ U₂ : AmMod W 0) (e : AmModHom U₁ U₂) (p : ℤ) (a : 𝒱)

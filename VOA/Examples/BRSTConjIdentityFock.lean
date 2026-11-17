@@ -192,7 +192,7 @@ theorem annBase_fockBasis (p : ModeIdx) (s : Finset ModeIdx) :
             pow_zero]
         rw [if_pos rfl, if_neg has, mul_zero, sub_zero, one_smul, if_pos (Finset.mem_insert_self _ _),
           hm, one_smul, Finset.erase_insert has]
-      · have hpa' : ofLex p ≠ ofLex a := fun h => hpa (by simpa using h)
+      · have hpa' : ofLex p ≠ ofLex a := fun h => hpa (by simpa using! h)
         rw [if_neg hpa', zero_smul, zero_sub]
         by_cases hps : p ∈ s
         · have hap : a < p := ha p hps
@@ -255,7 +255,7 @@ theorem fockForm_cre_adj {w : Finset ModeIdx → ℝ} {ν : ModeIdx → ℝ} (hw
     fockForm w (creBase (ofLex p) x) y = (ν p : ℂ) * fockForm w x (annBase (ofLex p) y) := by
   have key := sesq_ext_basis fockBasis (sesqComp (fockForm w) 1 (creBase (ofLex p)) LinearMap.id)
     (sesqComp (fockForm w) (ν p) LinearMap.id (annBase (ofLex p))) ?_ x y
-  · simpa using key
+  · simpa using! key
   intro s t
   change 1 * _ = _ * _
   simp only [LinearMap.id_apply, one_mul]
@@ -287,7 +287,7 @@ theorem fockForm_ann_adj {w : Finset ModeIdx → ℝ} {ν : ModeIdx → ℝ} (hw
     (ν p : ℂ) * fockForm w (annBase (ofLex p) x) y = fockForm w x (creBase (ofLex p) y) := by
   have key := sesq_ext_basis fockBasis (sesqComp (fockForm w) (ν p) (annBase (ofLex p))
     LinearMap.id) (sesqComp (fockForm w) 1 LinearMap.id (creBase (ofLex p))) ?_ x y
-  · simpa using key
+  · simpa using! key
   intro s t
   change _ * _ = 1 * _
   simp only [LinearMap.id_apply, one_mul]

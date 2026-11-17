@@ -21,10 +21,9 @@ def gtCauchySlice (q : R) (h : PochhammerUnits q) (N r s : ℕ) :
     (fun lam => if (∑ i, lam i) = (r + s : ℕ) then gtCauchyWeight q h r lam else 0)
     (by
       intro lam hn
-      dsimp only at hn
       split_ifs at hn with hd
       · obtain ⟨hb, he⟩ := gtCauchyWeight_shape q h r s lam hn hd
-        exact Finset.mem_image.mpr ⟨(lam 1).toNat, by simpa using hb, he.symm⟩
+        exact Finset.mem_image.mpr ⟨(lam 1).toNat, by simpa using! hb, he.symm⟩
       · exact (hn rfl).elim)
 
 @[simp] theorem gtCauchySlice_apply (q : R) (h : PochhammerUnits q) (N r s : ℕ)
@@ -71,7 +70,7 @@ theorem gtCauchySlice_eval (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
         (fun _ _ _ _ he => gtTwoRow_second_injective N (r + s) he)]
       apply Finset.sum_congr rfl
       intro b hb
-      have hb : b ≤ min r s := by simpa using hb
+      have hb : b ≤ min r s := by simpa using! hb
       have ht : (∑ i, gtTwoRow N (r + s - b) b i) = (r + s : ℕ) := by
         rw [gtTwoRow_sum]
         have := hb.trans (min_le_left _ _)

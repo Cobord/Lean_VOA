@@ -29,7 +29,9 @@ open PowerSeries VOA.DeligneAudit.DeligneCharacter
 noncomputable section
 
 /-- `z = 1` (and `x = 1`): the sum of the coefficients. -/
-def ev1 : R →ₗ[Kq] Kq := Finsupp.linearCombination Kq fun _ => (1 : Kq)
+def ev1 : R →ₗ[Kq] Kq :=
+  (Finsupp.linearCombination Kq fun _ : V => (1 : Kq)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 theorem ev1_mon (v : V) (c : Kq) : ev1 (mon v c) = c := by
   change (Finsupp.linearCombination Kq _) (Finsupp.single v c) = _
@@ -96,7 +98,7 @@ theorem jmap_coeff_neg (f : PowerSeries ℤ) (g : ℤ) (hg : g < 0) : (jmap f).c
   simp only [jmap, RingHom.coe_comp, Function.comp_apply]
   rw [HahnSeries.ofPowerSeries_apply, HahnSeries.embDomain_notin_range]
   rintro ⟨n, hn⟩
-  simp only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at hn
+  have h0 : (0 : ℤ) ≤ g := by rw [← hn]; exact Int.natCast_nonneg n
   omega
 
 theorem jmap_poch (n : ℕ) : jmap (VOA.DeligneAudit.A2.poch n) = qpoch n := by

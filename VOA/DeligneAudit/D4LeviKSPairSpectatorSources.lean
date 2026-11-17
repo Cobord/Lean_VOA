@@ -18,7 +18,7 @@ theorem pairAntipode_append (F : ℕ → Module.End ℂ V)
   induction xs generalizing A with
   | nil => rfl
   | cons r xs ih =>
-      simpa only [List.cons_append, pairAntipode] using
+      simpa only [List.cons_append, pairAntipode] using!
         ih (A * F r - F r * A)
 
 /-- At every recursive antipode stage, the source has undergone exactly
@@ -58,9 +58,9 @@ theorem pairXZ_spectator_sources_iter
             (pairAntipode F xs A * F r - F r * pairAntipode F xs A) := by
         have hlen' : (xs ++ [r]).length + rs.length = b := by
           simpa [List.length_append, Nat.add_assoc,
-            Nat.add_comm, Nat.add_left_comm] using hlen
+            Nat.add_comm, Nat.add_left_comm] using! hlen
         have hh := ih (xs ++ [r]) hlen'
-        simpa only [pairAntipode_append, pairAntipode] using hh
+        simpa only [pairAntipode_append, pairAntipode] using! hh
       exact ⟨hsource, hnext⟩
 
 /-- The `pairTransferSources` hypothesis is automatic for every XZ
@@ -77,9 +77,9 @@ theorem pairXZ_spectator_sources
       (ρ.op (17 : Fin 28))
       (pairRadicalOp ρ (uZeroWord b) w) rs
       (pairXZRecolourOperator ρ a b c 0 Q) := by
-  simpa only [pairAntipode, List.length_nil, zero_add] using
+  simpa only [pairAntipode, List.length_nil, zero_add] using!
     pairXZ_spectator_sources_iter ρ w m i a b c deg h hi hkey
-      Q [] rs (by simpa using hlen)
+      Q [] rs (by simpa using! hlen)
 
 /-- All-m, all-b transfer of the U spectator across a pure XZ polynomial,
     under the stated saturation and final-key hypotheses. -/

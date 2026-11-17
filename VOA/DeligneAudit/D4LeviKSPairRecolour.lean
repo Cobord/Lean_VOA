@@ -100,7 +100,7 @@ theorem xyzEvaluation_rename_equiv {σ : Type*} [Fintype σ]
         exact e.surjective i
     have h := hp.map fun j => (shape j, d (e.symm j))
     simpa [shapedModes, List.map_map, Function.comp_def,
-      Finsupp.mapDomain_equiv_apply] using h.symm
+      Finsupp.mapDomain_equiv_apply] using! h.symm
   induction P using MvPolynomial.induction_on' with
   | monomial d t =>
       have hm : (monomial d t : MvPolynomial σ ℂ) =
@@ -146,7 +146,7 @@ theorem pairRecolour_adjoint_one
       -pairWordOpEvaluation ρ
         (pairPolynomialConvert (pairRecolourShape a b c k) r P) w := by
   simpa [pairRecolourOperator, pairPolynomialConvert, pairAdjoint,
-    pairPolynomialConvertIter, pairWordConvertIter] using
+    pairPolynomialConvertIter, pairWordConvertIter] using!
     pairPolynomialConvertIter_adjoint_apply ρ w
       (pairRecolourShape a b c k) [r] P
 

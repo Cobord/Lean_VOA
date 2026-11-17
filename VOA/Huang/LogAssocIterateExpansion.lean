@@ -28,7 +28,7 @@ theorem hasLogExp_monomial_psEval {G : PowerSeries ℂ} (hG : G∈SubexpPS) (lam
     intro l
     by_cases hl : l=k
     · subst l
-      simpa only [p,Polynomial.coeff_monomial,ite_true] using (mem_subexpPS.mp hG)
+      simpa only [p,Polynomial.coeff_monomial,ite_true] using! (mem_subexpPS.mp hG)
     · have he : (fun n => ‖(p n).coeff l‖)=(fun _ => (0 : ℝ)) := by
         funext n
         simp [p,Polynomial.coeff_monomial,hl,Ne.symm hl]
@@ -71,7 +71,7 @@ theorem lowerIterate_eq_sum_log {K : ℕ}
   unfold logIterateLowerCosetFun
   apply tsum_eq_sum
   intro l hl
-  have hkl : K≤l := by simpa only [Finset.mem_range,not_lt] using hl
+  have hkl : K≤l := by simpa only [Finset.mem_range,not_lt] using! hl
   have hzero : logIterateLowerCosetSeries Y₃ Y₄ f x y z α₁ α₂ α₃ β r l=0 := by
     ext n
     simp [logIterateLowerCosetSeries,hK _ l hkl]
@@ -93,7 +93,7 @@ theorem log_iterate_lowerCoset_hasLogExp (hC2 : C2Cofinite W)
   have hG (l : ℕ) : logIterateLowerCosetSeries Y₃.1 Y₄.1 f x y z α₁ α₂ α₃ β r l∈SubexpPS := by
     apply subexp_of_summable_unitDisc
     intro t ht
-    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using
+    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using!
       summable_log_iterate hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₃ Y₄
         f x y z (r+α₃-β-1) (α₁+α₂-r-1) 0 l ht
   refine hasLogExp_congr (fun t _ => (lowerIterate_eq_sum_log Y₃.1

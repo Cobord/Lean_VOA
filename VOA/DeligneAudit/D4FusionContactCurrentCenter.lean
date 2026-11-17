@@ -35,12 +35,12 @@ theorem current_center_pow_of_known (h : HighestRel R w m)
     intro v
     exact congrArg (fun T : Module.End ℂ V => T v) (current_highest_HF R 0 0)
   have hk : (currentCenter R 0)^[N] w = 0 := by
-    simpa only [Module.End.pow_apply] using hN
+    simpa only [Module.End.pow_apply] using! hN
   have hs := (VOA.DeligneAudit.CLFilt.hw_pow
     (currentHighestE R 0) (currentCenter R 0) (currentHighestH R 0)
     hEF hHF (current_highest_E_kills h 0) (current_highest_H_zero h) N hk).2
     (by positivity : 0 ≤ ((2 * m : ℕ) : ℤ))
-  simpa only [Int.toNat_natCast, Module.End.pow_apply] using hs
+  simpa only [Int.toNat_natCast, Module.End.pow_apply] using! hs
 
 /-- All center-current words beyond the sharp source weight vanish,
 using the actual sl₂ current structure and the existing E-calculus. -/

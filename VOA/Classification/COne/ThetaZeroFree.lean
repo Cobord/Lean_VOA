@@ -245,8 +245,7 @@ theorem slash_S : (fun τ : ℍ => thetaProd8 τ) ∣[(12 : ℤ)] ModularGroup.S
   ext z
   rw [ModularForm.SL_slash_apply, coe_S_smul, thetaProd8_S z.2]
   have hz : (z : ℂ) ≠ 0 := z.ne_zero
-  have hd : UpperHalfPlane.denom ModularGroup.S z = z := by
-    simp [UpperHalfPlane.denom, ModularGroup.S]
+  have hd : UpperHalfPlane.denom ModularGroup.S z = z := ModularGroup.denom_S z
   rw [hd, zpow_neg, show (12 : ℤ) = ((12 : ℕ) : ℤ) by norm_num, zpow_natCast]
   field_simp
 
@@ -255,7 +254,7 @@ theorem slash_T : (fun τ : ℍ => thetaProd8 τ) ∣[(12 : ℤ)] ModularGroup.T
   ext z
   rw [ModularForm.SL_slash_apply, coe_T_smul, thetaProd8_T]
   have : UpperHalfPlane.denom ModularGroup.T z = 1 := by
-    simp [UpperHalfPlane.denom, ModularGroup.T]
+    rw [ModularGroup.denom_apply]; simp [ModularGroup.coe_T]
   rw [this, one_zpow, mul_one]
 
 theorem isZeroAtImInfty_thetaProd8 :
@@ -327,7 +326,8 @@ theorem thetaProd8_ne_zero {τ : ℂ} (hτ : 0 < τ.im) : thetaProd8 τ ≠ 0 :=
   obtain ⟨c, hc⟩ := CuspForm.exists_smul_discriminant_of_weight_eq_twelve thetaCusp
   have hval : ∀ z : ℍ, thetaProd8 z = c * ModularForm.discriminant z := fun z => by
     have := congrArg (fun g : CuspForm 𝒮ℒ 12 => g z) hc
-    simpa using this.symm
+    have h2 : thetaCusp z = c * ModularForm.discriminant z := by simpa using this.symm
+    exact h2
   have hc0 : c ≠ 0 := by
     intro h0
     have := hval UpperHalfPlane.I

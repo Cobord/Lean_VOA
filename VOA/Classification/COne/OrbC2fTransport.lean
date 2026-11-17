@@ -43,7 +43,7 @@ theorem scale_osc_square :
     (oscMatrix_transpose_mul (latP 4) (latP 1) (latP_posDef 4 four_ge_one)
       (latP_posDef 1 le_rfl) (scaleIota 1 2) (scaleIota_isometry 1 2))
   simpa only [Matrix.mul_apply, Matrix.transpose_apply, rankOne_sum,
-    Matrix.one_apply_eq, sq] using h
+    Matrix.one_apply_eq, sq] using! h
 
 theorem scale_fock_J :
     fockMap (oscMatrix (latP 4) (latP 1) (scaleIota 1 2)) (evR (a0 4) JR) =
@@ -72,10 +72,16 @@ theorem scaleMorph_J : scaleMorph 1 2 (J 4 four_ge_one : LatModuleGen (latP 4)) 
 theorem scaleMorph_E : scaleMorph 1 2 (EP 4 four_ge_one : LatModuleGen (latP 4)) =
     latChargeGen (latP 1) (2 : ℤ) + latChargeGen (latP 1) (-2 : ℤ) := by
   rw [EP_coe, map_add]
-  change latMorph (latP 4) (latP 1) (scaleIota 1 2) (latStateGen _ 1 _) +
-    latMorph (latP 4) (latP 1) (scaleIota 1 2) (latStateGen _ 1 _) = _
-  rw [latMorph_latStateGen, latMorph_latStateGen, rankOne_latCob, rankOne_latCob,
-    one_smul, one_smul, map_one]
-  rfl
+  -- 4.35: the ℤ charges sit at `(latP 4).carrier` positions (ill-typed at implicit
+  -- transparency), so instantiate the rewrite lemmas explicitly and close by defeq.
+  have h1 := latMorph_latStateGen (latP 4) (latP 1) (scaleIota 1 2) 1
+    ((1 : ℤ) : (latP 4).carrier)
+  have h2 := latMorph_latStateGen (latP 4) (latP 1) (scaleIota 1 2) 1
+    ((-1 : ℤ) : (latP 4).carrier)
+  rw [rankOne_latCob 4 1 (scaleIota 1 2) ((1 : ℤ) : (latP 4).carrier), one_smul,
+    map_one] at h1
+  rw [rankOne_latCob 4 1 (scaleIota 1 2) ((-1 : ℤ) : (latP 4).carrier), one_smul,
+    map_one] at h2
+  exact congrArg₂ (· + ·) h1 h2
 
 end VOA.Classification.COne.OrbC2f

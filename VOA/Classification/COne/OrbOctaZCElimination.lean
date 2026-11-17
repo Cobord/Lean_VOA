@@ -173,13 +173,13 @@ theorem elimination_identity :
       Polynomial.C (eliminationScale : ℂ) * candidatePolynomial := by
   have h := congrArg zp elimination_check
   simpa only [zp_ptrim, zp_paddL, zp_pmulL, zp_pscaleL, Rat.cast_neg, Rat.cast_one,
-    map_neg, map_one, neg_one_mul, ← sub_eq_add_neg, p25List_spec] using h
+    map_neg, map_one, neg_one_mul, ← sub_eq_add_neg, p25List_spec] using! h
 
 theorem primary_cancellation :
     zp multiplier1 * zp circle1Middle - zp multiplier5 * zp circle5Middle = 0 := by
   have h := congrArg zp primary_cancellation_check
   simpa only [zp_ptrim, zp_paddL, zp_pmulL, zp_pscaleL, Rat.cast_neg, Rat.cast_one,
-    map_neg, map_one, neg_one_mul, ← sub_eq_add_neg, zp] using h
+    map_neg, map_one, neg_one_mul, ← sub_eq_add_neg, zp] using! h
 
 theorem eliminationScale_ne_zero : (eliminationScale : ℂ) ≠ 0 := by
   norm_num [eliminationScale, mkRat]

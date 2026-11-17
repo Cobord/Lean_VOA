@@ -91,11 +91,11 @@ theorem sMz_euler (v : Fin r → ℂ) (p : ℤ) (P : ℕ) (hP : p ≤ 2 * P) :
     simp only [Finset.mem_filter, Finset.mem_range]
     omega
   · intro a _ b _ h
-    simp only at h
+    try simp only at h
     omega
   · intro k hk
     simp only [Finset.mem_filter, Finset.mem_range] at hk
-    exact ⟨k / 2, by simp only [Finset.mem_range]; omega, by simp only; omega⟩
+    exact ⟨k / 2, by simp only [Finset.mem_range]; omega, by (try simp only); omega⟩
   · intro n _
     rw [show 2 * n / 2 = n by omega]
 
@@ -207,7 +207,7 @@ theorem exists_pderiv_bound (y : FockT r) : ∃ V : ℕ, ∀ x : ℕ × Fin r, V
   classical
   refine ⟨y.vars.sup (fun x => x.1 + 1), fun x hx => pderiv_eq_zero_of_notMem_vars fun hm => ?_⟩
   have := Finset.le_sup (f := fun x : ℕ × Fin r => x.1 + 1) hm
-  simp only at this
+  try simp only at this
   omega
 
 /-- **The Euler identity of the dressing**:

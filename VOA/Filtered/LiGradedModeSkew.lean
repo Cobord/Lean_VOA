@@ -46,7 +46,7 @@ theorem liWeightPiece_skew_term_mem (W : VertexOperatorAlgebra V)
   · by_cases hj : n + j ≤ q + p
     · have h := liFiltration_T_pow_mem W j (liFiltration_smul_nonneg_mem W hj hy.1 hx.1)
       have heq : q + p - (n + j) + j = p + q - n := by omega
-      simpa only [heq] using h
+      simpa only [heq] using! h
     · have hzero : W.smul y ((n + j : ℕ) : ℤ) x ∈ liFiltration W 0 := by
         rw [liFiltration_zero_eq_top]
         trivial
@@ -57,7 +57,7 @@ theorem liWeightPiece_skew_term_mem (W : VertexOperatorAlgebra V)
       rw [Nat.cast_sub hN]
       push_cast
       ring
-    simpa only [heq] using hg
+    simpa only [heq] using! hg
 
 /-- Translated descended modes agree with the classes of the original skew summands. -/
 theorem liGradedClass_skew_term (W : VertexOperatorAlgebra V)
@@ -144,7 +144,7 @@ theorem liGradedClass_mode_skew (W : VertexOperatorAlgebra V)
               (liWeightPiece W (p + q - n) (N + M - (n + 1))).subtype (F j) :=
           (liWeightPiece W (p + q - n) (N + M - (n + 1))).subtype.toAddMonoidHom.map_finsum hfin
         rw [hmap]
-        simpa only [F, Submodule.coe_smul] using hskew
+        simpa only [F, Submodule.coe_smul] using! hskew
       let π : liWeightPiece W (p + q - n) (N + M - (n + 1)) →ₗ[ℂ]
           liAssociatedGraded W :=
         (DirectSum.lof ℂ (ℕ × ℕ) (fun d : ℕ × ℕ => liWeightLayer W d.1 d.2)

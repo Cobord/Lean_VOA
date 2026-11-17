@@ -6,6 +6,11 @@ import VOA.Moonshine.MonsterGriess.ParityEqualsVisible
 # Lattice actions linking the rational Griess commutant
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8

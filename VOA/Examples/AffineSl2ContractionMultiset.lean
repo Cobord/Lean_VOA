@@ -114,7 +114,7 @@ theorem forgetOrder_contractionNormal (a : Letter) (w : List Letter) :
         Finsupp.lmapDomain_apply, Finsupp.mapDomain_single, ← Multiset.cons_coe,
         Multiset.erase_cons_head, List.count_cons_self, Nat.cast_add, Nat.cast_one]
       by_cases ha : oppositeLetter a ∈ w
-      · rw [Multiset.cons_erase (by simpa using ha), ← Finsupp.single_add]
+      · rw [Multiset.cons_erase (by simpa using! ha), ← Finsupp.single_add]
         congr 1
         ring
       · have hc : w.count (oppositeLetter a)=0 := List.count_eq_zero.mpr ha
@@ -140,7 +140,6 @@ theorem forgetOrder_actContraction (a : Letter) (f : NormalForm) :
       forgetOrder_shift, forgetOrder_contractionNormal, forgetOrder_single,
       multisetAct]
     simp [multisetShift]
-    simp only [List.count_eq_countP, Bool.beq_eq_decide_eq]
 
 /-- The vacuum coefficient keeps precisely the empty creation multiset. -/
 noncomputable def multisetPolynomial : MultisetForm →ₗ[ℂ] Polynomial ℂ :=
@@ -214,7 +213,6 @@ theorem multisetRun_diagonal (u : List Letter) (p : ℕ) :
       Multiset.count_map_eq_count' oppositeLetter _ oppositeLetter_involutive.injective]
     rw [← Finsupp.smul_single_one, map_smul, ih]
     simp [diagonalContraction, Nat.add_assoc, Nat.add_comm]
-    simp only [List.count_eq_countP, Bool.beq_eq_decide_eq]
 
 /-- A nonzero vacuum contraction forces equality of the complete colour/depth
 multisets. This support statement needs no ordering or equal-length assumption. -/
@@ -227,7 +225,7 @@ theorem multisetRun_vacuum_support (u : List Letter) (p : ℕ) (s : Multiset Let
       by_contra hs
       apply hv
       simp [multisetRun, multisetPolynomial, hs]
-    simpa using hs
+    simpa using! hs
   | cons a u ih =>
     have hc : s.count (oppositeLetter a) ≠ 0 := by
       intro hz

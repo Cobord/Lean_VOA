@@ -25,7 +25,7 @@ theorem expFun_sub_mem_lower (F : ℤ → Submodule ℂ M)
   have hp : ∀ n : ℕ, (D ^ n) x ∈ F (d - n) := by
     intro n
     induction n with
-    | zero => simpa using hx
+    | zero => simpa using! hx
     | succ n ih =>
       rw [VOA.pow_succ'_apply]
       convert hLower _ _ ih using 1
@@ -45,7 +45,7 @@ theorem expFun_mem_filtration (F : ℤ → Submodule ℂ M)
     {d : ℤ} {x : M} (hx : x ∈ F d) : expFun hD x ∈ F d := by
   have ht := expFun_sub_mem_lower F hF hD hLower hx
   have := Submodule.add_mem (F d) (hF (by omega : d - 1 ≤ d) ht) hx
-  simpa only [sub_add_cancel] using this
+  simpa only [sub_add_cancel] using! this
 
 end FilteredExponential
 
@@ -64,7 +64,7 @@ theorem normalizedCoordinateChange_mem (P : LWModule W)
     normalizedCoordinateChange P x ∈ moduleLevelLE P d := by
   have ht := normalizedCoordinateChange_sub_mem_lower P hx
   have := Submodule.add_mem _ (moduleLevelLE_mono P (by omega : d - 1 ≤ d) ht) hx
-  simpa only [sub_add_cancel] using this
+  simpa only [sub_add_cancel] using! this
 
 theorem normalizedCoordinateChange_symm_mem (P : LWModule W)
     {d : ℤ} {x : P.carrier} (hx : x ∈ moduleLevelLE P d) :
@@ -73,7 +73,7 @@ theorem normalizedCoordinateChange_symm_mem (P : LWModule W)
   apply expFun_mem_filtration (moduleLevelLE P) (fun _ _ h => moduleLevelLE_mono P h)
     _ _ hx
   intro e y hy
-  simpa only [neg_neg] using moduleCoordGen_mem_lower P
+  simpa only [neg_neg] using! moduleCoordGen_mem_lower P
     (iterativeLog (logarithmicCoordinate 1)) hy
 
 theorem normalizedStateChange_sub_mem_lower
@@ -89,7 +89,7 @@ theorem normalizedStateChange_mem
     normalizedStateChange W a ∈ gradeLE W d := by
   have ht := normalizedStateChange_sub_mem_lower ha
   have := Submodule.add_mem _ (gradeLE_mono W (by omega : d - 1 ≤ d) ht) ha
-  simpa only [sub_add_cancel] using this
+  simpa only [sub_add_cancel] using! this
 
 /-- Ordinary modes respect the sum filtration, with the exact mode shift. -/
 theorem mode_mem_level_of_homogeneous (P : LWModule W)
@@ -127,7 +127,7 @@ theorem sqMode_mem_level (P : LWModule W)
       (sqMode_mem_level_of_homogeneous P hb hx m)
   | zero => simp
   | add a b _ _ ha hb =>
-    simpa only [map_add, LinearMap.add_apply] using Submodule.add_mem _ ha hb
+    simpa only [map_add, LinearMap.add_apply] using! Submodule.add_mem _ ha hb
 
 /-- The coefficient of the original mode is one; all other terms lower level. -/
 theorem sqMode_sub_mode_mem_lower (P : LWModule W)

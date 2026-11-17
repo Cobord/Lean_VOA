@@ -43,11 +43,11 @@ theorem sl2DegreeBoxes_card_le (m d : ℕ) :
     _ = ∑ a ∈ Finset.range (m + 1), A2.qbinomCoeff m a d := by
       apply Finset.sum_congr rfl
       intro a ha
-      exact modeBox_card_degree m a d (by simpa using ha)
+      exact modeBox_card_degree m a d (by simpa using! ha)
     _ = A2.gl2Hilb m 0 d := by
       unfold A2.gl2Hilb
       rw [Nat.sub_zero, ← Nat.range_succ_eq_Icc_zero]
-      simpa only [Nat.add_sub_cancel] using
+      simpa only [Nat.add_sub_cancel] using!
         (Finset.sum_range_reflect (fun a => A2.qbinomCoeff m a d) (m + 1)).symm
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]
@@ -60,10 +60,10 @@ theorem sl2_word_bihomogeneous (l : List ℕ) :
     MvPolynomial.IsWeightedHomogeneous om (CLAssembly.mono l) (l.length, l.sum) := by
   induction l with
   | nil =>
-      simpa [CLAssembly.mono] using MvPolynomial.isWeightedHomogeneous_one ℂ om
+      simpa [CLAssembly.mono] using! MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons r l ih =>
       have hh := (MvPolynomial.isWeightedHomogeneous_X ℂ om r).mul ih
-      simpa [CLAssembly.mono, om, Nat.add_comm] using hh
+      simpa [CLAssembly.mono, om, Nat.add_comm] using! hh
 
 /-- Garland's homogeneous box spanning gives a finite spanning family in each degree. -/
 theorem sl2LowerDegree_le_boxes (F : ℕ → Module.End ℂ V)
@@ -92,7 +92,7 @@ theorem sl2LowerDegree_finite_and_rank (F : ℕ → Module.End ℂ V)
   let E : Finset V := (sl2DegreeBoxes m d).image
     (fun f => Sl2Weyl.evAlg F hFF (MvPolynomial.monomial f 1) y)
   have hs : sl2LowerDegree F y d ≤ Submodule.span ℂ (E : Set V) := by
-    simpa only [E, Finset.coe_image] using sl2LowerDegree_le_boxes F hFF y m d hk
+    simpa only [E, Finset.coe_image] using! sl2LowerDegree_le_boxes F hFF y m d hk
   haveI : FiniteDimensional ℂ (Submodule.span ℂ (E : Set V)) :=
     FiniteDimensional.span_of_finite _ E.finite_toSet
   refine ⟨Submodule.finiteDimensional_of_le hs, ?_⟩
@@ -110,7 +110,7 @@ theorem sl2_local_weyl_graded_bound {E H F : ℕ → Module.End ℂ V}
   apply sl2LowerDegree_finite_and_rank F hS.hFF y m d
   intro r s hr hrs
   exact Garland.garland
-    (fun k => by simpa only [add_comm] using hS.hEF 1 k)
+    (fun k => by simpa only [add_comm] using! hS.hEF 1 k)
     (fun j k => hS.hHF (j + 1) k) hS.hFF
     (hE 1) (fun j => hH (j + 1) (by omega)) r hr hF s hrs
 

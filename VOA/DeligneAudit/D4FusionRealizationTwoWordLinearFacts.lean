@@ -14,8 +14,8 @@ noncomputable section
 theorem word_checks (i : ℕ) (hi : i < 841) :
     wordMetaCheck i = true ∧ wordStepCheck i = true := by
   have h := List.all_eq_true.mp word_checks_all i
-    (List.mem_range'_1.mpr ⟨Nat.zero_le _, by simpa using hi⟩)
-  simpa only [Bool.and_eq_true] using h
+    (List.mem_range'_1.mpr ⟨Nat.zero_le _, by simpa using! hi⟩)
+  simpa only [Bool.and_eq_true] using! h
 
 theorem wordNode_range (i : ℕ) (hi : i < 841) :
     rangeCheck 841 (wordNode i).vector = true := by
@@ -37,13 +37,13 @@ theorem wordNode_parent (i : ℕ) (hi : i < 841) (hi0 : i ≠ 0) :
   have h := (word_checks i hi).2
   simp only [wordStepCheck, if_neg hi0, Bool.and_eq_true, decide_eq_true_eq,
     beq_iff_eq] at h
-  simpa only [and_assoc] using h
+  simpa only [and_assoc] using! h
 
 private theorem vec_eq_of_sortedDiff (n : ℕ) (v w : SV)
     (h : sortedZero (v ++ scale (-1) w) = true) : vec n v = vec n w := by
   apply sub_eq_zero.mp
   simpa only [vec_append, vec_scale, Int.cast_neg, Int.cast_one, neg_one_smul,
-    sub_eq_add_neg] using vec_zero_of_sortedZero n h
+    sub_eq_add_neg] using! vec_zero_of_sortedZero n h
 
 /-- Every finite column step is an equality of genuine complex vectors. -/
 theorem wordNode_vec_step (i : ℕ) (hi : i < 841) (hi0 : i ≠ 0) :

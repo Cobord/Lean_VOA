@@ -109,7 +109,7 @@ theorem chargedJacobi_of_productFormula {n : ℕ} (hn : 0 < n) (a j : ℤ)
   have h := twisted_jacobi_of_local_pf (V2m 1 le_rfl) (shiftedY n a j) hn
     (shiftedY_truncation hn a j) (latChargeGen (latP 1) β) (latChargeGen (latP 1) γ)
     k m (shiftedY_local hn a j k m _ _) (hpf β γ k m hk hm) x ℓ 0 0
-  simpa only [mul_zero, zero_add] using h
+  simpa only [mul_zero, zero_add] using! h
 
 /-- Unconditional charged-pair twisted Jacobi, including non-dual shifts.
 This does not assert Jacobi on arbitrary oscillator descendants. -/

@@ -108,7 +108,7 @@ theorem pairWordOpEvaluation_convertIter
           ρ.op (17 : Fin 28) r * pairWordOpEvaluation ρ P -
               pairWordOpEvaluation ρ P * ρ.op (17 : Fin 28) r =
             -pairWordOpEvaluation ρ (pairWordConvert r P) := by
-        simpa only [pairAdjoint] using pairWordOpEvaluation_convert ρ r P
+        simpa only [pairAdjoint] using! pairWordOpEvaluation_convert ρ r P
       rw [hone, pairAdjoint_neg, ih]
       simp
 
@@ -180,7 +180,7 @@ theorem pairPolynomialConvertIter_monomial {σ : Type*} [Fintype σ]
       ((threeWordsIter rs (shapedModes shape Finset.univ.toList a)).map
         fun q => Finsupp.single q (1 : ℂ)).sum := by
   simpa only [pairPolynomialConvertIter, LinearMap.comp_apply,
-    pairPolynomialWords_monomial] using
+    pairPolynomialWords_monomial] using!
       pairWordConvertIter_single rs (shapedModes shape Finset.univ.toList a)
 
 /-- A polynomial identity in the converted word module evaluates to an

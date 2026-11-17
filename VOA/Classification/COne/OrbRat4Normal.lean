@@ -268,7 +268,7 @@ theorem evalWord_xvc (c : ℂ) : ∀ w : List ℕ,
     rw [MvPolynomial.X, mul_left_comm, MvPolynomial.monomial_mul, one_mul]
 
 theorem coeff_evRc (c : ℂ) (m : (ℕ × Fin r) →₀ ℕ) : ∀ L : RawPoly ℕ,
-    MvPolynomial.coeff m (evRc a c L) =
+    (evRc a c L).coeff m =
       (L.map fun t => if oscExp a t.2 = m then ((t.1 : ℚ) : ℂ) * c ^ t.2.count 0 else 0).sum
   | [] => by simp [evRc_nil]
   | (q, w) :: L => by
@@ -340,7 +340,7 @@ noncomputable def cB (L : RawPoly ℕ) (m : (ℕ × Fin r) →₀ ℕ) : ℚ :=
   (L.map fun s => if oscExp a s.2 = m ∧ s.2.count 0 = 1 then s.1 else 0).sum
 
 theorem coeff_split (L : RawPoly ℕ) (hL : ∀ t ∈ L, t.2.count 0 ≤ 1) (m : (ℕ × Fin r) →₀ ℕ) :
-    MvPolynomial.coeff m (evRc a c L) = ((cA a L m : ℚ) : ℂ) + ((cB a L m : ℚ) : ℂ) * c := by
+    (evRc a c L).coeff m = ((cA a L m : ℚ) : ℂ) + ((cB a L m : ℚ) : ℂ) * c := by
   rw [coeff_evRc]
   induction L with
   | nil => simp [cA, cB]
@@ -382,7 +382,7 @@ theorem cB_of_mem {L : RawPoly ℕ} (hL : RN L) {t : ℚ × List ℕ} (ht : t �
 
 /-- A nonzero coefficient sits at the oscillator exponent of every word of a reduced form. -/
 theorem coeff_ne_zero {L : RawPoly ℕ} (hL : RN L) (hc : c * c = 8) {t : ℚ × List ℕ}
-    (ht : t ∈ L) : MvPolynomial.coeff (oscExp a t.2) (evRc a c L) ≠ 0 := by
+    (ht : t ∈ L) : (evRc a c L).coeff (oscExp a t.2) ≠ 0 := by
   rw [coeff_split a c L (fun s hs => (hL.2 s hs).2.2)]
   intro h
   obtain ⟨hA, hB⟩ := rat_comb_zero c hc _ _ h
@@ -424,7 +424,8 @@ theorem RN_eval_single {L : RawPoly ℕ} (hL : RN L) (hc : c * c = 8) (w : ℚ) 
       exact absurd rfl hco
   rcases L with _ | ⟨t, L⟩
   · exfalso
-    have := congrArg (MvPolynomial.coeff (oscExp a [1])) h
+    have := congrArg (fun q : MvPolynomial _ _ => q.coeff (oscExp a [1])) h
+    beta_reduce at this
     rw [evRc_nil, coeff_evRc] at this
     simp at this
     exact hw (by exact_mod_cast this.symm)
@@ -450,7 +451,11 @@ theorem proj_sector (d d' : ℤ) (p : FockN (rank (latP 4))) :
     LinearMap.coe_comp, Function.comp_apply, LinearMap.lTensor_tmul, Finsupp.lapply_apply,
     LinearEquiv.coe_coe, TensorProduct.rid_tmul]
   by_cases hdd : d' = d
-  · subst hdd; simp
+  · subst hdd
+    have h1 : (Finsupp.single (d' : (latP 4).carrier) (1 : ℂ)) (d' : (latP 4).carrier) = 1 :=
+      Finsupp.single_eq_same
+    exact (congrArg (· • p) h1).trans
+      ((one_smul ℂ p).trans (ite_cond_eq_true p 0 (eq_self d')).symm)
   · rw [if_neg hdd]
     have h0 : (Finsupp.single (d' : (latP 4).carrier) (1 : ℂ)) (d : (latP 4).carrier) = 0 := by
       rw [Finsupp.single_apply, if_neg hdd]

@@ -67,7 +67,7 @@ theorem keyOrbit_map_eq_basis_orbits
       rintro x ⟨j, rfl⟩
       change N.mkQ (v j : V) ∈ D
       exact Submodule.mem_iSup_of_mem j
-        (by simpa using wordOp_mem_cycSubG Q (N.mkQ (v j : V)) [])
+        (by simpa using! wordOp_mem_cycSubG Q (N.mkQ (v j : V)) [])
   have hle : (keyOrbit ρ w k).map N.mkQ ≤ D := by
     rw [keyOrbit_eq_iSup_vectorOrbit, Submodule.map_iSup]
     apply iSup_le
@@ -110,7 +110,7 @@ theorem key_orbit_rank
           ∑ j ∈ s, L := by
     induction s using Finset.induction_on with
     | empty =>
-        exact ⟨by simpa using
+        exact ⟨by simpa using!
           (inferInstance : FiniteDimensional ℂ (⊥ : Submodule ℂ (V ⧸ N))),
           by
             have hz : (∅ : Finset (Fin n)).sup O = ⊥ := rfl
@@ -126,11 +126,11 @@ theorem key_orbit_rank
   have hall := haux Finset.univ
   have heq : (Finset.univ : Finset (Fin n)).sup O =
       (keyOrbit ρ w k).map N.mkQ := by
-    simpa [O, Finset.sup_eq_iSup] using hv.symm
+    simpa [O, Finset.sup_eq_iSup] using! hv.symm
   rw [heq] at hall
   refine ⟨hall.1, ?_⟩
   simpa only [Finset.sum_const, Finset.card_fin, nsmul_eq_mul,
-    Nat.mul_comm] using hall.2
+    Nat.mul_comm] using! hall.2
 
 end
 end VOA.DeligneAudit.D4Levi

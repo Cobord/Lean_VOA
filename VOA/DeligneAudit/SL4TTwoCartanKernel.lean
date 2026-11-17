@@ -29,7 +29,7 @@ theorem baseSaturatedEvaluationKernel_base_mul (β : B →ₐ[ℂ] R) (π : R �
     {x : R} (hx : x ∈ baseSaturatedEvaluationKernel β π) (b : B) :
     β b * x ∈ baseSaturatedEvaluationKernel β π := by
   intro c
-  simpa only [map_mul, mul_assoc] using hx (c * b)
+  simpa only [map_mul, mul_assoc] using! hx (c * b)
 
 /-- The two Cartan combinations isolate both radical power sums on saturated relations. -/
 theorem twoCartan_saturatedKernel_generators (β : B →ₐ[ℂ] R) (π : R →ₗ[ℂ] V)
@@ -62,17 +62,17 @@ theorem twoCartan_saturatedKernel_generators (β : B →ₐ[ℂ] R) (π : R →�
     have hz : π (β b * (g₁ * x)) = 0 :=
       (smul_eq_zero.mp hthree).resolve_left (by norm_num)
     refine ⟨hz, ?_⟩
-    simpa only [hz, add_zero, zero_sub, eq_neg_iff_add_eq_zero, zero_add] using hlast
+    simpa only [hz, add_zero, zero_sub, eq_neg_iff_add_eq_zero, zero_add] using! hlast
   exact ⟨fun b => (hpair b).1, fun b => (hpair b).2⟩
 
 /-- Algebra elements preserving a subspace under multiplication form a subalgebra. -/
 def multiplicationPreservingSubalgebra (S : Submodule ℂ R) : Subalgebra ℂ R where
   carrier := {p | ∀ x ∈ S, p * x ∈ S}
   zero_mem' := by intro x hx; simp
-  one_mem' := by intro x hx; simpa using hx
-  add_mem' := by intro p q hp hq x hx; simpa [add_mul] using S.add_mem (hp x hx) (hq x hx)
-  mul_mem' := by intro p q hp hq x hx; simpa [mul_assoc] using hp (q * x) (hq x hx)
-  algebraMap_mem' := by intro z x hx; simpa [Algebra.smul_def] using S.smul_mem z hx
+  one_mem' := by intro x hx; simpa using! hx
+  add_mem' := by intro p q hp hq x hx; simpa [add_mul] using! S.add_mem (hp x hx) (hq x hx)
+  mul_mem' := by intro p q hp hq x hx; simpa [mul_assoc] using! hp (q * x) (hq x hx)
+  algebraMap_mem' := by intro z x hx; simpa [Algebra.smul_def] using! S.smul_mem z hx
 
 /-- Power-sum degree induction propagates relative relations through arbitrary multipliers. -/
 theorem twoCartan_saturatedKernel_mul (β : B →ₐ[ℂ] R) (π : R →ₗ[ℂ] V)
@@ -111,7 +111,7 @@ theorem twoCartan_relationIdeal_le_kernel (β : B →ₐ[ℂ] R) (π : R →ₗ[
   have hle : Ideal.span relations ≤ I := Ideal.span_le.mpr hrel
   intro x hx
   have he := hle hx (1 : B)
-  simpa only [map_one, one_mul] using he
+  simpa only [map_one, one_mul] using! he
 
 end
 

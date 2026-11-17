@@ -42,7 +42,7 @@ def gs (c : L) (k : ℕ) : PowerSeries L := expand (2 * k + 1) (by omega) (geomC
 theorem one_sub_mul_gs (c : L) (k : ℕ) :
     (1 - PowerSeries.C c * X ^ (2 * k + 1)) * gs c k = PowerSeries.C c * X ^ (2 * k + 1) := by
   have h := congrArg (expand (2 * k + 1) (by omega)) (one_sub_mul_geomC c)
-  simpa [gs, map_mul, map_sub, expand_C, expand_X] using h
+  simpa [gs, map_mul, map_sub, expand_C, expand_X] using! h
 
 theorem coeff_gs (c : L) (k n : ℕ) :
     coeff n (gs c k) = if (2 * k + 1) ∣ n then (if n / (2 * k + 1) = 0 then 0 else c ^ (n / (2 * k + 1)))

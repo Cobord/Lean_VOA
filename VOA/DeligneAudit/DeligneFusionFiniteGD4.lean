@@ -56,7 +56,7 @@ theorem d4_kn : ∀ c : Fin 28, d4Kn c = true → D4sector.raising c ∨ D4secto
   change ∀ c : Fin 28, d4Kn c = true →
     (4 ≤ c.val ∧ c.val < 16) ∨ (16 ≤ c.val ∧ c.val < 20)
   intro c h
-  simpa [d4Kn] using h
+  simpa [d4Kn] using! h
 
 /-- **The finiteness table facts for `D4`.** -/
 theorem d4_finiteTable : FiniteTableG D4sector :=

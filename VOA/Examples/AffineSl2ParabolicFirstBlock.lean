@@ -147,7 +147,7 @@ theorem parabolic_determinant_identity (k : ℂ) (d n : ℕ) (c : ℤ) :
           (Wak.Charged.affineParabolicProduct d n c).eval k) := by
   rw [← weightDeterminant_parabolic_block_coefficient]
   congr 1
-  simpa only [Nat.cast_add,Nat.cast_one,add_assoc] using
+  simpa only [Nat.cast_add,Nat.cast_one,add_assoc] using!
     Wak.Charged.weightDeterminant_parabolic_coefficient_all k d n c
 
 end

@@ -76,7 +76,6 @@ theorem EEVec_vSchur_nonneg (α' α : (latP 1).carrier) (s w : ℕ) :
   · intro k hk; simp
   · intro m hm
     simp only [mem_Icc] at hm
-    dsimp only
     omega
   · intro k hk
     have hk' : k < w + 1 := mem_range.mp hk
@@ -92,7 +91,7 @@ def q20 : FockN (rank (latP 1)) :=
     vSchur (latP 1) (-1 : ℤ) 11 * vSchur (latP 1) (-1 : ℤ) 9
 
 theorem EEVec_q20 : EEVec (latP 1) (-1 : ℤ) ((9 : ℕ) : ℤ) (vSchur (latP 1) (-1 : ℤ) 11) = q20 := by
-  rw [EEVec_vSchur_nonneg, latP_form]
+  rw [EEVec_vSchur_nonneg (-1 : ℤ) (-1 : ℤ) 9 11, latP_form 1 (-1) (-1)]
   have hf : ((2 * ((1 : ℕ) : ℤ) * (-1 : ℤ) * (-1 : ℤ) : ℤ) : ℂ) = 2 := by norm_num
   rw [hf]
   rw [Finset.sum_range_succ' _ 11, Finset.sum_range_succ' _ 10, Finset.sum_range_succ' _ 9]
@@ -137,11 +136,11 @@ theorem aExpVec_q20 : aExpVec (latP 1) (6 : ℤ) 20 q20 =
     ((2 : ℂ) * ((167960 : ℂ) * 705432 - 352716 * 352716)) • vacuumN (rank (latP 1)) := by
   rw [q20, map_add, map_sub, map_smul,
     show (20 : ℕ) = 9 + 11 by rfl,
-    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl),
+    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl) (-1 : ℤ) (6 : ℤ) 9 11,
     show (9 + 11 : ℕ) = 10 + 10 by rfl,
-    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl),
+    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl) (-1 : ℤ) (6 : ℤ) 10 10,
     show (10 + 10 : ℕ) = 11 + 9 by rfl,
-    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl),
+    aExpVec_vSchur_mul (latP 1) (latP_posDef 1 le_rfl) (-1 : ℤ) (6 : ℤ) 11 9,
     gco_m12, gco_m12, gco_m12]
   rw [smul_smul, ← sub_smul, ← add_smul]
   congr 1
@@ -179,15 +178,15 @@ theorem w60_w62 : V2v.smul (wv 6 0) (-29) (wv 6 2) =
     exact Submodule.add_mem _ (Submodule.sub_mem _ p1 (Submodule.smul_mem _ _ p2)) p3
   rw [show -(-29 : ℤ) - 1 - 2 * ((1 : ℕ) : ℤ) * (6 : ℤ) * (4 : ℤ) = -((20 : ℕ) : ℤ) by
     norm_num]
-  rw [WpC2.EEVec_eq_weight_bounded_sum' (latP 1) _ _ hq]
+  rw [WpC2.EEVec_eq_weight_bounded_sum' (latP 1) (6 : ℤ) (-((20 : ℕ) : ℤ)) hq]
   rw [show max (0 : ℤ) (-((20 : ℕ) : ℤ)) = 0 by norm_num,
     show ((20 : ℕ) : ℤ) + (-((20 : ℕ) : ℤ)) = 0 by ring, Finset.Icc_self, Finset.sum_singleton,
     show ((0 : ℤ) - (-((20 : ℕ) : ℤ))).toNat = 20 by rfl,
-    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero, one_mul, aExpVec_q20, latStateGen_csmul,
-    smul_smul, smul_smul]
+    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero (latP 1) (6 : ℤ), one_mul, aExpVec_q20,
+    latStateGen_csmul (latP 1) _ _ ((6 : ℤ) + (4 : ℤ)), smul_smul, smul_smul]
   rw [show (6 : ℤ) + (4 : ℤ) = (10 : ℤ) by norm_num]
   change _ = kappa2 • latStateGen (latP 1) (vacuumN _) (10 : ℤ)
-  rw [← latStateGen_csmul, ← latStateGen_csmul]
+  rw [← latStateGen_csmul (latP 1) _ _ (10 : ℤ), ← latStateGen_csmul (latP 1) _ _ (10 : ℤ)]
   congr 2
   unfold kappa2
   ring
@@ -210,7 +209,7 @@ theorem w60_w60 : V2v.smul (wv 6 0) (-29) (wv 6 0) = 0 := by
   rw [wv_zero]
   change V2v.smul (latChargeGen (latP 1) ((6 : ℕ) : ℤ)) (-29)
     (latStateGen (latP 1) (vacuumN _) ((6 : ℕ) : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_neg (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) ((6 : ℕ) : ℤ), latP_form, if_neg (by norm_num)]
   simp [latStateGen]
 
 theorem w60_w61 : V2v.smul (wv 6 0) (-29) (wv 6 1) = 0 := by
@@ -320,6 +319,7 @@ theorem second_wv : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 2 ≤ t → t ≤ 
       refine Submodule.sub_mem _ ?_ (Submodule.smul_mem _ _ (wv_grading _ _))
       have h := V2v.smul_mem_grading (wv_grading 6 i) (wv_grading 6 j) (-29)
       convert h using 2
+      all_goals norm_num
     have hho : ho (Φ i j) = (((2 * 10 : ℕ) : ℂ) - 2 * ((t - 2 : ℕ) : ℂ)) • Φ i j := by
       subst hij
       simp only [hΦ]
@@ -389,6 +389,7 @@ theorem grading_pair (i j : ℕ) :
     V2v.smul (wv 6 i) (-29) (wv 6 j) ∈ V2v.grading (((10 : ℕ) : ℤ) ^ 2) := by
   have h := V2v.smul_mem_grading (wv_grading 6 i) (wv_grading 6 j) (-29)
   convert h using 2
+  all_goals norm_num
 
 theorem second_corner_a : V2v.smul (wv 6 11) (-29) (wv 6 12) ∈
     lowerDesc V2v (((10 : ℕ) : ℤ) ^ 2) := by

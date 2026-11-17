@@ -83,7 +83,7 @@ theorem sJ_letterSym (l : Generator × ℕ) : sJ (letterSym l) = (2 : ℂ) ^ ljw
   apply sJ_weighted
   have h := letterSym_mem_weighted l
   obtain ⟨g, n⟩ := l
-  cases g <;> simpa [letterJetWt, ljw] using h
+  cases g <;> simpa [letterJetWt, ljw] using! h
 
 /-! ### Scaling the model ring -/
 
@@ -143,7 +143,7 @@ theorem modelDeg_iSupIndep (ht : ∀ n, θ (t n) = (2 : ℂ) ^ (n + 1) • t n) 
     iSupIndep (modelDeg R t r) := by
   have h := (Module.End.eigenspaces_iSupIndep
     ((Θ R θ).toLinearMap)).comp (f := fun d : ℤ => (2 : ℂ) ^ (d - r))
-    (fun a b hab => by simpa using two_zpow_injective hab)
+    (fun a b hab => by simpa using! two_zpow_injective hab)
   refine h.mono fun d => ?_
   rw [modelDeg, Submodule.span_le]
   rintro _ ⟨w, hw, hd, rfl⟩

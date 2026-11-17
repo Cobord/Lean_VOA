@@ -96,6 +96,8 @@ namespace AKWeightGrading
 
 variable {W : VertexOperatorAlgebra 𝒱}
 
+set_option synthInstance.maxHeartbeats 80000 in
+-- Lean 4.35: instance search for the `DirectSum` evaluation hom below times out at the default.
 theorem decompose_smul_of_mem (hgrade : AKWeightGrading W)
     {p q : ℤ} (f : E46) {x : 𝒱E 𝒱} (hx : x ∈ akTotalWeightSpace W q) :
     letI := hgrade.coeffDecomposition

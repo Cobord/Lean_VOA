@@ -45,7 +45,6 @@ theorem gtPieriUp_apply (q : R) {N : ℕ} (S : Finset (Fin N))
     have he : pieriWeight nu S ≠ lam := by
       intro he
       have hh := congrArg (fun row => gtLowerSubset row S) he
-      dsimp only at hh
       rw [gtLowerSubset_pieriWeight] at hh
       exact hn hh
     simp [he]

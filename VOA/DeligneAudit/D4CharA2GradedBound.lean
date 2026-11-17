@@ -17,7 +17,7 @@ theorem terminal_finrank_le_steps (n : ℕ) (F : ℕ → Submodule ℂ V)
       ∑ i ∈ Finset.range n, Module.finrank ℂ (StepQuot F i) := by
   have hh := a2_terminal_finrank_le_sum n F (fun i => F (i + 1)) (fun _ => 1)
     hzero hmono hfinite (fun i hi => by simp [KeyQuot, StepQuot])
-  simpa only [one_mul] using hh
+  simpa only [one_mul] using! hh
 
 variable (ρ : CurrentModule VOA.AffineSl3.bracketTable V) (w : V)
 

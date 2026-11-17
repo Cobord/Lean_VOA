@@ -16,6 +16,9 @@ namespace VOA.Moonshine.ConwayNorton
 open scoped TensorProduct
 open Module (End)
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 /-- A conformal vertex algebra with an internal integer grading, without

@@ -39,11 +39,11 @@ theorem exists_comb_of_span_pair {E : Type*} [AddCommGroup E] [Module ℂ E] {f1
         rw [show b2 * a1 - b1 * a2 = a1 * b2 - a2 * b1 by ring, hd, zero_smul]
       rw [← this]; module)
     obtain ⟨hb2, hb1⟩ := hb
-    have hb1' : b1 = 0 := by simpa using hb1
+    have hb1' : b1 = 0 := by simpa using! hb1
     subst hb2 hb1'
     have ha := hind a2 (-a1) (by rw [← h1, ← h2]; module)
     obtain ⟨ha2, ha1⟩ := ha
-    have ha1' : a1 = 0 := by simpa using ha1
+    have ha1' : a1 = 0 := by simpa using! ha1
     subst ha1'
     have := (hind 1 0 (by rw [← h1]; simp)).1
     exact one_ne_zero this
@@ -73,7 +73,6 @@ theorem RQ_indep (hyΩ : y ∈ Omega B) (hyL : L0 B y = h • y) (hy0 : y ≠ 0)
     · exact hy0 h1
   have e1 := congrArg (fun v => mode (B.YM (V2mPlus m hm).conformalVector) 2 v) hst
   have e2 := congrArg (fun v => mode (B.YM (V2mPlus m hm).conformalVector) 3 v) hst
-  simp only at e1 e2
   have q1 := L1_Q1 m hm B hyΩ hm2
   have q2 := L2_Q1 m hm B hyΩ hyL hm2
   rw [HP_one] at q1 q2
@@ -149,7 +148,7 @@ theorem lat_weight_two_mem_span (r : Fin (m - 1)) (hs : r.val + 4 ≤ m) {v : La
     · have : m * n ^ 2 + n * s ≥ 3 := by nlinarith
       omega
   subst hn
-  have hw2 : w = 2 := by simpa using hkey
+  have hw2 : w = 2 := by simpa using! hkey
   subst hw2
   intro y hy
   obtain ⟨q, hq, rfl⟩ := Submodule.mem_map.mp hy

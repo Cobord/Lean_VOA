@@ -50,13 +50,13 @@ theorem mixed_unit_indicator_mem_cycloField (F : SphericalFusion C) (M : Modular
   have hj' : (F.j (mixedCenter (F.simple (F.dualLabel F.unitLabel))
       (F.simple F.unitLabel)).1).hom = (1 : ℂ) • centralDrinfeldMorphism
         (mixedCenter (F.simple (F.dualLabel F.unitLabel)) (F.simple F.unitLabel)) := by
-    simpa [M.toRibbon.twistScalar_dualLabel, M.toRibbon.twistScalar_unitLabel] using hj
+    simpa [M.toRibbon.twistScalar_dualLabel, M.toRibbon.twistScalar_unitLabel] using! hj
   rw [hn, Nat.cast_succ, generalizedIndicatorAll_positive]
   let A := mixedCenter (F.simple (F.dualLabel F.unitLabel)) (F.simple F.unitLabel)
   letI := F.homFinite A.1 (tensorPower V (n + 1))
   have hp := generalizedRotation_pow_scalar F.toPivotal A V n one_ne_zero hj'
   simp only [inv_one, one_smul] at hp
-  simpa [generalizedIndicatorInt] using
+  simpa [generalizedIndicatorInt] using!
     trace_mem_cycloField (generalizedRotation F.toPivotal A V n).toLinearMap
       (Nat.succ_pos n) hp
 

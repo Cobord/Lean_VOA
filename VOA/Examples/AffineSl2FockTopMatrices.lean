@@ -33,7 +33,7 @@ theorem occupation_bosonWeight (s : ℤ) (d : Occupation) :
 /-- The highest-weight-leading creation coordinate matrix. -/
 def creationTopMatrix (k : ℂ) (n : ℕ) (c : ℤ) :
     Matrix (JointIndex n c) (JointIndex n c) ℂ := fun i j =>
-  coeff i.val (leadingCreationWord k j.val.toMultiset.toList 1)
+  (leadingCreationWord k j.val.toMultiset.toList 1).coeff i.val
 
 /-- The highest-weight-leading positive row matrix; the creation list is
 reversed because opposite-mode adjoints reverse products. -/
@@ -43,7 +43,7 @@ def rowTopMatrix (k : ℂ) (n : ℕ) (c : ℤ) :
 
 /-- The Fock vacuum has signed boson weight zero. -/
 theorem one_mem_bosonAtLeast (s : ℤ) : (1 : WakFock)∈bosonAtLeast s 0 := by
-  simpa using boson_monomial_mem s 0 0 (by simp)
+  simpa using! boson_monomial_mem s 0 0 (by simp)
 
 /-- The creation top matrix vanishes when output boson multiplicity exceeds
 that of the input creation word. -/
@@ -68,7 +68,7 @@ theorem creationTopMatrix_equal_bosons (k : ℂ) (n : ℕ) (c : ℤ) (i j : Join
     constructor
     · intro hh; exact (Subtype.ext hh).symm
     · intro hh; exact congrArg Subtype.val hh.symm
-  simpa only [creationTopMatrix,hh] using sub_eq_zero.mp he
+  simpa only [creationTopMatrix,hh] using! sub_eq_zero.mp he
 
 /-- A positive row cannot remove more bosons than its number of neutral
 letters, so its constant coefficient vanishes below the opposite triangle. -/

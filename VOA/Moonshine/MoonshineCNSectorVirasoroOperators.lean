@@ -26,7 +26,10 @@ theorem hypLorentzianPolynomial_chargedOscillator (a : Fin 2) (c : ℂ)
 theorem lorentzianIsotropicVector_charge (x y : ℤ) (a : Fin 2) :
     (lorentzianLattice.form ![x, y] (lorentzianIsotropicVector a) : ℂ) =
       if a = 0 then (x : ℂ) else (y : ℂ) := by
-  fin_cases a <;> simp [lorentzianIsotropicVector, lorentzian_form_apply]
+  first
+  | (fin_cases a <;> simp [lorentzianIsotropicVector, lorentzian_form_apply]; done)
+  | (refine (congrArg (fun z : ℤ => (z : ℂ)) (lorentzian_form_apply _ _)).trans ?_
+     fin_cases a <;> simp [lorentzianIsotropicVector])
 
 def lorentzianSectorVirasoro (α : lorentzianLattice.carrier) (n : ℤ) :
     Module.End ℂ (FockN (rank lorentzianLattice)) :=
@@ -53,14 +56,25 @@ theorem lorentzianSectorVirasoro_tmul (α : lorentzianLattice.carrier)
 theorem lorentzianSectorVirasoro_nonnegative_one (x y n : ℤ) (hn : 0 ≤ n) :
     lorentzianSectorVirasoro ![x, y] n 1 =
       if n = 0 then ((x : ℂ) * y) • (1 : FockN (rank lorentzianLattice)) else 0 := by
-  rw [lorentzianSectorVirasoro_apply,
-    show LvirN (rank lorentzianLattice) 1 n 1 = 0 from LvirN_vacuum _ _ (by omega),
-    show frameOscillator lorentzianComplexFrame ![x, y] n 1 = 0 from
-      frameOscillator_vacuum _ _ _ hn, zero_add, zero_add]
-  congr 1
-  congr 1
-  push_cast [lorentzian_form_apply]
-  ring
+  first
+  | (rw [lorentzianSectorVirasoro_apply,
+      show LvirN (rank lorentzianLattice) 1 n 1 = 0 from LvirN_vacuum _ _ (by omega),
+      show frameOscillator lorentzianComplexFrame ![x, y] n 1 = 0 from
+        frameOscillator_vacuum _ _ _ hn, zero_add, zero_add]
+     congr 1
+     congr 1
+     push_cast [lorentzian_form_apply]
+     ring)
+  | (refine (lorentzianSectorVirasoro_apply _ _ _).trans ?_
+     rw [show LvirN (rank lorentzianLattice) 1 n 1 = 0 from LvirN_vacuum _ _ (by omega),
+      show frameOscillator lorentzianComplexFrame ![x, y] n 1 = 0 from
+        frameOscillator_vacuum _ _ _ hn, zero_add, zero_add,
+      show (lorentzianLattice.form ![x, y] ![x, y] : ℤ) = 2 * (x * y) from
+        (lorentzian_form_apply _ _).trans (by simp; ring)]
+     congr 1
+     congr 1
+     push_cast
+     ring)
 
 theorem lorentzianSectorVirasoro_creation (x y m : ℤ) (a : Fin 2) (j : ℕ)
     (p : hypFock) :
@@ -73,9 +87,11 @@ theorem lorentzianSectorVirasoro_creation (x y m : ℤ) (a : Fin 2) (j : ℕ)
           (hypLorentzianPolynomialEquiv p)) := by
   have hc := hypLorentzianPolynomial_creation a 0 j p
   rw [hypOscillator_negative_apply] at hc
-  rw [hc, hypLorentzianPolynomial_chargedOscillator,
-    lorentzianSectorVirasoro_apply, lorentzianSectorVirasoro_apply,
-    LvirN_frameOscillator]
+  rw [hc, hypLorentzianPolynomial_chargedOscillator]
+  first
+  | rw [lorentzianSectorVirasoro_apply, lorentzianSectorVirasoro_apply]
+  | rw [lorentzianSectorVirasoro_apply ![x, y] m, lorentzianSectorVirasoro_apply ![x, y] m]
+  rw [LvirN_frameOscillator]
   have hf := LinearMap.congr_fun (frameOscillator_commutator lorentzianComplexFrame
     ![x, y] (lorentzianIsotropicVector a) m (-(j + 1 : ℤ)))
       (hypLorentzianPolynomialEquiv p)

@@ -1012,7 +1012,7 @@ All five unconditional (given the stated hypothesis \lean{hC}); \lean{#print axi
 standard three.
 \end{status}
 
-\begin{example}[$E_8$ from the Hamming code; paper only]\label{ch02:ex:e8}
+\begin{example}[$E_8$ from the Hamming code]\label{ch02:ex:e8}
 The extended Hamming code $H_8\subseteq\chtwoF^8$ is the $[8,4,4]$ code spanned by the rows of
 \begin{equation*}
 \begin{pmatrix}
@@ -1025,12 +1025,84 @@ Theorem~\ref{ch02:thm:constructionA}, $\Gamma_{H_8}$ is an even unimodular posit
 lattice of rank $8$: it is the $E_8$ lattice.  Its roots are $\tfrac12x\cdot x=2$, i.e.\ $x\cdot
 x=4$: the $2\cdot8=16$ vectors $\pm2e_i$, and the $14\cdot2^4=224$ vectors with entries $\pm1$ on
 the support of a weight-$4$ codeword; $16+224=240$, the coefficient of $q$ in $\vartheta_{E_8}=E_4$
-(the only modular form of weight $4$ with constant term $1$).  This example is not formalised in
-the vendored files used here; it is included to let the reader test the definitions on a small
-case.  It also illustrates why Construction A alone never produces a rootless lattice: the
+(the only modular form of weight $4$ with constant term $1$).  The code-theoretic part of this
+example (double evenness, self-duality, and the three lattice properties) is formalised below
+(Definition~\ref{ch02:def:hamming8} and Theorem~\ref{ch02:thm:hamming8}); the root count $240$ and the
+identification with $E_8$ are \emph{not} formalised and are argued on paper only.  It also illustrates why Construction A alone never produces a rootless lattice: the
 vectors $\pm2e_i$ always have norm $\tfrac12\cdot4=2$.  To kill them one needs the twist by $u$ of
 \S\ref{ch02:sec:leech}.
 \end{example}
+
+\begin{definition}[The extended Hamming code in Lean]\label{ch02:def:hamming8}
+$H_8$ is the image of the systematic encoder $\mathbb F_2^4\to\mathbb F_2^8$,
+$x\mapsto(x_0,x_1,x_2,x_3,\ x_1+x_2+x_3,\ x_0+x_2+x_3,\ x_0+x_1+x_3,\ x_0+x_1+x_2)$, i.e.\ the row space of
+$[I_4\mid J_4-I_4]$ with $J_4$ the all-ones matrix.
+\end{definition}
+\noindent File \leanpath{VOA/\allowbreak LatticesAndCodes/\allowbreak Codes/\allowbreak Hamming.lean}, namespace \lean{Code}.
+\begin{leancode}
+def hamming8Enc : (Fin 4 → ZMod 2) →ₗ[ZMod 2] (Fin 8 → ZMod 2) where
+  toFun x := ![x 0, x 1, x 2, x 3,
+    x 1 + x 2 + x 3, x 0 + x 2 + x 3, x 0 + x 1 + x 3, x 0 + x 1 + x 2]
+
+def hamming8 : Code 2 8 := LinearMap.range hamming8Enc
+\end{leancode}
+(The two linearity proofs in \lean{hamming8Enc} are omitted.)
+\begin{dictionary}
+\lean{![a, b, …]} is the vector with the listed entries; \lean{LinearMap.range} is the image; \lean{Code 2 8} is a subspace of
+$\mathbb F_2^8$ (\lean{abbrev Code}, Section~\ref{ch02:sec:codes}). So \lean{hamming8} is the row
+space of $[I_4\mid J_4-I_4]$. This is \emph{not literally} the matrix displayed in Example~\ref{ch02:ex:e8} (for instance
+$11110000$ is in that code but not in \lean{hamming8}, which contains $11111111$ and the words $(x,\,(J_4-I_4)x)$); the two codes
+are equivalent by a permutation of coordinates, by the classical uniqueness of the $[8,4,4]$ binary code, which is not in the
+library. Every property used below is invariant under such a permutation. The minimum distance $4$ is not stated in Lean.
+\end{dictionary}
+\begin{physics}
+The extended Hamming code is the smallest doubly even self-dual code; as a code CFT it is the $c=8$ chiral theory of the $E_8$
+lattice, i.e.\ the level-one $E_8$ current algebra, built from eight bosons glued by the codewords.
+\end{physics}
+
+\begin{theorem}[$H_8$ is doubly even and self-dual; $\Gamma_{H_8}$ is even, unimodular and positive definite]\label{ch02:thm:hamming8}
+The code $H_8$ of Definition~\ref{ch02:def:hamming8} is doubly even and self-dual, and the Construction~A lattice $\Gamma_{H_8}$
+is even, unimodular and positive definite (of rank $8$).
+\end{theorem}
+\noindent File \leanpath{VOA/\allowbreak LatticesAndCodes/\allowbreak Codes/\allowbreak Hamming.lean}, namespace \lean{Code}.
+\begin{leancode}
+theorem hamming8_isDoublyEven : hamming8.IsDoublyEven := by
+
+theorem hamming8_isSelfDual : hamming8.IsSelfDual := by
+
+theorem hamming8_lattice_isEven :
+    (latticeOfCode hamming8 hamming8_isSelfOrthogonal).IsEven :=
+
+theorem hamming8_lattice_isUnimodular :
+    (latticeOfCode hamming8 hamming8_isSelfOrthogonal).IsUnimodular :=
+
+theorem hamming8_lattice_isPosDef :
+    (latticeOfCode hamming8 hamming8_isSelfOrthogonal).IsPosDef :=
+\end{leancode}
+\begin{dictionary}
+No hypotheses. \lean{IsDoublyEven}, \lean{IsSelfDual} are the definitions of Section~\ref{ch02:sec:codes}
+(\lean{4 ∣ weight c} for every codeword; \lean{C.dual = C}). \lean{hamming8_isSelfOrthogonal}
+(\lean{hamming8 ≤ hamming8.dual}, obtained from double evenness by Lemma~\ref{ch02:lem:doublyeven}) is the witness that
+\lean{latticeOfCode} requires; \lean{IsEven}, \lean{IsUnimodular}, \lean{IsPosDef} are the lattice predicates of
+Theorem~\ref{ch02:thm:constructionA}. The rank $8$ is \lean{latticeOfCode_rank}. Not stated: the minimum distance, the
+root count $240$, and the identification of $\Gamma_{H_8}$ with the $E_8$ root lattice; these remain paper arguments
+(Example~\ref{ch02:ex:e8}). Non-vacuity: the code is an explicit image of an injective map (\lean{hamming8_rank : hamming8.rank = 4}),
+so it is not the zero code.
+\end{dictionary}
+\emph{Proof on paper.}  Double evenness is a check of the sixteen codewords (in Lean, by \lean{decide} over
+$\mathbb F_2^4$). The encoder is injective (its first four coordinates are $x$), so the rank is $4=8/2$; a doubly even code is
+self-orthogonal (Lemma~\ref{ch02:lem:doublyeven}), hence self-dual. The three lattice statements are
+Theorem~\ref{ch02:thm:constructionA} applied to $H_8$.  \qed
+\begin{physics}
+Even unimodular positive definite of rank $8$ is the condition for a holomorphic chiral CFT of eight bosons on a lattice;
+modular invariance of its partition function $\vartheta_{\Gamma}/\eta^8$ (up to the $c=8$ phase) is exactly evenness plus
+unimodularity. That the lattice is $E_8$, so that the theory carries the $E_8$ level-one current algebra with $248$ currents, is
+the part not formalised here.
+\end{physics}
+\begin{status}
+Proved; axioms standard (\lean{[propext, Classical.choice, Quot.sound]}); unconditional.  The root count $240$ and the
+identification with $E_8$ are not formalised.
+\end{status}
 
 \subsection{\texorpdfstring{The Golay lattice $N(A_1^{24})$}{The Golay lattice N(A1^24)}}\label{ch02:sec:golaylattice}
 
@@ -1884,6 +1956,7 @@ Lean declaration & intended meaning & hypotheses & check\\
 \lean{Code.golay_rank}, \lean{golay_isSelfDual}, \lean{golay_isDoublyEven}, \lean{golay_minDist} & $[24,12,8]$, self-dual, doubly even & none & Thm.~\ref{ch02:thm:golay}\\
 \lean{Code.golay_hammingEnumerator} & $W=X^{24}+759\cdots+Y^{24}$ & none & Thm.~\ref{ch02:thm:golayenum}\\
 \lean{latticeOfCode} and its five properties & Construction A & $C\subseteq C^\perp$ & Thm.~\ref{ch02:thm:constructionA}\\
+\lean{Code.hamming8}, \lean{hamming8_isDoublyEven}, \lean{hamming8_isSelfDual}, \lean{hamming8_lattice_isEven/isUnimodular/isPosDef} & extended Hamming code; $\Gamma_{H_8}$ even unimodular pos.\ def.\ ($240$ roots, $=E_8$: not formalised) & none & Thm.~\ref{ch02:thm:hamming8}\\
 \lean{Leech.golayLattice} & $N(A_1^{24})$, $\det1$, rank $24$ & none & \S\ref{ch02:sec:golaylattice}\\
 \lean{Leech.lattice} & $2A\cup(u+2A)$, form $x\cdot y/8$ & -- & Def.~\ref{ch02:def:leechcarrier}\\
 \lean{Leech.lattice_rank}, \lean{lattice_isPosDef}, \lean{lattice_isEven} & rank $24$, pos.\ def., even & none & Thm.~\ref{ch02:thm:leechbasic}\\
@@ -1945,4 +2018,5 @@ Pure and Applied Mathematics 134, Academic Press, 1988 (Chapters 10--12), and, f
 via $N(A_1^{24})$, L.~Dolan, P.~Goddard and P.~Montague, ``Conformal field theories, representations and
 lattice constructions'', \emph{Comm. Math. Phys.} 179 (1996) 61--120, arXiv:hep-th/9410029.  Mathlib's
 modular forms library (dimension formula, Eisenstein $q$-expansions, $\Delta=(E_4^3-E_6^2)/1728$)
-is used as a black box and is documented in the Mathlib sources at the pinned version v4.30.0.
+is used as a black box and is documented in the Mathlib sources at the pinned commit \texttt{b63f6e8a} (used with
+Lean v4.35.0-rc3).

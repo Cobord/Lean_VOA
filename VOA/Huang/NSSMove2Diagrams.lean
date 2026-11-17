@@ -78,7 +78,7 @@ theorem mixedMugerExchange_iff_closed (F : SphericalFusion C) :
     ext f
     change F.scalarTrace _ (f ≫ _) = F.scalarTrace _ (f ≫ _)
     rw [F.scalarTrace_comp_comm f, F.scalarTrace_comp_comm f]
-    simpa [Preadditive.sum_comp] using h a b i j f
+    simpa [Preadditive.sum_comp] using! h a b i j f
 
 /-- Reassociation of two blocks of the same object, with no braided crossing. -/
 def blockReassociation (V : C) (n k : ℕ) :

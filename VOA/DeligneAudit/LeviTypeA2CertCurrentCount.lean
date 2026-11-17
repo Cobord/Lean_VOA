@@ -20,7 +20,7 @@ theorem a2_bWord_coeff_count (ls : List ℕ) (s a b : ℕ) {v : V}
   | nil =>
     by_cases hs : s = 0
     · subst s
-      simpa [bWord] using hv
+      simpa [bWord] using! hv
     · simp [bWord, hs]
   | cons x ls ih =>
     have hb : bWord (fun i => ρ.op 5 i) (x :: ls) =
@@ -31,7 +31,7 @@ theorem a2_bWord_coeff_count (ls : List ℕ) (s a b : ℕ) {v : V}
     have htail := ih z.2 a b hv
     have h := a2CountSpan_second ρ w a (b + ls.length) (x + z.1) htail
     simpa [bTail, mul_smul, Nat.add_assoc, Nat.add_comm,
-      Nat.add_left_comm] using h
+      Nat.add_left_comm] using! h
 
 /-- Every coefficient of a node-two current power preserves a Levi closure. -/
 theorem a2_fCurrent_pow_preserves (S : Submodule ℂ V)
@@ -42,7 +42,7 @@ theorem a2_fCurrent_pow_preserves (S : Submodule ℂ V)
   | zero =>
     by_cases hs : s = 0
     · subst s
-      simpa [fCurrent] using hv
+      simpa [fCurrent] using! hv
     · simp [hs]
   | succ n ih =>
     rw [pow_succ, PowerSeries.coeff_mul, Finset.sum_smul]
@@ -50,7 +50,7 @@ theorem a2_fCurrent_pow_preserves (S : Submodule ℂ V)
     intro z hz
     have hf : ρ.op 4 z.2 v ∈ a2LeviClosure ρ S :=
       a2LeviClosure_inv ρ S 4 z.2 (Or.inr (Or.inl rfl)) hv
-    simpa [fCurrent, mul_smul] using ih z.1 hf
+    simpa [fCurrent, mul_smul] using! ih z.1 hf
 
 end VOA.DeligneAudit.A3Sector
 

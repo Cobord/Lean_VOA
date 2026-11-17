@@ -14,6 +14,8 @@ at different charges. This map preserves all negative modes and each level.
 It is not an intertwiner for positive modes: their charge dependence is
 exactly the information needed in a norm-derivative calculation.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- Keep every sorted-word coordinate fixed while changing central charge.
@@ -67,8 +69,8 @@ theorem chargeTransport_level (c c' h : ℂ) (n : ℕ) (v : Verma c h)
     rw [chargeTransport_word]
     exact negWord_mem_sortedSpan_of_sorted c' h hw hn
   | zero => simp
-  | add x y _ _ hx hy => simpa only [map_add] using (sortedSpan c' h n).add_mem hx hy
-  | smul a x _ hx => simpa only [map_smul] using (sortedSpan c' h n).smul_mem a hx
+  | add x y _ _ hx hy => simpa only [map_add] using! (sortedSpan c' h n).add_mem hx hy
+  | smul a x _ hx => simpa only [map_smul] using! (sortedSpan c' h n).smul_mem a hx
 
 /-- Apply the charge transport coefficientwise to an actual level sequence. -/
 noncomputable def chargeSequence (c c' h : ℂ) :

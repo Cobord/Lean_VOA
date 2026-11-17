@@ -50,7 +50,7 @@ theorem centerMonodromyLoop_eq_sum_projectors (Z : SphericalFusion (Center C))
     centerMonodromyLoop Z (Z.simple i)ᘁ B =
       ∑ j, (categoricalS Z i j / Z.dimension (Z.simple j)) • (Z.simpleProjector j B).f := by
   have h := congrArg (centralForgetHom B B) (monodromyLoop_eq_sum_projectors Z i B)
-  simpa only [map_sum, map_smul] using h
+  simpa only [map_sum, map_smul] using! h
 
 open Classical in
 /-- Each central isotypic projector, on the underlying object, is an inverse-S
@@ -61,6 +61,6 @@ theorem centerSimpleProjector_eq_sum_loops (Z : SphericalFusion (Center C))
       ∑ i, (Z.dimension (Z.simple j) * (categoricalS Z)⁻¹ j i) •
         centerMonodromyLoop Z (Z.simple i)ᘁ B := by
   have h := congrArg (centralForgetHom B B) (simpleProjector_eq_sum_loops Z M j B)
-  simpa only [map_sum, map_smul] using h
+  simpa only [map_sum, map_smul] using! h
 
 end VOA.Huang.NgSchauenburg

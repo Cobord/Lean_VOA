@@ -113,7 +113,7 @@ def quotRep : CurrentModule (bracketTable) (V ⧸ S) where
   comm c d r s x := by
     obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective S x
     have := congrArg S.mkQ (ρ.comm c d r s y)
-    simpa [Submodule.mapQ_apply, map_sum, map_smul, map_sub] using this
+    simpa [Submodule.mapQ_apply, map_sum, map_smul, map_sub] using! this
 
 theorem quotRep_op (c : Fin 8) (r : ℕ) (v : V) :
     (quotRep ρ S hS).op c r (S.mkQ v) = S.mkQ (ρ.op c r v) := rfl

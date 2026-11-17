@@ -232,7 +232,7 @@ theorem aeval_L0_mem (S : WeakModule.Submodule' (contragredientModule A).toWeakM
   · rw [Polynomial.aeval_monomial, Module.End.mul_apply, Module.algebraMap_end_apply]
     refine S.carrier.smul_mem a ?_
     induction n with
-    | zero => simpa using hφ
+    | zero => simpa using! hφ
     | succ n ih =>
       rw [pow_succ', Module.End.mul_apply]
       have := S.act_mem W.conformalVector 1 ih
@@ -262,11 +262,16 @@ theorem lof_component_mem (S : WeakModule.Submodule' (contragredientModule A).to
   · have hmem := aeval_L0_mem A S hφ (∏ γ ∈ s, (Polynomial.X - Polynomial.C γ))
     rw [hsum] at hmem
     erw [map_sum] at hmem
-    rw [Finset.sum_congr rfl (fun β _ => hiso β (cmp A β φ)),
+    rw [Finset.sum_congr rfl (fun β _ => hiso β (cmp A β φ))] at hmem
+    have hsingle : (∑ β ∈ DFinsupp.support φ, (∏ γ ∈ s, (β - γ)) •
+        DirectSum.lof ℂ ℂ (fun β => Module.Dual ℂ (A.weight β)) β (cmp A β φ)) =
+        (∏ γ ∈ s, (α - γ)) •
+          DirectSum.lof ℂ ℂ (fun β => Module.Dual ℂ (A.weight β)) α (cmp A α φ) :=
       Finset.sum_eq_single α (fun β hβ hβα => by
-        rw [Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hβα, hβ⟩) (sub_self β)]
-        exact zero_smul ℂ _)
-        (fun h => absurd hα h)] at hmem
+          rw [Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hβα, hβ⟩) (sub_self β)]
+          exact zero_smul ℂ _)
+        (fun h => absurd hα h)
+    erw [hsingle] at hmem
     have hc : (∏ γ ∈ s, (α - γ)) ≠ 0 :=
       Finset.prod_ne_zero_iff.mpr fun γ hγ => sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hγ))
     have := S.carrier.smul_mem (∏ γ ∈ s, (α - γ))⁻¹ hmem

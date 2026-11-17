@@ -233,12 +233,12 @@ def standardSites (h : ℕ) : Fin h → ℂ := fun a => (a.val : ℂ) + 1
 theorem standardSites_injective (h : ℕ) : Function.Injective (standardSites h) := by
   intro a b hab
   apply Fin.ext
-  have h' : (a.val : ℂ) = b.val := by simpa [standardSites] using hab
+  have h' : (a.val : ℂ) = b.val := by simpa [standardSites] using! hab
   exact_mod_cast h'
 
 theorem standardSites_ne_zero (h : ℕ) (a : Fin h) : standardSites h a ≠ 0 := by
   intro hab
-  have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [standardSites] using hab
+  have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [standardSites] using! hab
   exact Nat.succ_ne_zero a.val (by exact_mod_cast h')
 
 theorem singlyMarkedStratumPoint_injective (B k j : ℕ) (V Y : Finset (Fin (B + 1))) :

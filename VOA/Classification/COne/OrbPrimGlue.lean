@@ -439,9 +439,9 @@ theorem V2ModelSplit.toV2Model {V : Type u} [AddCommGroup V] [Module ℂ V]
       obtain ⟨c, rfl⟩ : ∃ c : ℂ, F = MvPolynomial.C c := by
         refine ⟨F.coeff 0, ?_⟩
         rw [← totalDegree_eq_zero_iff_eq_C]
-        exact le_antisymm (by simpa using hF.totalDegree_le) (Nat.zero_le _)
+        exact le_antisymm (by simpa using! hF.totalDegree_le) (Nat.zero_le _)
       rw [← mul_one (MvPolynomial.C c), ← smul_eq_C_mul, map_smul, h.vac]
-      simpa using (prim W₀ 0).smul_mem c (vacuum_mem_prim W₀)
+      simpa using! (prim W₀ 0).smul_mem c (vacuum_mem_prim W₀)
     · exact h.primVal F n hn hF
   top := h.top
   r2 := h.r2

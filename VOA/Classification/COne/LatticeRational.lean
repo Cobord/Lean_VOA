@@ -277,7 +277,7 @@ theorem cr_comm (i j : ℕ) : H.cr i * H.cr j = H.cr j * H.cr i := by
 /-- Polynomials in the creation operators: `p ↦ p(a(-1), a(-2), …)`. -/
 noncomputable def evalOp : MvPolynomial ℕ ℂ →ₐ[ℂ] End ℂ M :=
   haveI : IsMulCommutative (Algebra.adjoin ℂ (Set.range H.cr)) :=
-    Algebra.isMulCommutative_adjoin ℂ (by rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩; exact H.cr_comm i j)
+    Algebra.isMulCommutative_adjoin ℂ (by rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ _; exact H.cr_comm i j)
   (Algebra.adjoin ℂ (Set.range H.cr)).val.comp
     (MvPolynomial.aeval fun i => ⟨H.cr i, Algebra.subset_adjoin ⟨i, rfl⟩⟩)
 
@@ -499,7 +499,8 @@ theorem hb_mem_grading : hb m ∈ (V2m m hm).grading 1 := by
     refine ⟨X ((0 : ℕ), a0 m), ?_, rfl⟩
     rw [gradingZN_of_nonneg (by norm_num)]
     have := isWeightedHomogeneous_X ℂ (weightFnN (r := rank (latP m))) ((0 : ℕ), a0 m)
-    simpa using this
+    simp at this
+    exact this
   have h := bigradα_le_gradingLatGen (latP m) 1 0 hb'
   rwa [halfNorm_zero (latP m), add_zero] at h
 
@@ -534,8 +535,15 @@ theorem hb_smul_charge (β : ℤ) {i : ℤ} (hi : 0 ≤ i) :
     LinearMap.add_apply]
   rcases eq_or_lt_of_le hi with h0 | hpos
   · subst h0
-    rw [if_pos (by norm_num), if_pos rfl, latChargeGen, zGradeOpGen_latStateGen]
-    simp [latStateGen, currentN_apply]
+    rw [if_pos (by norm_num), if_pos rfl]
+    have hz := zGradeOpGen_latStateGen (latP m) (a0 m) (vacuumN (rank (latP m)))
+      (β : (latP m).carrier)
+    change _ + zGradeOpGen (latP m) (a0 m)
+        (latStateGen (latP m) (vacuumN (rank (latP m))) (β : (latP m).carrier)) =
+      chargeCoord (latP m) β (a0 m) •
+        latStateGen (latP m) (vacuumN (rank (latP m))) (β : (latP m).carrier)
+    rw [hz]
+    simp [latChargeGen, latStateGen, currentN_apply]
   · rw [if_neg (by omega), LinearMap.zero_apply, add_zero, if_neg (by omega)]
     simp only [latChargeGen, latStateGen, LinearMap.rTensor_tmul, currentN_apply,
       show -(-i - 1) - 1 = i by ring]

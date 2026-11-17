@@ -63,7 +63,7 @@ theorem hasDerivAt_prodFun_log (k : ℕ)
   let κ := S-ν+1
   have hEv : ∀ q∈overlapDomain, prodFun (fun n => Y₁.1 n k) Y₂ f x y z S ν q=Ev κ 0 G q := by
     intro q hq
-    simpa only [κ,G,Nat.cast_zero,sub_zero,pow_zero,one_mul] using
+    simpa only [κ,G,Nat.cast_zero,sub_zero,pow_zero,one_mul] using!
       prodFun_eq_Ev (fun n => Y₁.1 n k) Y₂ f x y z S ν 0 0 hG hq
   have hev : prodFun (fun n => Y₁.1 n k) Y₂ f x y z S ν =ᶠ[𝓝 t] Ev κ 0 G :=
     Filter.eventually_of_mem (isOpen_overlapDomain.mem_nhds ht) hEv

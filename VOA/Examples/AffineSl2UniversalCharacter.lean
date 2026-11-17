@@ -47,7 +47,7 @@ theorem energy_support_cutoff (N : ℕ) (i : EnergyIndex N) :
     exact_mod_cast h
   have hp : (0 : ℕ) < (i.val q : ℕ) := Nat.pos_of_ne_zero (Finsupp.mem_support_iff.mp hq)
   have hb : i.val q * currentWeight q ≤ Finsupp.weight currentWeight i.val := by
-    simpa only [Finsupp.weight_apply,Finsupp.sum,nsmul_eq_mul] using
+    simpa only [Finsupp.weight_apply,Finsupp.sum,nsmul_eq_mul] using!
       (Finset.single_le_sum (fun j (_ : j∈i.val.support) => Nat.zero_le (i.val j * currentWeight j)) hq)
   have hq' : currentWeight q ≤ N := by
     rw [hw] at hb
@@ -90,7 +90,7 @@ theorem universal_grading_finrank_eq_reciprocalEuler_cube
     intro j hj
     exact coeff_reciprocalEuler j (N+1) (by omega)
   have h := (ht.mul ht).mul ht
-  simpa only [pow_succ,pow_zero,one_mul] using (h N le_rfl).symm
+  simpa only [pow_succ,pow_zero,one_mul] using! (h N le_rfl).symm
 
 end
 end VOA.AffineSl2GeneralRigidity

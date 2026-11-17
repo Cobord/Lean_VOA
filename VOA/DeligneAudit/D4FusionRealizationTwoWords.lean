@@ -60,7 +60,7 @@ def wordVector (i : Fin 841) : Source :=
 theorem wordVector_eq_sourceword (i : Fin 841) :
     wordVector i = wordOp sourceRep (wordWitness i) sourceGenerator := by
   apply (flatCoordinates 28).injective
-  simpa only [wordVector,LinearEquiv.apply_symm_apply] using (flat_wordWitness i).symm
+  simpa only [wordVector,LinearEquiv.apply_symm_apply] using! (flat_wordWitness i).symm
 
 theorem wordVector_word (i : Fin 841) :
     ∃ l : List (Fin 28 × ℕ), degree l = (wordNode i).level ∧

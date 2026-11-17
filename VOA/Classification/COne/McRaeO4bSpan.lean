@@ -46,7 +46,7 @@ theorem linearMap_mem_modeSpan_orbit (hW : W.IsSimple) (ψ : (G → ℂ) →ₗ[
     simp only [Submodule.mem_iInf, LinearMap.mem_ker]
     intro w hw
     have := congrFun ((LinearMap.mem_ker).mp hc) ⟨w, hw⟩
-    simpa [Θ] using this
+    simpa [Θ] using! this
   obtain ⟨R, hR⟩ := Θ.exists_leftInverse_of_injective hΘ
   let F : (S → 𝒱) →ₗ[ℂ] 𝒱 := ψ ∘ₗ R
   let s : S → Finset 𝒱 := fun j =>

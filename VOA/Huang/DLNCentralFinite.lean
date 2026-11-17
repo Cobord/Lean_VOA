@@ -133,7 +133,7 @@ theorem centralQuotient_pow_index (N : ℕ) (hN : 0 < N) (x : CentralQuotient N)
     ((MonoidHom.transferCenterPow (CentralQuotient N)).comp f) g
   have hp' : f g ^ ((Subgroup.center (CentralQuotient N)).index * 12) = 1 := by
     simpa only [MonoidHom.comp_apply, ← pow_mul, Subgroup.coe_pow,
-      MonoidHom.transferCenterPow_apply, Subgroup.coe_one] using
+      MonoidHom.transferCenterPow_apply, Subgroup.coe_one] using!
       congrArg (fun z : Subgroup.center (CentralQuotient N) => (z : CentralQuotient N)) hp
   have hd : (Subgroup.center (CentralQuotient N)).index ∣ (Gamma N).index :=
     (Subgroup.index_dvd_of_le (gamma_image_le_center N)).trans
@@ -146,7 +146,7 @@ theorem centralQuotient_pow_index (N : ℕ) (hN : 0 < N) (x : CentralQuotient N)
 theorem pow_index_mem_relativeCommutator (N : ℕ) (hN : 0 < N) (g : SL2Z) :
     g ^ (12 * (Gamma N).index) ∈ relativeCommutator N := by
   apply (QuotientGroup.eq_one_iff _).mp
-  simpa only [← map_pow] using
+  simpa only [← map_pow] using!
     centralQuotient_pow_index N hN (QuotientGroup.mk' (relativeCommutator N) g)
 
 /-- Characters of the principal subgroup killing the relative commutator have

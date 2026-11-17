@@ -51,8 +51,8 @@ theorem gps_coeff_zero_core (S : Finset ℂ) (c₀ : ℂ) (b : ℂ → ℂ)
       split_ifs
       · simp only [a]; split_ifs
         · exact hbM _
-        · simpa using hM
-      · simpa using hM
+        · simpa using! hM
+      · simpa using! hM
     calc ‖(p j n).coeff k‖ ≤ M := h1
       _ = M * 1 := (mul_one M).symm
       _ ≤ M * r ^ n := mul_le_mul_of_nonneg_left (one_le_pow₀ hr.le) hM

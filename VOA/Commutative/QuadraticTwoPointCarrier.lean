@@ -120,6 +120,7 @@ theorem quotient_mem_pairScalars (i j : I) (hji : j ≠ i)
     (hp : p ∈ componentCarrier (K := K) i j hji kind)
     (hfac : p = collisionFactor (K := K) i j ^ kind.order * q) :
     q ∈ pairScalars (K := K) i j := by
+  change swapVariables (K := K) i j q = q
   have heq := hp.1
   rw [hfac, map_mul, map_pow, swapVariables_collisionFactor, neg_pow] at heq
   apply mul_left_cancel₀

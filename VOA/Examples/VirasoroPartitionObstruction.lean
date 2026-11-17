@@ -53,10 +53,10 @@ theorem partitionGramPolynomial_eval (c : ℂ) (n : ℕ) :
     (partitionGramPolynomial n).map (Polynomial.eval c) =
       GramMat.gramMatrix (VirGram4.canB c) (n:ℤ) (gradedBasis c n) := by
   ext i j
-  simp only [Matrix.map_apply, partitionGramPolynomial, GramMat.gramMatrix_apply,
-    universal_gram_entry]
-  exact congrArg₂ (fun (x y : VirUniv c) => (VirGram4.canB c).form x y)
-    (partitionWord_basis c n i).symm (partitionWord_basis c n j).symm
+  exact (universal_gram_entry c (partitionWord n i) (partitionWord n j)).trans
+    ((congrArg₂ (fun (x y : VirUniv c) => (VirGram4.canB c).form x y)
+      (partitionWord_basis c n i).symm (partitionWord_basis c n j).symm).trans
+      (GramMat.gramMatrix_apply (VirGram4.canB c) (n : ℤ) (gradedBasis c n) i j).symm)
 
 /-- The same matrix evaluated at c+δt gives the actual lifted adjoint-word
 pairings of every graded deformation. No determinant equation and no deformed

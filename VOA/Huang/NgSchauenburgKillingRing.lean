@@ -43,7 +43,7 @@ theorem categoricalS_unit_right (F : SphericalFusion C) (i : F.Label) :
     F.dimension_unitLabel, div_one] at h
   have h' := congrArg (fun f => f ≫ F.unitIso.inv) h
   have hs := congrArg (F.scalarTrace (F.simple F.unitLabel)) h'
-  simpa using hs.symm
+  simpa using! hs.symm
 
 /-- A column proportional to the vacuum column must itself be the vacuum
 column. The hypothesis is an equality of actual categorical S entries. -/
@@ -102,8 +102,11 @@ theorem monodromy_killingRing_simple_ne (F : SphericalFusion C) (M : Modular F)
   have ha0 : a = 0 := by rw [haz, hz, zero_smul]; rfl
   have hs : a = F.globalDimension⁻¹ • ∑ i, F.dimension (F.simple i) •
       monodromyLoop F.toPivotal (F.simple i) (F.simple j) := by
-    simp only [a, halfBraidingAverage, LinearMap.smul_apply, LinearMap.sum_apply]
-    simp only [X, Y, halfBraidingLoop_braided_id]
+    simp only [a, halfBraidingAverage]
+    erw [LinearMap.smul_apply, LinearMap.sum_apply]
+    congr 1
+    refine Finset.sum_congr rfl fun i _ => ?_
+    erw [LinearMap.smul_apply, halfBraidingLoop_braided_id]
     rfl
   rw [hs] at ha0
   exact (smul_eq_zero.mp ha0).resolve_left (inv_ne_zero F.globalDimension_ne_zero)
@@ -130,8 +133,8 @@ theorem monodromy_killingRing_simple (F : SphericalFusion C) (M : Modular F)
         if j = F.unitLabel then F.globalDimension • 𝟙 (F.simple j) else 0 := by
   by_cases h : j = F.unitLabel
   · subst j
-    simpa using monodromy_killingRing_unit F
-  · simpa [h] using monodromy_killingRing_simple_ne F M j h
+    simpa using! monodromy_killingRing_unit F
+  · simpa [h] using! monodromy_killingRing_simple_ne F M j h
 
 /-- The genuine dimension-weighted monodromy ring kills every non-unit
 isotypic channel of an arbitrary object. No S orthogonality is assumed. -/

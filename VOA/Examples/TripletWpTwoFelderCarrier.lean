@@ -344,7 +344,7 @@ theorem wpTwoCosetFiberPos_finite (k : ℤ) : (wpTwoCosetFiberPos k).Finite := b
       simp_all
     have hpre : (f ⁻¹' Set.Icc (-k) (k + 1)).Finite :=
       Set.Finite.preimage (Set.injOn_of_injective hinj) (Set.finite_Icc (-k) (k + 1))
-    simpa [charges, f] using hpre
+    exact hpre
   apply Set.Finite.subset (Set.Finite.image (wpTwoCosetLevelMap k) hcharges)
   rintro ⟨w, q⟩ ⟨hwq, hw⟩
   simp only at hwq hw
@@ -719,9 +719,10 @@ theorem shortMomentum_pair_source (m : ℤ) :
     (-1 / 2 : ℂ) *
         (((latP 2).form (alphaP 2) (m • alphaP 2) : ℤ) : ℂ) =
       -2 * (m : ℂ) := by
-  rw [sourceCharge_eq]
-  rw [latP_form]
-  simp only [alphaP, mul_one]
+  have h : (latP 2).form (alphaP 2) (m • alphaP 2) = 2 * ((2 : ℕ) : ℤ) * 1 * m := by
+    rw [sourceCharge_eq]
+    exact latP_form 2 1 m
+  rw [h]
   push_cast
   ring
 
@@ -738,16 +739,25 @@ def shortScreeningField :
     FormalDist (LatModuleGen (latP 2) →ₗ[ℂ] WpTwoCosetCarrier) :=
   fun t => TensorProduct.lift (Finsupp.lsum ℂ (shortScreeningFam t)).flip
 
+/-- The sectorwise family on a single charge, stated with a carrier-typed charge so that the
+rewrites below stay type-correct at reducible transparency. -/
+private theorem lsum_shortScreeningFam_single (t : ℤ) (m : (latP 2).carrier) (p : WpTwoFock) :
+    Finsupp.lsum ℂ (shortScreeningFam t) (Finsupp.single m 1) p =
+      wpTwoCosetState (shortDress (t + 2 * (show ℤ from m)) p)
+        (wpTwoCosetCharge (show ℤ from m)) := by
+  rw [Finsupp.lsum_single, shortScreeningFam, LinearMap.toSpanSingleton_apply, one_smul,
+    LinearMap.comp_apply, LinearMap.flip_apply, TensorProduct.mk_apply]
+  rfl
+
 /-- Defining action on a charged Fock basis state. -/
 theorem shortScreeningField_latStateGen
     (t m : ℤ) (p : WpTwoFock) :
     shortScreeningField t (latStateGen (latP 2) p m) =
       wpTwoCosetState (shortDress (t + 2 * m) p) (wpTwoCosetCharge m) := by
-  rw [shortScreeningField, latStateGen, TensorProduct.lift.tmul]
-  change (Finsupp.lsum ℂ (shortScreeningFam t)) (eGen (latP 2) m) p = _
-  rw [eGen, Finsupp.lsum_single, shortScreeningFam, LinearMap.toSpanSingleton_apply,
-    one_smul, LinearMap.comp_apply, LinearMap.flip_apply, TensorProduct.mk_apply]
-  rfl
+  show (TensorProduct.lift (Finsupp.lsum ℂ (shortScreeningFam t)).flip)
+      (p ⊗ₜ[ℂ] Finsupp.single (m : (latP 2).carrier) (1 : ℂ)) = _
+  rw [TensorProduct.lift.tmul, LinearMap.flip_apply]
+  exact lsum_shortScreeningFam_single t m p
 
 /-- The short-screening current is lower truncated on every source state. -/
 theorem shortScreeningField_isHeterotypicField :
@@ -808,8 +818,9 @@ theorem shortScreeningField_shiftsToCoset :
     ShiftsToWpTwoCoset shortScreeningField := by
   intro m t x hx
   obtain ⟨p, rfl⟩ := hx
-  rw [← BgB.latStateGen_eq_mkEα, shortScreeningField_latStateGen]
-  exact wpTwoCosetState_mem_sector _ _
+  rw [← BgB.latStateGen_eq_mkEα]
+  exact (congrArg (· ∈ wpTwoCosetSector (wpTwoCosetCharge m))
+    (shortScreeningField_latStateGen t m p)).mpr (wpTwoCosetState_mem_sector _ _)
 
 theorem shortScreening_mem_cosetSector (m : (latP 2).carrier)
     (x : LatModuleGen (latP 2)) (hx : x ∈ chargeSec (latP 2) m) :

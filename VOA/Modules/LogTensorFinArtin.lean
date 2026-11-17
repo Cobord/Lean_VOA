@@ -95,6 +95,6 @@ theorem exists_eq_bot_of_high (hC2 : C2Cofinite W) (hfg : FinGen N.toWeakModule)
   have heq : highSub N j₀ = highSub N m := congrArg OrderDual.ofDual (hj₀ m hjm)
   have hym : y ∈ highSub N m := by rw [← heq]; exact hy0
   have := hym 1 α (lt_of_le_of_lt (le_max_left _ _) hm)
-  simpa using this
+  simpa using! this
 
 end VOA.LogTensor.LogFin

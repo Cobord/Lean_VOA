@@ -290,11 +290,11 @@ theorem finsum_Dterm (N : ℕ) (a : Fin 3) (m : (MatterSpace L)) (g : Sl2GhostSp
     ∑ᶠ n, (Dterm L) hA N a m g n =
       ∑ jj ∈ Finset.range N, (mLead L) hA (toLex (a, jj)) m ⊗ₜ[ℂ] gAn (toLex (a, jj)) g := by
   rw [finsum_eq_sum_of_support_subset _ ((Dterm_support L) hA N a m g),
-    Finset.sum_image (fun x _ y _ h => by simpa using h)]
+    Finset.sum_image (fun x _ y _ h => by simpa using! h)]
   refine Finset.sum_congr rfl fun jj hjj => ?_
   rw [Finset.mem_range] at hjj
   have e : (-(-(jj : ℤ) - 1) - 1) = (jj : ℤ) := by ring
-  rw [Dterm, if_pos ⟨by omega, by rw [e]; simpa using hjj⟩, e, Int.toNat_natCast]
+  rw [Dterm, if_pos ⟨by omega, by rw [e]; simpa using! hjj⟩, e, Int.toNat_natCast]
   rfl
 
 /-- **The decomposition of `Q` on a pure tensor**: `Q (m ⊗ g) - (dN L) (m ⊗ g)` has no component
@@ -352,7 +352,7 @@ theorem Q_sub_dN_tmul (N : ℕ) {j1 j2 : KF × ℤ} {m : (MatterSpace L)} {g : S
         · rintro ⟨w, hw⟩
           have hsh : (ghShiftF 1 n).1.2 = (n : ℂ) := by
             have := congrArg Prod.snd (piRp_ghShiftF 1 n)
-            simpa [piRp_apply] using this
+            simpa [piRp_apply] using! this
           simp only [Prod.fst_add, Prod.snd_add] at hw
           rw [hsh, ← hwg] at hw
           have hw' : (w : ℤ) = wg + n := by exact_mod_cast hw

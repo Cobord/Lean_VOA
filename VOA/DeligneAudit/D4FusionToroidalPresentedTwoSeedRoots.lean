@@ -53,7 +53,7 @@ theorem two_seed_rootEF (i : Fin 12) (x : PTE 2) :
         ((ρPTE 2).op (twoSeedRootE i) 0 0 x) =
         ∑ c : Fin 28, D4sector.f (twoSeedRootE i) (negativeIndex i) c •
           (ρPTE 2).op c 0 0 x := by
-    simpa only [Nat.zero_add, if_pos (by omega)] using h
+    simpa only [Nat.zero_add, if_pos (by omega)] using! h
   simp only [twoSeedRootH, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply,
     map_smul, Finset.smul_sum, smul_smul]
   rw [← smul_sub, h', Finset.smul_sum]
@@ -63,7 +63,7 @@ theorem two_seed_rootHF (i : Fin 12) (s : ℕ) (hs : s ≤ 1) (x : PTE 2) :
     twoSeedRootH i ((ρPTE 2).op (negativeIndex i) 0 s x) -
       (ρPTE 2).op (negativeIndex i) 0 s (twoSeedRootH i x) =
         (-2 : ℂ) • (ρPTE 2).op (negativeIndex i) 0 s x := by
-  have hin : ∀ c y,
+  have hin : ∀ (c : Fin 28) (y : PTE 2),
       (ρPTE 2).op c 0 0 ((ρPTE 2).op (negativeIndex i) 0 s y) -
       (ρPTE 2).op (negativeIndex i) 0 s ((ρPTE 2).op c 0 0 y) =
         ∑ d : Fin 28, D4sector.f c (negativeIndex i) d •
@@ -71,7 +71,7 @@ theorem two_seed_rootHF (i : Fin 12) (s : ℕ) (hs : s ≤ 1) (x : PTE 2) :
     intro c y
     have h := (ρPTE 2).comm c (negativeIndex i) 0 0 0 s y
     rw [if_pos (by omega)] at h
-    simpa only [Nat.zero_add] using h
+    simpa only [Nat.zero_add] using! h
   calc
     twoSeedRootH i ((ρPTE 2).op (negativeIndex i) 0 s x) -
         (ρPTE 2).op (negativeIndex i) 0 s (twoSeedRootH i x) =

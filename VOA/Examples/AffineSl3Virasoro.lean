@@ -14,6 +14,8 @@ open VOA VOA.AffineSl3 VOA.AffineSl3.SugawaraCov
 open scoped BigOperators
 open Module (End)
 open VOA.AffineLie
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3
 
 /-- The sl3 Sugawara central charge, using dimension eight and dual Coxeter number three. -/
@@ -552,7 +554,7 @@ theorem omegaJomega_three (k : ℂ) (hk : k + 3 ≠ 0) :
   have htrace : (∑ aa : Fin 8, ∑ bb : Fin 8, kappaInv aa bb * formTable aa bb) = 8 := by
     have hrow (aa : Fin 8) : (∑ bb : Fin 8, kappaInv aa bb * formTable aa bb) = 1 := by
       have h := kappaInv_kappa aa aa
-      simpa only [if_pos rfl, kappaInv_symm, mul_comm] using h
+      simpa only [if_pos rfl, kappaInv_symm, mul_comm] using! h
     simp only [hrow, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
     norm_num
   rw [htrace, smul_smul]

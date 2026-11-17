@@ -109,7 +109,12 @@ theorem conjugation_explicit (F : FusionChoice W) (hV : StronglyRational W)
         traceFunction (moduleIntertwiner (lwOf D (σ z)).isMod) (lwOf D (σ z)).h
           (bracketModes (P := lwOf D a) (Q := lwOf D b) (N := vacuumLW W hv) (epsInt F c)
             (ins.κ - 1 - 0 - ((s : ℂ) - N0)) (∑ i, ins.wa i) (∑ j, ins.wb j)) τ)
-    rw [vacuum_traceFunction_eq, vacuum_traceFunction_eq, hsk', mul_assoc μ, hps]
+    rw [vacuum_traceFunction_eq D z (bracketModes (P := lwOf D b) (Q := lwOf D a)
+        (N := vacuumLW W hv) (piInt F π) (ins.κ - 1 - 0 - ((s : ℂ) - N0))
+        (∑ j, ins.wb j) (∑ i, ins.wa i)) τ,
+      vacuum_traceFunction_eq D (σ z) (bracketModes (P := lwOf D a) (Q := lwOf D b)
+        (N := vacuumLW W hv) (epsInt F c) (ins.κ - 1 - 0 - ((s : ℂ) - N0))
+        (∑ i, ins.wa i) (∑ j, ins.wb j)) τ, hsk', mul_assoc μ, hps]
     ring
   · have halr : ∀ j i, ins.wb j ≠ 0 → ins.wa i ≠ 0 →
         ∃ Dn : ℕ, (D.h a + D.h b) - ins.αb j - ins.αa i + N0 = Dn := by
@@ -143,11 +148,15 @@ theorem conjugation_explicit (F : FusionChoice W) (hV : StronglyRational W)
       · rw [h0, map_zero]
       · rw [h0, map_zero, LinearMap.zero_apply]
     simp only [hz1, hz2, traceFunction_zero, mul_zero] at hA hB
-    have hvacF : vacF F hv c ins (σ z) τ u = 0 := hA.unique hasSum_zero
+    have hvacF : vacF F hv c ins (σ z) τ u = 0 := hA.unique (by
+      convert hasSum_zero using 1
+      all_goals (funext s; exact (congrArg (_ * ·) (traceFunction_zero _ _ _)).trans (mul_zero _)))
     have hrevF : revF F hv π ins z τ u = 0 := by
       unfold revF
       rw [Finset.sum_comm]
-      exact hB.unique hasSum_zero
+      exact hB.unique (by
+        convert hasSum_zero using 1
+        all_goals (funext s; exact (congrArg (_ * ·) (traceFunction_zero _ _ _)).trans (mul_zero _)))
     rw [hvacF, hrevF, mul_zero]
 
 /-- **(G1) on the vacuum row, with the eigenvalue explicit**:
@@ -192,7 +201,7 @@ theorem vacuumRow_explicit (F : FusionChoice W) (H : OrdinaryFourPointInput F)
     intro w z
     have := congrFun (congrFun hTS w) z
     rw [Matrix.mul_apply, Matrix.one_apply] at this
-    simpa only [Matrix.of_apply] using this
+    simpa only [Matrix.of_apply] using! this
   obtain ⟨r, lab, i, p, htot⟩ :=
     exists_split hNice.1 D hcomp (tensorObj F (famObj D b) (famObj D a))
   obtain ⟨η', hη'⟩ := exists_vacuumSection F hNice hcomp v0 hv0 c.ε c.ε_ne

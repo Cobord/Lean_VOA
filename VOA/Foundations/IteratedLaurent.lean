@@ -81,8 +81,8 @@ theorem eq_zero_of_mulBySub_of_bddBelow {f : FormalDist₂ 𝒲} (hsub : mulBySu
   have hf := eq_deltaDeriv_zero_of_mulBySub_eq_zero hsub
   have key : ∀ a b : ℤ, f a b = f (-1) (a + b + 1) := by
     intro a b
-    conv_lhs => rw [hf]
-    simp [deltaDeriv_apply]
+    have h := congrFun (congrFun hf a) b
+    exact h.trans ((deltaDeriv_apply 0 (fun n => f (-1) n) a b).trans (by simp))
   ext m n
   change f m n = 0
   rw [key m n]

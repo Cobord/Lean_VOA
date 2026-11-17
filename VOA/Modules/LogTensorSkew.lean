@@ -240,7 +240,6 @@ noncomputable def shiftLin (a : ℂ) (Y : LogModes M₁ M₂ M₃) (hY : LogFin 
     M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] M₃ :=
   LinearMap.mk₂ ℂ (fun w₁ w₂ => shiftPt a Y n j w₁ w₂)
     (fun w₁ w₁' w₂ => by
-      dsimp only
       obtain ⟨K₁, h₁⟩ := hY w₁ w₂ n
       obtain ⟨K₂, h₂⟩ := hY w₁' w₂ n
       have h₃ : ∀ k : ℕ, K₁ + K₂ ≤ k → Y n k (w₁ + w₁') w₂ = 0 := fun k hk => by
@@ -250,14 +249,12 @@ noncomputable def shiftLin (a : ℂ) (Y : LogModes M₁ M₂ M₃) (hY : LogFin 
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [map_add, LinearMap.add_apply, smul_add])
     (fun c w₁ w₂ => by
-      dsimp only
       obtain ⟨K, h⟩ := hY w₁ w₂ n
       rw [shiftPt_eq_sum K (fun k hk => by rw [map_smul, LinearMap.smul_apply, h k hk, smul_zero]),
         shiftPt_eq_sum K h, Finset.smul_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [map_smul, LinearMap.smul_apply, smul_comm])
     (fun w₁ w₂ w₂' => by
-      dsimp only
       obtain ⟨K₁, h₁⟩ := hY w₁ w₂ n
       obtain ⟨K₂, h₂⟩ := hY w₁ w₂' n
       have h₃ : ∀ k : ℕ, K₁ + K₂ ≤ k → Y n k w₁ (w₂ + w₂') = 0 := fun k hk => by
@@ -267,7 +264,6 @@ noncomputable def shiftLin (a : ℂ) (Y : LogModes M₁ M₂ M₃) (hY : LogFin 
       refine Finset.sum_congr rfl fun k _ => ?_
       rw [map_add, smul_add])
     (fun c w₁ w₂ => by
-      dsimp only
       obtain ⟨K, h⟩ := hY w₁ w₂ n
       rw [shiftPt_eq_sum K (fun k hk => by rw [map_smul, h k hk, smul_zero]),
         shiftPt_eq_sum K h, Finset.smul_sum]

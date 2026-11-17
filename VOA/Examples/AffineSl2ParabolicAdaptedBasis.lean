@@ -127,6 +127,8 @@ theorem parabolicReferenceBasis_right (d N : ℕ) (c : ℤ)
       horizontalReflection 1 d (occupationBasis 1 (-(d : ℂ)-2) i.val) := by
   simp [parabolicReferenceBasis,Module.Basis.prod_apply,parabolicJointSplit,
     horizontalReflectionJoint,jointBasis_apply]
+  exact congrArg (fun x => horizontalReflection 1 d x)
+    (jointBasis_apply 1 (-(d : ℂ)-2) N (c+(d : ℤ)+1) i)
 
 /-- Transport the one reference basis to every level and highest weight by fixed PBW coordinates. -/
 def parabolicAdaptedFamilyBasis (k h : ℂ) (d N : ℕ) (c : ℤ) :
@@ -154,7 +156,7 @@ theorem parabolicAdaptedFamilyBasis_right (k h : ℂ) (d N : ℕ) (c : ℤ)
 def parabolicAdaptedIndexEquiv (d N : ℕ) (c : ℤ) :
     JointIndex N c ≃ ParabolicAdaptedIndex d N c :=
   Fintype.equivOfCardEq (by
-    simpa only [Fintype.card_sum,Fintype.card_fin] using
+    simpa only [Fintype.card_sum,Fintype.card_fin] using!
       (parabolicJointSpace_finrank_add 1 d N c).symm)
 
 /-- The original PBW basis reindexed by the actual quotient and kernel dimensions. -/

@@ -39,6 +39,7 @@ private theorem mode15_mem : W.smul X 15 X ∈
     seed16Kernel ⊔ Submodule.span ℂ {X} := by
   have hg : W.smul X 15 X ∈ W.grading 16 := by
     convert W.grading_mode _ X_grading _ X_grading 15 using 2
+    all_goals first | rfl | norm_num
   have hs := grading_lt_36 16 (by norm_num) hg
   have hp : ∀ z ∈ twoSeedSpan,
       piHom W 16 z ∈ seed16Kernel ⊔ Submodule.span ℂ {X} := by
@@ -70,7 +71,7 @@ private theorem mode15_mem : W.smul X 15 X ∈
     | zero => simp
     | add a b _ _ ha hb => rw [map_add]; exact Submodule.add_mem _ ha hb
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
-  simpa only [piHom_of_mem W hg] using hp _ hs
+  simpa only [piHom_of_mem W hg] using! hp _ hs
 
 /-- The first of the four requested non-vacuum seed identities. -/
 theorem q24_seed16 : q24L (mk W X) = 0 := by

@@ -75,7 +75,7 @@ theorem singleAdjoint_quotient_rank :
   rw [singleAdjoint_cyclic_quotient Q v b h]
   have hb := (A3Sector.a3_all_weight_rank (singleAdjointRaisedQuotient Q v)
     ((cycSubG Q (Q.op 3 0 v)).mkQ v) 1 b 1 (singleAdjoint_quotient_localWeyl Q v b h)).2
-  simpa only [pow_one, show (4 : ℕ) * 6 ^ b * 4 = 16 * 6 ^ b by ring] using hb
+  simpa only [pow_one, show (4 : ℕ) * 6 ^ b * 4 = 16 * 6 ^ b by ring] using! hb
 
 /-- The raised submodule and its quotient give the exterior-pair bound on the cyclic cell. -/
 theorem singleAdjoint_cyclic_rank : Module.finrank ℂ (cycSubG Q v) ≤ 6 ^ (b + 2) := by

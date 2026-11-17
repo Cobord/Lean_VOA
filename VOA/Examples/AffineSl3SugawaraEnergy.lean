@@ -100,12 +100,12 @@ theorem inner0_body_eq (k : ℂ) (c aa bb : Fin 8) (μ p : ℤ) (x : Vacuum k) :
     have happ := congrArg (fun (R : End ℂ (Vacuum k)) => R x)
       (show (J k aa (-p-1) * J k bb (p+1)) * J k c μ - J k c μ * (J k aa (-p-1) * J k bb (p+1))
         = -(J k c μ * (J k aa (-p-1) * J k bb (p+1)) - (J k aa (-p-1) * J k bb (p+1)) * J k c μ) from by abel)
-    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using happ
+    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using! happ
   · rw [if_neg hp, if_neg hp]
     have happ := congrArg (fun (R : End ℂ (Vacuum k)) => R x)
       (show (J k bb (p+1) * J k aa (-p-1)) * J k c μ - J k c μ * (J k bb (p+1) * J k aa (-p-1))
         = -(J k c μ * (J k bb (p+1) * J k aa (-p-1)) - (J k bb (p+1) * J k aa (-p-1)) * J k c μ) from by abel)
-    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using happ
+    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using! happ
 
 /-- The `Lsug 0` inner body splits as `-(struct0Part + central0Part)`. -/
 theorem inner0_body_split (k : ℂ) (c aa bb : Fin 8) (μ p : ℤ) (x : Vacuum k) :

@@ -65,6 +65,9 @@ def xi : piLattice.carrier := ![(0 : ℤ), 1]
 theorem piLattice_form (v w : piLattice.carrier) :
     piLattice.form v w = v 0 * w 1 + v 1 * w 0 := by
   change Matrix.toBilin' (!![(0 : ℤ), 1; 1, 0]) v w = _
+  revert v w
+  show ∀ v w : Fin 2 → ℤ, Matrix.toBilin' (!![(0 : ℤ), 1; 1, 0]) v w = v 0 * w 1 + v 1 * w 0
+  intro v w
   rw [Matrix.toBilin'_apply']
   simp [dotProduct, Matrix.mulVec, Fin.sum_univ_two]
 

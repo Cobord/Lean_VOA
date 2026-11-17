@@ -52,7 +52,7 @@ def mkLevelOne (g : ℂ → ℂ) (k : ℕ) (hg : DifferentiableOn ℂ g (imGT 0)
     have hne : (τ : ℂ) ≠ 0 := τ.ne_zero
     change g ((-(τ : ℂ))⁻¹) * (τ : ℂ) ^ (-(k : ℤ)) = g τ
     rw [show (-(τ : ℂ))⁻¹ = -1 / (τ : ℂ) from by rw [inv_neg, neg_div, one_div], h1,
-      zpow_neg, zpow_natCast]
+      _root_.zpow_neg, zpow_natCast]
     field_simp
   have hT' : (fun τ : ℍ => g τ) ∣[(k : ℤ)] ModularGroup.T = fun τ : ℍ => g τ := by
     ext τ
@@ -61,7 +61,7 @@ def mkLevelOne (g : ℂ → ℂ) (k : ℕ) (hg : DifferentiableOn ℂ g (imGT 0)
         UpperHalfPlane.denom (ModularGroup.T : Matrix.SpecialLinearGroup (Fin 2) ℤ) τ = 1 := by
       rw [ModularGroup.denom_apply, ModularGroup.T]
       simp
-    rw [hd, one_zpow, mul_one, UpperHalfPlane.coe_vadd]
+    rw [hd, _root_.one_zpow, mul_one, UpperHalfPlane.coe_vadd]
     rw [show ((1 : ℝ) : ℂ) + (τ : ℂ) = (τ : ℂ) + 1 from by push_cast; ring]
     exact hT τ τ.im_pos
   { toFun := fun τ : ℍ => g τ
@@ -247,7 +247,7 @@ theorem slashInv_S_apply {G : Type*} [FunLike G ℍ ℂ] {k : ℤ} [SlashInvaria
   rw [he] at h
   rw [← h]
   change F ⟨-1 / z, hm⟩ = z ^ k * (F ⟨-1 / z, hm⟩ * z ^ (-k))
-  rw [zpow_neg]
+  rw [_root_.zpow_neg]
   field_simp
 
 theorem slashInv_T_apply {G : Type*} [FunLike G ℍ ℂ] {k : ℤ} [SlashInvariantFormClass G 𝒮ℒ k]
@@ -260,7 +260,7 @@ theorem slashInv_T_apply {G : Type*} [FunLike G ℍ ℂ] {k : ℤ} [SlashInvaria
   have hd : UpperHalfPlane.denom (ModularGroup.T : Matrix.SpecialLinearGroup (Fin 2) ℤ)
       (⟨z, hz⟩ : ℍ) = 1 := by
     rw [ModularGroup.denom_apply, ModularGroup.T]; simp
-  rw [hd, one_zpow, mul_one] at h
+  rw [hd, _root_.one_zpow, mul_one] at h
   have hm : z + 1 ∈ imGT 0 := add_one_mem_imGT hz
   rw [ofComplex_apply_of_im_pos hm, ofComplex_apply_of_im_pos hz, ← h]
   congr 1
@@ -406,7 +406,9 @@ theorem exists_mlde {n : ℕ} {ν : Fin n → ℂ} {U : Fin n → PowerSeries �
   let Af : Fin n → ℂ → ℂ := fun r z => wrc (famF ν U) z r * wr (famF ν U) z ^ 5 * DeltaC z ^ M
   have hΔan : ∀ z ∈ imGT 0, AnalyticAt ℂ DeltaC z := fun z hz => by
     have := analyticAt_slashInv CuspForm.discriminant hz
-    simpa [DeltaC] using this
+    first
+      | exact this
+      | (simp at this; exact this)
   have hBan : DifferentiableOn ℂ Bf (imGT 0) := fun z hz =>
     (((analyticAt_wr hf hz).pow 6).mul ((hΔan z hz).pow M)).differentiableAt.differentiableWithinAt
   have hAan : ∀ r, DifferentiableOn ℂ (Af r) (imGT 0) := fun r z hz =>

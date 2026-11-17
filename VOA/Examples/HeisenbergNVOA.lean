@@ -30,6 +30,9 @@ sum** (2) and the **assembly** (5).
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace HeisenbergN
 
 open scoped BigOperators
@@ -448,7 +451,7 @@ theorem LvirN_zero_gradingWN (r : ℕ) (k : ℂ) (hk : k ≠ 0) {w : ℕ} {p : F
   have hwa : Finsupp.weight weightFnN a = w := by
     rw [mem_gradingWN] at hp
     exact hp (MvPolynomial.mem_support_iff.mp ha)
-  rw [LvirN_zero_monomial r k hk (MvPolynomial.coeff a p) a, hwa]
+  rw [LvirN_zero_monomial r k hk (p.coeff a) a, hwa]
 
 /-- **VOA2 (conformal weight)**: `L₀ = mode (YN ωN) 1` acts on `gradingZN n` as `n`. -/
 theorem conf_L0_gradingN (r : ℕ) (k : ℂ) (hk : k ≠ 0) {n : ℤ} (v : FockN r)
@@ -499,8 +502,7 @@ theorem YmonN_DCovariant (r : ℕ) (k : ℂ) (hk : k ≠ 0) (a : (ℕ × Fin r) 
 theorem YN_DCovariant (r : ℕ) (k : ℂ) (hk : k ≠ 0) (v : FockN r) :
     DCovariant (LvirN r k (-1)) (YN r k v) := by
   classical
-  rw [show YN r k v = Finsupp.linearCombination ℂ (YmonN r k) v from rfl,
-    Finsupp.linearCombination_apply, Finsupp.sum]
+  rw [YN_eq_support_sum]
   exact DCovariant.finsetSum _ _ (fun a _ => (YmonN_DCovariant r k hk a).smul _)
 
 /-- The bare `PreVertexAlgebra (FockN r)` (VA1–VA5), for Goddard uniqueness. -/

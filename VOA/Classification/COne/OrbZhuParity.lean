@@ -220,7 +220,7 @@ theorem even_odd_top : evenSpan ⊔ oddSpan = ⊤ := by
   have h := span_towers_A_eq_top Wt gSeed (fun i => (gWt i : ℤ)) gSeed_mem nR ![11, 11, 2]
     (towers_span_truncated tetraSixteenTruncation_holds) (by
       intro i a ha
-      exact pow_mem_towerSub Wt _ (by fin_cases i <;> simpa [nR] using ha))
+      exact pow_mem_towerSub Wt _ (by fin_cases i <;> simpa [nR] using! ha))
   apply top_unique
   rw [← h, Submodule.span_le]
   rintro _ ⟨⟨i, a⟩, rfl⟩
@@ -386,7 +386,7 @@ theorem psi_aeval {ψ : A Wt →ₗ[ℂ] ℂ}
   have hpow : ∀ a : ℕ, ψ ((omegaL Wt ^ a) (mk Wt Wt.vacuum)) = w ^ a := by
     intro a
     induction a with
-    | zero => simpa using h1
+    | zero => simpa using! h1
     | succ a ih =>
       rw [pow_succ', Module.End.mul_apply]
       change ψ (Amul (zhuRingData_holds Wt) (mk Wt Wt.conformalVector)
@@ -418,7 +418,7 @@ theorem q13_omega_eq_zero : (aeval (omegaL Wt) (P8 * P5)) (mk Wt Wt.vacuum) = 0 
     rw [map_smul, smul_eq_mul, Matrix.vandermonde_apply, mul_comm]
     congr 1
     have := hψw j (X ^ (a : ℕ))
-    simpa [w] using this
+    simpa [w] using! this
   -- independence
   have hind : LinearIndependent ℂ w := by
     rw [Fintype.linearIndependent_iff]
@@ -435,7 +435,7 @@ theorem q13_omega_eq_zero : (aeval (omegaL Wt) (P8 * P5)) (mk Wt Wt.vacuum) = 0 
     apply Submodule.span_le.mpr
     rintro _ ⟨a, rfl⟩
     have := hfixed (X ^ (a : ℕ))
-    simpa [w] using this
+    simpa [w] using! this
   haveI : FiniteDimensional ℂ evenSpan := by
     haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun a : Fin 11 =>
         (omegaL Wt ^ (a : ℕ)) (mk Wt Wt.vacuum))) :=

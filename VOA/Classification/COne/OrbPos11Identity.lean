@@ -33,6 +33,6 @@ def identityTwistedOrdinary (T : TwistedModule (1 : Aut W) 1 M) : OrdVModule W M
 theorem identityTwistedOrdinary_irreducible (T : TwistedModule (1 : Aut W) 1 M)
     (hT : TwistedIrreducible T) : (identityTwistedOrdinary T).IsIrreducible := by
   refine ⟨hT.1, fun P => hT.2 P.carrier (fun v k x hx => ?_)⟩
-  simpa only [WeakModule.act_def, identityTwistedOrdinary_mode] using P.act_mem v k hx
+  simpa only [WeakModule.act_def, identityTwistedOrdinary_mode] using! P.act_mem v k hx
 
 end VOA.Classification.COne.OrbPos11

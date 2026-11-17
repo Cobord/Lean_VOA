@@ -66,7 +66,7 @@ theorem untwisted_finrank_lower_bound (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
   have h := ((linearIndependent_algHom_toLinearMap ℂ (VOA.A (V2mPlus m hm)) ℂ).comp
     χ hχi).fintype_card_le_finrank
   simpa [Fintype.card_sum, Fintype.card_fin,
-    show m-1+4 = m+3 by omega] using h
+    show m-1+4 = m+3 by omega] using! h
 
 end VOA.Classification.COne.PlusCharacterTable
 

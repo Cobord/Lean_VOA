@@ -63,6 +63,6 @@ theorem scalar_dual_monodromy_transfer (P : Pivotal C) (X Y : C) (z : ℂ)
     simp [rightAdjointMate]
   rw [hm] at ht
   apply (cancel_mono (dualMonodromyPairIso P X Y).hom).mp
-  simpa using ht.symm
+  simpa using! ht.symm
 
 end VOA.Huang.NSCongruence

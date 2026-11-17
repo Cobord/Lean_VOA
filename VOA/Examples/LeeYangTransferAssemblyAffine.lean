@@ -112,7 +112,7 @@ theorem affineUniversalConj_maxIdeal_stable :
   intro x hx
   apply hle
   change affineUniversalConj (affineUniversalConj x) ∈ I
-  simpa only [affineUniversalConj_sq] using hx
+  simpa only [affineUniversalConj_sq] using! hx
 
 /-- The descended compact conjugation on the actual simple affine factor. -/
 def affineConj : ASpace →ₛₗ[starRingEnd ℂ] ASpace :=

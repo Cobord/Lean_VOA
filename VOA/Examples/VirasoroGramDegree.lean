@@ -34,7 +34,7 @@ creation length. Arbitrary scalar coefficients do not change that bound. -/
 theorem single_mem_lengthFiltration (t : Label) (a : ℂ) {d : ℕ}
     (h : t.1+t.2.length ≤ d) : Finsupp.single t a ∈ lengthFiltration d := by
   have ht : Finsupp.single t (1:ℂ) ∈ lengthFiltration d := Submodule.subset_span ⟨t,h,rfl⟩
-  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using
+  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using!
     Submodule.smul_mem (lengthFiltration d) a ht
 
 /-- Prefixing a creation mode costs one unit of filtration degree. -/
@@ -47,8 +47,8 @@ theorem prepend_mem_lengthFiltration (i : ℕ) {d : ℕ} {f : NormalForm}
     apply single_mem_lengthFiltration
     simp only [List.length_cons]; omega
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Adding p central factors raises the filtration bound by p. -/
 theorem centralShift_mem_lengthFiltration (p : ℕ) {d : ℕ} {f : NormalForm}
@@ -61,8 +61,8 @@ theorem centralShift_mem_lengthFiltration (p : ℕ) {d : ℕ} {f : NormalForm}
     change p+t.1+t.2.length ≤ p+d
     omega
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Applying a creation mode raises the bound by one; every other mode
 preserves it. The central term trades a creation mode for one central factor. -/
@@ -82,7 +82,7 @@ theorem modeNormal_mem_lengthFiltration (m : ℤ) (w : List ℕ) :
       apply Submodule.add_mem
       · apply Submodule.add_mem
         · have hh := prepend_mem_lengthFiltration i (ih m)
-          simpa only [if_neg hm, Nat.add_zero] using hh
+          simpa only [if_neg hm, Nat.add_zero] using! hh
         · apply Submodule.smul_mem
           apply lengthFiltration_mono (show w.length + (if m-(i:ℤ)-2 < -1 then 1 else 0) ≤
             w.length+1 by split_ifs <;> omega) (ih _)
@@ -101,10 +101,10 @@ theorem actNormal_mem_lengthFiltration (m : ℤ) (hm : -1 ≤ m)
     simp only [actNormal, Finsupp.linearCombination_single, one_smul]
     apply lengthFiltration_mono ht
     have hh := centralShift_mem_lengthFiltration t.1 (modeNormal_mem_lengthFiltration m t.2)
-    simpa only [if_neg (by omega : ¬m < -1), Nat.add_zero] using hh
+    simpa only [if_neg (by omega : ¬m < -1), Nat.add_zero] using! hh
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- A word made entirely of creation modes is already a single normal-form
 term, with central power zero and its original creation list. -/
@@ -143,7 +143,7 @@ theorem centralPolynomial_natDegree_le {d : ℕ} {f : NormalForm}
     obtain ⟨t,ht,rfl⟩ := hf
     simp only [centralPolynomial, Finsupp.linearCombination_single, one_smul]
     split_ifs
-    · simpa only [natDegree_X_pow] using (Nat.le_add_right t.1 t.2.length).trans ht
+    · simpa only [natDegree_X_pow] using! (Nat.le_add_right t.1 t.2.length).trans ht
     · simp
   | zero => simp
   | add f g _ _ hf hg =>
@@ -217,14 +217,17 @@ theorem coeff_det_sum_column_bounds {ι : Type*} [Fintype ι] [DecidableEq ι]
     (M : Matrix ι ι (Polynomial ℂ)) (d : ι → ℕ)
     (h : ∀ i j, (M i j).natDegree ≤ d j) :
     M.det.coeff (∑ j, d j) = Matrix.det (fun i j => (M i j).coeff (d j)) := by
-  rw [Matrix.det_apply, Matrix.det_apply, finsetSum_coeff]
+  have hR : Matrix.det (fun i j => (M i j).coeff (d j) : Matrix ι ι ℂ) =
+      ∑ σ : Equiv.Perm ι, Equiv.Perm.sign σ • ∏ i, (M (σ i) i).coeff (d i) :=
+    Matrix.det_apply _
+  rw [hR, Matrix.det_apply, finsetSum_coeff]
   apply Finset.sum_congr rfl
   intro σ hσ
   have hc := coeff_prod_sum_bounds Finset.univ (fun j => M (σ j) j) d
     (fun j _ => h (σ j) j)
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs
-  · simpa only [hs, one_smul] using hc
-  · simpa only [hs, Units.neg_smul, one_smul, coeff_neg] using congrArg Neg.neg hc
+  · simpa only [hs, one_smul] using! hc
+  · simpa only [hs, Units.neg_smul, one_smul, coeff_neg] using! congrArg Neg.neg hc
 
 /-- The matrix of coefficients at each column's maximal permitted charge
 degree. Its determinant is the candidate top coefficient of the actual Gram

@@ -109,7 +109,7 @@ theorem rank_eq_zero_of_lt_f {r : RLetter} {d : ℕ} (h : r < toLex (0, d)) :
 theorem rank_le_one_of_lt_h {r : RLetter} {d : ℕ} (h : r < toLex (1, d)) :
     (ofLex r).1 ≤ 1 := by
   have := rank_le_of_le h.le
-  simpa using this
+  simpa using! this
 
 /-! ## §3  The map `W₀` -/
 
@@ -294,7 +294,7 @@ theorem W0_rword_of_rank_two (l : List RLetter) (hl : ∀ q ∈ l, (ofLex q).1 =
     W0 k hk (rword k l) = classicalW l := by
   have hp := List.mergeSort_perm l (fun a b => decide (a ≤ b))
   rw [rword_perm_of_rank_two k hp.symm hl, W0_rword_sorted k hk _
-    (by simpa using List.pairwise_mergeSort' (fun a b => a ≤ b) l), classicalW_perm hp]
+    (by simpa using! List.pairwise_mergeSort' (fun a b => a ≤ b) l), classicalW_perm hp]
 
 theorem W0_eword (ν : ℕ →₀ ℕ) : W0 k hk (eword k ν) = monomial ν 1 := by
   rw [eword, W0_rword_of_rank_two, classicalW_eList]
@@ -418,9 +418,9 @@ theorem sub_sE_W0_mem (y : WakModule k) : y - sE k (W0 k hk y) ∈ whitIdeal k :
       (whitIdeal k).comap (LinearMap.id - (sE k).comp (W0 k hk)) := by
     rw [Submodule.span_le]
     rintro _ ⟨μ, rfl⟩
-    simpa [Fvec] using hsorted _ (expWord_pairwise μ)
+    simpa [Fvec] using! hsorted _ (expWord_pairwise μ)
   have h := hle (by rw [Fvec_span_eq_top]; trivial : y ∈ Submodule.span ℂ (Set.range (Fvec k)))
-  simpa using h
+  simpa using! h
 
 
 /-! ## §6  The Kazhdan filtration lemma -/
@@ -518,11 +518,9 @@ theorem W0_rword_sub (l : List RLetter) :
     W0 k hk (rword k l) - classicalW l ∈ Dg ((Kl l - 1) / 2) := by
   refine straighten (P := fun l => W0 k hk (rword k l) - classicalW l ∈ Dg ((Kl l - 1) / 2))
     (fun l hl => ?_) (fun pre a b post _ hswap hbr => ?_) l
-  · dsimp only
-    rw [W0_rword_sorted k hk l hl, sub_self]
+  · rw [W0_rword_sorted k hk l hl, sub_self]
     exact Submodule.zero_mem _
-  · dsimp only at hswap hbr ⊢
-    have hKs := Kl_swap pre post a b
+  · have hKs := Kl_swap pre post a b
     rw [rword_swap, map_add, map_sum, ← classicalW_swap pre post a b, ← hKs,
       add_sub_right_comm]
     refine Submodule.add_mem _ hswap (Submodule.sum_mem _ fun c _ => ?_)
@@ -586,11 +584,9 @@ theorem chargeLift_rword (G : WakModule k →ₗ[ℂ] M) (l : List RLetter) :
   refine straighten (P := fun l => chargeLift k hk G (rword k l) =
       Finsupp.single (chl l) (G (rword k l))) (fun l hl => ?_)
     (fun pre a b post _ hswap hbr => ?_) l
-  · dsimp only
-    rw [rword_sorted k l hl, chargeLift, ← Fbasis_apply k hk, Module.Basis.constr_basis,
+  · rw [rword_sorted k l hl, chargeLift, ← Fbasis_apply k hk, Module.Basis.constr_basis,
       Fbasis_apply, ← eq_expWord_toFinsupp l hl]
-  · dsimp only at hswap hbr ⊢
-    rw [rword_swap, map_add, map_add, map_sum, map_sum, hswap, chl_swap, Finsupp.single_add]
+  · rw [rword_swap, map_add, map_add, map_sum, map_sum, hswap, chl_swap, Finsupp.single_add]
     congr 1
     rw [Finsupp.single_finsetSum]
     refine Finset.sum_congr rfl fun c _ => ?_

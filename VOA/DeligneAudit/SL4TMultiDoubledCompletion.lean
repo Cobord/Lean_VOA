@@ -244,7 +244,7 @@ theorem multiDoubledSiteCoefficientFlag_valid (B k : ℕ) (hk : 1 ≤ k) (hkB : 
     (q : MixedParams) (hq : q ∈ mixedValidBlocks 0 B) :
     MultiDoubledSiteCoefficientFlag B k q := by
   obtain ⟨hv, hA, hB⟩ := (mem_mixedValidBlocks 0 B q).mp hq
-  have hA0 : q.A = 0 := by simpa using hA
+  have hA0 : q.A = 0 := by simpa using! hA
   have hBn : q.B.toNat = B := by omega
   have h := multiDoubledSiteCoefficientFlag_of_stratumCost q hv hA0 k hk (by omega)
     (middleFlag_stratumCost_le_blockBound q hv hA0 k (by omega))
@@ -259,7 +259,7 @@ theorem truncatedWeyl_sl4_multiDoubledSite_rank_le (B k : ℕ) (hk : 2 * k ≤ B
       Module.finrank ℂ (TruncatedLabelModule 0 B 0 (B - k)) ≤ 20 ^ k * 6 ^ (B - 2 * k) := by
   by_cases hk0 : k = 0
   · subst k
-    simpa using truncatedLabelModule_finite_and_local_bound 0 B 0 B
+    simpa using! truncatedLabelModule_finite_and_local_bound 0 B 0 B
   · exact truncatedWeyl_sl4_multiDoubledSite_rank_le_of_flags B k hk
       (fun q hq => multiDoubledSiteCoefficientFlag_valid B k (by omega) hk q hq)
 

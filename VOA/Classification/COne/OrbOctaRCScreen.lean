@@ -33,7 +33,7 @@ theorem screenTerm_sound (d : ℤ) (t : ℚ × List ℕ) (Q : RawPoly ℕ)
     List.flatMap_nil, List.append_nil, evRc_normR, evRc_scaleR]
   have hs : -(0 : ℤ) - 1 - 2 * (-1) * d = 2 * d - 1 := by ring
   rw [hs]
-  simpa using (hQ (-cα 1) (by simpa using charge_square_two)).symm
+  simpa using! (hQ (-cα 1) (by simpa using! charge_square_two)).symm
 
 theorem screenRows_sound (d : ℤ) (P : RawPoly ℕ) (Qs : List (RawPoly ℕ))
     (h : List.Forall₂ (fun t Q =>

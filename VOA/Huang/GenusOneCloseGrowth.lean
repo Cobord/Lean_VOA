@@ -52,7 +52,7 @@ theorem hasDerivAt_vertical (f : ℂ → ℂ) (x s : ℝ) {d : ℂ}
     HasDerivAt (fun t : ℝ => f ((x : ℂ) + I * (t : ℂ))) (d * I) s := by
   have hl : HasDerivAt (fun t : ℝ => (x : ℂ) + I * (t : ℂ)) I s := by
     have h1 := ((hasDerivAt_id s).ofReal_comp).const_mul I
-    simpa using h1.const_add (x : ℂ)
+    simpa using! h1.const_add (x : ℂ)
   exact hf.comp s hl
 
 /-- **Uniform moderate growth of analytic insertion blocks.** -/
@@ -73,7 +73,7 @@ theorem exists_uniform_growth (hAC2 : FusionC2.ModuleC2Cofinite A.toWeakModule) 
   have hmem : ∀ x t : ℝ, 0 < t → (x : ℂ) + I * (t : ℂ) ∈ imGT 0 := by
     intro x t ht
     change (0 : ℝ) < ((x : ℂ) + I * (t : ℂ)).im
-    simpa using ht
+    simpa using! ht
   -- the derivative of each component on the upper half-plane
   have hderiv : ∀ (k : U) (z : ℂ) (hz : z ∈ imGT 0),
       _root_.deriv (F k.val) z =
@@ -98,7 +98,7 @@ theorem exists_uniform_growth (hAC2 : FusionC2.ModuleC2Cofinite A.toWeakModule) 
     intro x t ht
     rw [add_zero]
     have hz := hmem x t (by linarith)
-    have him : 1 ≤ ((x : ℂ) + I * (t : ℂ)).im := by simpa using ht
+    have him : 1 ≤ ((x : ℂ) + I * (t : ℂ)).im := by simpa using! ht
     refine (pi_norm_le_iff_of_nonneg (by positivity)).2 fun k => ?_
     rw [norm_mul, Complex.norm_I, mul_one, hderiv k _ hz, norm_mul]
     have h2pi : ‖(2 * π * I : ℂ)‖ = 2 * π := by
@@ -158,7 +158,7 @@ theorem exists_uniform_growth (hAC2 : FusionC2.ModuleC2Cofinite A.toWeakModule) 
   have hvl : ∀ l : U, ‖F l.val z‖ ≤ ‖v z.re z.im‖ := by
     intro l
     have := norm_le_pi_norm (v z.re z.im) l
-    simpa [v, ← hzeq] using this
+    simpa [v, ← hzeq] using! this
   rw [hg]
   calc ‖∑ l : U, eisensteinEval (c w l) z * F l.val z‖
       ≤ ∑ l : U, ‖eisensteinEval (c w l) z * F l.val z‖ := norm_sum_le _ _

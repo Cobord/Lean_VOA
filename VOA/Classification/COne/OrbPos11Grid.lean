@@ -24,9 +24,11 @@ theorem action_coefficient_covariance_pow (g : G)
         (actionIntertwiner G hSR X a).val z w x :=
     (actionMonodromyThrough_iff_coefficients G hSR X a g).mp hm z w x
   induction n with
-  | zero => simp
+  | zero => simp; rfl
   | succ n ih =>
-    rw [pow_succ' g.1, Aut.mul_apply, pow_succ, mul_smul, hc, ih]
+    have e : (g.1 ^ (n + 1)) v = g.1 ((g.1 ^ n) v) :=
+      congrArg (fun φ : Aut (V2m 1 le_rfl) => φ v) (pow_succ' g.1 n)
+    rw [e, pow_succ, mul_smul, hc ((g.1 ^ n) v), ih]
 
 /-- Every nonzero coefficient lies on the fractional grid of any positive
 period. This is stronger than support on eigenvectors: it covers every state. -/
@@ -36,7 +38,9 @@ theorem action_coefficient_grid (g : G)
     (hne : (actionIntertwiner G hSR X a).val z v x ≠ 0) :
     ∃ k : ℤ, z = (k : ℂ) / N := by
   have h := action_coefficient_covariance_pow G hSR X a g hm z N v x
-  rw [hg, Aut.one_apply] at h
+  rw [hg] at h
+  change (Phase.upper.c z * Phase.upper.c z) ^ N •
+    (actionIntertwiner G hSR X a).val z v x = _ at h
   have hp : (Phase.upper.c z * Phase.upper.c z) ^ N = 1 := by
     apply sub_eq_zero.mp
     apply (smul_eq_zero.mp (show

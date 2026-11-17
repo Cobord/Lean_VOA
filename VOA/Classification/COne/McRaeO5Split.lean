@@ -205,12 +205,11 @@ theorem twisted_admissible (hD : TwistData a p g) :
         change ((X.act.L0op - α • 1) ^ k) (p.1 x) = 0
         rw [← hom_L0_pow, hk, map_zero]
       · have : (⟨p.1 0, 0, rfl⟩ : Sp p) = 0 := Subtype.ext (map_zero p.1)
-        simp only
-        rw [this]; exact T.zero_mem
+        exact (congrArg (· ∈ T) this).mpr T.zero_mem
       · intro x y hx hy
         have : (⟨p.1 (x + y), x + y, rfl⟩ : Sp p) = ⟨p.1 x, x, rfl⟩ + ⟨p.1 y, y, rfl⟩ :=
           Subtype.ext (map_add p.1 x y)
-        rw [this]; exact T.add_mem hx hy
+        exact (congrArg (· ∈ T) this).mpr (T.add_mem hx hy)
     refine eq_top_iff.mpr fun y _ => ?_
     obtain ⟨x, hxy⟩ := y.2
     have : y = ⟨p.1 x, x, rfl⟩ := Subtype.ext hxy.symm

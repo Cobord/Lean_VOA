@@ -42,7 +42,7 @@ theorem phase_eq_iff {n : ℕ} (hn : 0 < n) (b c : ℤ) :
 theorem shiftAut_latState (n : ℕ) (a β : ℤ) (p : Osc) :
     shiftAut n a (latStateGen (latP 1) p β) =
       phase n (a*β) • latStateGen (latP 1) p β := by
-  rw [shiftAut, charU_latStateGen]
+  refine (charU_latStateGen 1 le_rfl (torusUnit n a) p β).trans ?_
   simp only [Units.val_zpow_eq_zpow_val, ci]
   change ((torusUnit n a : ℂˣ) : ℂ)^β • latStateGen (latP 1) p β = _
   change (Complex.exp (2 * (Real.pi : ℂ) * Complex.I * a / n))^β •
@@ -64,7 +64,7 @@ theorem shiftAut_pow {n : ℕ} (hn : 0 < n) (a : ℤ) : shiftAut n a ^ n = 1 := 
       (phase_eq_iff hn _ _).mpr (by simp)
     simpa only [phase, Int.cast_mul, Int.cast_natCast, Int.cast_zero, mul_zero,
       zero_div, Complex.exp_zero, show (n : ℂ) * (2 * (Real.pi : ℂ) * Complex.I * a / n) =
-        2 * (Real.pi : ℂ) * Complex.I * ((n : ℂ)*a) / n by ring] using hp
+        2 * (Real.pi : ℂ) * Complex.I * ((n : ℂ)*a) / n by ring] using! hp
   exact (map_pow (charU 1 le_rfl) (torusUnit n a) n).symm.trans
     (by rw [hu, map_one]; rfl)
 
@@ -100,7 +100,7 @@ theorem shiftedY_support {n : ℕ} (hn : 0 < n) (a j : ℤ) (r : ℕ) (u : Space
   have hne : phase n (-(r : ℤ)) - phase n ℓ ≠ 0 := by
     intro hz
     have hp := (phase_eq_iff hn ℓ (-(r : ℤ))).mp (sub_eq_zero.mp hz).symm
-    exact hℓ (by simpa using hp)
+    exact hℓ (by simpa using! hp)
   have hz : (phase n (-(r : ℤ)) - phase n ℓ) • shiftedY n a j u ℓ = 0 := by
     rw [sub_smul, hc, sub_self]
   exact (smul_eq_zero.mp hz).resolve_left hne

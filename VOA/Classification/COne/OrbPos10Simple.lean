@@ -29,14 +29,14 @@ theorem end_finrank_lt_of_split_quotient {Y X Z : C} (f : Y ⟶ X) (hf : f ≠ 0
     intro t t' he
     have := congrArg (fun k => s ≫ k ≫ p) he
     simpa only [L, LinearMap.coe_mk, AddHom.coe_mk, Category.assoc,
-      reassoc_of% hs, hs, Category.comp_id, Category.id_comp] using this
+      reassoc_of% hs, hs, Category.comp_id, Category.id_comp] using! this
   have hn : ¬ Function.Surjective L := by
     intro he
     obtain ⟨t, ht⟩ := he (𝟙 X)
     apply hf
     have := congrArg (fun k => f ≫ k) ht
     simpa only [L, LinearMap.coe_mk, AddHom.coe_mk, ← Category.assoc,
-      hfp, zero_comp, Category.comp_id] using this.symm
+      hfp, zero_comp, Category.comp_id] using! this.symm
   have hle := LinearMap.finrank_le_finrank_of_injective hi
   exact lt_of_le_of_ne hle (fun he => hn
     ((LinearMap.injective_iff_surjective_of_finrank_eq_finrank he).mp hi))

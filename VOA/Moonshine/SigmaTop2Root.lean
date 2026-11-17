@@ -24,6 +24,11 @@ In `V_N` the letters on a root pair `j ≠ k` are `H = h_jh_k`, `A_jA_k`, `B_jB_
 `sorry`-free.  Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -266,9 +271,12 @@ theorem sig_lV_gP {j k : Fin 24} (hjk : j ≠ k) :
   have hk := kP_ne_zero hjk
   have h : lV (gP j k) (gP_mem j k) = (2 * kP j k)⁻¹ • golayToV0 (PPN j k) := by
     rw [golayToV0_PPN hjk, smul_smul, inv_mul_cancel₀ (mul_ne_zero two_ne_zero hk), one_smul]
+  have hsub : ∀ x y, golayToV0 (x - y) = golayToV0 x - golayToV0 y := fun x y => by
+    rw [sub_eq_add_neg, LinearEquiv.map_add, ← neg_one_smul ℂ y, LinearEquiv.map_smul, neg_one_smul,
+      ← sub_eq_add_neg]
   conv_lhs => rw [h]
-  rw [sig_smul, sig, ← golayToV0_sigma, golaySigma0_PPN hjk, map_sub, map_add, map_smul, map_smul,
-    map_smul, golayToV0_HHo, golayToV0_PPN hjk, golayToV0_MMN hjk]
+  rw [sig_smul, sig, ← golayToV0_sigma, golaySigma0_PPN hjk, hsub, LinearEquiv.map_add, LinearEquiv.map_smul,
+    LinearEquiv.map_smul, LinearEquiv.map_smul, golayToV0_HHo, golayToV0_PPN hjk, golayToV0_MMN hjk]
   congr 1
   simp only [smul_smul]
   module
@@ -279,9 +287,12 @@ theorem sig_lV_gM {j k : Fin 24} (hjk : j ≠ k) :
   have hk := kM_ne_zero hjk
   have h : lV (gM j k) (gM_mem j k) = (2 * kM j k)⁻¹ • golayToV0 (MMN j k) := by
     rw [golayToV0_MMN hjk, smul_smul, inv_mul_cancel₀ (mul_ne_zero two_ne_zero hk), one_smul]
+  have hsub : ∀ x y, golayToV0 (x - y) = golayToV0 x - golayToV0 y := fun x y => by
+    rw [sub_eq_add_neg, LinearEquiv.map_add, ← neg_one_smul ℂ y, LinearEquiv.map_smul, neg_one_smul,
+      ← sub_eq_add_neg]
   conv_lhs => rw [h]
-  rw [sig_smul, sig, ← golayToV0_sigma, golaySigma0_MMN hjk, map_add, map_sub, map_smul, map_smul,
-    map_smul, golayToV0_HHo, golayToV0_PPN hjk, golayToV0_MMN hjk]
+  rw [sig_smul, sig, ← golayToV0_sigma, golaySigma0_MMN hjk, LinearEquiv.map_add, hsub, LinearEquiv.map_smul,
+    LinearEquiv.map_smul, LinearEquiv.map_smul, golayToV0_HHo, golayToV0_PPN hjk, golayToV0_MMN hjk]
   congr 1
   simp only [smul_smul]
   module
@@ -414,7 +425,7 @@ theorem blk_eq_of_three {m : leech.carrier} (hm0 : m ∉ lambda0) (h4 : leech.fo
 theorem form_self_add {γ n : leech.carrier} (hγ : leech.form γ γ = 4) (hn : leech.form n n = 4)
     (h : leech.form γ n = -2) : leech.form (γ + n) (γ + n) = 4 := by
   have hs := leech.isSymm.eq n γ
-  simp only [LinearMap.flip_apply] at hs
+  try simp only [LinearMap.flip_apply] at hs
   simp only [map_add, LinearMap.add_apply, hγ, hn, h]
   rw [show leech.form n γ = leech.form γ n from by rw [hs]] ; rw [h]; norm_num
 

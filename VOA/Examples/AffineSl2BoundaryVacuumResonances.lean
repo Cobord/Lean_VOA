@@ -32,7 +32,7 @@ theorem vacuum_labels (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
     obtain ⟨s,hs,hm,hj⟩ := positive_resonance_scale P 1 (m+1) (j+1)
       hP (by omega) (by omega) hcop heq
     have hmle : m+1≤n := le_trans (Nat.le_mul_of_pos_left _ (by omega : 0<j+1))
-      (by simpa [Wak.Charged.oscillatorEnergy] using he)
+      (by simpa [Wak.Charged.oscillatorEnergy] using! he)
     right
     refine ⟨s,by omega,?_,Or.inl ?_⟩
     · nlinarith
@@ -56,7 +56,7 @@ theorem vacuum_labels (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
       obtain ⟨s,hs,hm',hj⟩ := negative_resonance_scale P 1 m (j+1)
         hP (by omega) (by omega) hcop heq
       have hmle : m≤n := le_trans (Nat.le_mul_of_pos_left _ (by omega : 0<j+1))
-        (by simpa [Wak.Charged.oscillatorEnergy] using he)
+        (by simpa [Wak.Charged.oscillatorEnergy] using! he)
       right
       refine ⟨s,hs,?_,Or.inr ?_⟩
       · nlinarith
@@ -86,7 +86,7 @@ theorem reflected_labels (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
     obtain ⟨s,hs,hm,hj⟩ := negative_resonance_scale P 1 (m+1) (j+1)
       hP (by omega) (by omega) hcop heq
     have hmle : m+1≤n := le_trans (Nat.le_mul_of_pos_left _ (by omega : 0<j+1))
-      (by simpa [Wak.Charged.oscillatorEnergy] using he)
+      (by simpa [Wak.Charged.oscillatorEnergy] using! he)
     refine ⟨s,hs,?_,Or.inl ?_⟩
     · nlinarith
     · have hm' : m=P*s-1 := by omega
@@ -103,7 +103,7 @@ theorem reflected_labels (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
     obtain ⟨s,hs,hm,hj⟩ := positive_resonance_scale P 1 m (j+1)
       hP (by omega) (by omega) hcop heq
     have hmle : m≤n := le_trans (Nat.le_mul_of_pos_left _ (by omega : 0<j+1))
-      (by simpa [Wak.Charged.oscillatorEnergy] using he)
+      (by simpa [Wak.Charged.oscillatorEnergy] using! he)
     refine ⟨s,by omega,?_,Or.inr ?_⟩
     · nlinarith
     · have hj' : j=2*s-2 := by omega
@@ -228,17 +228,17 @@ theorem vacuum_resonance_sum (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
       obtain ⟨hi0,hi⟩ := Finset.mem_erase.mp hi
       have hz : Wak.Charged.realRootWeight (2/(P:ℂ)) i=0 := by
         by_contra h; simp [h] at hm
-      have hm' : Wak.Charged.affineKacMultiplicity n c i≠0 := by simpa [hz] using hm
+      have hm' : Wak.Charged.affineKacMultiplicity n c i≠0 := by simpa [hz] using! hm
       rcases vacuum_labels P hP hcop n c i hi hz with h|⟨s,hs,hsn,h|h⟩
       · exact False.elim (hi0 h)
       all_goals
         subst i
       · refine ⟨(s,false),by simp [Nat.succ_le_iff,hs,hsn],?_,rfl⟩
         rw [guardedMultiplicity_eq n c _ (by simp [vacuumLabel,vacuumPositive])]
-        simpa [vacuumLabel,hi] using hm'
+        simpa [vacuumLabel,hi] using! hm'
       · refine ⟨(s,true),by simp [Nat.succ_le_iff,hs,hsn],?_,rfl⟩
         rw [guardedMultiplicity_eq n c _ (by simp [vacuumLabel,vacuumNegative])]
-        simpa [vacuumLabel,hi] using hm'
+        simpa [vacuumLabel,hi] using! hm'
     · rintro ⟨s,b⟩ hx hh
       have hs : 0<s := (Finset.mem_Icc.mp (Finset.mem_product.mp hx).1).1
       have ha : (vacuumLabel P (s,b)).1.1≠2 := by cases b <;> simp [vacuumLabel]
@@ -284,15 +284,15 @@ theorem reflected_resonance_sum (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)
     · intro i hi hm
       have hz : Wak.Charged.realRootWeight (2/(P:ℂ)) i= -2 := by
         by_contra h; simp [h] at hm
-      have hm' : Wak.Charged.affineKacMultiplicity n c i≠0 := by simpa [hz] using hm
+      have hm' : Wak.Charged.affineKacMultiplicity n c i≠0 := by simpa [hz] using! hm
       obtain ⟨s,hs,hsn,h|h⟩ := reflected_labels P hP hcop n c i hi hz
       all_goals subst i
       · refine ⟨(s,false),by simp [Nat.succ_le_iff,hs,hsn],?_,rfl⟩
         rw [guardedMultiplicity_eq n c _ (by simp [reflectedLabel,reflectedPositive])]
-        simpa [reflectedLabel,hi] using hm'
+        simpa [reflectedLabel,hi] using! hm'
       · refine ⟨(s,true),by simp [Nat.succ_le_iff,hs,hsn],?_,rfl⟩
         rw [guardedMultiplicity_eq n c _ (by simp [reflectedLabel,reflectedNegative])]
-        simpa [reflectedLabel,hi] using hm'
+        simpa [reflectedLabel,hi] using! hm'
     · rintro ⟨s,b⟩ hx hh
       have hs : 0<s := (Finset.mem_Icc.mp (Finset.mem_product.mp hx).1).1
       have ha : (reflectedLabel P (s,b)).1.1≠2 := by cases b <;> simp [reflectedLabel]
@@ -328,10 +328,18 @@ theorem vacuumPositive_count (P s : ℕ) (hP : 0<P) (hs : 0<s) (n : ℕ) (c : �
   have hj : 2*s-2+1=2*s-1 := by omega
   have hc : ((2*s-1:ℕ):ℤ)=2*(s:ℤ)-1 := by
     rw [Nat.cast_sub (by omega : 1≤2*s)]; push_cast; rfl
-  simp only [guardedMultiplicity,Wak.Charged.oscillatorEnergy,
-    Wak.Charged.oscillatorCharge,Wak.Charged.affineKacMultiplicity,
-    hj,hm,hc,shiftedJointCount,lowerEnergy]
-  simp [mul_comm]
+  have hE : ((vacuumPositive P s).2 + 1) * Wak.Charged.oscillatorEnergy (vacuumPositive P s).1 =
+      lowerEnergy P s := by
+    simp only [vacuumPositive, Wak.Charged.oscillatorEnergy, lowerEnergy, Fin.isValue,
+      Fin.reduceEq, ↓reduceIte, hj, hm]
+    ring
+  have hC : (((vacuumPositive P s).2 + 1 : ℕ) : ℤ) *
+      Wak.Charged.oscillatorCharge (vacuumPositive P s).1 = 2*(s:ℤ)-1 := by
+    simp only [vacuumPositive, Wak.Charged.oscillatorCharge, Fin.isValue, Fin.reduceEq,
+      ↓reduceIte, hj, hc, mul_one]
+  unfold guardedMultiplicity Wak.Charged.affineKacMultiplicity shiftedJointCount
+  rw [hE, hC]
+  try rfl
 
 theorem vacuumNegative_count (P s : ℕ) (n : ℕ) (c : ℤ) :
     guardedMultiplicity n c (vacuumNegative P s) =
@@ -354,10 +362,18 @@ theorem reflectedNegative_count (P s : ℕ) (hs : 0<s) (n : ℕ) (c : ℤ) :
   have hj : 2*s-2+1=2*s-1 := by omega
   have hc : ((2*s-1:ℕ):ℤ)=2*(s:ℤ)-1 := by
     rw [Nat.cast_sub (by omega : 1≤2*s)]; push_cast; rfl
-  simp only [guardedMultiplicity,Wak.Charged.oscillatorEnergy,
-    Wak.Charged.oscillatorCharge,Wak.Charged.affineKacMultiplicity,
-    hj,hc,shiftedJointCount,lowerEnergy]
-  simp [mul_comm]
+  have hE : ((reflectedNegative P s).2 + 1) *
+      Wak.Charged.oscillatorEnergy (reflectedNegative P s).1 = lowerEnergy P s := by
+    simp only [reflectedNegative, Wak.Charged.oscillatorEnergy, lowerEnergy, Fin.isValue,
+      Fin.reduceEq, ↓reduceIte, hj]
+    ring
+  have hC : (((reflectedNegative P s).2 + 1 : ℕ) : ℤ) *
+      Wak.Charged.oscillatorCharge (reflectedNegative P s).1 = -(2*(s:ℤ)-1) := by
+    simp only [reflectedNegative, Wak.Charged.oscillatorCharge, Fin.isValue, Fin.reduceEq,
+      ↓reduceIte, hj, hc, mul_neg, mul_one]
+  unfold guardedMultiplicity Wak.Charged.affineKacMultiplicity shiftedJointCount
+  rw [hE, hC]
+  try rfl
 
 /-- The actual numerator valuation equals the explicit two-family count. -/
 theorem vacuumOrder_boundary (P : ℕ) (hP : 0<P) (hcop : P.Coprime 2)

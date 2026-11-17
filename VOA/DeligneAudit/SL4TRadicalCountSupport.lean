@@ -21,7 +21,7 @@ theorem radicalModeEvaluation_one (d : Fin 3 → ℕ) :
     radicalModeEvaluation ρ w d 1 = radicalZeroModeVector ρ w d := by
   have he := radicalModeEvaluation_monomial ρ w d 0 1
   simpa [radicalModeWord, radicalZeroModeVector, aWord,
-    List.ofFn_const, List.prod_replicate] using he
+    List.ofFn_const, List.prod_replicate] using! he
 
 /-- Any invariant relation space containing the zero-mode vector contains the multiplicity. -/
 theorem radicalMultiplicityEvaluation_eq_zero_of_one (a b c : ℕ)

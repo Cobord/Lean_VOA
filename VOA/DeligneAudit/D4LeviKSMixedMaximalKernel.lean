@@ -38,11 +38,11 @@ theorem rxMixedSeed_evaluation_list
       (fun i : Fin (c + (a + b)) =>
         (List.replicate c (5 : Fin 6) ++
           List.replicate (a + b) (1 : Fin 6))[i.val]'(by
-            simpa using i.isLt)) =
+            simpa using! i.isLt)) =
       (fun i : Fin (c + (a + b)) =>
         (List.replicate c (5 : Fin 6) ++
           List.replicate (a + b) (1 : Fin 6)).get
-            ⟨i.val, by simpa using i.isLt⟩) := by
+            ⟨i.val, by simpa using! i.isLt⟩) := by
     funext i
     rfl
   rw [hget] at he'
@@ -52,13 +52,13 @@ theorem rxMixedSeed_evaluation_list
     finCongr (by simp [cs])
   have hshape :
       (fun i : Fin (c + (a + b)) => cs.get
-        ⟨i.val, by simpa [cs] using i.isLt⟩) = cs.get ∘ eLen := by
+        ⟨i.val, by simpa [cs] using! i.isLt⟩) = cs.get ∘ eLen := by
     funext i
     rfl
   rw [show (fun i : Fin (c + (a + b)) =>
       (List.replicate c (5 : Fin 6) ++
         List.replicate (a + b) (1 : Fin 6)).get
-          ⟨i.val, by simpa using i.isLt⟩) = cs.get ∘ eLen from hshape] at he'
+          ⟨i.val, by simpa using! i.isLt⟩) = cs.get ∘ eLen from hshape] at he'
   have hr := xyzEvaluation_rename_bijection ρ w cs.get eLen
     (hsymm (Fin (c + (a + b))) ℂ s)
   rw [rename_hsymm] at hr
@@ -91,11 +91,11 @@ theorem ryMixedSeed_evaluation_list
       (fun i : Fin (c + b) =>
         (List.replicate c (5 : Fin 6) ++
           List.replicate b (4 : Fin 6))[i.val]'(by
-            simpa using i.isLt)) =
+            simpa using! i.isLt)) =
       (fun i : Fin (c + b) =>
         (List.replicate c (5 : Fin 6) ++
           List.replicate b (4 : Fin 6)).get
-            ⟨i.val, by simpa using i.isLt⟩) := by
+            ⟨i.val, by simpa using! i.isLt⟩) := by
     funext i
     rfl
   rw [hget] at he'
@@ -105,13 +105,13 @@ theorem ryMixedSeed_evaluation_list
     finCongr (by simp [cs])
   have hshape :
       (fun i : Fin (c + b) => cs.get
-        ⟨i.val, by simpa [cs] using i.isLt⟩) = cs.get ∘ eLen := by
+        ⟨i.val, by simpa [cs] using! i.isLt⟩) = cs.get ∘ eLen := by
     funext i
     rfl
   rw [show (fun i : Fin (c + b) =>
       (List.replicate c (5 : Fin 6) ++
         List.replicate b (4 : Fin 6)).get
-          ⟨i.val, by simpa using i.isLt⟩) = cs.get ∘ eLen from hshape] at he'
+          ⟨i.val, by simpa using! i.isLt⟩) = cs.get ∘ eLen from hshape] at he'
   have hr := xyzEvaluation_rename_bijection ρ w cs.get eLen
     (hsymm (Fin (c + b)) ℂ s)
   rw [rename_hsymm] at hr

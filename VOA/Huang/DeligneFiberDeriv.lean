@@ -468,9 +468,12 @@ theorem tder_μ_lof (Y Z : C) (a b : ℕ) (x : tcomp G B Y a) (y : tcomp G B Z b
     cases b with
     | zero =>
       rw [tder_lof_zero, tder_lof_zero, tder_lof_zero]
+      erw [TensorProduct.tmul_zero, TensorProduct.zero_tmul]
       simp
     | succ b =>
-      rw [tder_lof_zero, TensorProduct.zero_tmul, map_zero, map_zero, add_zero]
+      rw [tder_lof_zero]
+      erw [TensorProduct.zero_tmul, map_zero]
+      rw [add_zero]
       change tder G D (Y ⊗ Z) (tlof G B (Y ⊗ Z) ((0 + b) + 1) _) = _
       rw [tder_lof_succ, tder_lof_succ, tensorG_μ_lof, tensorG_map_lof, ← μ_whiskerLeft_apply,
         map_map_apply, map_map_apply, map_map_apply]
@@ -479,7 +482,9 @@ theorem tder_μ_lof (Y Z : C) (a b : ℕ) (x : tcomp G B Y a) (y : tcomp G B Z b
   | succ a =>
     cases b with
     | zero =>
-      rw [tder_lof_zero, TensorProduct.tmul_zero, map_zero, map_zero, zero_add]
+      rw [tder_lof_zero]
+      erw [TensorProduct.tmul_zero, map_zero]
+      rw [zero_add]
       change tder G D (Y ⊗ Z) (tlof G B (Y ⊗ Z) (a + 1) _) = _
       rw [tder_lof_succ, tder_lof_succ, tensorG_μ_lof, tensorG_map_lof, ← μ_whiskerRight_apply,
         map_map_apply, map_map_apply, map_map_apply]
@@ -514,11 +519,17 @@ theorem tder_μ (Y Z : C) (p : (tensorG G B).obj Y) (q : (tensorG G B).obj Z) :
   | h0 => simp [mulSnd]
   | hof a x =>
     induction q using tensorG_induction G with
-    | h0 => simp [mulSnd]
+    | h0 =>
+      simp only [mulSnd]
+      erw [TensorProduct.tmul_zero, TensorProduct.tmul_zero]
+      simp
     | hof b y => exact tder_μ_lof G D Y Z a b x y
     | hadd q q' hq hq' =>
-      rw [TensorProduct.tmul_add, map_add, map_add, hq, hq']
+      erw [TensorProduct.tmul_add]
+      rw [map_add, map_add, hq, hq']
       simp only [mulSnd, map_add, TensorProduct.tmul_add, TensorProduct.add_tmul]
+      erw [TensorProduct.tmul_add]
+      simp only [map_add]
       abel
   | hadd p p' hp hp' =>
     rw [TensorProduct.add_tmul, map_add, map_add, hp, hp']

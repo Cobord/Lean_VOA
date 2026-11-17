@@ -205,7 +205,7 @@ theorem aExpCZm1_comp_EminusC1 (N : ℤ) (hN : 0 ≤ N) (b : ℤ) :
               (-(2 : ℂ) * ((i : ℂ) + 1)) • g (i + j + 1))
           = ∑ s ∈ Finset.range (N.toNat + 1), ((-1 : ℂ) * ((s : ℂ) * ((s : ℂ) + 1))) • g s := by
         have key := partB_reindex (M := Module.End ℂ B) (fun s => (-1 : ℂ) • g s) N.toNat
-          (fun s hs => by simp only []; rw [hgzero s hs, smul_zero])
+          (fun s hs => by (try simp only []); rw [hgzero s hs, smul_zero])
         -- Massage `partB_reindex` (with `(-1)•g`) into our negated-kernel form.
         rw [show (fun j => ∑ i ∈ Finset.range (N.toNat + 1),
               (-(2 : ℂ) * ((i : ℂ) + 1)) • g (i + j + 1))
@@ -215,7 +215,7 @@ theorem aExpCZm1_comp_EminusC1 (N : ℤ) (hN : 0 ≤ N) (b : ℤ) :
             rw [smul_smul]; congr 1; ring]
         rw [key]
         refine Finset.sum_congr rfl fun s _ => ?_
-        simp only []
+        try simp only []
         rw [smul_smul]; congr 1; ring
       -- Step 4: combine Part A + Part B; the `[1]·N` kernel survives, cancel `N⁻¹·N`.
       rw [hLHS, Finset.sum_congr rfl hterm]
@@ -544,7 +544,7 @@ theorem G3_support_finite (C D : ℤ) (x : B) : (Function.support (G3 C D x)).Fi
   intro qpm hqpm
   obtain ⟨q, p, m⟩ := qpm
   rw [Function.mem_support, G3] at hqpm
-  simp only at hqpm
+  try simp only at hqpm
   have hqS : q ∈ Sq := by
     rw [hSq, Function.mem_support]; intro h
     exact hqpm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -691,7 +691,7 @@ theorem G3'_support_finite (C D : ℤ) (x : B) : (Function.support (G3' C D x)).
   intro pqm hpqm
   obtain ⟨p, q, m⟩ := pqm
   rw [Function.mem_support, G3pre] at hpqm
-  simp only at hpqm
+  try simp only at hpqm
   have hpS : p ∈ Sp := by
     rw [hSp, Function.mem_support]; intro h
     exact hpqm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -999,7 +999,7 @@ theorem Yemα_cross_bracket_sdiff :
           fun a₁ a₂ b₁ b₂ c₁ c₂ d₁ d₂ => by abel]
       rw [h1, h2, add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero]; simp only [map_zero, sub_zero, sub_self]
       | add g1 g2 h1 h2 =>
           erw [TensorProduct.tmul_add]
@@ -1010,7 +1010,8 @@ theorem Yemα_cross_bracket_sdiff :
               fun a₁ a₂ b₁ b₂ c₁ c₂ d₁ d₂ => by abel]
           rw [h1, h2, add_zero]
       | single n a =>
-          rw [(Finsupp.smul_single_one n a).symm]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul]
           simp only [map_smul, ← smul_sub]
           erw [Yemα_cross_bracket_sdiff_on_state]

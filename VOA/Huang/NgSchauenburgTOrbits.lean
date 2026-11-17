@@ -58,7 +58,7 @@ theorem generalizedIndicatorInt_mul_degree (F : SphericalFusion C) (A : Center C
   have h := generalizedIndicatorAll_add_mul_degree F A V ht hj (n + 1 : ℕ) 0 k
   have hp : (0 : ℤ) < (n + 1 : ℕ) := by omega
   simpa only [generalizedIndicatorAll, if_pos hp, Int.toNat_natCast,
-    Nat.add_sub_cancel, zero_add, generalizedIndicatorInt_zero] using h
+    Nat.add_sub_cancel, zero_add, generalizedIndicatorInt_zero] using! h
 
 /-- From second index zero, T shifts reach precisely the multiples of the degree. -/
 theorem tShift_zero_reachable_iff (m l : ℤ) :

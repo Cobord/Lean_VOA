@@ -310,7 +310,8 @@ def counitHom : vObj G hfg ⟶ (unitObject : LogModuleCat (orbifoldVOA G)) :=
     rw [map_smul, map_sum]
     congr 1
     refine Finset.sum_congr rfl fun g _ => ?_
-    rw [Aut.map_smul, u.2 g g.2]
+    refine (Aut.map_smul (g : Aut W) (u : V) n x).trans ?_
+    rw [u.2 g g.2]
     rfl⟩
 
 theorem counitHom_apply (x : V) : (counitHom G hfg).1 x = averageLinear G x := rfl

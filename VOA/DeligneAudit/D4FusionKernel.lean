@@ -181,7 +181,7 @@ def d4KernelTable : KernelTable D4sector where
   lowExp_le i _ := d4_lowExp_le i
   simple i _ h1 := by
     obtain ⟨e, he, hc, h2, h3⟩ := d4_simple' i h1
-    exact ⟨e, 1, he, fun c hf => Or.inl (hc c hf), by simpa using h2, fun d => by simpa using h3 d⟩
+    exact ⟨e, 1, he, fun c hf => Or.inl (hc c hf), by simpa using! h2, fun d => by simpa using! h3 d⟩
   eθ := (15 : Fin 28)
   sθ := -1
   eθ_raising := show 4 ≤ ((15 : Fin 28) : ℕ) ∧ ((15 : Fin 28) : ℕ) < 16 by decide

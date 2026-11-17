@@ -121,7 +121,9 @@ namespace BottomSurvives
 
 variable {W}
 
-/-- **The main theorem.** The defect-quotient lifting hypothesis assembles into the abstract
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The main theorem.** The defect-quotient lifting hypothesis assembles into the abstract
 `InducedAssignment W` — the Frenkel–Zhu lifting datum of Theorem 5.3.4. Every field is supplied:
 `realize` and `isoInvariant` directly, and the abstract `realizes` field is exactly the
 bottom-survival crux `survives`. From it, `invFun` and the round-trip `forwardMap ∘ invFun = id`
@@ -136,7 +138,9 @@ def toInducedAssignment (B : BottomSurvives W) : InducedAssignment W where
 
 end BottomSurvives
 
-/-- **`InducedAssignment W` from bottom survival.** The lifting direction of the Zhu bijection
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`InducedAssignment W` from bottom survival.** The lifting direction of the Zhu bijection
 (Theorem 5.3.4) is realized the instant the defect-quotient construction `U ↦ M̄(U)` satisfies bottom
 survival (`survives`) and functoriality (`isoInvariant`). The carrier, field `Y_{M̄(U)}`, module
 Jacobi 5.3.1b and the `ℂ`-grading are all unconditional (proved in the architecture); this wires the

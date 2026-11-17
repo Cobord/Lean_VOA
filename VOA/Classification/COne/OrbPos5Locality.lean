@@ -67,7 +67,7 @@ theorem resc_coefficientField_mem {n : ℕ} (hn : 0 < n) (a j β e : ℤ)
   · exact Submodule.zero_mem _
 
 /-- Rescaling is linear in the fractional mode family. -/
-def rescaleLinear (n : ℕ) (e : ℤ) : Modes →ₗ[ℂ] FormalDist (Module.End ℂ Space) where
+noncomputable def rescaleLinear (n : ℕ) (e : ℤ) : Modes →ₗ[ℂ] FormalDist (Module.End ℂ Space) where
   toFun F := resc F n e
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -86,8 +86,8 @@ theorem resc_shiftedY_mem {n : ℕ} (hn : 0 < n) (a j e : ℤ) (u : Space) :
     apply Submodule.span_le.mpr
     rintro _ ⟨⟨p, β⟩, rfl⟩
     change resc (shiftedY n a j (latStateGen (latP 1) p β)) n e ∈ ordinaryShiftSpan j
-    rw [shiftedY_latState]
-    exact resc_sectorField_mem hn a j β e p
+    exact (congrArg (fun F => resc F n e ∈ ordinaryShiftSpan j)
+      (shiftedY_latState n a j β p)).mpr (resc_sectorField_mem hn a j β e p)
   have hu : u ∈ (ordinaryShiftSpan j).comap
       ((rescaleLinear n e).comp (shiftedY n a j)) := by rw [ht]; trivial
   exact hu

@@ -33,7 +33,6 @@ theorem screeningFunctional_raising_range (r s t n : ℕ) (d : ℕ →₀ ℕ)
   · intro i hi
     have he := Finsupp.le_weight_of_ne_zero' (fun k : ℕ => k+1)
       (Finsupp.mem_support_iff.mp hi)
-    dsimp only at he
     exact Finset.mem_range.mpr (by omega)
   · intro i hi hni
     simp [Finsupp.notMem_support_iff.mp hni]
@@ -42,7 +41,7 @@ theorem screeningFunctional_raising_range (r s t n : ℕ) (d : ℕ →₀ ℕ)
 residue of the power-sum raising derivation. -/
 theorem screeningFockState_shift_functional (r s t n : ℕ) (β : ℚ) (d : ℕ →₀ ℕ)
     (hd : Finsupp.weight (fun k => k+1) d + n = r*s) :
-    coeff (fockOccupation d) (fockShiftDerivation n (screeningFockState r s t β)) =
+    (fockShiftDerivation n (screeningFockState r s t β)).coeff (fockOccupation d) =
       ((screeningPrefactor β d * screeningFunctional r s t
         (powerSumRaising n (monomial d 1))) : ℂ) := by
   rw [screeningFockState_shift_coeff r s t n β d hd,
@@ -54,7 +53,7 @@ power-sum variable into the residue. -/
 theorem screeningFockState_derivative_functional (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (i : ℕ)
     (hd : Finsupp.weight (fun k => k+1) d + (i+1) = r*s) :
-    coeff (fockOccupation d) (pderiv (i,0) (screeningFockState r s t β)) =
+    (pderiv (i,0) (screeningFockState r s t β)).coeff (fockOccupation d) =
       ((β / ((i+1:ℕ):ℚ) * screeningPrefactor β d *
         screeningFunctional r s t (X i * monomial d 1)) : ℂ) := by
   rw [screeningFockState_pderiv_coeff r s t β d i hd, screeningFunctional_apply]
@@ -65,7 +64,7 @@ theorem screeningFockState_derivative_functional (r s t : ℕ) (β : ℚ)
 first power sum; the repeated-occupation factorial is already cancelled. -/
 theorem screeningFockState_second_derivative_functional (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (hd : Finsupp.weight (fun k => k+1) d + 2 = r*s) :
-    coeff (fockOccupation d) (pderiv (0,0) (pderiv (0,0) (screeningFockState r s t β))) =
+    (pderiv (0,0) (pderiv (0,0) (screeningFockState r s t β))).coeff (fockOccupation d) =
       ((β^2 * screeningPrefactor β d *
         screeningFunctional r s t (X 0 ^ 2 * monomial d 1)) : ℂ) := by
   have hw : Finsupp.weight (fun k => k+1) d + (0+1) + (0+1) = r*s := by omega
@@ -81,12 +80,12 @@ theorem screeningFockState_second_derivative_functional (r s t : ℕ) (β : ℚ)
 the first residue Ward expression, before the parameter substitution. -/
 theorem screeningFockState_L1_coefficient (r s t : ℕ) (β ell p : ℚ)
     (d : ℕ →₀ ℕ) (hd : Finsupp.weight (fun k => k+1) d + 1 = r*s) :
-    coeff (fockOccupation d)
-      (sectorVirasoro (ell:ℂ) (p:ℂ) 1 (screeningFockState r s t β)) =
+    (sectorVirasoro (ell:ℂ) (p:ℂ) 1 (screeningFockState r s t β)).coeff
+      (fockOccupation d) =
       ((screeningPrefactor β d *
         (screeningFunctional r s t (powerSumRaising 1 (monomial d 1)) +
           2*β*(p-2*ell)*screeningFunctional r s t (X 0 * monomial d 1))) : ℂ) := by
-  rw [sectorVirasoro_one_differential, coeff_add, coeff_smul,
+  rw [sectorVirasoro_one_differential, MvPolynomial.coeff_add, MvPolynomial.coeff_smul,
     screeningFockState_shift_functional r s t 1 β d hd,
     screeningFockState_derivative_functional r s t β d 0 hd]
   push_cast
@@ -97,13 +96,14 @@ theorem screeningFockState_L1_coefficient (r s t : ℕ) (β ell p : ℚ)
 the raising term, beta squared times p1 squared, and the momentum term p2. -/
 theorem screeningFockState_L2_coefficient (r s t : ℕ) (β ell p : ℚ)
     (d : ℕ →₀ ℕ) (hd : Finsupp.weight (fun k => k+1) d + 2 = r*s) :
-    coeff (fockOccupation d)
-      (sectorVirasoro (ell:ℂ) (p:ℂ) 2 (screeningFockState r s t β)) =
+    (sectorVirasoro (ell:ℂ) (p:ℂ) 2 (screeningFockState r s t β)).coeff
+      (fockOccupation d) =
       ((screeningPrefactor β d *
         (screeningFunctional r s t (powerSumRaising 2 (monomial d 1)) +
           β^2*screeningFunctional r s t (X 0 ^ 2 * monomial d 1) +
           2*β*(p-3*ell)*screeningFunctional r s t (X 1 * monomial d 1))) : ℂ) := by
-  rw [sectorVirasoro_two_differential, coeff_add, coeff_add, coeff_smul,
+  rw [sectorVirasoro_two_differential, MvPolynomial.coeff_add, MvPolynomial.coeff_add,
+    MvPolynomial.coeff_smul,
     screeningFockState_shift_functional r s t 2 β d hd,
     screeningFockState_second_derivative_functional r s t β d hd,
     screeningFockState_derivative_functional r s t β d 1 hd]

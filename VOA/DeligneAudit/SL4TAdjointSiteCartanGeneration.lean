@@ -131,7 +131,7 @@ theorem mixedAlphabetPowerSum_outer_label_one (B : ℕ) (d : Fin 3 → ℕ) (e�
     rcases hi with rfl | rfl
     · by_cases hlt : d 0 < k
       · exact mixedRelation_zero q hv _
-          (Or.inl ⟨0, k, by simpa [hq, mixedLengths, mixedLabelBlockParams] using hlt, rfl⟩)
+          (Or.inl ⟨0, k, by simpa [hq, mixedLengths, mixedLabelBlockParams] using! hlt, rfl⟩)
       · obtain ⟨rfl, hd⟩ : k = 1 ∧ d 0 = 1 := by omega
         have hh : mixedE 0 1 = mixedH 0 1 := by simp [mixedE, mixedH, complete_one]
         rw [hh]
@@ -139,7 +139,7 @@ theorem mixedAlphabetPowerSum_outer_label_one (B : ℕ) (d : Fin 3 → ℕ) (e�
           by simp [hq, mixedLabelBlockParams, hd], by simp [hq, mixedLabelBlockParams], rfl⟩))
     · by_cases hlt : d 2 < k
       · exact mixedRelation_zero q hv _
-          (Or.inl ⟨2, k, by simpa [hq, mixedLengths, mixedLabelBlockParams] using hlt, rfl⟩)
+          (Or.inl ⟨2, k, by simpa [hq, mixedLengths, mixedLabelBlockParams] using! hlt, rfl⟩)
       · obtain ⟨rfl, hd⟩ : k = 1 ∧ d 2 = 1 := by omega
         have hh : mixedE 2 1 = mixedH 2 1 := by simp [mixedE, mixedH, complete_one]
         rw [hh]

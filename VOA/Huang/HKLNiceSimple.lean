@@ -72,7 +72,7 @@ theorem L_one_weight_one (hV : Nice V) (A : Ordinary V) {x : A.carrier}
         hom_mem_weight (A₂ := (g j).isMod) (A₃ := adjointModule V) s.inv.property hy
       have hz1 : s.inv.val y ∈ V.grading 1 := by
         have : (adjointModule V).weight ((1 : ℤ) : ℂ) = V.grading 1 := adjWeight_cast V 1
-        rw [← this]; simpa using hz
+        rw [← this]; simpa using! hz
       have hL : mode ((vacuumObject (W := V)).isMod.YM V.conformalVector) 2 (s.inv.val y) = 0 :=
         hV.1.L_one_grading_one_eq_zero hz1
       have : y = s.hom.val (s.inv.val y) := by
@@ -159,7 +159,7 @@ theorem extVOA_isSimple (hV : Nice V) (hhap : finrank ℂ (vacuumObject ⟶ A) =
     left
     have hzero : tensorHom F (𝟙 A) f ≫ m ≫ q = 0 := by
       refine tensor_hom_ext F _ _ fun n a x => ?_
-      simp only [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
+      refine (congrArg (fun z => (m ≫ q).val z) (tensorHom_intertwiner F (𝟙 A) f n a x)).trans ?_
       change q.val ((extIntertwiner F m).val n a (Subtype.val (x : P.carrier))) = 0
       exact hq _ (ext_mem_ideal I hI n a (x : P.carrier).property)
     have hf := hker X f hzero
@@ -215,7 +215,7 @@ theorem extVOA_isSimple (hV : Nice V) (hhap : finrank ℂ (vacuumObject ⟶ A) =
       have h := hproj ⟨x, hx⟩
       have hvac0 : V.vacuum ∈ (adjointModule V).weight 0 := by
         have := vacuum_mem_adj (V := V)
-        simpa using this
+        simpa using! this
       change ((weightProj (adjointModule V) 0 (qv x) : _) : 𝒱) ∈ S at h
       rw [hqx, show weightProj (adjointModule V) 0 V.vacuum = ⟨V.vacuum, hvac0⟩ from
         weightProj_apply_self (adjointModule V) 0 ⟨V.vacuum, hvac0⟩] at h
@@ -248,7 +248,7 @@ theorem extVOA_L_one (hV : Nice V) {v : A.carrier}
     ext_unit_left_int F m η hl]
   have hv1 : v ∈ A.isMod.weight 1 := by
     have := (extVOA_grading (F := F) (m := m) (η := η) hl hr htw hloc hvac hpos 1) ▸ hv
-    simpa using this
+    simpa using! this
   exact L_one_weight_one hV A hv1
 
 /-- **The extension is self-dual** (simple + `L₁W₁ = 0`). -/

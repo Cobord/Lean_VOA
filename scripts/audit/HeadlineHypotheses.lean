@@ -32,7 +32,7 @@ open Lean Meta Elab Command
               let d ← x.fvarId!.getDecl
               if d.binderInfo.isExplicit && (← isProp d.type) then
                 let s := toString (← ppExpr d.type)
-                hs := hs.push ((s.replace "\n" " ").take 160)
+                hs := hs.push ((s.replace "\n" " ").take 160).toString
             return hs
           let axs ← Lean.collectAxioms n
           return (hyps, axs)

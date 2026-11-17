@@ -66,7 +66,7 @@ def radicalSecondLeviRelativeEvaluation :
           apply Subtype.ext
           have hz := radicalSecondLeviRelativeIdeal_le_relations ρ w a b c h d e₁ e₂ hm
             hP (1 : RadicalGrassmannianRing a b c d)
-          simpa only [map_one, one_mul] using hz)
+          simpa only [map_one, one_mul] using! hz)
 
 set_option synthInstance.maxHeartbeats 100000 in
 -- The coefficient algebra is a tensor product of three Grassmannian quotient rings.

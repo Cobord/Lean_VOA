@@ -54,7 +54,7 @@ theorem symmetricShiftAction_mem_of_intertwine
   have hh := hInv r _ hU
   rw [modeWordEvaluation_psum_intertwine f (H r) (c r) r (hmono r) U] at hh
   have hscaled := N.smul_mem (c r)⁻¹ hh
-  simpa only [smul_smul, inv_mul_cancel₀ (hc r), one_smul] using hscaled
+  simpa only [smul_smul, inv_mul_cancel₀ (hc r), one_smul] using! hscaled
 
 end VOA.DeligneAudit.D4Levi
 

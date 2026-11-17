@@ -57,7 +57,7 @@ theorem endpoint_middle_product_mem (i j : Fin 9) (z : MiddlePair b) :
   have hh := (Submodule.subset_span (R := ℂ)
     (s := Set.range fun w : LowEnergyWord b => polyWord w.val) ⟨⟨l,hl⟩,rfl⟩)
   simpa only [energySpan,l,polyWord,List.map_cons,List.map_nil,List.prod_cons,
-    List.prod_nil,mul_one,mul_assoc] using hh
+    List.prod_nil,mul_one,mul_assoc] using! hh
 
 theorem endpoint_middle_mem (i j : Fin 9) {p : MvPolynomial (Vars m) ℂ}
     (hp : p ∈ middleSpan b) :
@@ -68,9 +68,9 @@ theorem endpoint_middle_mem (i j : Fin 9) {p : MvPolynomial (Vars m) ℂ}
       exact endpoint_middle_product_mem b i j z
   | zero => simp only [mul_zero]; exact (energySpan b).zero_mem
   | add p q _ _ ihp ihq =>
-      simpa only [mul_add] using (energySpan b).add_mem ihp ihq
+      simpa only [mul_add] using! (energySpan b).add_mem ihp ihq
   | smul a p _ ih =>
-      simpa only [mul_smul_comm] using (energySpan b).smul_mem a ih
+      simpa only [mul_smul_comm] using! (energySpan b).smul_mem a ih
 
 def leviCurrent : Fin 3 → Fin 10 := ![7,8,9]
 

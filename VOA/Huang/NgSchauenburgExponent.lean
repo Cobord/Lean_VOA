@@ -47,9 +47,9 @@ theorem phases_eq_one_of_weighted_sum {J : Type*} [Fintype J]
   have hnorm := Complex.sq_norm_sub_sq_re (t i)
   rw [ht, hre] at hnorm
   apply Complex.ext
-  · simpa using hre
+  · simpa using! hre
   · have : (t i).im = 0 := by nlinarith [sq_nonneg (t i).im]
-    simpa using this
+    simpa using! this
 
 attribute [-instance] hasRightDualUnit hasRightDualLeftDual
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] [RightRigidCategory C]
@@ -117,7 +117,7 @@ theorem isFSExponent_iff_twistOrder_dvd_of_bantay
       · intro i
         simp [norm_pow, M.toRibbon.twistScalar_isOfFinOrder i |>.norm_eq_one]
       · simp [M.toRibbon.twistScalar_unitLabel]
-      · simpa only [hD, hd, div_pow] using hsum
+      · simpa only [hD, hd, div_pow] using! hsum
     rw [Ribbon.twistOrder, orderOf_dvd_iff_pow_eq_one]
     funext i
     exact ht i

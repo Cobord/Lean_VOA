@@ -39,7 +39,7 @@ theorem root_hf_table :
 theorem root_ef_cartan_supportC (j : Fin 6) (c : Fin 28)
     (hc : 4 ≤ c.val) :
     fD4 (positiveColour j) (radicalColour j) c = 0 := by
-  simpa only [fD4, fC, fZ, Int.cast_zero] using
+  simpa only [fD4, fC, fZ, Int.cast_zero] using!
     congrArg (fun n : ℤ => (n : ℂ))
       (root_ef_cartan_support j c hc)
 
@@ -50,7 +50,7 @@ theorem root_hf_tableC (j : Fin 6) (d : Fin 28) :
           fD4 c (radicalColour j) d) =
       if d = radicalColour j then (-2 : ℂ) else 0 := by
   simpa only [fD4, fC, fZ, Int.cast_mul, Int.cast_sum, Int.cast_ite,
-    Int.cast_ofNat, Int.cast_neg, Int.cast_zero] using
+    Int.cast_ofNat, Int.cast_neg, Int.cast_zero] using!
       congrArg (fun n : ℤ => (n : ℂ)) (root_hf_table j d)
 
 end VOA.DeligneAudit.D4Levi

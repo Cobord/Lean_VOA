@@ -158,7 +158,9 @@ theorem neededSliceMems_of_two (W : VertexOperatorAlgebra 𝒱)
 
 /-! ## The collapse-only hinge — DJ Lemma 2.8 discharged. -/
 
-/-- **`phase4_of_collapse` — the faithful Zhu 5.3.4 bijection, DJ Lemma 2.8 discharged.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_collapse` — the faithful Zhu 5.3.4 bijection, DJ Lemma 2.8 discharged.**
 `phase4_of_dj28_full` fed the unconditional `dj28IntoFull_unconditional`; the only remaining
 mathematical inputs are the collapse `∀ n, OnmCollapses W n` (the DJ 2.6/2.7 into-`O'` content) and
 the generalized-Verma `M(U)` construction data (`A`/`hirr`/`F`/`hiso`/`G`). -/

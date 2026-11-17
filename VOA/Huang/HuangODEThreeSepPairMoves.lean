@@ -202,7 +202,7 @@ theorem pairSeries_terminal
 
 theorem negOnePow_mul_cbz_neg_one (j : ℕ) : negOnePow (j : ℤ) * cbz (-1) (j : ℤ) = 1 := by
   have h := negOnePow_mul_cbz_neg_one_sub 0 j
-  simpa using h
+  simpa using! h
 
 theorem negOnePow_neg_one' : negOnePow (-1 : ℤ) = -1 := by
   simp

@@ -65,12 +65,12 @@ def grpL : (P : List ℕ) → Fin (tsL P) → ℕ
   | _ :: P => Fin.append (fun _ : Fin (nbL P) => 0) (fun v => grpL P v + 1)
 
 theorem rhoL_cons_castAdd (r : ℕ) (P : List ℕ) (i : Fin (nbL P)) :
-    rhoL (r :: P) (Fin.castAdd (tsL P) i) = Fin.natAdd r i := by
-  simp [rhoL, Fin.append_left]
+    rhoL (r :: P) (Fin.castAdd (tsL P) i) = Fin.natAdd r i :=
+  Fin.append_left (Fin.natAdd r) (fun v => Fin.natAdd r (rhoL P v)) i
 
 theorem rhoL_cons_natAdd (r : ℕ) (P : List ℕ) (v : Fin (tsL P)) :
-    rhoL (r :: P) (Fin.natAdd (nbL P) v) = Fin.natAdd r (rhoL P v) := by
-  simp [rhoL, Fin.append_right]
+    rhoL (r :: P) (Fin.natAdd (nbL P) v) = Fin.natAdd r (rhoL P v) :=
+  Fin.append_right (Fin.natAdd r) (fun v => Fin.natAdd r (rhoL P v)) v
 
 theorem grpL_cons_castAdd (r : ℕ) (P : List ℕ) (i : Fin (nbL P)) :
     grpL (r :: P) (Fin.castAdd (tsL P) i) = 0 := by
@@ -130,41 +130,48 @@ theorem card_rhoL : ∀ (P : List ℕ) (b : Fin (nbL P)),
     (Finset.univ.filter fun v => rhoL P v = b).card = colL P b
   | [], b => Fin.elim0 b
   | r :: P, b => by
-    show (Finset.univ.filter fun v : Fin (nbL P + tsL P) => rhoL (r :: P) v = b).card = _
-    rw [card_filter_fin_add (m := nbL P) (n := tsL P)]
-    revert b
-    refine fun b => Fin.addCases (fun i => ?_) (fun b' => ?_) b
-    · rw [colL_cons_castAdd]
-      have h1 : (Finset.univ.filter fun i' : Fin (nbL P) =>
-          rhoL (r :: P) (Fin.castAdd (tsL P) i') = Fin.castAdd (nbL P) i) = ∅ := by
-        ext i'
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
-        rw [rhoL_cons_castAdd]
-        intro h; exact absurd (congrArg Fin.val h) (by simp; omega)
-      have h2 : (Finset.univ.filter fun v : Fin (tsL P) =>
-          rhoL (r :: P) (Fin.natAdd (nbL P) v) = Fin.castAdd (nbL P) i) = ∅ := by
-        ext v
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
-        rw [rhoL_cons_natAdd]
-        intro h; exact absurd (congrArg Fin.val h) (by simp; omega)
-      rw [h1, h2]; rfl
-    · rw [colL_cons_natAdd, ← card_rhoL P b']
-      have h1 : (Finset.univ.filter fun i' : Fin (nbL P) =>
-          rhoL (r :: P) (Fin.castAdd (tsL P) i') = Fin.natAdd r b').card = 1 := by
-        rw [Finset.card_eq_one]
-        refine ⟨b', ?_⟩
-        ext j
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-        rw [rhoL_cons_castAdd]
-        exact ⟨fun h => Fin.natAdd_injective (nbL P) r h, fun h => h ▸ rfl⟩
-      have h2 : (Finset.univ.filter fun v : Fin (tsL P) =>
-          rhoL (r :: P) (Fin.natAdd (nbL P) v) = Fin.natAdd r b') =
-            (Finset.univ.filter fun v => rhoL P v = b') := by
-        ext v
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [rhoL_cons_natAdd]
-        exact ⟨fun h => Fin.natAdd_injective (nbL P) r h, fun h => h ▸ rfl⟩
-      rw [h1, h2, add_comm]
+    -- Lean 4.35 port: work with a map typed `Fin (nbL P + tsL P) → Fin (r + nbL P)`, so that the
+    -- `Decidable` instances are found without unfolding `tsL`/`nbL`.
+    have key : ∀ f : Fin (nbL P + tsL P) → Fin (r + nbL P),
+        (∀ i, f (Fin.castAdd (tsL P) i) = Fin.natAdd r i) →
+        (∀ v, f (Fin.natAdd (nbL P) v) = Fin.natAdd r (rhoL P v)) →
+        ∀ c : Fin (r + nbL P), (Finset.univ.filter fun v => f v = c).card = colL (r :: P) c := by
+      intro f hf1 hf2 c
+      rw [card_filter_fin_add (m := nbL P) (n := tsL P)]
+      revert c
+      refine fun c => Fin.addCases (fun i => ?_) (fun b' => ?_) c
+      · rw [colL_cons_castAdd]
+        have h1 : (Finset.univ.filter fun i' : Fin (nbL P) =>
+            f (Fin.castAdd (tsL P) i') = Fin.castAdd (nbL P) i) = ∅ := by
+          ext i'
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
+          rw [hf1]
+          intro h; exact absurd (congrArg Fin.val h) (by simp; omega)
+        have h2 : (Finset.univ.filter fun v : Fin (tsL P) =>
+            f (Fin.natAdd (nbL P) v) = Fin.castAdd (nbL P) i) = ∅ := by
+          ext v
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
+          rw [hf2]
+          intro h; exact absurd (congrArg Fin.val h) (by simp; omega)
+        rw [h1, h2]; rfl
+      · rw [colL_cons_natAdd, ← card_rhoL P b']
+        have h1 : (Finset.univ.filter fun i' : Fin (nbL P) =>
+            f (Fin.castAdd (tsL P) i') = Fin.natAdd r b').card = 1 := by
+          rw [Finset.card_eq_one]
+          refine ⟨b', ?_⟩
+          ext j
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
+          rw [hf1]
+          exact ⟨fun h => Fin.natAdd_injective (nbL P) r h, fun h => h ▸ rfl⟩
+        have h2 : (Finset.univ.filter fun v : Fin (tsL P) =>
+            f (Fin.natAdd (nbL P) v) = Fin.natAdd r b') =
+              (Finset.univ.filter fun v => rhoL P v = b') := by
+          ext v
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+          rw [hf2]
+          exact ⟨fun h => Fin.natAdd_injective (nbL P) r h, fun h => h ▸ rfl⟩
+        rw [h1, h2, add_comm]
+    exact key (rhoL (r :: P)) (rhoL_cons_castAdd r P) (rhoL_cons_natAdd r P) b
 
 /-! ### Slot assignments: abstract combinatorics -/
 
@@ -269,7 +276,7 @@ theorem grp_lt_of_sum_eq {Θ : Fin s → Fin K} {grp : Fin s → ℕ} (hv : Vali
     · rw [hall]
   have hvmem : v ∈ (Finset.univ.filter fun w => Θ w = Θ v) := by simp
   rw [← hsub] at hvmem
-  simpa using hvmem
+  simpa using! hvmem
 
 /-- **Copy images**: under the conclusion of `grp_lt_of_sum_eq`, a block meets copy `i` iff
 `i` is below its size. -/
@@ -360,7 +367,7 @@ theorem gFS_vanish : ∀ (P : List ℕ) (x : ExpL P) {K : ℕ} (f : Fin (tsL P) 
 theorem exists_perm_of_range_eq {N K : ℕ} {φ ψ : Fin N → Fin K} (hφ : Function.Injective φ)
     (hψ : Function.Injective ψ) (h : Set.range φ = Set.range ψ) :
     ∃ π : Equiv.Perm (Fin N), ∀ i, ψ i = φ (π i) := by
-  refine ⟨(Equiv.ofInjective ψ hψ).trans ((Equiv.setCongr h.symm).trans
+  refine ⟨(Equiv.ofInjective ψ hψ).trans ((Set.equivOfEq h.symm).trans
     (Equiv.ofInjective φ hφ).symm), fun i => ?_⟩
   simp only [Equiv.trans_apply]
   rw [Equiv.apply_ofInjective_symm hφ]
@@ -384,12 +391,14 @@ theorem gFS_rename_congr : ∀ (P : List ℕ) (x : ExpL P) {K : ℕ} (f g : Fin 
       rename f (gFS P x) = rename g (gFS P x)
   | [], _, _, _, _, _, _, _ => by simp [gFS]
   | r :: P, x, K, f, g, hf, hg, himg => by
-    suffices key : ∀ f' g' : Fin (nbL P + tsL P) → Fin K, f = f' → g = g' →
+    suffices key : ∀ f' g' : Fin (nbL P + tsL P) → Fin K, f' = f → g' = g →
         rename f' (rename (Fin.castAdd (tsL P)) (vdm (nbL P) * topL P x.2) *
           rename (Fin.natAdd (nbL P)) (gFS P x.2)) =
         rename g' (rename (Fin.castAdd (tsL P)) (vdm (nbL P) * topL P x.2) *
           rename (Fin.natAdd (nbL P)) (gFS P x.2)) from key f g rfl rfl
-    intro f' g' hf' hg'
+    -- Lean 4.35 port: eliminate the original `f g` (typed `Fin (tsL (r :: P)) → Fin K`) in favour
+    -- of the shadowing `f g : Fin (nbL P + tsL P) → Fin K`, so `rename_rename` sees well-typed maps.
+    intro f g hf' hg'
     subst hf' hg'
     have hAsymm : Symm (vdm (nbL P) * topL P x.2) := Symm.mul (vdm_symm _) (topL_symm P x.2)
     generalize vdm (nbL P) * topL P x.2 = A at hAsymm ⊢
@@ -475,9 +484,9 @@ theorem fFS_collKill (P : List ℕ) (hP : P ≠ []) (x : ExpL P) :
   have hS : P.length ≤ S.card := by
     have : S.card = (Finset.univ.filter fun v => ρ v = b).card := by
       apply Finset.card_bij (fun v _ => σ v)
-      · intro v hv; simpa [S] using hv
+      · intro v hv; simpa [S] using! hv
       · intro v _ w _ h; exact σ.injective h
-      · intro w hw; exact ⟨σ.symm w, by simpa [S] using hw, by simp⟩
+      · intro w hw; exact ⟨σ.symm w, by simpa [S] using! hw, by simp⟩
     rw [this]; exact hcard
   have hmaps : ∀ v ∈ S, grpL P v ∈ Finset.range (P.length - 1) := by
     intro v _
@@ -504,12 +513,11 @@ theorem mainL_cons (r : ℕ) (P : List ℕ) (x : ExpL (r :: P)) :
         rename (Fin.natAdd (nbL P)) (gFS P x.2)) =
       rename (Fin.natAdd r) (vdm (nbL P) * topL P x.2 * mainL P x.2) := by
     intro ρ' hρ'
-    subst hρ'
     generalize vdm (nbL P) * topL P x.2 = A
     rw [map_mul, rename_rename, rename_rename, mainL, map_mul, rename_rename]
     congr 1
-    · congr 2; funext i; exact rhoL_cons_castAdd r P i
-    · congr 2; funext v; exact rhoL_cons_natAdd r P v
+    · congr 2; funext i; subst hρ'; exact rhoL_cons_castAdd r P i
+    · congr 2; funext v; subst hρ'; exact rhoL_cons_natAdd r P v
   exact key _ rfl
 
 /-- The product of the Vandermonde factors. -/
@@ -551,9 +559,9 @@ theorem VL_ne_zero : ∀ P : List ℕ, VL P ≠ 0
 theorem card_fiber_comp_equiv {s s' K : ℕ} (ρ : Fin s' → Fin K) (e : Fin s ≃ Fin s') (b : Fin K) :
     (Finset.univ.filter fun v => (ρ ∘ e) v = b).card = (Finset.univ.filter fun u => ρ u = b).card := by
   apply Finset.card_bij (fun v _ => e v)
-  · intro v hv; simpa using hv
+  · intro v hv; simpa using! hv
   · intro v _ w _ h; exact e.injective h
-  · intro u hu; exact ⟨e.symm u, by simpa using hu, by simp⟩
+  · intro u hu; exact ⟨e.symm u, by simpa using! hu, by simp⟩
 
 theorem rhoL_hlt (P : List ℕ) (v : Fin (tsL P)) :
     grpL P v < (Finset.univ.filter fun w => rhoL P w = rhoL P v).card := by
@@ -638,19 +646,24 @@ theorem cntL_cons_zero (r : ℕ) (P : List ℕ) : cntL (r :: P) 0 = 0 := by
 
 theorem cntL_cons_succ (r : ℕ) (P : List ℕ) (j : ℕ) :
     cntL (r :: P) (j + 1) = nbL P + cntL P j := by
-  unfold cntL
-  show (Finset.univ.filter fun v : Fin (nbL P + tsL P) => grpL (r :: P) v < j + 1).card = _
-  rw [card_filter_fin_add (m := nbL P) (n := tsL P)]
-  congr 1
-  · have : (Finset.univ.filter fun i : Fin (nbL P) =>
-        grpL (r :: P) (Fin.castAdd (tsL P) i) < j + 1) = Finset.univ := by
-      ext i; simp [grpL_cons_castAdd]
-    rw [this, Finset.card_univ, Fintype.card_fin]
-  · congr 1
-    ext v
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    rw [grpL_cons_natAdd]
-    omega
+  -- Lean 4.35 port: work with a map typed `Fin (nbL P + tsL P) → ℕ` (see `card_rhoL`).
+  have key : ∀ g : Fin (nbL P + tsL P) → ℕ, (∀ i, g (Fin.castAdd (tsL P) i) = 0) →
+      (∀ v, g (Fin.natAdd (nbL P) v) = grpL P v + 1) →
+      (Finset.univ.filter fun v => g v < j + 1).card = nbL P + cntL P j := by
+    intro g hg1 hg2
+    rw [card_filter_fin_add (m := nbL P) (n := tsL P)]
+    congr 1
+    · have : (Finset.univ.filter fun i : Fin (nbL P) =>
+          g (Fin.castAdd (tsL P) i) < j + 1) = Finset.univ := by
+        ext i; simp [hg1]
+      rw [this, Finset.card_univ, Fintype.card_fin]
+    · unfold cntL
+      congr 1
+      ext v
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [hg2]
+      omega
+  exact key (grpL (r :: P)) (grpL_cons_castAdd r P) (grpL_cons_natAdd r P)
 
 /-- **Profiles of equal length and block count with equal copy counts coincide.** -/
 theorem eq_of_cntL : ∀ (P P0 : List ℕ), P.length = P0.length → nbL P = nbL P0 →
@@ -664,8 +677,8 @@ theorem eq_of_cntL : ∀ (P P0 : List ℕ), P.length = P0.length → nbL P = nbL
     have h0 : cntL P 0 = 0 := by simp [cntL]
     have h0' : cntL P0 0 = 0 := by simp [cntL]
     rw [h0, h0'] at h1
-    have h1' : nbL P = nbL P0 := by simpa using h1
-    have hP : P = P0 := eq_of_cntL P P0 (by simpa using hl) h1' (fun j => by
+    have h1' : nbL P = nbL P0 := by simpa using! h1
+    have hP : P = P0 := eq_of_cntL P P0 (by simpa using! hl) h1' (fun j => by
       have := hc (j + 1)
       rw [cntL_cons_succ, cntL_cons_succ] at this
       omega)

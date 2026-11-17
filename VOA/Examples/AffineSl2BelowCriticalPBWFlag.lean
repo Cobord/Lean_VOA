@@ -113,7 +113,7 @@ theorem inversionCount_swap (pre post : List LexLetter) (a b : LexLetter) (hba :
   | cons q pre ih =>
       simp only [List.cons_append, inversionCount, List.filter_append, List.length_append,
         List.filter_cons]
-      split_ifs <;> simp only [List.length_cons] at ih ⊢ <;> omega
+      split_ifs <;> (try simp only [List.length_cons] at ih ⊢) <;> omega
 
 /-- A non-sorted list contains an adjacent inverted pair. -/
 theorem exists_adjacent_inversion_of_not_pairwise :
@@ -164,7 +164,7 @@ theorem lexState_adjacent_swap (pre post : List LexLetter) (a b : LexLetter) :
       rw [hm] at h
       rw [add_comm (∑ c : Fin 3, fabc (ofLex a).1 (ofLex b).1 c •
         J k c (-↑((ofLex a).2 + (ofLex b).2 + 1) - 1) (lexState k post))] at h
-      simpa only [lexState_cons, ofLex_toLex] using h
+      simpa only [lexState_cons, ofLex_toLex] using! h
   | cons q pre ih =>
       simp only [List.cons_append, lexState_cons]
       rw [ih, map_add, map_sum]
@@ -208,7 +208,7 @@ theorem lexState_mem_pbwSpan (l : List LexLetter) : lexState k l ∈ pbwSpan k h
     rw [lexState_adjacent_swap k]
     refine Submodule.add_mem _ ?_ (Submodule.sum_mem _ fun c _ =>
       Submodule.smul_mem _ _ (hbracket c))
-    simpa using hswap
+    simpa using! hswap
 termination_by (l.length, inversionCount l)
 decreasing_by
   · rw [heq]

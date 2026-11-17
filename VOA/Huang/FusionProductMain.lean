@@ -48,7 +48,7 @@ theorem nonempty_product (hV : StronglyRational W) (hΦ : Finite (Φ W))
     exact ⟨⟨i⟩, hi⟩
   have hneS : ∀ i j, LWModule.Iso W (S i) (S j) → i = j := by
     intro i j hij
-    exact ULift.ext _ _ (hne i.down j.down hij)
+    exact ULift.ext (hne i.down j.down hij)
   exact nonempty_product_of_finiteTargets hV A₁ A₂ S iS hneS
     (finiteTargets_of_stronglyRational hV hΦ S hS)
 

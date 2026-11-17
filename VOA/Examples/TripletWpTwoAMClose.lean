@@ -195,7 +195,7 @@ theorem chargeOsc_pos_ATwo (n : ℕ) (hn : 1 ≤ n) (i : ℕ) :
   by_cases hni : n = i + 1
   · rw [if_pos hni]
     rw [if_pos (by omega)] at h
-    simpa only [LinearMap.smul_apply, LinearMap.id_apply, Int.cast_ofNat] using h
+    simpa only [LinearMap.smul_apply, LinearMap.id_apply, Int.cast_ofNat, Int.cast_natCast] using h
   · rw [if_neg hni]
     rw [if_neg (by omega)] at h
     simpa using h
@@ -643,7 +643,6 @@ theorem eval_hProductPartTwo :
     aFieldActPoly, aFieldActWord, aFieldMode, aFieldCoeff, annihilateAWord,
     scaleAPoly, prependA, evalAPoly, evalAWord]
   norm_num [Finset.prod_range_succ]
-  rw [show Int.toNat 6 = 6 by norm_num [Int.toNat]]
   have h0 : ATwo 6 * (ATwo 0 * (ATwo 0 * (ATwo 0 * vacuumN (rank Ltwo)))) =
       ATwo 0 * (ATwo 0 * (ATwo 0 * (ATwo 6 * vacuumN (rank Ltwo)))) := by ring
   have h1 : ATwo 6 * (ATwo 0 * (ATwo 1 * vacuumN (rank Ltwo))) =
@@ -711,9 +710,6 @@ theorem Qwp_sq_neg_two_eq_EEVec (hp : 1 ≤ 2) :
   norm_num
   rw [cocycle_two, cocycle_two]
   simp only [one_smul]
-  change latStateGen Ltwo
-      (EEVec Ltwo alphaTwo 3 (vSchur Ltwo alphaTwo 7)) 0 = _
-  rfl
 
 /-- The screened side in the independently audited three-term Schur normal form. -/
 theorem Qwp_sq_neg_two_eq_schur (hp : 1 ≤ 2) :

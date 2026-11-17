@@ -20,7 +20,7 @@ theorem normalized_columns_separate (S : Matrix I I ℂ) (hS : IsUnit S)
     (h : ∀ i, S i k / d k = S i l / d l) : k = l := by
   have he : S.mulVec (Pi.single k (d k)⁻¹) = S.mulVec (Pi.single l (d l)⁻¹) := by
     ext i
-    simpa [Matrix.mulVec, dotProduct, Pi.single_apply, div_eq_mul_inv] using h i
+    simpa [Matrix.mulVec, dotProduct, Pi.single_apply, div_eq_mul_inv] using! h i
   have hv := Matrix.mulVec_injective_of_isUnit hS he
   by_contra hn
   have hk := congrFun hv k
@@ -70,7 +70,7 @@ theorem fusion_commutant_diagonal (F : SphericalFusion C) (M : Modular F)
   rw [categorical_verlinde_matrix F M] at hi
   have hs := isUnit_iff_ne_zero.mpr M.nondegenerate
   simpa only [Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ hs,
-    Matrix.nonsing_inv_mul _ hs, Matrix.mul_one] using hi
+    Matrix.nonsing_inv_mul _ hs, Matrix.mul_one] using! hi
 
 open Classical in
 /-- A diagonal fusion-commuting matrix is scalar, detected on the vacuum row. -/

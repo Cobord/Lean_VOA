@@ -126,7 +126,9 @@ theorem layer_conj_upper_lower (q : R) (hq : q * q = 0) (a : Rˣ) (ha : (a : R) 
   have hai := inv_val_of_sq_zero q hq a ha
   have hq2 : q ^ 2 = 0 := by rw [sq]; exact hq
   have hq3 : q ^ 3 = 0 := by rw [pow_succ, hq2, zero_mul]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [upperRoot, lowerRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, ha, hai] <;>
     ring_nf <;> simp [hq2, hq3]
@@ -137,7 +139,9 @@ theorem layer_conj_upper_torus (q : R) (hq : q * q = 0) (h3 : 3 * q = 0) (a : R�
   have hai := inv_val_of_sq_zero q hq a ha
   have hq2 : q ^ 2 = 0 := by rw [sq]; exact hq
   have hq3 : q ^ 3 = 0 := by rw [pow_succ, hq2, zero_mul]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [upperRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, ha, hai] <;>
     ring_nf <;> (try simp [hq2, hq3]) <;>
@@ -150,7 +154,9 @@ theorem layer_conj_lower_upper (q : R) (hq : q * q = 0) (a : Rˣ) (ha : (a : R) 
   have hai := inv_val_of_sq_zero q hq a ha
   have hq2 : q ^ 2 = 0 := by rw [sq]; exact hq
   have hq3 : q ^ 3 = 0 := by rw [pow_succ, hq2, zero_mul]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [upperRoot, lowerRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, ha, hai] <;>
     ring_nf <;> simp [hq2, hq3]
@@ -161,7 +167,9 @@ theorem layer_conj_lower_torus (q : R) (hq : q * q = 0) (h3 : 3 * q = 0) (a : R�
   have hai := inv_val_of_sq_zero q hq a ha
   have hq2 : q ^ 2 = 0 := by rw [sq]; exact hq
   have hq3 : q ^ 3 = 0 := by rw [pow_succ, hq2, zero_mul]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, ha, hai] <;>
     ring_nf <;> (try simp [hq2, hq3]) <;>
@@ -171,14 +179,18 @@ theorem layer_conj_lower_torus (q : R) (hq : q * q = 0) (h3 : 3 * q = 0) (a : R�
 theorem conj_upper_one_torus (b : Rˣ) :
     upperRoot 1 * torus b * (upperRoot 1)⁻¹ =
       torus b * upperRoot (((b⁻¹ : Rˣ) : R) ^ 2 - 1) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [upperRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two] <;> ring_nf <;>
     simp [pow_two, ← mul_assoc]
 
 theorem conj_lower_one_torus (b : Rˣ) :
     lowerRoot 1 * torus b * (lowerRoot 1)⁻¹ = torus b * lowerRoot ((b : R) ^ 2 - 1) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, Matrix.mul_apply, Fin.sum_univ_two,
       Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two] <;> ring_nf <;>
     simp [pow_two, ← mul_assoc]
@@ -196,7 +208,9 @@ theorem torus_eq_four_roots (b : Rˣ) (c d : R) (hb : (b : R) = 1 + c * d) :
     torus b = upperRoot c * lowerRoot d * upperRoot (-c * ((b⁻¹ : Rˣ) : R)) *
       lowerRoot (-d * (b : R)) := by
   have hbi : ((b⁻¹ : Rˣ) : R) * (b : R) = 1 := by simp
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+  fin_cases i <;> fin_cases j <;>
     simp [upperRoot, lowerRoot, torus, Matrix.mul_apply, Fin.sum_univ_two] <;>
     first
     | linear_combination hbi - ((b⁻¹ : Rˣ) : R) * hb

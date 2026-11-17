@@ -117,7 +117,7 @@ theorem pHL0 (P : LWModule W) :
         (DJCarrier.incl W (pBotAmMod P) n)
       = (P.h + (n : ℂ)) • DJCarrier.incl W (pBotAmMod P) n by
     have hcf := LinearMap.congr_fun hFG y
-    simpa only [LinearMap.comp_apply, LinearMap.smul_apply] using hcf
+    simpa only [LinearMap.comp_apply, LinearMap.smul_apply] using! hcf
   refine djPiece_ext (fun v w => ?_)
   -- `[ω]` acts by `P.h` on the bottom `Ω(P)`.
   have homega : (pBotAmMod P).ρ (mkAnFull W 0 W.conformalVector) w = P.h • w := by

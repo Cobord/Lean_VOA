@@ -179,7 +179,7 @@ theorem sym_rel_zero : E8C.sym (quadP 248 (relQ 0)) = 0 := by
     (by
       have h := simpleProjection_sv
       rw [sv] at h
-      simpa [w2] using h)
+      simpa [w2] using! h)
     (fun e => by
       have := hw_bracket_shadowZ e
       simp only [structureConstant_eq]
@@ -246,7 +246,7 @@ theorem casPoly_row (i : Fin 248) :
   | cons t l ih =>
       simp only [List.map_cons, List.sum_cons, map_add, add_mul, Finset.sum_add_distrib, ih]
       rw [quadP_cons', smul_add]
-      congr 1
+      refine congrArg₂ (· + ·) ?_ rfl
       simp only [apply_ite MvPolynomial.C, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
         Finset.mem_univ, if_true]
       rw [Xn_fin, Xn_fin, MvPolynomial.smul_eq_C_mul, map_mul, map_intCast]
@@ -290,7 +290,7 @@ theorem targetLowerBoundQ8 :
       norm_num) 2 casPoly_eq
     (fun r => by
       change E8C.sym (quadraticRelation (rel r)) = 0
-      rw [quadraticRelation_rel]
+      erw [quadraticRelation_rel]
       exact sym_rel_all r.val r.isLt)
 
 /-- **The vacuum quartic relation of `L_{-6}(𝔢₈)`** (`κ = (30+1)(5·30-6) = 4464`). -/
@@ -298,12 +298,13 @@ theorem vacuumQuarticRelation8 : VacuumQuarticRelation W8 4464 := by
   have h := vacuumQuarticRelation_of_carrierData E8data e8CertData (-6) hk8 2 casPoly_eq
     (fun r => by
       change E8C.sym (quadraticRelation (rel r)) = 0
-      rw [quadraticRelation_rel]
+      erw [quadraticRelation_rel]
       exact sym_rel_all r.val r.isLt)
   convert h using 1
-  rw [simple_centralCharge', e8CertData_h, show (Fintype.card (Fin E8data.n) : ℂ) = 248 from by
+  erw [simple_centralCharge', e8CertData_h, show (Fintype.card (Fin E8data.n) : ℂ) = 248 from by
     rw [Fintype.card_fin]; rfl]
   norm_num
+  exact Iff.rfl
 
 end
 

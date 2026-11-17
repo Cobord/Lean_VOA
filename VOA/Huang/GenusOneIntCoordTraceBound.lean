@@ -86,7 +86,7 @@ theorem logSquareTraceSummable_of_squareTraceMass_bound (hC2 : C2Cofinite W)
   have hR : 0 ≤ R := sub_nonneg.mpr (Real.one_le_exp (norm_nonneg _))
   have hsmall : R * B < 1 := calc
     R * B ≤ R * (B + 1) := mul_le_mul_of_nonneg_left (by linarith) hR
-    _ < 1 := (lt_div_iff₀ hBp).mp (by simpa only [one_div] using hd z hz)
+    _ < 1 := (lt_div_iff₀ hBp).mp (by simpa only [one_div] using! hd z hz)
   have hs := (summable_geometric_of_lt_one (mul_nonneg hR hB) hsmall).mul_left C
   apply hs.of_nonneg_of_le
   · intro k
@@ -129,7 +129,7 @@ theorem squareTraceMass_bound_of_logSquareTraceSummable (hC2 : C2Cofinite W)
     ((hsum x).le_tsum k (fun j _ => hterm x j)).trans
       (Finset.single_le_sum (fun j _ => tsum_nonneg (hterm j)) (Finset.mem_univ x))
   rw [inv_pow, ← div_eq_mul_inv, le_div_iff₀ (pow_pos hR k)]
-  simpa only [mul_comm] using hle
+  simpa only [mul_comm] using! hle
 
 /-- Exact characterization of the remaining analytic input by exponential growth
 of the absolute square-component masses. -/

@@ -76,8 +76,8 @@ theorem secondLevi_positive_inv (he : ∀ i s, a2Positive i → ρ.op i s w = 0)
       obtain ⟨l, r, hl, hr, rfl⟩ := hz
       exact secondLevi_positive_on_normal ρ w he l r hl hr a s ha
   | zero => simp
-  | add x y _ _ hx hy => simpa using (a2LeviSpan ρ w).add_mem hx hy
-  | smul c x _ hx => simpa using (a2LeviSpan ρ w).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (a2LeviSpan ρ w).add_mem hx hy
+  | smul c x _ hx => simpa using! (a2LeviSpan ρ w).smul_mem c hx
 
 /-- PBW/Levi generation: all current words are spanned by Levi words on
 negative radical monomials. -/

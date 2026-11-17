@@ -20,6 +20,9 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra 
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## General-weight infrastructure (re-stated and re-proved here). -/
 
 theorem L1_smul_qp_w {w : ℤ} {u : V} (hu : u ∈ W.grading w) (hqpu : W.L 1 u = 0)
@@ -85,7 +88,7 @@ theorem comm_rel_w (u a b : V) (w p q : ℤ) (j : ℕ) :
   obtain ⟨N, hzero, hN⟩ := commBound W u a (-(j:ℤ)) (w + p + q - 2 + j)
   refine ⟨N, hzero, ?_⟩
   have happ := congrArg (fun (f : Module.End ℂ V) => f b) hN
-  simp only at happ
+  try simp only at happ
   rw [LieRing.of_associative_ring_bracket, LinearMap.sub_apply, Module.End.mul_apply,
     Module.End.mul_apply] at happ
   rw [LinearMap.sum_apply] at happ
@@ -219,7 +222,7 @@ theorem gBinom_iter_diff_eval_gen (c : ℤ) (N t : ℕ) :
     have h := gBinom_fwdDiff_iter c N (t - N)
     rw [show N + (t - N) = t by omega] at h
     have happ := congrArg (fun f => f (0:ℤ)) h
-    simp only at happ
+    try simp only at happ
     rw [happ]; congr 1; simp
   · rw [if_neg (by omega)]
     -- N > t : do t+1 differences to reach a constant then 0

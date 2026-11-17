@@ -92,6 +92,8 @@ Prop 4.7 (`:1098-1122`); DLM2 (`q-alg/9509005`) Prop 6.1 (`refs/dlm2.txt:784-911
 (`ProjKillsDefectSubmodule`).
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open VertexOperatorAlgebra

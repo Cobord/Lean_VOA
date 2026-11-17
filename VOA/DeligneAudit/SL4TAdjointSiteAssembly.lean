@@ -189,7 +189,7 @@ theorem mixedQuotientRingImage_bound_of_jointFlag
   have hHq (s : ℕ) (hs : 1 ≤ s) (x : MixedRing q ⧸ J) :
       H s (ψ x) = ψ (p s * x) := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ J x
-    simpa only [p, ← map_mul, heval] using hH s hs x
+    simpa only [p, ← map_mul, heval] using! hH s hs x
   have hFq (x : MixedRing q ⧸ J) :
       (F 0 ^ ((mixedWeight q).toNat + 1)) (ψ x) = 0 := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ J x
@@ -324,10 +324,12 @@ theorem adjointSite_jointSymbol_lowering_zero (B h : ℕ) (hh : 0 < h)
     exact hflat n e₁ e₂ hv φ
   · have hs : adjointSiteJointSymbol (mixedLabelBlockParams 1 B ![0, n, 1] e₁ e₂) = 1 := by
       simp [adjointSiteJointSymbol, mixedLabelBlockParams]
+      rfl
     rw [hs, one_mul]
     exact adjointSite_unmarked_lowering_zero ρ w B hW h hh ht hg n e₁ e₂ hv φ
   · have hs : adjointSiteJointSymbol (mixedLabelBlockParams 1 B ![1, n, 0] e₁ e₂) = 0 := by
       simp [adjointSiteJointSymbol, mixedLabelBlockParams]
+      rfl
     rw [hs, zero_mul, map_zero, ZeroMemClass.coe_zero, map_zero]
   · have hs : adjointSiteJointSymbol (mixedLabelBlockParams 1 B ![1, n, 1] e₁ e₂) =
         adjointSiteMarkedSymbol (mixedLabelBlockParams 1 B ![1, n, 1] e₁ e₂) := by

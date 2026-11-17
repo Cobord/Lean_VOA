@@ -55,11 +55,18 @@ theorem map_rightRegular [Finite G] (X : FDRep ℂ G) (φ : (rightFDRep : FDRep 
 theorem eq_ofRightFDRep [Fintype G] [DecidableEq G] (X : FDRep ℂ G) (φ : (rightFDRep : FDRep ℂ G) ⟶ X) :
     ofRightFDRep X (φ.hom (Pi.single 1 1)) = φ := by
   ext f
-  change sumSMulInv (φ.hom (Pi.single 1 1)) f = φ.hom f
+  change sumSMulInv (φ.hom (show rightFDRep.V from Pi.single 1 1)) (show G → ℂ from f) = φ.hom f
   rw [sumSMulInv_apply]
   simp_rw [← map_rightRegular, rightRegular_inv_single_one]
-  conv_rhs => rw [show f = ∑ s, f s • (Pi.single s 1 : G → ℂ) from by
-    funext t; simp [Pi.single_apply]]
+  conv_rhs => rw [show (show G → ℂ from f) = ∑ s, (show G → ℂ from f) s • (Pi.single s 1 : G → ℂ) from by
+    funext t
+    simp only [Finset.sum_apply, Pi.smul_apply]
+    rw [Finset.sum_eq_single t]
+    · simp
+    · intro s _ hst
+      simp [Pi.single_apply, Ne.symm hst]
+    · intro ht
+      exact (ht (Finset.mem_univ t)).elim]
   have hL : ∀ x : G → ℂ, φ.hom x = φ.hom.hom.hom x := fun x => rfl
   simp only [hL]
   erw [map_sum]
@@ -130,8 +137,8 @@ instance funIsCommMonObj [Finite G] : IsCommMonObj (rightFDRep : FDRep ℂ G) wh
     ext : 1
     apply TensorProduct.ext'
     intro f g
-    change (LinearMap.mul' ℂ (G → ℂ)) (TensorProduct.comm ℂ (G → ℂ) (G → ℂ) (f ⊗ₜ g)) =
-      LinearMap.mul' ℂ (G → ℂ) (f ⊗ₜ g)
+    change (LinearMap.mul' ℂ (G → ℂ)) (TensorProduct.comm ℂ (G → ℂ) (G → ℂ) ((show G → ℂ from f) ⊗ₜ (show G → ℂ from g))) =
+      LinearMap.mul' ℂ (G → ℂ) ((show G → ℂ from f) ⊗ₜ (show G → ℂ from g))
     rw [TensorProduct.comm_tmul, LinearMap.mul'_apply, LinearMap.mul'_apply, mul_comm]
 
 /-- A `G`-map `ℂ ⟶ Fun(G)` takes `1` to a `G`-invariant function. -/

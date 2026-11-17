@@ -46,7 +46,7 @@ theorem conj_GammaGL (N : ℕ) (γ : SL(2, ℤ)) :
   · rintro hA
     obtain ⟨a, ha, hA'⟩ := mem_GammaGL_iff.mp hA
     refine mem_GammaGL_iff.mpr ⟨γ⁻¹ * a * γ, ?_, ?_⟩
-    · simpa using (CongruenceSubgroup.Gamma_normal N).conj_mem a ha γ⁻¹
+    · simpa using! (CongruenceSubgroup.Gamma_normal N).conj_mem a ha γ⁻¹
     · rw [map_mul, map_mul, hA', map_inv]
       group
   · rintro hA
@@ -112,7 +112,7 @@ theorem quotientFunc_cosetOne {N : ℕ} {k : ℤ} (F : ModularForm (GammaGL N) k
 /-! ## Expansions -/
 
 theorem nat_mem_strictPeriods_SL (N : ℕ) : (N : ℝ) ∈ (𝒮ℒ).strictPeriods := by
-  simpa using (𝒮ℒ).strictPeriods.nsmul_mem one_mem_strictPeriods_SL N
+  simpa using! (𝒮ℒ).strictPeriods.nsmul_mem one_mem_strictPeriods_SL N
 
 theorem hasSum_qExpansion_Gamma {N : ℕ} [NeZero N] {k : ℤ}
     (F : ModularForm (GammaGL N) k) (τ : ℍ) :
@@ -182,7 +182,7 @@ theorem coeff_qExpansion_trace {N : ℕ} [NeZero N] {k : ℤ}
   rw [hT]
   have := hasSum_sum (s := (Finset.univ : Finset (CosetQ N)))
     fun q _ => hasSum_qExpansion_Gamma (gammaSlash P (cosetRep q)) τ
-  simpa only [Finset.sum_smul] using this
+  simpa only [Finset.sum_smul] using! this
 
 /-- The width-`N` expansion of the trace is the sum of the cusp summands. -/
 theorem qExpansion_trace_eq {N : ℕ} [NeZero N] {k : ℤ} (P : ModularForm (GammaGL N) k) :
@@ -255,6 +255,8 @@ theorem coeff_qExpansion_gammaSlash_mul_T {N : ℕ} [NeZero N] {k : ℤ}
   have hf : (gammaSlash P (γ * ModularGroup.T)) τ = (gammaSlash P γ) ((1 : ℝ) +ᵥ τ) := by
     rw [gammaSlash_slash, ModularForm.SL_slash_apply, UpperHalfPlane.modular_T_smul]
     simp [UpperHalfPlane.denom, ModularGroup.T]
+    change _ * (((((0 : ℤ) : ℝ) : ℂ) * (τ : ℂ) + (((1 : ℤ) : ℝ) : ℂ)) ^ k)⁻¹ = _
+    simp
   rw [hf]
   have := hasSum_qExpansion_Gamma (gammaSlash P γ) ((1 : ℝ) +ᵥ τ)
   rw [qParam_add_one] at this

@@ -44,7 +44,7 @@ theorem g2_hc : ((G2data.n : ℕ) : ℂ) * (-5/3) / (-5/3 + g2CertData.h) =
 theorem kappaInv_eq (a c : Fin 14) :
     g2CertData.kappaInv a c = (g2D a : ℂ)⁻¹ * (coef (g2dl a) c : ℂ) := by
   change (Pi.basisFun ℂ (Fin 14)).repr (dualV g2Checks g2dl g2D a) c = _
-  rw [Pi.basisFun_repr]
+  erw [Pi.basisFun_repr]
   rfl
 
 /-- `3 / Dᵢ`. -/
@@ -144,7 +144,7 @@ theorem sym_hw : G2C.sym (∑ s, (cz s : ℂ) • (X (ta s) * X (tb s))) = 0 := 
   refine sym_singular g2CertData (-5/3) g2_level_ne (fun s => (cz s : ℂ)) ta tb ?_ ?_ ?_
   · have h := g2sv_proj
     rw [g2sv, quadState] at h
-    simpa [termsZC, g2svTerms, Fin.sum_univ_three, cz, ta, tb, add_assoc] using h
+    simpa [termsZC, g2svTerms, Fin.sum_univ_three, cz, ta, tb, add_assoc] using! h
   · intro e
     have h := hw_bracket_shadowZ e
     simp only [g2scZ] at h

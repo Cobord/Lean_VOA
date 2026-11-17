@@ -43,35 +43,35 @@ theorem vandermonde_omission_sum (r q M : ℕ) :
   have h := congrArg (fun P : Auxiliary r => P*
     ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1))
     (weightedEuler_delta_power r (r*(q-1)) M)
-  dsimp only at h
   rw [weightedEuler_apply,Finset.sum_mul,smul_mul_assoc,
     Finset.mul_sum,Finset.sum_mul] at h
   convert h using 1
   · apply Finset.sum_congr rfl
     intro i hi
     dsimp only [betaOmit]
-    ring
-  · congr 1
+    exact (mul_left_comm _ _ _).trans (mul_assoc _ _ _).symm
+  · have key (c d p e : Auxiliary r) : c*(d*p*e)=d*(c*p)*e := by
+      rw [mul_assoc d p e,mul_left_comm c d,mul_assoc d (c*p) e,mul_assoc c p e]
+    refine congrArg ((2*M : ℂ) • ·) ?_
     apply Finset.sum_congr rfl
     intro ij hij
     dsimp only [betaOmitPair,pairOmittedIntegrand]
-    ring
+    exact key _ _ _ _
 
 /-- The exact selected-coefficient form of weighted Vandermonde differentiation. -/
 theorem selected_vandermonde_omission_sum (r q M : ℕ) :
     (∑ i : Fin r,(auxiliaryEuler i (delta r^(2*M))*
       ((∏ j∈Finset.univ.erase i,betaFactor r (r*(q-1)) j)*
-        ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1)))
+        ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1))).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)))=
     (2*M : ℂ) • (∑ ij∈variablePairs r,
-      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2)
+      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
-  have h := congrArg (fun P : Auxiliary r => P
+  have h := congrArg (fun P : Auxiliary r => P.coeff
     (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) (vandermonde_omission_sum r q M)
-  dsimp only at h
   rw [auxiliary_sum_apply] at h
   change _=(2*M : ℂ) • ((∑ ij∈variablePairs r,
-      betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2) _) at h
+      betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff _) at h
   rw [auxiliary_sum_apply] at h
   exact h
 
@@ -79,13 +79,13 @@ theorem selected_vandermonde_omission_sum (r q M : ℕ) :
 pair sum, retaining the factor M rather than assuming it invertible. -/
 theorem summed_omitted_ibp (r q M : ℕ) (hq : 0<q) :
     (M : ℂ) • (∑ i : Fin r,
-      (bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i)
+      (bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)))=
     (2*M : ℂ) • (∑ ij∈variablePairs r,
-      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2)
+      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) -
     (((r-1)*M+q-1 : ℕ) : ℂ) • (∑ i : Fin r,
-      omittedIntegrand r q M i (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
+      (omittedIntegrand r q M i).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
   rw [Finset.smul_sum]
   simp_rw [omittedIntegrand_ibp r q M hq]
   rw [Finset.sum_sub_distrib,← Finset.smul_sum,selected_vandermonde_omission_sum]

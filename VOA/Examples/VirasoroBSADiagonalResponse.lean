@@ -201,7 +201,7 @@ theorem bsaDiagonalError_zero_of_lt (N r : ℕ) (hN : 4≤N) (hr : r+2<N) :
       bsaNormLocalDefect_zero N (r-2+1) (by omega),
       bsaNormLocalDefect_zero N (r-2) (by omega),
       ih (r-2+1) (by omega) (by omega), ih (r-2) (by omega) (by omega)] at hstep
-    simpa only [show r-2+2=r by omega, mul_zero, sub_zero, add_zero] using hstep
+    simpa only [show r-2+2=r by omega, mul_zero, sub_zero, add_zero] using! hstep
 
 /-- Uniqueness of the triangular Ward recurrence identifies the numerical
 candidate with the divided ACTUAL diagonal response below the terminal level. -/

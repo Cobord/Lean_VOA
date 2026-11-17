@@ -49,7 +49,7 @@ private theorem rootEF (i : Fin 12) (x : OneU) :
   have h' : ρ.op (rootE i) 0 (ρ.op (negativeIndex i) 0 x) -
       ρ.op (negativeIndex i) 0 (ρ.op (rootE i) 0 x) =
         ∑ c : Fin 28, D4sector.f (rootE i) (negativeIndex i) c • ρ.op c 0 x := by
-    simpa only [Nat.zero_add] using h
+    simpa only [Nat.zero_add] using! h
   simp only [rootH, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply,
     map_smul, LinearMap.smul_apply, Finset.smul_sum, smul_smul]
   rw [← smul_sub, h', Finset.smul_sum]
@@ -59,11 +59,11 @@ private theorem rootHF (i : Fin 12) (x : OneU) :
     rootH i (ρ.op (negativeIndex i) 0 x) -
       ρ.op (negativeIndex i) 0 (rootH i x) =
         (-2 : ℂ) • ρ.op (negativeIndex i) 0 x := by
-  have hin : ∀ c y,
+  have hin : ∀ (c : Fin 28) (y : OneU),
       ρ.op c 0 (ρ.op (negativeIndex i) 0 y) -
         ρ.op (negativeIndex i) 0 (ρ.op c 0 y) =
           ∑ d : Fin 28, D4sector.f c (negativeIndex i) d • ρ.op d 0 y :=
-    fun c y => by simpa using ρ.comm c (negativeIndex i) 0 0 y
+    fun c y => by simpa using! ρ.comm c (negativeIndex i) 0 0 y
   calc
     rootH i (ρ.op (negativeIndex i) 0 x) -
         ρ.op (negativeIndex i) 0 (rootH i x) =

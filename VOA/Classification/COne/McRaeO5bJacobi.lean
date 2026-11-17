@@ -48,7 +48,7 @@ variable {X : LogModuleCat (orbifoldVOA G)} (a : tensorObject hC2 (vObj G hfg) X
 theorem actY_trunc (w : V) (y : X) :
     ∃ N : ℤ, ∀ j : ℤ, N ≤ j → (actY hC2 a).1 (j : ℂ) 0 w y = 0 := by
   obtain ⟨N, hN⟩ := (actY hC2 a).2.truncation w y 0
-  exact ⟨N, fun j hj => by simpa using hN j hj 0⟩
+  exact ⟨N, fun j hj => by simpa using! hN j hj 0⟩
 
 theorem actY_zero_right (n : ℂ) (k : ℕ) (w : V) : (actY hC2 a).1 n k w (0 : X) = 0 :=
   map_zero _
@@ -202,7 +202,7 @@ theorem jacobi_homog (hX : letI := logarithmicMonoidalCategory hC2
   rw [finsum_congr hfL, finsum_sub_distrib hfinA hfinB, ← mul_finsum, finsum_congr hfR]
   have e : resInf m ℓ (sA a p f D u v x') - resZero m ℓ (tC a p f D u v x') -
       resOne m ℓ (qD a p f D u v x') = 0 := by rw [hres, sub_self]
-  simpa only [resInf, resZero, resOne] using e
+  simpa only [resInf, resZero, resOne] using! e
 
 end Homog
 

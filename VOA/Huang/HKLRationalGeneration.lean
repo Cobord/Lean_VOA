@@ -56,7 +56,7 @@ theorem exists_eigenvector_of_ne_bot (hC2 : C2Cofinite W) (A : WeakModule W M)
   obtain ⟨v, hv⟩ := hα.exists_hasEigenvector
   refine ⟨v, (v.2 : (v : M) ∈ S').2, fun h => hv.2 (Subtype.ext h), α, ?_⟩
   have := congrArg Subtype.val hv.apply_eq_smul
-  simpa [T] using this
+  simpa [T] using! this
 
 /-- **`L₀` is semisimple on every weak module of a strongly rational VOA.** -/
 theorem eigenSum_eq_top {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]

@@ -268,7 +268,6 @@ theorem fhat_inl (b : Fin (p ^ 2)) (k : ℤ) :
     (F := fun x => cvec p (.inl b) x * E (2 * p ^ 2) (k * x)) rfl two_pos hP
     (fhat_per hp _ (cvec_periodic hp _) k)
     (fun x hx => by simp only [cvec]; push_cast at hx ⊢; simp [hx])
-  simp only at hs
   unfold fhat gsl
   rw [hs]
   refine Finset.sum_congr rfl fun z _ => ?_
@@ -289,7 +288,6 @@ theorem fhat_inr_inl (h : Fin p) (k : ℤ) :
     (F := fun x => cvec p (.inr (.inl h)) x * E (2 * p ^ 2) (k * x)) (by ring) (by positivity)
     hp0 (fhat_per hp _ (cvec_periodic hp _) k)
     (fun x hx => by simp only [cvec]; push_cast at hx ⊢; simp [hx])
-  simp only at hs
   unfold fhat gsl
   rw [hs]
   refine Finset.sum_congr rfl fun z _ => ?_
@@ -307,7 +305,6 @@ theorem fhat_inr_inr (u : Unit) (k : ℤ) : fhat p (cvec p (.inr (.inr u))) k = 
     (F := fun x => cvec p (.inr (.inr u)) x * E (2 * p ^ 2) (k * x)) (by ring) (by positivity)
     one_pos (fhat_per hp _ (cvec_periodic hp _) k)
     (fun x hx => by simp only [cvec]; push_cast at hx ⊢; simp [hx])
-  simp only at hs
   unfold fhat
   rw [hs]
   simp [cvec, E_zero]
@@ -319,7 +316,6 @@ theorem fhat_thvec (k : ℤ) : fhat p (thvec p) k = if (p : ℤ) ∣ k then (p :
     (F := fun x => thvec p x * E (2 * p ^ 2) (k * x)) (by ring) (by positivity)
     hp0 (fhat_per hp _ thvec_periodic k)
     (fun x hx => by simp only [thvec]; push_cast at hx ⊢; simp [hx])
-  simp only at hs
   unfold fhat
   rw [hs, ← sum_E_lin hp0]
   refine Finset.sum_congr rfl fun z _ => ?_
@@ -463,7 +459,7 @@ theorem dRel_inl_unit [Fact p.Prime] (hp2 : p ≠ 2) {N : ℕ} {K : ℤ} (hNK : 
       have := (dvd_pow_self (p : ℤ) two_ne_zero).trans (Int.ModEq.dvd (modEq_of_zmod' this))
       have h3 : (p : ℤ) ∣ p * (c * u) := dvd_mul_right _ _
       have := dvd_sub h3 this
-      simpa using this
+      simpa using! this
     have hβ' : ((4 * b' * (β + K) : ℤ) : ZMod (p ^ 2)) = 1 := by
       apply hU.mul_left_cancel
       push_cast at hβ ⊢
@@ -638,7 +634,7 @@ theorem dRel_h [Fact p.Prime] (hp2 : p ≠ 2) {N : ℕ} {K : ℤ} (hNK : (N : �
   have hvp : ¬ (p : ℤ) ∣ v := by
     intro hd
     have : (p : ℤ) ∣ ((h : ℕ) : ℤ) * N := by
-      have := (dvd_sub hd (dvd_refl (p : ℤ))); rw [hv] at this; simpa using this
+      have := (dvd_sub hd (dvd_refl (p : ℤ))); rw [hv] at this; simpa using! this
     rcases hpp.dvd_or_dvd this with h' | h'
     · exact hhp h'
     · exact hpN h'
@@ -663,7 +659,7 @@ theorem dRel_h [Fact p.Prime] (hp2 : p ≠ 2) {N : ℕ} {K : ℤ} (hNK : (N : �
       rw [← hbv, hc]; push_cast; ring
     have := (dvd_pow_self (p : ℤ) two_ne_zero).trans (Int.ModEq.dvd (modEq_of_zmod' e))
     have := dvd_sub (dvd_mul_right (p : ℤ) (c * v)) this
-    simpa using this
+    simpa using! this
   have hβ'' : ((4 * b'' * (p * γ + K) : ℤ) : ZMod (p ^ 2)) = 1 := by
     have hU := isUnit_zmod_of_not_dvd (e := 2) hp hvp
     apply hU.mul_left_cancel
@@ -715,7 +711,7 @@ theorem dRel_inf (hp2 : p ≠ 2) {N : ℕ} {K : ℤ} (hNK : (N : ℤ) = 4 * K) (
         (modEq_of_zmod' (by rw [hNb]; simp))
     have h4 : (p : ℤ) ∣ 1 - N * b' := Int.ModEq.dvd h3
     have h5 : (p : ℤ) ∣ 1 := by
-      have := dvd_add h4 (dvd_mul_of_dvd_right hd (N : ℤ)); simpa using this
+      have := dvd_add h4 (dvd_mul_of_dvd_right hd (N : ℤ)); simpa using! this
     exact hp.one_lt.ne' (by exact_mod_cast Int.eq_one_of_dvd_one (by positivity) h5)
   have hN' : ((N : ℕ) : ZMod (p ^ 2)) = 4 * (K : ZMod (p ^ 2)) := by
     have := congrArg (Int.cast : ℤ → ZMod (p ^ 2)) hNK; push_cast at this; exact this
@@ -777,17 +773,17 @@ theorem matL_eq_word (N : ℕ) :
     rw [zpow_neg, zpow_natCast, inv_pow]
   rw [hT]
   apply Subtype.ext
-  simp only [Matrix.SpecialLinearGroup.coe_mul, ModularGroup.coe_T_zpow]
+  simp only [Matrix.SpecialLinearGroup.coe_mul, ModularGroup.coe_T_zpow,
+    Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, ModularGroup.coe_S]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [matL, Matrix.mul_apply, Fin.sum_univ_two, ModularGroup.S,
-      Matrix.SpecialLinearGroup.SL2_inv_expl, Matrix.vecMul, dotProduct]
+    simp [matL, Matrix.mul_apply, Fin.sum_univ_two, Matrix.vecMul, dotProduct]
 
 theorem weilWord_Tinv_pow (P : ℕ) {γ : SL(2, ℤ)} {A : Matrix (Fin (2 * P)) (Fin (2 * P)) ℂ}
     (h : WeilWord P γ A) (n : ℕ) :
     WeilWord P (ModularGroup.T⁻¹ ^ n * γ) (weilTinv P ^ n * A) := by
   induction n with
-  | zero => simpa using h
+  | zero => simpa using! h
   | succ n ih =>
     have := WeilWord.Tinv ih
     rwa [← mul_assoc, ← Matrix.mul_assoc, ← pow_succ', ← pow_succ'] at this
@@ -797,7 +793,7 @@ theorem weilWord_matL (P N : ℕ) :
     WeilWord P (matL N) (weilS P * (weilTinv P ^ N * weilS P)) := by
   rw [matL_eq_word]
   have h0 : WeilWord P ModularGroup.S⁻¹ (weilS P) := by
-    simpa using WeilWord.Sinv (WeilWord.one (N := P))
+    simpa using! WeilWord.Sinv (WeilWord.one (N := P))
   exact WeilWord.S (weilWord_Tinv_pow P h0 N)
 
 /-- The diagonal of `(T⁻¹)^N` at level `p²`: `e(−K μ²/p²)` for `N = 4K`, `24 ∣ N`. -/

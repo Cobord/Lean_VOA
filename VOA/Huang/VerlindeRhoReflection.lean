@@ -35,7 +35,7 @@ theorem Lsq_zero_mem_gradeLE {d : ℤ} {v : V} (hv : v ∈ gradeLE W d) :
       (gradeLE_mono W (by have := j.2; omega) hr)
       (Submodule.smul_mem _ _ (mem_gradeLE_of_mem_grading W j.2 hx))
   | zero => simp
-  | add x y _ _ hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
+  | add x y _ _ hx hy => simpa only [map_add] using! Submodule.add_mem _ hx hy
 
 /-- If the eigenvalue differs from the top ordinary grade, that grade vanishes. -/
 theorem sq_eigen_lower {d n : ℤ} {v : V} (hv : v ∈ gradeLE W d)
@@ -57,7 +57,7 @@ theorem sq_eigen_lower {d n : ℤ} {v : V} (hv : v ∈ gradeLE W d)
     (Submodule.disjoint_def.mp (grading_disjoint_gradeLE W d)) _
       (Submodule.smul_mem _ _ hx) hlow
   have hx0 : x = 0 := (smul_eq_zero.mp hz).resolve_left hc
-  simpa only [hx0, zero_add] using hy
+  simpa only [hx0, zero_add] using! hy
 
 /-- An eigenvector with eigenvalue at least `d` cannot lie below grade `d`. -/
 theorem sq_eigen_eq_zero_below (d : ℕ) {n : ℤ} (hdn : (d : ℤ) ≤ n)
@@ -66,9 +66,9 @@ theorem sq_eigen_eq_zero_below (d : ℕ) {n : ℤ} (hdn : (d : ℤ) ≤ n)
   induction d with
   | zero =>
     simpa only [Nat.cast_zero, zero_sub, gradeLE_eq_bot W (by norm_num : (-1 : ℤ) < 0),
-      Submodule.mem_bot] using hv
+      Submodule.mem_bot] using! hv
   | succ d ih =>
-    have hv' : v ∈ gradeLE W (d : ℤ) := by simpa using hv
+    have hv' : v ∈ gradeLE W (d : ℤ) := by simpa using! hv
     exact ih (by omega) (sq_eigen_lower hv' he (by omega))
 
 /-- A square-weight `n` vector has no ordinary grades above `n`. -/
@@ -86,7 +86,7 @@ theorem sqWeight_le_gradeLE (n : ℕ) : sqWeightSpace W (n : ℂ) ≤ gradeLE W 
       by_cases hkn : (k + 1 : ℕ) ≤ n
       · exact gradeLE_mono W (by exact_mod_cast hkn) hv
       · apply ih v
-        · simpa using sq_eigen_lower hv he (by omega)
+        · simpa using! sq_eigen_lower hv he (by omega)
         · exact he
   exact aux d.toNat v (gradeLE_mono W (by omega) hd) he
 
@@ -114,7 +114,7 @@ theorem contraTwist_mem_gradeLE {d : ℤ} {v : V} (hv : v ∈ gradeLE W d) :
     exact Submodule.add_mem _ (gradeLE_mono W (by have := j.2; omega) hr)
       (Submodule.smul_mem _ _ (mem_gradeLE_of_mem_grading W j.2 hx))
   | zero => simp
-  | add x y _ _ hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
+  | add x y _ _ hx hy => simpa only [map_add] using! Submodule.add_mem _ hx hy
 
 /-- The remaining coordinate calculation concerns just one operator. -/
 def SquareBracketReflectionCommutes (W : VertexOperatorAlgebra V) : Prop :=

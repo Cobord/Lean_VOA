@@ -45,7 +45,7 @@ theorem exists_null_of_vacuumChevalley_root (k : ℂ) (hk : k + 2 ≠ 0)
     intro j
     have hh := congrFun hr j
     simpa only [Matrix.vecMul, dotProduct, RingHom.mapMatrix_apply,
-      Matrix.map_apply, Pi.zero_apply] using hh
+      Matrix.map_apply, Pi.zero_apply] using! hh
 
 /-- A nonsingular actual Chevalley block has zero intersection with the
 maximal graded ideal. -/
@@ -68,7 +68,7 @@ theorem null_eq_zero_of_vacuumChevalley_ne_zero (k : ℂ) (hk : k + 2 ≠ 0)
     have he := hz (currentPBWBasis k hk j.val)
     rw [← hr] at he
     simpa only [vacuumChevalleyPolynomial_actual k hk,
-      map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using he
+      map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using! he
   have hr0 := Matrix.eq_zero_of_vecMul_eq_zero hm hv
   rw [← hr, hr0]
   simp
@@ -151,7 +151,7 @@ theorem boundary_first_null (m : ℕ) :
       x ∈ QuotVOA.maxGradedIdeal (universal _
         (admissible_level_noncritical 2 (2 * m + 1) (by omega) (by omega))) := by
   have hc : Nat.Coprime 2 (2 * m + 1) := by simp
-  simpa using admissible_first_null 2 (2 * m + 1) (by omega) (by omega) hc
+  simpa using! admissible_first_null 2 (2 * m + 1) (by omega) (by omega) hc
 
 end
 end VOA.AffineSl2GeneralRigidity

@@ -13,7 +13,8 @@ theorem remainderTopIdeal_zero (xs : List A) (N : ℕ) :
     remainderTopIdeal xs N 0 = ⊤ := by
   apply (Ideal.eq_top_iff_one _).mpr
   have h := remainderTopMinor_mem xs N 0 (fun a => Fin.elim0 a)
-  simpa only [remainderTopMinor, Matrix.det_isEmpty] using h
+  have h1 : remainderTopMinor xs N 0 (fun a => Fin.elim0 a) = 1 := Matrix.det_isEmpty
+  rwa [h1] at h
 
 /-- The characteristic coefficient at the alphabet length is one over every ring. -/
 theorem alphabetCharacteristic_top_coeff (xs : List A) :
@@ -22,7 +23,7 @@ theorem alphabetCharacteristic_top_coeff (xs : List A) :
     Polynomial.coeff_zero_eq_eval_zero]
   induction xs with
   | nil => simp [D4Levi.ksEPoly]
-  | cons x xs ih => simpa [D4Levi.ksEPoly] using ih
+  | cons x xs ih => simpa [D4Levi.ksEPoly] using! ih
 
 /-- Removing the leading characteristic monomial leaves strictly smaller powers. -/
 theorem alphabetCharacteristic_tail_degree (xs : List A) :
@@ -80,7 +81,7 @@ theorem remainderTopIdeal_all_sizes_graded_certificate (w : σ → ℤ)
         Ideal.span {alphabetCharacteristic xs, Polynomial.X ^ N} := by
   by_cases hj : j = 0
   · subst j
-    simpa only [Nat.sub_zero, sub_zero] using
+    simpa only [Nat.sub_zero, sub_zero] using!
       remainderTopIdeal_zero_graded_certificate w xs hxs N a d ha
   · exact remainderTopIdeal_graded_certificate w xs hxs N j (by omega) hjr a d ha hmem
 

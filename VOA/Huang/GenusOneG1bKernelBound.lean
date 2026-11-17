@@ -38,7 +38,7 @@ theorem exists_linear_le_pow (c d : ℕ) {μ : ℝ} (hμ : 1 < μ) :
   refine ⟨C, hC0, fun p => ?_⟩
   have := hC p
   push_cast
-  simpa [pow_one, add_assoc] using this
+  simpa [pow_one, add_assoc] using! this
 
 theorem sum_coeff_le {P : Polynomial ℂ} {E : ℕ} {F : PowerSeries ℂ} {μ D : ℝ} (hμ : 1 < μ)
     (hP : omt ^ E * F = pc P) (p : ℕ)

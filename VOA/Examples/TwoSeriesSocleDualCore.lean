@@ -79,7 +79,7 @@ theorem word_append_apply (l : List (Fin 3 × ℕ)) (k : Fin 3 × ℕ) (m : M) :
 
 theorem word_mem (G : ModeGrading ρ Mdeg) :
     ∀ (l : List (Fin 3 × ℕ)) (d : ℤ), ∀ m ∈ Mdeg d, word ρ l m ∈ Mdeg (d - wordWt l)
-  | [], d, m, hm => by simpa [word, wordWt] using hm
+  | [], d, m, hm => by simpa [word, wordWt] using! hm
   | k :: l, d, m, hm => by
     rw [word_cons_apply]
     have h := G.deg k _ _ (word_mem G l d m hm)
@@ -150,7 +150,7 @@ theorem exists_sing_of_ne (G : ModeGrading ρ Mdeg) (K : Submodule ℂ M)
     intro a v hv
     refine ⟨hK _ v hv.1, ?_⟩
     have := G.deg (a, 0) n v hv.2
-    simpa using this
+    simpa using! this
   haveI : FiniteDimensional ℂ (Mdeg (n : ℤ)) := G.fin n
   haveI : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_right
   haveI : Nontrivial V := ⟨⟨⟨m, hm⟩, 0, fun h => hm0 (congrArg Subtype.val h)⟩⟩
@@ -179,7 +179,7 @@ theorem exists_sing_of_ne (G : ModeGrading ρ Mdeg) (K : Submodule ℂ M)
   have hu_eig : ∀ j : ℕ, ρ (2, 0) (u j) = (c - 2 * (j : ℂ)) • u j := by
     intro j
     induction j with
-    | zero => simpa [u] using hHv
+    | zero => simpa [u] using! hHv
     | succ j ih =>
       rw [hu_succ, hcomm, ih, map_smul]; push_cast; module
   -- some `u j` vanishes, by finiteness of the spectrum of `H`
@@ -201,7 +201,7 @@ theorem exists_sing_of_ne (G : ModeGrading ρ Mdeg) (K : Submodule ℂ M)
   obtain ⟨j0, hj0, hj0min⟩ : ∃ j0, u j0 = 0 ∧ ∀ j < j0, u j ≠ 0 :=
     ⟨Nat.find hdie, Nat.find_spec hdie, fun j h => Nat.find_min hdie h⟩
   have hj0pos : j0 ≠ 0 := by
-    rintro rfl; exact hv0 (by simpa [u] using hj0)
+    rintro rfl; exact hv0 (by simpa [u] using! hj0)
   obtain ⟨j, rfl⟩ : ∃ j, j0 = j + 1 := ⟨j0 - 1, by omega⟩
   refine ⟨n, c - 2 * (j : ℂ), u j, ⟨(hu_mem j).1, (hu_mem j).2, fun a i => hpos _ (hu_mem j) a i,
     by rw [← hu_succ]; exact hj0, hu_eig j⟩, hj0min j (by omega)⟩
@@ -235,7 +235,7 @@ theorem exists_separating {S : Type*} [AddCommGroup S] [Module ℂ S] [FiniteDim
   rw [Nat.card_eq_fintype_card] at h
   let b := Module.finBasis ℂ S
   obtain ⟨e⟩ := Function.Embedding.nonempty_of_card_le
-    (α := Fin (finrank ℂ S)) (β := J) (by simpa using h)
+    (α := Fin (finrank ℂ S)) (β := J) (by simpa using! h)
   refine ⟨fun j => if hj : ∃ t, e t = j then b.coord hj.choose else 0, fun s hs => ?_⟩
   rw [← b.forall_coord_eq_zero_iff]
   intro t
@@ -360,7 +360,7 @@ theorem exists_socleDuals (G : ModeGrading ρ Mdeg)
       subst hdeg hN'
       intro hj _
       exact hj
-    exact key (by simpa [word] using (hmemK s).mp hsK i' [])
+    exact key (by simpa [word] using! (hmemK s).mp hsK i' [])
   · intro i
     ext m
     have hr : (ρ (2, 0) + (2 * (cl i : ℂ)) • (1 : Module.End ℂ M)) m ∈

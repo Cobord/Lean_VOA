@@ -71,7 +71,7 @@ theorem univ_one_orientation_bound (e n r : ℕ) :
   haveI := hb.1
   refine ⟨(Submodule.topEquiv : (⊤ : Submodule ℂ (CVMod (e, 0) (n, 0) (r, 0) 0))
     ≃ₗ[ℂ] CVMod (e, 0) (n, 0) (r, 0) 0).finiteDimensional, ?_⟩
-  simpa only [finrank_top] using hb.2
+  simpa only [finrank_top] using! hb.2
 
 /-- The actual universal base in the opposite orientation has the same
 bound by the checked current-root swap equivalence. -/

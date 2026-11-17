@@ -47,8 +47,9 @@ theorem ghostCurrent_ghost (a : Fin 3) : ghostCurrent a ∈ sl2GhostGrading 0 :=
   apply Submodule.sum_mem
   intro c _
   apply Submodule.smul_mem
-  simpa only [neg_add_cancel] using
-    sl2GhostSVA_mode_ghostGrading (bGhost_ghost c) (cGhost_ghost b) (-1)
+  have h := sl2GhostSVA_mode_ghostGrading (bGhost_ghost c) (cGhost_ghost b) (-1)
+  rw [neg_add_cancel] at h
+  exact h
 
 /-- The cubic ghost correction, with the conventional factor one half. -/
 noncomputable def ghostBRSTState : Sl2GhostSpace :=

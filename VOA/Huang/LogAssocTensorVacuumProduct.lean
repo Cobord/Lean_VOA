@@ -27,9 +27,12 @@ theorem completedLogProduct_module_vacuum
   let q := evaluatePoint (adjointModule W).toLog N₃ N₃
     (logModuleIntertwiner N₃.toWeakModule) 0 W.vacuum y
   have hq (γ : ℂ) : (q γ : M₃)=if γ=b then y else 0 := by
-    dsimp only [q]
-    rw [evaluatePoint_zero,evaluateOne_homogeneous (adjointModule W).toLog N₃ N₃
-      (logModuleIntertwiner N₃.toWeakModule) hv hy γ]
+    have h1 := DFunLike.congr_fun (DFunLike.congr_fun (evaluatePoint_zero
+      (adjointModule W).toLog N₃ N₃ (logModuleIntertwiner N₃.toWeakModule)) W.vacuum) y
+    refine (congrArg (fun F : Completion N₃ => (F γ : M₃)) h1).trans ?_
+    refine (evaluateOne_homogeneous (adjointModule W).toLog N₃ N₃
+      (logModuleIntertwiner N₃.toWeakModule) hv hy γ).trans ?_
+    change (logModuleIntertwiner N₃.toWeakModule).1 (0 + b - γ - 1) 0 W.vacuum y = _
     by_cases he : γ=b
     · subst γ
       simp only [zero_add,sub_self,zero_sub]

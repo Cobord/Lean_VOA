@@ -69,7 +69,7 @@ theorem mixedCoeff_zero (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0) (p q s : ℕ)
     (hd : 1 ≤ p + q) (hs : clippedSum (parts r n e) (p + q) < s + (p + q)) :
     mixedCoeff (R.op 3) (R.op 5) p q s w = 0 := by
   apply mixedCoeff_zero_of_clipped (h.raising 1 (by decide) 0) ?_ p q s hd hs
-  simpa only [Nat.add_zero] using h.highest
+  simpa only [Nat.add_zero] using! h.highest
 
 theorem second_all (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0) (s : ℕ) :
     R.op 4 s w = 0 := by
@@ -79,12 +79,12 @@ theorem second_all (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0) (s : ℕ) :
 theorem first_trunc (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0) (s : ℕ)
     (hs : r + n + e ≤ s) : R.op 3 s w = 0 := by
   apply trunc_of_cvrel h.first s
-  simpa only [parts_length, Nat.add_zero] using hs
+  simpa only [parts_length, Nat.add_zero] using! hs
 
 theorem theta_trunc (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0) (s : ℕ)
     (hs : r + n + e ≤ s) : R.op 5 s w = 0 := by
   apply trunc_of_cvrel h.highest s
-  simpa only [parts_length, Nat.add_zero] using hs
+  simpa only [parts_length, Nat.add_zero] using! hs
 
 /-- The finite set of current modes in each of the two commuting colors.
 Word lengths are unrestricted until a spanning recursion is proved. -/

@@ -27,11 +27,11 @@ def fockCoefficientPolynomial (e : Occupation) (P : FockPolynomial) : Polynomial
 
 /-- Coefficients of the extracted scalar polynomial are actual oscillator coefficients. -/
 theorem fockCoefficientPolynomial_coeff (e : Occupation) (P : FockPolynomial) (j : ℕ) :
-    (fockCoefficientPolynomial e P).coeff j=coeff e (P j) := rfl
+    (fockCoefficientPolynomial e P).coeff j=(P.coeff j).coeff e := rfl
 
 /-- Scalar evaluation commutes with every fixed oscillator coefficient. -/
 theorem fockCoefficientPolynomial_eval (e : Occupation) (P : FockPolynomial) (h : ℂ) :
-    (fockCoefficientPolynomial e P).eval h=coeff e (PolynomialModule.eval h P) := by
+    (fockCoefficientPolynomial e P).eval h=(PolynomialModule.eval h P).coeff e := by
   induction P using PolynomialModule.induction_linear with
   | zero => simp [fockCoefficientPolynomial]
   | add P Q hP hQ => simp_all [fockCoefficientPolynomial]
@@ -44,7 +44,7 @@ theorem fockCoefficientPolynomial_degree (e : Occupation) {P : FockPolynomial} {
     (hP : FockDegreeLE d P) : (fockCoefficientPolynomial e P).natDegree≤d := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro j hj
-  rw [fockCoefficientPolynomial_coeff,hP j hj,coeff_zero]
+  simp [fockCoefficientPolynomial_coeff,hP j hj]
 
 /-- Polynomial creation-coordinate matrix of actual occupation words. -/
 def creationPolynomialMatrix (k : ℂ) (n : ℕ) (c : ℤ) :
@@ -61,7 +61,7 @@ creation-coordinate matrix, even at critical level. -/
 theorem creationPolynomialMatrix_eval (k h : ℂ) (n : ℕ) (c : ℤ) :
     (creationPolynomialMatrix k n c).map (Polynomial.eval h)=creationMatrix k h n c := by
   ext i j
-  exact (fockCoefficientPolynomial_eval _ _ _).trans (congrArg (coeff i.val) (polynomialWord_eval _ _ _ _))
+  exact (fockCoefficientPolynomial_eval _ _ _).trans (congrArg (fun R : WakFock => R.coeff i.val) (polynomialWord_eval _ _ _ _))
 
 /-- Every specialization of the polynomial row matrix is the actual positive-row matrix. -/
 theorem rowPolynomialMatrix_eval (k h : ℂ) (n : ℕ) (c : ℤ) :

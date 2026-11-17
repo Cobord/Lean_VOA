@@ -31,6 +31,8 @@ defined on a basis.
 Everything is proved outright.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AdamovicSymbol
 
 open VOA.SymbolModel VOA.ConcreteHodge VOA.LeeYangTransferAssembly Sl2CosetConcrete
@@ -161,8 +163,8 @@ theorem letterPair (l l' : Generator × ℕ) :
   · rw [if_neg (fun h => hw (by rw [h]))]
     apply (universalForm k hk).orthogonal_of_ne (m := letterWt l) (n := letterWt l') hw
     · have h := correctedWordState_mem_grading k hk [dualLetter l]
-      simpa [wordWt, letterWt_dualLetter] using h
-    · simpa [wordWt] using correctedWordState_mem_grading k hk [l']
+      simpa [wordWt, letterWt_dualLetter] using! h
+    · simpa [wordWt] using! correctedWordState_mem_grading k hk [l']
 
 end Pairing
 
@@ -225,22 +227,22 @@ theorem degOnePair (i j : Option (Generator × ℕ)) :
   cases i with
   | none =>
     cases j with
-    | none => simpa [degOnePartner, degOneWord, degOneVal] using hvac
+    | none => simpa [degOnePartner, degOneWord, degOneVal] using! hvac
     | some l =>
       rw [if_neg (by simp)]
       apply (universalForm ALevel aNoncritical).orthogonal_of_ne (m := 0) (n := letterWt l)
         (letterWt_pos l).ne
-      · simpa [wordWt] using correctedWordState_mem_grading ALevel aNoncritical []
-      · simpa [wordWt] using correctedWordState_mem_grading ALevel aNoncritical [l]
+      · simpa [wordWt] using! correctedWordState_mem_grading ALevel aNoncritical []
+      · simpa [wordWt] using! correctedWordState_mem_grading ALevel aNoncritical [l]
   | some l =>
     cases j with
     | none =>
       rw [if_neg (by simp)]
       apply (universalForm ALevel aNoncritical).orthogonal_of_ne (m := letterWt l) (n := 0)
         (letterWt_pos l).ne'
-      · simpa [wordWt, letterWt_dualLetter] using
+      · simpa [wordWt, letterWt_dualLetter] using!
           correctedWordState_mem_grading ALevel aNoncritical [dualLetter l]
-      · simpa [wordWt] using correctedWordState_mem_grading ALevel aNoncritical []
+      · simpa [wordWt] using! correctedWordState_mem_grading ALevel aNoncritical []
     | some l' =>
       rw [degOnePartner, degOneWord, letterPair]
       simp [degOneVal]
@@ -256,7 +258,7 @@ theorem degreeOne_linearIndependent : LinearIndependent ℂ degOneVec := by
   set z := ∑ j ∈ s, g j • correctedWordState ALevel aNoncritical (degOneWord j) with hz
   have hz0 : Imax.mkQ z = 0 := by
     rw [hz, map_sum]
-    simpa [degOneVec] using hsum
+    simpa [degOneVec] using! hsum
   have hpair : (universalForm ALevel aNoncritical).form
       (correctedWordState ALevel aNoncritical (degOnePartner i)) z = 0 := by
     rw [← simpleForm_mkQ ALevel aNoncritical, hz0, map_zero]

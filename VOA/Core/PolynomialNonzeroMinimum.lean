@@ -29,18 +29,19 @@ theorem exists_nonzero_symbol (w : σ → ℤ) (P : MvPolynomial σ ℂ) (hP : P
   let d := t.min' ht
   obtain ⟨e,he,hed⟩ := Finset.mem_image.mp (Finset.min'_mem t ht)
   let Q := weightedHomogeneousComponent w d P
-  have hmin (f) (hf : coeff f P≠0) : d≤Finsupp.weight w f :=
+  have hmin (f) (hf : P.coeff f≠0) : d≤Finsupp.weight w f :=
     Finset.min'_le t _ (Finset.mem_image.mpr ⟨f,mem_support_iff.mpr hf,rfl⟩)
   have hQ : Q≠0 := by
     intro hz
-    have hh := congrArg (coeff e) hz
+    have hh := congrArg (fun R : MvPolynomial σ ℂ => R.coeff e) hz
     apply mem_support_iff.mp he
-    simpa only [Q,coeff_weightedHomogeneousComponent,hed,d,if_pos rfl,coeff_zero] using hh
+    simpa only [Q,coeff_weightedHomogeneousComponent,hed,d,↓reduceIte,
+      AddMonoidAlgebra.coeff_zero,Finsupp.coe_zero,Pi.zero_apply] using hh
   refine ⟨d,Q,hQ,weightedHomogeneousComponent_isWeightedHomogeneous d P,?_⟩
   apply (mem_iff _).mpr
   intro f hf
   rw [coeff_sub] at hf
-  change coeff f P-coeff f (weightedHomogeneousComponent w d P)≠0 at hf
+  change P.coeff f-(weightedHomogeneousComponent w d P).coeff f≠0 at hf
   rw [coeff_weightedHomogeneousComponent] at hf
   by_cases hd : Finsupp.weight w f=d
   · simp [hd] at hf

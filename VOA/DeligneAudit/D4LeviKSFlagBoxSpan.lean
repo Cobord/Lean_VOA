@@ -71,12 +71,12 @@ theorem ksFlag_boxX_YZ_reduce (m a b c dx e : ℕ) (hsize : a + b + c ≤ m)
               hsize P hP B hB R hR hdR
             have hd : dx + j + (dz + dy - j) = dx + e := by omega
             rw [hd] at hh
-            simpa only [S, mul_assoc, mul_comm, mul_left_comm] using hh
+            simpa only [S, mul_assoc, mul_comm, mul_left_comm] using! hh
         | zero => simp [S]
         | add T W hT hW ihT ihW =>
-            simpa only [mul_add] using S.add_mem ihT ihW
+            simpa only [mul_add] using! S.add_mem ihT ihW
         | smul t T hT ihT =>
-            simpa only [mul_smul_comm] using S.smul_mem t ihT
+            simpa only [mul_smul_comm] using! S.smul_mem t ihT
       obtain ⟨B, hB, C, hC, heq⟩ := Submodule.mem_sup.mp hstep
       have hC' : ksTargetXMap a b c P * C ∈ S := by
         apply Submodule.mem_sup_right
@@ -84,12 +84,12 @@ theorem ksFlag_boxX_YZ_reduce (m a b c dx e : ℕ) (hsize : a + b + c ≤ m)
         exact ksFlagRelationImage_mono m a b c (dz + dy) (dx + e) (by omega) hC
       have hh := S.add_mem (hbox B hB) hC'
       rw [← mul_add, heq] at hh
-      simpa only [S, mul_comm, mul_left_comm, mul_assoc] using hh
+      simpa only [S, mul_comm, mul_left_comm, mul_assoc] using! hh
   | zero => simp [S]
   | add T W hT hW ihT ihW =>
-      simpa only [mul_add] using S.add_mem ihT ihW
+      simpa only [mul_add] using! S.add_mem ihT ihW
   | smul t T hT ihT =>
-      simpa only [mul_smul_comm] using S.smul_mem t ihT
+      simpa only [mul_smul_comm] using! S.smul_mem t ihT
 
 /-- The complete graded partial-flag spanning inclusion. -/
 theorem ksFlag_three_block_span (m a b c d : ℕ) (hsize : a + b + c ≤ m)
@@ -112,9 +112,9 @@ theorem ksFlag_three_block_span (m a b c d : ℕ) (hsize : a + b + c ≤ m)
         rintro T ⟨j, hj, B, hB, W, hW, rfl⟩
         have hh := ksFlag_boxX_YZ_reduce m a b c j (d - j) hsize B hB W hW
         rw [Nat.add_sub_of_le hj] at hh
-        simpa only [S, mul_comm] using hh
+        simpa only [S, mul_comm] using! hh
       have hh := (sup_le hle le_sup_right) hstep
-      simpa only [S, mul_comm] using hh
+      simpa only [S, mul_comm] using! hh
   | zero => exact S.zero_mem
   | add P Q hP hQ ihP ihQ => exact S.add_mem ihP ihQ
   | smul t P hP ihP => exact S.smul_mem t ihP

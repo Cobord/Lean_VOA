@@ -34,8 +34,10 @@ noncomputable def charge (j : ℤ) : Module.End ℂ Space :=
 theorem charge_latState (j k : ℤ) (p : FockN (rank (latP 1))) :
     charge j (latStateGen (latP 1) p k) =
       (2 * (k : ℂ) + j) • latStateGen (latP 1) p k := by
-  simp only [charge, latStateGen, TensorProduct.map_tmul, LinearMap.id_apply,
-    chargeMomentum, eGen, Finsupp.linearCombination_single, one_smul,
+  have hc : chargeMomentum j (eGen (latP 1) k) = (2 * (k : ℂ) + j) • eGen (latP 1) k := by
+    unfold chargeMomentum
+    exact (Finsupp.linearCombination_single ℂ (1 : ℂ) (k : ℤ)).trans (one_smul ℂ _)
+  simp only [charge, latStateGen, TensorProduct.map_tmul, LinearMap.id_apply, hc,
     TensorProduct.tmul_smul]
 
 /-- The diagonal charge is the actual root Heisenberg zero mode, with the
@@ -44,7 +46,11 @@ theorem charge_eq_root_zeroMode (j : ℤ) :
     charge j = chargeCoord (latP 1) (1 : ℤ) (a0 1) •
       mode ((latticeModule 1 le_rfl j).YM (hVec (latP 1) (a0 1))) 0 := by
   refine LinearMap.ext_on_range (latStateGen_span (latP 1)) fun ⟨p, k⟩ => ?_
-  rw [charge_latState, LinearMap.smul_apply, latticeModule_zeroMode, smul_smul,
+  show charge j (latStateGen (latP 1) p k) =
+    (chargeCoord (latP 1) (1 : ℤ) (a0 1) •
+      mode ((latticeModule 1 le_rfl j).YM (hVec (latP 1) (a0 1))) 0) (latStateGen (latP 1) p k)
+  rw [charge_latState j k p, LinearMap.smul_apply,
+    latticeModule_zeroMode (m := 1) (hm := le_rfl) (j := j) p k, smul_smul,
     mul_comm _ (chi 1 j k), chi_mul 1 le_rfl j k]
   norm_num
 

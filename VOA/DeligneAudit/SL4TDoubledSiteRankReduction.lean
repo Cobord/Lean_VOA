@@ -41,9 +41,9 @@ theorem secondLeviFiltration_rank_le_of_orbit_bounds [FiniteDimensional ℂ V]
     fin_cases j <;> simp [a3KeyLabelInt] <;> omega
   have hb := finiteFiberFiltration_finrank_le S N secondLeviCountFiber
     (fun e => -(e.1 : ℤ)) c t
-    (fun i => Finset.mem_antidiagonal.mpr rfl)
+    (fun i => Finset.HasAntidiagonal.mem_antidiagonal.mpr rfl)
     (fun i j hj => by
-      have he := Finset.mem_antidiagonal.mp hj
+      have he := Finset.HasAntidiagonal.mem_antidiagonal.mp hj
       simp only [secondLeviCountFiber, he])
     (higherSecondLeviCountClosure_le_fiber Q β)
     (fun e => by
@@ -56,7 +56,7 @@ theorem secondLeviFiltration_rank_le_of_orbit_bounds [FiniteDimensional ℂ V]
         rw [show (S e).map (N e).mkQ = secondLeviOrbit Q β e.1 e.2 from
           secondLeviClosure_map_eq_orbit Q β e.1 e.2
             (radicalSecondLeviMultiplicity_otherCartan ρ w a b h d (hm 0) e.1 e.2)]
-        simpa only [c, if_pos he] using hbound e.1 e.2 hv
+        simpa only [c, if_pos he] using! hbound e.1 e.2 hv
       · have he' : p < e.1 ∨ q < e.2 := by
           simp only [t, Finset.mem_product, Finset.mem_range] at he
           omega
@@ -64,7 +64,7 @@ theorem secondLeviFiltration_rank_le_of_orbit_bounds [FiniteDimensional ℂ V]
           radicalSecondLeviClosure_map_zero ρ w a b h d hm e.1 e.2 he']
         simp [c, he])
     (fun e he => by simp [c, he])
-  simpa only [c, Finset.sum_ite_mem, Finset.inter_self] using hb
+  simpa only [c, Finset.sum_ite_mem, Finset.inter_self] using! hb
 
 /-- The nested Levi indices inject into the valid blocks of the doubled-site catalog. -/
 theorem doubledSiteNestedBlockBound_sum_le (B : ℕ) (hB : 2 ≤ B) :

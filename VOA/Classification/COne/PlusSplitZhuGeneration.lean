@@ -130,9 +130,9 @@ theorem iterProdSpan_le_preimage (B : Subalgebra ℂ (VOA.A W)) {G : Set V}
           · rw [piHom_of_mem_ne W hkw hk]; exact (preimage W B).zero_mem
         · simp only [map_zero]; exact (preimage W B).zero_mem
         · intro y z _ _ hy hz
-          simpa only [map_add] using (preimage W B).add_mem hy hz
+          simpa only [map_add] using! (preimage W B).add_mem hy hz
         · intro c y _ hy
-          simpa only [map_smul] using (preimage W B).smul_mem c hy
+          simpa only [map_smul] using! (preimage W B).smul_mem c hy
       rwa [piHom_of_mem W hx] at hpi
   apply top_unique
   rw [← W.isInternal.submodule_iSup_eq_top]
@@ -150,7 +150,7 @@ theorem adjoin_eq_top_of_iterProd_mod_C2 {G : Set V}
     obtain ⟨k, hk⟩ := isIterProd_homog (fun s hs =>
       let ⟨k, hk⟩ := hhom s hs; ⟨(k : ℤ), hk⟩) hs
     by_cases hkn : 0 ≤ k
-    · exact ⟨k.toNat, by simpa [Int.toNat_of_nonneg hkn] using hk⟩
+    · exact ⟨k.toNat, by simpa [Int.toNat_of_nonneg hkn] using! hk⟩
     · have hz : s = 0 := by
         rw [W.positivity k (by omega), Submodule.mem_bot] at hk; exact hk
       exact ⟨0, by rw [hz]; exact (W.grading 0).zero_mem⟩
@@ -183,6 +183,6 @@ theorem V2mPlus_zhu_adjoin_generators (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
     (G := Set.range (gP m hm))
     (by rintro s ⟨i, rfl⟩; exact ⟨wtP m i, gP_mem_grading m hm i⟩)
     (top_eq_span_iterProd m hm hm2)
-  simpa only [← Set.range_comp', Function.comp_def] using h
+  simpa only [← Set.range_comp', Function.comp_def] using! h
 
 end VOA.Classification.COne

@@ -54,7 +54,7 @@ theorem a3OrderedStep_rank (a b c : ℕ)
     · by_cases hq : a3KeyLabelInt b c 1 k < 0
       · rw [a3_key_negative_levi_orbit_zero ρ w a b c h 1 k (v j).property hq]
         simp [L, a3KeyOrbitLength, hq]
-      · simpa [L, a3KeyOrbitLength, hp, hq] using
+      · simpa [L, a3KeyOrbitLength, hp, hq] using!
           (a3_key_levi_orbit_rank ρ w a b c h k (v j).property
             (by omega) (by omega)).2
   exact a3_step_quot_rank_of_orbits F T m L

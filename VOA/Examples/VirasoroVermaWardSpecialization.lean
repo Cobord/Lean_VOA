@@ -48,7 +48,7 @@ creation energy. This is the relative grading of the general Verma module. -/
 theorem vermaMode_zero_negWord (c h : ℂ) (w : List ℕ) :
     vermaMode c h 0 (negWord c h w)=(h+(energyHW w:ℂ)) • negWord c h w := by
   induction w with
-  | nil => simpa [vermaMode] using verma_zero_acts c h
+  | nil => simpa [vermaMode] using! verma_zero_acts c h
   | cons i w ih =>
     simp only [negWord_cons]
     rw [vermaMode_comm_apply,ih]
@@ -73,7 +73,7 @@ theorem verma_positive_zero_of_one_two (c h : ℂ) (v : Verma c h)
   have hall : ∀ k : ℕ, vermaMode c h ((k:ℤ)+2) v=0 := by
     intro k
     induction k with
-    | zero => simpa using h2
+    | zero => simpa using! h2
     | succ k ih =>
       have hh := vermaMode_comm_apply c h 1 ((k:ℤ)+2) v
       simp only [h1,ih,map_zero,show ¬ (1:ℤ)+((k:ℤ)+2)=0 by omega,
@@ -87,10 +87,10 @@ theorem verma_positive_zero_of_one_two (c h : ℂ) (v : Verma c h)
       convert he using 1 <;> push_cast <;> ring
   intro n hn
   by_cases he : n=1
-  · simpa [he] using h1
+  · simpa [he] using! h1
   · obtain ⟨k,hk⟩ := Int.eq_ofNat_of_zero_le (show 0≤n-2 by omega)
     have he : n=(k:ℤ)+2 := by omega
-    simpa [he] using hall k
+    simpa [he] using! hall k
 
 /-- Each equation records a PBW coefficient of either the L₁ or L₂ image.
 All PBW output words are allowed, so no unstated degree-closure lemma is used. -/
@@ -126,11 +126,11 @@ theorem vermaWardMatrix_kernel_iff (c h : ℂ) (n : ℕ) (v : VermaPartitions n 
     · apply (vermaSortedBasis c h).repr.injective
       ext w
       have hh := congrFun he (0,w)
-      simpa [vermaWardMatrix_mulVec] using hh
+      simpa [vermaWardMatrix_mulVec] using! hh
     · apply (vermaSortedBasis c h).repr.injective
       ext w
       have hh := congrFun he (1,w)
-      simpa [vermaWardMatrix_mulVec] using hh
+      simpa [vermaWardMatrix_mulVec] using! hh
   · rintro ⟨h1,h2⟩
     funext row
     rw [vermaWardMatrix_mulVec]

@@ -159,7 +159,7 @@ theorem pairEulerClosed_of_mixedPairWard (R : Subalgebra ℂ (PowerSeries ℂ))
       (by exact_mod_cast Real.pi_ne_zero)) Complex.I_ne_zero)
   have hi := (pairSeriesSpan R S).smul_of_tower_mem
     (((2 * (Real.pi : ℂ) * Complex.I) ^ 2)⁻¹) hm
-  simpa only [smul_smul, inv_mul_cancel₀ hc, one_smul] using hi
+  simpa only [smul_smul, inv_mul_cancel₀ hc, one_smul] using! hi
 
 end Mixed
 end VOA.Huang.GenusTwoPoint.Separate

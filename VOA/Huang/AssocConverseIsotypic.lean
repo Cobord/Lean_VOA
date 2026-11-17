@@ -77,9 +77,9 @@ theorem familyCoefficientSpan_mode_stable (R : ι → LWModule W) {κ : ι → T
     exact (familyCoefficientSpan R B).add_mem (familyCoefficientVector_mem R B _ _ _)
       (VOA.Huang.BottomRecovery.finsum_mem_submodule _ _ fun k =>
         (familyCoefficientSpan R B).smul_mem _ (familyCoefficientVector_mem R B _ _ _))
-  | zero => simpa only [Pi.zero_apply, map_zero] using (familyCoefficientSpan R B).zero_mem
-  | add x y _ _ hx hy => simpa using (familyCoefficientSpan R B).add_mem hx hy
-  | smul c x _ hx => simpa using (familyCoefficientSpan R B).smul_mem c hx
+  | zero => simpa only [Pi.zero_apply, map_zero] using! (familyCoefficientSpan R B).zero_mem
+  | add x y _ _ hx hy => simpa using! (familyCoefficientSpan R B).add_mem hx hy
+  | smul c x _ hx => simpa using! (familyCoefficientSpan R B).smul_mem c hx
 
 /-- A finite relation among formal products separates by the isomorphism class
 of the intermediate module, independently of all conformal weights. -/
@@ -102,7 +102,7 @@ theorem coefficient_products_separate [Fintype ι]
     apply Submodule.span_le.mpr
     rintro _ ⟨n, y, w, rfl⟩
     change L (familyCoefficientVector R B n y w) = 0
-    simpa [L, familyCoefficientVector] using hzero p n x y w
+    simpa [L, familyCoefficientVector] using! hzero p n x y w
   have hmem := single_mem_of_mode_stable R iR hne κ (familyCoefficientSpan R B)
     (fun a m _ hz => familyCoefficientSpan_mode_stable R B a m hz)
     (familyCoefficientVector_mem R B n y z) j
@@ -113,7 +113,7 @@ theorem coefficient_products_separate [Fintype ι]
     ((Pi.single j (familyCoefficientVector R B n y z j) :
       ∀ i, κ i → (R i).carrier) i k)) = 0 at he
   rw [Finset.sum_eq_single j] at he
-  · simpa only [Pi.single_eq_same, familyCoefficientVector] using he
+  · simpa only [Pi.single_eq_same, familyCoefficientVector] using! he
   · intro i _ hi
     rw [Pi.single_eq_of_ne hi]
     simp
@@ -135,7 +135,7 @@ theorem formalChannelSeparation_of_irredundant [Fintype ι]
     intro p q x y z
     have hh := congrFun ht (p, q, x, y, z)
     change (∑ j, formalProductTensorMap P₁ P₂ P₃ P₄ (R j) (t j)) (p, q, x, y, z) = 0 at hh
-    simpa only [he, Finset.sum_apply, formalProductTensorMap_tmul] using hh
+    simpa only [he, Finset.sum_apply, formalProductTensorMap_tmul] using! hh
   have hs := coefficient_products_separate R iR hne (fun j => Fin (n j)) A B hz
   intro j
   funext d

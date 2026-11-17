@@ -124,7 +124,7 @@ theorem modes_zero_jacobi_homogeneous {d : ℤ} {u : V} (hu : u ∈ W.grading d)
       simp only [map_zero,LinearMap.zero_apply,smul_zero]
   rw [finsum_congr hL,finsum_congr hR,← map_finsum _ hfinL,← map_finsum _ hfinR]
   apply congrArg (C2Rigid.dualPairingFlip N₃.toGW t)
-  simpa only [OJL,OJR,Int.cast_add] using opp_jacobi (A₁ := N₁.toGW) (A₂ := N₂.toWeakModule) (A₃ := N₃.toWeakModule)
+  simpa only [OJL,OJR,Int.cast_add] using! opp_jacobi (A₁ := N₁.toGW) (A₂ := N₂.toWeakModule) (A₃ := N₃.toWeakModule)
     (Y := F) hF hu a x y ell m n
 
 /-- Genuine homogeneous decomposition gives actual zeroth A-Jacobi on all vectors. -/

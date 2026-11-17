@@ -47,6 +47,11 @@ four `V₀⁺`-sectors (`cyclic_V3`, `cyclic_TPframe`).  It never uses (4.23).
 twisted half, open at the time of writing).  Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.M8hKey
@@ -67,9 +72,14 @@ theorem mulBySubPow_map {W W' : Type*} [AddCommGroup W] [Module ℂ W] [AddCommG
   induction N with
   | zero => rfl
   | succ N ih =>
-    rw [mulBySubPow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ, LinearMap.comp_apply]
-    funext m n
-    simp only [mulBySub_apply, map_sub]
+    first
+    | (rw [mulBySubPow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ, LinearMap.comp_apply]
+       funext m n
+       simp only [mulBySub_apply, map_sub])
+    | (funext m n
+       show mulBySub (mulBySubPow N ((fun m n => φ (f m n)) : FormalDist₂ W')) m n =
+         φ (mulBySub (mulBySubPow N f) m n)
+       rw [mulBySub_apply, mulBySub_apply, ih, map_sub])
 
 /-- The conjugate field `σ A(z) σ`. -/
 def conjF (σ : End ℂ V) (A : FormalDist (End ℂ V)) : FormalDist (End ℂ V) :=
@@ -238,7 +248,7 @@ theorem sigNat_sq : sigNat D * sigNat D = 1 := by
   · intro a ha
     rw [Module.End.mul_apply, Module.End.one_apply]
     have e := sigNat_V0 D ⟨a, ha⟩
-    simp only at e
+    try simp only at e
     rw [e, sigNat_V0]
     have := sig_sig ⟨a, ha⟩
     simp only [sig] at this
@@ -276,12 +286,12 @@ theorem sigNat_YnatU_V0 (u : V0Sub.carrier) (k : ℤ) :
   · intro a ha
     rw [Module.End.mul_apply, Module.End.mul_apply]
     have e := sigNat_V0 D ⟨a, ha⟩
-    simp only at e
+    try simp only at e
     rw [e, YnatU_apply, YnatU_apply]
     simp only [map_zero]
     have hmem := V0Sub.coeff_mem u.2 k ha
     have := sigNat_V0 D ⟨_, hmem⟩
-    simp only at this
+    try simp only at this
     rw [this, v0Sigma_Y u ⟨a, ha⟩ k]
     rfl
   · intro a ha

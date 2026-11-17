@@ -23,8 +23,9 @@ theorem chargeState_mem_latticeWeight (L : IntegralLattice) (α : L.carrier) :
     latChargeGen L α ∈ gradingLatGen L (halfNorm L α) := by
   have h := bigradα_le_gradingLatGen L 0 α
     (show latChargeGen L α ∈ bigradα L (0, α) from
-      ⟨vacuumN _, by simpa only [HeisenbergN.gradingZN_of_nonneg (le_refl 0)] using
-        vacuumN_mem_gradingWN (rank L), rfl⟩)
+      ⟨vacuumN _, by
+        simpa only [HeisenbergN.gradingZN_of_nonneg (le_refl 0), Int.toNat_zero,
+          SetLike.mem_coe] using vacuumN_mem_gradingWN (rank L), rfl⟩)
   simpa only [zero_add] using h
 
 /-- An even nondegenerate integral lattice with a complex bilinear frame has

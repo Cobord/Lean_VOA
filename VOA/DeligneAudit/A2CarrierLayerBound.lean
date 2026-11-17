@@ -106,7 +106,7 @@ theorem eq_zero_of_auxPoly_eq_zero {p m d : ℕ} (F : (JetVar AuxVar p →₀ �
   rw [Equiv.symm_symm, hπ] at hrel
   apply he
   rw [← hrel, ← coeff_tensorPolynomial F (pat m d t)]
-  change MvPolynomial.coeff _ (auxPoly p m d F t) = 0
+  change (auxPoly p m d F t).coeff _ = 0
   rw [h0]
   simp
 

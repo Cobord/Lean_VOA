@@ -48,7 +48,7 @@ theorem exists_mem_moduleLevelLE (P : LWModule W) (x : P.carrier) :
   · intro α y hy
     rcases FusionTop.eq_zero_or_level P hy with rfl | ⟨n, rfl⟩
     · exact ⟨0, Submodule.zero_mem _⟩
-    · exact ⟨n, mem_moduleLevelLE P le_rfl (by simpa using hy)⟩
+    · exact ⟨n, mem_moduleLevelLE P le_rfl (by simpa using! hy)⟩
 
 /-- `a k` is the coefficient of L(k+1). The sum is finite on each vector. -/
 theorem moduleCoordGen_support_finite (P : LWModule W) (a : ℕ → ℂ) (x : P.carrier) :
@@ -99,7 +99,7 @@ theorem moduleCoordGen_isLocNilp (P : LWModule W) (a : ℕ → ℂ) :
   have hpow : ∀ n : ℕ, ((moduleCoordGen P a) ^ n) x ∈ moduleLevelLE P (d - n) := by
     intro n
     induction n with
-    | zero => simpa using hd
+    | zero => simpa using! hd
     | succ n ih =>
       rw [VOA.pow_succ'_apply]
       have hs := moduleCoordGen_mem_lower P a ih

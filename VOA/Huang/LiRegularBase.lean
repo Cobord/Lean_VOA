@@ -60,10 +60,10 @@ variable (Bs : OppBase W M)
 
 /-- `bres a φ = Res_x φ(x) Y°(a,x) = Σₙ φₙ a°ₙ`. -/
 noncomputable def bres (a : V) (φ : ℂ[T;T⁻¹]) : Module.End ℂ M :=
-  Finsupp.linearCombination ℂ (Bs.B a) φ
+  (Finsupp.linearCombination ℂ (Bs.B a) ∘ₗ (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) φ
 
 theorem bres_single (a : V) (n : ℤ) (c : ℂ) :
-    Bs.bres a (Finsupp.single n c) = c • Bs.B a n :=
+    Bs.bres a (AddMonoidAlgebra.single n c) = c • Bs.B a n :=
   Finsupp.linearCombination_single ℂ _ _
 
 theorem bres_CT (a : V) (n : ℤ) (c : ℂ) : Bs.bres a (LC c * T n) = c • Bs.B a n := by

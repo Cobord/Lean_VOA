@@ -197,7 +197,8 @@ theorem unit_modes (ι : (unitObject : LogModuleCat W) ⟶ N) (a : tensorObject 
   intro h u j x
   have e := congrArg (fun Y : LogIntertwiningOperator (unitObject : LogModuleCat W).act.toWeakModule
     X.act.toWeakModule X.act.toWeakModule => Y.1 (j : ℂ) 0 u x) (unit_intertwiner hC2 ι a h)
-  simp only [precompose_apply] at e
+  -- 4.35: `precompose_apply` is `rfl`; `u : V` sits at the unit carrier, so `simp` cannot
+  -- rewrite `e`, and the definitional form is used directly.
   refine e.trans ?_
   change ofOrd (weakModuleModes X.act.toWeakModule) (j : ℂ) 0 u x = _
   rw [ofOrd_zero, weakModuleModes_apply_intCast]
@@ -211,7 +212,8 @@ theorem unit_modes_zero (ι : (unitObject : LogModuleCat W) ⟶ N) (a : tensorOb
   intro h u n k x hk
   have e := congrArg (fun Y : LogIntertwiningOperator (unitObject : LogModuleCat W).act.toWeakModule
     X.act.toWeakModule X.act.toWeakModule => Y.1 n k u x) (unit_intertwiner hC2 ι a h)
-  simp only [precompose_apply] at e
+  -- 4.35: `precompose_apply` is `rfl`; `u : V` sits at the unit carrier, so `simp` cannot
+  -- rewrite `e`, and the definitional form is used directly.
   refine e.trans ?_
   change ofOrd (weakModuleModes X.act.toWeakModule) n k u x = 0
   rcases hk with hk | hk

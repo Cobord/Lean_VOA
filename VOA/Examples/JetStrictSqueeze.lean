@@ -87,7 +87,7 @@ theorem injective_of_graded {G : ι → Submodule ℂ M} {J : ι → Submodule �
     simp only [DFinsupp.mapRange.linearMap_apply, DFinsupp.mapRange_apply, DFinsupp.coe_zero,
       Pi.zero_apply] at h3
     have h4 : g (f e) = 0 := congrArg Subtype.val h3
-    simpa using hinj e (f e) (f e).2 h4
+    simpa using! hinj e (f e) (f e).2 h4
   rw [hf, map_zero]
 
 end Generic
@@ -111,7 +111,7 @@ theorem jetWtPiece_iSupIndep (r : ℕ) : iSupIndep (jetWtPiece r) := by
   classical
   have h : iSupIndep (weightedHomogeneousSubmodule ℂ jetWt) :=
     (weightedDecomposition ℂ jetWt).isInternal.submodule_iSupIndep
-  exact h.comp (f := fun e : ℤ => e - r) (fun a b h => by simpa using h)
+  exact h.comp (f := fun e : ℤ => e - r) (fun a b h => by simpa using! h)
 
 /-! ### The corrected filtration at fixed weight -/
 
@@ -182,7 +182,7 @@ theorem sum_finrank_grDeg (R : ℕ) (d : ℤ) :
   | zero =>
     have h := finrank_grDeg_add 0 d
     rw [show pieceLT 0 d = ⊥ from rfl, finrank_bot ℂ ASpace, add_zero] at h
-    simpa using h
+    simpa using! h
   | succ R ih =>
     rw [Finset.sum_range_succ, ih, add_comm, ← finrank_grDeg_add (R + 1) d]
     rfl
@@ -195,7 +195,7 @@ theorem exists_piece_eq_grading (d : ℤ) : ∃ R : ℕ, affineFlag.piece R d = 
   have hdir : DirectedOn (· ≤ ·) (Set.range fun p : ℕ => affineFlag.piece p d) :=
     (affineFlag.directed d).directedOn_range
   obtain ⟨_, ⟨R, rfl⟩, hR⟩ :=
-    (CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le _ _).mp hc
+    (isCompactElement_iff_le_of_directed_sSup_le _).mp hc
       (Set.range fun p : ℕ => affineFlag.piece p d) (Set.range_nonempty _) hdir
       (by rw [sSup_range, affineFlag.exhaustive d])
   exact ⟨R, le_antisymm (affineFlag.le_grading R d) hR⟩
@@ -209,11 +209,9 @@ theorem iSup_grDeg (r : ℕ) : ⨆ d, grDeg r d = ⊤ := by
     (motive := fun z hz => Submodule.Quotient.mk (p := grKer r) (⟨z, hz⟩ : aFil r) ∈
       ⨆ d, grDeg r d)
     (fun d z hz => Submodule.mem_iSup_of_mem d (Submodule.mem_map.mpr ⟨_, hz, rfl⟩))
-    (by dsimp only
-        rw [show (⟨0, _⟩ : aFil r) = 0 from rfl, Submodule.Quotient.mk_zero]
+    (by rw [show (⟨0, _⟩ : aFil r) = 0 from rfl, Submodule.Quotient.mk_zero]
         exact Submodule.zero_mem _)
     (fun a b ha hb hha hhb => by
-      dsimp only at hha hhb ⊢
       rw [show (⟨a + b, _⟩ : aFil r) = ⟨a, ha⟩ + ⟨b, hb⟩ from rfl, Submodule.Quotient.mk_add]
       exact add_mem hha hhb) hy
 

@@ -288,7 +288,7 @@ theorem isUnit_of_isUnit_coe {a : S.opAlg} (h : IsUnit (a : Module.End ℂ S.V))
     intro b hb
     have h1 : (a : Module.End ℂ S.V) * (b : Module.End ℂ S.V) = 0 := by
       have := congrArg Subtype.val hb
-      simpa [L] using this
+      simpa [L] using! this
     apply Subtype.ext
     obtain ⟨u, hu⟩ := h
     have : (b : Module.End ℂ S.V) = ↑u⁻¹ * ((a : Module.End ℂ S.V) * b) := by

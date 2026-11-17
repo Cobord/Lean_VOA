@@ -30,7 +30,7 @@ private theorem theta_double (d : Fin 28) :
 private theorem thetaH_comm (r s : ℕ) (x : OneU) :
     thetaH r (ρ.op (27 : Fin 28) s x) - ρ.op (27 : Fin 28) s (thetaH r x) =
       (-2 : ℂ) • ρ.op (27 : Fin 28) (r + s) x := by
-  have hin : ∀ c y,
+  have hin : ∀ (c : Fin 28) (y : OneU),
       ρ.op c r (ρ.op (27 : Fin 28) s y) - ρ.op (27 : Fin 28) s (ρ.op c r y) =
       ∑ d : Fin 28, D4sector.f c (27 : Fin 28) d • ρ.op d (r + s) y :=
     fun c y => ρ.comm c (27 : Fin 28) r s y
@@ -80,7 +80,7 @@ private theorem thetaH_generator_one : thetaH 1 w = 0 := by
     · have hc := theta_support c hfc
       have hs := rs_cartan_pos
         (show Sat D4sector.f ρ w (ravSpec D4sector 1 2) by
-          simpa [OneR, ravFam_zero_right] using univG_sat D4sector.f OneR)
+          simpa [OneR, ravFam_zero_right] using! univG_sat D4sector.f OneR)
         (show D4sector.cartan c by exact hc) 1 (by omega)
       rw [hs]
       simp
@@ -95,7 +95,7 @@ private theorem thetaH_generator_zero : thetaH 0 w = (2 : ℂ) • w := by
     by_cases hc : c.val < 4
     · have hs := rs_cartan_zero
         (show Sat D4sector.f ρ w (ravSpec D4sector 1 2) by
-          simpa [OneR, ravFam_zero_right] using univG_sat D4sector.f OneR)
+          simpa [OneR, ravFam_zero_right] using! univG_sat D4sector.f OneR)
         (show D4sector.cartan c by exact hc)
       change ρ.op c 0 w = (((1 * thetaD4 c : ℕ) : ℂ)) • w at hs
       simp only [one_mul] at hs
@@ -129,17 +129,17 @@ theorem one_top_mode_one_theta : ρ.op D4sector.c₀ 1 oneTop = 0 := by
     change -ρ.op (15 : Fin 28) 0 w = 0
     have hs := rs_raising
       (show Sat D4sector.f ρ w (ravSpec D4sector 1 2) by
-        simpa [OneR, ravFam_zero_right] using univG_sat D4sector.f OneR)
+        simpa [OneR, ravFam_zero_right] using! univG_sat D4sector.f OneR)
       (show D4sector.raising (15 : Fin 28) by
         change 4 ≤ (15 : Fin 28).val ∧ (15 : Fin 28).val < 16
         decide) 0
     rw [hs, neg_zero]
   have hET : ∀ x, E (T x) - T (E x) = thetaH 1 x := by
     intro x
-    simpa only [E, T, Nat.zero_add] using thetaEF_comm 0 1 x
+    simpa only [E, T, Nat.zero_add] using! thetaEF_comm 0 1 x
   have hHT : ∀ x, H (T x) - T (H x) = (-2 : ℂ) • T x := by
     intro x
-    simpa only [H, T, Nat.zero_add] using thetaH_comm 0 1 x
+    simpa only [H, T, Nat.zero_add] using! thetaH_comm 0 1 x
   have hH1T : thetaH 1 (T w) = 0 := by
     have h := thetaH_comm 1 1 w
     rw [thetaH_generator_one, map_zero, sub_zero] at h
@@ -166,12 +166,12 @@ theorem one_top_mode_one_theta : ρ.op D4sector.c₀ 1 oneTop = 0 := by
     exact h
   have hEF : ∀ x, E (F x) - F (E x) = H x := by
     intro x
-    simpa only [E, F, H, Nat.zero_add] using thetaEF_comm 0 0 x
+    simpa only [E, F, H, Nat.zero_add] using! thetaEF_comm 0 0 x
   have hHF : ∀ x, H (F x) - F (H x) = (-2 : ℂ) • F x := by
     intro x
-    simpa only [H, F, Nat.zero_add] using thetaH_comm 0 0 x
+    simpa only [H, F, Nat.zero_add] using! thetaH_comm 0 0 x
   have hz := sl2_negative_two_of_finite E F H hEF hHF (T (T w)) hETTw hHTTw
-  simpa only [oneTop, T, ρ, w, D4sector] using hz
+  simpa only [oneTop, T, ρ, w, D4sector] using! hz
 
 end
 

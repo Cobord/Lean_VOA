@@ -22,7 +22,7 @@ theorem a2_f2_lower_wick_higher (q k s : ℕ) (xs ys : List ℕ)
   let N := a2LeviClosure ρ
     (a2HigherKeySpan ρ w q ⟨xs.length, ys.length + k, d⟩)
   have hsum :
-      (∑ z ∈ Finset.antidiagonal s,
+      (∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
         (PowerSeries.coeff z.1
             (fCurrent (fun i => ρ.op 4 i) ^ (k - t.2.length)) *
           aWord (fun i => ρ.op 3 i) t.1) *
@@ -34,13 +34,13 @@ theorem a2_f2_lower_wick_higher (q k s : ℕ) (xs ys : List ℕ)
     exact a2_f2_lower_wick_summand ρ w q k xs ys t ht hlt d z
   have hscalar (c : ℂ) :
       (algebraMap ℂ (Module.End ℂ V) c) •
-        ((∑ z ∈ Finset.antidiagonal s,
+        ((∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
           (PowerSeries.coeff z.1
               (fCurrent (fun i => ρ.op 4 i) ^ (k - t.2.length)) *
             aWord (fun i => ρ.op 3 i) t.1) *
             PowerSeries.coeff z.2 (bWord (fun i => ρ.op 5 i) t.2)) •
           ((ys.map fun i => ρ.op 5 i).prod • w)) ∈ N := by
-    simpa using N.smul_mem c hsum
+    simpa using! N.smul_mem c hsum
   have hcast : ((-1 : Module.End ℂ V) ^ t.2.length *
       (k.descFactorial t.2.length : Module.End ℂ V)) =
       algebraMap ℂ (Module.End ℂ V)
@@ -48,7 +48,7 @@ theorem a2_f2_lower_wick_higher (q k s : ℕ) (xs ys : List ℕ)
     simp
   unfold conversionTerm
   rw [hcast, mul_smul]
-  simpa only [mul_one] using
+  simpa only [mul_one] using!
     hscalar ((-1 : ℂ) ^ t.2.length * (k.descFactorial t.2.length : ℂ))
 
 /-- F₂ Garland defects convert to smaller first-colour mode sum modulo

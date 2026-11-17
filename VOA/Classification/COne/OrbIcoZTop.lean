@@ -15,6 +15,7 @@ private abbrev pair71 (i j : ℕ) := V2v.smul (wv 6 i) 71 (wv 6 j)
 
 private theorem pair71_grading (i j : ℕ) : pair71 i j ∈ V2v.grading 0 := by
   convert V2v.grading_mode _ (wv_grading 6 i) _ (wv_grading 6 j) 71 using 2
+  all_goals first | rfl | norm_num
 
 private theorem ho_zero_of_grade_zero {x : Sp} (hx : x ∈ V2v.grading 0) : ho x = 0 := by
   rw [V2v.vacuum_grade, Submodule.mem_span_singleton] at hx
@@ -43,9 +44,9 @@ private theorem pair71_step (i : ℕ) (hi : i < 12) :
     show 12 - i - 1 = 11 - i by omega] at he
   have hz : eps1 • (((i + 1 : ℕ) : ℂ) • pair71 i (12 - i) +
       ((12 - i : ℕ) : ℂ) • pair71 (i + 1) (11 - i)) = 0 := by
-    simpa only [smul_add, smul_smul] using he.symm
+    simpa only [smul_add, smul_smul] using! he.symm
   have h := (smul_eq_zero.mp hz).resolve_left eps1_ne_zero
-  simpa only [neg_smul] using eq_neg_of_add_eq_zero_right h
+  simpa only [neg_smul] using! eq_neg_of_add_eq_zero_right h
 
 private def diagCoeff (i : ℕ) : ℚ := (-1)^i / ((12:ℕ).choose i : ℚ)
 

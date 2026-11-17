@@ -79,8 +79,7 @@ theorem eulerDeriv_mul (F G : PowerSeries R) :
   simp only [coeff_eulerDeriv, map_add, PowerSeries.coeff_mul, Finset.mul_sum,
     ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun ij hij => ?_
-  rw [Finset.mem_antidiagonal] at hij
-  rw [← hij]
+  rw [← (Finset.HasAntidiagonal.mem_antidiagonal.mp hij : ij.1 + ij.2 = n)]
   push_cast
   ring
 

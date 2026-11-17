@@ -321,8 +321,8 @@ theorem semiInfiniteQ_shifts (hA : GradedUnitary (affineForm L) (affineRealStruc
   refine tensorDeg_induction (matterF L) ghostDegF k
     (fun z => semiInfiniteQ (matterAction L).toAffineSl2Action z ∈
       shiftTarget (brstDegF L) GoodRp k)
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ z hz
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ z hz
   intro b x hx y hy
   rw [semiInfiniteQ_tmul, matter_even_invol]
   have hk : b + (k - b) = k := by abel
@@ -333,7 +333,7 @@ theorem semiInfiniteQ_shifts (hA : GradedUnitary (affineForm L) (affineRealStruc
     have hc : mode (sl2GhostSVA.Y (cGhost a)) (-n - 1) y ∈
         shiftTarget ghostDegF (· = ghShiftF 1 n) (k - b) := by
       have h := ghostYCoeff_shifts a 1 n (k - b) y hy
-      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using h
+      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using! h
     have h := tmul_mem_tensor_shiftTarget (matterF L) ghostDegF hJ hc
     rw [hk] at h
     exact shiftTarget_mono (current_term_good n) k h
@@ -547,8 +547,8 @@ theorem G1_shifts (hA : GradedUnitary (affineForm L) (affineRealStructure L) (af
       intro i x hx
       refine tensorDeg_induction (aDeg L) bDeg i
         (fun x => (abYCoeff L) j (sA ⊗ₜ[ℂ] sB) x ∈ shiftTarget (tensorDeg (aDeg L) bDeg) UpTwo i)
-        (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-        (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ x hx
+        (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+        (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ x hx
       intro b a ha y hy
       rw [abYCoeff_apply]
       change TensorVA.tenY (ASVA L) BSVA (sA ⊗ₜ[ℂ] sB) j (a ⊗ₜ[ℂ] y) ∈ _
@@ -682,8 +682,8 @@ theorem omegaB_even : (omegaB L) ∈ (brstSVA L).parity 0 := by
     TensorVA.tenParity (matterSVA L) sl2GhostSVA 0
   refine TensorVA.tmul_mem_tenParity (matterSVA L) sl2GhostSVA (p₁ := 0) ?_ ?_
   · exact TensorVA.tmul_mem_tenParity (abSVA L) (USVA L) (p₁ := 0) (cosetOmega_even L)
-      (by simpa using (USVA L).vacuum_parity)
-  · simpa using sl2GhostSVA.vacuum_parity
+      (by simpa using! (USVA L).vacuum_parity)
+  · simpa using! sl2GhostSVA.vacuum_parity
 
 /-- `Q` commutes with every mode of `ω_C`. -/
 theorem Q_omegaB_mode (m : ℤ) (v : (BRSTSpace L)) :

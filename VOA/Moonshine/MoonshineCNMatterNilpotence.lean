@@ -14,9 +14,9 @@ theorem moonshineMatterMomentum_weight_below_halfNorm (α : lorentzianLattice.ca
     (N : ℤ) (hN : N < LatGen.halfNorm lorentzianLattice α) :
     moonshineMatterMomentum α ⊓ moonshineMatterNearVOA.grading N = ⊥ := by
   have hα : α = ![α 0, α 1] := by funext i; fin_cases i <;> rfl
-  rw [hα] at hN ⊢
   rw [lorentzian_halfNorm] at hN
   change N < α 0 * α 1 at hN
+  rw [hα]
   apply bot_unique
   intro u hu
   have hw := (moonshineMatterSector_weight_iff (α 0) (α 1) N

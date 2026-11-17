@@ -28,7 +28,7 @@ theorem grFs_zero_of_source (a : Fin 3) (ha : ∀ k, R.op (negRoot a) k w = 0) :
     Garland.Fs (grOp R w a) = 0 := by
   apply PowerSeries.ext
   intro k
-  simpa only [Garland.Fs, PowerSeries.coeff_mk, map_zero] using
+  simpa only [Garland.Fs, PowerSeries.coeff_mk, map_zero] using!
     grOp_zero_of_source_zero R w a k (ha k)
 
 theorem orderedCoeff_mem_of_first_zero (p q r s : ℕ) (hp : 0 < p)

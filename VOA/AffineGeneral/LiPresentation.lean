@@ -68,7 +68,7 @@ theorem rep_mul {p q : MvPolynomial (Fin n) ℂ} {N M : ℕ} {x y : V} (hp : Rep
   obtain ⟨hx, hpx⟩ := hp
   obtain ⟨hy, hqy⟩ := hq
   have hgr : W'.smul x (-1) y ∈ W'.grading ((N + M : ℕ) : ℤ) := by
-    simpa using W'.smul_mem_grading hx hy (-1)
+    simpa using! W'.smul_mem_grading hx hy (-1)
   refine ⟨hgr, ?_⟩
   rw [map_mul, hpx, hqy, liDegreeZeroClass_eq_liHomogeneousClass,
     liDegreeZeroClass_eq_liHomogeneousClass, liHomogeneousClass_mul]
@@ -85,7 +85,7 @@ theorem rep_sum {ι : Type*} (s : Finset ι) (p : ι → MvPolynomial (Fin n) �
     Rep W' g hg (∑ i ∈ s, p i) N (∑ i ∈ s, x i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using rep_zero N
+  | empty => simpa using! rep_zero N
   | insert a s ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha]
       exact rep_add (h a) ih

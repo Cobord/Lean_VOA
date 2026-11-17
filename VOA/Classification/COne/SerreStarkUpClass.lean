@@ -176,7 +176,7 @@ theorem coeff_eq_zero_of_eq_zero {f : ℂ → ℂ} (h : ∀ τ : ℂ, 0 < τ.im 
     thetaTypeCoeff f n = 0 := by
   rw [thetaTypeCoeff_congr (g := fun _ => 0) h]
   exact (IsThetaTypeForm.zero (N := 4)).coeff_eq_of_hasSum (c := fun _ => 0)
-    (fun τ _ => by simpa using hasSum_zero) n
+    (fun τ _ => by simpa using! hasSum_zero) n
 
 /-! ## The recurrence -/
 

@@ -99,8 +99,9 @@ theorem sl_crt_bijective {m n : ℕ} (h : m.Coprime n) :
       rw [e1, e2, M₁.2, M₂.2]
     refine ⟨⟨Xm, hdet⟩, ?_⟩
     simp only [Prod.mk.injEq]
-    constructor <;> ext i j <;>
-      simp [reductionMod, Xm, (hX i j).1, (hX i j).2]
+    constructor <;> ext i j
+    · exact (hX i j).1
+    · exact (hX i j).2
 
 theorem sl_crt_bijective' {L m n : ℕ} (hL : L = m * n) (h : m.Coprime n) :
     Function.Bijective fun g : SLm(L) =>
@@ -113,12 +114,12 @@ theorem sl_crt_bijective' {L m n : ℕ} (hL : L = m * n) (h : m.Coprime n) :
 private theorem S_four' : ModularGroup.S ^ 4 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [ModularGroup.S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [ModularGroup.coe_S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 
 private theorem ST_three' : (ModularGroup.S * ModularGroup.T) ^ 3 = ModularGroup.S ^ 2 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [ModularGroup.S, ModularGroup.T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [ModularGroup.coe_S, ModularGroup.coe_T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- A character of `SL₂(ℤ)` is determined in exponent by its value on `T`. -/
 theorem character_pow_of_T {A : Type*} [CommGroup A] (χ : SL2Z →* A) (n : ℕ)
@@ -131,7 +132,7 @@ theorem character_pow_of_T {A : Type*} [CommGroup A] (χ : SL2Z →* A) (n : ℕ
       χ ModularGroup.S ^ 2 * (χ ModularGroup.S * χ ModularGroup.T ^ 3) =
           χ ModularGroup.S ^ 3 * χ ModularGroup.T ^ 3 := by
             rw [← mul_assoc, ← pow_succ]
-      _ = χ ModularGroup.S ^ 2 * 1 := by simpa using h
+      _ = χ ModularGroup.S ^ 2 * 1 := by simpa using! h
   have hS : χ ModularGroup.S ^ n = 1 := by
     have hs : χ ModularGroup.S = (χ ModularGroup.T ^ 3)⁻¹ := eq_inv_of_mul_eq_one_left hST
     rw [hs, inv_pow, ← pow_mul, mul_comm, pow_mul, hT, one_pow, inv_one]
@@ -158,9 +159,9 @@ theorem pow_mem_commutator_SL (q : ℕ) [NeZero q] (b : SLm(q)) : b ^ q ∈ comm
     rw [← map_pow]
     simp only [MonoidHom.comp_apply, map_pow]
     rw [← map_pow, ← map_pow]
-    simpa only [zpow_natCast, map_pow] using congrArg Abelianization.of h1
+    simpa only [zpow_natCast, map_pow] using! congrArg Abelianization.of h1
   have := character_pow_of_T ((Abelianization.of).comp (reduction q)) q hT g
-  simpa only [MonoidHom.comp_apply, map_pow] using this
+  simpa only [MonoidHom.comp_apply, map_pow] using! this
 
 /-! ## Residuals and the assembly -/
 

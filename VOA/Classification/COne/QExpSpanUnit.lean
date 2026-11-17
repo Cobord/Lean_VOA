@@ -105,7 +105,7 @@ theorem coeff_mem_of_mul_spanUnit_pow {N j : ℕ} {a : PowerSeries ℂ}
     ∀ n, a.coeff n ∈ L := by
   apply coeff_mem_of_mul_unit (spanUnitSeries N ^ j)
   · simp [spanUnitSeries_constantCoeff]
-  · simpa only [map_pow] using h
+  · simpa only [map_pow] using! h
 
 /-- Weight raising by the integral unit can be reversed on full-level forms. -/
 theorem coeff_mem_of_weightRaise {N : ℕ} (hN : 0 < N) (h24 : 24 ∣ N)
@@ -118,7 +118,7 @@ theorem coeff_mem_of_weightRaise {N : ℕ} (hN : 0 < N) (h24 : 24 ∣ N)
   apply coeff_mem_of_mul_spanUnit_pow (j := j) L
   simpa only [ModularForm.qExpansion_mul (by exact_mod_cast hN)
     (nat_mem_strictPeriods_Gamma N), ModularForm.qExpansion_pow (by exact_mod_cast hN)
-    (nat_mem_strictPeriods_Gamma N), spanWeightOneUnit_qExpansion] using h
+    (nat_mem_strictPeriods_Gamma N), spanWeightOneUnit_qExpansion] using! h
 
 /-- In particular no new denominator is introduced by reversing weight raising. -/
 theorem awayCoeff_of_weightRaise {N : ℕ} (hN : 0 < N) (h24 : 24 ∣ N)

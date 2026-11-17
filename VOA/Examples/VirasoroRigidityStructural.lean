@@ -250,7 +250,7 @@ theorem no_gradedEquiv_of_finrank_ne {U₀ : Type u} [AddCommGroup U₀] [Module
     · rintro ⟨x, hx, rfl⟩; exact (he x).mp hx
     · intro hy
       refine ⟨e.symm y, (he (e.symm y)).mpr ?_, by simp⟩
-      simpa using hy
+      simpa using! hy
   have := LinearEquiv.finrank_eq (e.submoduleMap p₀)
   rw [hmap] at this
   exact this

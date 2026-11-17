@@ -3,6 +3,7 @@ Copyright (c) 2026 Fedor K. Popov. All rights reserved.
 Released under the Apache 2.0 license; see the LICENSE file.
 Authors: Fedor K. Popov
 -/
+import Mathlib.RingTheory.MvPolynomial.Basic
 import VOA.Examples.HeisenbergFock
 import VOA.Core.Dong
 import VOA.Core.FieldOps
@@ -28,7 +29,7 @@ oscillators, and its self-locality), this file constructs the **general** vertex
 * **`Y` on monomials.**  For a monomial `a₋(i₁+1)…a₋(iᵣ+1)1` (encoded by its exponent
   vector `a : ℕ →₀ ℕ`) the field `Ymon k a` is the iterated normal-ordered product
   (`Core.Dong.nprod`) of the `genField`s, with the `(1/(mⱼ-1)!)` factors built into each
-  `genField`.  `Y` is the `ℂ`-linear extension of `Ymon` (`Finsupp.linearCombination`).
+  `genField`.  `Y` is the `ℂ`-linear extension of `Ymon` (`Basis.constr` on the monomial basis).
 * **VA2 / the identity field** `Y(1,z) = idField = id·z⁰`  (`Y_vacuum`).
 * **The basic current** `Y(a₋₁1,z) = α(z)`  (`Y_current`).
 * **Creation / VA3** the regularity of `Y(u,z)` on the vacuum (`Y_creation_vacuum_lt`,
@@ -190,12 +191,14 @@ theorem Ymon_isField (k : ℂ) (a : ℕ →₀ ℕ) : IsField (Ymon k a) := Ywor
 /-- **The general vertex operator** `Y : Fock →ₗ[ℂ] FormalDist (End ℂ Fock)` — the `ℂ`-linear
 extension of `Ymon` off the monomial basis of `Fock = MvPolynomial ℕ ℂ` (Gannon §5.2). -/
 noncomputable def Y (k : ℂ) : Fock →ₗ[ℂ] FormalDist (End ℂ Fock) :=
-  Finsupp.linearCombination ℂ (Ymon k)
+  (MvPolynomial.basisMonomials ℕ ℂ).constr ℂ (Ymon k)
 
 /-- `Y` on a monomial returns the iterated product, with the scalar pulled out. -/
 theorem Y_monomial (k : ℂ) (a : ℕ →₀ ℕ) (c : ℂ) :
-    Y k (monomial a c) = c • Ymon k a :=
-  Finsupp.linearCombination_single ℂ c a
+    Y k (monomial a c) = c • Ymon k a := by
+  have hb : (monomial a c : Fock) = c • MvPolynomial.basisMonomials ℕ ℂ a := by
+    rw [MvPolynomial.coe_basisMonomials, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
+  rw [hb, map_smul, Y, Module.Basis.constr_basis]
 
 /-- `Y` on a bare monomial (`c = 1`). -/
 theorem Y_monomial_one (k : ℂ) (a : ℕ →₀ ℕ) : Y k (monomial a 1) = Ymon k a := by

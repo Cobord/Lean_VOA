@@ -18,11 +18,17 @@ theorem radicalPrefix_current (spectators : List (Fin 6 × ℕ))
       pairRadicalOp ρ (spectators ++ [(j, s)]) v := by
   simp only [pairRadicalOp_apply, radicalWord, List.map_append, wordOp_append,
     List.map_singleton, wordOp]
+  -- Lean 4.35: `wordOp_append` no longer fires under `simp` (`Fin 28` vs `Fin D4sector.n`);
+  -- the singleton word has been unfolded by `simp`, so give the lists explicitly.
+  exact (wordOp_append ρ (spectators.map fun p => (radicalColour p.1, p.2))
+    [(radicalColour j, s)] v).symm
 
 theorem radicalPrefix_word (spectators suffix : List (Fin 6 × ℕ)) :
     pairRadicalOp ρ spectators (radicalWord ρ w suffix) =
       radicalWord ρ w (spectators ++ suffix) := by
   simp only [pairRadicalOp_apply, radicalWord, List.map_append, wordOp_append]
+  -- Lean 4.35: `wordOp_append` no longer fires under `simp` (`Fin 28` vs `Fin D4sector.n`)
+  exact (wordOp_append ρ _ _ _).symm
 
 variable {W : Type} [AddCommGroup W] [Module ℂ W]
 
@@ -58,7 +64,7 @@ theorem cartan_high_radical_spectators (q : V →ₗ[ℂ] W) (m : ℕ)
             simp only [and_self, if_true, Nat.add_zero]
             congr 1
             apply radicalWord_perm ρ w
-            simpa only [List.cons_append, List.singleton_append, List.append_assoc] using
+            simpa only [List.cons_append, List.singleton_append, List.append_assoc] using!
               ((List.perm_middle.cons (5, 0)).trans
                 ((List.Perm.swap (5, r) (5, 0) (spectators ++ suffix)).trans
                   (List.perm_middle.cons (5, r)).symm))
@@ -67,7 +73,7 @@ theorem cartan_high_radical_spectators (q : V →ₗ[ℂ] W) (m : ℕ)
                 ((((5, 0) :: spectators) ++ [(5, r + s)]) ++ suffix).Perm
                   ((5, r + s) :: (5, 0) :: spectators ++ suffix) := by
               simpa only [List.append_assoc, List.singleton_append,
-                List.cons_append] using
+                List.cons_append] using!
                 (List.perm_middle (a := (5, r + s))
                   (l₁ := (5, 0) :: spectators) (l₂ := suffix))
             rw [radicalWord_perm ρ w hp]

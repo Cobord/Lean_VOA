@@ -121,7 +121,7 @@ theorem summable_product_qPowers_of_cuspWard (hV : StronglyRational W)
     (norm_nonneg (q / rho)) hqr
   have hs' : Summable (fun n => PowerSeries.coeff n
       (productCuspSeries hV i₁ i₂ iN Y₁ Y₂ hz₂ hz rho x y) * (q / rho) ^ n) :=
-    (by simpa only [norm_mul, norm_pow] using hs : Summable (fun n =>
+    (by simpa only [norm_mul, norm_pow] using! hs : Summable (fun n =>
       ‖PowerSeries.coeff n (productCuspSeries hV i₁ i₂ iN Y₁ Y₂ hz₂ hz rho x y) *
         (q / rho) ^ n‖)).of_norm
   have heq (n : ℕ) : PowerSeries.coeff n
@@ -169,7 +169,7 @@ theorem analyticAt_product_qSeries_zero_of_cuspWard (hV : StronglyRational W)
     hward ((‖rho‖ / 2 : ℝ) : ℂ) (by
       rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr]
       linarith [norm_pos_iff.mpr hrho])
-  simpa only [norm_mul, norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr] using hs
+  simpa only [norm_mul, norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr] using! hs
 
 /-- Ward identities on each smaller q-disc give outer convergence throughout
 the product annulus. This still asserts outer convergence only. -/
@@ -189,7 +189,7 @@ theorem productQSummable_in_annulus_of_cuspWard (hV : StronglyRational W)
   have hr₀ : 0 < r := (norm_nonneg (qParam τ)).trans_lt hqr
   apply productQSummable_of_cuspWard hV i₁ i₂ iN Y₁ Y₂ hx hy hz₂ hz
     (hward r hr₀ hr) τ
-  simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr₀] using hqr
+  simpa only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr₀] using! hqr
 
 /-- Certified value of the actual outer q-trace under the same Ward input. -/
 theorem hasSum_product_qTrace_of_cuspWard (hV : StronglyRational W)

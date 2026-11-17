@@ -8,7 +8,7 @@ private theorem class_sum (m : ℕ) (t : Fin 4 → ℕ)
     (ht : t ∈ Finset.piAntidiag (Finset.univ : Finset (Fin 4)) m) :
     t 0 + t 1 + t 2 + t 3 = m := by
   have h := (Finset.mem_piAntidiag.mp ht).1
-  simpa only [Fin.sum_univ_four] using h
+  simpa only [Fin.sum_univ_four] using! h
 
 private theorem class_vector (t : Fin 4 → ℕ) :
     t = ![t 0, t 1, t 2, t 3] := by
@@ -35,11 +35,11 @@ theorem ksClass_shape (m : ℕ) (k : RadicalKey) (t : Fin 4 → ℕ)
     (hs : ksSupported m k) (hc : ksKeyClass m k = t) :
     k = pairFinalKey (t 0) (t 2) (t 3) k.degree := by
   have h0 : k.x - k.y = t 0 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 0) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 0) hc
   have h2 : k.y = t 2 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 2) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 2) hc
   have h3 : k.z = t 3 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 3) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 3) hc
   rw [← h0, ← h2, ← h3]
   exact ksSupported_shape m k hs
 
@@ -58,11 +58,11 @@ theorem ksClass_boxCount (m : ℕ) (k : RadicalKey) (t : Fin 4 → ℕ)
     ksBoxCount m k = ksGradedBoxCount m (t 0) (t 2) (t 3) k.degree := by
   rw [ksSupported_boxCount m k hs]
   have h0 : k.x - k.y = t 0 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 0) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 0) hc
   have h2 : k.y = t 2 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 2) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 2) hc
   have h3 : k.z = t 3 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 3) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 3) hc
   rw [h0, h2, h3]
 
 end VOA.DeligneAudit.D4Levi

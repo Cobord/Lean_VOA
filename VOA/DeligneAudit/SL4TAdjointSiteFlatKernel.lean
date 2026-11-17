@@ -212,7 +212,7 @@ theorem flatCorner_lastLowering_zero (B h : ℕ) (hW : LocalWeylRel ρ w (weight
   · rw [pow_zero, Module.End.one_apply, hFh, map_zero]
   · obtain ⟨m, rfl⟩ : ∃ m, B = m + 1 := ⟨B - 1, by omega⟩
     have hFg (x : V) : ρ.op 11 h (ρ.op 9 0 x) = ρ.op 9 0 (ρ.op 11 h x) + ρ.op 10 h x := by
-      simpa only [add_zero, Int.cast_one, one_smul] using
+      simpa only [add_zero, Int.cast_one, one_smul] using!
         op_comm_of_single_bracket ρ bracket_last_middle h 0 x
     have hqg (x : V) : ρ.op 10 h (ρ.op 9 0 x) = ρ.op 9 0 (ρ.op 10 h x) :=
       op_comm_of_zero_bracket ρ bracket_lastPair_middle_zero h 0 x

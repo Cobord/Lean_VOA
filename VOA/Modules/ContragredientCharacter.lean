@@ -173,7 +173,7 @@ theorem weightBlock_contra_eq_conj (N : OrdVModule W M) (hJac : ContragredientJa
           ((-1 : ℂ) ^ n • Module.Dual.transpose (weightBlock N (oMod N v) α)) := by
   refine LinearMap.ext (fun y => ?_)
   -- write y = lof α g' for g' = (lofEquiv N α).symm y
-  obtain ⟨g', rfl⟩ : ∃ g', lofEquiv N α g' = y := ⟨(lofEquiv N α).symm y, by simp⟩
+  obtain ⟨g', rfl⟩ : ∃ g', lofEquiv N α g' = y := ⟨(lofEquiv N α).symm y, (lofEquiv N α).apply_symm_apply y⟩
   -- LHS
   show internalProjTo (contragredient N hJac).isInternal α
       (oMod (contragredient N hJac) v

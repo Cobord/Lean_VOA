@@ -53,6 +53,11 @@ covers `a ∈ (V₀⁺)₂` only.
 Imported by the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.SigmaExist
@@ -383,7 +388,7 @@ theorem IsSigmaV3T.zero_mode {Φ : VPlus →ₗ[ℂ] TP} (hΦ : IsSigmaV3T Φ) (
 theorem x0T_mem_weight (t₀ : TLeechT) : x0T t₀ ∈ plusModule.weight (2 : ℂ) := by
   have hX : (MvPolynomial.X (0, 0) : FockT 24) ∈ gradingT 24 1 := by
     have := MvPolynomial.isWeightedHomogeneous_X ℂ (wT (r := 24)) (0, 0)
-    simpa using this
+    first | simpa using this | exact this
   have hg : frameX0T t₀ ∈ TwistedSector.twGrading 24 leechT 1 :=
     TwistedSector.tmul_mem_twGrading 24 leechT hX t₀
   have hw : frameX0T t₀ ∈ TwistedSector.twWeight 24 leechT ((2 : ℚ)) := by
@@ -446,7 +451,7 @@ theorem hZO_TT {s' s : ZMod 2} {φ : TP →ₗ[ℂ] TP} (hφ : TopSigmaTT s' s �
   by_cases hq : q = k - 1
   · subst hq
     rw [WeakModule.act_def, mode_AT, projT2_of_mem (show actT a (k - 1) x ∈ plusModule.weight (2 : ℂ) by
-      convert hmem using 2; push_cast; ring), hφ.zero_mode k a ha' x hx]
+      convert hmem using 2; push_cast; ring; all_goals rfl), hφ.zero_mode k a ha' x hx]
   · rw [WeakModule.act_def, mode_AT, projT2_of_mem_ne (cast_ne_two hq) (y := actT a q x) hmem,
       map_zero, map_zero,
       LinearMap.zero_apply]
@@ -489,7 +494,7 @@ theorem eqOn_top_TT {s' s : ZMod 2} {φ : TP →ₗ[ℂ] TP} (hφ : TopSigmaTT s
       by_cases hn : n = k - 1
       · subst hn
         rw [projT2_of_mem (show actT a (k - 1) x₀ ∈ plusModule.weight (2 : ℂ) by
-          convert hmem using 2; push_cast; ring)]
+          convert hmem using 2; push_cast; ring; all_goals rfl)]
         exact subset_span ⟨k, a, ha, rfl⟩
       · rw [projT2_of_mem_ne (cast_ne_two hn) (y := actT a n x₀) hmem]
         exact zero_mem _

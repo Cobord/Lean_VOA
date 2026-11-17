@@ -19,14 +19,14 @@ def permutationFixedAlgebraEquiv {σ τ G H : Type*}
   toFun p := ⟨rename e p.val, by
     intro t
     have hi := rename_intertwine e (a (g.symm t)) (b t)
-      (by simpa using h (g.symm t)) p.val
+      (by simpa using! h (g.symm t)) p.val
     rw [hi, p.property]⟩
   invFun p := ⟨rename e.symm p.val, by
     intro t
     have hi := rename_intertwine e.symm (b (g t)) (a t) (by
       intro i
       apply e.injective
-      simpa using (h t (e.symm i)).symm) p.val
+      simpa using! (h t (e.symm i)).symm) p.val
     rw [hi, p.property]⟩
   left_inv p := by apply Subtype.ext; exact (renameEquiv ℂ e).left_inv p.val
   right_inv p := by apply Subtype.ext; exact (renameEquiv ℂ e).right_inv p.val

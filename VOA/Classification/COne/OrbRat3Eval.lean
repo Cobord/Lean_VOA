@@ -126,7 +126,7 @@ theorem chargeCoord_four (d : ℤ) :
   have h (k : ℕ) : chargeCoord (latP 4) (k : ℤ) (a0 4) = (k : ℂ) * cα 4 := by
     induction k with
     | zero =>
-      simpa only [Nat.cast_zero, zero_mul] using chargeCoord_zero (latP 4) (a0 4)
+      simpa only [Nat.cast_zero, zero_mul] using! chargeCoord_zero (latP 4) (a0 4)
     | succ k ih =>
       have hh := chargeCoord_add (latP 4) ((k : ℤ) : (latP 4).carrier)
         ((1 : ℤ) : (latP 4).carrier) (a0 4)
@@ -183,8 +183,9 @@ theorem exponentialAction_sound (b d n : ℤ) (P : RawPoly ℕ) :
   norm_cast
   rw [← chargeCoord_four]
   have h := V2m_charge_smul_evRc 4 four_ge_one b d n (liftR R)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul] at h
-  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*4=8 by norm_num] using h.symm
+  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle 4 (b : (latP 4).carrier) (d : (latP 4).carrier),
+    one_smul] at h
+  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*4=8 by norm_num] using! h.symm
 
 
 /-! ## Memoized creation coefficients
@@ -434,9 +435,9 @@ theorem sum_sector_filter (ds : List ℤ) (hd : ds.Nodup) :
           sector d (evRc (a0 4) (cα 4) ((s.filter fun q => q.1 = d).flatMap Prod.snd)) := by
       intro d
       by_cases h : p.1 = d
-      · rw [List.filter_cons_of_pos (by simpa using h), List.flatMap_cons, evRc_append,
+      · rw [List.filter_cons_of_pos (by simpa using! h), List.flatMap_cons, evRc_append,
           map_add, if_pos h]
-      · rw [List.filter_cons_of_neg (by simpa using h), if_neg h, zero_add]
+      · rw [List.filter_cons_of_neg (by simpa using! h), if_neg h, zero_add]
     simp only [hterm, List.sum_map_add, ih, evalSt_cons]
     congr 1
     rw [← List.sum_toFinset _ hd, Finset.sum_ite_eq]

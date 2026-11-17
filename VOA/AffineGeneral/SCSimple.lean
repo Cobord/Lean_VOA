@@ -196,7 +196,12 @@ theorem isSimple_of_tables (hD : RootChecks T D) [Nonempty (Fin D.nr)] :
           · exact Or.inl h
           · exact Or.inr ⟨γ, h1, by exact_mod_cast h2⟩)
     intro α β
-    exact (Relation.ReflTransGen.symmetric hsymm (hreach α)).trans (hreach β)
+    have hreverse : Relation.ReflTransGen (fun a b : Fin D.nr => ((D.pairT a b : ℤ) : ℂ) ≠ 0)
+        α D.base := by
+      induction hreach α with
+      | refl => exact .refl
+      | tail _ h ih => exact ih.head (hsymm h)
+    exact hreverse.trans (hreach β)
 
 /-- **The Killing form of a sparse vector**, as a finite sum of sparse coefficients. -/
 theorem killing_vec (l : List (ℕ × ℤ)) (hl : inRange N l = true)

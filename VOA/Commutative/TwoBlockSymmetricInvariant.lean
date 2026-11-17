@@ -66,7 +66,7 @@ theorem coefficient_isSymmetric_of_rightInvariant
   have hcov := sumAlgEquiv_rename_blockPermutation
     (K := K) (sigma := sigma) (tau := tau) (Equiv.refl sigma) f p
   rw [hp f] at hcov
-  have hcoeff := congrArg (MvPolynomial.coeff d) hcov
+  have hcoeff := congrArg (fun q : MvPolynomial _ _ => q.coeff d) hcov
   simpa [MvPolynomial.coeff_map] using hcoeff.symm
 
 section CoefficientLift
@@ -96,7 +96,7 @@ theorem map_subalgebraVal_injective :
   apply MvPolynomial.ext
   intro d
   apply Subtype.ext
-  have hcoeff := congrArg (MvPolynomial.coeff d) hpq
+  have hcoeff := congrArg (fun q : MvPolynomial _ _ => q.coeff d) hpq
   simpa [MvPolynomial.coeff_map] using hcoeff
 
 end CoefficientLift

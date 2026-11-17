@@ -94,8 +94,7 @@ theorem maximalCarrier_stable (d : ℤ) (a : V) (ha : a ∈ W.grading d) (n : �
     (motive := fun b => tauHat A₁ A₂ d a n b ∈ maximalCarrier A₁ A₂) hb ?_ ?_ ?_
   · intro S b hb
     exact compatibleSpace_le_maximal A₁ A₂ S (S.stable d a ha n b hb)
-  · dsimp only
-    rw [← tauEnd_apply, map_zero]
+  · rw [← tauEnd_apply, map_zero]
     exact Submodule.zero_mem _
   · intro b c hb hc
     rw [← tauEnd_apply, map_add, tauEnd_apply, tauEnd_apply]

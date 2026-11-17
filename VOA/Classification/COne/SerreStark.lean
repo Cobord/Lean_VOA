@@ -96,8 +96,10 @@ theorem isPreconnected_upperSet : IsPreconnected upperSet :=
 def matT : Matrix.SpecialLinearGroup (Fin 2) ℤ :=
   ⟨!![1, 1; 0, 1], by simp [Matrix.det_fin_two]⟩
 
+theorem coe_matT : (matT : Matrix (Fin 2) (Fin 2) ℤ) = !![1, 1; 0, 1] := rfl
+
 theorem matT_mem_Gamma1 (N : ℕ) : matT ∈ CongruenceSubgroup.Gamma1 N := by
-  simp [matT]
+  simp [CongruenceSubgroup.Gamma1_mem, coe_matT]
 
 theorem mobius_matT (τ : ℂ) : mobius matT τ = τ + 1 := by
   simp [mobius, matT]
@@ -283,6 +285,8 @@ theorem thetaRef_S_sq {τ : ℂ} (hτ : 0 < τ.im) :
 def matU (m : ℤ) : Matrix.SpecialLinearGroup (Fin 2) ℤ :=
   ⟨!![1, 0; 4 * m, 1], by simp [Matrix.det_fin_two]⟩
 
+theorem coe_matU (m : ℤ) : (matU m : Matrix (Fin 2) (Fin 2) ℤ) = !![1, 0; 4 * m, 1] := rfl
+
 theorem mobius_matU (m : ℤ) (τ : ℂ) : mobius (matU m) τ = τ / (4 * (m : ℂ) * τ + 1) := by
   simp [mobius, matU]
 
@@ -319,7 +323,7 @@ theorem thetaSqLaw_U (m : ℤ) : ThetaSqLaw (matU m) := by
 theorem matU_mul_neg (m : ℤ) : matU m * matU (-m) = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [coe_matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem mul_T_zpow_one_zero (γ : Matrix.SpecialLinearGroup (Fin 2) ℤ) (k : ℤ) :
     (γ * ModularGroup.T ^ k) 1 0 = γ 1 0 := by
@@ -334,12 +338,12 @@ theorem mul_T_zpow_one_one (γ : Matrix.SpecialLinearGroup (Fin 2) ℤ) (k : ℤ
 
 theorem mul_matU_one_zero (γ : Matrix.SpecialLinearGroup (Fin 2) ℤ) (m : ℤ) :
     (γ * matU m) 1 0 = γ 1 0 + 4 * m * γ 1 1 := by
-  simp [matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
+  simp [coe_matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
   ring
 
 theorem mul_matU_one_one (γ : Matrix.SpecialLinearGroup (Fin 2) ℤ) (m : ℤ) :
     (γ * matU m) 1 1 = γ 1 1 := by
-  simp [matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
+  simp [coe_matU, Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Balanced division: `d + c k` can be brought into `[-|c|/2, |c|/2]`. -/
 theorem exists_balanced (c d : ℤ) (hc : c ≠ 0) :

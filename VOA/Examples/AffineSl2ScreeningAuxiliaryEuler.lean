@@ -20,32 +20,31 @@ noncomputable section
 /-- Euler differentiation in auxiliary variable i, with actual oscillator
 coefficients. Negative exponents remain signed integers. -/
 def auxiliaryEulerLinear {r : ℕ} (i : Fin r) : Auxiliary r →ₗ[ℂ] Auxiliary r :=
-  Finsupp.lsum ℂ (fun g => (g i : ℂ) • Finsupp.lsingle g)
+  (Finsupp.lsum ℂ (fun g : Fin r → ℤ => (g i : ℂ) • AddMonoidAlgebra.lsingle (R := ℂ) g)) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- A single Laurent monomial is an Euler eigenvector with its signed
 exponent; the actual oscillator coefficient is only scalar multiplied. -/
 theorem auxiliaryEulerLinear_single {r : ℕ} (i : Fin r) (g : Fin r → ℤ) (P : WakFock) :
     auxiliaryEulerLinear i (single g P)=single g ((g i : ℂ) • P) := by
-  change (Finsupp.lsum ℂ (fun g : Fin r → ℤ => (g i : ℂ) • Finsupp.lsingle g))
+  change (Finsupp.lsum ℂ (fun g : Fin r → ℤ => (g i : ℂ) • AddMonoidAlgebra.lsingle (R := ℂ) g))
     (Finsupp.single g P)=_
-  rw [Finsupp.lsum_single]
-  change (g i : ℂ) • (Finsupp.single g P : (Fin r → ℤ) →₀ WakFock)=_
-  exact Finsupp.smul_single _ _ _
+  rw [Finsupp.lsum_single, LinearMap.smul_apply, AddMonoidAlgebra.lsingle_apply,
+    AddMonoidAlgebra.smul_single]
 
 /-- Euler differentiation acts on each actual coefficient by its exponent. -/
 theorem auxiliaryEulerLinear_apply {r : ℕ} (i : Fin r) (P : Auxiliary r)
-    (g : Fin r → ℤ) : auxiliaryEulerLinear i P g=(g i : ℂ) • P g := by
+    (g : Fin r → ℤ) : (auxiliaryEulerLinear i P).coeff g=(g i : ℂ) • P.coeff g := by
   induction P using AddMonoidAlgebra.induction_linear with
   | zero => rw [map_zero]; change (0 : WakFock)=_ • 0; rw [smul_zero]
   | add P Q hP hQ =>
-      rw [map_add]
-      change auxiliaryEulerLinear i P g+auxiliaryEulerLinear i Q g=_ • (P g+Q g)
-      rw [hP,hQ,smul_add]
+      rw [map_add,AddMonoidAlgebra.coeff_add,AddMonoidAlgebra.coeff_add,Finsupp.add_apply,
+        Finsupp.add_apply,hP,hQ,smul_add]
   | single a p =>
-      rw [auxiliaryEulerLinear_single]
+      rw [auxiliaryEulerLinear_single,AddMonoidAlgebra.coeff_single,AddMonoidAlgebra.coeff_single]
       by_cases h : a=g
       · subst a; simp
-      · simp [AddMonoidAlgebra.single_apply,h]
+      · simp [Finsupp.single_apply,h]
 
 /-- Actual auxiliary Euler differentiation satisfies the finite Laurent
 product rule, independently of oscillator variables. -/
@@ -68,7 +67,6 @@ def auxiliaryEuler {r : ℕ} (i : Fin r) : Derivation ℂ (Auxiliary r) (Auxilia
   map_one_eq_zero' := by
     rw [AddMonoidAlgebra.one_def,auxiliaryEulerLinear_single]
     simp
-    rfl
   leibniz' P Q := by
     rw [auxiliaryEulerLinear_mul]
     simp only [smul_eq_mul]
@@ -76,7 +74,7 @@ def auxiliaryEuler {r : ℕ} (i : Fin r) : Derivation ℂ (Auxiliary r) (Auxilia
 
 /-- The bundled auxiliary derivative has the same exact coefficient formula. -/
 theorem auxiliaryEuler_apply {r : ℕ} (i : Fin r) (P : Auxiliary r) (g : Fin r → ℤ) :
-    auxiliaryEuler i P g=(g i : ℂ) • P g := auxiliaryEulerLinear_apply i P g
+    (auxiliaryEuler i P).coeff g=(g i : ℂ) • P.coeff g := auxiliaryEulerLinear_apply i P g
 
 /-- Its action on a Laurent monomial leaves the oscillator coefficient
 unchanged apart from multiplication by the signed exponent. -/
@@ -87,9 +85,9 @@ theorem auxiliaryEuler_single {r : ℕ} (i : Fin r) (g : Fin r → ℤ) (P : Wak
 the Euler derivative minus L times the expression has zero selected
 coefficient, without an analytic contour or an infinite series. -/
 theorem auxiliaryEuler_selected_zero (r q M : ℕ) (i : Fin r) (P : Auxiliary r) :
-    (auxiliaryEuler i P-((((r-1)*M+q-1 : ℕ) : ℂ) • P))
+    (auxiliaryEuler i P-((((r-1)*M+q-1 : ℕ) : ℂ) • P)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
-  change (auxiliaryEuler i P) _-(((r-1)*M+q-1 : ℕ) : ℂ) • P _=0
+  change (auxiliaryEuler i P).coeff _-(((r-1)*M+q-1 : ℕ) : ℂ) • P.coeff _=0
   rw [auxiliaryEuler_apply]
   simp only [Int.cast_natCast,sub_self]
 
@@ -101,7 +99,6 @@ theorem auxiliaryEuler_betaFactor_ne (r D : ℕ) (i j : Fin r) (hij : i≠j) :
   apply Finset.sum_eq_zero
   intro n hn
   simp [unitExponent,Pi.single_eq_of_ne hij]
-  rfl
 
 /-- In differentiating an integrand with beta factor i omitted, every
 remaining beta factor is constant with respect to auxiliary variable i. -/
@@ -123,7 +120,6 @@ theorem auxiliaryEuler_bosonPower (r m : ℕ) (i : Fin r) :
   · simp [unitExponent,← Finsupp.smul_single]
   · intro j hj hji
     simp [unitExponent,Pi.single_eq_of_ne (Ne.symm hji)]
-    rfl
   · simp
 
 end

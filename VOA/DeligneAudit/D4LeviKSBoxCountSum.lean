@@ -84,7 +84,7 @@ theorem ksBoxCount_global_sum (m : ℕ) :
         ∏ j : Fin 4, ksClassWeight j ^ t j := by
       apply Finset.sum_le_sum
       intro t ht
-      simpa [S, Finset.filter_filter, and_comm, and_left_comm, and_assoc] using
+      simpa [S, Finset.filter_filter, and_comm, and_left_comm, and_assoc] using!
         ksBoxCount_fiber_le m t ht
     _ = 29 ^ m := ksWeightedMultinomial m
 

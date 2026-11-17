@@ -1416,9 +1416,14 @@ Proved; axioms standard (project record, Section~\ref{l23:sec:verification}).
 %======================================================================
 
 Theorem~\ref{l23:thm:simpleaffine} is only useful if some concrete Lie algebra in Lean carries an instance of
-\lean{LieAlgebra.IsSimple}. Mathlib v4.30 has none: it defines $\mathfrak{sl}_n$
+\lean{LieAlgebra.IsSimple}. Mathlib v4.30, against which this part was written, has none: it defines $\mathfrak{sl}_n$
 (\lean{LieAlgebra.SpecialLinear.sl}) and, through \lean{Matrix.ToLieAlgebra}, a Serre-relation construction of the exceptional
-algebras, but proves neither simplicity nor finite-dimensionality for any of them.
+algebras, but proves neither simplicity nor finite-dimensionality for any of them. (The current Mathlib commit
+\texttt{b63f6e8a} does contain one such instance, \lean{IsSimple K (lieAlgebra b)}, for Geck's construction
+\lean{RootPairing.GeckConstruction.lieAlgebra} of a Lie algebra from a base \lean{b} of a reduced, crystallographic,
+irreducible root system over an algebraically closed field \lean{K} of characteristic zero; it still has no
+simplicity instance for $\mathfrak{sl}_n$ or for the Serre-relation algebras. The library does not use Geck's
+construction.)
 
 \begin{warning}[title={Dead end: Mathlib's Serre construction}]\label{l23:warn:serre}
 The obvious route to $\mathfrak e_8$ is Mathlib's \lean{LieAlgebra.e₈ := Matrix.ToLieAlgebra …} (file

@@ -43,7 +43,6 @@ theorem natGaussian_complement (n k : ℕ) (hk : k ≤ n) :
   funext d
   have hh := congrArg (fun p : Polynomial ℚ => p.coeff d)
     (qbinom_symm (Polynomial.X : Polynomial ℚ) n k hk)
-  dsimp only at hh
   rw [A2.coeff_qbinom_X, A2.coeff_qbinom_X] at hh
   exact_mod_cast hh
 
@@ -65,8 +64,8 @@ theorem gl3Hilb_eq_box_branch (p q N : ℕ) :
   intro a ha
   apply Finset.sum_congr rfl
   intro b hb
-  have ha' : a ≤ p := by simpa using ha
-  have hb' : b ≤ q := by simpa using hb
+  have ha' : a ≤ p := by simpa using! ha
+  have hb' : b ≤ q := by simpa using! hb
   rw [show q + p - q = p by omega, Nat.sub_zero,
     show q + p - (q + a) = p - a by omega,
     natGaussian_complement p a ha', natGaussian_complement q b hb']
@@ -91,9 +90,9 @@ theorem gl4Hilb_eq_box_branch (a b c N : ℕ) :
   rw [← Nat.range_succ_eq_Icc_zero]
   apply Finset.sum_congr rfl
   intro z hz
-  have hx' : x ≤ a := by simpa using hx
-  have hy' : y ≤ b := by simpa using hy
-  have hz' : z ≤ c := by simpa using hz
+  have hx' : x ≤ a := by simpa using! hx
+  have hy' : y ≤ b := by simpa using! hy
+  have hz' : z ≤ c := by simpa using! hz
   have h₁ : c + b + a - (c + b) = a := by omega
   have h₂ : c + b - c = b := by omega
   have h₃ : c + b + a - (c + b + x) = a - x := by omega

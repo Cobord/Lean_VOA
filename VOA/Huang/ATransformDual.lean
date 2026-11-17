@@ -85,7 +85,8 @@ theorem evDD_pairing (x : M) (ψ : RestrictedDual A) :
       erw [map_zero]
       exact dualPairing_zero_x (contragredientModule A) _
     | of β g =>
-      rw [← DirectSum.lof_eq_of ℂ, dualPairing_lof]
+      rw [← DirectSum.lof_eq_of ℂ]
+      refine (dualPairing_lof (contragredientModule A) _ α _).trans ?_
       have hmem : DirectSum.lof ℂ ℂ (fun γ => Module.Dual ℂ (A.weight γ)) β g
           ∈ (contragredientModule A).weight β := ⟨g, rfl⟩
       by_cases h : α = β

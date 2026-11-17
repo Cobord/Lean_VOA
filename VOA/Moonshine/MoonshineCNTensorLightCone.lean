@@ -58,7 +58,7 @@ theorem hypTensorPBWMap_sorted_word (D : ℕ → Module.End ℂ V) (κ ell : ℂ
     map_sum, map_sum]
   apply Finset.sum_congr rfl
   intro e he
-  have hm : (monomial e (coeff e p) : hypFock) = coeff e p • monomial e 1 := by
+  have hm : (monomial e (p.coeff e) : hypFock) = p.coeff e • monomial e 1 := by
     rw [smul_monomial, smul_eq_mul, mul_one]
   rw [hm, mul_smul_comm, TensorProduct.tmul_smul, TensorProduct.tmul_smul,
     map_smul, map_smul, hypTensorPBWMap_sorted_monomial D κ ell l hl v e

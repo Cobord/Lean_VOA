@@ -21,21 +21,21 @@ noncomputable section
 theorem LowerDegree.add {r : ℕ} {d : ℤ} {P Q : Auxiliary r}
     (hP : LowerDegree d P) (hQ : LowerDegree d Q) : LowerDegree d (P+Q) := by
   intro g hg
-  change P g+Q g=0
+  change P.coeff g+Q.coeff g=0
   rw [hP g hg,hQ g hg,add_zero]
 
 /-- Negation does not change the lower auxiliary-degree bound. -/
 theorem LowerDegree.neg {r : ℕ} {d : ℤ} {P : Auxiliary r}
     (hP : LowerDegree d P) : LowerDegree d (-P) := by
   intro g hg
-  change -(P g)=0
+  change -(P.coeff g)=0
   rw [hP g hg,neg_zero]
 
 /-- A finite product of nonnegative-degree factors still has nonnegative degree. -/
 theorem lowerDegree_prod_zero {r : ℕ} {I : Type*} (S : Finset I)
     (P : I → Auxiliary r) (hP : ∀ i∈S, LowerDegree 0 (P i)) :
     LowerDegree 0 (∏ i∈S, P i) := by
-  simpa using LowerDegree.prod S (fun _ => 0) P hP
+  simpa using! LowerDegree.prod S (fun _ => 0) P hP
 
 /-- If derivatives of two factors equal specified multipliers up to
 high-degree errors, the derivative of their product has the sum multiplier
@@ -44,8 +44,8 @@ theorem derivative_error_mul {r : ℕ} (D : Derivation ℂ (Auxiliary r) (Auxili
     (d : ℤ) (P Q a b : Auxiliary r) (hP : LowerDegree 0 P) (hQ : LowerDegree 0 Q)
     (heP : LowerDegree d (D P-a*P)) (heQ : LowerDegree d (D Q-b*Q)) :
     LowerDegree d (D (P*Q)-(a+b)*(P*Q)) := by
-  have hp : LowerDegree d ((D P-a*P)*Q) := by simpa using heP.mul hQ
-  have hq : LowerDegree d (P*(D Q-b*Q)) := by simpa using hP.mul heQ
+  have hp : LowerDegree d ((D P-a*P)*Q) := by simpa using! heP.mul hQ
+  have hq : LowerDegree d (P*(D Q-b*Q)) := by simpa using! hP.mul heQ
   convert hp.add hq using 1
   rw [D.leibniz]
   simp only [smul_eq_mul]

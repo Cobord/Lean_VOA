@@ -20,7 +20,7 @@ theorem twoGen_one_cartan_pos (c : Fin 28) (hc : D4sector.cartan c)
       simp only [show ¬ 1 + 1 < 2 by omega, if_false] at hcomm
       rw [hv, map_zero, sub_zero] at hcomm
       exact hcomm
-    simpa [twoCurrent, twoGen] using hz
+    simpa [twoCurrent, twoGen] using! hz
   · have hr2 : ¬ r ≤ 1 := by omega
     simp [twoCurrent, hr2]
 
@@ -43,11 +43,11 @@ theorem twoGen_zero_cartan_one_mem (c : Fin 28)
         (ρPTE 2).op D4sector.c₀ 1 0 ((ρPTE 2).op c 0 1 (pTE 2)) =
         ∑ e : Fin 28, D4sector.f c D4sector.c₀ e •
           (ρPTE 2).op e 1 1 (pTE 2) := by
-    simpa only [Nat.add_zero, Nat.zero_add, if_pos (by omega)] using hcomm
+    simpa only [Nat.add_zero, Nat.zero_add, if_pos (by omega)] using! hcomm
   rw [hv, map_zero, sub_zero] at hcomm'
   have hz : (ρPTE 2).op c 0 1 (twoGen 0) ∈ twoM 1 :=
     hcomm' ▸ hsum
-  simpa [twoCurrent] using hz
+  simpa [twoCurrent] using! hz
 
 theorem twoOne_cartan_pos (c : Fin 28) (hc : D4sector.cartan c)
     (r : ℕ) (hr : 1 ≤ r) : twoOneCurrent.op c r twoOneGen = 0 := by

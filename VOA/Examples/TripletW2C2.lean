@@ -174,7 +174,7 @@ theorem C2Cofinite_of_grading_le_O₂ (W : VertexOperatorAlgebra 𝒱) {N : ℕ}
     · have hz : piHom W j x = 0 := by
         have hm := piHom_mem W j x
         rw [W.positivity j hj] at hm
-        simpa using hm
+        simpa using! hm
       rw [hz, map_zero]
       exact (LinearMap.range f).zero_mem
     · rcases lt_or_ge j (N : ℤ) with hjN | hjN
@@ -223,7 +223,7 @@ theorem C2Cofinite_of_finite_span_sup (W : VertexOperatorAlgebra 𝒱) (S : Fins
     refine ⟨⟨a, ha⟩, ?_⟩
     change mk₂ W a = mk₂ W (a + b)
     rw [mk₂_eq_iff]
-    simpa using (O₂ W).neg_mem hb
+    simpa using! (O₂ W).neg_mem hb
   exact Module.Finite.of_surjective f hsurj
 
 /-! ## §2  The positive template: strong generation + nilpotent generators

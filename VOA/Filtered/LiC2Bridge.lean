@@ -23,8 +23,8 @@ theorem wordAct_mem_O₂_of_level_pos (W : VertexOperatorAlgebra V)
   | cons a l ih =>
       change W.smul a.1 (-(a.2.2 : ℤ) - 1) (wordAct (adjointWeakModule W) l w) ∈ O₂ W
       by_cases ha : a.2.2 = 0
-      · have ht : 1 ≤ wordLevel l := by simpa only [wordLevel_cons, ha, zero_add] using hl
-        simpa only [ha, Nat.cast_zero, neg_zero, zero_sub] using
+      · have ht : 1 ≤ wordLevel l := by simpa only [wordLevel_cons, ha, zero_add] using! hl
+        simpa only [ha, Nat.cast_zero, neg_zero, zero_sub] using!
           poissonMul_mem_O₂_right W a.1 (ih ht)
       · exact smul_le_neg_two_mem_O₂ W _ _ (by omega)
 
@@ -78,7 +78,7 @@ theorem liDegreeZeroClass_mode_zero (W : VertexOperatorAlgebra V) (N M : ℕ)
           have heq : ((N + M - 1 : ℕ) : ℤ) = (N : ℤ) + M - 0 - 1 := by
             rw [Nat.cast_sub hNM, Nat.cast_add, Nat.cast_one]
             ring
-          simpa only [heq, poissonBracket_def] using h⟩ := by
+          simpa only [heq, poissonBracket_def] using! h⟩ := by
   change liAssociatedGradedMode W 0
     (liGradedClass W 0 N x.1 _) (liGradedClass W 0 M y.1 _) = _
   rw [liGradedClass_mode W 0 0 N M 0 (by omega) (by omega)]

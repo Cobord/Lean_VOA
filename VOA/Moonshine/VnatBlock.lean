@@ -218,23 +218,23 @@ theorem local_diag_diag {a a' : FormalDist (End ℂ V)} {b b' : FormalDist (End 
   rw [diagF, diagF, bracketDist_blockF]
   refine mulBySubPow_blockF₂_eq_zero ?_ ?_ ?_ ?_
   · refine mulBySubPow_eq_zero_of_le (le_max_left Na Nb) ?_
-    convert hNa using 2
+    refine (congrArg (mulBySubPow Na) ?_).trans hNa
     refine FormalDist₂.ext fun m n => ?_
     change a m * a' n + (0 : M →ₗ[ℂ] V) ∘ₗ (0 : V →ₗ[ℂ] M) - (a' n * a m + (0 : M →ₗ[ℂ] V) ∘ₗ 0)
       = a m * a' n - a' n * a m
     simp
-  · convert map_zero (mulBySubPow (𝒲 := M →ₗ[ℂ] V) (max Na Nb)) using 2
+  · refine (congrArg (mulBySubPow (𝒲 := M →ₗ[ℂ] V) (max Na Nb)) ?_).trans (map_zero _)
     refine FormalDist₂.ext fun m n => ?_
     change a m ∘ₗ (0 : M →ₗ[ℂ] V) + (0 : M →ₗ[ℂ] V) ∘ₗ b' n
       - (a' n ∘ₗ (0 : M →ₗ[ℂ] V) + (0 : M →ₗ[ℂ] V) ∘ₗ b m) = 0
     simp
-  · convert map_zero (mulBySubPow (𝒲 := V →ₗ[ℂ] M) (max Na Nb)) using 2
+  · refine (congrArg (mulBySubPow (𝒲 := V →ₗ[ℂ] M) (max Na Nb)) ?_).trans (map_zero _)
     refine FormalDist₂.ext fun m n => ?_
     change (0 : V →ₗ[ℂ] M) ∘ₗ a' n + b m ∘ₗ (0 : V →ₗ[ℂ] M)
       - ((0 : V →ₗ[ℂ] M) ∘ₗ a m + b' n ∘ₗ (0 : V →ₗ[ℂ] M)) = 0
     simp
   · refine mulBySubPow_eq_zero_of_le (le_max_right Na Nb) ?_
-    convert hNb using 2
+    refine (congrArg (mulBySubPow Nb) ?_).trans hNb
     refine FormalDist₂.ext fun m n => ?_
     change (0 : V →ₗ[ℂ] M) ∘ₗ (0 : M →ₗ[ℂ] V) + b m * b' n - ((0 : V →ₗ[ℂ] M) ∘ₗ 0 + b' n * b m)
       = b m * b' n - b' n * b m
@@ -256,24 +256,24 @@ theorem local_diag_off {a : FormalDist (End ℂ V)} {b : FormalDist (End ℂ M)}
   refine ⟨max Nc Nd, ?_⟩
   rw [diagF, offF, bracketDist_blockF]
   refine mulBySubPow_blockF₂_eq_zero ?_ ?_ ?_ ?_
-  · convert map_zero (mulBySubPow (𝒲 := End ℂ V) (max Nc Nd)) using 2
+  · refine (congrArg (mulBySubPow (𝒲 := End ℂ V) (max Nc Nd)) ?_).trans (map_zero _)
     refine FormalDist₂.ext fun m n => ?_
     change a m * (0 : End ℂ V) + (0 : M →ₗ[ℂ] V) ∘ₗ d' n
       - ((0 : End ℂ V) * a m + c' n ∘ₗ (0 : V →ₗ[ℂ] M)) = 0
     simp
   · refine mulBySubPow_eq_zero_of_le (le_max_left Nc Nd) ?_
-    convert hNc using 2
+    refine (congrArg (mulBySubPow Nc) ?_).trans hNc
     refine FormalDist₂.ext fun m n => ?_
     change a m ∘ₗ c' n + (0 : M →ₗ[ℂ] V) ∘ₗ (0 : End ℂ M) - ((0 : End ℂ V) ∘ₗ (0 : M →ₗ[ℂ] V)
       + c' n ∘ₗ b m) = a m ∘ₗ c' n - c' n ∘ₗ b m
     simp
   · refine mulBySubPow_eq_zero_of_le (le_max_right Nc Nd) ?_
-    convert hNd using 2
+    refine (congrArg (mulBySubPow Nd) ?_).trans hNd
     refine FormalDist₂.ext fun m n => ?_
     change (0 : V →ₗ[ℂ] M) ∘ₗ (0 : End ℂ V) + b m ∘ₗ d' n - (d' n ∘ₗ a m
       + (0 : End ℂ M) ∘ₗ (0 : V →ₗ[ℂ] M)) = b m ∘ₗ d' n - d' n ∘ₗ a m
     simp
-  · convert map_zero (mulBySubPow (𝒲 := End ℂ M) (max Nc Nd)) using 2
+  · refine (congrArg (mulBySubPow (𝒲 := End ℂ M) (max Nc Nd)) ?_).trans (map_zero _)
     refine FormalDist₂.ext fun m n => ?_
     change (0 : V →ₗ[ℂ] M) ∘ₗ c' n + b m * (0 : End ℂ M)
       - (d' n ∘ₗ (0 : M →ₗ[ℂ] V) + (0 : End ℂ M) * b m) = 0

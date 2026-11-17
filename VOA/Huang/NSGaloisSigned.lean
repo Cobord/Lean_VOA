@@ -91,7 +91,7 @@ theorem exists_fusionChar_eq (φ : F.Label → ℂ) (h0 : φ F.unitLabel = 1)
   have hinj : ∀ u w : F.Label → ℂ, S *ᵥ u = S *ᵥ w → u = w := by
     intro u w h
     have := congrArg (fun z => S⁻¹ *ᵥ z) h
-    simpa only [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hS, Matrix.one_mulVec] using this
+    simpa only [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hS, Matrix.one_mulVec] using! this
   have hc0 : ∃ k, c k ≠ 0 := by
     by_contra hall
     push_neg at hall

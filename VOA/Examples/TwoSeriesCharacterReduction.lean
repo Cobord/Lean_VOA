@@ -159,7 +159,7 @@ theorem finrank_pieceIn_le_gordon (hJ : HasJetRelations c n) (N : ℤ) (p : ℕ)
   · obtain ⟨N, rfl⟩ := Int.eq_ofNat_of_zero_le hN
     rw [finrank_pieceIn_eq_goodFil, goodFil_eq_span_gFamily c n hJ, ← card_gordonWordsLe]
     have := finrank_range_le_card (R := ℂ) (gFamily c n N p)
-    simpa [Set.finrank] using this
+    simpa [Set.finrank] using! this
 
 /-! ## §3  The named total lower bound and the squeeze -/
 

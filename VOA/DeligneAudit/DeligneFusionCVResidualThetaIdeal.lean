@@ -81,7 +81,7 @@ theorem residual_reverse_region (ϱ : Weight) (p q r j : ℕ)
     (by simp only [parts_length, List.length_nil]; omega)
     (by simp only [parts_length]; omega) (by omega) (by omega)
   rw [hdeg, Nat.add_sub_add_right] at hreg
-  simpa only [clippedSum, List.map_nil, List.sum_nil, Nat.add_zero] using hreg
+  simpa only [clippedSum, List.map_nil, List.sum_nil, Nat.add_zero] using! hreg
 
 end VOA.DeligneAudit.A2.CVResidualThetaRelations
 

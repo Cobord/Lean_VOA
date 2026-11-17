@@ -32,7 +32,7 @@ theorem pow_X_sub_C_dvd_det_of_zero_rows {ι : Type*} [Fintype ι] [DecidableEq 
     apply Matrix.ext
     intro i j
     by_cases hi : i ∈ s
-    · simpa [v, Q, hi] using
+    · simpa [v, Q, hi] using!
         (mul_divByMonic_eq_iff_isRoot.mpr (h i hi j)).symm
     · simp [v, Q, hi]
   have hv : (∏ i, v i) = (X-Polynomial.C c)^s.card := by
@@ -50,7 +50,7 @@ theorem pow_X_sub_C_dvd_det_of_null_rows {ι : Type*} [Fintype ι] [DecidableEq 
   let A : Matrix ι ι (Polynomial ℂ) := U.map Polynomial.C * M
   have ha : ∀ i ∈ s, ∀ j, (A i j).eval c = 0 := by
     intro i hi j
-    simpa [A, Matrix.mul_apply, Polynomial.eval_finsetSum] using h i hi j
+    simpa [A, Matrix.mul_apply, Polynomial.eval_finsetSum] using! h i hi j
   have hd := pow_X_sub_C_dvd_det_of_zero_rows A c s ha
   have hu : IsUnit (Polynomial.C U.det : Polynomial ℂ) :=
     (isUnit_iff_ne_zero.mpr hU).map Polynomial.C
@@ -101,13 +101,15 @@ theorem pow_X_sub_C_dvd_det_of_independent_null_rows
   let b := b₀.reindex e
   have hb : ∀ j, b (a j) = v j := by
     intro j
-    simp [b, a, Module.Basis.reindex_apply, b₀, Module.Basis.extend_apply_self]
+    change b₀.reindex e (e ⟨v j, hs.subset_extend _ (Set.mem_range_self j)⟩) = v j
+    rw [Module.Basis.reindex_apply, Equiv.symm_apply_apply]
+    simp [b₀, Module.Basis.extend_apply_self]
   have hd := pow_X_sub_C_dvd_det_of_basis_null_rows M c (Finset.univ.map a) b (by
     intro i hi j
     obtain ⟨t,ht,rfl⟩ := Finset.mem_map.mp hi
     rw [hb]
     exact h t j)
-  simpa using hd
+  simpa using! hd
 
 /-- The full specialized left nullspace forces that many powers of X-c
 in the determinant. A finite basis of the nullspace provides the independent
@@ -125,7 +127,7 @@ theorem pow_X_sub_C_nullity_dvd_det {ι : Type*} [Fintype ι] [DecidableEq ι]
     have he := LinearMap.mem_ker.mp hb
     exact congrFun he j
   have hd := pow_X_sub_C_dvd_det_of_independent_null_rows M c _ hv hh
-  simpa using hd
+  simpa using! hd
 
 /-- For a nonzero polynomial determinant, its root multiplicity is at least
 the dimension of the specialized nullspace. This is only a lower bound;
@@ -167,7 +169,7 @@ theorem sum_nullities_le_det_degree {ι τ : Type*} [Fintype ι] [DecidableEq ι
   have hd := Polynomial.natDegree_le_of_dvd (prod_nullity_factors_dvd_det M c hc) hM
   rw [Polynomial.natDegree_prod_of_monic _ _
     (fun t _ => (Polynomial.monic_X_sub_C (c t)).pow _)] at hd
-  simpa only [Polynomial.natDegree_pow, Polynomial.natDegree_X_sub_C, mul_one] using hd
+  simpa only [Polynomial.natDegree_pow, Polynomial.natDegree_X_sub_C, mul_one] using! hd
 
 /-- For vacuum partition Gram matrices the nullity budget is the exact sum
 of partition lengths. This links ordinary singular-space dimensions to the
@@ -177,7 +179,7 @@ theorem sum_partitionNullities_le_lengths {τ : Type*} [Fintype τ]
     (∑ t, Module.finrank ℂ (LinearMap.ker
       ((partitionGramPolynomial n).map (Polynomial.eval (c t))).vecMulLinear)) ≤
       ∑ j : VirModule.SortedOfEnergy n, j.val.length := by
-  simpa only [partitionDeterminant_natDegree] using
+  simpa only [partitionDeterminant_natDegree] using!
     sum_nullities_le_det_degree (partitionGramPolynomial n) (partitionDeterminant_ne_zero n) c hc
 
 /-- Ordinary independent partition relations, supplied inside a coefficient

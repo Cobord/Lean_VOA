@@ -125,8 +125,8 @@ theorem SuperVertexOperatorAlgebra.twistedZhuMul_of_eigenspace
     (hu : u ∈ g.twistedEigenspace N r.1) (v : 𝒱) :
     W.twistedZhuMul hW g N u v = W.twistedZhuMulHom hW r.1 u v := by
   by_cases hr : r.1 = 0
-  · have hu0 : u ∈ g.twistedEigenspace N 0 := by simpa only [hr] using hu
-    simpa only [hr] using W.twistedZhuMul_of_eigenspace_zero hW g
+  · have hu0 : u ∈ g.twistedEigenspace N 0 := by simpa only [hr] using! hu
+    simpa only [hr] using! W.twistedZhuMul_of_eigenspace_zero hW g
       (lt_of_le_of_lt (Nat.zero_le r.1) r.isLt) hu0 v
   · exact W.twistedZhuMul_of_nonfixed_average hW g N hr
       (g.fixedAverage_eigenspace_nonzero hpow r hr hu) v
@@ -288,7 +288,7 @@ theorem SuperVertexOperatorAlgebra.smul_negTwo_mem_of_lower_twisted_nonfixed
     apply hO
     have hdelta : twistedZhuDelta r.1 = 0 := twistedZhuDelta_ne_zero hr
     have hmem := W.twistedO_nonfixed_mem hW g r (v := b) hr hTa hTeig
-    simpa only [twistedZhuCircleHom, hdelta, Nat.cast_zero, sub_zero] using hmem
+    simpa only [twistedZhuCircleHom, hdelta, Nat.cast_zero, sub_zero] using! hmem
   let R : ℕ → 𝒱 := fun i => if i = 0 then 0 else F i
   have hRfin : (Function.support R).Finite := by
     refine Set.Finite.subset hFfin ?_
@@ -324,7 +324,7 @@ theorem SuperVertexOperatorAlgebra.smul_negTwo_mem_of_lower_twisted_nonfixed
           p + q + 1 - (i : ℤ) := by ring
       rw [heq] at hw
       apply hT (p + q + 1 - (i : ℤ)) (by omega)
-      simpa [R, F, hi] using
+      simpa [R, F, hi] using!
         (V.gradingZ (p + q + 1 - (i : ℤ))).smul_mem
           (fractionalBinom (twistedZhuExponent N r.1 (p + 1)) i) hw
   have hsub := Submodule.sub_mem T hcircle hRmem
@@ -361,9 +361,9 @@ theorem SuperVertexOperatorAlgebra.smul_negTwo_mem_of_lower_twisted
           hE.component_mem_grading p a ha r
         by_cases hr : r.1 = 0
         · exact W.smul_negTwo_mem_of_lower_twisted_fixed hW g hN hcweight hb
-            (by simpa [E, hr] using hcr) hp T hO hT
+            (by simpa [E, hr] using! hcr) hp T hO hT
         · exact W.smul_negTwo_mem_of_lower_twisted_nonfixed hW g r hr hcweight hb
-            (by simpa [E] using hcr) T hO hT
+            (by simpa [E] using! hcr) T hO hT
       · exact ih
 
 /-- Every integral conformal-weight piece is spanned by a fixed finite set modulo `O_g`, under

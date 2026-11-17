@@ -483,7 +483,7 @@ theorem eulerOp_CQ : 8 * eulerOp CQ = CQ * (9 * E2q3 - E2q) := by
       3 * reciprocalEuler ^ 2 * eulerOp reciprocalEuler := by
     have := eulerOp_pow_succ (reciprocalEuler : PowerSeries ℚ) 2; push_cast at this; exact this
   have hX : eulerOp (X : PowerSeries ℚ) = X := by
-    have := eulerOp_X_pow (R := ℚ) 1; simpa using this
+    have := eulerOp_X_pow (R := ℚ) 1; simpa using! this
   rw [CQ, eulerOp_mul, eulerOp_mul, eulerOp_ofNat_mul, hX, e9, e3]
   linear_combination (27 * X * reciprocalEuler ^ 3 * 9 * euler3Q ^ 8) * eulerOp_euler3Q +
     (27 * X * euler3Q ^ 9 * reciprocalEuler ^ 2) * eulerOp_reciprocalEuler

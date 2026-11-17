@@ -15,10 +15,12 @@ theorem two_h_theta_table (i s : ℕ) (x : PTE 2) :
       (ρPTE 2).op c i s x) =
       -(ρPTE 2).op D4sector.c₀ i s x := by
   have ht (c : Fin 28) :
-      D4sector.f (1 : Fin 28) D4sector.c₀ c =
-        if c = D4sector.c₀ then (-1 : ℂ) else 0 := by
-    simpa [negativeCartan, negativeIndex, negativeWeight, D4sector]
+      contactF (1 : Fin 28) (27 : Fin 28) c =
+        if c = (27 : Fin 28) then (-1 : ℂ) else 0 := by
+    simpa [negativeCartan, negativeIndex, negativeWeight]
       using negative_cartan_table (11 : Fin 12) c
+  change (∑ c : Fin 28, contactF (1 : Fin 28) (27 : Fin 28) c •
+      (ρPTE 2).op c i s x) = -(ρPTE 2).op (27 : Fin 28) i s x
   simp only [ht, ite_smul, zero_smul, Finset.sum_ite_eq',
     Finset.mem_univ, if_true, neg_one_smul]
 
@@ -44,7 +46,7 @@ theorem two_theta_two_zero :
     · change 16 ≤ (27 : Fin 28).val
       decide
     · decide
-  simpa [symbolLetters, wordOpT] using two_syntax_tail [(D4sector.c₀, 4)] ht
+  simpa [symbolLetters, wordOpT] using! two_syntax_tail [(D4sector.c₀, 4)] ht
 
 theorem two_theta_two_one_zero :
     (ρPTE 2).op D4sector.c₀ 2 1 (pTE 2) = 0 := by
@@ -55,7 +57,7 @@ theorem two_theta_two_one_zero :
     0 2 1 0 (pTE 2)
   have hsum : (∑ c : Fin 28, D4sector.f (1 : Fin 28) D4sector.c₀ c •
       (ρPTE 2).op c 2 1 (pTE 2)) = 0 := by
-    simpa [hh, two_theta_two_zero] using hcomm.symm
+    simpa [hh, two_theta_two_zero] using! hcomm.symm
   rw [two_h_theta_table] at hsum
   exact neg_eq_zero.mp hsum
 

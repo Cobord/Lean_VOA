@@ -37,7 +37,7 @@ theorem fTop_garland_zero
   let E : Module.End ℂ V := σ.op 2 1
   have hFF : ∀ r t, F r * F t = F t * F r := by
     intro r t
-    simpa [F, VOA.DeligneAudit.A3Sector.radicalOp] using
+    simpa [F, VOA.DeligneAudit.A3Sector.radicalOp] using!
       VOA.DeligneAudit.A3Sector.radicalOp_comm σ 2 r 2 t
   have hEF : ∀ t, E * F t - F t * E = H (t + 1) := by
     intro t
@@ -66,24 +66,24 @@ theorem fTop_garland_zero
     change σ.op 12 (r + 1) w + σ.op 13 (r + 1) w +
       σ.op 14 (r + 1) w = 0
     rw [show σ.op 12 (r + 1) w = 0 by
-      simpa [VOA.DeligneAudit.A3Sector.simpleH] using
+      simpa [VOA.DeligneAudit.A3Sector.simpleH] using!
         (source_localWeyl ρ w m h).cartan_pos 0 (r + 1) (by omega)]
     rw [show σ.op 13 (r + 1) w = 0 by
-      simpa [VOA.DeligneAudit.A3Sector.simpleH] using
+      simpa [VOA.DeligneAudit.A3Sector.simpleH] using!
         (source_localWeyl ρ w m h).cartan_pos 1 (r + 1) (by omega)]
     rw [show σ.op 14 (r + 1) w = 0 by
-      simpa [VOA.DeligneAudit.A3Sector.simpleH] using
+      simpa [VOA.DeligneAudit.A3Sector.simpleH] using!
         (source_localWeyl ρ w m h).cartan_pos 2 (r + 1) (by omega)]
     simp
   have hN : (F 0 ^ (m + 1)) w = 0 := by
     simpa [F, σ, VOA.DeligneAudit.A3Sector.weightABC,
-      Module.End.pow_apply] using
+      Module.End.pow_apply] using!
       VOA.DeligneAudit.A3Sector.a3_highest_nilpotence σ w 0 m 0
         (source_localWeyl ρ w m h)
   have hg := VOA.DeligneAudit.Garland.garland hEF hHF hFF hE hH
     k hk hN s hks
   simpa [F, σ, fTopOp, fCurrent, VOA.DeligneAudit.Garland.Fs,
-    VOA.DeligneAudit.A3Sector.F, leviCurrent, leviColour, leviSign] using hg
+    VOA.DeligneAudit.A3Sector.F, leviCurrent, leviColour, leviSign] using! hg
 
 end VOA.DeligneAudit.D4Levi
 

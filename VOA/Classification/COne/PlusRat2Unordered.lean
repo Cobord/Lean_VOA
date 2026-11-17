@@ -68,7 +68,7 @@ theorem remaining_of_unordered (hm2 : 2 ≤ m)
       obtain ⟨z, hz, he⟩ := (mem_positivePairs_iff m _ _).mp hp
       rw [weight_vacuum] at he
       have hwj : weight m j = (z : ℚ) := by
-        apply Rat.cast_injective (α := ℂ); push_cast; simpa using he
+        apply Rat.cast_injective (α := ℂ); push_cast; simpa using! he
       rcases lt_or_eq_of_le (show (1 : ℤ) ≤ z by omega) with hz1 | hz1
       · rw [hwj]; exact_mod_cast hz1
       · exfalso
@@ -84,7 +84,7 @@ theorem remaining_of_unordered (hm2 : 2 ≤ m)
       obtain ⟨z, hz, he⟩ := (mem_positivePairs_iff m _ _).mp hp
       rw [weight_vacuum] at he
       have hwi : weight m i = (z : ℚ) := by
-        apply Rat.cast_injective (α := ℂ); push_cast; simpa using he
+        apply Rat.cast_injective (α := ℂ); push_cast; simpa using! he
       rcases lt_or_eq_of_le (show (1 : ℤ) ≤ z by omega) with hz1 | hz1
       · exact hnot ⟨rfl, by rw [hwi]; exact_mod_cast hz1⟩
       · apply hvs
@@ -154,7 +154,6 @@ theorem positivePairs_six (i j : Label 6) (h : (i, j) ∈ positivePairs 6) :
   · fin_cases r <;> fin_cases t
     all_goals (try norm_num [weight] at h)
     all_goals norm_num [weight]
-    exact Or.inr rfl
   · fin_cases r <;> fin_cases j
     all_goals (try norm_num [weight] at h)
   · fin_cases i <;> fin_cases t

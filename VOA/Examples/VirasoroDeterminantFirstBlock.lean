@@ -70,10 +70,10 @@ theorem det_first_radical_coefficient [DecidableEq I] [DecidableEq J]
         (fun i j : J => (M (Sum.inr i) (Sum.inr j)).coeff 1) := by
     funext i j
     cases i <;> cases j <;>
-      simp [divideSecondRows, ← coeff_zero_eq_eval_zero, coeff_divX, hcol]
+      simp [Matrix.fromBlocks, divideSecondRows, ← coeff_zero_eq_eval_zero, coeff_divX, hcol]
   have hh := (evalRingHom (0 : R)).map_det (divideSecondRows M)
   change (divideSecondRows M).det.eval 0 = ((divideSecondRows M).map (evalRingHom (0 : R))).det at hh
-  rw [← coeff_zero_eq_eval_zero, he, Matrix.det_fromBlocks_zero₁₂] at hh
-  exact hh
+  rw [← coeff_zero_eq_eval_zero, he] at hh
+  exact hh.trans (Matrix.det_fromBlocks_zero₁₂ _ _ _)
 
 end VOA.PolynomialBlock

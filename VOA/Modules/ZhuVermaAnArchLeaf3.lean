@@ -273,7 +273,8 @@ theorem isSimpleAMod_of_bottomRecovers (hirr : P.IsIrreducibleLW) (hrec : Bottom
     -- `vSubmoduleBottomCarrier (genVSubmodule S) = comap subtype ⊤ = ⊤`.
     have htrace : vSubmoduleBottomCarrier S.genVSubmodule = ⊤ := by
       unfold vSubmoduleBottomCarrier
-      rw [htop, Submodule.comap_top]
+      rw [htop]
+      exact Submodule.comap_top _
     have := hrec S
     rw [htrace] at this
     exact top_le_iff.mp this

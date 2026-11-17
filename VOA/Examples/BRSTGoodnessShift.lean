@@ -147,8 +147,8 @@ theorem tensorDeg_map_shiftTarget (dV : ι → Submodule ℂ V) (dW : ι → Sub
   intro a z hz
   refine tensorDeg_induction dV dW a
     (fun z => TensorProduct.map T S z ∈ shiftTarget (tensorDeg dV dW) (addPred P Q) a)
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ z hz
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ z hz
   intro b x hx y hy
   rw [TensorProduct.map_tmul]
   have h := tmul_mem_tensor_shiftTarget dV dW (hT b x hx) (hS _ y hy)

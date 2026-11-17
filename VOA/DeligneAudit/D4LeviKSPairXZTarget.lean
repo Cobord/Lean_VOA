@@ -56,7 +56,7 @@ theorem xyzEvaluation_rename_bijection {σ τ : Type*}
         exact e.surjective i
     have h := hp.map fun j => (shape j, d (e.symm j))
     simpa [shapedModes, List.map_map, Function.comp_def,
-      Finsupp.mapDomain_equiv_apply] using h.symm
+      Finsupp.mapDomain_equiv_apply] using! h.symm
   induction P using MvPolynomial.induction_on' with
   | monomial d t =>
       have hm : (monomial d t : MvPolynomial σ ℂ) =
@@ -83,7 +83,7 @@ theorem pairXZFinalEvaluation_target
       xyzEvaluation ρ w (pairXZFinalShape a b c) Q := by
   have h := xyzEvaluation_rename_bijection ρ w
     (pairRecolourTargetShape a b c) (pairXZTargetEquiv a b c) Q
-  simpa only [pairXZFinalShape_target] using h
+  simpa only [pairXZFinalShape_target] using! h
 
 theorem pairRestriction_yFinsupp_evaluation
     (ρ : CurrentModule D4sector.f V) (w : V) (a b c : ℕ)

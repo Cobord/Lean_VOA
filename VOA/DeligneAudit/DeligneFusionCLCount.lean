@@ -55,7 +55,7 @@ theorem Dec_succ (B ℓ d : ℕ) :
       left
       rw [List.sum_cons] at hs
       rw [if_pos (by omega)]
-      exact ⟨t, ⟨hp.2, by simpa using hl, fun y hy => hp.1 y hy, by omega⟩, rfl⟩
+      exact ⟨t, ⟨hp.2, by simpa using! hl, fun y hy => hp.1 y hy, by omega⟩, rfl⟩
     · right
       rw [if_pos (by omega)]
       refine ⟨List.pairwise_cons.mpr hp, hl, fun y hy => ?_, hs⟩
@@ -120,11 +120,11 @@ theorem Inc_eq_image (B ℓ d : ℕ) : Inc B ℓ d = List.reverse '' Dec B ℓ d
   ext s
   constructor
   · rintro ⟨⟨hp, hB⟩, hl, hs⟩
-    refine ⟨s.reverse, ⟨?_, by simpa using hl, fun x hx => ?_, by simpa using hs⟩, by simp⟩
+    refine ⟨s.reverse, ⟨?_, by simpa using! hl, fun x hx => ?_, by simpa using! hs⟩, by simp⟩
     · rw [List.pairwise_reverse]; exact hp
     · have := hB x (List.mem_reverse.mp hx); omega
   · rintro ⟨t, ⟨hp, hl, hB, hs⟩, rfl⟩
-    refine ⟨⟨?_, fun x hx => ?_⟩, by simpa using hl, by simpa using hs⟩
+    refine ⟨⟨?_, fun x hx => ?_⟩, by simpa using! hl, by simpa using! hs⟩
     · rw [List.pairwise_reverse]; exact hp
     · have := hB x (List.mem_reverse.mp hx); omega
 

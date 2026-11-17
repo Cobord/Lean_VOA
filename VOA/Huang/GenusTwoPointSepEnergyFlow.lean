@@ -24,8 +24,8 @@ def energyFlowSeries (a : ℕ → ℂ) (r : ℕ) : PowerSeries ℂ :=
 /-- The scalar Witt bracket is the Euler-derivative commutator. -/
 theorem energyWittBracket_series (a b : ℕ → ℂ) :
     PowerSeries.mk (energyWittBracket a b) =
-      (PowerSeries.X * PowerSeries.derivative ℂ (PowerSeries.mk a)) * PowerSeries.mk b -
-      PowerSeries.mk a * (PowerSeries.X * PowerSeries.derivative ℂ (PowerSeries.mk b)) := by
+      (PowerSeries.X * PowerSeries.derivative (R := ℂ) (PowerSeries.mk a)) * PowerSeries.mk b -
+      PowerSeries.mk a * (PowerSeries.X * PowerSeries.derivative (R := ℂ) (PowerSeries.mk b)) := by
   ext n
   rw [PowerSeries.coeff_mk, map_sub]
   conv_rhs => lhs; rw [PowerSeries.coeff_mul]
@@ -35,7 +35,7 @@ theorem energyWittBracket_series (a b : ℕ → ℂ) :
   apply Finset.sum_congr rfl
   intro p _
   have he (c : ℕ → ℂ) (k : ℕ) : PowerSeries.coeff k
-      (PowerSeries.X * PowerSeries.derivative ℂ (PowerSeries.mk c)) = (k : ℂ) * c k := by
+      (PowerSeries.X * PowerSeries.derivative (R := ℂ) (PowerSeries.mk c)) = (k : ℂ) * c k := by
     cases k with
     | zero => simp
     | succ k => simp [PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_derivative, mul_comm]
@@ -57,8 +57,8 @@ def coordinateVectorField (a : ℕ → ℂ) : PowerSeries ℂ :=
 /-- Exact scalar commutator recurrence, with its sign determined by Virasoro. -/
 theorem energyFlowSeries_succ (a : ℕ → ℂ) (r : ℕ) :
     energyFlowSeries a (r + 1) =
-      coordinateVectorField a * PowerSeries.derivative ℂ (energyFlowSeries a r) -
-      PowerSeries.derivative ℂ (coordinateVectorField a) * energyFlowSeries a r := by
+      coordinateVectorField a * PowerSeries.derivative (R := ℂ) (energyFlowSeries a r) -
+      PowerSeries.derivative (R := ℂ) (coordinateVectorField a) * energyFlowSeries a r := by
   have h : (fun n => energyWittCoeff a (r + 1) n) =
       energyWittBracket (energyGenerator a) (energyWittCoeff a r) := rfl
   simp only [energyFlowSeries, h, energyWittBracket_series, energyGenerator_series,
@@ -69,14 +69,14 @@ theorem energyFlowSeries_succ (a : ℕ → ℂ) (r : ℕ) :
 /-- The coordinate and energy recurrences satisfy a product rule: the extra
 Jacobian terms cancel exactly. -/
 theorem energyFlow_product_step (a : ℕ → ℂ) (i j : ℕ) :
-    coordinateVectorField a * PowerSeries.derivative ℂ
-      (energyFlowSeries a i * PowerSeries.derivative ℂ (flowSeries a j)) =
-      energyFlowSeries a (i + 1) * PowerSeries.derivative ℂ (flowSeries a j) +
-      energyFlowSeries a i * PowerSeries.derivative ℂ (flowSeries a (j + 1)) := by
+    coordinateVectorField a * PowerSeries.derivative (R := ℂ)
+      (energyFlowSeries a i * PowerSeries.derivative (R := ℂ) (flowSeries a j)) =
+      energyFlowSeries a (i + 1) * PowerSeries.derivative (R := ℂ) (flowSeries a j) +
+      energyFlowSeries a i * PowerSeries.derivative (R := ℂ) (flowSeries a (j + 1)) := by
   rw [energyFlowSeries_succ, flowSeries_succ]
   have he : PowerSeries.X ^ 2 *
-      (PowerSeries.derivative ℂ (flowSeries a j) * PowerSeries.mk a) =
-      coordinateVectorField a * PowerSeries.derivative ℂ (flowSeries a j) := by
+      (PowerSeries.derivative (R := ℂ) (flowSeries a j) * PowerSeries.mk a) =
+      coordinateVectorField a * PowerSeries.derivative (R := ℂ) (flowSeries a j) := by
     unfold coordinateVectorField
     ring
   rw [he]
@@ -87,24 +87,24 @@ theorem energyFlow_product_step (a : ℕ → ℂ) (i j : ℕ) :
 This is the formal identity G(t,x) times the x-derivative of F(t,x) = F(t,x). -/
 theorem energyFlow_jacobian_coeff (a : ℕ → ℂ) (r : ℕ) :
     flowSeries a r = ∑ i ∈ Finset.range (r + 1), (r.choose i : ℂ) •
-      (energyFlowSeries a i * PowerSeries.derivative ℂ (flowSeries a (r - i))) := by
+      (energyFlowSeries a i * PowerSeries.derivative (R := ℂ) (flowSeries a (r - i))) := by
   induction r with
   | zero => simp [PowerSeries.derivative_X]
   | succ r ih =>
     have he : flowSeries a (r + 1) =
-        coordinateVectorField a * PowerSeries.derivative ℂ (flowSeries a r) := by
+        coordinateVectorField a * PowerSeries.derivative (R := ℂ) (flowSeries a r) := by
       rw [flowSeries_succ]
       unfold coordinateVectorField
       ring
     rw [he, ih, map_sum, Finset.mul_sum]
     have hs : ∀ i ∈ Finset.range (r + 1),
-        coordinateVectorField a * PowerSeries.derivative ℂ
+        coordinateVectorField a * PowerSeries.derivative (R := ℂ)
           ((r.choose i : ℂ) • (energyFlowSeries a i *
-            PowerSeries.derivative ℂ (flowSeries a (r - i)))) =
+            PowerSeries.derivative (R := ℂ) (flowSeries a (r - i)))) =
         (r.choose i : ℂ) • (energyFlowSeries a (i + 1) *
-          PowerSeries.derivative ℂ (flowSeries a ((r + 1) - (i + 1)))) +
+          PowerSeries.derivative (R := ℂ) (flowSeries a ((r + 1) - (i + 1)))) +
         (r.choose i : ℂ) • (energyFlowSeries a i *
-          PowerSeries.derivative ℂ (flowSeries a ((r + 1) - i))) := by
+          PowerSeries.derivative (R := ℂ) (flowSeries a ((r + 1) - i))) := by
       intro i hi
       have hi := Finset.mem_range.mp hi
       rw [Derivation.map_smul, mul_smul_comm, energyFlow_product_step, smul_add]
@@ -112,7 +112,7 @@ theorem energyFlow_jacobian_coeff (a : ℕ → ℂ) (r : ℕ) :
         show r + 1 - i = r - i + 1 by omega]
     rw [Finset.sum_congr rfl hs, Finset.sum_add_distrib]
     exact pascal_resum r (fun i => energyFlowSeries a i *
-      PowerSeries.derivative ℂ (flowSeries a (r + 1 - i)))
+      PowerSeries.derivative (R := ℂ) (flowSeries a (r + 1 - i)))
 
 
 /-- Sum in the flow parameter, with coefficients summed algebraically. -/
@@ -124,19 +124,19 @@ private theorem flowSum_support (f : ℕ → PowerSeries ℂ)
     (Function.support (fun r => PowerSeries.coeff n (f r))).Finite := by
   refine (Set.finite_Iic n).subset fun r hr => ?_
   by_contra h
-  exact hr (hf r n (by simpa using h))
+  exact hr (hf r n (by simpa using! h))
 
 private theorem flowSum_pair_support (f g : ℕ → PowerSeries ℂ)
     (hf : ∀ r n, n < r → PowerSeries.coeff n (f r) = 0)
     (hg : ∀ r n, n < r → PowerSeries.coeff n (g r) = 0) (n : ℕ) :
     (Function.support (fun p : ℕ × ℕ => PowerSeries.coeff n (f p.1 * g p.2))).Finite := by
   refine ((Set.finite_Iic n).prod (Set.finite_Iic n)).subset fun p hp => ?_
-  have he : ∃ q ∈ Finset.antidiagonal n,
+  have he : ∃ q ∈ Finset.HasAntidiagonal.antidiagonal n,
       PowerSeries.coeff q.1 (f p.1) * PowerSeries.coeff q.2 (g p.2) ≠ 0 := by
     apply Finset.exists_ne_zero_of_sum_ne_zero
-    simpa only [PowerSeries.coeff_mul] using hp
+    simpa only [PowerSeries.coeff_mul] using! hp
   obtain ⟨q, hq, hne⟩ := he
-  have hq := Finset.mem_antidiagonal.mp hq
+  have hq := Finset.HasAntidiagonal.mem_antidiagonal.mp hq
   have h1 : p.1 ≤ q.1 := by
     by_contra h
     exact hne (by rw [hf _ _ (by omega), zero_mul])
@@ -151,7 +151,7 @@ The order bounds justify both exchanges of infinite-index finite sums. -/
 theorem energyFlowSum_mul (f g : ℕ → PowerSeries ℂ)
     (hf : ∀ r n, n < r → PowerSeries.coeff n (f r) = 0)
     (hg : ∀ r n, n < r → PowerSeries.coeff n (g r) = 0) :
-    energyFlowSum (fun r => ∑ p ∈ Finset.antidiagonal r, f p.1 * g p.2) =
+    energyFlowSum (fun r => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal r, f p.1 * g p.2) =
       energyFlowSum f * energyFlowSum g := by
   ext n
   simp only [energyFlowSum, PowerSeries.coeff_mk, map_sum]
@@ -221,8 +221,8 @@ private theorem energyFlowSum_coordinate (a : ℕ → ℂ) :
 
 private theorem energyFlowSum_derivative (a : ℕ → ℂ) :
     energyFlowSum (fun r => (r.factorial : ℂ)⁻¹ •
-      PowerSeries.derivative ℂ (flowSeries a r)) =
-      PowerSeries.derivative ℂ (flowExponential a) := by
+      PowerSeries.derivative (R := ℂ) (flowSeries a r)) =
+      PowerSeries.derivative (R := ℂ) (flowExponential a) := by
   ext n
   simp only [energyFlowSum, PowerSeries.coeff_mk, map_smul, smul_eq_mul,
     PowerSeries.coeff_derivative, flowExponential, PowerSeries.coeff_succ_X_mul,
@@ -239,10 +239,10 @@ private theorem energyFlowSum_derivative (a : ℕ → ℂ) :
 
 /-- The full formal Jacobian identity for arbitrary positive coordinate coefficients. -/
 theorem energyExponential_mul_derivative (a : ℕ → ℂ) :
-    energyExponential a * PowerSeries.derivative ℂ (flowExponential a) =
+    energyExponential a * PowerSeries.derivative (R := ℂ) (flowExponential a) =
       flowExponential a := by
   let f := fun r => (r.factorial : ℂ)⁻¹ • energyFlowSeries a r
-  let g := fun r => (r.factorial : ℂ)⁻¹ • PowerSeries.derivative ℂ (flowSeries a r)
+  let g := fun r => (r.factorial : ℂ)⁻¹ • PowerSeries.derivative (R := ℂ) (flowSeries a r)
   have hf : ∀ r n, n < r → PowerSeries.coeff n (f r) = 0 := by
     intro r n hn
     simp [f, energyFlowSeries_order a r n hn]
@@ -250,7 +250,7 @@ theorem energyExponential_mul_derivative (a : ℕ → ℂ) :
     intro r n hn
     simp [g, PowerSeries.coeff_derivative, coeff_flowSeries, flowCoeff_vanish a hn]
   rw [← energyFlowSum_energy, ← energyFlowSum_derivative, ← energyFlowSum_mul f g hf hg]
-  have he : (fun r => ∑ p ∈ Finset.antidiagonal r, f p.1 * g p.2) =
+  have he : (fun r => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal r, f p.1 * g p.2) =
       (fun r => (r.factorial : ℂ)⁻¹ • flowSeries a r) := by
     funext r
     rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]

@@ -13,9 +13,8 @@ noncomputable section
 theorem modeList_injective : Function.Injective CLAssembly.lst := by
   intro f g h
   have hm := congrArg (fun l : List ℕ => (l : Multiset ℕ)) h
-  dsimp only at hm
   rw [CLAssembly.lst_coe, CLAssembly.lst_coe] at hm
-  simpa only [Finsupp.toMultiset_toFinsupp] using congrArg Multiset.toFinsupp hm
+  simpa only [Finsupp.toMultiset_toFinsupp] using! congrArg Multiset.toFinsupp hm
 
 theorem modeBoxList_image (m a d : ℕ) (ha : a ≤ m) :
     CLAssembly.lst ''

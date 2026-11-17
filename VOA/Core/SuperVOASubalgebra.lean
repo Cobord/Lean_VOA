@@ -140,7 +140,6 @@ instance gradingS_finrank (h : ℂ) : FiniteDimensional ℂ (S.gradingS h) := by
     (S.carrier.subtype.comp (S.gradingS h).subtype) (fun x => x.2)) ?_
   intro x y hxy
   have hcoe := congrArg Subtype.val hxy
-  simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at hcoe
   exact Subtype.ext (Subtype.ext hcoe)
 
 /-! ## Super-locality survives restriction -/

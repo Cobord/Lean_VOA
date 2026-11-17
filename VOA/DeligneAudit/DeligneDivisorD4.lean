@@ -82,7 +82,9 @@ theorem levOK_comb {ℓ : ℕ} (L : List (ℕ × ℤ)) (h : levOf L ℓ = true) 
 
 /-! ## Elementary tables -/
 
-theorem castQZ_antiQ (c d : Fin 28) : castQZ (S := D4sector) (antiQ c d) = antiZ c d := by
+/-- Generic form of `castQZ_antiQ` over an arbitrary sector (no `Fin 28` / `Fin D4sector.n` alias). -/
+private theorem castQZ_antiQ_gen {S : DeligneSectorData} (c d : Fin S.n) :
+    castQZ (S := S) (antiQ c d) = antiZ c d := by
   funext c' d'
   simp only [castQZ, antiQ, qget_cons, qget_nil, add_zero, antiZ, Fin.val_inj]
   have h1 : (c = c' ∧ d = d') ↔ (c' = c ∧ d' = d) :=
@@ -92,7 +94,12 @@ theorem castQZ_antiQ (c d : Fin 28) : castQZ (S := D4sector) (antiQ c d) = antiZ
   simp only [h1, h2]
   split_ifs <;> ring
 
-theorem castQZ_symQ (c d : Fin 28) : castQZ (S := D4sector) (symQ c d) = symZ c d := by
+theorem castQZ_antiQ (c d : Fin 28) : castQZ (S := D4sector) (antiQ c d) = antiZ c d :=
+  castQZ_antiQ_gen (S := D4sector) c d
+
+/-- Generic form of `castQZ_symQ` over an arbitrary sector (no `Fin 28` / `Fin D4sector.n` alias). -/
+private theorem castQZ_symQ_gen {S : DeligneSectorData} (c d : Fin S.n) :
+    castQZ (S := S) (symQ c d) = symZ c d := by
   funext c' d'
   simp only [castQZ, symQ, qget_cons, qget_nil, add_zero, symZ, Fin.val_inj]
   have h1 : (c = c' ∧ d = d') ↔ (c' = c ∧ d' = d) :=
@@ -100,6 +107,9 @@ theorem castQZ_symQ (c d : Fin 28) : castQZ (S := D4sector) (symQ c d) = symZ c 
   have h2 : (d = c' ∧ c = d') ↔ (c' = d ∧ d' = c) :=
     ⟨fun ⟨a, b⟩ => ⟨a.symm, b.symm⟩, fun ⟨a, b⟩ => ⟨a.symm, b.symm⟩⟩
   simp only [h1, h2]
+
+theorem castQZ_symQ (c d : Fin 28) : castQZ (S := D4sector) (symQ c d) = symZ c d :=
+  castQZ_symQ_gen (S := D4sector) c d
 
 theorem castQZ_flatMap {α : Type*} (L : List α) (F : α → QV) :
     castQZ (S := D4sector) (L.flatMap F) = (L.map fun x => castQZ (S := D4sector) (F x)).sum := by

@@ -49,7 +49,7 @@ theorem leviLast_compound_commute {W : Type} [AddCommGroup W] [Module ℂ W]
   apply LinearMap.ext
   intro X
   have hc : Q.op 4 r (Q.op 5 s X) - Q.op 5 s (Q.op 4 r X) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 4 5 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 4 5 r s X
   exact sub_eq_zero.mp hc
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
@@ -77,7 +77,7 @@ theorem adjointSite_lastHighMode_middlePower_last_zero (B h : ℕ) (hh : 0 < h)
   have hFF : ρ.op 11 h (ρ.op 11 0 w) = 0 := by
     rw [op_comm_of_zero_bracket ρ bracket_last_last h 0, hFw, map_zero]
   cases m with
-  | zero => simpa using hFF
+  | zero => simpa using! hFF
   | succ m =>
     rw [endomorphism_derivation_pow (ρ.op 11 h) (ρ.op 9 0) (ρ.op 10 h)
       (fun u => by
@@ -142,7 +142,7 @@ theorem middlePower_mem_higherRadical (d : Fin 3 → ℕ) (k : ℕ) (x : V)
     (hx : x ∈ higherRadicalCountClosure ρ w d) :
     (ρ.op 9 0 ^ k) x ∈ higherRadicalCountClosure ρ w d := by
   induction k with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply]
     exact a3LeviClosure_inv ρ _ 3 0 ih
@@ -152,7 +152,7 @@ theorem compoundPower_mem_higherRadical (d : Fin 3 → ℕ) (k : ℕ) (x : V)
     (hx : x ∈ higherRadicalCountClosure ρ w d) :
     (ρ.op 10 0 ^ k) x ∈ higherRadicalCountClosure ρ w d := by
   induction k with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply]
     exact a3LeviClosure_inv ρ _ 5 0 ih
@@ -178,7 +178,7 @@ theorem lastHighMode_unmarked_firstPiece_mem (h n m : ℕ) :
     exact hm
   cases n with
   | zero =>
-    simpa using lastHighMode_middlePower_last_mem ρ w h _ _ hxyw (m + 1)
+    simpa using! lastHighMode_middlePower_last_mem ρ w h _ _ hxyw (m + 1)
   | succ n' =>
     have hxz : (ρ.op 7 0 ^ n') (ρ.op 8 0 (ρ.op 6 0 w)) ∈
         higherRadicalCountClosure ρ w ![0, n' + 1, 1] := by
@@ -214,7 +214,7 @@ theorem adjointSite_lastHighMode_unmarked_mem (B h : ℕ) (hh : 0 < h)
   have hyw : (ρ.op 7 0 ^ (n + 1)) w ∈ higherRadicalCountClosure ρ w ![0, n, 1] := by
     have hk : higherRadicalCounts ![0, n, 1] ⟨0, n + 1, 0, 0⟩ := by
       simp [higherRadicalCounts]
-    simpa using zeroModeWord_mem_higherRadical ρ w ![0, n, 1] 0 (n + 1) 0 hk
+    simpa using! zeroModeWord_mem_higherRadical ρ w ![0, n, 1] 0 (n + 1) 0 hk
   have hAeq : ρ.op 11 h ((ρ.op 9 0 ^ m) (ρ.op 11 0 ((ρ.op 7 0 ^ (n + 1)) w))) =
       ρ.op 11 h ((ρ.op 9 0 ^ m) ((ρ.op 7 0 ^ (n + 1)) (ρ.op 11 0 w))) +
         ((n + 1 : ℕ) : ℂ) • ρ.op 11 h ((ρ.op 9 0 ^ m) ((ρ.op 7 0 ^ n) (ρ.op 8 0 w))) := by
@@ -259,7 +259,7 @@ theorem secondLeviModeEvaluation_middleTopElementary {B W : Type} [CommRing B] [
     rw [hp, Finset.sum_singleton]
   have h₁ (i : Fin e₁) : (Finsupp.mapDomain Sum.inl (∑ j : Fin e₁, Finsupp.single j 1) :
       SecondLeviModeSlot e₁ e₂ →₀ ℕ) (Sum.inl i) = 1 := by
-    rw [Finsupp.mapDomain_apply Sum.inl_injective]
+    rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
     simp [Finsupp.finsetSum_apply, Finsupp.single_apply]
   have h₂ (j : Fin e₂) : (Finsupp.mapDomain Sum.inl (∑ i : Fin e₁, Finsupp.single i 1) :
       SecondLeviModeSlot e₁ e₂ →₀ ℕ) (Sum.inr j) = 0 := by

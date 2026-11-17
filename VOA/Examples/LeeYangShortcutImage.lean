@@ -79,14 +79,14 @@ def imageToSimple {E : Type*} [AddCommGroup E] [Module ℂ E] {c : ℂ}
     (f : VirUniv c →ₗ[ℂ] E) (hk : LinearMap.ker f ≤ maxIdealVir c) :
     LinearMap.range f →ₗ[ℂ] (VirUniv c ⧸ maxIdealVir c) :=
   ((LinearMap.ker f).liftQ (maxIdealVir c).mkQ
-    (by simpa only [Submodule.ker_mkQ] using hk)).comp
+    (by simpa only [Submodule.ker_mkQ] using! hk)).comp
       (LinearMap.quotKerEquivRange f).symm.toLinearMap
 
 @[simp] theorem imageToSimple_rangeRestrict {E : Type*} [AddCommGroup E] [Module ℂ E]
     {c : ℂ} (f : VirUniv c →ₗ[ℂ] E) (hk : LinearMap.ker f ≤ maxIdealVir c)
     (x : VirUniv c) : imageToSimple f hk (f.rangeRestrict x) = (maxIdealVir c).mkQ x := by
   change (LinearMap.ker f).liftQ (maxIdealVir c).mkQ
-    (by simpa only [Submodule.ker_mkQ] using hk)
+    (by simpa only [Submodule.ker_mkQ] using! hk)
     (f.quotKerEquivRange.symm ⟨f x, _⟩) = _
   rw [LinearMap.quotKerEquivRange_symm_apply_image]
   rfl

@@ -45,7 +45,7 @@ theorem summable_pair_double (k l j : ℕ) {t u : ℂ} (ht : ‖t‖+‖t‖*‖
   obtain ⟨R₁,R₂,hAdm,hR₁,hR₂⟩ := exists_mid_rates (norm_nonneg t) (norm_nonneg u) hu ht
   obtain ⟨G,hG⟩ := pairCoeff_joint_geometric N₀ N₁ N₂ N₃ N₄ NU NV
     hC2 hfg₀ hfg₁ hfg₂ hfg₃ hfg₄ hfgU hfgV P ZT XY hx hy hz hw f a b c k l j hAdm.1 hAdm.2
-  have hG0 : 0≤G := le_trans (norm_nonneg _) (by simpa only [pow_zero,mul_one] using hG 0 0)
+  have hG0 : 0≤G := le_trans (norm_nonneg _) (by simpa only [pow_zero,mul_one] using! hG 0 0)
   have hR₁0 : 0≤R₁ := le_of_lt (lt_trans zero_lt_one hAdm.one_lt₁)
   have hR₂0 : 0≤R₂ := le_of_lt (lt_trans zero_lt_one hAdm.1)
   have hs := ((summable_geometric_of_lt_one

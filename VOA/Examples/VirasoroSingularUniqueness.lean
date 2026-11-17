@@ -20,14 +20,14 @@ open VirModule LeeYangFockExponential LeeYangFockVirasoro LeeYangWardClosure
 /-- A word's symbol at its own length is the commutative oscillator monomial. -/
 theorem vermaSymbol_word (ell p : ℂ) (w : List ℕ) :
     vermaSymbol ell p w.length (negWord _ _ w) = vermaWordSymbol w := by
-  change vermaSymbolProjection (vermaPolynomialLift ell p (negWord _ _ w) w.length) = _
+  change vermaSymbolProjection ((vermaPolynomialLift ell p (negWord _ _ w)).coeff w.length) = _
   rw [vermaPolynomialLift_word, vermaWordPolynomial_top]
   rfl
 
 /-- A word has no symbol above its number of creation factors. -/
 theorem vermaSymbol_word_above (ell p : ℂ) (w : List ℕ) (d : ℕ)
     (hd : w.length < d) : vermaSymbol ell p d (negWord _ _ w) = 0 := by
-  change vermaSymbolProjection (vermaPolynomialLift ell p (negWord _ _ w) d) = _
+  change vermaSymbolProjection ((vermaPolynomialLift ell p (negWord _ _ w)).coeff d) = _
   rw [vermaPolynomialLift_word, vermaWordPolynomial_coeff_above ell p w d hd, map_zero]
 
 /-- On states with PBW length at most d, positive modes induce the stated
@@ -53,8 +53,8 @@ theorem vermaSymbol_positive (ell p : ℂ) (d m : ℕ) (hm : 0 < m)
     rw [vermaPositive_word_symbol ell p w.val m hm, vermaSymbol_word]
   · have hl : w.val.length < d := lt_of_le_of_ne (hv w hw) hd
     rw [vermaSymbol_word_above ell p w.val d hl, map_zero]
-    change vermaSymbolProjection (vermaPolynomialLift ell p
-      (vermaMode _ _ (m:ℤ) (negWord _ _ w.val)) d) = 0
+    change vermaSymbolProjection ((vermaPolynomialLift ell p
+      (vermaMode _ _ (m:ℤ) (negWord _ _ w.val))).coeff d) = 0
     rw [vermaPositive_word_above ell p w.val m d hm hl, map_zero]
 
 /-- At maximal PBW length the coefficient of an ordered word is unchanged
@@ -65,7 +65,7 @@ theorem vermaSymbol_max_coordinate (ell p : ℂ)
     (hw : w ∈ ((vermaSortedBasis _ _).repr v).support)
     (hmax : ∀ u ∈ ((vermaSortedBasis _ _).repr v).support,
       u.val.length ≤ w.val.length) :
-    MvPolynomial.coeff (vermaWordExponent w.val) (vermaSymbol ell p w.val.length v) =
+    (vermaSymbol ell p w.val.length v).coeff (vermaWordExponent w.val) =
       (vermaSortedBasis _ _).repr v w := by
   classical
   let b := vermaSortedBasis (3 - 24 * ell ^ 2) (p ^ 2 - 2 * ell * p)
@@ -75,14 +75,13 @@ theorem vermaSymbol_max_coordinate (ell p : ℂ)
   rw [← he]
   simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, smul_eq_mul]
   rw [Finset.sum_eq_single w]
-  · change _ * MvPolynomial.coeff _
-      (vermaSymbolProjection (vermaPolynomialLift ell p (negWord _ _ w.val) _)) = _
+  · change _ * (vermaSymbolProjection ((vermaPolynomialLift ell p (negWord _ _ w.val)).coeff _)).coeff _
+      = _
     rw [vermaPolynomialLift_word, vermaWordPolynomial_top_selector ell p _ w.val
       w.val w.property w.property (le_refl _) rfl]
     simp
   · intro u hu huw
-    change _ * MvPolynomial.coeff _
-      (vermaSymbolProjection (vermaPolynomialLift ell p (negWord _ _ u.val) _)) = 0
+    change _ * (vermaSymbolProjection ((vermaPolynomialLift ell p (negWord _ _ u.val)).coeff _)).coeff _ = 0
     rw [vermaPolynomialLift_word, vermaWordPolynomial_top_selector ell p _ u.val
       w.val u.property w.property (hmax u hu) rfl,
       if_neg (fun he => huw (Subtype.ext he)), mul_zero]
@@ -103,8 +102,7 @@ theorem verma_singular_top_ne_zero (c h : ℂ) (n : ℕ) (v : Verma c h)
   obtain ⟨w,hw,hmax⟩ := a.support.exists_max_image (fun w => w.val.length)
     (Finsupp.support_nonempty_iff.mpr ha)
   have hc := vermaSymbol_max_coordinate ell p v w hw hmax
-  have hcn : MvPolynomial.coeff (vermaWordExponent w.val)
-      (vermaSymbol ell p w.val.length v) ≠ 0 := by
+  have hcn : (vermaSymbol ell p w.val.length v).coeff (vermaWordExponent w.val) ≠ 0 := by
     rw [hc]
     exact Finsupp.mem_support_iff.mp hw
   have hinv : ∀ m : ℕ, 0 < m → vermaLeadingDerivation m
@@ -129,7 +127,7 @@ theorem verma_singular_top_ne_zero (c h : ℂ) (n : ℕ) (v : Verma c h)
     have hl : w.val.length = energyHW w.val := by
       rw [hr]
       simp [energyHW]
-    simpa only [hl,he] using hr
+    simpa only [hl,he] using! hr
   change b.repr v ⟨List.replicate n 0, _⟩ ≠ 0
   have hw' : w = ⟨List.replicate n 0,sortedWord_replicate_zero n⟩ := Subtype.ext hwrep
   rw [← hw']

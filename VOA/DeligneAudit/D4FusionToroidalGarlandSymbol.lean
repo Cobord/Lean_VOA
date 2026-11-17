@@ -37,11 +37,11 @@ variable {n : ℕ} {f : Fin n → Fin n → Fin n → ℂ} {m : ℕ}
 /-- `[z^s] g(z)^j x`, `g(z) = ∑_s (c₀ ⊗ u t^s) z^s`. -/
 def gpow (ρ : ToroidalModule f m V) (c₀ : Fin n) : ℕ → ℕ → V → V
   | 0, s, x => if s = 0 then x else 0
-  | j + 1, s, x => ∑ p ∈ Finset.antidiagonal s, ρ.op c₀ 1 p.1 (gpow ρ c₀ j p.2 x)
+  | j + 1, s, x => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s, ρ.op c₀ 1 p.1 (gpow ρ c₀ j p.2 x)
 
 /-- The Garland symbol `P^{(j)}_N x = [z^N] f(z) g(z)^j x`. -/
 def Psym (ρ : ToroidalModule f m V) (c₀ : Fin n) (j N : ℕ) (x : V) : V :=
-  ∑ p ∈ Finset.antidiagonal N, ρ.op c₀ 0 p.1 (gpow ρ c₀ j p.2 x)
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, ρ.op c₀ 0 p.1 (gpow ρ c₀ j p.2 x)
 
 theorem gpow_one (ρ : ToroidalModule f m V) (c₀ : Fin n) (s : ℕ) (x : V) :
     gpow ρ c₀ 1 s x = ρ.op c₀ 1 s x := by
@@ -49,17 +49,17 @@ theorem gpow_one (ρ : ToroidalModule f m V) (c₀ : Fin n) (s : ℕ) (x : V) :
   rw [Finset.sum_eq_single (s, 0)]
   · simp
   · rintro ⟨a, b⟩ hp hne
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     have hb : b ≠ 0 := by
       intro hb
       exact hne (Prod.ext (by omega) hb)
     simp [hb]
   · intro h
-    exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h
+    exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h
 
 theorem Psym_one (ρ : ToroidalModule f m V) (c₀ : Fin n) (N : ℕ) (x : V) :
     Psym ρ c₀ 1 N x =
-      ∑ p ∈ Finset.antidiagonal N, ρ.op c₀ 0 p.1 (ρ.op c₀ 1 p.2 x) := by
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, ρ.op c₀ 0 p.1 (ρ.op c₀ 1 p.2 x) := by
   simp only [Psym, gpow_one]
 
 end Symbols
@@ -77,7 +77,7 @@ theorem d4_pair_mem (hm : 1 ≤ m) (a b j : ℕ) (hj : j ≤ a / m + b / m) :
     (highModeShift_D4 (ravFam D4sector m 0) m hm) hm [(D4sector.c₀, a), (D4sector.c₀, b)] 0
     (wUG D4sector.f (ravFam D4sector m 0)) (by rw [TU_zero]; trivial)
   refine TU_mono _ _ _ ?_ h
-  simpa only [symbolDegree, Nat.add_zero, Nat.zero_add] using hj
+  simpa only [symbolDegree, Nat.add_zero, Nat.zero_add] using! hj
 
 theorem d4_div_ge_one (hm : 1 ≤ m) (s : ℕ) : 1 ≤ (m + s) / m :=
   (Nat.le_div_iff_mul_le hm).mpr (by omega)
@@ -91,16 +91,16 @@ theorem d4_div_ge_two (hm : 1 ≤ m) (s : ℕ) (hs : m ≤ s) : 2 ≤ (m + s) / 
 /-- **The lift of `P^{(1)}_N` lies in the second filtration step** for `N ≥ m − 1`:
 `∑_{r+s=N} f_r f_{m+s} v ∈ TU 2`. -/
 theorem d4_lift_mem (hm : 1 ≤ m) (N : ℕ) (hN : m ≤ N + 1) :
-    ∑ p ∈ Finset.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)) ∈
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)) ∈
       TU D4sector.f (ravFam D4sector m 0) m 2 := by
   have hG := d4_garland_two m (N + m) (by omega)
-  have hsplit : ∀ q ∈ Finset.antidiagonal (N + m),
+  have hsplit : ∀ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
       d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) =
         (if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) +
         (if m ≤ q.1 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) -
         (if m ≤ q.1 ∧ m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) := by
     intro q hq
-    rw [Finset.mem_antidiagonal] at hq
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hq
     by_cases h1 : m ≤ q.1
     · by_cases h2 : m ≤ q.2
       · simp only [h1, h2, true_and, ↓reduceIte]
@@ -109,18 +109,18 @@ theorem d4_lift_mem (hm : 1 ≤ m) (N : ℕ) (hN : m ≤ N + 1) :
     · by_cases h2 : m ≤ q.2
       · simp only [h1, h2, false_and, ↓reduceIte, add_zero, sub_zero]
       · omega
-  have hsum : ∑ q ∈ Finset.antidiagonal (N + m), d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) =
-      (∑ q ∈ Finset.antidiagonal (N + m),
+  have hsum : ∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m), d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) =
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) +
-      (∑ q ∈ Finset.antidiagonal (N + m),
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.1 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) -
-      (∑ q ∈ Finset.antidiagonal (N + m),
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.1 ∧ m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) := by
     rw [← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
     exact Finset.sum_congr rfl hsplit
-  have hswap : (∑ q ∈ Finset.antidiagonal (N + m),
+  have hswap : (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.1 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) =
-      ∑ q ∈ Finset.antidiagonal (N + m),
+      ∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0 := by
     rw [← Finset.Nat.sum_antidiagonal_swap]
     refine Finset.sum_congr rfl fun q _ => ?_
@@ -128,7 +128,7 @@ theorem d4_lift_mem (hm : 1 ≤ m) (N : ℕ) (hN : m ≤ N + 1) :
     split_ifs
     · exact d4Ftheta_comm m q.2 q.1 (d4Gen m)
     · rfl
-  have hC : (∑ q ∈ Finset.antidiagonal (N + m),
+  have hC : (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
       if m ≤ q.1 ∧ m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) ∈
         TU D4sector.f (ravFam D4sector m 0) m 2 := by
     refine Submodule.sum_mem _ fun q _ => ?_
@@ -138,35 +138,35 @@ theorem d4_lift_mem (hm : 1 ≤ m) (N : ℕ) (hN : m ≤ N + 1) :
       have h2 := d4_div_ge_one' m hm q.2 h.2
       omega
     · exact Submodule.zero_mem _
-  have hA : (∑ q ∈ Finset.antidiagonal (N + m),
+  have hA : (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
       if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) ∈
         TU D4sector.f (ravFam D4sector m 0) m 2 := by
     rw [hsum, hswap] at hG
-    have h2 : (2 : ℂ) • (∑ q ∈ Finset.antidiagonal (N + m),
+    have h2 : (2 : ℂ) • (∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0) =
-        ∑ q ∈ Finset.antidiagonal (N + m),
+        ∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
           if m ≤ q.1 ∧ m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0 := by
       rw [two_smul]
       exact sub_eq_zero.mp hG
     have := Submodule.smul_mem _ ((2 : ℂ)⁻¹) hC
     rwa [← h2, smul_smul, inv_mul_cancel₀ two_ne_zero, one_smul] at this
-  have hX : ∑ p ∈ Finset.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)) =
-      ∑ q ∈ Finset.antidiagonal (N + m),
+  have hX : ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)) =
+      ∑ q ∈ Finset.HasAntidiagonal.antidiagonal (N + m),
         if m ≤ q.2 then d4Ftheta m q.1 (d4Ftheta m q.2 (d4Gen m)) else 0 := by
     rw [← Finset.sum_filter]
     refine Finset.sum_nbij' (fun p => (p.1, m + p.2)) (fun q => (q.1, q.2 - m)) ?_ ?_ ?_ ?_ ?_
     · intro p hp
-      rw [Finset.mem_antidiagonal] at hp
-      simp only [Finset.mem_filter, Finset.mem_antidiagonal]
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
+      simp only [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal]
       omega
     · intro q hq
-      simp only [Finset.mem_filter, Finset.mem_antidiagonal] at hq
-      simp only [Finset.mem_antidiagonal]
+      simp only [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal] at hq
+      simp only [Finset.HasAntidiagonal.mem_antidiagonal]
       omega
     · intro p _
       exact Prod.ext rfl (by change m + p.2 - m = p.2; omega)
     · intro q hq
-      simp only [Finset.mem_filter, Finset.mem_antidiagonal] at hq
+      simp only [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal] at hq
       exact Prod.ext rfl (by change m + (q.2 - m) = q.2; omega)
     · intro p _
       rfl
@@ -222,14 +222,15 @@ theorem d4_grOp_pair (hm : 1 ≤ m) (r s : ℕ) :
       d4_pair_mem m hm r (m + s) 1 (le_add_left (d4_div_ge_one m hm s))⟩ := by
   by_cases hs : s < m
   · by_cases hr : r < m
-    · rw [grToroidal_D4_op, grToroidal_D4_op, grGenerator_D4_eq,
+    · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 0) (s := r),
+        grToroidal_D4_op (c := D4sector.c₀) (i := 1) (s := s), grGenerator_D4_eq,
         grOp_single D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 1 s 0 _ hs _,
         grOp_single D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 0 r (0 + 1) _ hr _,
         symbL_apply]
       congr 1
       apply Subtype.ext
       simp [gradedSingle, d4Ftheta, d4Gen]
-    · rw [grToroidal_D4_op,
+    · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 0) (s := r),
         grOp_high_zero D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 0 r
           (Nat.le_of_not_lt hr),
         LinearMap.zero_apply, symbL_zero]
@@ -250,11 +251,11 @@ theorem garland_symbol_zero (hm : 1 ≤ m) (N : ℕ) (hN : m ≤ N + 1) :
     Psym (grToroidal_D4 m hm) D4sector.c₀ 1 N
       (grGenerator D4sector.f (ravFam D4sector m 0) m) = 0 := by
   rw [Psym_one, Finset.sum_congr rfl (fun p _ => d4_grOp_pair m hm p.1 p.2), ← map_sum]
-  have hsum : (∑ p ∈ Finset.antidiagonal N,
+  have hsum : (∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
       (⟨d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)),
         d4_pair_mem m hm p.1 (m + p.2) 1 (le_add_left (d4_div_ge_one m hm p.2))⟩ :
           TU D4sector.f (ravFam D4sector m 0) m 1)) =
-      ⟨∑ p ∈ Finset.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)),
+      ⟨∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, d4Ftheta m p.1 (d4Ftheta m (m + p.2) (d4Gen m)),
         TU_mono _ _ _ (by omega) (d4_lift_mem m hm N hN)⟩ := by
     apply Subtype.ext
     simp

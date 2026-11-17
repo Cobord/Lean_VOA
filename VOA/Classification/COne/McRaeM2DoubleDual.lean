@@ -81,7 +81,7 @@ theorem pairing_mode_eq {w : ℤ} {a : V} (ha : a ∈ W.grading w) (p : ℤ) (x 
     · intro α y hy
       change dualPairing N (mode (N.YM a) p y) φ = R y
       rw [mode_eq_sum_dualAdj N ha p hy, ← dualPairingFlip_apply, map_smul, map_sum]
-      simp only [R, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply]
+      simp only [R, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply]
       congr 1
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [map_smul, dualPairingFlip_apply, dualPairingFlip_apply,
@@ -108,7 +108,7 @@ theorem iota_mode (u : V) (n : ℤ) (x : M) :
     rw [dualPairing_mode_dualAdj (contra N) ha n (iota N x) hφ,
       pairing_iota N (dualAdj_mem (contra N) w a n β φ), dualAdj_clean (contra N) ha n hφ,
       pairing_mode_eq N ha n x φ]
-    simp only [LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+    simp only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply,
       dualPairingFlip_apply, map_smul, map_sum]
     rfl
   · show dualPairing N (mode (N.YM 0) n x) φ =

@@ -55,7 +55,7 @@ theorem gtMixedEulerStep_coeff_two (q : R) (h : PochhammerUnits q)
   simp only [coeff_rescale] at hh
   rw [mul_comm (gtMixedEulerStep q h (fun i => (u i : R)) y N 2), coeff_mul,
     Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] at hh
-  simpa only [gtCauchyDenominator_coeff] using hh
+  simpa only [gtCauchyDenominator_coeff] using! hh
 
 /-- The same recurrence after multiplying by any factor independent of the new x degree. -/
 theorem gtMixedEulerStep_coeff_mul (q : R) (h : PochhammerUnits q)

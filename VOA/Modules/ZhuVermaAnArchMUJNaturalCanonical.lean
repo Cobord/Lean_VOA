@@ -424,7 +424,9 @@ end InducedAssignment
 
 /-! ## Main theorem — the faithful bijection with `hiso` FULLY a theorem (modulo `J = Jcanon`) -/
 
-/-- **`phase4_of_dj28_uniform_canonicalJ` — the faithful Zhu 5.3.4 bijection with the functoriality
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_uniform_canonicalJ` — the faithful Zhu 5.3.4 bijection with the functoriality
 clause `hiso` FULLY discharged for the uniform Construction-A family, modulo `J = Jcanon`.**
 
 For the genuine uniform Construction-A family both halves of `hiso` are theorems: DJ Prop 3.4
@@ -449,7 +451,9 @@ theorem phase4_of_dj28_uniform_canonicalJ {W : VertexOperatorAlgebra 𝒱}
   phase4_of_dj28_uniform hslice A hirr G ludata
     (G.mujNatural_of_canonicalJ ludata hJcanon) G'
 
-/-- **`phase4_of_dj28_uniform_lumax` — the faithful Zhu 5.3.4 bijection with `hiso` FULLY
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_uniform_lumax` — the faithful Zhu 5.3.4 bijection with `hiso` FULLY
 unconditional for the uniform Construction-A family with a genuine `LUMaxData` maximal-`J` datum.**
 
 The functoriality clause `hiso` is a complete theorem with **no** `hJcanon` hypothesis: DJ Prop

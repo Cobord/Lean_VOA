@@ -36,7 +36,7 @@ theorem sl2_negative_two_of_finite (E F H : V →ₗ[ℂ] V)
     exact hfinite.not_infinite (Set.infinite_range_of_injective hinj)
   obtain ⟨N, hN⟩ := hnil
   induction N with
-  | zero => simpa using hN
+  | zero => simpa using! hN
   | succ n ih =>
       by_cases hp : F^[n] u = 0
       · exact ih hp

@@ -36,13 +36,13 @@ theorem graded_all_residual (h : CV3Rel R w (0, 0) (0, 0) ϱ 1)
 theorem first_high (h : CV3Rel R w (0, 0) (0, 0) ϱ 1)
     (q : ℕ) (hq : ϱ.1 + 1 ≤ q) : R.op 3 q w = 0 := by
   apply trunc_of_cvrel h.first
-  simpa only [parts_length, Nat.zero_add, Nat.add_zero] using hq
+  simpa only [parts_length, Nat.zero_add, Nat.add_zero] using! hq
 
 /-- The residual second-root current has its actual source cutoff. -/
 theorem second_high (h : CV3Rel R w (0, 0) (0, 0) ϱ 1)
     (q : ℕ) (hq : ϱ.2 + 1 ≤ q) : R.op 4 q w = 0 := by
   apply trunc_of_cvrel h.second
-  simpa only [parts_length, Nat.zero_add, Nat.add_zero] using hq
+  simpa only [parts_length, Nat.zero_add, Nat.add_zero] using! hq
 
 /-- The entire canonical adjoint coefficient ideal annihilates the actual
 residual PBW generator. No ideal inclusion is assumed. -/

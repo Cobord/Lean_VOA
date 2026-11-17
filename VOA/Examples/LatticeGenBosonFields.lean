@@ -40,7 +40,11 @@ theorem chargeCoord_zero (a : Fin (rank L)) : chargeCoord L (0 : L.carrier) a = 
   rw [chargeCoord]
   have hc : coordR L (0 : L.carrier) = 0 := by
     funext i
-    simp only [coordR, coord, map_zero, Finsupp.zero_apply, Int.cast_zero, Pi.zero_apply]
+    have hci : coord L (0 : L.carrier) i = 0 := by
+      show (latticeBasis L).repr 0 i = 0
+      rw [map_zero]
+      try rfl
+    simp only [coordR, hci, Int.cast_zero, Pi.zero_apply]
   have h0 : orthCoord L (0 : L.carrier) (rankEquiv L a) = 0 := by
     rw [orthCoord, hc, Matrix.mulVec_zero]; rfl
   rw [h0, Complex.ofReal_zero]

@@ -41,7 +41,7 @@ theorem twisted_field_nonvanishing (P : TwistedModule g n M) (hn : 0 < n)
     rw [finsum_nat_eq_sum_range 2 _ (fun i hi => by
       rw [hhigh i hi, map_zero]; simp)] at hJ
     have hc1 : cbinom ((k : ℂ) / n) 1 = (k : ℂ) / n := by simp [cbinom]
-    simpa [Finset.sum_range_succ, hc1, hpair, P.vacuum_YM, smul_smul] using hJ.symm
+    simpa [Finset.sum_range_succ, hc1, hpair, P.vacuum_YM, smul_smul] using! hJ.symm
   let k : ℤ := (n : ℤ) * ((K + j) / n + 1) - j
   have hk : K ≤ k := by
     have hdiv := Int.emod_add_mul_ediv (K + j) (n : ℤ)
@@ -103,14 +103,15 @@ private theorem root_pair :
         latticeCocycle (latP 1) (-1 : ℤ) (1 : ℤ) • (V2m 1 le_rfl).vacuum := by
   rw [V2m_smul_neg_charge (m := 1) (hm := le_rfl) 1 1]
   norm_num only
-  rw [EEVec_vacuum, if_pos (by norm_num), Int.toNat_zero, vSchur_zero]
+  rw [EEVec_vacuum (latP 1) ((-1 : ℤ) : (latP 1).carrier), if_pos (by norm_num), Int.toNat_zero,
+    vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier)]
   rfl
 
 private theorem root_pair_high (i : ℕ) (hi : 2 ≤ i) :
     (V2m 1 le_rfl).smul (latChargeGen (latP 1) (-1 : ℤ)) i
       (latChargeGen (latP 1) (1 : ℤ)) = 0 := by
   rw [V2m_smul_neg_charge (m := 1) (hm := le_rfl) 1 i,
-    EEVec_vacuum, if_neg (by omega)]
+    EEVec_vacuum (latP 1) ((-1 : ℤ) : (latP 1).carrier), if_neg (by omega)]
   simp [latStateGen]
 
 section Shift
@@ -146,7 +147,7 @@ theorem shifted_vac_charge_quantized (P : TwistedModule (shiftAut n a) n M)
     rw [mul_one, Int.toNat_of_nonneg (Int.emod_nonneg _ (by omega))]
   have hres : (q - a) % (n : ℤ) = 0 := by
     rw [hj] at hs
-    simpa only [Int.add_emod, Int.emod_emod, sub_eq_add_neg] using hs
+    simpa only [Int.add_emod, Int.emod_emod, sub_eq_add_neg] using! hs
   obtain ⟨b, hb⟩ := Int.dvd_of_emod_eq_zero hres
   refine ⟨-b - 1, ?_⟩
   change chargeCoord (latP 1) (1 : ℤ) (a0 1) * μ = _

@@ -148,7 +148,9 @@ theorem MUGradedAction_of_crossCirc0 (W : VertexOperatorAlgebra 𝒱)
     MUGradedAction W :=
   MUGradedAction_of_HARDmem W (hardmem_holds_of_crossCirc0 W Hcirc)
 
-/-- **`zhuBijection_trophy_of_crossCirc0` — the main theorem from the lone level-`0` cross-circle
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**`zhuBijection_trophy_of_crossCirc0` — the main theorem from the lone level-`0` cross-circle
 membership.**  Given the universal `crossCirc0` (the model-TRUE single membership, engine-verified
 at `SMAX = 12`) together with the term-level carrier/bridge data of `zhuBijection_phase4`, the
 forward map `forwardMap W : Φ(𝒱) → Irr A(𝒱)` is a **bijection**.  Route:

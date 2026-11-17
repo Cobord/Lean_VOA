@@ -66,7 +66,7 @@ theorem exceptionalFreeSimpleTargets : ExceptionalFreeSimpleTargets := by
       apply hi
       have he := congrArg (fun k : ambient G ⊗ X ⟶ ambient G ⊗ X =>
         k.val ((inductionUnit G F X).val x)) hz
-      simpa only [Ordinary.id_apply, LinearMap.zero_apply, map_zero] using he
+      simpa only [Ordinary.id_apply, LinearMap.zero_apply, map_zero] using! he
     letI := hX.1
     obtain ⟨x, hx⟩ := exists_ne (0 : X.carrier)
     exact hx (hall x)

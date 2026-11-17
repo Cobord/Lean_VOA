@@ -104,7 +104,7 @@ theorem op_comm_end4 (a b : Fin 28) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 theorem iterate_eq_pow (A : Module.End ℂ V) (n : ℕ) (x : V) : A^[n] x = (A ^ n) x := by
   rw [Module.End.pow_apply]
@@ -150,7 +150,7 @@ theorem root_sharpen {e γ : Fin 28} (hs : RootSl2 e γ) {w : V} {k : ℕ}
     have := h3 d
     split_ifs at this ⊢ <;> exact_mod_cast this
   have hin : ∀ c x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
-      ∑ d, fD4 c γ d • ρ.op d 0 x := fun c x => by simpa using ρ.comm c γ 0 0 x
+      ∑ d, fD4 c γ d • ρ.op d 0 x := fun c x => by simpa using! ρ.comm c γ 0 0 x
   refine sl2_sharpen (-ρ.op e 0) (ρ.op γ 0) H ?_ ?_ w k ?_ ?_ hN
   · intro x
     have := ρ.comm e γ 0 0 x
@@ -207,7 +207,7 @@ theorem d4_thetaNil : ThetaNilG D4sector := by
   have hL18 : (ρ.op (18 : Fin 28) 0)^[k + 1] w = 0 := by
     have := hL (18 : Fin 28) (show 16 ≤ ((18 : Fin 28) : ℕ) ∧ ((18 : Fin 28) : ℕ) < 20 by decide)
     change (ρ.op (18 : Fin 28) 0)^[k * lowExpD4 18 + 1] w = 0 at this
-    simpa [lowExpD4] using this
+    simpa [lowExpD4] using! this
   have hz : ∀ i : Fin 28, i.val = 16 ∨ i.val = 17 ∨ i.val = 19 → (ρ.op i 0)^[k + 1] w = 0 := by
     intro i hi
     have := hL i (show 16 ≤ i.val ∧ i.val < 20 by omega)

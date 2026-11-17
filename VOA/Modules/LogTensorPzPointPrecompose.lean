@@ -51,7 +51,6 @@ theorem pointEvaluationBlock_precompose (ell a b c : ℂ) (x : Q₁.weight a) (y
         ⟨g.toLinearMap y,hom_mem_weight Q₂ N₂ g y.2⟩ := by
   have h := congrArg (fun q : Completion N₃ => (q c : M₃))
     (evaluatePoint_precompose N₁ N₂ N₃ Q₁ Q₂ f g Y ell x y)
-  dsimp only at h
   rw [evaluatePoint_eq_block Q₁ Q₂ N₃ (precompose f g Y) ell x.2 y.2 c,
     evaluatePoint_eq_block N₁ N₂ N₃ Y ell (hom_mem_weight Q₁ N₁ f x.2)
       (hom_mem_weight Q₂ N₂ g y.2) c] at h

@@ -123,7 +123,7 @@ theorem cvDegreeProj_finiteDegreeSum (ε ν ϱ : Weight) (j : ℕ) (s : Finset �
     cvDegreeProj ε ν ϱ j i.1 (cvFiniteDegreeSum ε ν ϱ j s x) = x i := by
   change cvDegreeProj ε ν ϱ j i.1 (∑ d, (x d : CVMod ε ν ϱ j)) = x i
   rw [map_sum, Finset.sum_eq_single i]
-  · simpa using cvDegreeProj_cycDeg ε ν ϱ j i.1 i.1 (x i).property
+  · simpa using! cvDegreeProj_cycDeg ε ν ϱ j i.1 i.1 (x i).property
   · intro d _ hdi
     have hd : d.1 ≠ i.1 := fun h => hdi (Subtype.ext h)
     rw [cvDegreeProj_cycDeg ε ν ϱ j i.1 d.1 (x d).property, if_neg hd]
@@ -136,7 +136,7 @@ theorem cvFiniteDegreeSum_injective (ε ν ϱ : Weight) (j : ℕ) (s : Finset �
   funext i
   apply Subtype.ext
   have hp := congrArg (cvDegreeProj ε ν ϱ j i.1) hxy
-  simpa only [cvDegreeProj_finiteDegreeSum] using hp
+  simpa only [cvDegreeProj_finiteDegreeSum] using! hp
 
 /-- Finite sums of graded dimensions fit in any proved finite-dimensional universal module. -/
 theorem sum_finrank_cycDeg_le (ε ν ϱ : Weight) (j : ℕ) (s : Finset ℕ)

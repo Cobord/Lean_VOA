@@ -91,7 +91,7 @@ theorem Lop_neg_one_pair (e f : ℕ) :
 
 /-- The quadratic jet coefficient `T_k = Σ_{e+f=k} L₋ₑ₋₂ L₋f₋₂ |0⟩`. -/
 noncomputable def quadWord (k : ℕ) : VirUniv c :=
-  ∑ p ∈ Finset.antidiagonal k, negWordVir c [p.1, p.2]
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, negWordVir c [p.1, p.2]
 
 theorem Lop_neg_one_quadWord (k : ℕ) :
     Lop c (-1) (quadWord c k) = ((k : ℂ) + 1) • quadWord c (k + 1) := by
@@ -99,12 +99,12 @@ theorem Lop_neg_one_quadWord (k : ℕ) :
   rw [map_sum]
   simp only [Lop_neg_one_pair]
   rw [Finset.sum_add_distrib]
-  have hk : ((k : ℂ) + 1) • ∑ p ∈ Finset.antidiagonal (k + 1), negWordVir c [p.1, p.2] =
-      ∑ p ∈ Finset.antidiagonal (k + 1), ((p.1 : ℂ) • negWordVir c [p.1, p.2]) +
-      ∑ p ∈ Finset.antidiagonal (k + 1), ((p.2 : ℂ) • negWordVir c [p.1, p.2]) := by
+  have hk : ((k : ℂ) + 1) • ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1), negWordVir c [p.1, p.2] =
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1), ((p.1 : ℂ) • negWordVir c [p.1, p.2]) +
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (k + 1), ((p.2 : ℂ) • negWordVir c [p.1, p.2]) := by
     rw [← Finset.sum_add_distrib, Finset.smul_sum]
     refine Finset.sum_congr rfl fun p hp => ?_
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     rw [← add_smul]
     congr 1
     rw [show (k : ℂ) + 1 = ((k + 1 : ℕ) : ℂ) by push_cast; ring, ← hp]
@@ -151,7 +151,7 @@ theorem sigmaWord_mem (k : ℕ) : sigmaWord leeYangC k ∈ maxIdealVir leeYangC 
 /-- **The Lee–Yang jet relations.**  For every word `r` and `k`,
 `5 Σ_{e+f=k} L_r L₋ₑ₋₂ L₋f₋₂|0⟩ - (3(k+1)(k+2)/2) L_r L₋ₖ₋₄|0⟩ ∈ J`. -/
 theorem leeYangRelation_mem (r : List ℕ) (k : ℕ) :
-    (5 : ℂ) • (∑ p ∈ Finset.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
+    (5 : ℂ) • (∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
       ((3 : ℂ) * ((k : ℂ) + 1) * ((k : ℂ) + 2) / 2) • negWordVir leeYangC (r ++ [k + 2])
       ∈ maxIdealVir leeYangC := by
   have h := applyWord_mem_maxIdealVir leeYangC r (sigmaWord_mem k)
@@ -288,11 +288,11 @@ theorem sorted_mem_goodSpan : ∀ ℓ : ℕ, ∀ u : List ℕ, SortedWord u → 
     rw [hN, ← energyVir_perm hperm, energyVir_eq_sum, energyVir_eq_sum]
     simp [List.sum_append]; omega
   -- each summand, compared with `u`
-  have hterm : ∀ p ∈ Finset.antidiagonal k,
+  have hterm : ∀ p ∈ Finset.HasAntidiagonal.antidiagonal k,
       negWordVir leeYangC (r ++ [p.1, p.2]) -
         (if p.1 = a ∨ p.1 = b then (1 : ℂ) else 0) • negWordVir leeYangC u ∈ goodSpan ℓ N := by
     intro p hp
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     set w := r ++ [p.1, p.2] with hw
     have hwE : energyVir w = N := hEpair p.1 p.2 hp
     have hwl : w.length = ℓ := by rw [hw]; simp; omega
@@ -328,25 +328,25 @@ theorem sorted_mem_goodSpan : ∀ ℓ : ℕ, ∀ u : List ℕ, SortedWord u → 
         (by rw [length_sortDesc, hwl]) rfl
       rw [hsE] at hmem
       have := Submodule.add_mem _ hdiff' hmem
-      simpa using this
+      simpa using! this
   have hsum := Submodule.sum_mem (goodSpan ℓ N) hterm
   rw [Finset.sum_sub_distrib, ← Finset.sum_smul, Finset.sum_boole] at hsum
-  set m : ℂ := (((Finset.antidiagonal k).filter (fun p : ℕ × ℕ => p.1 = a ∨ p.1 = b)).card : ℂ)
+  set m : ℂ := (((Finset.HasAntidiagonal.antidiagonal k).filter (fun p : ℕ × ℕ => p.1 = a ∨ p.1 = b)).card : ℂ)
     with hm
   have hm0 : m ≠ 0 := by
     rw [hm, Nat.cast_ne_zero]
     apply Finset.card_ne_zero_of_mem (a := (a, b))
-    simp [Finset.mem_filter, Finset.mem_antidiagonal, hk]
+    simp [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal, hk]
   have hrel := leeYangRelation_mem r k
   have hY : negWordVir leeYangC (r ++ [k + 2]) ∈ goodSpan ℓ N := by
     apply hlow N _ (by simp; omega)
     rw [hN, ← energyVir_perm hperm, energyVir_eq_sum, energyVir_eq_sum]
     simp [List.sum_append]; omega
   have hcomb : ((5 : ℂ) * m) • negWordVir leeYangC u =
-      ((5 : ℂ) • (∑ p ∈ Finset.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
+      ((5 : ℂ) • (∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
         ((3 : ℂ) * ((k : ℂ) + 1) * ((k : ℂ) + 2) / 2) • negWordVir leeYangC (r ++ [k + 2])) +
       ((3 : ℂ) * ((k : ℂ) + 1) * ((k : ℂ) + 2) / 2) • negWordVir leeYangC (r ++ [k + 2]) -
-      (5 : ℂ) • ((∑ p ∈ Finset.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
+      (5 : ℂ) • ((∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, negWordVir leeYangC (r ++ [p.1, p.2])) -
         m • negWordVir leeYangC u) := by
     rw [mul_smul]; module
   have h5m : ((5 : ℂ) * m) • negWordVir leeYangC u ∈ goodSpan ℓ N := by

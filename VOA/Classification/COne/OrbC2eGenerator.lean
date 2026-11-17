@@ -27,10 +27,12 @@ theorem hasC_E_smul_neutral (m : ℕ) (hm : 1 ≤ m) {v : VP m hm} {Q : RawPoly 
   rw [hv] at h
   have he : ls m Q = latStateGen (latP m)
       (evRc (a0 m) (cα m) (liftR Q)) 0 := by rw [evRc_liftR]
-  rw [he, V2m_charge_smul_evRc, latticeCocycle_zero_right, one_smul] at h
+  rw [he, V2m_charge_smul_evRc m hm ((1 : ℤ) : (latP m).carrier) 0 n (liftR Q),
+    latticeCocycle_zero_right (latP m) ((1 : ℤ) : (latP m).carrier), one_smul] at h
   simp only [map_zero, sub_zero, add_zero] at h
   rw [HasC, h, stP, evRc_scaleR, latStateGen_csmul, map_smul]
   norm_num
+  rfl
 
 def weightNine : VP 4 four_ge_one :=
   (V2mPlus 4 four_ge_one).smul (J 4 four_ge_one) (-2) (EP 4 four_ge_one) -
@@ -69,15 +71,14 @@ theorem coord_stP (m : ℕ) (hm : 1 ≤ m) (P : RawPoly ℕ) :
       (stP m hm P : LatModuleGen (latP m)) = (1/2 : ℂ) • evRc (a0 m) (cα m) P := by
   classical
   rw [stP, PP_coe, map_smul, map_add, thetaLat_latStateGen]
-  simp only [latStateGen, coordEα_apply, al]
-  simp only [ite_true]
-  split
-  · rename_i h
-    have hf : False := by
-      change (1 : ℤ) = -1 at h
-      norm_num at h
-    exact hf.elim
-  · rw [add_zero]
+  have h1 : coordEα (latP m) ((1 : ℤ) : (latP m).carrier)
+      (latStateGen (latP m) (evRc (a0 m) (cα m) P) (al m)) = evRc (a0 m) (cα m) P :=
+    (coordEα_apply (latP m) _ _ _).trans (if_pos rfl)
+  have h2 : ∀ p : FockN (rank (latP m)), coordEα (latP m) ((1 : ℤ) : (latP m).carrier)
+      (latStateGen (latP m) p (-al m)) = 0 := fun p =>
+    (coordEα_apply (latP m) _ _ _).trans
+      (if_neg fun h => by have : (1 : ℤ) = -1 := h; omega)
+  rw [h1, h2, add_zero]
 
 /-- This algebra homomorphism detects the h(-5) term. -/
 def fifthOscillator (m : ℕ) : FockN (rank (latP m)) →ₐ[ℂ] ℂ :=
@@ -95,7 +96,6 @@ theorem weightNine_ne_zero : weightNine ≠ 0 := by
   have he := congrArg (fun v : VP 4 four_ge_one =>
     fifthOscillator 4 (coordEα (latP 4) ((1 : ℤ) : (latP 4).carrier)
       (v : LatModuleGen (latP 4)))) hs
-  dsimp only at he
   rw [coord_stP, map_smul, fifthOscillator_weightNineRaw] at he
   simp only [ZeroMemClass.coe_zero, map_zero] at he
   change (1/2 : ℂ) * (-12 * cα 4) = 0 at he

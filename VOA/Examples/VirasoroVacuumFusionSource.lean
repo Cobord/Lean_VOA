@@ -13,6 +13,8 @@ The scalar test is applied to actual states before quotienting. Its source
 sum has only the term two levels earlier. This isolates the even-step
 recursion relevant to the q=3 vacuum parameters.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- In the finite negative-mode sum only L minus two survives. This is
@@ -115,6 +117,6 @@ theorem vermaVacuumSurvival_sourceAt_three (c b t a : ℂ)
         vermaVacuumSurvival c (f.val (r+2))+
       (t/2)*(b+a+2-((r+2:ℕ):ℂ))*vermaVacuumSurvival c (f.val r) := by
   have hh := vermaVacuumSurvival_source_three c b t a (wardFieldLift c 0 a f) r
-  simpa [wardSourceAt,wardFieldLift] using hh
+  simpa [wardSourceAt,wardFieldLift] using! hh
 
 end VOA.InverseDS.VirasoroVerma

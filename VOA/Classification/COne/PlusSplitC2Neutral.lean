@@ -54,7 +54,7 @@ theorem neutral_class_mem_omega_line (k : ℕ) (hk : 6 ≤ k)
   rw [monSpan, Submodule.span_le]
   rintro _ ⟨a, b, hab, rfl⟩
   have hab' : a + 2 * b = k := by omega
-  simpa only [hab'] using ring_reduction _ _ ρ σ τ h8 h10 b a (by omega)
+  simpa only [hab'] using! ring_reduction _ _ ρ σ τ h8 h10 b a (by omega)
 
 /-- A neutral Poisson power becomes zero already at exponent m+1, for m≥5.
 This uses the charge-one Schur relation at weight 2m+2 < 4m. -/
@@ -78,7 +78,7 @@ theorem omega_pow_eq_zero (hm5 : 5 ≤ m) :
     rw [phi_latStateGen]
     have he : topCoeff m (2 * k) q = topCoeff m (2 * k) S := by
       dsimp [q]
-      simp only [topCoeff, coeff_smul, coeff_add, smul_eq_mul]
+      simp only [topCoeff, coeff_smul, MvPolynomial.coeff_add, smul_eq_mul]
       rw [← topCoeff, ← topCoeff, topCoeff_sigmaN, Even.neg_one_pow (even_two_mul k)]
       ring
     rw [he]

@@ -62,6 +62,9 @@ open VertexOperatorAlgebra
 open scoped BigOperators
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -113,7 +116,7 @@ theorem umode_add_left (W : VertexOperatorAlgebra 𝒱) (a a' : 𝒱) (m : ℤ) 
 
 theorem umode_smul_left (W : VertexOperatorAlgebra 𝒱) (c : ℂ) (a : 𝒱) (m : ℤ) :
     umode W (c • a) m = c • umode W a m := by
-  simp only [umode, gen_smul_left, map_smul]
+  rw [umode, umode, gen_smul_left]; exact map_smul (uι W) c _
 
 theorem umode_zero_left (W : VertexOperatorAlgebra 𝒱) (m : ℤ) :
     umode W (0 : 𝒱) m = 0 := by
@@ -204,7 +207,7 @@ theorem actMode_add_left (ρ : VHatRep W M) (a a' : 𝒱) (m : ℤ) :
 
 theorem actMode_smul_left (ρ : VHatRep W M) (c : ℂ) (a : 𝒱) (m : ℤ) :
     ρ.actMode (c • a) m = c • ρ.actMode a m := by
-  simp only [actMode_def, gen_smul_left, map_smul]
+  rw [actMode_def, actMode_def, gen_smul_left]; exact map_smul ρ c _
 
 /-- **The mode-commutation law on `M`** (locality, the `ℓ = 0` Borcherds slice 5.1.7c): pushing the
 `U(V̂)` Borcherds commutator `umode_commutator` through the representation `ρ` gives

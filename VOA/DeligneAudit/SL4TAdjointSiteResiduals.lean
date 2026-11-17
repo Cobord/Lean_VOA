@@ -248,8 +248,8 @@ def OneAdjointStratumCount (B k : ℕ) : Prop :=
         adjointSiteJointTopIdeal (mixedLabelBlockParams 1 B d e₁ e₂) (B - k) j =
           adjointSiteRemainderTopIdeal (mixedLabelBlockParams 1 B d e₁ e₂) (B - k)
               (B - k + 1) j ⊔
-            Ideal.span {Ideal.Quotient.mk _
-              (adjointSiteJointSymbol (mixedLabelBlockParams 1 B d e₁ e₂))} *
+            Ideal.span {(Ideal.Quotient.mk _
+              (adjointSiteJointSymbol (mixedLabelBlockParams 1 B d e₁ e₂)))} *
               adjointSiteRemainderTopIdeal (mixedLabelBlockParams 1 B d e₁ e₂) (B - k)
                 (B - k) j
 

@@ -239,8 +239,8 @@ theorem finiteDimensional_of_irreducible_span_vacuum
     apply hx
     have hmem : x ∈ (⊥ : Submodule ℂ M) := by
       rw [← h]; exact Submodule.mem_span_singleton_self x
-    simpa using hmem
-  · exact Module.finite_def.mpr ⟨{x}, by simpa using h⟩
+    simpa using! hmem
+  · exact Module.finite_def.mpr ⟨{x}, by simpa using! h⟩
 
 /-- …and it is one-dimensional. -/
 theorem finrank_eq_one_of_irreducible_span_vacuum
@@ -258,7 +258,7 @@ theorem finrank_eq_one_of_irreducible_span_vacuum
     apply hx
     have hmem : x ∈ (⊥ : Submodule ℂ M) := by
       rw [← h]; exact Submodule.mem_span_singleton_self x
-    simpa using hmem
+    simpa using! hmem
   · have h1 : Module.finrank ℂ ↥(Submodule.span ℂ ({x} : Set M)) = 1 := finrank_span_singleton hx
     rw [h, finrank_top] at h1
     exact h1

@@ -182,7 +182,9 @@ end InducedAssignment
 
 /-! ## The Zhu bijection from `LUUniversalData` -/
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the canonical `L(U)`-universal-property data.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the canonical `L(U)`-universal-property data.**
 
 Packaging the end-to-end reduction with the *canonical* assignment `K = U ↦ L(U)`: given the
 existence `InducedAssignment W` `A` producing irreducible realizations (`hirr`), the ambient

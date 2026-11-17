@@ -34,7 +34,7 @@ theorem Y_gen_mem_ghostDeg (a : Fin 3) (e : Fin 2) (j : ℤ) {i : (ℤ × ℤ) �
   have h := ghostMode_mem_ghostDeg a e (-j - 1) hx
   have e1 : -(-j - 1) - 1 = j := by ring
   rw [e1] at h
-  simpa only [gMode, mode_apply, e1] using h
+  simpa only [gMode, mode_apply, e1] using! h
 
 theorem ghShift_bc_cancel (m : ℤ) : ghShift 0 m + ghShift 1 (-1 - m) = 0 := by
   unfold ghShift
@@ -87,7 +87,7 @@ theorem ghostCurrentZeroPreserve : GhostCurrentZeroPreserve := by
   rw [map_smul, LinearMap.smul_apply]
   refine Submodule.smul_mem _ _ ?_
   have h := bilinear_zero_mem c b hy
-  simpa only [mode_apply, ghostYCoeff_apply] using h
+  simpa only [mode_apply, ghostYCoeff_apply] using! h
 
 /-- **`ZeroModesPreserve` for the concrete ghost grading, with no hypotheses.** -/
 theorem zeroModesPreserve_proved (w : Finset ModeIdx → ℝ) :

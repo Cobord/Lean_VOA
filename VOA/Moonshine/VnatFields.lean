@@ -342,8 +342,8 @@ theorem reconstruct_nat {κ : Type*} {Wbar : TP → FormalDist (TP →ₗ[ℂ] S
   have hfld : ∀ x, NonlinearConformal.wordFld (genNat Wbar g) hgen [x] = genNat Wbar g x := by
     intro x
     change (Fld.nprod ⟨genNat Wbar g x, hgen x⟩ Fld.one).1 = _
-    rw [Fld.nprod_val]
-    exact nprod_idField (hgen x)
+    exact (Fld.nprod_val (M := Vnat) ⟨genNat Wbar g x, hgen x⟩ Fld.one).trans
+      (nprod_idField (hgen x))
   refine ⟨YA, hF, hL, hC, hN, hD, fun u => ?_, fun i => ?_⟩
   · have h := hone (Sum.inl u)
     rw [hfld] at h

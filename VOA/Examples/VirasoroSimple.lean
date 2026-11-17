@@ -76,6 +76,8 @@ file only builds the object whose rationality is to be proved.
 No `sorry`/`admit`/`native_decide`, no new axioms.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirSimple
 
 open VOA

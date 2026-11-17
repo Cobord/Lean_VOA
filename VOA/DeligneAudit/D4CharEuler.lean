@@ -82,7 +82,7 @@ theorem gtEulerPos_mul_inv (q : R) (h : PochhammerUnits q) (x : R) :
       _ = _ := by rw [← gtEulerPos_shift]
   apply qDifference_unique q (pochhammerUnits_qDifferenceUnits q h) 1 1
     (gtEulerPos q h x * gtEulerInv q h x) 1 (by simp) (by simp)
-  · simpa using hf
+  · simpa using! hf
   · simp
   · simp
 

@@ -181,7 +181,8 @@ theorem range_evW (hstab : ∀ u ∈ S, ∀ (n : ℤ), ∀ x ∈ X, ρ u n x ∈
   · rw [← hcyc, span_le]
     rintro _ ⟨u, hu, n, rfl⟩
     refine ⟨Finsupp.single (Words.cons hu n (Words.nil S)) 1, ?_⟩
-    simp [evW, Words.cons, Words.nil]
+    rw [evW, Finsupp.linearCombination_single]
+    simp [Words.cons, Words.nil]
 
 /-- A twisted intertwiner transports word vectors to twisted word vectors. -/
 theorem IsTwInt.wordAct {Φ : M →ₗ[ℂ] N} (hΦ : IsTwInt ρ τ g S X Φ)
@@ -235,7 +236,9 @@ theorem exists_twInt_iff (hstab : ∀ u ∈ S, ∀ (n : ℤ), ∀ x ∈ X, ρ u 
       obtain ⟨f, rfl⟩ := hx
       rw [← evW_mapDomain_cons hu n x₀ f, hev, hev, evTw_mapDomain_cons hu n y₀ f]
     · have := hev (Finsupp.single (Words.nil S) 1)
-      simpa [e₁, e₂, evW, evTw, Words.nil, twWord] using this
+      rw [show e₁ = evW ρ S x₀ from rfl, show e₂ = evTw τ g S y₀ from rfl, evW, evTw,
+        Finsupp.linearCombination_single, Finsupp.linearCombination_single] at this
+      simpa [Words.nil, twWord] using this
 
 /-- Bilinear expansion: matching Gram matrices of word vectors give matching Gram matrices of
 all formal combinations. -/

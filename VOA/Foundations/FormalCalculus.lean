@@ -137,7 +137,9 @@ theorem support_smul_left_finite (g : FormalDist ℂ) (hg : (Function.support g)
     (F : ℤ → 𝒲) : (Function.support (fun k => g k • F k)).Finite := by
   refine hg.subset ?_
   intro k hk
-  rw [Function.mem_support] at hk ⊢
+  rw [Function.mem_support] at hk
+  -- Lean 4.35 port: `rw` cannot see through the `FormalDist` synonym in the goal.
+  show g k ≠ 0
   intro h
   exact hk (by rw [h, zero_smul])
 

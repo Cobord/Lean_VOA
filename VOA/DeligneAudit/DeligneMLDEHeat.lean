@@ -41,7 +41,7 @@ noncomputable section
 abbrev A := PowerSeries ℚ
 
 /-- The `x`-derivative. -/
-abbrev dx : Derivation ℚ A A := PowerSeries.derivative ℚ
+abbrev dx : Derivation ℚ A A := PowerSeries.derivative (R := ℚ)
 
 /-! ## The coefficientwise `x`-derivative on `A⟦q⟧` -/
 

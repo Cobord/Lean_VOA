@@ -14,7 +14,7 @@ open scoped BigOperators
 
 /-- Coefficients of the bracket of two nonnegative Witt tails. -/
 def energyWittBracket (a b : ℕ → ℂ) (n : ℕ) : ℂ :=
-  ∑ p ∈ Finset.antidiagonal n, ((p.1 : ℂ) - p.2) * a p.1 * b p.2
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ((p.1 : ℂ) - p.2) * a p.1 * b p.2
 
 section Representation
 variable {M : Type*} [AddCommGroup M] [Module ℂ M]
@@ -61,7 +61,7 @@ private theorem energyWittAction_comp (a b : ℕ → ℂ) (x : M) :
   intro i
   rw [map_finsum _ (weightedSupport L hL b x),
     smul_finsum' _ ((weightedSupport L hL b x).subset (fun j hj hz =>
-      hj (by simpa only [map_smul, map_zero] using congrArg (L i) hz)))]
+      hj (by simpa only [map_smul, map_zero] using! congrArg (L i) hz)))]
   apply finsum_congr
   intro j
   rw [map_smul, smul_smul]
@@ -97,7 +97,7 @@ theorem energyWittAction_comm
   rw [energyWittBracket, Finset.sum_smul]
   apply Finset.sum_congr rfl
   intro p hp
-  rw [Finset.mem_antidiagonal.mp hp]
+  rw [Finset.HasAntidiagonal.mem_antidiagonal.mp hp]
 
 end Representation
 
@@ -121,7 +121,7 @@ theorem energyWittCoeff_vanish (a : ℕ → ℂ) {r n : ℕ} (h : n < r) :
     unfold energyWittBracket
     apply Finset.sum_eq_zero
     intro p hp
-    have hp := Finset.mem_antidiagonal.mp hp
+    have hp := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     cases hzero : p.1 with
     | zero => simp [energyGenerator]
     | succ k => rw [ih (by omega), mul_zero]

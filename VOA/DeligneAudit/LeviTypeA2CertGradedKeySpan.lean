@@ -51,7 +51,7 @@ theorem a2KeyLayer_le_two_boxes (p q : ℕ)
     rw [radicalWord_split ρ l]
     rfl
   rw [hword]
-  simpa only [hxa, hyb, hsum] using hboxes
+  simpa only [hxa, hyb, hsum] using! hboxes
 
 end VOA.DeligneAudit.A3Sector
 

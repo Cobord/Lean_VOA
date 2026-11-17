@@ -27,7 +27,7 @@ theorem wickTerm_coeff (f a b : ℕ → A) (k s : ℕ) (p : List ℕ × List ℕ
     PowerSeries.coeff s
       (wickTerm (fCurrent f) (aConst a) (bTail b) k p) =
       (-1 : A) ^ p.2.length * (k.descFactorial p.2.length : A) *
-        ∑ q ∈ Finset.antidiagonal s,
+        ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
           (PowerSeries.coeff q.1 (fCurrent f ^ (k - p.2.length)) *
             aWord a p.1) * PowerSeries.coeff q.2 (bWord b p.2) := by
   rw [wickTerm]
@@ -46,7 +46,7 @@ theorem wickTerm_coeff (f a b : ℕ → A) (k s : ℕ) (p : List ℕ × List ℕ
 def conversionTerm (f a b : ℕ → A) (k s : ℕ)
     (p : List ℕ × List ℕ) : A :=
   (-1 : A) ^ p.2.length * (k.descFactorial p.2.length : A) *
-    ∑ q ∈ Finset.antidiagonal s,
+    ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
       (PowerSeries.coeff q.1 (fCurrent f ^ (k - p.2.length)) *
         aWord a p.1) * PowerSeries.coeff q.2 (bWord b p.2)
 

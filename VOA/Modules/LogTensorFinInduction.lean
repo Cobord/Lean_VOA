@@ -68,7 +68,7 @@ theorem van_below
     | zero =>
       intro α₁ α₂ n _ h3 k w₁ w₂ h₁ h₂
       have hmem := hY.mem_weight h₁ h₂ n k
-      exact eq_zero_of_mem_bot N₃ (hB₃ _ (by simpa using h3)) hmem
+      exact eq_zero_of_mem_bot N₃ (hB₃ _ (by simpa using! h3)) hmem
     | succ T IHo =>
       have inner : ∀ K : ℕ, ∀ α₁ α₂ n : ℂ, (α₁ + α₂ - n - 1).re < C →
           (α₁ + α₂ - n - 1).re < B₃ + (T + 1 : ℕ) → (α₁ + α₂).re < B₁ + B₂ + K →

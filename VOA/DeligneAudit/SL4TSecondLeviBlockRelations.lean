@@ -141,10 +141,10 @@ theorem secondLeviMultiplicity_lowering_sharp (q : ℕ)
   have hS := secondLeviQuotient_currentRelations Q β e₁ e₂
   have hef : ∀ x, E 0 (F 0 x) - F 0 (E 0 x) = H 0 x := by
     intro x
-    simpa using congrArg (fun T : Module.End ℂ _ => T x) (hS.hEF 0 0)
+    simpa using! congrArg (fun T : Module.End ℂ _ => T x) (hS.hEF 0 0)
   have hhf : ∀ x, H 0 (F 0 x) - F 0 (H 0 x) = (-2 : ℂ) • F 0 x := by
     intro x
-    simpa using congrArg (fun T : Module.End ℂ _ => T x) (hS.hHF 0 0)
+    simpa using! congrArg (fun T : Module.End ℂ _ => T x) (hS.hHF 0 0)
   have hp : ∀ n x, (F 0 ^ n) ((higherSecondLeviCountClosure Q β e₁ e₂).mkQ x) =
       (higherSecondLeviCountClosure Q β e₁ e₂).mkQ ((Q.op 4 0 ^ n) x) := by
     intro n
@@ -159,7 +159,7 @@ theorem secondLeviMultiplicity_lowering_sharp (q : ℕ)
     obtain ⟨x, hx, hxv⟩ := v.property
     rw [← hxv, ← Module.End.pow_apply, hp,
       secondLeviCountLayer_nilpotent Q β q hf e₁ e₂ hx, map_zero]
-  simpa only [← Module.End.pow_apply] using VOA.DeligneAudit.CLFilt.hw_pow
+  simpa only [← Module.End.pow_apply] using! VOA.DeligneAudit.CLFilt.hw_pow
     (E 0) (F 0) (H 0) hef hhf (secondLeviMultiplicity_raising Q β he e₁ e₂ 0 v)
       (secondLeviMultiplicity_weight Q β q hh e₁ e₂ v) K hn
 

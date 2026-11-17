@@ -130,12 +130,12 @@ theorem c2UniversalArc_universal (m : ℕ) (hm : 1 ≤ m) {A : Type*} [CommRing 
       apply AlgHom.ext
       intro x
       have hx := DFunLike.congr_fun h (e x)
-      simpa [c2UniversalArc, e] using hx
+      simpa [c2UniversalArc, e] using! hx
     · intro h
       apply AlgHom.ext
       intro a
       have ha := DFunLike.congr_fun h (e.symm a)
-      simpa [c2UniversalArc, e] using ha
+      simpa [c2UniversalArc, e] using! ha
   obtain ⟨f, hf, huniq⟩ :=
     InfiniteJet.existsUnique_arcLift (baseIdeal (R := ℂ) m) (u.comp e.toAlgHom)
   exact ⟨f, (key f).mpr hf, fun g hg => huniq g ((key g).mp hg)⟩

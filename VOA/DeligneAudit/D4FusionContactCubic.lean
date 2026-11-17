@@ -20,13 +20,13 @@ theorem raise_center_apply (h : HighestRel R w m) (i : Fin 8) :
     raise R i (center R w) = root R i w := by
   have hc := congrArg (fun T : Module.End ℂ V => T w) (raise_center_comm R i)
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, raise_kills h i,
-    map_zero, sub_zero] using hc
+    map_zero, sub_zero] using! hc
 
 theorem raise_center_square_apply (h : HighestRel R w m) (i : Fin 8) :
     raise R i (center R (center R w)) = 2 • root R i (center R w) := by
   have hc := congrArg (fun T : Module.End ℂ V => T w) (raise_center_pow R i 1)
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.smul_apply,
-    pow_one, raise_kills h i, map_zero, sub_zero, center_root_apply] using hc
+    pow_one, raise_kills h i, map_zero, sub_zero, center_root_apply] using! hc
 
 theorem raise_piece_mem (h : HighestRel R w m) (i : Fin 8) {d : ℕ} {v : V}
     (hv : v ∈ piece R w d) : raise R i v ∈ piece R w d := by
@@ -79,7 +79,7 @@ theorem root_root_center_mem_two (h : HighestRel R w m)
   have hc := bracket_root_piece_mem h j i center_square_mem_two
   have hz : raise R j (root R i (center R (center R w))) = 0 := by
     have hh := congrArg (raise R j) (root_center_square_zero h hC i)
-    simpa only [pow_two, Module.End.mul_apply, map_zero] using hh
+    simpa only [pow_two, Module.End.mul_apply, map_zero] using! hh
   rw [hz, zero_sub] at hc
   have hp := Submodule.neg_mem _ hc
   simp only [neg_neg, raise_center_square_apply h j, map_nsmul] at hp
@@ -113,7 +113,7 @@ The only additional relation is the source center cube itself. -/
 theorem cubic_mem_two (h : HighestRel R w m) (hC : (center R ^ 3) w = 0)
     (a b c : Fin 9) : radicalWord R [a, b, c] w ∈ piece R w 2 := by
   have hCCC : center R (center R (center R w)) = 0 := by
-    simpa only [pow_succ, pow_zero, one_mul, Module.End.mul_apply] using hC
+    simpa only [pow_succ, pow_zero, one_mul, Module.End.mul_apply] using! hC
   have hACC : ∀ i : Fin 8, root R i (center R (center R w)) ∈ piece R w 2 := by
     intro i
     have hz := root_center_square_zero h hC i
@@ -126,17 +126,17 @@ theorem cubic_mem_two (h : HighestRel R w m) (hC : (center R ^ 3) w = 0)
       · change center R (center R (center R w)) ∈ piece R w 2
         rw [hCCC]; exact Submodule.zero_mem _
       · change center R (center R (root R k w)) ∈ piece R w 2
-        simpa only [center_root_apply] using hACC k
+        simpa only [center_root_apply] using! hACC k
     · refine Fin.lastCases ?_ (fun k => ?_) c
       · change center R (root R j (center R w)) ∈ piece R w 2
-        simpa only [center_root_apply] using hACC j
+        simpa only [center_root_apply] using! hACC j
       · change center R (root R j (root R k w)) ∈ piece R w 2
-        simpa only [center_root_apply] using root_root_center_mem_two h hC j k
+        simpa only [center_root_apply] using! root_root_center_mem_two h hC j k
   · refine Fin.lastCases ?_ (fun j => ?_) b
     · refine Fin.lastCases ?_ (fun k => ?_) c
       · exact hACC i
       · change root R i (center R (root R k w)) ∈ piece R w 2
-        simpa only [center_root_apply] using root_root_center_mem_two h hC i k
+        simpa only [center_root_apply] using! root_root_center_mem_two h hC i k
     · refine Fin.lastCases ?_ (fun k => ?_) c
       · exact root_root_center_mem_two h hC i j
       · exact root_triple_mem_two h hC i j k

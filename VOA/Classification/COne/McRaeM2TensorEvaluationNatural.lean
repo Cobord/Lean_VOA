@@ -88,10 +88,18 @@ theorem dualUnitEvaluation_dinatural (N : LogVModule W R) (P : LogVModule W X)
       ((Ar.transform N (unitLog W) N (rightUnitIntertwiner N)).1 n 0 x ((transposeLog N P f).toLinearMap t)) =
     dualPairing (unitLog W).toGW v
       ((Ar.transform P (unitLog W) P (rightUnitIntertwiner P)).1 n 0 (f.toLinearMap x) t)
-  rw [Ar.transform_logZero,Ar.transform_logZero,
-    Ar.pair_modes_zero N (unitLog W) N (rightUnitIntertwiner N) n hx,
-    Ar.pair_modes_zero P (unitLog W) P (rightUnitIntertwiner P) n (Contra.hom_mem_weight N P f hx),
-    transposeLog_pair]
+  refine ((congrArg (dualPairing (unitLog W).toGW v)
+      (LinearMap.congr_fun (LinearMap.congr_fun
+        (Ar.transform_logZero N (unitLog W) N (rightUnitIntertwiner N) n) x)
+        ((transposeLog N P f).toLinearMap t))).trans
+      ((Ar.pair_modes_zero N (unitLog W) N (rightUnitIntertwiner N) n hx
+        ((transposeLog N P f).toLinearMap t) v).trans
+        (transposeLog_pair N P f _ t))).trans ?_
+  refine Eq.trans ?_ ((congrArg (dualPairing (unitLog W).toGW v)
+      (LinearMap.congr_fun (LinearMap.congr_fun
+        (Ar.transform_logZero P (unitLog W) P (rightUnitIntertwiner P) n) (f.toLinearMap x)) t)).trans
+      (Ar.pair_modes_zero P (unitLog W) P (rightUnitIntertwiner P) n
+        (Contra.hom_mem_weight N P f hx) t v)).symm
   have htw : f.toLinearMap
       (Ar.twI N.toGW (Ar.zeroFamily N (unitLog W) N (Ar.prepared N (unitLog W) N
         (rightUnitIntertwiner N))) a n x v) =
@@ -107,7 +115,7 @@ theorem dualUnitEvaluation_dinatural (N : LogVModule W R) (P : LogVModule W X)
     apply Finset.sum_congr rfl
     intro j hj
     rw [map_smul,← Ar.hom_L1w_pow P N f j x,rightUnit_prepared_natural N P f]
-  rw [htw]
+  exact congrArg (fun z : X => dualPairing P.toGW z t) htw
 
 /-- Genuine evaluation into the actual tensor unit is dinatural at every log degree. -/
 theorem evaluationIntertwiner_dinatural (N : LogVModule W R) (P : LogVModule W X)

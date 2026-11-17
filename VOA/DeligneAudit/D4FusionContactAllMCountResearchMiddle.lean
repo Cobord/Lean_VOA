@@ -56,10 +56,10 @@ theorem g0Deriv_middle (g : Fin 10) {p : MvPolynomial (Vars m) ℂ}
           {left := z.right, right := (j,z.left.2),
            left_lower := z.right_lower, left_upper := z.right_upper,
            right_lower := z.left_lower, right_upper := z.left_upper,
-           mode_sum := by simpa only [Nat.add_comm] using z.mode_sum})
+           mode_sum := by simpa only [Nat.add_comm] using! z.mode_sum})
   | zero => rw [map_zero]; exact (middleSpan b).zero_mem
-  | add p q _ _ ihp ihq => simpa only [map_add] using (middleSpan b).add_mem ihp ihq
-  | smul a p _ ih => simpa only [Derivation.map_smul] using (middleSpan b).smul_mem a ih
+  | add p q _ _ ihp ihq => simpa only [map_add] using! (middleSpan b).add_mem ihp ihq
+  | smul a p _ ih => simpa only [Derivation.map_smul] using! (middleSpan b).smul_mem a ih
 
 theorem g0Deriv_X_middle_zero (g : Fin 10) (x : Vars m)
     (hx : b.lower.val < x.2.val) :

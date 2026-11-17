@@ -14,6 +14,11 @@ preserves `TPForm`. `liftTwVnatAutOfForm` assembles the lift conditional on prec
 that form equation. Scalar rescaling preserves the already-proved mode covariance.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -139,8 +144,13 @@ theorem liftTwChargeIntertwiner_exists :
   have he := congrArg E (e.symm.map_smul (eA L α) t)
   change E (e.symm (eT L hEven hU α t)) =
     E (E.symm (liftTwChargeAction L ι hEven hU hι (eA L α) (E (e.symm t)))) at he
-  simpa only [LinearEquiv.apply_symm_apply, liftTwChargeAction_eA,
-    LinearMap.smul_apply] using he
+  first
+  | simpa only [LinearEquiv.apply_symm_apply, liftTwChargeAction_eA,
+      LinearMap.smul_apply] using he
+  | (show E (e.symm (eT L hEven hU α t)) =
+        latCob L L ι α • eT L hEven hU (ι α) (E (e.symm t))
+     simpa only [LinearEquiv.apply_symm_apply, liftTwChargeAction_eA,
+      LinearMap.smul_apply] using he)
 
 /-- A chosen charge intertwiner; no surjectivity hypothesis on the isometry is needed. -/
 def liftTwChargeEquiv : ExtraT L hEven hU ≃ₗ[ℂ] ExtraT L hEven hU :=
@@ -244,7 +254,9 @@ theorem liftTwLatticeEquiv_FgT (a : Fin (rank L)) :
     ∑ b, oscMatrix L L ι b a • modeTT b _
       (liftTwLatticeEquiv L hEven hU hPos ι hι
         ((liftTwLatticeEquiv L hEven hU hPos ι hι).symm x)) at h
-  simpa only [LinearEquiv.apply_symm_apply] using h
+  first
+  | simpa only [LinearEquiv.apply_symm_apply] using h
+  | simpa only [LinearEquiv.apply_symm_apply, Nat.cast_ofNat] using h
 
 theorem liftTwLatticeEquiv_YTLFld (α : L.carrier) (e : ℤ) :
     liftTwConjField (liftTwLatticeEquiv L hEven hU hPos ι hι) (YTLFld L hEven hU α e) =

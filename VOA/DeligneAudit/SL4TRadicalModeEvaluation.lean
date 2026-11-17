@@ -26,8 +26,9 @@ def radicalModeWord (d : Fin 3 → ℕ) (u : RadicalModeSlot d → ℕ) : V :=
 
 /-- Linear extension of evaluation on monomials; exponents are current modes. -/
 def radicalModeEvaluation (d : Fin 3 → ℕ) : RadicalModePolynomial d →ₗ[ℂ] V :=
-  Finsupp.lsum ℂ fun u : RadicalModeSlot d →₀ ℕ =>
-    (LinearMap.ringLmapEquivSelf ℂ ℂ V).symm (radicalModeWord ρ w d u)
+  (Finsupp.lsum ℂ fun u : RadicalModeSlot d →₀ ℕ =>
+    (LinearMap.ringLmapEquivSelf ℂ ℂ V).symm (radicalModeWord ρ w d u)) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem radicalModeEvaluation_monomial (d : Fin 3 → ℕ)
     (u : RadicalModeSlot d →₀ ℕ) (z : ℂ) :

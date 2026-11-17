@@ -29,6 +29,11 @@ invariant form of `V♮` on `T`.  This is the form half of the twisted Griess di
 * ⭐ `TForm_spinIso` and `spinFormScale_ne_zero`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.GriessDictionary
@@ -101,7 +106,7 @@ noncomputable def spinGram : Matrix SpinIdx SpinIdx ℂ :=
 theorem spinPullForm_eq (v w : SpinIdx → ℂ) : spinPullForm v w = v ⬝ᵥ spinGram *ᵥ w := by
   have h := congrArg (fun B : LinearMap.BilinForm ℂ (SpinIdx → ℂ) => B v w)
     (Matrix.toBilin'_toMatrix' spinPullForm)
-  simp only at h
+  try simp only at h
   rw [Matrix.toBilin'_apply'] at h
   exact h.symm
 
@@ -110,7 +115,14 @@ theorem spinPullForm_eq (v w : SpinIdx → ℂ) : spinPullForm v w = v ⬝ᵥ sp
 theorem spinPullForm_spinOp (α : leech.carrier) (v w : SpinIdx → ℂ) :
     spinPullForm (spinOp (coordOfRed (red leech α)) *ᵥ v) w
       = (-1 : ℂ) ^ (leech.form α α / 2) * spinPullForm v (spinOp (coordOfRed (red leech α)) *ᵥ w) := by
-  rw [spinPullForm_apply, spinPullForm_apply, spinIso_spinOp, spinIso_spinOp, TForm_eT]
+  rw [spinPullForm_apply, spinPullForm_apply]
+  first
+  | rw [spinIso_spinOp, spinIso_spinOp, TForm_eT]
+  | (have h1 := spinIso_spinOp α v
+     have h2 := spinIso_spinOp α w
+     have h3 := TForm_eT α (spinIso v) (spinIso w)
+     rw [← h1, ← h2] at h3
+     exact h3)
 
 /-- **The Gram matrix commutes with every spin matrix of the lattice.** -/
 theorem spinOp_mul_spinGram (α : leech.carrier) :
@@ -171,7 +183,7 @@ theorem spinGram_eq_smul_one : spinGram = spinFormScale • (1 : Matrix SpinIdx 
   have hκ' : spinGram = κ • (1 : Matrix SpinIdx SpinIdx ℂ) := by
     rw [← hκ, scalar_apply, smul_one_eq_diagonal]
   have h0 : spinFormScale = κ := by
-    rw [spinFormScale, hκ', smul_apply, one_apply_eq, smul_eq_mul, mul_one]
+    rw [spinFormScale, hκ', Matrix.smul_apply, one_apply_eq, smul_eq_mul, mul_one]
   rw [h0]
   exact hκ'
 

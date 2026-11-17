@@ -17,7 +17,7 @@ theorem largePrimeGaussLowerRelations : LargePrimeGaussLowerRelations := by
     π hs X Y hX hY hn hz
   have hy : gaussLift X Y (lowerRoot (1 : ZMod (p ^ k))) =
       Y (Multiplicative.ofAdd 1) := by
-    simpa using gaussLift_lower_torus_upper X Y (1 : ZMod (p ^ k)) 0 1
+    simpa using! gaussLift_lower_torus_upper X Y (1 : ZMod (p ^ k)) 0 1
   rw [hm, hy]
 
 theorem largePrimeGaussBoundaryRelations : LargePrimeGaussBoundaryRelations := by

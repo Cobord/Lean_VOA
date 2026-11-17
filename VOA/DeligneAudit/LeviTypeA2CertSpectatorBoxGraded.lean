@@ -35,8 +35,8 @@ theorem a2_span_box_graded_spectator (F : ℕ → Module.End ℂ V)
         rw [← Module.End.mul_apply, hc, Module.End.mul_apply]
         exact Submodule.subset_span ⟨f, hf, hw, rfl⟩
     | zero => simp
-    | add x y _ _ hx hy => simpa only [map_add] using S.add_mem hx hy
-    | smul c x _ hx => simpa only [map_smul] using S.smul_mem c hx
+    | add x y _ _ hx hy => simpa only [map_add] using! S.add_mem hx hy
+    | smul c x _ hx => simpa only [map_smul] using! S.smul_mem c hx
   have h := hmap _ (span_box_graded F hFF w m hk hp)
   have hc := a2_evAlg_comm_spectator F hFF B hBF P
   rwa [← Module.End.mul_apply, hc, Module.End.mul_apply] at h

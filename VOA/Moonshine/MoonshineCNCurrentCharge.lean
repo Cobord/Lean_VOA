@@ -330,7 +330,10 @@ theorem frameCurrent_comm_canonicalChargedField_tmul (a : Fin (rank L)) (β : L.
       = frameCoordinate F β a • canonicalChargedField F β (t + j + 1) (latStateGen L p γ) := by
   have hcur1 : currentN (rank L) 1 a (-1) = (0 : End ℂ (FockN (rank L))) := by
     rw [currentN_apply, show -(-1 : ℤ) - 1 = 0 from by ring, oscN_zero]
-  rw [bracketDist_apply, LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
+  rw [show bracketDist (frameCurrent F a) (canonicalChargedField F β) j t
+      = frameCurrent F a j * canonicalChargedField F β t
+        - canonicalChargedField F β t * frameCurrent F a j from rfl,
+    LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
     canonicalChargedField_tmul, map_smul, frameCurrent_tmul, frameCurrent_tmul]
   by_cases hj : j = -1
   · 

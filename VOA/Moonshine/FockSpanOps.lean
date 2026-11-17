@@ -220,7 +220,9 @@ theorem totalDegree_pderiv_le (v : ℕ × Fin (rank leech)) (p : Fk) :
   refine le_trans ?_ (le_totalDegree hs)
   have h := Finsupp.degree_mono (σ := ℕ × Fin (rank leech)) (R := ℕ)
     (tsub_le_self : s - Finsupp.single v 1 ≤ s)
-  simpa [Finsupp.degree, Finsupp.sum] using h
+  first
+    | simpa [Finsupp.degree, Finsupp.sum] using h
+    | exact h
 
 /-- Fock states of total degree `≤ d` and weight `w`. -/
 noncomputable def Fdw (d : ℕ) (w : ℤ) : Submodule ℂ Fk :=

@@ -263,7 +263,8 @@ theorem O₂_le_liFiltration_one (W : VertexOperatorAlgebra V) :
     (lwGenerated_adjoint W) hc (-1) hvac
   change W.smul c (-1) W.vacuum ∈
     Gfil (adjointWeakModule W) ({W.vacuum} : Set V) 1 at h
-  simpa only [liFiltration, PreVertexAlgebra.smul_vacuum_neg_one] using h
+  simp only [PreVertexAlgebra.smul_vacuum_neg_one] at h
+  exact h
 
 /-- Translation kills the unit of the Li associated graded. -/
 @[simp] theorem liAssociatedGradedTranslation_one (W : VertexOperatorAlgebra V) :

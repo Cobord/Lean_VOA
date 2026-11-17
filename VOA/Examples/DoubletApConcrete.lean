@@ -166,7 +166,8 @@ theorem hggD (p : ℕ) (h4 : 4 ∣ p) : 2 * (latD p).form (gD p) (gD p) = (p : �
 `4 ∣ p` — this is `evenD` in numerical form.) -/
 theorem halfNormD (p : ℕ) (h4 : 4 ∣ p) (m : ℤ) :
     halfNorm (latD p) m = ((p / 4 : ℕ) : ℤ) * m ^ 2 := by
-  rw [halfNorm, hlatP_form_k p (p / 2) (hp2D p h4)]
+  change (latD p).form m m / 2 = _
+  rw [hlatP_form_k p (p / 2) (hp2D p h4)]
   have hk : ((p / 2 : ℕ) : ℤ) = 2 * ((p / 4 : ℕ) : ℤ) := by
     have hd : p / 2 = 2 * (p / 4) := by omega
     rw [hd]; push_cast; ring
@@ -209,7 +210,9 @@ noncomputable def lamD (p : ℕ) : Fin (rank (latD p)) → ℂ :=
 theorem bgPairD (p : ℕ) (h4 : 4 ∣ p) (hp : 0 < p) (m : ℤ) :
     BgA.bgPair (latD p) (lamD p) m = ((p : ℂ) - 1) / 2 * (m : ℂ) := by
   have hpC : (p : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-  rw [lamD, BgA.bgPair_latBg (latD p) (posDefD p h4 hp), cast_form_gD p h4, cD]
+  rw [lamD]
+  refine (BgA.bgPair_latBg (latD p) (posDefD p h4 hp) (cD p) (gD p) m).trans ?_
+  rw [cast_form_gD p h4, cD]
   field_simp
 
 /-- **`⟨λ, g⟩ = (p−1)/2`** — literally the hypothesis `hlam` of
@@ -232,11 +235,15 @@ the construction have to agree. -/
 /-- **The background charge and the refinement are compatible.** -/
 theorem bgCompatD (p : ℕ) (h4 : 4 ∣ p) (hp : 0 < p) :
     SAmbB.BgCompat (latD p) (qrD p h4) (lamD p) := by
+  have key : ∀ k : ℤ, ((p : ℂ) - 1) / 2 * (k : ℂ) =
+      (p : ℂ) / 4 * (k : ℂ) ^ 2 - ((qH p k : ℚ) : ℂ) := fun k => by
+    simp only [qH]
+    push_cast
+    ring
   intro m
-  rw [SAmbB.bgPair_B_eq_A, bgPairD p h4 hp, qrD_q, cast_halfNormD p h4]
-  simp only [qH]
-  push_cast
-  ring
+  have h2 := cast_halfNormD p h4 m
+  have h3 : (((qrD p h4).q m : ℚ) : ℂ) = ((qH p m : ℚ) : ℂ) := rfl
+  exact (bgPairD p h4 hp m).trans ((key m).trans (congrArg₂ (· - ·) h2 h3).symm)
 
 /-! ## §4  The ambient: the `ℂ`-graded super near-VOA on the half lattice -/
 

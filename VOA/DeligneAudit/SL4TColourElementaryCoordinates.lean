@@ -75,7 +75,7 @@ theorem colourElementaryPresentation_coordinate (c : Fin n) (s : ℕ) :
     have hz : esymm (Fin (sizes c)) ℂ s = 0 := by
       rw [esymm, Finset.powersetCard_eq_empty.mpr]
       · exact Finset.sum_empty
-      · simpa using (show sizes c < s by omega)
+      · simpa using! (show sizes c < s by omega)
     rw [hz, map_zero]
 
 /-- Power sums expressed in the finite elementary coordinates of a single colour. -/

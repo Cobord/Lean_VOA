@@ -96,7 +96,7 @@ theorem superMk_superVSqZ_zero_mem_superZhuCommSpan
       subst v
       simp
     · have hvM : v ∈ V.gradingZ ((M.toNat : ℕ) : ℤ) := by
-        simpa [show ((M.toNat : ℕ) : ℤ) = M from by omega] using hv.1
+        simpa [show ((M.toNat : ℕ) : ℤ) = M from by omega] using! hv.1
       have hcomm := V.superZhu_comm_mod_superO hV hK haKp hap hvM hv.2
       have hzero : V.superMk hV
           (V.superZhuMul hV (V.parProj p a) v
@@ -112,7 +112,7 @@ theorem superMk_superVSqZ_zero_mem_superZhuCommSpan
         (V.superMk_mem_superAParity hV hv.2)
   · simp
   · intro x y hx hy
-    simpa only [map_add] using Submodule.add_mem hZ.superZhuCommSpan hx hy
+    simpa only [map_add] using! Submodule.add_mem hZ.superZhuCommSpan hx hy
 
 /-- The image of the intrinsic cusp relation space is exactly the homogeneous
 supercommutator span of the super Zhu algebra. -/
@@ -178,7 +178,7 @@ noncomputable def superCuspRelSpanQuotEquiv
     have hxmem : x ∈ V.superCuspRelSpan hV := by
       have hadd := (V.superCuspRelSpan hV).add_mem
         (superO_le_superCuspRelSpan hdiff) hy
-      simpa using hadd
+      simpa using! hadd
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact hxmem
   · intro q

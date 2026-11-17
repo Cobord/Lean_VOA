@@ -92,7 +92,7 @@ theorem remainderTopIdeal_quotient_graded_certificate (w : σ → ℤ)
     have h := hle hmap
     change (Polynomial.C b * Polynomial.X ^ (xs.length - j) + p).map f ∈ _ at h
     simpa only [Polynomial.map_add, Polynomial.map_mul,
-      Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, hba, f] using h
+      Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, hba, f] using! h
 
 /-- All nonzero quotient correction coefficients lie in strictly larger homogeneous pieces. -/
 theorem remainderTopIdeal_quotient_strict_certificate (w : σ → ℤ)

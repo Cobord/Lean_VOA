@@ -40,9 +40,9 @@ theorem pairSourceSymmetric_rename_x (a b c : ℕ)
   | mem P hP =>
       rcases hP with ⟨⟨j, r⟩, rfl⟩
       fin_cases j
-      · simpa [pairSourcePower] using pairSourceXPsum_rename_x a b c r e
-      · simpa [pairSourcePower] using sourceYPsum_rename_x a b c r e
-      · simpa [pairSourcePower] using pairSourceZPsum_rename_x a b c r e
+      · simpa [pairSourcePower] using! pairSourceXPsum_rename_x a b c r e
+      · simpa [pairSourcePower] using! sourceYPsum_rename_x a b c r e
+      · simpa [pairSourcePower] using! pairSourceZPsum_rename_x a b c r e
   | algebraMap z => simp
   | add P Q _ _ hP hQ => simp [hP, hQ]
   | mul P Q _ _ hP hQ => simp [hP, hQ]

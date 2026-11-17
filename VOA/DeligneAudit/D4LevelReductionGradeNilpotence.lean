@@ -17,10 +17,10 @@ theorem truncatedGrade_shift_nilpotent (m : ℕ) (hm : 1 ≤ m)
       (hv : v ∈ truncatedGradeSpace m κ) :
       (T ^ n) v ∈ truncatedGradeSpace m (κ + (n : ℤ) * d) := by
     induction n with
-    | zero => simpa using hv
+    | zero => simpa using! hv
     | succ n ih =>
       simpa only [pow_succ', Module.End.mul_apply, Nat.cast_add, Nat.cast_one,
-        add_mul, one_mul, add_assoc] using hT _ _ ih
+        add_mul, one_mul, add_assoc] using! hT _ _ ih
   refine ⟨6 * m + 1, LinearMap.ker_eq_top.mp ?_⟩
   apply top_unique
   rw [← truncatedGradeSpace_spans m hm]
@@ -30,14 +30,14 @@ theorem truncatedGrade_shift_nilpotent (m : ℕ) (hm : 1 ≤ m)
   by_cases hκ : κ < -5 * (m : ℤ) ∨ (m : ℤ) < κ
   · have hz : v = 0 := by
       simpa only [truncatedGradeSpace_eq_bot_of_grade_outside m hm κ hκ,
-        Submodule.mem_bot] using hv
+        Submodule.mem_bot] using! hv
     rw [hz, map_zero]
   have hp := hpow (6 * m + 1) κ v hv
   have hout : κ + ((6 * m + 1 : ℕ) : ℤ) * d < -5 * (m : ℤ) ∨
       (m : ℤ) < κ + ((6 * m + 1 : ℕ) : ℤ) * d := by
     rcases hd with rfl | rfl <;> push_cast <;> omega
   simpa only [truncatedGradeSpace_eq_bot_of_grade_outside m hm _ hout,
-    Submodule.mem_bot] using hp
+    Submodule.mem_bot] using! hp
 
 /-- A Cartan commutator with eigenvalue twice a unit step gives a nilpotent operator. -/
 theorem truncatedGrade_commutator_nilpotent (m : ℕ) (hm : 1 ≤ m)

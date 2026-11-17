@@ -5,6 +5,7 @@ Authors: Fedor K. Popov
 -/
 import Mathlib.Algebra.MvPolynomial.PDeriv
 import Mathlib.Algebra.MvPolynomial.Derivation
+import Mathlib.Algebra.MvPolynomial.CommRing
 import Mathlib.RingTheory.Derivation.Lie
 import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
 import Mathlib.RingTheory.MvPolynomial.EulerIdentity
@@ -324,7 +325,7 @@ theorem degSetT_finite (r d : ℕ) : (degSetT r d).Finite := by
 
 /-- A graded piece is the span of the monomials of that doubled weight. -/
 theorem gradingT_eq_supported (r d : ℕ) :
-    gradingT r d = Finsupp.supported ℂ ℂ (degSetT r d) :=
+    gradingT r d = AddMonoidAlgebra.supported ℂ ℂ (degSetT r d) :=
   weightedHomogeneousSubmodule_eq_finsupp_supported ℂ wT d
 
 /-- Each graded piece of `S[θ]` is finite-dimensional. -/
@@ -333,8 +334,8 @@ instance gradingT_finiteDimensional (r d : ℕ) : FiniteDimensional ℂ (grading
   letI : Fintype (degSetT r d) := hs.fintype
   rw [gradingT_eq_supported]
   exact FiniteDimensional.of_injective
-    (Finsupp.supportedEquivFinsupp (R := ℂ) (M := ℂ) (degSetT r d)).toLinearMap
-    (Finsupp.supportedEquivFinsupp (R := ℂ) (M := ℂ) (degSetT r d)).injective
+    (AddMonoidAlgebra.supportedEquivFinsupp (R := ℂ) (S := ℂ) (degSetT r d)).toLinearMap
+    (AddMonoidAlgebra.supportedEquivFinsupp (R := ℂ) (S := ℂ) (degSetT r d)).injective
 
 /-- `finrank (gradingT r d) = #{exponent vectors of doubled weight d}`. -/
 theorem finrank_gradingT (r d : ℕ) :
@@ -342,7 +343,7 @@ theorem finrank_gradingT (r d : ℕ) :
   have hs := degSetT_finite r d
   letI : Fintype (degSetT r d) := hs.fintype
   have e := (LinearEquiv.ofEq _ _ (gradingT_eq_supported r d)).trans
-    (Finsupp.supportedEquivFinsupp (R := ℂ) (M := ℂ) (degSetT r d))
+    (AddMonoidAlgebra.supportedEquivFinsupp (R := ℂ) (S := ℂ) (degSetT r d))
   rw [e.finrank_eq, Module.finrank_finsupp_self, Nat.card_eq_fintype_card]
 
 /-- The only exponent vector of doubled weight `0` is `0`. -/
@@ -387,7 +388,7 @@ theorem degSetT_one (r : ℕ) :
 theorem gradingT_zero (r : ℕ) : gradingT r 0 = ℂ ∙ vacT r := by
   apply le_antisymm
   · intro p hp
-    have hconst : p = C (coeff 0 p) := by
+    have hconst : p = C (p.coeff 0) := by
       ext m
       rw [coeff_C]
       by_cases hm : m = 0
@@ -396,7 +397,7 @@ theorem gradingT_zero (r : ℕ) : gradingT r 0 = ℂ ∙ vacT r := by
         by_contra hne
         have : m ∈ degSetT r 0 := hp hne
         rw [degSetT_zero] at this; exact hm this
-    rw [hconst, show (C (coeff 0 p) : FockT r) = coeff 0 p • vacT r by
+    rw [hconst, show (C (p.coeff 0) : FockT r) = p.coeff 0 • vacT r by
       rw [vacT, smul_eq_C_mul, mul_one]]
     exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _)
   · rw [Submodule.span_singleton_le_iff_mem]; exact vacT_mem_gradingT r
@@ -556,14 +557,15 @@ theorem thetaT_monomial (r : ℕ) (m : (ℕ × Fin r) →₀ ℕ) (c : ℂ) :
 
 /-- `θ` acts on coefficients by the oscillator-number sign. -/
 theorem coeff_thetaT (r : ℕ) (m : (ℕ × Fin r) →₀ ℕ) (p : FockT r) :
-    coeff m (thetaT r p) = (-1 : ℂ) ^ m.degree * coeff m p := by
+    (thetaT r p).coeff m = (-1 : ℂ) ^ m.degree * p.coeff m := by
   induction p using MvPolynomial.induction_on' with
   | monomial n c =>
     rw [thetaT_monomial, coeff_smul, coeff_monomial, smul_eq_mul]
     by_cases h : n = m
     · subst h; simp
     · simp [h]
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq, mul_add]
+  | add p q hp hq =>
+    rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
 
 /-- `θ` preserves the `L₀`-grading. -/
 theorem thetaT_mem_gradingT {r d : ℕ} {p : FockT r} (hp : p ∈ gradingT r d) :
@@ -604,35 +606,35 @@ theorem thetaT_modeT (r : ℕ) (i : Fin r) (k : ℤ) (p : FockT r) :
 
 /-- `θ`-fixed vectors are exactly those supported on even oscillator number. -/
 theorem thetaT_eq_self_iff (r : ℕ) (p : FockT r) :
-    thetaT r p = p ↔ ∀ m, coeff m p ≠ 0 → Even m.degree := by
+    thetaT r p = p ↔ ∀ m, p.coeff m ≠ 0 → Even m.degree := by
   constructor
   · intro h m hm
     by_contra hodd
     rw [Nat.not_even_iff_odd] at hodd
-    have := congrArg (coeff m) h
+    have : (thetaT r p).coeff m = p.coeff m := by rw [h]
     rw [coeff_thetaT, hodd.neg_one_pow] at this
     exact hm (by linear_combination -this / 2)
   · intro h
     ext m
     rw [coeff_thetaT]
-    by_cases hm : coeff m p = 0
+    by_cases hm : p.coeff m = 0
     · rw [hm, mul_zero]
     · rw [(h m hm).neg_one_pow, one_mul]
 
 /-- `θ`-anti-fixed vectors are exactly those supported on odd oscillator number. -/
 theorem thetaT_eq_neg_iff (r : ℕ) (p : FockT r) :
-    thetaT r p = -p ↔ ∀ m, coeff m p ≠ 0 → Odd m.degree := by
+    thetaT r p = -p ↔ ∀ m, p.coeff m ≠ 0 → Odd m.degree := by
   constructor
   · intro h m hm
     by_contra hev
     rw [Nat.not_odd_iff_even] at hev
-    have := congrArg (coeff m) h
+    have : (thetaT r p).coeff m = (-p).coeff m := by rw [h]
     rw [coeff_thetaT, hev.neg_one_pow, coeff_neg] at this
     exact hm (by linear_combination this / 2)
   · intro h
     ext m
     rw [coeff_thetaT, coeff_neg]
-    by_cases hm : coeff m p = 0
+    by_cases hm : p.coeff m = 0
     · rw [hm, mul_zero, neg_zero]
     · rw [(h m hm).neg_one_pow]; ring
 

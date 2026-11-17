@@ -138,7 +138,7 @@ theorem radicalSymmetricModes_le_powerSumAlgebra (d : Fin 3 → ℕ) :
     (radicalModeOrbitSum_mem_powerSumAlgebra d P) (n : ℂ)⁻¹
   rw [he] at hm
   change (n : ℂ)⁻¹ • ((n : ℂ) • P) ∈ radicalPowerSumAlgebra d at hm
-  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using hm
+  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using! hm
 
 end
 

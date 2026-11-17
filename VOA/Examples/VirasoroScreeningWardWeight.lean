@@ -35,7 +35,6 @@ theorem screeningVectorField_variable (r n : ℕ) (j : Fin r) :
     ring
   · intro i hi hij
     simp [unitExponent, Pi.single_eq_of_ne hij]
-    rfl
   · simp
 
 /-- A product of polynomial eigenvectors has logarithmic multiplier the

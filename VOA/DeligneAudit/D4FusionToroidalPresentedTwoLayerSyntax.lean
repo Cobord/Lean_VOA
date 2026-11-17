@@ -44,9 +44,9 @@ theorem evalT_rhoPTE_two (z : FreeT 28) :
 
 theorem two_garland_one_zero (N : ℕ) (hN : 1 ≤ N) :
     Psym (ρPTE 2) D4sector.c₀ 1 N (pTE 2) = 0 := by
-  rw [← evalT_psymSyntax, evalT_rhoPTE_two]
-  exact mk_syntax D4sector.f 2 (JprimeSyntaxE 2)
-    (psymSyntax D4sector.c₀ 1 N) (two_garland_one_syntax N hN)
+  rw [← evalT_psymSyntax]
+  exact (evalT_rhoPTE_two _).trans (mk_syntax D4sector.f 2 (JprimeSyntaxE 2)
+    (psymSyntax D4sector.c₀ 1 N) (two_garland_one_syntax N hN))
 
 theorem two_garland_quadratic_relation :
     prefixT [(D4sector.c₀, 1, 0)]

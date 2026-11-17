@@ -246,7 +246,7 @@ theorem moveB (hY₁ : IsGradedJacobiFamily A₁ A₅ A₄ Y₁)
 
 theorem cbz_neg_one_nat (k : ℕ) : cbz (-1) (k : ℤ) = (-1 : ℂ) ^ k := by
   have h := cbz_neg_one_sub 0 k
-  simpa using h
+  simpa using! h
 
 /-- **Move `𝒞`** (innermost vector `u₋₁w₃`, Huang's `𝒞`): a regular relation. -/
 theorem moveC (hY₁ : IsGradedJacobiFamily A₁ A₅ A₄ Y₁)

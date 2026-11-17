@@ -128,12 +128,12 @@ theorem cubicZhuCharacterTable_of_pairs (hu : CubicUntwistedDoubledPairs)
   · have : k = 0 ∨ k = 1 := by omega
     rcases this with rfl | rfl
     · exact hu.1
-    · simpa [cubicPairWeight] using hu.2
+    · simpa [cubicPairWeight] using! hu.2
 
 /-- And conversely: the residual pairs are consequences of the table. -/
 theorem pairs_of_cubicZhuCharacterTable (h : CubicZhuCharacterTable) :
     CubicUntwistedDoubledPairs ∧ CubicTwistedDoubledPairs := by
   have hp := cubicZhuCharacterTable_iff.mp h
-  refine ⟨⟨hp 0, by simpa [cubicPairWeight] using hp 1⟩, fun k _ => hp k⟩
+  refine ⟨⟨hp 0, by simpa [cubicPairWeight] using! hp 1⟩, fun k _ => hp k⟩
 
 end VOA.Classification.COne.OrbRat5

@@ -441,7 +441,7 @@ theorem summable_eulerMaj {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) :
     _ = P.eval r := (Polynomial.eval_eq_sum_range' (by omega) r).symm
     _ = ∏ n ∈ range L, (1 + r ^ (n + 1)) := eval_eulerMaj L r
     _ ≤ ∏ n ∈ range L, Real.exp (r ^ (n + 1)) := by
-        refine Finset.prod_le_prod (fun n _ => by positivity) fun n _ => ?_
+        refine Finset.prod_le_prod₀ (fun n _ => by positivity) fun n _ => ?_
         have := Real.add_one_le_exp (r ^ (n + 1))
         linarith
     _ = Real.exp (∑ n ∈ range L, r ^ (n + 1)) := (Real.exp_sum _ _).symm
@@ -566,7 +566,7 @@ theorem gap_eta_mul (c : ℕ → ℂ) (g : ℂ → ℂ)
   refine hsum.hasSum.congr_fun fun N => ?_
   rw [PowerSeries.coeff_mul, Finset.sum_mul]
   refine Finset.sum_congr rfl fun kl hkl => ?_
-  rw [Finset.mem_antidiagonal] at hkl
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
   simp only [ha, PowerSeries.coeff_map, PowerSeries.coeff_mk, eq_intCast]
   rw [hpow, hpow, ← hkl, pow_add]
   ring

@@ -84,7 +84,7 @@ theorem serG_mul (D : Derivation ℂ B B) (f g : PowerSeries B) :
   exact Finset.sum_congr rfl fun p _ => by ring
 
 theorem serG_derivative (D : Derivation ℂ B B) (f : PowerSeries B) :
-    serG D (PowerSeries.derivative B f) = PowerSeries.derivative B (serG D f) := by
+    serG D (PowerSeries.derivative (R := B) f) = PowerSeries.derivative (R := B) (serG D f) := by
   ext n
   simp only [coeff_serG, PowerSeries.coeff_derivative, Derivation.leibniz, smul_eq_mul]
   have h : D ((n : B) + 1) = 0 := by
@@ -112,7 +112,7 @@ theorem serG_C (D : Derivation ℂ B B) (a : B) :
 
 /-- The Witt shape `t^k (c f + t f')`. -/
 def wshape (k : ℕ) (c : B) (f : PowerSeries B) : PowerSeries B :=
-  PowerSeries.X ^ k * (PowerSeries.C c * f + PowerSeries.X * PowerSeries.derivative B f)
+  PowerSeries.X ^ k * (PowerSeries.C c * f + PowerSeries.X * PowerSeries.derivative (R := B) f)
 
 omit [Algebra ℂ B] in
 theorem coeff_wshape (k : ℕ) (c : B) (f : PowerSeries B) (m : ℕ) :
@@ -345,7 +345,7 @@ theorem inL_x : InL xSer := fun m => Submodule.subset_span ⟨(0, m), rfl⟩
 theorem inL_z : InL zSer := fun m => by
   have h : PowerSeries.coeff m (-zSer) ∈ Lpoly := Submodule.subset_span ⟨(1, m), rfl⟩
   rw [map_neg] at h
-  simpa using neg_mem h
+  simpa using! neg_mem h
 
 theorem inL_y : InL ySer := fun m => by
   have h : PowerSeries.coeff m (-(ySer + ySer)) ∈ Lpoly := Submodule.subset_span ⟨(2, m), rfl⟩

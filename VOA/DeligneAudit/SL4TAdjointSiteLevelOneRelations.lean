@@ -83,7 +83,7 @@ theorem radicalAlphabetQuotCurrent_outer_eq_zero (B : ℕ)
   have he := radicalGrassmannianEvaluation_powerSum ρ w 1 B 1 hW D j s hs φ
   rw [hφ, radicalGrassmannianPowerSum_outer_eq_zero B D j hj s hs, zero_mul,
     map_zero] at he
-  simpa using he
+  simpa using! he
 
 /-- The zero-mode top word `x y^n z(r) v` lies in the first Levi layer of key `(1, n, 1)`. -/
 theorem adjointSite_topWord_mem_layer (n r : ℕ) :
@@ -94,7 +94,7 @@ theorem adjointSite_topWord_mem_layer (n r : ℕ) :
   unfold radicalCountLayer
   apply Submodule.mem_iSup_of_mem r
   convert hm using 1
-  simp [aWord, List.map_replicate, List.prod_replicate, F, Module.End.mul_apply]
+  all_goals simp [aWord, List.map_replicate, List.prod_replicate, F, Module.End.mul_apply]
 
 /-- A commuting pair of current operators also commutes with all powers. -/
 theorem op_pow_comm_of_zero_bracket {a b : Fin 15} (hab : ∀ e, bracketInt a b e = 0)
@@ -110,7 +110,7 @@ theorem last_compoundPower_comm (r n : ℕ) (u : V) :
       (ρ.op 7 0 ^ (n + 1)) (ρ.op 11 r u) +
         ((n + 1 : ℕ) : ℂ) • (ρ.op 7 0 ^ n) (ρ.op 8 r u) := by
   have hFy (v : V) : ρ.op 11 r (ρ.op 7 0 v) = ρ.op 7 0 (ρ.op 11 r v) + ρ.op 8 r v := by
-    simpa only [add_zero, Int.cast_one, one_smul] using
+    simpa only [add_zero, Int.cast_one, one_smul] using!
       op_comm_of_single_bracket ρ bracket_last_compound r 0 v
   induction n with
   | zero => simpa only [zero_add, pow_one, pow_zero, Nat.cast_one, one_smul,

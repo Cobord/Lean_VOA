@@ -76,7 +76,6 @@ theorem productPointProfile_row_summable (hC2 : C2Cofinite W)
     (Complex.exp (e₁*(β-a₁-h'))*Complex.exp (e₂*(h'-h-a₂))*Complex.exp (e₃*(h-(a₃+a₄))))
     Prod.swap Prod.swap_injective hG ?_
   intro p
-  simp only []
   rw [productPointProfile_eq_polynomial N₀ N₁ N₂ N₃ N₄ N₅ N₆
     hfg₀ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ hfg₆, Prod.fst_swap, Prod.snd_swap,
     fullLogProductCoefficient_eq]
@@ -120,7 +119,6 @@ theorem midPointProfile_row_summable (hC2 : C2Cofinite W)
     (Complex.exp (e₁*(β-a₁-h'))*Complex.exp (e₂*(h'-h-a₂))*Complex.exp (e₃*(h-(a₃+a₄))))
     Prod.swap Prod.swap_injective hG ?_
   intro p
-  simp only []
   rw [midPointProfile_eq_polynomial N₀ N₁ N₂ N₃ N₄ N₅ N₆
     hfg₀ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ hfg₆, Prod.fst_swap, Prod.snd_swap,
     fullLogMidProductCoefficient_eq]

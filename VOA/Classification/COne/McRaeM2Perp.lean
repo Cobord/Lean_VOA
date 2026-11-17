@@ -248,7 +248,7 @@ theorem eq_zero_of_pr {x : M} (h : ∀ f, dualPairing O x f = 0) : x = 0 := by
     have he : internalProjTo O.isInternal α x = ⟨cmp O α x, cmp_mem O α x⟩ := Subtype.ext rfl
     rw [he, hg] at h1
     exact one_ne_zero h1
-  simpa using hx
+  simpa using! hx
 
 end Pairing
 
@@ -475,7 +475,8 @@ def perpIso
   right_inv T := perpA_perpD O hO hD (OrderDual.ofDual T)
   map_rel_iff' := by
     intro S S'
-    simp only [Equiv.coe_fn_mk, OrderDual.toDual_le_toDual]
+    -- 4.35: the `Equiv.mk` target is ill-typed at implicit transparency; restate it.
+    change perpA O hO hD S' ≤ perpA O hO hD S ↔ S ≤ S'
     constructor
     · intro h
       have := perpD_antitone O hO hD h

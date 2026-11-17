@@ -57,11 +57,11 @@ theorem second_coefficient_zero (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
     Q (R.op 4) r s w = 0 := by
   by_cases hr : r = 0
   · subst r
-    have hs0 : 0 < s := by simpa [clippedSum] using hs
+    have hs0 : 0 < s := by simpa [clippedSum] using! hs
     simp [Q, hs0.ne']
   · obtain ⟨k, hk⟩ := parts_region_optimizer ϱ.2 ν.2 ε.2 r (by omega)
     have hCV : CVRel (R.op 4) (parts ϱ.2 ν.2 ε.2) w := by
-      simpa only [Nat.add_zero] using h.second
+      simpa only [Nat.add_zero] using! h.second
     exact hCV r s k (by omega) (by omega)
 
 private theorem first_high_zero (h : CV3Rel R w ε ν ϱ 0) :
@@ -89,7 +89,7 @@ theorem shifted_theta_second_zero (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
   · intro i k
     rw [← sub_eq_zero, op_comm_end]
     simp [Fin.sum_univ_eight, bracketTable]
-  · simpa only [LinearMap.neg_apply, neg_eq_zero] using first_high_zero h
+  · simpa only [LinearMap.neg_apply, neg_eq_zero] using! first_high_zero h
 
 /-- The entire one-theta boundary coefficient vanishes in the actual module.
 The first auxiliary partition enters only through its length. -/
@@ -104,7 +104,7 @@ theorem theta_second_one (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
     simp only [PowerSeries.coeff_mul, LinearMap.sum_apply, Module.End.mul_apply]
     apply Finset.sum_eq_zero
     rintro ⟨i, j⟩ hij
-    have hij' : i + j = s := Finset.mem_antidiagonal.mp hij
+    have hij' : i + j = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
     rw [Polynomial.coeff_coe]
     by_cases hi : i < N
     · rw [finiteCurrent_coeff_lt N Y i hi]
@@ -118,7 +118,7 @@ theorem theta_second_one (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
         (PowerSeries.mk (fun k => Y (N + k)) * Garland.Fs Z ^ r)) w = 0 := by
     rw [PowerSeries.coeff_X_pow_mul']
     split_ifs with hNs
-    · simpa only [mixedCoeff, pow_one, Garland.Fs] using
+    · simpa only [mixedCoeff, pow_one, Garland.Fs] using!
         shifted_theta_second_zero h r (s - N) (by dsimp [N] at hNs; omega)
     · exact LinearMap.zero_apply w
   simp only [mixedCoeff, pow_one]

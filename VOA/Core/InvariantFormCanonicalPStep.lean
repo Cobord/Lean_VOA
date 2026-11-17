@@ -48,6 +48,9 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra 
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## Native `L₋₁`-covariance recursion for `canBilin` (replicating `Core.InvariantFormDiagonal`,
 using `canBilin_Lneg1_adj` in place of `B.virasoro_adj (-1)`). -/
 
@@ -374,7 +377,7 @@ theorem canBilin_mode_lower_right (hne : W.vacuum ≠ 0)
       = canBilin W hne a (W.L 1 (W.smul u (-n) b)) - canBilin W hne a (W.smul u (-n) (W.L 1 b)) := by
     rw [← map_sub]
     have := congrArg (fun x => canBilin W hne a x) hbr.symm
-    simp only at this
+    try simp only at this
     rw [map_smul] at this
     rw [this]
   rw [hpair]

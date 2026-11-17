@@ -25,7 +25,7 @@ theorem a2KeyLayer_eq_bot_of_count (p q : ℕ) (k : A2RadicalKey)
   rw [a2KeyLayer, eq_bot_iff, Submodule.span_le]
   intro z hz
   obtain ⟨l, hd₁, hd₂, _, _, rfl⟩ := hz
-  rw [hc l (by simpa only [hd₁, hd₂] using hk)]
+  rw [hc l (by simpa only [hd₁, hd₂] using! hk)]
   exact Submodule.zero_mem _
 
 /-- Conditional finite support: every nonzero key layer lies in the explicit box. -/

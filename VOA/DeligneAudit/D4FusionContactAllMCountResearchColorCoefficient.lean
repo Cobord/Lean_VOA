@@ -45,7 +45,7 @@ theorem colorCurrentAlg_deriv (m : ℕ) (g : Fin 10) (p : MvPolynomial (Vars 2) 
   induction p using MvPolynomial.induction_on with
   | C c =>
       rw [MvPolynomial.derivation_C,map_zero]
-      simpa only [colorCurrentAlg,MvPolynomial.aeval_C] using
+      simpa only [colorCurrentAlg,MvPolynomial.aeval_C] using!
         ((seriesDerivation (g0Deriv m g 0)).map_algebraMap c).symm
   | add p q ihp ihq => simp only [map_add,ihp,ihq]
   | mul_X p x ih =>
@@ -87,8 +87,9 @@ theorem leviOrbit_grouped_coefficient (l : List (Fin 3)) :
   | cons i l ih =>
       change evalMap b (.deriv (leviIndex i) (leviOrbit l .base).toWheel) (groupedSeed b) = _
       rw [evalMap_levi_step,ih,Derivation.map_smul,constant_deriv_coefficient]
-      congr 2
-      exact congrArg (fun p => colorCurrentAlg m p) (twoEvalMap_levi_step i _ twoSeed).symm
+      exact congrArg
+        (fun p => (1/2:ℂ) • PowerSeries.coeff (b.lower.val+b.top.val) (colorCurrentAlg m p))
+        (twoEvalMap_levi_step i (leviOrbit l .base) twoSeed).symm
 
 end
 

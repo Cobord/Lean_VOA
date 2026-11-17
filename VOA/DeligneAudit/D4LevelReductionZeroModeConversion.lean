@@ -48,8 +48,8 @@ theorem middleRaising_threeColourZero (m : ℕ)
     induction n with
     | zero =>
         have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-          simpa [ravFam] using h
-        simpa [radicalWord, wordOp] using
+          simpa [ravFam] using! h
+        simpa [radicalWord, wordOp] using!
           (rs_raising hs (show D4sector.raising (leviColour (A3Sector.simpleE 1)) by
             change 4 ≤ (leviColour (A3Sector.simpleE 1)).val ∧
               (leviColour (A3Sector.simpleE 1)).val < 16
@@ -72,7 +72,7 @@ theorem middleRaising_threeColourZero (m : ℕ)
       ρ.op (leviColour (A3Sector.simpleE 1)) 0 (threeColourZeroVector ρ w 0 j (c + 1)) =
         (c + 1 : ℂ) • threeColourZeroVector ρ w 0 (j + 1) c := by
     induction j with
-    | zero => simpa [threeColourZeroVector, threeColourZeroWord] using hcentral (c + 1)
+    | zero => simpa [threeColourZeroVector, threeColourZeroWord] using! hcentral (c + 1)
     | succ j ih =>
         have hc := simple_raise_comm ρ 1 4 0 0
           (threeColourZeroVector ρ w 0 j (c + 1))
@@ -99,7 +99,7 @@ theorem threeColourZero_mem_bottomOrbit (m : ℕ)
     threeColourZeroVector ρ w a j c ∈ keyVectorOrbit ρ (bottomVector ρ w a (j + c)) := by
   induction j generalizing c with
   | zero =>
-      simpa [threeColourZeroVector, threeColourZeroWord, bottomVector, bottomRadicalWord] using
+      simpa [threeColourZeroVector, threeColourZeroWord, bottomVector, bottomRadicalWord] using!
         keyVectorOrbit_mem ρ (bottomVector ρ w a c) [] (by simp)
   | succ j ih =>
       have hv := keyVectorOrbit_inv ρ (bottomVector ρ w a (j + (c + 1)))
@@ -107,7 +107,7 @@ theorem threeColourZero_mem_bottomOrbit (m : ℕ)
       rw [middleRaising_threeColourZero ρ w m h a j c] at hv
       have hn : (c + 1 : ℂ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero c
       have hh := (Submodule.smul_mem_iff _ hn).mp hv
-      simpa only [Nat.succ_add, Nat.add_succ] using hh
+      simpa only [Nat.succ_add, Nat.add_succ] using! hh
 
 end
 

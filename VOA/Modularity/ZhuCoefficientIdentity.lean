@@ -52,7 +52,7 @@ theorem finsum_int_split_at {α : Type*} [AddCommMonoid α] (f : ℤ → α)
   · intro a b h; simpa using h
   · rw [Set.disjoint_left]
     rintro p ⟨a, rfl⟩ ⟨b, hb⟩
-    simp only at hb
+    try simp only at hb
     omega
   · refine Set.eq_univ_of_forall (fun p => ?_)
     by_cases hp : c ≤ p
@@ -360,7 +360,7 @@ theorem finsum_modeSgn_telescopeZ :
     simp only [Function.mem_support, ne_eq] at hq
     simp only [Set.mem_prod, Set.mem_Iic]
     rw [hht] at hq
-    simp only at hq
+    try simp only at hq
     by_contra hc
     refine hq ?_
     by_cases h0 : q.1 = 0 ∨ q.2 = 0
@@ -615,7 +615,7 @@ theorem zhu_abstract_assembly {ka : ℕ} (hk : 1 ≤ ka) (e : ℂ) (R : ℤ) (D 
   rw [hcorr, sub_zero]
   -- and the remaining finite `n`-sum is `Σᶠ_n S n`
   rw [hS]
-  dsimp only
+  try dsimp only
   refine finsum_eq_sum_of_support_subset _ (fun n hn => ?_)
   simp only [Function.mem_support, ne_eq] at hn
   simp only [Finset.coe_range, Set.mem_Iio]

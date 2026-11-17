@@ -206,7 +206,7 @@ theorem levelBox_of_theoremA (hA : SerreStarkTheoremA) : SerreStarkLevelBox24 :=
     rw [← (hgrpval i₀ hi₀).2 (-1)]
     have := (hdata i₀).2.1
     rw [DirichletCharacter.Even] at this
-    simpa using this
+    simpa using! this
   -- `a(T₀) = 2 E(T₀)`
   have haT₀ : thetaTypeCoeff f T₀ = 2 * E T₀ := by
     rw [hstep3 T₀ (by omega), Finset.sum_eq_single_of_mem T₀ hT₀Ts]
@@ -235,10 +235,10 @@ theorem levelBox_of_theoremA (hA : SerreStarkTheoremA) : SerreStarkLevelBox24 :=
   rw [hx]
   refine hbox x hx1 ⟨?_, ?_⟩
   · rw [DirichletCharacter.Even]
-    simpa using hev
+    simpa using! hev
   · have := (hdata i₀).2.2.2
     rw [hti₀, hx, (hgrpval i₀ hi₀).1] at this
-    simpa [mul_assoc] using this
+    simpa [mul_assoc] using! this
 
 end SSHecke
 

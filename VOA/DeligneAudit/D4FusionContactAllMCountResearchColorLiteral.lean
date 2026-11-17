@@ -66,7 +66,7 @@ theorem colorFormulaRow_eq_target :
   have hh := Rows.eval_zero_of_collect (colorValue b)
     (colorFormulaRow ++ Rows.scale (-1) colorTargetRow) colorFormulaRow_check
   rw [Rows.eval_append,Rows.eval_scale] at hh
-  simpa only [neg_one_zsmul,add_neg_eq_zero] using hh
+  simpa only [neg_one_zsmul,add_neg_eq_zero] using! hh
 
 /-- The exact literal polynomial, including its rational coefficients. -/
 def literalLeading : MvPolynomial (Vars m) ℂ :=
@@ -77,7 +77,7 @@ theorem refinedLeading_eq_literal : refinedLeading b = literalLeading b := by
   rw [colorFormulaRow_eval] at hh
   have he := congrArg (fun p => (1/64:ℂ) • p) hh
   simpa only [smul_smul,one_div_mul_cancel (by norm_num : (64:ℂ) ≠ 0),one_smul,
-    literalLeading] using he
+    literalLeading] using! he
 
 /-- The whole actual relation has exactly this literal leading polynomial. -/
 theorem refinedWheel_sub_literal_mem (ha : b.lower.val + 1 < b.top.val) :

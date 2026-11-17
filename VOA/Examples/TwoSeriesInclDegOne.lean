@@ -87,10 +87,16 @@ theorem coeff_zero_bSer : PowerSeries.coeff 0 bSer = 1 := by
 def wSer : PowerSeries Pl :=
   cSer.derivativeFun * bSer - cSer * bSer.derivativeFun
 
+-- Lean 4.35 port: `PowerSeries.coeff_derivativeFun` is now an alias of the `PowerSeries.derivative`
+-- form; this restates it for `derivativeFun` (proved by defeq).
+private theorem coeff_derivativeFun_d1 {R : Type*} [CommSemiring R] (f : PowerSeries R) (n : ℕ) :
+    PowerSeries.coeff n f.derivativeFun = PowerSeries.coeff (n + 1) f * (n + 1) :=
+  PowerSeries.coeff_derivative f n
+
 theorem derivativeFun_one_add (a : Pl) :
     (1 + PowerSeries.C a * PowerSeries.X).derivativeFun = PowerSeries.C a := by
   refine PowerSeries.ext fun k => ?_
-  rw [PowerSeries.coeff_derivativeFun, map_add, PowerSeries.coeff_one, PowerSeries.coeff_C_mul,
+  rw [coeff_derivativeFun_d1, map_add, PowerSeries.coeff_one, PowerSeries.coeff_C_mul,
     PowerSeries.coeff_X, PowerSeries.coeff_C]
   rcases k with _ | k <;> simp
 
@@ -151,8 +157,8 @@ abbrev inlP : Pl →+* DP := TrivSqZeroExt.inlHom Pl Pl
 
 theorem map_derivative {A B : Type*} [CommRing A] [CommRing B] (f : A →+* B)
     (g : PowerSeries A) :
-    PowerSeries.map f (PowerSeries.derivative A g) =
-      PowerSeries.derivative B (PowerSeries.map f g) := by
+    PowerSeries.map f (PowerSeries.derivative (R := A) g) =
+      PowerSeries.derivative (R := B) (PowerSeries.map f g) := by
   refine PowerSeries.ext fun n => ?_
   rw [PowerSeries.coeff_map, PowerSeries.coeff_derivative, PowerSeries.coeff_derivative,
     PowerSeries.coeff_map, map_mul]
@@ -161,9 +167,9 @@ theorem map_derivative {A B : Type*} [CommRing A] [CommRing B] (f : A →+* B)
 
 theorem map_derivativeFun {A B : Type*} [CommRing A] [CommRing B] (f : A →+* B)
     (g : PowerSeries A) :
-    PowerSeries.map f g.derivativeFun = PowerSeries.derivative B (PowerSeries.map f g) := by
+    PowerSeries.map f g.derivativeFun = PowerSeries.derivative (R := B) (PowerSeries.map f g) := by
   refine PowerSeries.ext fun n => ?_
-  rw [PowerSeries.coeff_map, PowerSeries.coeff_derivativeFun, PowerSeries.coeff_derivative,
+  rw [PowerSeries.coeff_map, coeff_derivativeFun_d1, PowerSeries.coeff_derivative,
     PowerSeries.coeff_map, map_mul]
   congr 1
   rw [map_add, map_natCast, map_one]
@@ -183,8 +189,8 @@ theorem map_chi_colSer_one :
   simp [chi, chiV]
 
 theorem derivative_C_mul {B : Type*} [CommRing B] (a : B) (g : PowerSeries B) :
-    PowerSeries.derivative B (PowerSeries.C a * g) =
-      PowerSeries.C a * PowerSeries.derivative B g := by
+    PowerSeries.derivative (R := B) (PowerSeries.C a * g) =
+      PowerSeries.C a * PowerSeries.derivative (R := B) g := by
   rw [Derivation.leibniz, PowerSeries.derivative_C, smul_zero, add_zero, smul_eq_mul]
 
 theorem map_chi_jSer :
@@ -279,11 +285,11 @@ theorem mul_mem_W {a b : ℕ} {x y : DP} (hx : x ∈ W a) (hy : y ∈ W b) : x *
 
 theorem inl_mem_W {r : ℕ} {p : Pl} (hp : p.degree ≤ (r : WithBot ℕ)) :
     (TrivSqZeroExt.inl p : DP) ∈ W r :=
-  mem_W.mpr ⟨by simpa using hp, by simp⟩
+  mem_W.mpr ⟨by simpa using! hp, by simp⟩
 
 theorem eps_inl_mem_W {r : ℕ} {p : Pl} (hp : (Polynomial.X * p).degree ≤ (r : WithBot ℕ)) :
     DualNumber.eps * (TrivSqZeroExt.inl p : DP) ∈ W r :=
-  mem_W.mpr ⟨by simp, by simpa using hp⟩
+  mem_W.mpr ⟨by simp, by simpa using! hp⟩
 
 /-! ### The letters land in `W 1` -/
 
@@ -410,7 +416,7 @@ theorem boxInclusion_degOne {n : ℕ} (hn : 2 ≤ n) (e : ℤ) (N : ℕ) :
     have hspan := tMonW_one_le (tn n) M hτ
     by_cases hM : M < N
     · have hbox : tn n M ∈ boxW (tn n) N 1 ((M + 1 : ℕ) : ℤ) :=
-        Submodule.subset_span ⟨[M], rfl, by simp, by simpa using hM, by simp⟩
+        Submodule.subset_span ⟨[M], rfl, by simp, by simpa using! hM, by simp⟩
       exact (Submodule.span_le.mpr (Set.singleton_subset_iff.mpr hbox)) hspan
     · obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.mp hspan
       by_cases hc : c = 0

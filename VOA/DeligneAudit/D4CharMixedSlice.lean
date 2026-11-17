@@ -53,12 +53,11 @@ def gtMixedSlice (q : R) (h : PochhammerUnits q) (r : ℕ) (s t v : ℤ) :
     (fun lam => if (∑ i, lam i) = r + s - t - v then gtMixedWeight q h r t v lam else 0)
     (by
       intro lam hn
-      dsimp only at hn
       split_ifs at hn with hd
       · obtain ⟨hb, hd', he⟩ := gtMixedWeight_shape q h r s t v lam hn hd
         apply Finset.mem_image.mpr
         exact ⟨⟨(lam 1).toNat, (-lam 3).toNat⟩,
-          Finset.mem_product.mpr ⟨by simpa using hb, by simpa using hd'⟩, he.symm⟩
+          Finset.mem_product.mpr ⟨by simpa using! hb, by simpa using! hd'⟩, he.symm⟩
       · exact (hn rfl).elim)
 
 @[simp] theorem gtMixedSlice_apply (q : R) (h : PochhammerUnits q) (r : ℕ)
@@ -149,10 +148,10 @@ theorem gtMixedSlice_eval (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
       rw [gtMixedFiveCoeff]
       apply Finset.sum_congr rfl
       intro b hb
-      have hb : b ≤ min r s := by simpa using hb
+      have hb : b ≤ min r s := by simpa using! hb
       apply Finset.sum_congr rfl
       intro d hd
-      have hd : d ≤ min t v := by simpa using hd
+      have hd : d ≤ min t v := by simpa using! hd
       have ht : (∑ i, gtMixedFiveRow (r + s - b : ℕ) b (t + v - d : ℕ) d i) =
           (r : ℤ) + s - t - v := by
         rw [gtMixedFiveRow_sum]

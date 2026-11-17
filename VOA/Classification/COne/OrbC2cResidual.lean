@@ -24,7 +24,7 @@ theorem mk₂_virWord_eq_zero_of_bad (W : VertexOperatorAlgebra V) (x : V)
   | cons k ks ih =>
     by_cases hk : k = 1
     · subst k
-      have ht : ∃ j ∈ ks, j ≠ 1 := by simpa using h
+      have ht : ∃ j ∈ ks, j ≠ 1 := by simpa using! h
       change mk₂ W (W.L (-2) (virWord W ks x)) = 0
       rw [← exceptionalConformalEnd_mk, ih ht, map_zero]
     · cases k with
@@ -97,12 +97,12 @@ theorem tetrahedralDongJiangRelations_of_modeDecomposition
     rw [map_sub, map_add, map_smul, map_smul,
       (mk₂_eq_zero_iff _).mpr (smul_le_neg_two_mem_O₂ _ U U (by norm_num)),
       zero_sub, neg_eq_zero] at he
-    simpa only [exceptionalConformalEnd_pow_mk] using he
+    simpa only [exceptionalConformalEnd_pow_mk] using! he
   · have he := (mk₂_eq_zero_iff (orbifoldVOA tetra)).mpr (hR h22)
     rw [map_sub, map_add, map_smul, map_smul,
       (mk₂_eq_zero_iff _).mpr (smul_le_neg_two_mem_O₂ _ U U (by norm_num)),
       zero_sub, neg_eq_zero] at he
-    simpa only [exceptionalConformalEnd_pow_mk] using he
+    simpa only [exceptionalConformalEnd_pow_mk] using! he
 
 /-- The concrete tetrahedral conclusion with the state-level residuals visible. -/
 theorem tetra_c2Cofinite_of_state_inputs (hs : TetrahedralVirasoroSpan)

@@ -73,11 +73,9 @@ theorem eq_zero_of_base {Y : LogModes M₁ M₂ M₃}
             rw [he]; exact hα
         · simp
         · intro a b ha hb
-          simp only at ha hb ⊢
           rw [map_add, map_add, ha, hb, add_zero]
       · simp
       · intro a b ha hb
-        simp only at ha hb ⊢
         rw [map_add, LinearMap.add_apply, map_add, ha, hb, add_zero]
     | zero => simp
     | add a b _ _ ha hb => rw [map_add, ha, hb, add_zero]
@@ -86,7 +84,7 @@ theorem eq_zero_of_base {Y : LogModes M₁ M₂ M₃}
   ext w₁ w₂
   have h := mem_image Y n k w₁ w₂
   rw [himg, Submodule.mem_bot] at h
-  simpa using h
+  simpa using! h
 
 /-- The output of `(·)_{α₁+α₂−α₃−1; k}` on `(N₁)_[α₁] × (N₂)_[α₂]` lies in `(N₃)_[α₃]`. -/
 theorem mem_weight_eval {Y : LogModes M₁ M₂ M₃}

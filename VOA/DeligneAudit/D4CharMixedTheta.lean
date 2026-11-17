@@ -28,7 +28,7 @@ theorem rsMixedKernel_eq_series :
 
 /-- Every coefficient of the substituted kernel is its full finite GT expansion. -/
 theorem rsMixedKernel_coeff (d : ℕ) :
-    coeff d rsMixedKernel = ∑ t ∈ Finset.antidiagonal d,
+    coeff d rsMixedKernel = ∑ t ∈ Finset.HasAntidiagonal.antidiagonal d,
       ∑ p ∈ gtPartitionsTwo t.2, ∑ z ∈ gtPartitionsTwo t.1,
         gtQ rsNome rsPochhammerUnits rsXAlphabet 2 ![(p.1 : ℤ), (p.2 : ℤ)] *
           gtQ rsNome rsPochhammerUnits rsXAlphabet 2 ![(z.1 : ℤ), (z.2 : ℤ)] *
@@ -43,7 +43,7 @@ theorem rsMixedKernel_coeff (d : ℕ) :
 
 /-- Orthogonality applied to each finite coefficient of the actual substituted kernel. -/
 theorem rsMixedKernel_moment_coeff (d : ℕ) :
-    rsMoment (coeff d rsMixedKernel) = ∑ t ∈ Finset.antidiagonal d,
+    rsMoment (coeff d rsMixedKernel) = ∑ t ∈ Finset.HasAntidiagonal.antidiagonal d,
       ∑ p ∈ gtPartitionsTwo t.2, ∑ z ∈ gtPartitionsTwo t.1,
         if p.1 - p.2 = z.1 - z.2 then
           ((D4K.qpoch (p.1 - p.2))⁻¹ * (D4K.qpoch p.2)⁻¹ * (D4K.qpoch z.2)⁻¹) •
@@ -71,7 +71,7 @@ theorem rsMixedKernel_moment_odd (n : ℕ) :
   intro p hp
   apply Finset.sum_eq_zero
   intro z hz
-  have ht := Finset.mem_antidiagonal.mp ht
+  have ht := Finset.HasAntidiagonal.mem_antidiagonal.mp ht
   have hp := (mem_gtPartitionsTwo _ _).mp hp
   have hz := (mem_gtPartitionsTwo _ _).mp hz
   rw [if_neg (by omega : p.1 - p.2 ≠ z.1 - z.2)]

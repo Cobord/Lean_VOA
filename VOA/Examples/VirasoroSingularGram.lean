@@ -28,7 +28,7 @@ theorem Lop_positive_eq_zero_of_one_two (c : ℂ) (v : VirUniv c)
   have hall : ∀ k : ℕ, Lop c ((k:ℤ)+2) v = 0 := by
     intro k
     induction k with
-    | zero => simpa using h2
+    | zero => simpa using! h2
     | succ k ih =>
       have hh := LeeYang.Lop_apply_comm c 1 ((k:ℤ)+2) v
       have hz : ¬ (1:ℤ)+((k:ℤ)+2)=0 := by omega
@@ -42,11 +42,11 @@ theorem Lop_positive_eq_zero_of_one_two (c : ℂ) (v : VirUniv c)
       convert he using 1 <;> push_cast <;> ring
   intro n hn
   by_cases he : n=1
-  · simpa [he] using h1
+  · simpa [he] using! h1
   · have hn2 : 2 ≤ n := by omega
     obtain ⟨k,hk⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ n-2 by omega)
     have he : n=(k:ℤ)+2 := by omega
-    simpa [he] using hall k
+    simpa [he] using! hall k
 
 /-- In the universal vacuum module a positive-weight singular state is
 orthogonal to every creation word. For nonempty words the first mode moves
@@ -129,15 +129,15 @@ theorem partition_coordinates_singular_row (c : ℂ) {n : ℕ} (hn : 0 < n)
   have he : ∀ k, (partitionGramPolynomial n k j).eval c =
       (VirGram4.canB c).form (b k : VirUniv c) (b j : VirUniv c) := by
     intro k
-    simpa only [Matrix.map_apply, GramMat.gramMatrix_apply, b] using
-      congrArg (fun M => M k j) (partitionGramPolynomial_eval c n)
+    exact (congrArg (fun M => M k j) (partitionGramPolynomial_eval c n)).trans
+      (GramMat.gramMatrix_apply (VirGram4.canB c) (n:ℤ) (gradedBasis c n) k j)
   simp_rw [he]
   have hs := congrArg (gradingVir c (n:ℤ)).subtype (b.sum_equivFun v)
   simp only [map_sum, map_smul] at hs
   have hh := congrArg (fun x => (VirGram4.canB c).form x (b j : VirUniv c)) hs
   have hz := canB_singular_left_zero c hn (v : VirUniv c) v.property h1 h2 (b j)
   simpa only [map_sum, LinearMap.sum_apply, map_smul, LinearMap.smul_apply,
-    smul_eq_mul] using hh.trans hz
+    smul_eq_mul] using! hh.trans hz
 
 /-- Independent positive-weight states killed by L₁ and L₂ force one
 charge factor per state in the actual partition determinant. Independence
@@ -165,6 +165,6 @@ theorem partitionDeterminant_eval_zero_of_singular (c : ℂ) {n : ℕ} (hn : 0 <
   have hd := partitionDeterminant_dvd_of_independent_singular c hn _ hi
     (fun _ => h1) (fun _ => h2)
   apply Polynomial.dvd_iff_isRoot.mp
-  simpa using hd
+  simpa using! hd
 
 end VOA.VirDeformModes.NormalOrdering

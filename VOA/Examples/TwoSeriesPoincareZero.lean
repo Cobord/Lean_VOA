@@ -75,11 +75,11 @@ theorem mk_mem_boxW_of_atMostOne {n N k E : ℕ} {F : TPoly}
     by_cases hm : N ≤ m
     · exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ (hder m hm))
     · simp [hw, hm]
-  have hHeq : H = ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (coeff s F) :=
+  have hHeq : H = ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (F.coeff s) :=
     euler_sum w F F.vars subset_rfl
   have hlow : F - H = ∑ s ∈ F.support,
-      (if Finsupp.weight w s = 0 then monomial s (coeff s F) else 0) := by
-    have hF' : F = ∑ s ∈ F.support, monomial s (coeff s F) := as_sum F
+      (if Finsupp.weight w s = 0 then monomial s (F.coeff s) else 0) := by
+    have hF' : F = ∑ s ∈ F.support, monomial s (F.coeff s) := as_sum F
     rw [hHeq]
     nth_rewrite 1 [hF']
     rw [← Finset.sum_sub_distrib]
@@ -123,17 +123,16 @@ theorem mk_mem_boxW_of_atMostOne {n N k E : ℕ} {F : TPoly}
 
 /-- The part of `F` supported on monomials satisfying `p`. -/
 def filt (p : (ℕ →₀ ℕ) → Prop) [DecidablePred p] (F : TPoly) : TPoly :=
-  Finsupp.filter p F
+  AddMonoidAlgebra.ofCoeff (Finsupp.filter p F.coeff)
 
 theorem coeff_filt (p : (ℕ →₀ ℕ) → Prop) [DecidablePred p] (F : TPoly) (s : ℕ →₀ ℕ) :
-    coeff s (filt p F) = if p s then coeff s F else 0 := by
-  simp only [filt, coeff]
-  exact Finsupp.filter_apply p F s
+    (filt p F).coeff s = if p s then F.coeff s else 0 :=
+  Finsupp.filter_apply p F.coeff s
 
 theorem filt_add_filt_not (p : (ℕ →₀ ℕ) → Prop) [DecidablePred p] (F : TPoly) :
     filt p F + filt (fun s => ¬ p s) F = F := by
   ext s
-  rw [coeff_add, coeff_filt, coeff_filt]
+  rw [MvPolynomial.coeff_add, coeff_filt, coeff_filt]
   split_ifs <;> simp
 
 theorem mem_support_filt {p : (ℕ →₀ ℕ) → Prop} [DecidablePred p] {F : TPoly} {s : ℕ →₀ ℕ}
@@ -223,7 +222,7 @@ theorem jetPoincare_of_T0 {n N k E : ℕ} (hN : 1 ≤ N) (hE : E + n + 2 ≤ 2 *
     obtain ⟨hps, hsF⟩ := mem_support_filt hs
     refine ⟨Finsupp.single 0 n, Set.mem_singleton _, ?_⟩
     have hk : Finsupp.weight 1 s = k := by
-      have := hFh (mem_support_iff.mp hsF); simpa [Finsupp.degree_eq_weight_one] using this
+      have := hFh (mem_support_iff.mp hsF); simpa [Finsupp.degree_eq_weight_one] using! this
     have hE' : Finsupp.weight wT s = E := hFw (mem_support_iff.mp hsF)
     have := s0_ge hN s hk hE' hps
     intro i

@@ -87,7 +87,7 @@ theorem hasPoly_sum_range (n : ℕ) (f : ℕ → (m1Sub m hm).carrier) (F : ℕ 
     (hf : ∀ i, HasPoly m hm (f i) (F i)) :
     HasPoly m hm (∑ i ∈ Finset.range n, f i) ((List.range n).flatMap F) := by
   induction n with
-  | zero => simpa using hasPoly_zero m hm
+  | zero => simpa using! hasPoly_zero m hm
   | succ n ih =>
     rw [Finset.sum_range_succ, List.range_succ, List.flatMap_append, List.flatMap_singleton]
     exact hasPoly_add m hm ih (hf n)
@@ -215,7 +215,7 @@ theorem oMod_monoE {M : Type} [AddCommGroup M] [Module ℂ M] (N : OrdVModule (V
         oMod_zhuMul_lowest_all N hcw _ _ hx, ih, map_smul, hω, smul_smul, pow_succ, mul_comm]
   rw [monoE]
   induction j with
-  | zero => simpa using hωi i
+  | zero => simpa using! hωi i
   | succ j ih =>
     rw [Function.iterate_succ_apply', hφ.map_zhuMul (WM_mem_grading m hm),
       oMod_zhuMul_lowest_all N hcw _ _ hx, ih, map_smul, hW, smul_smul, pow_succ]

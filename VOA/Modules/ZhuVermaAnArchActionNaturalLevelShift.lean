@@ -231,7 +231,9 @@ end InducedAssignment
 
 /-! ## The headline — the Zhu bijection with `hiso` on the level-shift-action naturality -/
 
-/-- **`zhuBijection_assembled_levelShiftNatural` — the `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_assembled_levelShiftNatural` — the `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem
 5.3.4, with `hiso` resting on the proved DJ Prop 3.4 naturality of the level-shift action.**
 
 Identical to `zhuBijection_assembled_muNatural`/`_firstFactor`, except the functoriality clause
@@ -255,7 +257,9 @@ theorem zhuBijection_assembled_levelShiftNatural {W : VertexOperatorAlgebra 𝒱
 
 /-! ## The faithful (`hall`-free) hinge, with `hiso`'s DJ Prop 3.4 half discharged -/
 
-/-- **`phase4_of_dj28_levelShiftNatural` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_levelShiftNatural` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection
 `Φ(𝒱) ↔ Irr A(𝒱)` (`forwardMapIrr`) with the functoriality `hiso`'s DJ Prop 3.4 half proved for the
 genuine level-shift construction.**
 

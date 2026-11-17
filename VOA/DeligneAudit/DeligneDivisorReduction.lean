@@ -88,6 +88,9 @@ theorem divisorComparisonG_of_pair (h : PairComparisonG S) : DivisorComparisonG 
   have hM := mem_Mspace_of_symmetric hwK hsym
   refine ⟨(wS m) ^ K, fun hmem => wS_not_mem p hp (p.isPrime.mem_of_pow_mem K hmem), ?_⟩
   convert hM using 1
+  all_goals first
+    | rfl
+    | (rw [Subalgebra.smul_def, SubmonoidClass.coe_pow]; rfl)
 
 /-! ## Pair operators -/
 
@@ -116,7 +119,7 @@ theorem polyOp_pair_mem (x : Fin S.n) (a b : Fin m) (hab : a ≠ b) (P : Polynom
   classical
   have h := polyOp_mem x (Lpair a b * P) hv
   rw [Finset.sum_eq_add_of_mem a b (Finset.mem_univ a) (Finset.mem_univ b) hab] at h
-  · simpa only [Polynomial.eval_mul, Gpair] using h
+  · simpa only [Polynomial.eval_mul, Gpair] using! h
   · intro k _ hk
     rw [Polynomial.eval_mul, eval_Lpair_other a b k (by tauto), zero_mul, zero_smul]
 

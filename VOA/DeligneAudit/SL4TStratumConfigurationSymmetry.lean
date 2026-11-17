@@ -44,11 +44,11 @@ theorem fullFlagDoublesIn_relabel (B k : ℕ) (Y : Finset (Fin B))
   intro ha
   constructor
   · intro h i hi
-    have hs := h (e i) (by simpa [fullFlagConfiguration_relabel] using hi)
-    simpa using hs
+    have hs := h (e i) (by simpa [fullFlagConfiguration_relabel] using! hi)
+    simpa using! hs
   · intro h i hi
     have hs := h (e.symm i) hi
-    simpa using hs
+    simpa using! hs
 
 /-- The configuration stratum is invariant under permutation of its positions. -/
 def fullFlagStratumConfiguration_relabel (B k j : ℕ) (Y : Finset (Fin B))

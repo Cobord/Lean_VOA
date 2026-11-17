@@ -33,7 +33,7 @@ theorem vermaContentRelation_single (s t : Multiset ℕ) (w : List ℕ)
     Finsupp.single w a∈vermaContentRelation s t := by
   have hh : Finsupp.single w (1:Polynomial ℂ)∈vermaContentRelation s t :=
     Submodule.subset_span ⟨w,h,rfl⟩
-  simpa using Submodule.smul_mem (vermaContentRelation s t) a hh
+  simpa using! Submodule.smul_mem (vermaContentRelation s t) a hh
 
 /-- Prefixing one remaining index adds it to the original content. -/
 theorem vermaContentRelation_prepend (i : ℕ) {s t : Multiset ℕ}
@@ -46,8 +46,8 @@ theorem vermaContentRelation_prepend (i : ℕ) {s t : Multiset ℕ}
     apply vermaContentRelation_single
     rw [← Multiset.cons_coe,← Multiset.singleton_add,add_comm ({i}:Multiset ℕ),← add_assoc,hw]
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Recording additional removed indices on both sides preserves content. -/
 theorem vermaContentRelation_add_left (a : Multiset ℕ) {s t : Multiset ℕ} :
@@ -63,7 +63,7 @@ theorem vermaContractionNormal_content (a : ℕ) (w : List ℕ) :
   | nil => exact Submodule.zero_mem _
   | cons i w ih =>
     apply Submodule.add_mem
-    · simpa [← Multiset.cons_coe,← Multiset.singleton_add,add_comm] using
+    · simpa [← Multiset.cons_coe,← Multiset.singleton_add,add_comm] using!
         vermaContentRelation_prepend i ih
     · split_ifs with h
       · have hi : a=i := by omega
@@ -83,18 +83,18 @@ theorem vermaContractionAction_content (a : ℕ) {s t : Multiset ℕ}
     have hh := vermaContentRelation_add_left t (vermaContractionNormal_content a w)
     rwa [hw] at hh
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- A whole contraction word records its complete multiset of removed indices. -/
 theorem vermaContractionWord_content (u : List ℕ) {s t : Multiset ℕ}
     {f : VermaPolynomialForm (Polynomial ℂ)} (h : f∈vermaContentRelation s t) :
     vermaContractionWord u f∈vermaContentRelation s (t+(u:Multiset ℕ)) := by
   induction u generalizing t f with
-  | nil => simpa [vermaContractionWord] using h
+  | nil => simpa [vermaContractionWord] using! h
   | cons a u ih =>
     simpa [vermaContractionWord,← Multiset.cons_coe,← Multiset.singleton_add,
-      add_assoc,add_comm,add_left_comm] using ih (vermaContractionAction_content a h)
+      add_assoc,add_comm,add_left_comm] using! ih (vermaContractionAction_content a h)
 
 /-- Extracting the highest coefficient of one nonempty word gives zero,
 with any polynomial coefficient and without a sortedness assumption. -/
@@ -326,7 +326,7 @@ weights with a degenerate actual Gram form. This does not identify them
 with the Kac labels; that representation-theoretic identification is open. -/
 theorem vermaGram_degenerate_finite (c : ℂ) (n : ℕ) :
     Set.Finite {h : ℂ | (vermaGramMatrix c h n).det=0} := by
-  simpa only [Polynomial.IsRoot.def,vermaWeightDeterminant_eval] using
+  simpa only [Polynomial.IsRoot.def,vermaWeightDeterminant_eval] using!
     Polynomial.finite_setOf_isRoot (vermaWeightDeterminant_ne_zero c n)
 
 /-- The sum of actual Gram nullities at distinct highest weights is bounded

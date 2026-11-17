@@ -88,9 +88,9 @@ theorem logDegLE_sum {ι : Type*} (S : Finset ι) {K : ℕ} {F : ι → ℂ → 
     (h : ∀ i∈S,LogDegLE K (F i)) : LogDegLE K (fun t => ∑ i∈S,F i t) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using logDegLE_zero K
+  | empty => simpa using! logDegLE_zero K
   | @insert a S ha ih =>
-    simpa only [Finset.sum_insert ha,Pi.add_apply] using
+    simpa only [Finset.sum_insert ha,Pi.add_apply] using!
       (h a (Finset.mem_insert_self _ _)).add (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 /-- Finite sums preserve a common genuine collision exponent bound. -/
@@ -98,9 +98,9 @@ theorem expGE_sum {ι : Type*} (S : Finset ι) {M : ℝ} {F : ι → ℂ → ℂ
     (h : ∀ i∈S,ExpGE M (F i)) : ExpGE M (fun t => ∑ i∈S,F i t) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using expGE_zero M
+  | empty => simpa using! expGE_zero M
   | @insert a S ha ih =>
-    simpa only [Finset.sum_insert ha,Pi.add_apply] using
+    simpa only [Finset.sum_insert ha,Pi.add_apply] using!
       (h a (Finset.mem_insert_self _ _)).add (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 end VOA.Huang.LogAssocExpansion

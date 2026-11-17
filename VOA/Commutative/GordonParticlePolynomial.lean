@@ -34,7 +34,7 @@ def particlePolynomial (D : ℕ) (L : VOA.BoundaryAuxiliary.JetPoly K →ₗ[K] 
 
 @[simp] theorem coeff_particlePolynomial (D : ℕ)
     (L : VOA.BoundaryAuxiliary.JetPoly K →ₗ[K] K) (color : ι → Fin 3) (r : ι →₀ ℕ) :
-    coeff r (particlePolynomial D L color) =
+    (particlePolynomial D L color).coeff r =
       if r.degree = D then L (∏ i, X (color i, r i)) else 0 := by
   classical
   simp [particlePolynomial, coeff_sum, coeff_monomial, particleCoefficient]
@@ -54,7 +54,7 @@ theorem modeProduct_mapDomain (color : ι → Fin 3) (r : ι →₀ ℕ)
   symm
   apply Fintype.prod_equiv e
   intro i
-  simp [Finsupp.mapDomain_apply, he]
+  simp [Finsupp.mapDomain_apply_of_injective e.injective, he]
 
 /-- The polynomial realization is separately symmetric, in the literal sense of
 invariance under every color-preserving permutation of the labeled particles. -/
@@ -91,7 +91,7 @@ def particlePolynomialLinear (D : ℕ) (color : ι → Fin 3) :
   toFun L := particlePolynomial D L color
   map_add' L M := by
     ext r
-    simp only [coeff_particlePolynomial, LinearMap.add_apply, coeff_add]
+    simp only [coeff_particlePolynomial, LinearMap.add_apply, AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
     split_ifs <;> simp
   map_smul' c L := by
     ext r

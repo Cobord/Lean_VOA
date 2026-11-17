@@ -30,7 +30,7 @@ theorem twoStepSplitting_submodule {R X : Type*} [Ring R] [AddCommGroup X] [Modu
   refine ⟨d.comap P.subtype, ?_, ?_, ?_, ?_⟩
   · exact Submodule.map_le_iff_le_comap.mp had
   · have := Submodule.comap_mono (f := P.subtype) hdc
-    simpa only [Submodule.comap_map_eq_of_injective P.injective_subtype] using this
+    simpa only [Submodule.comap_map_eq_of_injective P.injective_subtype] using! this
   · apply Submodule.map_injective_of_injective P.injective_subtype
     rw [Submodule.map_inf _ P.injective_subtype, hd, hi]
   · apply Submodule.map_injective_of_injective P.injective_subtype
@@ -81,7 +81,7 @@ theorem generalizedGeneratorSplitting_of_equalBottom_and_resonant
   by_cases hcos : SameCoset h k
   · obtain ⟨z, hz⟩ := hcos
     by_cases hz0 : z = 0
-    · have hkh : k = h := by simpa [hz0] using hz
+    · have hkh : k = h := by simpa [hz0] using! hz
       rw [hkh] at hk
       exact heq m hm hm2 N a b c h hab hbc hh hk
     · exact hres m hm hm2 N a b c h k hab hbc hh hk ⟨z, hz0, hz⟩

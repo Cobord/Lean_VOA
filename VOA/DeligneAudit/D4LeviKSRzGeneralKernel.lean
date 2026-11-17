@@ -35,7 +35,7 @@ theorem rzTargetGenerator_mem_ker
   have hz : zs.length = l := by simp [zs]
   apply rzTargetGenerator_mem_ker_of_word_bridge ρ w m i a b k l s
     α β xs zs h hk hks hx hz hi hkey
-  simpa only [xs, zs, List.map_map, Function.comp_def] using
+  simpa only [xs, zs, List.map_map, Function.comp_def] using!
     rzRawSourceGenerator_word_bridge ρ w a b k l s α β
 
 end VOA.DeligneAudit.D4Levi

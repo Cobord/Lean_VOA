@@ -96,8 +96,8 @@ theorem iterateSeparateFuchsian_of_eulerEquations
   have hs := separateSystem_of_localMonic (inv_pos.mpr (by linarith : 0 < r)) hρ
     lam mu 1 0 0 1 (by norm_num)
     (f := ofArray (iterateLevelCoeff Y₃ Y₄ w₁ w₂ α₁ α₂))
-    (by simpa using h₁) (by simpa using h₂)
-  simpa only [inv_inv, coeff_ofArray_fun] using hs
+    (by simpa using! h₁) (by simpa using! h₂)
+  simpa only [inv_inv, coeff_ofArray_fun] using! hs
 
 end Consumers
 end VOA.Huang.GenusTwoPoint.Separate

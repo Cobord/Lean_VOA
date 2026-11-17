@@ -53,7 +53,7 @@ noncomputable def zhuQuotientOp (L : V →ₗ[ℂ] Module.End ℂ M)
     intro x
     obtain ⟨w, rfl⟩ := (fzO A.toWeakModule).mkQ_surjective x
     change (fzO A.toWeakModule).mkQ (L a w) = 0
-    simpa using hO a ha w)
+    simpa using! hO a ha w)
 
 @[simp] theorem zhuQuotientOp_mk (L : V →ₗ[ℂ] Module.End ℂ M)
     (hs : ∀ a w, w ∈ fzO A.toWeakModule → L a w ∈ fzO A.toWeakModule)

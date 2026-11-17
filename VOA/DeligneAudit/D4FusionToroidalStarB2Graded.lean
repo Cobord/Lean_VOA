@@ -111,7 +111,7 @@ theorem ι_gpow (h : HighTShift A w m) (c₀ : Fin n) (j : ℕ) :
     simp only [gpow, gpowA]
     split_ifs with hs
     · subst hs
-      simpa using hξ
+      simpa using! hξ
     · simp
   | succ j ih =>
     intro s d ξ y hξ

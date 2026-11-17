@@ -14,7 +14,7 @@ theorem thetaLambert_shift {r : ℂ} (hr : ‖r‖ < 1) (u : ℂ) :
   have h := (thetaLambert_summable hr u).tsum_eq_zero_add
   change thetaLambert r u = _ at h
   simpa only [pow_zero, mul_one, pow_succ, thetaLambert,
-    mul_assoc, mul_comm, mul_left_comm] using h
+    mul_assoc, mul_comm, mul_left_comm] using! h
 
 /-- Correct boundary constant, with the positive-index tail kept explicit. -/
 theorem thetaLambert_boundary {r u : ℂ} (hr : ‖r‖ < 1) (hu : u ≠ 1) :
@@ -42,7 +42,7 @@ theorem thetaLambert_eq_double_tsum {r u : ℂ} (hr : ‖r‖ < 1) (hu : ‖u‖
   calc
     ‖u‖ * ‖r‖ ^ n ≤ ‖u‖ * 1 :=
       mul_le_mul_of_nonneg_left (pow_le_one₀ (norm_nonneg r) hr.le) (norm_nonneg u)
-    _ < 1 := by simpa using hu
+    _ < 1 := by simpa using! hu
 
 /-- The standard primitive-root parameter at the boundary. -/
 theorem thetaExp_div_nat (N b : ℕ) :

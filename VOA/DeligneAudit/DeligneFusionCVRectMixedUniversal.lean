@@ -43,10 +43,10 @@ theorem pair_twoRectRel (k l : ℕ) (hk : 1 ≤ k) (hk3 : k ≤ 3)
   have hp2 : parts (pairRho k l).2 (pairNu k l).2 ((pairEpsilon k l).2 + 0) = [l] := by
     interval_cases l <;> simp [parts, pairEpsilon, pairNu, pairRho]
   refine ⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_⟩
-  · simpa only [h1] using h.cartan_first
-  · simpa only [h2] using h.cartan_second
-  · simpa only [hp1] using h.first
-  · simpa only [hp2] using h.second
+  · simpa only [h1] using! h.cartan_first
+  · simpa only [h2] using! h.cartan_second
+  · simpa only [hp1] using! h.first
+  · simpa only [hp2] using! h.second
 
 /-- The actual universal module of an opposite small rectangle pair is finite
 and satisfies its sharp product bound. No dimension hypothesis is an input. -/

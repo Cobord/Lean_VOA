@@ -48,13 +48,13 @@ theorem posX_le_xCount (l : List (Fin 6 × ℕ)) :
       by_cases hj : j = 1
       · subst j
         by_cases hs : 0 < s
-        · simpa [posX, hs] using Nat.add_le_add_left ih 1
-        · simpa [posX, hs] using Nat.le_trans ih (Nat.le_succ _)
-      · simpa [posX, hj] using ih
+        · simpa [posX, hs] using! Nat.add_le_add_left ih 1
+        · simpa [posX, hs] using! Nat.le_trans ih (Nat.le_succ _)
+      · simpa [posX, hj] using! ih
 
 theorem posX_le_keyX (k : RadicalKey) (l : List (Fin 6 × ℕ))
     (hk : wordKey l = k) : posX l ≤ k.x := by
-  simpa [← hk, wordKey] using posX_le_xCount l
+  simpa [← hk, wordKey] using! posX_le_xCount l
 
 /-- Replacing a selected U' by a zero-mode X raises Levi height by two. -/
 theorem xzero_higher_up (m : ℕ) (r : ℕ) (rest : List (Fin 6 × ℕ)) :
@@ -84,7 +84,7 @@ theorem fThreeDerivative_eq_sum (r : ℕ) (l : List (Fin 6 × ℕ)) :
           ((threeWords r l).map fun q =>
             radicalWord ρ w ((j, s) :: q)).sum := by
         simpa only [List.map_map, Function.comp_def, radicalWord,
-          List.map_cons, wordOp] using
+          List.map_cons, wordOp] using!
           (map_list_sum (ρ.op (radicalColour j) s)
             ((threeWords r l).map (radicalWord ρ w)))
       rw [ih, map_neg, hmap]
@@ -127,7 +127,7 @@ theorem fFourDerivative_eq_sum (r : ℕ) (l : List (Fin 6 × ℕ)) :
           ((fourWords r l).map fun q =>
             radicalWord ρ w ((j, s) :: q)).sum := by
         simpa only [List.map_map, Function.comp_def, radicalWord,
-          List.map_cons, wordOp] using
+          List.map_cons, wordOp] using!
           (map_list_sum (ρ.op (radicalColour j) s)
             ((fourWords r l).map (radicalWord ρ w)))
       rw [ih, map_neg, hmap]

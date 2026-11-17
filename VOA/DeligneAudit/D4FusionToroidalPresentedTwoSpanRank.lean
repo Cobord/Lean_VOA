@@ -27,7 +27,7 @@ theorem one_cycSubG_eq_cycDeg_zero
       have hm : wordOp R l w ∈ cycDeg R w d :=
         Submodule.subset_span ⟨l, rfl, rfl⟩
       rw [hz] at hm
-      have hv : wordOp R l w = 0 := by simpa using hm
+      have hv : wordOp R l w = 0 := by simpa using! hm
       change wordOp R l w ∈ cycDeg R w 0
       rw [hv]
       exact Submodule.zero_mem _

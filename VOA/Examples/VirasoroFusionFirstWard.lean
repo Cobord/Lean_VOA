@@ -116,7 +116,6 @@ theorem fusionTerminalState_L1 (A N : ℕ) (t : ℂ) (him : t.im≠0)
     t N ht hN (fusionKernelSequence A N t him hN)
   have he := congrArg (fun f : wardSequenceSpace (vermaBSACharge t)
     (fusionKacWeight (A:ℂ) ((N:ℂ)-1) t) => f.val (A*(N-1)-1)) hh
-  dsimp only at he
   rw [wardSourceAt_diagonal _ _ _ _ _ _ _ _
     (fusionKernelSequence_first_below A N t him hN),wardSourceDiagonal_shift_one,
     show A*(N-1)-1+1=A*(N-1) by omega,
@@ -124,5 +123,5 @@ theorem fusionTerminalState_L1 (A N : ℕ) (t : ℂ) (him : t.im≠0)
   change vermaMode _ _ 1 _-(_ : ℂ) • _=0 at he
   rw [fusionKernelSequence_source_below A N t him hN (A*(N-1)-1) (by omega),
     smul_zero,sub_zero] at he
-  simpa only [fusionTerminalState,show A*(N-1)-1+1=A*(N-1) by omega] using he
+  simpa only [fusionTerminalState,show A*(N-1)-1+1=A*(N-1) by omega] using! he
 end VOA.InverseDS.VirasoroVerma

@@ -13,6 +13,11 @@ whose spin matrix squares to `-1`. Cancelling the resulting correction and apply
 `liftVisParity_ext` proves liftability of every visible pair and every member of `Gvis`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -139,7 +144,13 @@ theorem liftVisRRelative_intertwine (p : Pvis) (D : Matrix SpinIdx SpinIdx ℚ)
   rw [Matrix.map_mul (f := Rat.castHom ℂ), hmap, Matrix.map_mul (f := Rat.castHom ℂ)]
   ext i j
   have h := liftVisRelativeCharge_intertwine p α (Pi.single j 1)
-  rw [hD, hD] at h
+  first
+  | rw [hD, hD] at h
+  | replace h := (hD _).symm.trans (h.trans
+      (congrArg (fun v : SpinIdx → ℂ =>
+        ((liftMonoWeight (liftVisIsometry p.1.2) α * liftVisWeight p α : ℚ) : ℂ) •
+          ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ v))
+        (hD _)))
   have hi := congrFun h i
   change (D.map (Rat.castHom ℂ) *ᵥ
       ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ Pi.single j 1)) i =
@@ -162,8 +173,12 @@ theorem liftVisRRelative (p : Pvis) :
         liftVisRRelative_intertwine p _ h α)
   obtain ⟨μ, hμ⟩ := liftVisRCoord_surjective q
   refine ⟨μ, c, hc, fun v => ?_⟩
-  rw [h, hq]
-  simp only [liftMonoQmat, hμ, TDR_eq_qmatR]
+  first
+  | (rw [h, hq]
+     simp only [liftMonoQmat, hμ, TDR_eq_qmatR])
+  | (refine (h v).trans ?_
+     rw [hq]
+     simp only [liftMonoQmat, hμ, TDR_eq_qmatR])
 
 /-- The normalized chosen charge differs from the prescribed spin matrix by `±Qμ`. -/
 theorem liftVisRCharge (p : Pvis) :
@@ -178,9 +193,14 @@ theorem liftVisRCharge (p : Pvis) :
   change (liftVisMatrixEquiv _ (liftVisSpinOrthogonal p))
     ((liftVisMatrixEquiv _ (liftVisSpinOrthogonal p)).symm
       (liftSpinCharge (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) v)) = _ at hv
-  rw [LinearEquiv.apply_symm_apply, liftVisMatrixEquiv_apply,
-    Matrix.mulVec_mulVec, ← Matrix.map_mul (f := Rat.castHom ℂ)] at hv
-  exact hv
+  first
+  | (rw [LinearEquiv.apply_symm_apply, liftVisMatrixEquiv_apply,
+      Matrix.mulVec_mulVec, ← Matrix.map_mul (f := Rat.castHom ℂ)] at hv
+     exact hv)
+  | (refine ((LinearEquiv.apply_symm_apply _ _).symm.trans
+        (hv.trans (liftVisMatrixEquiv_apply _ _ _))).trans ?_
+     exact (Matrix.mulVec_mulVec _ _ _).trans
+       (congrArg (· *ᵥ (v : SpinIdx → ℂ)) (Matrix.map_mul (f := Rat.castHom ℂ)).symm))
 
 /-- A lift fixing the symmetric block and acting on `W` by left multiplication. -/
 def liftVisRBlocks (g : AutO) (D : Matrix SpinIdx SpinIdx ℚ) : Prop :=

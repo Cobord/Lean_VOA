@@ -48,6 +48,9 @@ open VertexOperatorAlgebra PreVertexAlgebra
 open scoped BigOperators
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
@@ -186,10 +189,10 @@ theorem cbz_genJacobi_core (m k : ℤ) (s t : ℕ) (hts : t ≤ s) :
     refine (ZhuRes.finsumZ_eq_range_sum
         (fun p : ℤ => cbz (m - (t : ℤ)) (p - (t : ℤ)) * cbz k ((s : ℤ) - p)) (N := s + 1)
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_apply_neg (m - (t : ℤ)) (by omega : p - (t : ℤ) < 0), zero_mul])
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_apply_neg k (by push_cast at hp ⊢; omega : (s : ℤ) - p < 0), mul_zero])).symm]
   -- shift the integer index `p ↦ q + t`, turning it into the bare Vandermonde at degree (s-t).
   rw [← cbz_mul_vandermonde (m - (t : ℤ)) k ((s : ℤ) - (t : ℤ))]
@@ -418,9 +421,9 @@ theorem genJacobiDepth_holds (W : VertexOperatorAlgebra 𝒱) (hD : BracketDesce
       rw [finsumZ_eq_range_sum_mod
           (fun t : ℤ => cbz ((s - j : ℕ) : ℤ) t •
             gen W (W.smul (W.smul a t b) ((s : ℤ) - t) c) D) (N := s + 1)
-          (fun p hp => by dsimp only; rw [cbz_apply_neg _ hp, zero_smul])
+          (fun p hp => by (try dsimp only); rw [cbz_apply_neg _ hp, zero_smul])
           (fun p hp => by
-            dsimp only
+            try dsimp only
             rw [cbz_lt (by exact_mod_cast (by omega : (0 : ℤ) ≤ ((s - j : ℕ) : ℤ)))
               (by push_cast; rw [Nat.cast_sub hjs]; omega), zero_smul])]
     rw [hcollapse, Finset.smul_sum, Finset.smul_sum]

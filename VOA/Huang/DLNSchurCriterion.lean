@@ -23,13 +23,13 @@ theorem schurTrivial_iff_centralDerivedInjective (Q : Type) [Group Q] :
         rw [map_commutator_eq, commutator_def]
         exact Subgroup.commutator_mono le_top le_top
       exact hmap ⟨x, hx, rfl⟩
-    · simpa [hβx] using congrArg (fun f : F →* Q => f x) hcompat
+    · simpa [hβx] using! congrArg (fun f : F →* Q => f x) hcompat
 
 /-- Any map into a Schur-trivial group has trivial inflation. -/
 theorem inflationTrivial_of_schurTrivial_target {A B : Type} [Group A] [Group B]
     (r : B →* A) (h : SchurTrivial A) : InflationTrivial r := by
   intro E _ π hs hc F _ α β hcompat x hx hβx
-  exact h E π hs hc F α (r.comp β) (by simpa using hcompat) x hx
+  exact h E π hs hc F α (r.comp β) (by simpa using! hcompat) x hx
     (by simp [hβx])
 
 end VOA.Huang.DLNSchur

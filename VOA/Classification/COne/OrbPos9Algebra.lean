@@ -39,8 +39,10 @@ theorem ambientMultiplication_left_unit (G : Subgroup (Aut W))
       (leftUnitor F (ambient G)).hom := by
   apply tensor_hom_ext F
   intro n v x
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply,
-    ambientMultiplication_intertwiner, leftUnitor_intertwiner]
+  refine ((congrArg (fun z => (ambientMultiplication G F).val z)
+      (tensorHom_intertwiner F (unitInclusion G) (𝟙 (ambient G)) n v x)).trans
+    ((ambientMultiplication_intertwiner G F n _ _).trans ?_)).trans
+    (leftUnitor_intertwiner F (ambient G) n v x).symm
   change moduleModes (adjointModule W) n v.1 x = moduleModes (ambient G).isMod n v x
   unfold moduleModes
   split_ifs <;> rfl
@@ -53,11 +55,16 @@ theorem ambientMultiplication_right_unit (G : Subgroup (Aut W))
   apply Ordinary.hom_ext
   intro y
   obtain ⟨x, rfl⟩ := right_vacuum_coefficient_surjective F (ambient G) y
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply,
-    ambientMultiplication_intertwiner, rightUnitor_intertwiner,
-    skew_moduleIntertwiner_vacuum_neg_one]
-  change moduleModes (adjointModule W) (-1) x W.vacuum = x
-  rw [show (-1 : ℂ) = ((-1 : ℤ) : ℂ) by simp, moduleModes_apply_intCast]
-  exact (W.creation x).1
+  refine ((congrArg (fun z => (ambientMultiplication G F).val z)
+      (tensorHom_intertwiner F (𝟙 (ambient G)) (unitInclusion G) (-1) x
+        (orbifoldVOA G).vacuum)).trans
+    ((ambientMultiplication_intertwiner G F (-1) _ _).trans ?_)).trans
+    ((rightUnitor_intertwiner F (ambient G) (-1) x (orbifoldVOA G).vacuum).trans
+      (skew_moduleIntertwiner_vacuum_neg_one (ambient G) x)).symm
+  have key : ∀ y : V, moduleModes (adjointModule W) (-1) y W.vacuum = y := by
+    intro y
+    rw [show (-1 : ℂ) = ((-1 : ℤ) : ℂ) by simp, moduleModes_apply_intCast]
+    exact (W.creation y).1
+  exact key x
 
 end VOA.Classification.COne.OrbPos9

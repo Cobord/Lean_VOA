@@ -84,7 +84,7 @@ theorem T_zero (m : ℕ) : T (n := n) m 0 = ⊤ := by
   | add x y hx hy => exact Submodule.add_mem _ hx hy
   | single l a =>
       have h := sw_mem_T (n := n) m 0 l (Nat.zero_le _)
-      simpa [sw] using Submodule.smul_mem (T m 0) a h
+      simpa [sw] using! Submodule.smul_mem (T m 0) a h
 
 /-- Image of the high-mode word filtration in the universal module. -/
 def TU (f : Fin n → Fin n → Fin n → ℂ) (R : RelSpec n) (m j : ℕ) :

@@ -169,7 +169,7 @@ theorem representedIterate_summable (hV : StronglyRational W)
     Summable (iterateWeightTerm F (representedIterate F A B) (ordinaryTest d)) := by
   apply (weight_progression_injective Q.h).summable_iff
     (representedIterate_term_off_spectrum F A B d) |>.mp
-  simpa only [Function.comp_def, representedIterate_term_level] using
+  simpa only [Function.comp_def, representedIterate_term_level] using!
     AssocConverse.summable_iterateTerm hV i₁ i₂ i₃ i₄ A B d
 
 theorem representedProduct_summable (hV : StronglyRational W)
@@ -180,7 +180,7 @@ theorem representedProduct_summable (hV : StronglyRational W)
     Summable (productWeightTerm F (representedProduct F A B) (ordinaryTest d)) := by
   apply (weight_progression_injective Q.h).summable_iff
     (representedProduct_term_off_spectrum F A B d) |>.mp
-  simpa only [Function.comp_def, representedProduct_term_level] using
+  simpa only [Function.comp_def, representedProduct_term_level] using!
     AssocConverse.summable_productTerm hV i₁ i₂ i₃ i₄ A B d
 
 end VOA.Huang.TensorCat

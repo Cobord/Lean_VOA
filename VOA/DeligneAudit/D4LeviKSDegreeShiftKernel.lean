@@ -29,7 +29,7 @@ theorem pairTarget_mul_height_mem_shifted_ker
     (pairFinalKey a b c s) P Q hP
   have hshift : heightHigherOrbit ρ w m (pairFinalKey a b c s) ≤
       higherOrbit ρ w m (pairFinalKey a b c (s + r)) := by
-    simpa [keyShift, pairFinalKey] using
+    simpa [keyShift, pairFinalKey] using!
       (heightHigherOrbit_le_higher_shift ρ w m (pairFinalKey a b c s) r)
   have hprefix : xyzEvaluation ρ w (pairSourceShape a b c)
       (Q * P : pairSourceSymmetric a b c) ∈ keyPrefix ρ w m i := by

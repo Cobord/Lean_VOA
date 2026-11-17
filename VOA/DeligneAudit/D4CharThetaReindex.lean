@@ -11,13 +11,13 @@ noncomputable section
 
 /-- Equal gaps and even total size are exactly the triples a+b+c=n. -/
 theorem rsEqualGap_sum {A : Type*} [AddCommMonoid A] (n : ℕ) (f : ℕ → ℕ → ℕ → A) :
-    (∑ t ∈ Finset.antidiagonal (2 * n),
+    (∑ t ∈ Finset.HasAntidiagonal.antidiagonal (2 * n),
       ∑ p ∈ gtPartitionsTwo t.2, ∑ z ∈ gtPartitionsTwo t.1,
         if p.1 - p.2 = z.1 - z.2 then f (p.1 - p.2) p.2 z.2 else 0) =
       ∑ a ∈ Finset.range (n + 1), ∑ b ∈ Finset.range (n - a + 1), f a b (n - a - b) := by
   classical
   let s : Finset (Σ _ : ℕ × ℕ, (ℕ × ℕ) × (ℕ × ℕ)) :=
-    ((Finset.antidiagonal (2 * n)).sigma fun t =>
+    ((Finset.HasAntidiagonal.antidiagonal (2 * n)).sigma fun t =>
       (gtPartitionsTwo t.2).product (gtPartitionsTwo t.1)).filter fun z =>
         z.2.1.1 - z.2.1.2 = z.2.2.1 - z.2.2.2
   let t : Finset (Σ _ : ℕ, ℕ) :=
@@ -29,13 +29,13 @@ theorem rsEqualGap_sum {A : Type*} [AddCommMonoid A] (n : ℕ) (f : ℕ → ℕ 
       z.2.1.1 - z.2.1.2 = z.2.2.1 - z.2.2.2 := by
     intro z
     simp only [s, Finset.mem_filter, Finset.mem_sigma, Finset.product_eq_sprod, Finset.mem_product,
-      Finset.mem_antidiagonal, mem_gtPartitionsTwo]
+      Finset.HasAntidiagonal.mem_antidiagonal, mem_gtPartitionsTwo]
     tauto
   have ht : ∀ z, z ∈ t ↔ z.1 ≤ n ∧ z.2 ≤ n - z.1 := by
     intro z
     simp [t, Nat.lt_succ_iff]
   have hleft :
-      (∑ t ∈ Finset.antidiagonal (2 * n),
+      (∑ t ∈ Finset.HasAntidiagonal.antidiagonal (2 * n),
         ∑ p ∈ gtPartitionsTwo t.2, ∑ z ∈ gtPartitionsTwo t.1,
           if p.1 - p.2 = z.1 - z.2 then f (p.1 - p.2) p.2 z.2 else 0) =
         ∑ z ∈ s, f (z.2.1.1 - z.2.1.2) z.2.1.2 z.2.2.2 := by

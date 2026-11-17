@@ -89,7 +89,7 @@ theorem two_one_pure_seed_of_stability
             ∑ e : Fin 28, D4sector.f c x.1 e •
               (ρPTE 2).op e 1 (s + x.2.2) w else 0) +
             (ρPTE 2).op x.1 0 x.2.2 ((ρPTE 2).op c 1 s w) := by
-        simpa only [Nat.add_zero] using (sub_eq_iff_eq_add.mp hcomm)
+        simpa only [Nat.add_zero] using! (sub_eq_iff_eq_add.mp hcomm)
       have hleft : (ρPTE 2).op x.1 0 x.2.2
           ((ρPTE 2).op c 1 s w) ∈ seedLine := by
         refine Submodule.span_induction ?_ ?_ ?_ ?_ (ih c s hl')
@@ -98,9 +98,9 @@ theorem two_one_pure_seed_of_stability
           exact hstable x.1 x.2.2
         · simp
         · intro y z _ _ hy hz
-          simpa only [map_add] using Submodule.add_mem seedLine hy hz
+          simpa only [map_add] using! Submodule.add_mem seedLine hy hz
         · intro a y _ hy
-          simpa only [map_smul] using Submodule.smul_mem seedLine a hy
+          simpa only [map_smul] using! Submodule.smul_mem seedLine a hy
       have hright : (if s + x.2.2 < 2 then
           ∑ e : Fin 28, D4sector.f c x.1 e •
             (ρPTE 2).op e 1 (s + x.2.2) w else 0) ∈ seedLine := by

@@ -48,7 +48,8 @@ theorem primaryV8_value : scaleMorph 1 2 primaryV8 = (OrbOctaR.X : LatModuleGen 
   have hE (d : ℤ) : scaleMorph 1 2 (latChargeGen (latP 4) d) =
       latChargeGen (latP 1) (2 * d) := by
     change latMorph (latP 4) (latP 1) (scaleIota 1 2) (latStateGen _ 1 d) = _
-    rw [latMorph_latStateGen, rankOne_latCob, one_smul, map_one]
+    rw [latMorph_latStateGen (latP 4) (latP 1) (scaleIota 1 2) _ (d : (latP 4).carrier),
+      rankOne_latCob 4 1 (scaleIota 1 2) (d : (latP 4).carrier), one_smul, map_one]
     rfl
   rw [hN, hE, hE]
   rfl

@@ -25,7 +25,8 @@ table, does not require $\Gamma_g$ to lie in the normaliser of $\Gamma_0(N)$, an
 so it is weaker than the table-level conjecture (Chapter~\ref{ch:16}, \S\ref{ch16:sec:fidelity}).  It is a statement about
 $\Aut(\Vnat)$, whatever that group is; its link with the Monster (AxiomMath's group $\mathrm{AutO}$) is the subject of
 Chapters~\ref{ch:21}--\ref{ch:22}, and the identification $\Aut(\Vnat)\cong\mathrm{AutO}$ there is conditional on the
-named hypothesis \lean{GmatEqAutO}, which release v1.06 discharges in its Lean~4.35 companion (Chapter~\ref{ch:22},
+named hypothesis \lean{GmatEqAutO}, which the separate package \texttt{MoonshineCFSG/} of the repository discharges
+for AxiomMath's own Monster model (Chapter~\ref{ch:22},
 Section~\ref{ch22:sec:discharged}).  The machine evidence is targeted and umbrella builds with \texttt{\#print axioms}
 reports (listed in the status boxes); the book's authors did not re-run them.
 
@@ -483,7 +484,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
     (hinj : ∀ k k', μ k = μ k' → k = k') (hr : ∀ b : Fin r, ∃ a, a ≠ b) (K : ℕ)
     (q : FockN r) (hK : ∀ v ∈ q.vars, v.1 < K) (c : Fin r → Fin r → ℂ)
     (h : ∀ a b, quadOp μ K a b q = c a b • q) (hq : q ≠ 0) :
-    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (coeff 0 q) := by
+    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (q.coeff 0) := by
 \end{leancode}
 (\leanpath{VOA/Moonshine/AutFockEigen.lean}.)
 \begin{leancode}
@@ -2267,7 +2268,7 @@ the notes on the Monster, \S0 and \S5, say \lean{Finite AutVnat} ``is not delive
 \lean{finite_autVnat}.  (iii) The docstring of \chtwentylean{MonsterLieSimpleRootGeneration} calls generation ``not yet proved''
 (\S\ref{ch20:sec:generation}).  (iv) The docstring of \lean{AutVnat} calls it the group ``the campaign identifies with the
 Monster'' (quoted); the identification is conditional on \lean{GmatEqAutO} (Chapter~\ref{ch:22}), and holds with no
-hypothesis in the Lean~4.35 companion of release v1.06 (Section~\ref{ch22:sec:discharged}).  None affects a Lean statement.
+hypothesis in the separate package \texttt{MoonshineCFSG/} (Section~\ref{ch22:sec:discharged}).  None affects a Lean statement.
 \end{warning}
 
 \begin{warning}

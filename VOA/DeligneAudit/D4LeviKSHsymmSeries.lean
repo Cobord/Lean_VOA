@@ -99,7 +99,7 @@ theorem ksHSeries_coeff_hsymm (n s : ℕ) :
     has no coefficients above the size of the complementary alphabet. -/
 theorem ksHSeries_remove_coeff (vs ws : List A) (s : ℕ) :
     PowerSeries.coeff s (ksHSeries vs) =
-      ∑ p ∈ Finset.antidiagonal s,
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
         PowerSeries.coeff p.1 (ksHSeries (vs ++ ws)) * (ksEPoly ws).coeff p.2 := by
   rw [ksHSeries_remove vs ws, PowerSeries.coeff_mul]
   simp only [Polynomial.coeff_coe]

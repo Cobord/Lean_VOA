@@ -53,7 +53,14 @@ theorem residualEval_eq_canonical (f : σ → τ) (hf : Function.Surjective f)
     rw [canonicalMap_rawParts, shape_parts_of_surjective f hf]
   let e := labelEquiv (canonicalMap (σ := σ) (shape f)) f h
   refine ⟨e, ?_⟩
-  apply (sumRingEquiv K τ δ).injective
+  have hinj : Function.Injective (sumToIter K τ δ) := by
+    have h : sumToIter K τ δ = (sumRingEquiv K τ δ).toRingHom := by
+      apply MvPolynomial.ringHom_ext
+      · intro c; simp [sumToIter_C]
+      · rintro (i | i) <;> simp [sumToIter_Xl, sumToIter_Xr]
+    rw [h]
+    exact (sumRingEquiv K τ δ).injective
+  apply hinj
   change sumToIter K τ δ (residualEval f F) =
     sumToIter K τ δ (residualEval e (residualEval (canonicalMap (shape f)) F))
   rw [sumToIter_residualEval, sumToIter_residualEval, sumToIter_residualEval]
@@ -82,9 +89,7 @@ theorem activeMap_surjective (f : σ → τ) : Function.Surjective (activeMap f)
 theorem activeMap_blockSize (f : σ → τ) (j : Active f) :
     blockSize (activeMap f) j = blockSize f j.val := by
   unfold blockSize
-  congr 1
-  ext i
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+  refine congrArg Finset.card (Finset.filter_congr fun i _ ↦ ?_)
   exact Subtype.ext_iff
 
 theorem activeMap_shape (f : σ → τ) : shape (activeMap f) = shape f := by

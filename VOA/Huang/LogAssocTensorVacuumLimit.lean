@@ -63,6 +63,6 @@ theorem creation_constant_of_completed_point_identity (hC2 : C2Cofinite W)
       hx hv hz hlog hcreation f β hr.1
     exact hh.symm.trans ((heq r hr.1 hr.2).trans (hpoint r))
   have hconst := tendsto_nhds_unique (hleft.congr' hevent) hright
-  simpa only [A,C,Nat.cast_zero,add_zero,sub_zero] using hconst
+  simpa only [A,C,Nat.cast_zero,add_zero,sub_zero] using! hconst
 
 end VOA.Huang.LogAssocExpansion

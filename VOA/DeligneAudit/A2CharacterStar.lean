@@ -119,11 +119,11 @@ theorem coeff_fermionProd : ∀ R N, coeff N (fermionProd R) = (fermionCoeff R N
 theorem sum_Icc_eq_sum_range {M : Type*} [AddCommMonoid M] (a b : ℕ) (h : a ≤ b) (g : ℕ → M) :
     ∑ ν ∈ Finset.Icc a b, g ν = ∑ r ∈ Finset.range (b - a + 1), g (b - r) := by
   refine Finset.sum_bij' (fun ν _ => b - ν) (fun r _ => b - r) ?_ ?_ ?_ ?_ ?_
-  · intro ν hν; rw [Finset.mem_Icc] at hν; rw [Finset.mem_range]; dsimp only; omega
-  · intro r hr; rw [Finset.mem_range] at hr; rw [Finset.mem_Icc]; dsimp only; omega
-  · intro ν hν; rw [Finset.mem_Icc] at hν; dsimp only; omega
-  · intro r hr; rw [Finset.mem_range] at hr; dsimp only; omega
-  · intro ν hν; rw [Finset.mem_Icc] at hν; dsimp only; congr 1; omega
+  · intro ν hν; rw [Finset.mem_Icc] at hν; rw [Finset.mem_range]; omega
+  · intro r hr; rw [Finset.mem_range] at hr; rw [Finset.mem_Icc]; omega
+  · intro ν hν; rw [Finset.mem_Icc] at hν; omega
+  · intro r hr; rw [Finset.mem_range] at hr; omega
+  · intro ν hν; rw [Finset.mem_Icc] at hν; congr 1; omega
 
 /-- `G_M = ∑_r [M,r]_q`, the Rogers–Szegő polynomial at `1` (`= Hilb` of the `GL₂` branching). -/
 noncomputable def rogersSzego (M : ℕ) : PowerSeries ℤ :=

@@ -222,7 +222,7 @@ theorem decompMap_injective (k : ℕ) : Function.Injective (decompMap k) := by
     exact (decompMap k (j₂, σ₂)).injective (h1.trans h2.symm)
   subst hj
   have : liftP σ₁ = liftP σ₂ := by
-    simpa [decompMap] using h
+    simpa [decompMap] using! h
   rw [liftP_injective this]
 
 theorem decompMap_bijective (k : ℕ) : Function.Bijective (decompMap k) := by

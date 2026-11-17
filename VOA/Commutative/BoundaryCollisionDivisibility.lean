@@ -37,7 +37,9 @@ section ResidualLabels
 
 theorem newXZLabelZ_ne_newXZLabelX (a b c d : ℕ) :
     newXZLabelZ a b c d ≠ newXZLabelX a b c d := by
-  simp [newXZLabelZ, newXZLabelX]
+  intro h
+  have hA := congrArg Sigma.fst h
+  simp [newXZLabelZ, newXZLabelX] at hA
 
 theorem newYYLabelOne_ne_newYYLabelZero (a b c d : ℕ) :
     newYYLabelOne a b c d ≠ newYYLabelZero a b c d := by
@@ -55,9 +57,12 @@ theorem liftXZPassiveLabel_ne_newXZLabelX (a b c d : ℕ)
   · have hv := congrArg (fun q : XZLabel a b c d ↦ (q.2 : ℕ)) h
     change ((i.succ : Fin (a + 1)) : ℕ) = ((0 : Fin (a + 1)) : ℕ) at hv
     simp at hv
-  · simp [liftXZPassiveLabel, newXZLabelX] at h
-  · simp [liftXZPassiveLabel, newXZLabelX] at h
-  · simp [liftXZPassiveLabel, newXZLabelX] at h
+  · have hA := congrArg Sigma.fst h
+    simp [liftXZPassiveLabel, newXZLabelX] at hA
+  · have hA := congrArg Sigma.fst h
+    simp [liftXZPassiveLabel, newXZLabelX] at hA
+  · have hA := congrArg Sigma.fst h
+    simp [liftXZPassiveLabel, newXZLabelX] at hA
 
 theorem liftYYPassiveLabel_ne_newYYLabelZero (a b c d : ℕ)
     (i : SpeciesLabel (boundaryMultiplicity a b c d)) :
@@ -65,12 +70,15 @@ theorem liftYYPassiveLabel_ne_newYYLabelZero (a b c d : ℕ)
   intro h
   rcases i with ⟨A, i⟩
   cases A
-  · simp [liftYYPassiveLabel, newYYLabelZero] at h
+  · have hA := congrArg Sigma.fst h
+    simp [liftYYPassiveLabel, newYYLabelZero] at hA
   · have hv := congrArg (fun q : YYLabel a b c d ↦ (q.2 : ℕ)) h
     change ((i.succ.succ : Fin (b + 2)) : ℕ) = ((0 : Fin (b + 2)) : ℕ) at hv
     simp at hv
-  · simp [liftYYPassiveLabel, newYYLabelZero] at h
-  · simp [liftYYPassiveLabel, newYYLabelZero] at h
+  · have hA := congrArg Sigma.fst h
+    simp [liftYYPassiveLabel, newYYLabelZero] at hA
+  · have hA := congrArg Sigma.fst h
+    simp [liftYYPassiveLabel, newYYLabelZero] at hA
 
 /-- The typed diagonal labels are exactly the `XZ` labels remaining after deleting the active
 `X` label; the active `Z` label represents the common collision coordinate. -/
@@ -539,8 +547,36 @@ theorem shiftedXZParticlePolynomial_crossCollisionProduct_dvd
       (boundarySpeciesTransposition (boundaryMultiplicity (a + 1) b (c + 1) d)
         .Z (0 : Fin (c + 1)) j) F)
     hmoveX
-  simpa [speciesLabelEquiv_boundarySpeciesTransposition, newXZLabelX, newXZLabelZ,
-    boundarySpeciesLabel] using hmoveZ
+  have hX := speciesLabelEquiv_boundarySpeciesTransposition
+    (boundaryMultiplicity (a + 1) b (c + 1) d) .X (0 : Fin (a + 1)) i
+  have hZ := speciesLabelEquiv_boundarySpeciesTransposition
+    (boundaryMultiplicity (a + 1) b (c + 1) d) .Z (0 : Fin (c + 1)) j
+  rw [hX, hZ] at hmoveZ
+  have hne : ∀ {A B : BoundarySpecies}, A ≠ B →
+      ∀ (u : Fin (boundaryMultiplicity (a + 1) b (c + 1) d A))
+        (v : Fin (boundaryMultiplicity (a + 1) b (c + 1) d B)),
+        (⟨A, u⟩ : SpeciesLabel (boundaryMultiplicity (a + 1) b (c + 1) d)) ≠ ⟨B, v⟩ :=
+    fun hAB _ _ h => hAB (congrArg Sigma.fst h)
+  have e1 : (Equiv.swap
+      (⟨.X, (0 : Fin (a + 1))⟩ : SpeciesLabel (boundaryMultiplicity (a + 1) b (c + 1) d))
+      ⟨.X, i⟩) (newXZLabelX a b c d) = ⟨.X, i⟩ :=
+    Equiv.swap_apply_left _ _
+  have e2 : (Equiv.swap
+      (⟨.X, (0 : Fin (a + 1))⟩ : SpeciesLabel (boundaryMultiplicity (a + 1) b (c + 1) d))
+      ⟨.X, i⟩) (newXZLabelZ a b c d) = newXZLabelZ a b c d :=
+    Equiv.swap_apply_of_ne_of_ne (hne (A := .Z) (B := .X) (by decide) _ _)
+      (hne (A := .Z) (B := .X) (by decide) _ _)
+  have e3 : (Equiv.swap
+      (⟨.Z, (0 : Fin (c + 1))⟩ : SpeciesLabel (boundaryMultiplicity (a + 1) b (c + 1) d))
+      ⟨.Z, j⟩) ⟨.X, i⟩ = ⟨.X, i⟩ :=
+    Equiv.swap_apply_of_ne_of_ne (hne (A := .X) (B := .Z) (by decide) _ _)
+      (hne (A := .X) (B := .Z) (by decide) _ _)
+  have e4 : (Equiv.swap
+      (⟨.Z, (0 : Fin (c + 1))⟩ : SpeciesLabel (boundaryMultiplicity (a + 1) b (c + 1) d))
+      ⟨.Z, j⟩) (newXZLabelZ a b c d) = ⟨.Z, j⟩ :=
+    Equiv.swap_apply_left _ _
+  rw [e1, e2, e3, e4] at hmoveZ
+  exact hmoveZ
 
 /-- For a shifted multispecies polynomial in the `YY` source sector, vanishing of the one typed
 active diagonal propagates by `Y`-species symmetry to every pair of `Y` labels.  The complete

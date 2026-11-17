@@ -23,7 +23,7 @@ theorem prefix_product_coefficient_zero (G : ℕ → A) (H : PowerSeries A) (j T
   rw [PowerSeries.coeff_mul]
   apply Finset.sum_eq_zero
   rintro ⟨i, k⟩ hik
-  have hik' : i + k = j + T := Finset.mem_antidiagonal.mp hik
+  have hik' : i + k = j + T := Finset.HasAntidiagonal.mem_antidiagonal.mp hik
   rw [Polynomial.coeff_coe]
   by_cases hi : i < j
   · rw [finiteCurrent_coeff_lt j G i hi, hH k (by omega), mul_zero]
@@ -43,7 +43,7 @@ theorem coefficient_leading_row (F G : ℕ → A) (H : PowerSeries A) (S T : ℕ
     (hF : ∀ i, S < i → F i = 0)
     (hH : ∀ k, T < k → PowerSeries.coeff k H = 0) :
     PowerSeries.coeff (S + T) (PowerSeries.mk F * PowerSeries.mk G * H) =
-      ∑ ij ∈ Finset.antidiagonal S,
+      ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S,
         F ij.1 * PowerSeries.coeff T (PowerSeries.mk (fun k => G (ij.2 + k)) * H) := by
   rw [mul_assoc, PowerSeries.coeff_mul,
     Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
@@ -62,7 +62,7 @@ theorem coefficient_leading_row (F G : ℕ → A) (H : PowerSeries A) (S T : ℕ
   rw [htrim, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   apply Finset.sum_congr rfl
   intro i hi
-  have hiS : i ≤ S := by simpa only [Finset.mem_range, Nat.lt_succ_iff] using hi
+  have hiS : i ≤ S := by simpa only [Finset.mem_range, Nat.lt_succ_iff] using! hi
   rw [show S + T - i = (S - i) + T by omega,
     coefficient_shift_of_high_right G H (S - i) T hH]
 

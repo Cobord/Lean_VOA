@@ -89,7 +89,7 @@ private theorem top_of_local_invariant (c₀ : Fin n) (depth : ℕ)
     induction T using Finset.induction_on with
     | empty =>
         intro v
-        simpa only [Finset.notMem_empty, if_false] using hw
+        simpa only [Finset.notMem_empty, if_false] using! hw
     | @insert j T hj ih =>
         intro v
         let base : Fin N → D1SiteG.Space n := fun i => if i ∈ T then v i else D1SiteG.w c₀
@@ -126,7 +126,7 @@ private theorem top_of_local_invariant (c₀ : Fin n) (depth : ℕ)
   rw [← PiTensorProduct.span_tprod_eq_top]
   apply Submodule.span_le.mpr
   rintro _ ⟨v, rfl⟩
-  simpa only [Finset.mem_univ, if_true] using hpartial Finset.univ v
+  simpa only [Finset.mem_univ, if_true] using! hpartial Finset.univ v
 
 /-- The actual tensor generator is cyclic for any distinct shifted sites. -/
 theorem cyclic_top (z : Fin N → ℂ) (hz : Function.Injective z) (c₀ : Fin n) (depth : ℕ)

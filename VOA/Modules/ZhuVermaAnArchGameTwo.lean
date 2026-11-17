@@ -229,7 +229,9 @@ theorem irredBottomRigidity_of_universal (hgen : GeneratedFromBottom W) :
 
 /-! ## End-to-end: the scoped rigidity and the Zhu bijection from the universal property -/
 
-/-- **Scoped rigidity from the universal property.** Combining
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**Scoped rigidity from the universal property.** Combining
 `InducedAssignment.realizesSelfOnIrr_of_rigidity` with `irredBottomRigidity_of_universal`: from
 `RealizeIrreducible A` (the assignment is `L(U)`) and `GeneratedFromBottom W` (the universal property
 of `M(U)`), the scoped rigidity `RealizesSelfOnIrr A` holds. -/
@@ -238,7 +240,9 @@ theorem realizesSelfOnIrr_of_universal (A : InducedAssignment W)
     A.RealizesSelfOnIrr :=
   A.realizesSelfOnIrr_of_rigidity hirr (irredBottomRigidity_of_universal hgen)
 
-/-- **The literal `RealizesSelf` from the universal property**, under the ambient irreducibility
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The literal `RealizesSelf` from the universal property**, under the ambient irreducibility
 scope of Theorem 5.3.4. -/
 theorem realizesSelf_of_universal (A : InducedAssignment W)
     (hall : AllLWIrreducible W) (hirr : A.RealizeIrreducible) (hgen : GeneratedFromBottom W) :
@@ -247,7 +251,9 @@ theorem realizesSelf_of_universal (A : InducedAssignment W)
 
 end InducedAssignment
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the universal property of `M(U)`.** Packaging the
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the universal property of `M(U)`.** Packaging the
 end-to-end reduction: given an `InducedAssignment W` `A` producing irreducible realizations (`hirr`),
 the ambient irreducibility scope (`hall`), and the single deep crux `GeneratedFromBottom W` (the
 universal property / generation-from-bottom of the generalized Verma module), the forward map

@@ -99,7 +99,7 @@ actual vector. This makes coefficient kernels accessible from states. -/
 theorem vermaLevelState_coordinates (c h : ℂ) (n : ℕ) (v : sortedSpan c h n) :
     vermaLevelState c h n (fun w => (vermaLevelBasis c h n).repr v w)=v.val := by
   have hh := congrArg Subtype.val ((vermaLevelBasis c h n).sum_repr v)
-  simpa [vermaLevelState,vermaLevelBasis,Module.Basis.mk_apply,vermaLevelWord] using hh
+  simpa [vermaLevelState,vermaLevelBasis,Module.Basis.mk_apply,vermaLevelWord] using! hh
 
 /-- An actual nonzero level state killed by the two positive generators
 supplies a nonzero coordinate kernel of the universal Ward equations. -/
@@ -127,7 +127,7 @@ theorem vermaWardMatrix_continuous (n : ℕ) :
         (vermaUniversalWardMatrix n row col)) := by
     funext p
     have hh := congrArg (fun M => M row col) (vermaUniversalWardMatrix_eval p.1 p.2 n)
-    simpa using hh.symm
+    simpa using! hh.symm
   rw [he]
   apply (MvPolynomial.continuous_eval _).comp
   apply continuous_pi

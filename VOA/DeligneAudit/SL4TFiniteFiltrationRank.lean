@@ -86,8 +86,8 @@ theorem finiteFiberFiltration_finrank_le {ι : Type v} [DecidableEq ι]
     Module.finrank ℂ ↥(⨆ i, S i) ≤ ∑ i ∈ support, c i := by
   classical
   have hfg : (⨆ i, S i).FG := Module.Finite.iff_fg.mp inferInstance
-  obtain ⟨t, ht⟩ := CompleteLattice.IsCompactElement.exists_finset_of_le_iSup
-    (Submodule ℂ V) ((Submodule.fg_iff_compact _).mp hfg) S le_rfl
+  obtain ⟨t, ht⟩ := IsCompactElement.exists_finset_of_le_iSup
+    ((Submodule.fg_iff_compact _).mp hfg) S le_rfl
   let s := t.biUnion fiber
   have hts : t ⊆ s := by
     intro i hi

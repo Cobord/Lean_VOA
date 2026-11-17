@@ -60,7 +60,7 @@ theorem vermaSimpleLevel_finrank_le (c : ℂ) (N : ℕ) :
     have h0 := hA 0
     rw [Nat.cast_zero, V.vacuum_grade, finrank_span_singleton (virasoroSimple_vacuum_ne_zero c)]
       at h0
-    simpa [vermaSimpleLevel_zero_finrank] using h0.symm
+    simpa [vermaSimpleLevel_zero_finrank] using! h0.symm
   rw [hA N, Finset.sum_range_succ']
   simp only [hA0, one_mul, Nat.sub_zero]
   refine le_add_left (le_of_eq ?_)

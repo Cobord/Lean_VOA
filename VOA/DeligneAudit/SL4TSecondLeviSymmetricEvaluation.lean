@@ -43,7 +43,7 @@ theorem secondLeviPositionProduct_permute (e₁ e₂ : ℕ)
     (e.2.ofFn_comp_perm (fun i => u (.inr i)))
   simpa only [a2RadicalOp, secondLeviSlotPermutation, Function.comp_def,
     Equiv.sumCongr_apply, Sum.map_inl, Sum.map_inr, if_true, if_false,
-    show (1 : Fin 2) ≠ 0 by decide] using congrArg₂ (· * ·) h₁ h₂
+    show (1 : Fin 2) ≠ 0 by decide] using! congrArg₂ (· * ·) h₁ h₂
 
 /-- Relabelling within either alphabet leaves mode evaluation unchanged. -/
 theorem secondLeviModeEvaluation_rename (e₁ e₂ : ℕ)

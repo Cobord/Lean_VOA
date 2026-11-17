@@ -16,21 +16,21 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 theorem commutingModes_top_adjacent_zero (F : ℕ → Module.End ℂ V)
     (hFF : ∀ r s, F r * F s = F s * F r) (v : V) (n : ℕ)
     (ht : ∀ s, n + 2 ≤ s → F s v = 0)
-    (hq : ∑ x ∈ Finset.antidiagonal (2 * n + 1), F x.1 (F x.2 v) = 0) :
+    (hq : ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (2 * n + 1), F x.1 (F x.2 v) = 0) :
     F n (F (n + 1) v) = 0 := by
   classical
   let t : Finset (ℕ × ℕ) := {(n, n + 1), (n + 1, n)}
   have hc (r s : ℕ) : F r (F s v) = F s (F r v) :=
     congrArg (fun T : Module.End ℂ V => T v) (hFF r s)
-  have htmem : t ⊆ Finset.antidiagonal (2 * n + 1) := by
+  have htmem : t ⊆ Finset.HasAntidiagonal.antidiagonal (2 * n + 1) := by
     intro x hx
     simp only [t, Finset.mem_insert, Finset.mem_singleton] at hx
-    rcases hx with rfl | rfl <;> simp [Finset.mem_antidiagonal] <;> omega
+    rcases hx with rfl | rfl <;> simp [Finset.HasAntidiagonal.mem_antidiagonal] <;> omega
   have he : (∑ x ∈ t, F x.1 (F x.2 v)) =
-      ∑ x ∈ Finset.antidiagonal (2 * n + 1), F x.1 (F x.2 v) := by
+      ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (2 * n + 1), F x.1 (F x.2 v) := by
     apply Finset.sum_subset htmem
     intro x hx hnot
-    have hxsum := Finset.mem_antidiagonal.mp hx
+    have hxsum := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
     have hlarge : n + 2 ≤ x.1 ∨ n + 2 ≤ x.2 := by
       by_contra hn
       have hfirst : ¬ n + 2 ≤ x.1 := fun h => hn (Or.inl h)
@@ -48,7 +48,7 @@ theorem commutingModes_top_adjacent_zero (F : ℕ → Module.End ℂ V)
   simp only [t, Finset.sum_pair hne] at he
   rw [hc (n + 1) n, hq] at he
   have hz : (2 : ℂ) • F n (F (n + 1) v) = 0 := by
-    simpa only [two_smul] using he
+    simpa only [two_smul] using! he
   exact (smul_eq_zero.mp hz).resolve_left (by norm_num)
 
 variable [FiniteDimensional ℂ V]

@@ -49,7 +49,7 @@ theorem isSimpleModule_range_single (hsimp : ∀ k, IsSimpleModule R (U k)) (k :
   have hinj : Function.Injective (LinearMap.single R U k) := by
     intro x y hxy
     have := congrFun hxy k
-    simpa using this
+    simpa using! this
   exact IsSimpleModule.congr (LinearEquiv.ofInjective _ hinj).symm
 
 /-- A finite product of simple modules is semisimple. -/
@@ -144,8 +144,10 @@ theorem exists_vector_trace_separating {r : ℕ} (U : Fin r → AMod W)
   obtain ⟨v, rfl⟩ := _root_.VOA.mk_surjective W a
   refine ⟨v, ?_, ?_⟩
   · convert hk using 2
+    exact LinearMap.ext fun _ => rfl
   · intro l hlk
     convert hl l hlk using 2
+    exact LinearMap.ext fun _ => rfl
 
 end AModFamily
 

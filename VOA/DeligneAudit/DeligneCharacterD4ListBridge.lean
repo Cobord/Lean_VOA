@@ -44,7 +44,7 @@ theorem termR_add (k : List ℤ × ℤ) (a b : ℤ) : termR (k, a + b) = termR (
   rw [mon, mon, mon, ← AddMonoidAlgebra.single_add]
 
 theorem termR_zero (k : List ℤ × ℤ) : termR (k, 0) = 0 := by
-  rw [termR, Int.cast_zero, mul_zero, mon]; exact Finsupp.single_zero _
+  rw [termR, Int.cast_zero, mul_zero, mon]; exact AddMonoidAlgebra.single_zero _
 
 theorem toR_addTerm (t : Term) (g : LPoly) : toR (addTerm t g) = termR t + toR g := by
   induction g with
@@ -112,7 +112,7 @@ theorem toR_demazureFinTerm (i : Fin 4) (a b c d e k : ℤ) :
   · rw [toR_map_range, smul_neg, Finset.smul_sum, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [termR, rootToV_shiftAt, smul_mon, mul_one, Int.cast_neg, mul_neg, mon, mon]
-    exact Finsupp.single_neg _ _
+    exact AddMonoidAlgebra.single_neg _ _
 
 theorem Atheta_D4 : ((List.range thetaD4.length).map fun i => pairCoroot cartanD4 i thetaD4) =
     [0, 1, 0, 0] := by decide
@@ -147,7 +147,7 @@ theorem toR_demazureZeroTerm (a b c d e k : ℤ) :
         rootToV [a, b, c, d] - ((j : ℤ) + 1) • thetaV by rw [neg_smul, ← sub_eq_add_neg]]
     rw [show qq ^ (e + ((j : ℤ) + 1)) * (k : Kq) = qq ^ e * k * qq ^ ((j : ℤ) + 1) by
       rw [zpow_add₀ qq_ne_zero]; ring]
-    exact Finsupp.single_neg _ _
+    exact AddMonoidAlgebra.single_neg _ _
 
 /-- All keys have four root coordinates. -/
 def Good (f : LPoly) : Prop := ∀ t ∈ f, ∃ a b c d : ℤ, t.1.1 = [a, b, c, d]

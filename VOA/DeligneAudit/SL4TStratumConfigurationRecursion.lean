@@ -13,10 +13,10 @@ theorem labelSwap_preserves_cutoff {N : ℕ} (k : ℕ) (a b : Fin N)
   classical
   by_cases hca : c = a
   · subst c
-    simpa only [Equiv.swap_apply_left] using hab.symm
+    simpa only [Equiv.swap_apply_left] using! hab.symm
   by_cases hcb : c = b
   · subst c
-    simpa only [Equiv.swap_apply_right] using hab
+    simpa only [Equiv.swap_apply_right] using! hab
   rw [Equiv.swap_apply_of_ne_of_ne hca hcb]
 
 /-- Every doubled-label deletion fiber has the smaller paired-configuration cardinality. -/
@@ -62,7 +62,7 @@ theorem fullFlagDeletedConfiguration_double_card (B k j : ℕ) (Y : Finset (Fin 
         (k + 1) j Y a) = _
       rw [deletedLabelStratumConfiguration_double_card B _ k j Y (by omega) a ha]
       have h := Nat.card_congr (labelStratumConfiguration_equiv B k j Y)
-      simpa only [show B + 1 - (k + 1) = B - k by omega, Nat.add_sub_cancel] using h
+      simpa only [show B + 1 - (k + 1) = B - k by omega, Nat.add_sub_cancel] using! h
 
 /-- The single-site deletion fiber has precisely the original smaller configuration type. -/
 theorem fullFlagDeletedConfiguration_single_card (B k j : ℕ) (Y : Finset (Fin B))
@@ -72,7 +72,7 @@ theorem fullFlagDeletedConfiguration_single_card (B k j : ℕ) (Y : Finset (Fin 
   change Nat.card (DeletedLabelStratumConfiguration B (B + 1 - k) k j Y a) = _
   rw [deletedLabelStratumConfiguration_single_card B _ k j Y (by omega) a ha]
   have h := Nat.card_congr (labelStratumConfiguration_equiv B k j Y)
-  simpa only [show B + 1 - k - 1 = B - k by omega] using h
+  simpa only [show B + 1 - k - 1 = B - k by omega] using! h
 
 /-- Summing a constant weight over doubled and single labels gives their multiplicities. -/
 theorem labelClasses_sum (N k d s : ℕ) (hk : k ≤ N) :

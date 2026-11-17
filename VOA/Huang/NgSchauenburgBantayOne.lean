@@ -51,7 +51,7 @@ theorem monodromy_killingRing_dual (F : SphericalFusion C) (M : Modular F) (X : 
       (Center.ofBraidedObj X) (F.simple i)ᘁ (𝟙 X) =
       halfBraidingLoop F.toPivotal (oppositeBraidedCenter X)
         (Center.ofBraidedObj X) (F.simple (F.dualLabel i)) (𝟙 X) at h
-    simpa only [halfBraidingLoop_braided_id] using h
+    simpa only [halfBraidingLoop_braided_id] using! h
   simp only [hi]
   conv_lhs => arg 2; intro i; rw [← F.dimension_dualLabel i]
   exact ((F.dualLabelEquiv).sum_comp
@@ -68,14 +68,14 @@ theorem categoricalS_dimension_sum (F : SphericalFusion C) (M : Modular F)
     (monodromy_killingRing_dual F M (F.simple k))
   have hp : F.simpleProjector F.unitLabel (F.simple k) =
       if k = F.unitLabel then 𝟙 (F.simple k) else 0 := by
-    simpa using F.comp_simpleProjector F.unitLabel k (𝟙 (F.simple k))
+    simpa using! F.comp_simpleProjector F.unitLabel k (𝟙 (F.simple k))
   simp only [map_sum, map_smul, monodromyLoop_simple, F.scalarTrace_id,
     smul_eq_mul, hp] at h
   simp only [div_mul_cancel₀ _ (F.dimension_simple_ne_zero k)] at h
   by_cases hk : k = F.unitLabel
   · subst k
-    simpa using h
-  · simpa [hk] using h
+    simpa using! h
+  · simpa [hk] using! h
 
 /-- The twist-weighted fusion sum is a weighted S column, before modularity
 is used. This is categorical balancing and rigidity reciprocity. -/

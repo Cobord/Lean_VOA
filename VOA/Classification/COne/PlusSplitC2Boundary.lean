@@ -23,7 +23,7 @@ theorem iterW_poly (a : ℕ) :
       monomial_mem_FilF (latP m) 0 1 (by simp)
     have hpair (i j : ℕ) : X (i, LatMod.a0 m) * X (j, LatMod.a0 m) ∈
         FilF (latP m) 2 := by
-      simpa using X_mul_mem_FilF (latP m) (i, LatMod.a0 m)
+      simpa using! X_mul_mem_FilF (latP m) (i, LatMod.a0 m)
         (X_mul_mem_FilF (latP m) (j, LatMod.a0 m) h1)
     exact Submodule.sub_mem _ (Submodule.smul_mem _ _ (hpair 0 2))
       (Submodule.smul_mem _ _ (hpair 1 1))
@@ -61,7 +61,7 @@ theorem M1_omega_cubed_W :
   have hz : τ = 0 := by
     have hp : (1 / 2 : ℂ) ^ 5 ≠ 0 := pow_ne_zero _ (by norm_num)
     exact (mul_eq_zero.mp (by linear_combination -hf : τ * (1 / 2 : ℂ) ^ 5 = 0)).resolve_right hp
-  simpa only [hz, zero_smul] using hτ
+  simpa only [hz, zero_smul] using! hτ
 
 section Algebra
 variable {R : Type*} [CommRing R] [Algebra ℂ R]
@@ -122,7 +122,7 @@ theorem omega_boundary_relation (hm2 : 2 ≤ m) :
     rw [phi_latStateGen]
     have he : topCoeff m (2 * k) q = topCoeff m (2 * k) S := by
       dsimp [q]
-      simp only [topCoeff, coeff_smul, coeff_add, smul_eq_mul]
+      simp only [topCoeff, coeff_smul, MvPolynomial.coeff_add, smul_eq_mul]
       rw [← topCoeff, ← topCoeff, topCoeff_sigmaN, Even.neg_one_pow (even_two_mul k)]
       ring
     rw [he]
@@ -154,14 +154,13 @@ theorem omega_boundary_relation (hm2 : 2 ≤ m) :
   have he : k - 2 = m - 1 := by dsimp [k]; omega
   change a • o m hm ^ k + b • (o m hm ^ (k - 2) * w m hm) = 0 at hz
   have hz' := congrArg (fun x : A₂ (V2mPlus m hm) => a⁻¹ • x) hz
-  dsimp only at hz'
   rw [smul_add, smul_smul, inv_mul_cancel₀ ha, one_smul, smul_zero] at hz'
   refine ⟨-(a⁻¹ * b), ?_⟩
-  simpa only [he, smul_smul, neg_smul] using eq_neg_of_add_eq_zero_left hz'
+  simpa only [he, smul_smul, neg_smul] using! eq_neg_of_add_eq_zero_left hz'
 
 theorem omega_cubed_W : o m hm ^ 3 * w m hm = 0 := by
   have h := congrArg (poissonIncl m hm) (M1_omega_cubed_W m hm)
-  simpa only [map_mul, map_pow, map_zero, poissonIncl_mk₂] using h
+  simpa only [map_mul, map_pow, map_zero, poissonIncl_mk₂] using! h
 
 theorem omega_pow_eq_zero_ge4 (hm4 : 4 ≤ m) : o m hm ^ (m + 1) = 0 := by
   obtain ⟨c, hc⟩ := omega_boundary_relation m hm (by omega)

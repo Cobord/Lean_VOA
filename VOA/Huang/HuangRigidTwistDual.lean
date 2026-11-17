@@ -110,12 +110,14 @@ theorem weight_ne_bot_of_contragredient {M : Type u} [AddCommGroup M] [Module �
   intro hN
   apply h
   change RestrictedDual.weight N α = ⊥
-  rw [RestrictedDual.weight, LinearMap.range_eq_bot]
+  rw [RestrictedDual.weight]
+  refine LinearMap.range_eq_bot.mpr ?_
   haveI : Subsingleton (N.weight α) := by
     rw [hN]; infer_instance
   ext f
   have : f = 0 := Subsingleton.elim _ _
   simp [this]
+  rfl
 
 open VOA.VHat VOA.VHat.DLM3 VOA.Huang.ZhuFiniteIrr VOA.Huang.ZhuSemisimple in
 /-- The canonical Zhu family of a nice VOA: complete, irredundant, with a vacuum label. -/

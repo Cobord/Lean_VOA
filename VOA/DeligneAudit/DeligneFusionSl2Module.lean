@@ -29,7 +29,8 @@ theorem range_comm : ∀ a ∈ Set.range F, ∀ b ∈ Set.range F, a * b = b * a
 include hFF in
 /-- Evaluation `R → End V`, `zᵢ ↦ F i` (through the commutative subalgebra). -/
 def evAlg : R →ₐ[ℂ] Module.End ℂ V :=
-  letI : CommRing (Alg F) := Algebra.adjoinCommRingOfComm ℂ (range_comm F hFF)
+  letI : CommRing (Alg F) := Algebra.adjoinCommRingOfComm ℂ
+    (fun a ha b hb _ => range_comm F hFF a ha b hb)
   (Alg F).val.comp (MvPolynomial.aeval fun i => ⟨F i, Algebra.subset_adjoin ⟨i, rfl⟩⟩)
 
 theorem evAlg_z (i : ℕ) : evAlg F hFF (z i) = F i := by

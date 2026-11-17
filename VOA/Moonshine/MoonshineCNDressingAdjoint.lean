@@ -33,7 +33,7 @@ theorem creationCoefficient_succ_constantCoeff (γ : L.carrier) (N : ℕ) :
   simp [creationVariable_constantCoeff]
 
 theorem dressingField_vacuum_constantCoeff (γ : L.carrier) (t : ℤ) :
-    coeff 0 (dressingField F γ t 1) = if t = 0 then 1 else 0 := by
+    (dressingField F γ t 1).coeff 0 = if t = 0 then 1 else 0 := by
   have h := dressingField_vacuum F γ t
   rw [vacuumN] at h
   rw [h, ← constantCoeff_eq]

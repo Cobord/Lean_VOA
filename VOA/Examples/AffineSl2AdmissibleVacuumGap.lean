@@ -33,7 +33,7 @@ theorem admissible_zero_labels_le (p q : ℕ) (hp : 2≤p) (hq : 0<q)
       linear_combination hz
     have eqn := positive_weight_zero_equation p q (m+1) (r+1) hq hz'
     have hb : (m+1)*(r+1)≤q*(p-1) := by
-      exact le_trans (by simpa [oscillatorEnergy,Nat.mul_comm] using he) hn
+      exact le_trans (by simpa [oscillatorEnergy,Nat.mul_comm] using! he) hn
     obtain ⟨hm,hr⟩ := first_minus_resonance_unique hp hq (by omega) hcop eqn hb
     right
     have hm' : m=q-1 := by omega
@@ -42,16 +42,16 @@ theorem admissible_zero_labels_le (p q : ℕ) (hp : 2≤p) (hq : 0<q)
   · by_cases hm : m=0
     · subst m
       have hr : r=0 := by
-        have hz' : (r : ℂ)=0 := by simpa [realRootWeight,realRootSlope,realRootOffset] using hz
+        have hz' : (r : ℂ)=0 := by simpa [realRootWeight,realRootSlope,realRootOffset] using! hz
         exact_mod_cast hz'
       left; simp [hr]
     · have hz' : ((r+1 : ℕ) : ℂ)-1-(m : ℂ)*((p : ℂ)/q)=0 := by
         simpa [realRootWeight,realRootSlope,realRootOffset,Nat.cast_add,sub_eq_add_neg,
-          neg_mul,add_comm,add_left_comm,add_assoc] using hz
+          neg_mul,add_comm,add_left_comm,add_assoc] using! hz
       have eqn := negative_weight_zero_equation p q m (r+1) hq hz'
       have hs := plus_resonance_energy_gt hp hq (by omega) hcop eqn
       have hb : m*(r+1)≤q*(p-1) := by
-        exact le_trans (by simpa [oscillatorEnergy,Nat.mul_comm] using he) hn
+        exact le_trans (by simpa [oscillatorEnergy,Nat.mul_comm] using! he) hn
       omega
   · exact False.elim (hc rfl)
 
@@ -119,11 +119,23 @@ theorem affineVacuumProduct_admissible_above_charge (p q : ℕ) (hp : 2 ≤ p)
         rw [hi']
         have hp' : p - 2 + 1 = p - 1 := by omega
         have hq' : q - 1 + 1 = q := by omega
-        simp only [affineKacMultiplicity, oscillatorEnergy, oscillatorCharge,
-          Fin.isValue, Fin.reduceEq, if_false, if_true, hp', hq']
-        rw [Nat.mul_comm (p - 1) q, Nat.sub_self]
-        letI := jointIndex_zero_positive_empty (c - (p - 1 : ℕ)) (by omega)
-        simp
+        have hO : oscillatorEnergy ((0 : Fin 3), q - 1) = q := by
+          unfold oscillatorEnergy
+          exact (@if_neg _ _ (show ¬((0 : Fin 3) = 1) by decide) _ _ _).trans hq'
+        have hC : oscillatorCharge ((0 : Fin 3), q - 1) = 1 := by
+          simp [oscillatorCharge]
+        have key : ∀ (E : ℕ) (C : ℤ), E = 0 → C = c - ((p - 1 : ℕ) : ℤ) →
+            IsEmpty (JointIndex E C) := by
+          rintro E C rfl rfl
+          exact jointIndex_zero_positive_empty (c - (p - 1 : ℕ)) (by omega)
+        unfold affineKacMultiplicity
+        refine (@Fintype.card_eq_zero_iff _ (kacProductFintype _ _)).mpr ?_
+        apply key
+        · show q * (p - 1) - (p - 2 + 1) * oscillatorEnergy ((0 : Fin 3), q - 1) = 0
+          rw [hO, hp', Nat.mul_comm, Nat.sub_self]
+        · show c - ((p - 2 + 1 : ℕ) : ℤ) * oscillatorCharge ((0 : Fin 3), q - 1) =
+            c - ((p - 1 : ℕ) : ℤ)
+          rw [hC, hp', mul_one]
       rw [hm, pow_zero]
       exact one_ne_zero
   · apply pow_ne_zero

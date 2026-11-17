@@ -18,8 +18,8 @@ open Polynomial
 
 /-- The power-series derivative commutes with coefficient maps. -/
 theorem derivative_map {R S : Type*} [CommRing R] [CommRing S] (φ : R →+* S) (F : PowerSeries R) :
-    PowerSeries.derivative S (PowerSeries.map φ F) =
-      PowerSeries.map φ (PowerSeries.derivative R F) := by
+    PowerSeries.derivative (R := S) (PowerSeries.map φ F) =
+      PowerSeries.map φ (PowerSeries.derivative (R := R) F) := by
   ext n
   rw [PowerSeries.coeff_derivative, PowerSeries.coeff_map, PowerSeries.coeff_map,
     PowerSeries.coeff_derivative, map_mul, map_add, map_natCast, map_one]
@@ -30,7 +30,7 @@ noncomputable def evalAtQSeries (c : ℕ → ℂ) : ℂ[X] →+* LaurentSeries �
 
 /-- **The generating identity at `X = f`:** `p Φ′ = −Φ · H` in `ℂ((q))[[p]]`. -/
 theorem faberGen_map_generating (c : ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ)
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ)
         (PowerSeries.map (evalAtQSeries c) (faberGen c)) =
       -(PowerSeries.map (evalAtQSeries c) (faberGen c) *
         PowerSeries.map (evalAtQSeries c) (faberSeries c)) := by
@@ -190,7 +190,7 @@ theorem knzLogSeries_eq (c : ℕ → ℂ) :
 /-- **The logarithmic form of the denominator identity:** `p ∂_p S = −S · E` in `ℂ((q))[[p]]`,
 with `E = Σ_{M ≥ 1} (F_M(f) − q^{−M}) p^M` (blueprint: `Notes/moonshine/MOON_BKM.md`). -/
 theorem knz_log (c : ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ) (knzSeries c) =
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ) (knzSeries c) =
       -(knzSeries c * knzLogSeries c) := by
   set u : PowerSeries (LaurentSeries ℂ) := 1 - PowerSeries.C qInv * PowerSeries.X with hu
   have hu0 : u ≠ 0 := by
@@ -201,7 +201,7 @@ theorem knz_log (c : ℕ → ℂ) :
   rw [← hu] at hG
   have h := faberGen_map_generating c
   rw [faberGen_map_eq_mul, ← hu, Derivation.leibniz, smul_eq_mul, smul_eq_mul] at h
-  have hdu : PowerSeries.derivative (LaurentSeries ℂ) u = -PowerSeries.C qInv := by
+  have hdu : PowerSeries.derivative (R := LaurentSeries ℂ) u = -PowerSeries.C qInv := by
     rw [hu, map_sub, Derivation.map_one_eq_zero, Derivation.leibniz, smul_eq_mul, smul_eq_mul,
       PowerSeries.derivative_X, PowerSeries.derivative_C, mul_one, mul_zero, add_zero, zero_sub]
   rw [hdu] at h
@@ -239,7 +239,7 @@ theorem knzLogCoeff_cJ {M : ℕ} (hM : 0 < M) :
 `S = 1 − Σ_{a,b ≥ 1} c(a+b−1) pᵃ q^b`. Equivalently
 `p ∂_p S = −S · Σ_{k,m,n ≥ 1} m c(mn) p^{mk} q^{nk}`. -/
 theorem knz_log_J :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ) (knzSeries cJ) =
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ) (knzSeries cJ) =
       -(knzSeries cJ * PowerSeries.mk fun M => if M = 0 then 0 else
         HahnSeries.ofPowerSeries ℤ ℂ
           (PowerSeries.mk fun r => if r = 0 then 0 else qHeckeCoeff cJ M r)) := by

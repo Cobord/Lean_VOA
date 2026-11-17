@@ -101,7 +101,7 @@ theorem orderedCoeff_mem (p q r s : ℕ) :
   have hh := currentProduct_mem R w
     (List.replicate p 0 ++ List.replicate q 1 ++ List.replicate r 2) s
   simpa only [currentProduct_append, currentProduct_replicate, List.length_append,
-    List.length_replicate] using hh
+    List.length_replicate] using! hh
 
 theorem orderedCoeff_symbol (p q r s : ℕ) :
     (gradedOrderedCoeff R w p q r s : AmbientGr R w) =
@@ -109,7 +109,7 @@ theorem orderedCoeff_symbol (p q r s : ℕ) :
   have hh := currentProduct_symbol R w
     (List.replicate p 0 ++ List.replicate q 1 ++ List.replicate r 2) s
   simpa only [currentProduct_append, currentProduct_replicate, List.length_append,
-    List.length_replicate] using hh
+    List.length_replicate] using! hh
 
 theorem gradedOrderedCoeff_zero (p q r s : ℕ)
     (hrel : orderedCoeff R w p q r s ∈ Pbelow R w (p + q + r)) :

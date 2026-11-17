@@ -671,9 +671,9 @@ theorem exists_homog_gen_of_quot_finite (P : Submodule ℂ 𝒱)
     rw [Finset.mem_filter] at hx
     obtain ⟨hxU, hx1⟩ := hx
     have hxg : x ∈ W.grading (deg x) := hdeg x (hUhom x hxU)
-    refine ⟨by simpa using (by omega : 1 ≤ (deg x).toNat), ?_⟩
+    refine ⟨by simpa using! (by omega : 1 ≤ (deg x).toNat), ?_⟩
     have hcast : (((deg x).toNat : ℕ) : ℤ) = deg x := Int.toNat_of_nonneg (by omega)
-    simpa [hcast] using hxg
+    simpa [hcast] using! hxg
   have hvac : W.grading 0 = Submodule.span ℂ ({W.vacuum} : Set 𝒱) := W.vacuum_grade
   have hUle : Submodule.span ℂ (U : Set 𝒱) ≤
       Submodule.span ℂ ((fun p : 𝒱 × ℕ => p.1) '' (Pr : Set (𝒱 × ℕ)) ∪ {W.vacuum}) := by

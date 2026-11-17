@@ -124,7 +124,7 @@ theorem pairingMatrix_mulVec_lifted_relation {V : Type*} [AddCommGroup V] [Modul
   have h2 := congrArg (a₁ i) hr
   simp only [map_sum, map_smul, map_add, map_zero, smul_eq_mul] at h0 h1 h2
   apply TrivSqZeroExt.ext
-  · simpa [Matrix.mulVec, dotProduct, firstOrderPairingMatrix, fst_sum, mul_comm] using h0
+  · simpa [Matrix.mulVec, dotProduct, firstOrderPairingMatrix, fst_sum, mul_comm] using! h0
   · have h : ∑ j, (a i (u j) * s j + (a i (u₁ j) + a₁ i (u j)) * r j) = 0 := by
       calc
         _ = (∑ j, (r j * a i (u₁ j) + s j * a i (u j))) +
@@ -134,7 +134,7 @@ theorem pairingMatrix_mulVec_lifted_relation {V : Type*} [AddCommGroup V] [Modul
           intro j _
           ring
         _ = 0 := by rw [h1, h2, add_zero]
-    simpa [Matrix.mulVec, dotProduct, firstOrderPairingMatrix, snd_sum, smul_eq_mul, mul_comm, add_comm] using h
+    simpa [Matrix.mulVec, dotProduct, firstOrderPairingMatrix, snd_sum, smul_eq_mul, mul_comm, add_comm] using! h
 
 /-- An ordinary relation among the states and an ordinary relation among the
 row functionals kill the mixed first-order pairing. The state correction is
@@ -148,10 +148,10 @@ theorem pairingMatrix_tangent_of_two_relations
     ∑ i, ∑ j, q i * (firstOrderPairingMatrix u u₁ a a₁ i j).snd * r j = 0 := by
   have hq' (v : V) : ∑ i, q i * a i v = 0 := by
     have h := congrArg (fun f : V →ₗ[ℂ] ℂ => f v) hq
-    simpa using h
+    simpa using! h
   have hr' (i : n) : ∑ j, r j * a₁ i (u j) = 0 := by
     have h := congrArg (a₁ i) hr
-    simpa only [map_sum, map_smul, map_zero, smul_eq_mul] using h
+    simpa only [map_sum, map_smul, map_zero, smul_eq_mul] using! h
   simp only [firstOrderPairingMatrix, snd_add, snd_inl, snd_inr, zero_add]
   calc
     _ = (∑ i, ∑ j, q i * a i (u₁ j) * r j) +
@@ -182,7 +182,7 @@ theorem det_pairingMatrix_eq_zero_of_spanning_relation
   obtain ⟨s, _, hs⟩ := exists_lifted_state_relation u u₁ hspan r hr
   apply det_eq_zero_of_lifted_kernel _ (fun j => inl (r j) + inr (s j))
     (pairingMatrix_mulVec_lifted_relation u u₁ a a₁ r s hr hs) i
-  simpa using hi
+  simpa using! hi
 
 /-- Evaluate the canonical level-four matrix at a central charge and a
 first-order displacement, entry by entry. -/
@@ -199,7 +199,7 @@ theorem leeYang_tangent_eq_zero_of_kernel (δ : ℂ) (v : Fin 2 → DualNumber �
     (hker : gram4Dual leeYangC δ *ᵥ v = 0) (i : Fin 2) (hi : (v i).fst ≠ 0) : δ = 0 := by
   apply leeYang_tangent_eq_zero
   have h := det_eq_zero_of_lifted_kernel _ v hker i hi
-  simpa only [gram4Dual, ← RingHom.map_det, gram4Polynomial_det] using h
+  simpa only [gram4Dual, ← RingHom.map_det, gram4Polynomial_det] using! h
 
 /-- A lifted kernel relation with a nonzero constant coefficient gives the
 same first-order obstruction for Ising, using its first singular level six. -/
@@ -207,14 +207,14 @@ theorem ising_tangent_eq_zero_of_kernel (δ : ℂ) (v : Fin 4 → DualNumber ℂ
     (hker : gram6Dual isingC δ *ᵥ v = 0) (i : Fin 4) (hi : (v i).fst ≠ 0) : δ = 0 := by
   apply ising_tangent_eq_zero
   have h := det_eq_zero_of_lifted_kernel _ v hker i hi
-  simpa only [gram6Dual, ← RingHom.map_det, gram6Polynomial_det] using h
+  simpa only [gram6Dual, ← RingHom.map_det, gram6Polynomial_det] using! h
 
 /-- The identical kernel criterion for M(2,7), at central charge −68/7. -/
 theorem m27_tangent_eq_zero_of_kernel (δ : ℂ) (v : Fin 4 → DualNumber ℂ)
     (hker : gram6Dual m27C δ *ᵥ v = 0) (i : Fin 4) (hi : (v i).fst ≠ 0) : δ = 0 := by
   apply m27_tangent_eq_zero
   have h := det_eq_zero_of_lifted_kernel _ v hker i hi
-  simpa only [gram6Dual, ← RingHom.map_det, gram6Polynomial_det] using h
+  simpa only [gram6Dual, ← RingHom.map_det, gram6Polynomial_det] using! h
 
 /-- A nonzero kernel vector alone is insufficient over dual numbers. The one
 by one matrix [ε] annihilates the nonzero vector [ε], but has nonzero determinant
@@ -228,9 +228,12 @@ theorem nilpotent_kernel_not_det_zero :
     simp [Matrix.mulVec, dotProduct, ε]
   · intro h
     have hs := congrArg (fun v : Fin 1 → DualNumber ℂ => (v 0).snd) h
-    simpa [ε] using hs
+    simpa [ε] using! hs
   · intro h
-    have hs := congrArg TrivSqZeroExt.snd h
-    simpa [Matrix.det_unique, ε] using hs
+    have hdet : Matrix.det (fun _ _ => ε : Matrix (Fin 1) (Fin 1) (DualNumber ℂ)) = ε :=
+      Matrix.det_fin_one _
+    have h' : ε = 0 := hdet.symm.trans h
+    have hs := congrArg TrivSqZeroExt.snd h'
+    simp [ε] at hs
 
 end VOA.VirRigidGramLift

@@ -16,6 +16,12 @@
 > and `moonshine-lean4.35/VOA/Moonshine/MoonshineLRCFSGBridge.lean` proves `GmatEqAutO` from `gmat_eq_griess`
 > (`#print axioms`: `propext`, `Classical.choice`, `Quot.sound`). The text comparison below is what makes the other
 > definitions agree.
+>
+> **Release v1.1.** The whole library is on Lean v4.35.0-rc3 and does not depend on CFSG; it keeps its own copies of
+> the structures, so the correction above still applies to the library. The resolution now lives in the separate
+> package `MoonshineCFSG/`: its copies of the nine affected modules (e.g. `MoonshineCFSG/MoonshineCFSG/MonsterGriess/Golay.lean`)
+> use CFSG's structures as above, and `MoonshineCFSG/MoonshineCFSG/MoonshineLRCFSGBridge.lean` proves `GmatEqAutO`
+> from `gmat_eq_griess`, with the same axioms.
 
 
 A read-only comparison of source texts; no build was involved. Source: AxiomMath/CFSG at the pinned commit

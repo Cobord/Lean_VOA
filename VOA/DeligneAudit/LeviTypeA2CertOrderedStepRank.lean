@@ -45,7 +45,7 @@ theorem a2OrderedStep_rank (p q : ℕ)
     by_cases hk : a2KeyHeight q k < 0
     · rw [a2_key_negative_levi_orbit_zero ρ w p q h k (v j).property hk]
       simp [L, a2KeyOrbitLength, hk]
-    · simpa [L, a2KeyOrbitLength, hk] using
+    · simpa [L, a2KeyOrbitLength, hk] using!
         (a2_key_levi_orbit_rank ρ w p q h k (v j).property (by omega)).2
   exact a2_step_quot_rank_of_orbits F T m L
     (fun j => a2LeviClosure ρ (ℂ ∙ (v j : V))) hv hfinite hrank

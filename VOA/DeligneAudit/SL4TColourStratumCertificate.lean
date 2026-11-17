@@ -231,8 +231,8 @@ theorem colourTruncatedStratum_certificate (selected : Finset C) (N j : ℕ)
         c.coeff l ∈ colourTruncatedDegree colour N e) ∧
       Polynomial.C a * Polynomial.X ^ ((selectedColourPositions colour selected).card - j) +
           c ∈
-        Ideal.span {descendingPoly (newtonCoeff (colourTruncatedPowerSum colour selected N))
-          (selectedColourPositions colour selected).card} ⊔
+        Ideal.span {(descendingPoly (newtonCoeff (colourTruncatedPowerSum colour selected N))
+          (selectedColourPositions colour selected).card)} ⊔
           Ideal.span {Polynomial.X ^ N} := by
   classical
   let Y := selectedColourPositions colour selected
@@ -264,8 +264,8 @@ theorem colourTruncatedStratum_certificate (selected : Finset C) (N j : ℕ)
   let L := xs.length - j
   let F : (MvPolynomial (Fin B) ℂ)[X] := Polynomial.C f.val * Polynomial.X ^ L + p -
     Polynomial.C (weightedHomogeneousComponent w d g) * Polynomial.X ^ L
-  have hF : F ∈ Ideal.span {(descendingPoly (newtonCoeff (selectedColourPowerSum colour selected))
-      Y.card).map (ColourPolynomialRing colour).val.toRingHom, Polynomial.X ^ N} := by
+  have hF : F ∈ Ideal.span {((descendingPoly (newtonCoeff (selectedColourPowerSum colour selected))
+      Y.card).map (ColourPolynomialRing colour).val.toRingHom), (Polynomial.X ^ N)} := by
     rw [selectedColourCharacteristic_map]
     have he : F = Polynomial.C (weightedHomogeneousComponent w d h) * Polynomial.X ^ L + p := by
       simp only [F]
@@ -329,9 +329,9 @@ theorem colourTruncatedStratum_certificate (selected : Finset C) (N j : ℕ)
       rw [show π.toRingHom g₀ = π g₀ from rfl, hπg₀, map_zero, zero_mul, sub_zero]
       rfl
     have hmem : (colourAverageCoefficients colour F).map π.toRingHom ∈
-        Ideal.span {descendingPoly (newtonCoeff (colourTruncatedPowerSum colour selected N))
-          Y.card} ⊔ Ideal.span {Polynomial.X ^ N} := by
-      simpa only [Polynomial.map_pow, Polynomial.map_X] using hmap
+        Ideal.span {(descendingPoly (newtonCoeff (colourTruncatedPowerSum colour selected N))
+          Y.card)} ⊔ Ideal.span {Polynomial.X ^ N} := by
+      simpa only [Polynomial.map_pow, Polynomial.map_X] using! hmap
     have hL : L = (selectedColourPositions colour selected).card - j := by
       simp only [L]
       rw [hlen]

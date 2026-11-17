@@ -63,16 +63,17 @@ theorem rho_monomial (l : ℕ) (n : Fin 2 × ℕ →₀ ℕ) (c : ℂ) :
 
 /-- Coefficients of monomials in the kept variables are unchanged by `rho`. -/
 theorem coeff_rho (l : ℕ) (m : Fin 2 × ℕ →₀ ℕ) (hm : ∀ x ∈ m.support, keep l x) (Q : JetPoly) :
-    coeff m (rho l Q) = coeff m Q := by
+    (rho l Q).coeff m = Q.coeff m := by
   induction Q using MvPolynomial.induction_on' with
   | monomial n c =>
     rw [rho_monomial]
     split_ifs with h
     · rfl
-    · rw [coeff_zero, coeff_monomial, if_neg]
+    · rw [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, coeff_monomial, if_neg]
       rintro rfl
       exact h hm
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq]
+  | add p q hp hq => rw [map_add, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_add,
+    Finsupp.add_apply, Finsupp.add_apply, hp, hq]
 
 /-! ### The truncated column `ũ(s)` -/
 
@@ -139,10 +140,10 @@ theorem rho_genCoeff (l : ℕ) (g : Fin 4) (a : ℕ) :
     rw [Finset.sum_eq_single (a, 0)]
     · simp [mul_comm]
     · intro p hp hne
-      rw [Finset.mem_antidiagonal] at hp
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
       have : p.2 ≠ 0 := fun h => hne (Prod.ext (by omega) h)
       simp [this]
-    · intro h; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h
+    · intro h; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h
   · change rho l (PowerSeries.coeff a (colSer 1 * colSer 1)) = _
     simp only [vcount, ellP, Fin.reduceFinMk, Matrix.cons_val, Polynomial.coeff_one,
       PowerSeries.coeff_mul, map_sum, map_mul, coeff_colSer, rho_v]
@@ -151,7 +152,7 @@ theorem rho_genCoeff (l : ℕ) (g : Fin 4) (a : ℕ) :
     · rw [if_neg (by omega), map_zero, mul_zero]
       apply Finset.sum_eq_zero
       intro p hp
-      rw [Finset.mem_antidiagonal] at hp
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
       by_cases h1 : p.1 = 0
       · have : p.2 ≠ 0 := by omega
         simp [this]
@@ -166,10 +167,10 @@ theorem rho_genCoeff (l : ℕ) (g : Fin 4) (a : ℕ) :
     · simp only [if_true]
       ring
     · intro p hp hne
-      rw [Finset.mem_antidiagonal] at hp
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
       have : p.2 ≠ 0 := fun h => hne (Prod.ext (by omega) h)
       rw [if_neg this, mul_zero]
-    · intro h; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h
+    · intro h; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h
 
 /-! ### Products and the monomial `u_λ v_0^l` -/
 
@@ -193,8 +194,8 @@ theorem mono_v0 (ms : Multiset ℕ) (l : ℕ) : mono ms l (1, 0) = l := by
   simp [mono, mapDomain_uIdx_v0]
 
 theorem coeff_mono_vpow (ms : Multiset ℕ) (l E : ℕ) (f : UPoly) :
-    coeff (mono ms l) (X (1, 0) ^ E * rename uIdx f) =
-      if E = l then coeff (Multiset.toFinsupp ms) f else 0 := by
+    (X (1, 0) ^ E * rename uIdx f).coeff (mono ms l) =
+      if E = l then f.coeff (Multiset.toFinsupp ms) else 0 := by
   rw [X_pow_eq_monomial, coeff_monomial_mul']
   by_cases hle : Finsupp.single ((1 : Fin 2), 0) E ≤ mono ms l
   · rw [if_pos hle, one_mul]
@@ -232,8 +233,8 @@ theorem keep_mono (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l) :
 /-- The coefficient of `u_λ v_0^l` in a product of generator coefficients. -/
 theorem coeff_mono_Pga {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (w : Fin r → Fin 4) (a : Fin r →₀ ℕ) :
-    coeff (mono ms l) (Pga w a) = if ∑ i, vcount (w i) = l then
-      coeff (Multiset.toFinsupp ms) (∏ i, (ellP l (w i)).coeff (a i)) else 0 := by
+    (Pga w a).coeff (mono ms l) = if ∑ i, vcount (w i) = l then
+      (∏ i, (ellP l (w i)).coeff (a i)).coeff (Multiset.toFinsupp ms) else 0 := by
   rw [← coeff_rho l _ (keep_mono ms l hms), rho_Pga, coeff_mono_vpow]
 
 /-! ### Degree bounds and evaluation of the reduced series -/
@@ -247,7 +248,7 @@ theorem ellP_coeff_eq_zero (l : ℕ) (g : Fin 4) (a : ℕ) (h : 2 * l < a) :
   · simp only [ellP, Fin.zero_eta, Matrix.cons_val_zero, sq, Polynomial.coeff_mul]
     apply Finset.sum_eq_zero
     intro p hp
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     by_cases h1 : l < p.1
     · rw [coeff_uq_eq_zero l p.1 h1, zero_mul]
     · rw [coeff_uq_eq_zero l p.2 (by omega), mul_zero]
@@ -309,21 +310,22 @@ def boxF (r l : ℕ) : Finset (Fin r → ℕ) := Fintype.piFinset fun _ => Finse
 
 /-- The generating polynomial `Σ_a [u_λ v_0^l] P_{w,a} t^a`. -/
 def Apol {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (w : Fin r → Fin 4) : MvPolynomial (Fin r) ℂ :=
-  ∑ a ∈ boxF r l, monomial (toF a) (coeff (mono ms l) (Pga w (toF a)))
+  ∑ a ∈ boxF r l, monomial (toF a) ((Pga w (toF a)).coeff (mono ms l))
 
 theorem coeff_mono_Pga_of_not_box {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (w : Fin r → Fin 4) (d : Fin r →₀ ℕ) (hd : (⇑d) ∉ boxF r l) :
-    coeff (mono ms l) (Pga w d) = 0 := by
+    (Pga w d).coeff (mono ms l) = 0 := by
   rw [boxF, Fintype.mem_piFinset] at hd
   push Not at hd
   obtain ⟨i, hi⟩ := hd
   rw [Finset.mem_range, not_lt] at hi
   rw [coeff_mono_Pga ms l hms, Finset.prod_eq_zero (Finset.mem_univ i)
-    (ellP_coeff_eq_zero l (w i) (d i) (by omega)), coeff_zero, ite_self]
+    (ellP_coeff_eq_zero l (w i) (d i) (by omega)), AddMonoidAlgebra.coeff_zero,
+    Finsupp.zero_apply, ite_self]
 
 theorem coeff_Apol {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (w : Fin r → Fin 4) (d : Fin r →₀ ℕ) :
-    coeff d (Apol ms l w) = coeff (mono ms l) (Pga w d) := by
+    (Apol ms l w).coeff d = (Pga w d).coeff (mono ms l) := by
   rw [Apol, coeff_sum]
   simp only [coeff_monomial]
   by_cases hd : (⇑d) ∈ boxF r l
@@ -357,7 +359,7 @@ product of the local forms. -/
 theorem eval_Apol {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (w : Fin r → Fin 4) (t : Fin r → ℂ) :
     eval t (Apol ms l w) = if ∑ i, vcount (w i) = l then
-      coeff (Multiset.toFinsupp ms) (∏ i, locG l (t i) (w i)) else 0 := by
+      (∏ i, locG l (t i) (w i)).coeff (Multiset.toFinsupp ms) else 0 := by
   rw [Apol, map_sum]
   simp only [eval_monomial, coeff_mono_Pga ms l hms]
   split_ifs with hV

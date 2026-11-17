@@ -177,7 +177,7 @@ theorem op_comm_end7 (a b : Fin 133) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 /-- One Heisenberg step. -/
 theorem heis_step7 {a b z : Fin 133} {c : ℤ} (hc : c ≠ 0)
@@ -230,12 +230,12 @@ theorem root_sharpen7 {e γ : Fin 133} (hs : RootSl2E7 e γ) {w : V} {k : ℕ}
         rw [this]; simp
     rw [Finset.sum_congr rfl fun c _ => hpt c, ← Int.cast_sum, h3d]
     split_ifs <;> simp
-  have hin : ∀ c x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
-      ∑ d : Fin 133, E7sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using ρ.comm c γ 0 0 x
+  have hin : ∀ (c : Fin 133) x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
+      ∑ d : Fin 133, E7sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using! ρ.comm c γ 0 0 x
   refine sl2_sharpen (-ρ.op e 0) (ρ.op γ 0) H ?_ ?_ w k ?_ ?_ hN
   · intro x
     have : ρ.op e 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op e 0 x) =
-        ∑ c : Fin 133, E7sector.f e γ c • ρ.op c 0 x := by simpa using ρ.comm e γ 0 0 x
+        ∑ c : Fin 133, E7sector.f e γ c • ρ.op c 0 x := by simpa using! ρ.comm e γ 0 0 x
     simp only [LinearMap.neg_apply, map_neg, hH, LinearMap.coe_sum, Finset.sum_apply,
       LinearMap.smul_apply]
     rw [← this]; abel
@@ -286,7 +286,7 @@ theorem e7_thetaNil : ThetaNilG E7sector := by
   have hL76 : (ρ.op (76 : Fin 133) 0)^[k + 1] w = 0 := by
     have := hL (76 : Fin 133) (show ((76 : Fin 133) : ℕ) ∈ [76, 75, 74, 73, 72, 71, 70] by decide)
     change (ρ.op (76 : Fin 133) 0)^[k * lowExpE7 76 + 1] w = 0 at this
-    simpa [lowExpE7] using this
+    simpa [lowExpE7] using! this
   have hz : ∀ i : Fin 133, 70 ≤ i.val ∧ i.val < 76 → (ρ.op i 0)^[k + 1] w = 0 := by
     intro i hi
     have := hL i (show i.val ∈ [76, 75, 74, 73, 72, 71, 70] by

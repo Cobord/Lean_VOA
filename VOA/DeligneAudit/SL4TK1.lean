@@ -30,10 +30,10 @@ theorem S_zero_algebraMap_surjective (M : ℕ) :
     cases s with
     | false =>
         simpa only [leftE, eClass, biLeft_mk, elementary_succ, alphabetIn,
-          MvPolynomial.rename_X] using leftE_eq_zero M 0 0 (i + 1) (by omega)
+          MvPolynomial.rename_X] using! leftE_eq_zero M 0 0 (i + 1) (by omega)
     | true =>
         simpa only [rightE, eClass, biRight_mk, elementary_succ, alphabetIn,
-          MvPolynomial.rename_X] using rightE_eq_zero M 0 0 (i + 1) (by omega)
+          MvPolynomial.rename_X] using! rightE_eq_zero M 0 0 (i + 1) (by omega)
   induction p using MvPolynomial.induction_on with
   | C c => exact ⟨c, rfl⟩
   | add p q hp hq =>
@@ -71,12 +71,12 @@ theorem k1_recursive (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
       have hb0 : b = 0 := by omega
       subst a
       subst b
-      simpa only [cellLevels, and_self, if_true] using spanningChain_zero
+      simpa only [cellLevels, and_self, if_true] using! spanningChain_zero
   | succ M ih =>
       have hnn : SpanningChain (S_relationIdeal (M + 1) a b) ⊥ (thomI1 (M + 1) a b)
           (if a ≤ M ∧ b ≤ M then cellLevels M a b else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             flagPiece_nn (M + 1) a b (by omega) (by omega) (ih a b h.1 h.2)
         · have heq : thomI1 (M + 1) a b = ⊥ := by
             by_cases haM : a = M + 1
@@ -92,7 +92,7 @@ theorem k1_recursive (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if a ≤ M ∧ 0 < b ∧ b ≤ M + 1 then
             (cellLevels M a (b - 1)).map (fun n => n + 1) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             flagPiece_ng (M + 1) a b (by omega) hb h.2.1 (ih a (b - 1) h.1 (by omega))
         · have heq : thomI1 (M + 1) a b = thomI2 (M + 1) a b := by
             by_cases hb0 : b = 0
@@ -108,7 +108,7 @@ theorem k1_recursive (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if 0 < a ∧ a ≤ M + 1 ∧ 0 < b ∧ b ≤ M + 1 then
             (cellLevels M (a - 1) (b - 1)).map (fun n => n + 1) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             flagPiece_both (M + 1) a b ha hb h.1 h.2.2.1
               (ih (a - 1) (b - 1) (by omega) (by omega))
         · have heq : thomI3 (M + 1) a b = thomI2 (M + 1) a b := by
@@ -124,7 +124,7 @@ theorem k1_recursive (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if 0 < a ∧ a ≤ M + 1 ∧ b ≤ M then
             (cellLevels M (a - 1) b).map (fun n => n + 1) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             flagPiece_gn (M + 1) a b ha h.1 (by omega) (ih (a - 1) b (by omega) h.2.2)
         · have heq : thomI3 (M + 1) a b = ⊤ := by
             by_cases ha0 : a = 0

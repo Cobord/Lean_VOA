@@ -55,7 +55,7 @@ theorem rzMaximalTarget_eq_smul_hsymm (a b c s : ℕ) :
         Nat.card (Equiv.Perm (Fin c)) : ℕ) : ℂ) •
         rzFullHSymm a b c s := by
   apply Subtype.ext
-  simpa [rzFullHSymm] using rzMaximalTarget_polynomial a b c s
+  simpa [rzFullHSymm] using! rzMaximalTarget_polynomial a b c s
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
@@ -70,10 +70,10 @@ theorem rzMaximalTarget_mul_shifted_mem_ker
     U * rzMaximalTarget a b c s ∈
       (pairTargetQuotientEvaluation ρ w m i a b c
         (pairKernelPrefix_of_sat ρ w m i a b c (s + r) h hi hkey)).ker := by
-  simpa only [rzMaximalTarget, add_zero] using
+  simpa only [rzMaximalTarget, add_zero] using!
     rzTargetGenerator_mul_shifted_mem_ker ρ w m i a b c 0 s r
       (fun _ => 0) (fun z : Fin 0 => z.elim0)
-      h hc hks hi (by simpa using hkey) U
+      h hc hks hi (by simpa using! hkey) U
 
 theorem rzFullHSymm_mul_shifted_mem_ker
     (ρ : CurrentModule D4sector.f V) (w : V)
@@ -97,7 +97,7 @@ theorem rzFullHSymm_mul_shifted_mem_ker
   have hsmul : C • (U * rzFullHSymm a b c s) ∈
       (pairTargetQuotientEvaluation ρ w m i a b c
         (pairKernelPrefix_of_sat ρ w m i a b c (s + r) h hi hkey)).ker := by
-    simpa only [C, mul_smul_comm] using hrel
+    simpa only [C, mul_smul_comm] using! hrel
   exact (Submodule.smul_mem_iff _ hC).mp hsmul
 
 end VOA.DeligneAudit.D4Levi

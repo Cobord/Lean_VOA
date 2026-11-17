@@ -88,8 +88,8 @@ theorem shift_reindex (P T : ℕ) (g : ℕ → End ℂ (FockN (rank L))) (hg : �
       simp only [Finset.mem_filter, Finset.mem_range]; omega
     · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj
       simp only [Finset.mem_range]; omega
-    · intro r hr; simp only [Finset.mem_range] at hr; simp only []; omega
-    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; simp only []; omega
+    · intro r hr; simp only [Finset.mem_range] at hr; (try simp only []); omega
+    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; (try simp only []); omega
     · intro r _; rfl
   rw [Finset.sum_congr rfl (fun i hi => by rw [hinner i hi])]
   rw [show (∑ i ∈ Finset.range (T + 1),
@@ -146,7 +146,7 @@ theorem crossContr (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : �
       set op : ℤ → End ℂ (FockN (rank L)) :=
         fun j => (EminusVecField L α (b - j)).comp (aExpVecZ L β (N - j)) with hop
       have hopvanish : ∀ j : ℤ, N.toNat < j → op j = 0 := fun j hj => by
-        rw [hop]; dsimp only
+        rw [hop]; try dsimp only
         rw [aExpVecZ_neg L β (show N - j < 0 by omega), LinearMap.comp_zero]
       have hLHS : (aExpVecZ L β N).comp (EminusVecField L α b)
           = (N : ℂ)⁻¹ • ∑ r ∈ Finset.range N.toNat,
@@ -209,7 +209,7 @@ theorem crossContr (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : �
           rw [← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun r _ => ?_
           rw [smul_sub, smul_comm (wC P i) (P : ℂ)]
-          rw [hop]; dsimp only
+          rw [hop]; try dsimp only
           rw [show b - (i : ℤ) - ((r : ℤ) + 1) = b - ((i : ℤ) + r + 1) from by ring,
             show N - 1 - (r : ℤ) - (i : ℤ) = N - ((i : ℤ) + r + 1) from by ring]]
         rw [← Finset.smul_sum, ← comp_sum', hMain i hi, ← Finset.smul_sum, ← Finset.smul_sum]
@@ -266,11 +266,11 @@ theorem contr_P (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : ℤ) 
     fun i => wC P i • (EminusVecField L α (b - (i : ℤ))).comp (EplusVecField L β (a + (i : ℤ)))
     with hterm
   have hvanA : ∀ i, (-a).toNat < i → term i = 0 := fun i hi => by
-    rw [hterm]; dsimp only
+    rw [hterm]; try dsimp only
     rw [EplusVecField_eq_aExpVecZ L β (a + (i : ℤ)),
       aExpVecZ_neg L β (show -(a + (i : ℤ)) < 0 by omega), LinearMap.comp_zero, smul_zero]
   have hvanP : ∀ i, P < i → term i = 0 := fun i hi => by
-    rw [hterm]; dsimp only; rw [wC_vanish hi, zero_smul]
+    rw [hterm]; (try dsimp only); rw [wC_vanish hi, zero_smul]
   set K := max (P + 1) ((-a).toNat + 1) with hK
   rw [show (∑ i ∈ Finset.range ((-a).toNat + 1), term i) = ∑ i ∈ Finset.range K, term i from
       (Finset.sum_subset (by intro x hx; simp only [Finset.mem_range] at hx ⊢; omega)

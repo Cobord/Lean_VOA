@@ -26,9 +26,10 @@ noncomputable def vermaPolynomialCreation (ell p : ℂ) (i : ℕ)
 
 /-- A negative mode raises the free-momentum degree by at most one. -/
 theorem vermaPolynomialCreation_above (ell p : ℂ) (i d : ℕ)
-    (q : PolynomialModule ℂ VermaFockFamily) (hq : ∀ k, d<k → q k=0)
-    (k : ℕ) (hk : d+1<k) : vermaPolynomialCreation ell p i q k=0 := by
-  rw [vermaPolynomialCreation,PolynomialModule.add_apply,polynomialModule_map_coeff,
+    (q : PolynomialModule ℂ VermaFockFamily) (hq : ∀ k, d<k → q.coeff k=0)
+    (k : ℕ) (hk : d+1<k) : (vermaPolynomialCreation ell p i q).coeff k=0 := by
+  unfold vermaPolynomialCreation
+  rw [PolynomialModule.coeff_add,Finsupp.add_apply,polynomialModule_map_coeff,
     polynomialModule_X_coeff,if_pos (by omega),polynomialModule_map_coeff,
     hq k (by omega),hq (k-1) (by omega)]
   simp
@@ -36,10 +37,11 @@ theorem vermaPolynomialCreation_above (ell p : ℂ) (i d : ℕ)
 /-- At maximal degree the negative mode multiplies the projected symbol by
 its oscillator variable; the fixed part contributes only lower degrees. -/
 theorem vermaPolynomialCreation_top (ell p : ℂ) (i d : ℕ)
-    (q : PolynomialModule ℂ VermaFockFamily) (hq : ∀ k, d<k → q k=0) :
-    vermaSymbolProjection (vermaPolynomialCreation ell p i q (d+1))=
-      MvPolynomial.X (i,(0:Fin 1))*vermaSymbolProjection (q d) := by
-  rw [vermaPolynomialCreation,PolynomialModule.add_apply,polynomialModule_map_coeff,
+    (q : PolynomialModule ℂ VermaFockFamily) (hq : ∀ k, d<k → q.coeff k=0) :
+    vermaSymbolProjection ((vermaPolynomialCreation ell p i q).coeff (d+1))=
+      MvPolynomial.X (i,(0:Fin 1))*vermaSymbolProjection (q.coeff d) := by
+  unfold vermaPolynomialCreation
+  rw [PolynomialModule.coeff_add,Finsupp.add_apply,polynomialModule_map_coeff,
     hq (d+1) (by omega),map_zero,zero_add,polynomialModule_X_coeff,
     if_pos (by omega),Nat.add_sub_cancel,polynomialModule_map_coeff,
     vermaSymbolProjection_momentum]
@@ -48,7 +50,7 @@ theorem vermaPolynomialCreation_top (ell p : ℂ) (i d : ℕ)
 state relations to pass to their momentum coefficients. -/
 noncomputable def vermaPolynomialCoefficient (k : ℕ) :
     PolynomialModule ℂ VermaFockFamily →ₗ[ℂ] VermaFockFamily where
-  toFun q := q k
+  toFun q := q.coeff k
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
@@ -57,8 +59,8 @@ projected oscillator symbol is nonzero. Distinct longest PBW words supply
 distinct monomials, so their coefficients cannot cancel. -/
 theorem vermaPolynomialLift_top_exists (ell p : ℂ)
     (v : Verma (3-24*ell^2) (p^2-2*ell*p)) (hv : v≠0) :
-    ∃ d, (∀ k, d<k → vermaPolynomialLift ell p v k=0) ∧
-      vermaSymbolProjection (vermaPolynomialLift ell p v d)≠0 := by
+    ∃ d, (∀ k, d<k → (vermaPolynomialLift ell p v).coeff k=0) ∧
+      vermaSymbolProjection ((vermaPolynomialLift ell p v).coeff d)≠0 := by
   classical
   let b := vermaSortedBasis (3-24*ell^2) (p^2-2*ell*p)
   let a := b.repr v
@@ -68,12 +70,12 @@ theorem vermaPolynomialLift_top_exists (ell p : ℂ)
   have hs : vermaPolynomialLift ell p v =
       ∑ u ∈ a.support, a u • vermaWordPolynomial ell p u.val := by
     have he := congrArg (vermaPolynomialLift ell p) (b.linearCombination_repr v)
-    simpa only [Finsupp.linearCombination_apply,Finsupp.sum,map_sum,map_smul,b,vermaSortedBasis_apply,vermaPolynomialLift_sorted] using he.symm
-  have hscoeff (k : ℕ) : vermaPolynomialLift ell p v k =
-      ∑ u ∈ a.support, a u • vermaWordPolynomial ell p u.val k := by
+    simpa only [Finsupp.linearCombination_apply,Finsupp.sum,map_sum,map_smul,b,vermaSortedBasis_apply,vermaPolynomialLift_sorted] using! he.symm
+  have hscoeff (k : ℕ) : (vermaPolynomialLift ell p v).coeff k =
+      ∑ u ∈ a.support, a u • (vermaWordPolynomial ell p u.val).coeff k := by
     have he := congrArg (vermaPolynomialCoefficient k) hs
     simpa only [map_sum,map_smul,vermaPolynomialCoefficient,LinearMap.coe_mk,
-      AddHom.coe_mk] using he
+      AddHom.coe_mk] using! he
   refine ⟨w.val.length,?_,?_⟩
   · intro k hk
     rw [hscoeff]
@@ -81,14 +83,15 @@ theorem vermaPolynomialLift_top_exists (ell p : ℂ)
     intro u hu
     rw [vermaWordPolynomial_coeff_above ell p u.val k (lt_of_le_of_lt (hm u hu) hk),smul_zero]
   · intro hz
-    have he := congrArg (MvPolynomial.coeff (vermaWordExponent w.val)) hz
+    have he := congrArg (fun q : MvPolynomial _ _ => q.coeff (vermaWordExponent w.val)) hz
+    beta_reduce at he
     rw [hscoeff] at he
     simp only [
       map_sum,map_smul,MvPolynomial.coeff_sum,MvPolynomial.coeff_smul,
       smul_eq_mul,MvPolynomial.coeff_zero] at he
     have hc : (∑ u ∈ a.support, a u *
-        MvPolynomial.coeff (vermaWordExponent w.val)
-          (vermaSymbolProjection (vermaWordPolynomial ell p u.val w.val.length)))=a w := by
+        (vermaSymbolProjection ((vermaWordPolynomial ell p u.val).coeff w.val.length)).coeff
+          (vermaWordExponent w.val))=a w := by
       rw [Finset.sum_eq_single w]
       · rw [vermaWordPolynomial_top_selector ell p _ w.val w.val w.property w.property
           (le_refl _) rfl]; simp

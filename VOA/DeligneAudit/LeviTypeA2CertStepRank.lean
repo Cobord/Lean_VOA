@@ -24,7 +24,7 @@ theorem a2_step_rank_of_orbit_spanning
     induction s using Finset.induction_on with
     | empty =>
         constructor
-        · simpa only [Finset.sup_empty] using
+        · simpa only [Finset.sup_empty] using!
             (inferInstance : FiniteDimensional ℂ (⊥ : Submodule ℂ Q))
         · simp
     | @insert j s hj ih =>
@@ -44,7 +44,7 @@ theorem a2_step_rank_of_orbit_spanning
   calc
     Module.finrank ℂ Q ≤ m * L := by
       simpa only [finrank_top, Finset.sum_const, Finset.card_fin,
-        nsmul_eq_mul] using h.2
+        nsmul_eq_mul] using! h.2
     _ = L * m := Nat.mul_comm _ _
 
 /-- Exact step formulation: one orbit for each member of a key-quotient basis

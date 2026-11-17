@@ -5,7 +5,11 @@ Authors: Fedor K. Popov
 -/
 import VOA.Modularity.ZhuRecursion
 import Mathlib.NumberTheory.Bernoulli
-import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.NumberTheory.ArithmeticFunction.Defs
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 
 /-!
 # The formal Eisenstein series for Zhu's recursion  (TASK B1)

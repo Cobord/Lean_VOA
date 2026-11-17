@@ -49,7 +49,7 @@ theorem middleFlagInvariantEvaluation_elementary_zero (n : ℕ) (hn : 0 < n) :
   have hz : newtonCoeff (fun _ => (0 : MixedRing q)) n = 0 := by
     have he := congrArg (PowerSeries.coeff n)
       (newtonCoefficientSeries_zero (R := MixedRing q))
-    simpa [newtonCoefficientSeries, Nat.ne_of_gt hn] using he
+    simpa [newtonCoefficientSeries, Nat.ne_of_gt hn] using! he
   exact (IsUnit.mul_right_eq_zero (isUnit_neg_one.pow n)).mp (h.symm.trans (hc.trans hz))
 
 /-- The elementary coinvariant ideal is killed by the concrete invariant specialization. -/

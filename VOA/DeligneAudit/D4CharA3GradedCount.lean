@@ -33,7 +33,7 @@ theorem a3GradedKey_sum_le (a b c N : ℕ) :
     intro k hk l hl heq
     obtain ⟨x, y, z, d⟩ := k
     obtain ⟨u, v, w, e⟩ := l
-    simpa [encode, Prod.mk.injEq, A3RadicalKey.mk.injEq, and_assoc] using heq
+    simpa [encode, Prod.mk.injEq, A3RadicalKey.mk.injEq, and_assoc] using! heq
   have hs : J.image encode ⊆ B := by
     intro t ht
     obtain ⟨k, hk, rfl⟩ := Finset.mem_image.mp ht

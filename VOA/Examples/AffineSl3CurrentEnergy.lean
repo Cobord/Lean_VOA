@@ -12,6 +12,8 @@ The Euler commutator passes through each actual locally finite normal
 product. Every current mode therefore lowers energy by its Fourier index,
 including the highest lowering defined through a commutator.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

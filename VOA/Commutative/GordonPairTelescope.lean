@@ -66,9 +66,16 @@ theorem relabel_mem_nextSource (m D a b c : ℕ) (R : PairCount a b)
   have hz := VOA.GordonKernelFlag.laterKernel_le_ker (modelPairEval (K := K) m D a b c)
     (show R < S by exact Nat.lt_succ_self _) hF
   have hnext := nextPairEval_eq_zero_of_successor a b c R.val ha hb F.val hz
-  apply (collisionFactor_dvd_iff _ _ (by simp [eLabel, fLabel]) _).mp
-  exact residual_factor_dvd (firstResidual a R.val ha) x (firstResidual b R.val hb) y
+  have hdvd := residual_factor_dvd (firstResidual a R.val ha) x (firstResidual b R.val hb) y
     (rename e F.val) (functionalModel_residual_symmetry m D _ hmodel) hnext
+  convert (collisionFactor_dvd_iff (K := K) _ _ (by simp [eLabel, fLabel]) _).mp hdvd
+  unfold nextPairEval
+  rw [AlgHom.comp_apply]
+  congr 1
+  exact congrArg (fun d : DecidableEq (Target (Fin R.val) (ResidualIndex a R.val)
+      (ResidualIndex b R.val) (Fin c)) =>
+    @collisionMap K _ _ d (eLabel x) (fLabel y) (by simp [eLabel, fLabel]))
+    (Subsingleton.elim _ _)
 
 /-- The actual R-th restricted evaluation image is contained in the paired image
 whose partition Hilbert bound has already been proved. -/

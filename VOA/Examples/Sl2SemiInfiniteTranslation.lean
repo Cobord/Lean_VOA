@@ -17,6 +17,8 @@ property is assumed. The field-product and mode-commutator formulas below follow
 from these data, creation, super locality and Goddard uniqueness.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2SemiInfinite
 open Module (End)
 open scoped BigOperators TensorProduct
@@ -289,7 +291,9 @@ theorem T_mem_parity (H : TranslationCovariant V) {p : ZMod 2} {u : 𝒱}
   simp only [LinearMap.sub_apply, Module.End.mul_apply, H.vacuum_zero,
     map_zero, sub_zero, V.Y_apply_vacuum_zero, zero_add, one_smul] at h
   rw [h]
-  simpa only [add_zero] using V.parity_mode u hu V.vacuum V.vacuum_parity (-2)
+  have h2 := V.parity_mode u hu V.vacuum V.vacuum_parity (-2)
+  rw [add_zero] at h2
+  exact h2
 
 /-- Translation commutes with the parity involution. -/
 theorem T_parityInvol (H : TranslationCovariant V) (u : 𝒱) :

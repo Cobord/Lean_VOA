@@ -28,7 +28,7 @@ theorem configurationColourMultiplicity_eq_iff {B k : ℕ} (colour : Fin B → C
       rcases a with ⟨a, c⟩
       have ha := congrFun (congrFun h a) c
       simpa only [configurationColourMultiplicity, Fintype.card_subtype,
-        Prod.mk.injEq, Prod.eta] using ha
+        Prod.mk.injEq, Prod.eta] using! ha
     let ef := fun a => Classical.choice (Fintype.card_eq.mp (hc a))
     let e : Equiv.Perm (Fin B) := Equiv.ofFiberEquiv ef
     have he (i : Fin B) : (g.val (e i), colour (e i)) = (f.val i, colour i) :=

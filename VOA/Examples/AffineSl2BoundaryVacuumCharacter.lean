@@ -47,7 +47,7 @@ theorem character_eq_product_iff (m : ℕ) :
   · intro h
     apply PowerSeries.ext
     intro N
-    simpa only [coeff_character] using h N
+    simpa only [coeff_character] using! h N
 
 /-- The proved Sections 2--5 bound, in the paper's positive boundary index. -/
 theorem sourcePiece_finrank_le_product (m : ℕ) (hm : 1 ≤ m) (N : ℕ) :
@@ -55,7 +55,7 @@ theorem sourcePiece_finrank_le_product (m : ℕ) (hm : 1 ≤ m) (N : ℕ) :
   cases m with
   | zero => omega
   | succ n =>
-      simpa only [product, denominator] using
+      simpa only [product, denominator] using!
         VOA.GordonConformalCharacter.sourcePiece_finrank_le_product (K := ℂ) n N
 
 /-- The actual simple-VOA weight space is no larger than the actual arc piece,

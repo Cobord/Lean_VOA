@@ -32,7 +32,7 @@ theorem sixth_pair_2 : V2v.smul (wv 6 2) 35 (wv 6 4) =
   have hs := congrArg (fun v : Sp => (1 / 11 : ℂ) • v)
     (eq_neg_of_add_eq_zero_left h)
   norm_num [smul_smul, smul_neg, ← neg_smul] at hs
-  simpa only [neg_div] using hs
+  simpa only [neg_div] using! hs
 
 theorem sixth_pair_3 : V2v.smul (wv 6 3) 35 (wv 6 3) =
     (3054998804 / 5 : ℂ) • wv 6 0 := by
@@ -54,7 +54,7 @@ theorem sixth_pair_4 : V2v.smul (wv 6 4) 35 (wv 6 2) =
   have hs := congrArg (fun v : Sp => (1 / 9 : ℂ) • v)
     (eq_neg_of_add_eq_zero_left h)
   norm_num [smul_smul, smul_neg, ← neg_smul] at hs
-  simpa only [neg_div] using hs
+  simpa only [neg_div] using! hs
 
 theorem sixth_pair_5 : V2v.smul (wv 6 5) 35 (wv 6 1) =
     (8401246711 / 9 : ℂ) • wv 6 0 := by
@@ -76,7 +76,7 @@ theorem sixth_pair_6 : V2v.smul (wv 6 6) 35 (wv 6 0) =
   have hs := congrArg (fun v : Sp => (1 / 7 : ℂ) • v)
     (eq_neg_of_add_eq_zero_left h)
   norm_num [smul_smul, smul_neg, ← neg_smul] at hs
-  simpa only [neg_div] using hs
+  simpa only [neg_div] using! hs
 
 theorem sixth_base_pair (i j : ℕ) (hij : i + j = 6) :
     V2v.smul (wv 6 i) 35 (wv 6 j) =

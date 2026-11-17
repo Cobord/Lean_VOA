@@ -351,7 +351,14 @@ theorem coordR_map (ι : K.carrier →ₗ[ℤ] L.carrier) (α : K.carrier) :
   simp only [coordR, coord, map_sum, map_zsmul, Finsupp.coe_finsetSum, Finset.sum_apply,
     Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Int.cast_sum, Int.cast_mul, Matrix.mulVec,
     dotProduct, latMatrix, Matrix.of_apply]
-  exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+  first
+    | exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+    | (erw [Finset.sum_apply]
+       rw [Int.cast_sum]
+       apply Finset.sum_congr rfl
+       intro i _
+       erw [Pi.smul_apply, smul_eq_mul, Int.cast_mul]
+       exact mul_comm _ _)
 
 theorem latMatrix_gram (ι : K.carrier →ₗ[ℤ] L.carrier)
     (hι : ∀ α β, L.form (ι α) (ι β) = K.form α β) :

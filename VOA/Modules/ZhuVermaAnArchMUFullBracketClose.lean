@@ -56,6 +56,8 @@ open scoped TensorProduct DirectSum BigOperators
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## The OPE weight bookkeeping. -/
 
 theorem smul_mem_grading (W : VertexOperatorAlgebra 𝒱) {K M : ℤ} {a b : 𝒱}

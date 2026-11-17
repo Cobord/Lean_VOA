@@ -120,7 +120,8 @@ theorem reversed_coeff (x : ι) (j : Fin (c.r x)) {αb αa : ℂ} {wb : (lwOf D 
   have iL := lwOf_irreducible D (c.lab x j)
   rw [productCoeff_eq_sum_prodValue hV (lwOf_irreducible D b) (lwOf_irreducible D a) iL _ _
     hwb hwa β₀ bs one_ne_zero hpn,
-    iterateCoeff_eq_sum_iterValue hV (lwOf_irreducible D b) (lwOf_irreducible D a) iL _ _
+    iterateCoeff_eq_sum_iterValue (Q := vacuumLW W hv) hV (lwOf_irreducible D b)
+      (lwOf_irreducible D a) iL (moduleIntertwiner (lwOf D (c.lab x j)).isMod) (piInt F π)
       hwb hwa β₀ bs hs0' hsn]
   simp_rw [iterateCoeff_eq_sum_iterValue hV (lwOf_irreducible D b) (lwOf_irreducible D a) iL _ _
       hwb hwa β₀ bs hs0' hsn]
@@ -134,11 +135,13 @@ theorem reversed_coeff (x : ι) (j : Fin (c.r x)) {αb αa : ℂ} {wb : (lwOf D 
       (bs t).property, supportedAt_weightFunctional (lwOf D (c.lab x j)).isMod β₀ bs t, s, hs0,
       hs1⟩
   have h := reversed_fourPoint F H hV hv c hβ π x j lab' i p htot d
+  rw [iterateValue_eq_iterValue (Q := vacuumLW W hv)
+    (moduleIntertwiner (lwOf D (c.lab x j)).isMod) (piInt F π) d] at h
   simp only [iterateValue_eq_iterValue, productValue_eq_prodValue] at h
   have hσ : αb + αa + β₀ - β₀ - 2 = αb + αa - 2 := by ring
   have hcast : ((1 + s : ℝ) : ℂ) = 1 + (s : ℂ) := by push_cast; ring
   rw [hcast]
-  simpa only [d, hσ] using h
+  simpa only [d, hσ] using! h
 
 /-- A positive real below finitely many positive reals. -/
 theorem exists_pos_le_fin {r : ℕ} (f : Fin r → ℝ) (hf : ∀ k, 0 < f k) :

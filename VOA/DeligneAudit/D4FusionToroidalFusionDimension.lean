@@ -29,13 +29,13 @@ theorem evalGr_rank_le (hz : Function.Injective z) :
   obtain ⟨B, hB⟩ := exists_evalFbelow_top S hskew z hz
   have h := finrank_gr_le_source (d1EvalAction S.f S.jacobi hskew z)
     (D1TensorG.generator S.c₀) B hB
-  exact ⟨h.1, by simpa only [D1TensorG.finrank_space] using h.2⟩
+  exact ⟨h.1, by simpa only [D1TensorG.finrank_space] using! h.2⟩
 
 theorem d4_evalGr_rank_le (N : ℕ) :
     FiniteDimensional ℂ
       (Gr (D4Fusion.action N) (D4Fusion.generator N)) ∧
     Module.finrank ℂ (Gr (D4Fusion.action N) (D4Fusion.generator N)) ≤ 29 ^ N := by
-  simpa only [D4sector, D4Fusion.action, D4Fusion.generator] using
+  simpa only [D4sector, D4Fusion.action, D4Fusion.generator] using!
     (evalGr_rank_le D4sector D1SiteG.D4Check.table_skewC
       (D1TensorG.points N) (D1TensorG.points_injective N))
 

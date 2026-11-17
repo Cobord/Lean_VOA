@@ -20,7 +20,7 @@ theorem analyticAt_zero_of_summable (c : ℕ → ℂ) (r : ℝ) (hr : 0 < r)
   let p := FormalMultilinearSeries.ofScalars ℂ c
   have hrad : ENNReal.ofReal r ≤ p.radius := by
     apply p.le_radius_of_summable_norm
-    simpa only [p, FormalMultilinearSeries.ofScalars_norm, Real.coe_toNNReal _ hr.le] using hc
+    simpa only [p, FormalMultilinearSeries.ofScalars_norm, Real.coe_toNNReal _ hr.le] using! hc
   have hp := p.hasFPowerSeriesOnBall
     (lt_of_lt_of_le (ENNReal.ofReal_pos.mpr hr) hrad)
   have ha := hp.analyticAt

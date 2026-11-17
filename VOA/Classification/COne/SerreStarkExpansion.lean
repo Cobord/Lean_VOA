@@ -232,7 +232,7 @@ theorem coord_bound : ∃ Kc : ℝ, 0 ≤ Kc ∧ ∀ (X : S.opAlg) (j : Fin (Mod
     simp only [LinearMap.coe_comp, Function.comp_apply, Module.Basis.coord_apply]
     congr 2
     have := congrArg (fun F => F X) hLft
-    simpa using this.symm
+    simpa using! this.symm
   rw [e]
   calc ‖(S.BA.coord j).comp Lft (S.ιm X)‖ ≤ K j * ‖S.ιm X‖ := hKb j _
     _ ≤ (∑ j, K j) * ‖S.ιm X‖ := by
@@ -300,7 +300,6 @@ theorem tildeE_eq_inverse (p : S.ι) : ∃ ε > 0, ∀ y : ℂ, y ≠ 0 → ‖y
   have hpy : (p.1 : ℂ) * y ≠ 0 := mul_ne_zero hp0 hy0
   set x := ((p.1 : ℂ) * y)⁻¹
   have h1 := congrArg (fun A => x • A) (h y hy0 hy)
-  simp only at h1
   have e1 : x • ((((p.1 : ℂ) * y) • 1 - S.Ua p) * S.tildeE p y) =
       (1 - x • S.Ua p) * S.tildeE p y := by
     rw [← smul_mul_assoc, smul_sub, smul_smul, inv_mul_cancel₀ hpy, one_smul]

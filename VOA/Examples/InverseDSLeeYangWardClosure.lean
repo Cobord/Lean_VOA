@@ -26,6 +26,8 @@ identities.  No intertwining-operator axiom is introduced here.
 
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 namespace InverseDS
 namespace LeeYangWardClosure

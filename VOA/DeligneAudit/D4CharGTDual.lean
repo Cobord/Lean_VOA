@@ -21,10 +21,10 @@ theorem gtRows_dual {N : ℕ} (lam : Fin (N + 1) → ℤ) (μ : Fin N → ℤ) :
   constructor
   · intro h i
     have hi := h i.rev
-    simpa [gtDual, Fin.rev_succ, Fin.rev_castSucc, and_comm] using hi
+    simpa [gtDual, Fin.rev_succ, Fin.rev_castSucc, and_comm] using! hi
   · intro h i
     have hi := h i.rev
-    simpa [gtDual, Fin.rev_succ, Fin.rev_castSucc, and_comm] using hi
+    simpa [gtDual, Fin.rev_succ, Fin.rev_castSucc, and_comm] using! hi
 
 theorem gtDual_sum {N : ℕ} (lam : Fin N → ℤ) :
     (∑ i, gtDual lam i) = -(∑ i, lam i) := by
@@ -53,7 +53,7 @@ theorem sum_gtRows_dual {R : Type*} [AddCommMonoid R] {N : ℕ}
   refine Finset.sum_bij' (fun μ _ => gtDual μ) (fun μ _ => gtDual μ)
     ?_ ?_ ?_ ?_ ?_
   · intro μ hμ
-    simpa only [gtDual_involutive] using (gtRows_dual (gtDual lam) μ).mpr hμ
+    simpa only [gtDual_involutive] using! (gtRows_dual (gtDual lam) μ).mpr hμ
   · intro μ hμ
     exact (gtRows_dual lam μ).mpr hμ
   · intro μ _

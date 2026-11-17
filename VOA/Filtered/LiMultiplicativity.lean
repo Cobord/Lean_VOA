@@ -83,6 +83,7 @@ private theorem wordAct_smul_mem_adjointGfil (W : VertexOperatorAlgebra V)
         convert hinner using 1
         norm_num [wordLevel_cons]
         ring_nf
+        rfl
 
 /-- A homogeneous nonnegative mode acts one Li step better than the generic mode estimate. -/
 private theorem homogeneous_smul_nonneg_word_mem_adjointGfil
@@ -121,6 +122,7 @@ private theorem homogeneous_smul_nonneg_word_mem_adjointGfil
         convert hpre using 1
         norm_num [wordLevel_cons]
         ring_nf
+        rfl
       · refine finsum_mem_submodule_lf _ _ (fun j => ?_)
         rcases lt_or_ge j 0 with hj | hj
         · rw [cbz_apply_neg _ hj, zero_smul]
@@ -329,7 +331,8 @@ theorem liFiltration_antitone (W : VertexOperatorAlgebra V) {p q : ℕ} (hpq : p
 
 /-- The degree-zero adjoint Li piece is the whole VOA. -/
 theorem liFiltration_zero_eq_top (W : VertexOperatorAlgebra V) : liFiltration W 0 = ⊤ := by
-  simpa only [liFiltration, adjointModule, LWGenerated] using lwGenerated_adjoint W
+  simpa only [liFiltration, adjointModule, LWGenerated, Nat.cast_zero] using
+    lwGenerated_adjoint W
 
 /-- Iterated translation raises Li degree by the number of translations. -/
 theorem liFiltration_T_pow_mem (W : VertexOperatorAlgebra V) {p : ℕ} (j : ℕ) {x : V}
@@ -503,7 +506,8 @@ private theorem skew_neg_one_summand_mem_next (W : VertexOperatorAlgebra V)
     rw [hdeg] at hT
     exact hT
   · have htop : liFiltration W 0 = ⊤ := by
-      simpa only [liFiltration, adjointModule, LWGenerated] using lwGenerated_adjoint W
+      simpa only [liFiltration, adjointModule, LWGenerated, Nat.cast_zero] using
+        lwGenerated_adjoint W
     have hmode : W.smul y (r : ℤ) x ∈ liFiltration W 0 := by
       rw [htop]
       exact Submodule.mem_top
@@ -525,7 +529,7 @@ theorem liNegOneCommutatorEstimate_proven (W : VertexOperatorAlgebra V) :
       sub_zero, pow_zero, Module.End.one_apply]
     norm_num [sgn, PreVertexAlgebra.smul_def]
   have hfin : (Function.support f).Finite := by
-    simpa only [f, neg_neg] using W.skew_support_finite x y 0
+    simpa only [f, neg_neg, sub_self] using W.skew_support_finite x y 0
   let s : Finset ℕ := hfin.toFinset.erase 0
   have hsupp : Function.support f ⊆ (↑(insert 0 s) : Set ℕ) := by
     intro j hj
@@ -559,8 +563,10 @@ theorem liWeightPiece_neg_one_comm_mem (W : VertexOperatorAlgebra V)
   exact Submodule.sub_mem _
     (liWeightPiece_smul_neg_one_mem W hx hy).2
     (by
-      have h := (liWeightPiece_smul_neg_one_mem W hy hx).2
-      simpa only [Nat.add_comm] using h)
+      have h : W.smul y (-1) x ∈ W.grading ((M + N : ℕ) : ℤ) :=
+        (liWeightPiece_smul_neg_one_mem W hy hx).2
+      rw [Nat.add_comm, Nat.cast_add] at h
+      exact h)
 
 /-- The commutator gate identifies the two representative products in the common target layer. -/
 theorem liWeightLayerMul_mk_eq_swap_of_commutator (W : VertexOperatorAlgebra V)

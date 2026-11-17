@@ -95,7 +95,7 @@ theorem simpleDimensionsCyclotomic_of_mixedS (F : SphericalFusion C) (M : Modula
   simp only [mixedS_apply, categoricalS_unit_right, F.dimension_dualLabel,
     F.dimension_unitLabel, mul_one] at hi
   have h := Subalgebra.mul_mem _ (cycloField_inv_mem M.toRibbon.finite_twist.1 h0) hi
-  simpa [inv_inv, ← mul_assoc, F.globalDimension_ne_zero] using h
+  simpa [inv_inv, ← mul_assoc, F.globalDimension_ne_zero] using! h
 
 /-- Exact characterization of the remaining unconditional cyclotomicity input. -/
 theorem mixedSCyclotomic_iff_dimensions (F : SphericalFusion C) (M : Modular F) :

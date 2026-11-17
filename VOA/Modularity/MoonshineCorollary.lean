@@ -95,12 +95,16 @@ theorem coeff_one_charSeries_of_grading_one_eq_bot (W : VertexOperatorAlgebra �
 /-- `S² = −1` in `SL₂(ℤ)`. -/
 theorem S_mul_S : ModularGroup.S * ModularGroup.S = -1 := by
   ext i j
+  -- Lean 4.35 port: push the `SL₂` coercion through `*`/`-` before `simp` unfolds `S`.
+  try simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_neg]
   fin_cases i <;> fin_cases j <;>
     simp [ModularGroup.S, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- `(ST)³ = −1` in `SL₂(ℤ)`. -/
 theorem S_mul_T_pow_three : (ModularGroup.S * ModularGroup.T) ^ 3 = -1 := by
   ext i j
+  try simp only [Matrix.SpecialLinearGroup.coe_pow, Matrix.SpecialLinearGroup.coe_mul,
+    Matrix.SpecialLinearGroup.coe_neg]
   fin_cases i <;> fin_cases j <;>
     simp [ModularGroup.S, ModularGroup.T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 

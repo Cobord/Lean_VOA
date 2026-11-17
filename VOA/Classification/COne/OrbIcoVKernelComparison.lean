@@ -78,6 +78,7 @@ theorem killed_bsa_kernel_eq_radicalLevel (c h : ℂ) (hc : c=1) (hh : h=36)
     subst c
     subst h
     convert FFLower.radical_bound 6 m using 1 <;> norm_num
+    exact rfl
   have hdim := Submodule.finrank_mono hDK
   rw [hD] at hdim
   exact Submodule.eq_of_le_of_finrank_le hKR (hR.trans hdim)

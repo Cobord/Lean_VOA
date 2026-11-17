@@ -40,7 +40,7 @@ theorem current_mem_joint (k : ℂ) (hk : k + 2 ≠ 0) (n c : ℤ)
   fin_cases a
   · exact H0_E m hh _ (by push_cast; ring)
   · exact H0_F m hh _ (by push_cast; ring)
-  · simpa using H0_H m hm hh
+  · simpa using! H0_H m hm hh
 
 /-- Any null state at the first admissible energy is annihilated by every
 strictly positive current mode. -/
@@ -62,7 +62,7 @@ theorem admissible_first_null_positive (p q : ℕ) (hp : 2 ≤ p) (hq : 0 < q)
     have hj' : J _ a m x ∈ jointSpace _ (admissible_level_noncritical p q hp hq)
         (((q * (p - 1) : ℕ) - m).toNat : ℕ)
         (2 * (((p : ℤ) - 1) + ![1, -1, 0] a)) := by
-      simpa only [Int.toNat_of_nonneg hnonneg] using hj
+      simpa only [Int.toNat_of_nonneg hnonneg] using! hj
     exact admissible_null_eq_zero_below_all p q hp hq hcop _ _
       (by omega) _ hj' hji
 
@@ -127,7 +127,7 @@ theorem boundary_primitive_exists (n : ℕ) :
         x ∈ jointSpace k hk (denominator n : ℕ) 2 ∧
         J k colE 0 x = 0 ∧ SingP k x := by
     subst k
-    simpa using he
+    simpa using! he
   exact ht (level n) (level_noncritical n) (by unfold level; ring)
 
 /-- An unconditional `Candidate` for every boundary index. Its leading
@@ -143,7 +143,7 @@ noncomputable def uniformCandidate (n : ℕ) (hn : 1 ≤ n) : Candidate (level n
     vector := x
     homogeneous := jointSpace_le_grading _ _ _ _ hx
     horizontalRaising := hs.2.2.1
-    horizontalCharge := by simpa using ((mem_jointSpace_iff _ _ _ _ _).mp hx).2
+    horizontalCharge := by simpa using! ((mem_jointSpace_iff _ _ _ _ _).mp hx).2
     positiveSingular := hs.2.2.2
     nonzero := hs.1
   }

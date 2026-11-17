@@ -180,7 +180,7 @@ theorem leeYang_gradedUnitary_of_affine_jetStrict
 /-! ### Sanity checks (non-vacuity) -/
 
 theorem evalBase_genCoeff_two_zero : evalBase (genCoeff 2 0) = 1 := by
-  rw [genCoeff, genSer_two, zSer, PowerSeries.coeff_mul, Finset.antidiagonal_zero,
+  rw [genCoeff, genSer_two, zSer, PowerSeries.coeff_mul, Finset.Nat.antidiagonal_zero,
     Finset.sum_singleton]
   simp [colSer, evalBase, baseVal]
 
@@ -216,7 +216,7 @@ theorem grVac_w_ne_zero : grCyclicVector_zero.w grVac ≠ 0 := by
   apply grVac_ne_zero
   refine grCyclicVector_zero.cyclic grVac fun l => ?_
   cases l with
-  | nil => simpa [word] using h
+  | nil => simpa [word] using! h
   | cons k l =>
     simp only [word, List.map_cons, List.prod_cons, Module.End.mul_apply]
     rw [grRho_zero_eq_zero, LinearMap.zero_apply, map_zero]
@@ -252,7 +252,7 @@ def grJetStrict_zero : GrJetStrict 0 where
         Submodule.coe_smul]
       refine Submodule.smul_mem _ _ (Submodule.smul_mem _ _ ?_)
       rw [mem_weightedHomogeneousSubmodule]
-      simpa [oneJet] using isWeightedHomogeneous_one ℂ jetWt
+      simpa [oneJet] using! isWeightedHomogeneous_one ℂ jetWt
     · rw [grDeg_zero_eq_zero hd hm, map_zero]; exact Submodule.zero_mem _
 
 end

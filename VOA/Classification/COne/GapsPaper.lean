@@ -350,7 +350,8 @@ theorem mobius_S (τ : ℂ) : mobius ModularGroup.S τ = -1 / τ := by
   simp [mobius, ModularGroup.S]
 
 theorem mobius_S_inv (τ : ℂ) : mobius ModularGroup.S⁻¹ τ = -1 / τ := by
-  simp [mobius, ModularGroup.S, Matrix.SpecialLinearGroup.SL2_inv_expl, neg_div]
+  rw [mobius, Matrix.SpecialLinearGroup.SL2_inv_expl]
+  simp [ModularGroup.coe_S, neg_div]
 
 theorem mobius_T_inv (τ : ℂ) : mobius ModularGroup.T⁻¹ τ = τ + (-1 : ℤ) := by
   rw [← zpow_neg_one, mobius_T_zpow]

@@ -46,7 +46,7 @@ theorem gtCauchyTail_zero_state (q : R) (bs : List ℤ) :
       rw [gtCauchyTail, Fintype.sum_bool, gtCauchyTailDelta_cons]
       by_cases hb : b = 0
       · subst b
-        simpa [gtCauchyTailEdge, gtCauchyBond, pieriBit] using ih
+        simpa [gtCauchyTailEdge, gtCauchyBond, pieriBit] using! ih
       · by_cases hb' : b = 1
         · subst b
           simp [gtCauchyTailEdge, gtCauchyBond, pieriBit]
@@ -93,7 +93,7 @@ theorem gtCauchyHead_tail (q : R) (h : PochhammerUnits q) (a b c : ℤ)
         (gtCauchyHeadStates q h a b c).2 =
         q ^ (a + b - c).toNat * gtQCoeff q h ![a, b] ![c] from
       gtQ_two_state_total q h a b c]
-  · simpa only [gtCauchyHeadStates, mul_comm] using
+  · simpa only [gtCauchyHeadStates, mul_comm] using!
       gtQ_two_state_boundary q h a b c
 
 end

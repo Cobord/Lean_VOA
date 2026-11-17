@@ -34,11 +34,11 @@ theorem coeff_bWord_lower_mem (a b : ℕ → A) (xs zs l pref ys : List ℕ)
     rw [hb, PowerSeries.coeff_mul]
     have heq :
         (aWord a zs * (pref.map b).prod *
-          (∑ q ∈ Finset.antidiagonal s,
+          (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
             PowerSeries.coeff q.1 (bTail b x) *
               PowerSeries.coeff q.2 (bWord b l)) * (ys.map b).prod) •
           (R • v) =
-        ∑ q ∈ Finset.antidiagonal s,
+        ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
           (aWord a zs * ((pref ++ [x + q.1]).map b).prod *
             PowerSeries.coeff q.2 (bWord b l) * (ys.map b).prod) •
             (R • v) := by

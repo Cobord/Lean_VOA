@@ -29,20 +29,24 @@ theorem chargeGen_grading (n : ℤ) : latChargeGen (latP 1) n ∈ V2v.grading (n
     bigradα (latP 1) (0, n) from ⟨_, one_mem_Z0, rfl⟩)
   rw [halfNorm_latP, zero_add] at h
   change latChargeGen (latP 1) n ∈ gradingLatGen (latP 1) (n ^ 2)
-  simpa using h
+  simpa using! h
 
 theorem chargeGen_primary (n : ℤ) (m : ℕ) :
     V2v.L ((m : ℤ) + 1) (latChargeGen (latP 1) n) = 0 := by
-  rw [V2v, V2m, latticeVOAGen_L, latChargeGen, LLGen_tmul _ (latP_posDef 1 le_rfl),
-    LvirN_vacuum _ _ (by omega), chargeOsc_vacuum _ _ _ (by omega), if_neg (by omega)]
-  simp [latStateGen]
+  have key : ∀ x : (latP 1).carrier,
+      V2v.L ((m : ℤ) + 1) (latStateGen (latP 1) (vacuumN _) x) = 0 := by
+    intro x
+    rw [V2v, V2m, latticeVOAGen_L, LLGen_tmul _ (latP_posDef 1 le_rfl) _ _ x,
+      LvirN_vacuum _ _ (by omega), chargeOsc_vacuum _ x _ (by omega), if_neg (by omega)]
+    simp [latStateGen]
+  exact key n
 
 theorem fo_eq_screening (x : Sp) : fo x = Screening.screening V2v (latChargeGen (latP 1) (-a1 1)) x := by
   rw [fo_eq]; rfl
 
 theorem chargeGen_neg_grading : latChargeGen (latP 1) (-a1 1) ∈ V2v.grading 1 := by
   have h := chargeGen_grading (-1)
-  simpa [a1] using h
+  simpa [a1] using! h
 
 theorem fo_L (m : ℤ) (x : Sp) : fo (V2v.L m x) = V2v.L m (fo x) := by
   have h := Screening.screening_comm_mode V2v (latChargeGen (latP 1) (-a1 1)) V2v.conformalVector (m + 1) x
@@ -70,7 +74,7 @@ theorem chargeGen_prim (n : ℤ) : latChargeGen (latP 1) n ∈ prim V2v (n ^ 2) 
 
 theorem vn_prim (n k : ℕ) : vn n k ∈ prim V2v ((n : ℤ) ^ 2) := by
   induction k with
-  | zero => simpa [vn] using chargeGen_prim (n : ℤ)
+  | zero => simpa [vn] using! chargeGen_prim (n : ℤ)
   | succ k ih =>
     have : vn n (k + 1) = fo (vn n k) := by
       simp only [vn, pow_succ', Module.End.mul_apply]
@@ -80,7 +84,7 @@ theorem vn_prim (n k : ℕ) : vn n k ∈ prim V2v ((n : ℤ) ^ 2) := by
 theorem vn_bigrad (n k : ℕ) :
     vn n k ∈ bigradα (latP 1) ((k : ℤ) * (2 * (n : ℤ) - (k : ℤ)), ((n : ℤ) - (k : ℤ) : ℤ)) := by
   induction k with
-  | zero => simpa [vn] using (show latChargeGen (latP 1) (n : ℤ) ∈
+  | zero => simpa [vn] using! (show latChargeGen (latP 1) (n : ℤ) ∈
       bigradα (latP 1) (0, (n : ℤ)) from ⟨_, one_mem_Z0, rfl⟩)
   | succ k ih =>
     have : vn n (k + 1) = fo (vn n k) := by
@@ -88,7 +92,8 @@ theorem vn_bigrad (n k : ℕ) :
     rw [this]
     have h := Qscr_mem_bigradα (latP 1) (-a1 1) ih
     convert h using 3
-    · rw [latP_form]; simp [a1]; ring
+    refine Prod.ext ?_ ?_
+    · rw [latP_form 1 (-a1 1 : (latP 1).carrier) ((n : ℤ) - (k : ℤ))]; simp [a1]; ring
     · change ((n : ℤ) - ((k + 1 : ℕ) : ℤ)) = ((n : ℤ) - k) + -1
       push_cast; ring
 
@@ -99,8 +104,9 @@ theorem eo_chargeGen (n : ℕ) : eo (latChargeGen (latP 1) (n : ℤ)) = 0 :=
 theorem ho_chargeGen (n : ℕ) :
     ho (latChargeGen (latP 1) (n : ℤ)) = ((2 * n : ℕ) : ℂ) • latChargeGen (latP 1) (n : ℤ) := by
   rw [VertexOperatorAlgebra.zeroMode_apply, show (1 : ℤ) - 1 = 0 by norm_num,
-    show latChargeGen (latP 1) (n : ℤ) = latStateGen (latP 1) (vacuumN _) (n : ℤ) from rfl,
-    smul_hSt_zero_latStateGen, latP_form]
+    show latChargeGen (latP 1) (n : ℤ) = latStateGen (latP 1) (vacuumN _) (n : ℤ) from rfl]
+  refine (smul_hSt_zero_latStateGen (latP 1) _ _ (a1 1) _ (n : ℤ)).trans ?_
+  rw [latP_form 1 (a1 1) (n : ℤ)]
   congr 1
 
 theorem eo_vn (n k : ℕ) :

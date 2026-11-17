@@ -188,7 +188,9 @@ theorem MUGradedAction_of_HARDmem (W : VertexOperatorAlgebra 𝒱)
 
 /-! ## The TIGHTEST conditional Zhu bijection main theorem — from the membership gate. -/
 
-/-- **`zhuBijection_trophy_of_HARDmem` — the TIGHTEST conditional main theorem.**  Given the
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**`zhuBijection_trophy_of_HARDmem` — the TIGHTEST conditional main theorem.**  Given the
 universal membership gate `HARDmem` (`anmRightDiff ∈ Onm W n 0`, the model-TRUE hypothesis — engine-TRUE
 at every `M, K` including `M = 1, K ≥ 2`), together with the term-level construction data of
 `zhuBijection_phase4` (the irreducibility scope `hall` and the carrier/bridge data

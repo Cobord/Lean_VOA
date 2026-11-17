@@ -36,7 +36,7 @@ theorem eq_zero_of_supportedAt_bot {N : LogVModule W M} {f : M →ₗ[ℂ] ℂ} 
   · intro a x hx
     by_cases ha : a=b
     · subst a
-      have hz : x=0 := by simpa only [hb,Submodule.mem_bot] using hx
+      have hz : x=0 := by simpa only [hb,Submodule.mem_bot] using! hx
       rw [hz,map_zero]
     · exact hf a ha x hx
   · exact map_zero f

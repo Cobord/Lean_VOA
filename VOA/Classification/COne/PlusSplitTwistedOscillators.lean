@@ -37,7 +37,7 @@ theorem odd_top_finrank : Module.finrank ℂ (oddWeight (9 / 16)) = 1 := by
   rw [odd_top, finrank_gradingT_one]
 
 theorem evenWeight_eq_bot_of_lt (q : ℚ) (hq : q < 1 / 16) : evenWeight q = ⊥ := by
-  rw [evenWeight, weightT_eq_bot_of_lt (by simpa using hq), bot_inf_eq]
+  rw [evenWeight, weightT_eq_bot_of_lt (by simpa using! hq), bot_inf_eq]
 
 theorem oddWeight_eq_bot_of_lt (q : ℚ) (hq : q < 9 / 16) : oddWeight q = ⊥ := by
   by_cases he : ∃ d, levelT 1 d = q
@@ -53,7 +53,7 @@ theorem oddWeight_eq_bot_of_lt (q : ℚ) (hq : q < 9 / 16) : oddWeight q = ⊥ :
     rw [oddWeight, weightT_eq_bot he, bot_inf_eq]
 
 theorem first_oscillator_mem : (X (0, (0 : Fin 1)) : FockT 1) ∈ gradingT 1 1 := by
-  simpa [gradingT, wT] using isWeightedHomogeneous_X ℂ (wT (r := 1)) (0, (0 : Fin 1))
+  simpa [gradingT, wT] using! isWeightedHomogeneous_X ℂ (wT (r := 1)) (0, (0 : Fin 1))
 
 /-- These are the actual conformal modes of the rank-one twisted Heisenberg module. -/
 theorem conformal_top_actions :
@@ -63,7 +63,7 @@ theorem conformal_top_actions :
       (9 / 16 : ℂ) • X (0, (0 : Fin 1)) := by
   simp only [heisTwistedModule_YM, YT_omega_two]
   constructor
-  · simpa using L0T_vacT 1
+  · simpa using! L0T_vacT 1
   · have h := L0T_of_mem_gradingT first_oscillator_mem
     norm_num [levelT] at h ⊢
     exact h

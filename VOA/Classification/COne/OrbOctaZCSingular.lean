@@ -109,13 +109,13 @@ theorem s9_zero : evV OrbOctaR.W OrbOctaR.X s9v = 0 := by
     rw [OrbOctaR.W.L_zero_grading _ OrbOctaR.X_grading]; norm_num
   have hc : OrbOctaR.W.centralCharge = ((1 : ℚ) : ℂ) := by
     change (V2m 1 le_rfl).centralCharge = _
-    simpa using V2m_centralCharge 1 le_rfl
+    simpa using! V2m_centralCharge 1 le_rfl
   have hp : evV OrbOctaR.W OrbOctaR.X s9v ∈ prim OrbOctaR.W (16 + (9 : ℕ)) := by
     rw [mem_prim]
     refine ⟨evV_mem_grading OrbOctaR.X_grading (fun p hp => (s9v_spec p hp).1), fun m => ?_⟩
     have h := L_pos_of_L1_L2 (s9chk_sound hc hx hx0 s9chk_one)
       (s9chk_sound hc hx hx0 s9chk_two) (m + 1) (by omega)
-    simpa using h
+    simpa using! h
   have hl := evV_mem_lowerDesc OrbOctaR.X_grading (N := 9) (v := s9v) s9v_spec
   have hz := prim_inf_lowerDesc (W := OrbOctaR.W)
     ((v2VirUnitary_holds.some).restrict (orbifold octa)) (16 + (9 : ℕ))

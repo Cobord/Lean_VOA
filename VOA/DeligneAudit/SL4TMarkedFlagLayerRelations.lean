@@ -135,7 +135,7 @@ theorem weakLayer_singly_le_ker (K : ℕ) (hn : n + 1 = h + K + 2) (i : ℕ) (hi
       apply mem_span_pow_succ_of_le _ _ K i hi
       have hb := pair_boundary_mem_of_product r hE V (weakMarkedFlag_product_zero _ _ _)
         (u.succAbove j) u hau hj hu (h + 1) K (by omega) (by omega) (weakMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
   · intro s _
     simp
 
@@ -160,12 +160,12 @@ theorem weakLayer_lower_le_ker (k : ℕ) (hn : n + 1 = h + k + 1) (hk1 : 1 ≤ k
     · apply mem_span_pow_succ_of_le _ _ k i hi
       have hb := pair_boundary_mem_of_card r hE (u.succAbove j) u hau (h + 1) k (by omega)
         (by omega) (weakMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
     · apply mem_span_pow_succ_of_le _ _ (k - 1) i (by omega)
       have hb := pair_boundary_mem_of_product r hE V (weakMarkedFlag_product_zero _ _ _)
         (u.succAbove j) u hau hj hu (h + 1) (k - 1) (by omega) (by omega)
         (weakMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel, Nat.sub_add_cancel hk1] using hb
+      simpa only [Nat.add_sub_cancel, Nat.sub_add_cancel hk1] using! hb
   · intro s hs
     by_cases hsh : h ≤ s
     · exact deletedGroupPowerSum_mem_of_zero r V u hu s
@@ -276,7 +276,7 @@ theorem doublyLayer_singly_le_ker (k : ℕ) (hn : n + 1 = h + k + 2) (i : ℕ) (
       have hb := pair_boundary_mem_of_product r hE V (doublyMarkedFlag_product_zero _ _ _)
         (u.succAbove j) u hau hj hu (h + 1) k (by omega) (by omega)
         (doublyMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
   · intro s _
     simp
 
@@ -295,7 +295,7 @@ theorem doublyLayer_singlyProduct_le_ker (k : ℕ) (hn : n + 1 = h + k + 2) (i :
   change aeval (deletedLayerRoot r u i) (flagGroupProduct (deletedGroup u V)ᶜ) = 0
   have h0 := layer_mk_eq_zero r u i _
     (deletedComplProduct_mem r V u hu (doublyMarkedFlag_compl_product_zero _ _ _) i hi1)
-  simpa [flagGroupProduct, deletedLayerRoot, map_prod] using h0
+  simpa [flagGroupProduct, deletedLayerRoot, map_prod] using! h0
 
 /-- From layer `k + 1` on, the layers of `u` carry the doubly marked relations with cutoff
 lowered by one (two-root exchanges and the power-sum exchange). -/
@@ -322,12 +322,12 @@ theorem doublyLayer_lower_le_ker (k : ℕ) (hn : n + 1 = h + k + 2) (hh : 1 ≤ 
     · apply mem_span_pow_succ_of_le _ _ (k + 1) i hi
       have hb := pair_boundary_mem_of_card r hE (u.succAbove j) u hau (h + 1) (k + 1)
         (by omega) (by omega) (doublyMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
     · apply mem_span_pow_succ_of_le _ _ k i (by omega)
       have hb := pair_boundary_mem_of_product r hE V (doublyMarkedFlag_product_zero _ _ _)
         (u.succAbove j) u hau hj hu (h + 1) k (by omega) (by omega)
         (doublyMarkedFlag_cutoff _ _ _ _)
-      simpa only [Nat.add_sub_cancel] using hb
+      simpa only [Nat.add_sub_cancel] using! hb
   · intro s hs
     by_cases hsh : h ≤ s
     · exact deletedGroupPowerSum_mem_of_zero r V u hu s

@@ -43,7 +43,7 @@ theorem creationPolynomialMatrix_det_top (k : ℂ) (n : ℕ) (c : ℤ) :
     (creationPolynomialMatrix k n c).det.coeff (creationDegree n c)=1 := by
   rw [creationDegree,VirDeformModes.NormalOrdering.coeff_det_sum_column_bounds _ _
     (creationPolynomialMatrix_degree k n c)]
-  simpa only [creationPolynomialMatrix_top] using creationTopMatrix_det k n c
+  simpa only [creationPolynomialMatrix_top] using! creationTopMatrix_det k n c
 
 /-- The creation determinant is nonzero at every fixed level, including critical level. -/
 theorem creationPolynomialMatrix_det_ne_zero (k : ℂ) (n : ℕ) (c : ℤ) :

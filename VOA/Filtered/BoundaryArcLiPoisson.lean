@@ -33,7 +33,7 @@ theorem quotientAffineCurrentLiClass_mode_zero (a b : Fin 3) :
     ∑ c : Fin 3, fabc a b c • J.mkQ (currentState k c)
   rw [poissonBracket_def,QuotVOA.quotientVOA_mkQ_smul]
   have h := congrArg J.mkQ (universal_current_poissonBracket k hk a b)
-  simpa only [poissonBracket_def,map_sum,map_smul] using h
+  simpa only [poissonBracket_def,map_sum,map_smul] using! h
 
 /-- In paper coordinates the quotient Li bracket is the specified geometric Poisson bracket. -/
 theorem quotientAffineCurrentLiClass_paper_bracket (i j : Fin 3) :

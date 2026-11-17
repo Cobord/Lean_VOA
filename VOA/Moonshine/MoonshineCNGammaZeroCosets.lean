@@ -396,7 +396,9 @@ theorem heckeLevelSum_lowerSL {f : ℍ → ℂ} {M p : ℕ} (hp : p.Prime) {m n 
     have := congrArg (Int.cast : ℤ → ZMod p) hmn
     push_cast at this
     rw [ZMod.natCast_self, mul_zero, zero_sub] at this
-    linear_combination -this
+    first
+    | linear_combination -this
+    | exact neg_eq_iff_eq_neg.mp this
   have hj₀ : (n : ZMod p).val ∈ Finset.range p := Finset.mem_range.mpr (ZMod.val_lt _)
   have hjs : (-(n : ZMod p)).val ∈ Finset.range p := Finset.mem_range.mpr (ZMod.val_lt _)
   -- the exceptional index `j₀ ≡ n`
@@ -412,7 +414,16 @@ theorem heckeLevelSum_lowerSL {f : ℍ → ℂ} {M p : ℕ} (hp : p.Prime) {m n 
     rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
     rw [ZMod.natCast_zmod_val, ZMod.natCast_self, mul_zero, zero_add]
-    linear_combination (n : ZMod p) * hν
+    first
+    | linear_combination (n : ZMod p) * hν
+    | (have hν' : (n : ZMod p) * (M : ZMod p) + 1 = 0 := by
+          rw [hν]; exact neg_add_cancel 1
+       refine (congrArg (fun x => (n : ZMod p) - x)
+         (mul_neg ((n : ZMod p) * (M : ZMod p)) (n : ZMod p))).trans ?_
+       refine (sub_neg_eq_add _ _).trans ?_
+       rw [mul_comm ((n : ZMod p) * (M : ZMod p)) (n : ZMod p)]
+       exact (add_comm _ _).trans ((mul_add_one (n : ZMod p) _).symm.trans
+         ((congrArg (fun x => (n : ZMod p) * x) hν').trans (mul_zero _))))
   obtain ⟨e, he⟩ := he
   have hext := diamondScale_lowerSL (f := f) hp.pos hmn hf (js := (-(n : ZMod p)).val) (e := e)
     he.symm τ

@@ -15,7 +15,7 @@ open scoped Classical
 
 private theorem boundaryLevel_noncritical (P : ℕ) (hP : 0<P) :
     2/(P : ℂ)-2+2 ≠ 0 := by
-  simpa only [sub_add_cancel] using
+  simpa only [sub_add_cancel] using!
     div_ne_zero (by norm_num : (2 : ℂ) ≠ 0) (Nat.cast_ne_zero.mpr (Nat.ne_of_gt hP))
 
 /-- The finite sum of actual Gram determinant orders is exactly the
@@ -47,7 +47,8 @@ theorem vacuumRootOrderTotal_eq_weylPairTail (P : ℕ) (hP : 0<P)
   simp only [AffineSl2BoundaryVacuumResonances.lowerEnergy,
     AffineSl2BoundaryVacuumResonances.upperEnergy,shiftedPBWCount]
   rw [hw]
-  split_ifs <;> simp [universalPBWCount_eq_coeff]
+  by_cases hA : P*s*(2*s-1) ≤ N <;> by_cases hB : P*s*(2*s+1) ≤ N <;>
+    simp [hA, hB, universalPBWCount_eq_coeff]
 
 /-- The total actual root order plus the Euler product coefficient is the
 full universal vacuum coefficient. This is the exact numerical identity

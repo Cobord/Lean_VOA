@@ -27,7 +27,7 @@ def jetProduct (p : ProductSpec) : JetRing :=
 theorem eval_baseRow (r a b c : ℕ) :
     eval jetVarNat (QuarticReducedRows.map Fin.val (orbitRow r a b c)) =
       jetBase (orbit ℂ r a b c) := by
-  simpa only [jetRow,Function.iterate_zero_apply] using jetRow_eval 0 r a b c
+  simpa only [jetRow,Function.iterate_zero_apply] using! jetRow_eval 0 r a b c
 
 private theorem eval_flatMap {ι A : Type*} [CommRing A]
     (v : ℕ → A) (l : List ι) (f : ι → Row ℕ) :
@@ -66,7 +66,7 @@ theorem certificate_jet_identity (i : Fin 20) :
   have h := eval_zero_of_fastCollect jetVarNat (residualRow i) (certificate_check i)
   rw [residualRow,eval_append,eval_scale,targetRow_eval,eval_negativeProducts] at h
   simp_rw [productRow_eval] at h
-  exact sub_eq_zero.mp (by simpa only [sub_eq_add_neg] using h)
+  exact sub_eq_zero.mp (by simpa only [sub_eq_add_neg] using! h)
 
 end
 #print axioms certProduct_orders

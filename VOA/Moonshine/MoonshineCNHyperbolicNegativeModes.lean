@@ -14,6 +14,9 @@ namespace VOA.Moonshine.ConwayNorton
 open MvPolynomial
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem hypNegativePotential_pderiv_b (κ ell : ℂ) (j t : ℕ) :
     pderiv (t, 1) (hypNegativePotential κ ell j) =
       (if t = j then MvPolynomial.C κ else 0) +

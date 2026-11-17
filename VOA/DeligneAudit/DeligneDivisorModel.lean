@@ -388,7 +388,7 @@ theorem relSym_eq {x : TPs S m} (hx : x ∈ currentCarrier S.fullMatrix m 0) (r 
       relF r (pairTable x a b t) + swapVariables (ia a) (ia b) (relF r (pairTable x a b t)) := by
   simp only [relSym, relF, mul_add, Finset.sum_add_distrib, map_sum, map_mul, swapVariables,
     rename_C]
-  congr 1
+  rw [add_right_inj]
   refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => ?_
   rw [pairTable_swap a b hab t hx]
   rfl

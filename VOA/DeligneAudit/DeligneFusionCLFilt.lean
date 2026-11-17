@@ -47,7 +47,7 @@ theorem hw_pow (E F H : V →ₗ[ℂ] V) (hEF : ∀ x, E (F x) - F (E x) = H x)
             exact this h
           · exact_mod_cast sub_eq_zero.mp h
         subst hlam
-        exact ⟨fun h => absurd h (by omega), fun _ => by simpa using hk⟩
+        exact ⟨fun h => absurd h (by omega), fun _ => by simpa using! hk⟩
 
 end HW
 
@@ -93,7 +93,7 @@ def Sub (P : Idx → Prop) : Submodule ℂ V :=
     v = wordOp ρ (g ++ u) w}
 
 theorem USub_le_Sub (P : Idx → Prop) : USub ρ w P ≤ Sub ρ w P :=
-  Submodule.span_mono fun _ ⟨u, hu, hP, hv⟩ => ⟨[], u, by simp, hu, hP, by simpa using hv⟩
+  Submodule.span_mono fun _ ⟨u, hu, hP, hv⟩ => ⟨[], u, by simp, hu, hP, by simpa using! hv⟩
 
 theorem Sub_g1_inv (P : Idx → Prop) {x : Fin 8 × ℕ} (hx : g1Letter x) :
     Sub ρ w P ≤ (Sub ρ w P).comap (ρ.op x.1 x.2) := by
@@ -294,11 +294,11 @@ theorem part_i {N : ℕ} (h : MabRel ρ w N 0) (u : List (Fin 8 × ℕ)) (hu : �
   set lam : ℤ := (N : ℤ) - (idx u).1.1 + (idx u).1.2 with hlam
   have hH0 : HQ 0 (S.mkQ y) = (lam : ℂ) • S.mkQ y := by
     simp only [HQ, Submodule.mkQ_apply, Submodule.mapQ_apply]
-    rw [h1_zero_word ρ w (N : ℂ) (by simpa using h.cartan_zero 6 (by decide)) u hu]
+    rw [h1_zero_word ρ w (N : ℂ) (by simpa using! h.cartan_zero 6 (by decide)) u hu]
     rw [← Submodule.Quotient.mk_smul, hlam]; push_cast; rfl
   -- local nilpotency of `f₁`
   have hw3 : (ρ.op 3 0 ^ (N + 1)) w = 0 := by
-    rw [Module.End.pow_apply]; simpa using h.lowering_f1
+    rw [Module.End.pow_apply]; simpa using! h.lowering_f1
   have hnilV := pow_kill_wordOp (ρ := ρ) 3 (by decide) hw3 u
   have hiter : ∀ K (v : V), (FQ 0)^[K] (S.mkQ v) = S.mkQ ((ρ.op 3 0)^[K] v) := by
     intro K; induction K with
@@ -350,7 +350,7 @@ theorem alpha2_box {N : ℕ} (h : MabRel ρ w N 0) {p : R} {n : ℕ × ℕ}
     rw [ρ.comm 1 4 1 k v]; simp [Fin.sum_univ_eight, bracketTable, add_comm 1 k]
   · intro m k; ext v; simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply]
     rw [ρ.comm 7 4 (m + 1) k v]; simp [Fin.sum_univ_eight, bracketTable]
-  · rw [Module.End.pow_apply]; simpa using h.lowering_f2
+  · rw [Module.End.pow_apply]; simpa using! h.lowering_f2
 
 end
 

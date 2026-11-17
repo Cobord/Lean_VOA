@@ -40,8 +40,7 @@ def slotOp (x : Fin 8) (i : Fin m) : TP m →ₗ[ℂ] TP m where
   map_smul' a p := by
     funext t
     simp only [Pi.smul_apply, RingHom.id_apply, smul_eq_C_mul, Finset.mul_sum, mul_neg]
-    congr 1
-    refine Finset.sum_congr rfl fun c _ => ?_
+    refine congrArg Neg.neg (Finset.sum_congr rfl fun c _ => ?_)
     ring
 
 theorem loopOp_eq_sum_slot (x : Fin 8) (r : ℕ) (v : TP m) :
@@ -54,8 +53,7 @@ theorem slotOp_psmul (x : Fin 8) (i : Fin m) (p : Pm m) (v : TP m) :
     slotOp x i (p • v) = p • slotOp x i v := by
   funext t
   simp only [slotOp, LinearMap.coe_mk, AddHom.coe_mk, psmul_apply, Finset.mul_sum, mul_neg]
-  congr 1
-  refine Finset.sum_congr rfl fun c _ => ?_
+  refine congrArg Neg.neg (Finset.sum_congr rfl fun c _ => ?_)
   ring
 
 theorem loopOp_psmul (x : Fin 8) (r : ℕ) (p : Pm m) (v : TP m) :
@@ -263,11 +261,11 @@ theorem slot_all (i : Fin m) (t : Fin m → Fin 8) (Q : Pm m) (hQ : Q • ee i t
   · -- e₁
     have h := m2 3 5
     simp only [slotOp_psmul, rec0, smul_neg] at h
-    simpa using Submodule.neg_mem _ h
+    simpa using! Submodule.neg_mem _ h
   · -- e₂
     have h := m2 4 5
     simp only [slotOp_psmul, rec1, smul_neg] at h
-    simpa using Submodule.neg_mem _ h
+    simpa using! Submodule.neg_mem _ h
   · -- e₁₂
     have h := m2 5 5
     simp only [slotOp_psmul, rec2, smul_add, smul_neg] at h
@@ -280,12 +278,12 @@ theorem slot_all (i : Fin m) (t : Fin m → Fin 8) (Q : Pm m) (hQ : Q • ee i t
   · -- f₁
     have h := m1 4
     simp only [slotOp_psmul, rec3, smul_neg] at h
-    simpa using Submodule.neg_mem _ h
+    simpa using! Submodule.neg_mem _ h
   · -- f₂
     have h := m1 3
-    simpa only [slotOp_psmul, rec4] using h
+    simpa only [slotOp_psmul, rec4] using! h
   · -- f₁₂
-    simpa using m0
+    simpa using! m0
   · -- h₁
     have h6 := s3 4 5 1
     have h7 := s3 4 1 5

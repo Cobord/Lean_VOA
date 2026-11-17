@@ -74,7 +74,9 @@ theorem isoInvariantOfPointwise (W : VertexOperatorAlgebra 𝒱)
   exact AModEquiv.trans W (realizesOfPointwise W hreal U)
     (AModEquiv.trans W e (AModEquiv.symm W (realizesOfPointwise W hreal U')))
 
-/-- **The full `InducedAssignment W` from pointwise realizability + bottom-lifting.** -/
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The full `InducedAssignment W` from pointwise realizability + bottom-lifting.** -/
 noncomputable def inducedAssignmentOfPointwise (W : VertexOperatorAlgebra 𝒱)
     (hreal : ∀ U : AMod W, HasInducedModule W U) (hlift : BottomIsoLifts W) :
     InducedAssignment W where

@@ -43,7 +43,7 @@ theorem graded_word_mem (l : List (TLtr n)) :
         have hp := gradedCyclic_op A w m h a.1 a.2.1 a.2.2 ih
         change grOp A w m a.1 a.2.1 a.2.2 _ ∈ gradedCyclic A w m h at hp
         rw [he] at hp
-        simpa only [evalWord, tDegree, Nat.add_comm] using hp
+        simpa only [evalWord, tDegree, Nat.add_comm] using! hp
       · have hlow : A.op a.1 a.2.1 a.2.2 (evalWord A l w) ∈
             evalFbelow A w (tDegree l + a.2.2) := by
           have hh := h a.1 a.2.1 a.2.2 (tDegree l + 1)
@@ -59,7 +59,7 @@ theorem graded_word_mem (l : List (TLtr n)) :
               (evalWord_mem A w (a :: l))) = 0 := by
           apply (Submodule.Quotient.mk_eq_zero (kernel A w)).mpr
           exact Submodule.subset_span ⟨tDegree (a :: l), _, by
-            simpa only [tDegree, evalWord, Nat.add_comm] using hlow, rfl⟩
+            simpa only [tDegree, evalWord, Nat.add_comm] using! hlow, rfl⟩
         rw [hz]
         exact Submodule.zero_mem _
 
@@ -75,7 +75,7 @@ theorem gradedCyclic_top : gradedCyclic A w m h = ⊤ := by
         obtain ⟨l, hd, rfl⟩ := hx
         by_cases he : tDegree l = d
         · subst d
-          simpa only [symbol_apply] using graded_word_mem A w m h l
+          simpa only [symbol_apply] using! graded_word_mem A w m h l
         · have hlt : tDegree l < d := by omega
           rw [symbol_apply]
           have hz : (kernel A w).mkQ

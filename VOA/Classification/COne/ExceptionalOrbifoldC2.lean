@@ -58,7 +58,7 @@ theorem exceptional_two_tower_finite (D : Module.End ℂ M) (v x : M) (p q : ℕ
         rw [high x q hx n (by omega)]
         exact Submodule.zero_mem _
   exact ⟨⟨hf ▸ Submodule.fg_span (Set.finite_range f)⟩,
-    by simpa using (finrank_le_of_span_eq_top hf)⟩
+    by simpa using! (finrank_le_of_span_eq_top hf)⟩
 
 end LinearAlgebra
 

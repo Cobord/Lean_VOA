@@ -70,8 +70,14 @@ theorem mulBySubPow_zshift (k : ℤ) (f : FormalDist₂ (End ℂ M)) (N : ℕ) :
   | zero => rfl
   | succ N ih =>
       funext m n
-      rw [mulBySubPow_succ, LinearMap.comp_apply, ih, LinearMap.comp_apply,
-        mulBySub_apply, mulBySub_apply, show m - 1 - k = m - k - 1 by ring]
+      have h1 : mulBySubPow N (fun m n => f (m - k) n) (m - 1) n
+          = mulBySubPow N f (m - 1 - k) n := congrFun (congrFun ih (m - 1)) n
+      have h2 : mulBySubPow N (fun m n => f (m - k) n) m (n - 1)
+          = mulBySubPow N f (m - k) (n - 1) := congrFun (congrFun ih m) (n - 1)
+      show mulBySubPow N (fun m n => f (m - k) n) (m - 1) n
+          - mulBySubPow N (fun m n => f (m - k) n) m (n - 1)
+        = mulBySubPow N f (m - k - 1) n - mulBySubPow N f (m - k) (n - 1)
+      rw [h1, h2, show m - 1 - k = m - k - 1 by ring]
 
 theorem Local.zmul_left {a b : FormalDist (End ℂ M)} (h : Local a b) (k : ℤ) :
     Local (zmul k a) b := by

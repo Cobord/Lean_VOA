@@ -130,10 +130,8 @@ theorem insertionSlash_deriv_of_coordinateCovariance
     field_simp
     field_simp at hc
     linear_combination hc
-  · dsimp only
-    simp only [map_zero, Pi.zero_apply, deriv_zero, mul_zero]
+  · simp only [map_zero, Pi.zero_apply, deriv_zero, mul_zero]
   · intro x y hx hy
-    dsimp only at hx hy ⊢
     rw [map_add, deriv_add
       ((differentiableOn_insertionSlash D hF x).differentiableAt ((isOpen_imGT 0).mem_nhds hz))
       ((differentiableOn_insertionSlash D hF y).differentiableAt ((isOpen_imGT 0).mem_nhds hz)),
@@ -167,7 +165,7 @@ theorem isInsertionAnalyticBlock_insertionSlash
         (zhuGC (m + 1) z * E (sqAct A a k (2 * (m + 1) - 2 : ℤ) w)) = 0
     rw [insertionNegTwoVector, map_add,
       map_finsum _ (insertion_negTwo_support A a k z w)] at hr
-    simpa only [map_smul, smul_eq_mul, mul_assoc] using hr
+    simpa only [map_smul, smul_eq_mul, mul_assoc] using! hr
   · intro w z hz
     let E : M →ₗ[ℂ] ℂ := (LinearMap.proj z).comp G
     have hd := insertionSlash_deriv_of_coordinateCovariance D hcoord hF w hz

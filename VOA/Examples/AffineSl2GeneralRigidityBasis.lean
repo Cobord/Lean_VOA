@@ -71,7 +71,7 @@ theorem quotientCurrent_linearIndependent (hk0 : k ≠ 0) : LinearIndependent �
   apply Fintype.linearIndependent_iff.mpr
   intro c hc
   have hv : (∑ i, c i • ((quotientCurrent k hk) i : WakModule k ⧸ I)) = 0 :=
-    by simpa using congrArg (fun x : (simple k hk).grading 1 => (x : WakModule k ⧸ I)) hc
+    by simpa using! congrArg (fun x : (simple k hk).grading 1 => (x : WakModule k ⧸ I)) hc
   have probe (a : Fin 3) := congrArg (fun x => (simple k hk).smul ((quotientCurrent k hk) a) 1 x) hv
   simp only [Fin.sum_univ_three] at probe
   have h0 : c 0 = 0 := by
@@ -115,8 +115,8 @@ theorem quotientCurrent_span :
         Submodule.subset_span (Set.mem_range_self b), ?_⟩
       simp [quotientCurrent, currentState_def, wordStateA_cons, wordStateA_nil]
     | zero => simp [S]
-    | add x y _ _ hx hy => simpa using S.add_mem hx hy
-    | smul c x _ hx => simpa using S.smul_mem c hx
+    | add x y _ _ hx hy => simpa using! S.add_mem hx hy
+    | smul c x _ hx => simpa using! S.smul_mem c hx
   apply top_unique
   intro x _
   obtain ⟨v, hv, he⟩ := Submodule.mem_map.mp x.property

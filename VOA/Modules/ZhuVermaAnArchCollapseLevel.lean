@@ -133,11 +133,11 @@ theorem levelMix_mem_Onm_of_collapse (W : VertexOperatorAlgebra 𝒱) (n p : ℕ
     refine sup_le ?_ ?_
     · rw [Submodule.span_le]
       rintro x ⟨c, d, rfl⟩
-      simpa only [SetLike.mem_coe, Submodule.mem_comap, levelMixMap_apply] using
+      simpa only [SetLike.mem_coe, Submodule.mem_comap, levelMixMap_eq_levelMix] using
         hLM.circ a v c d
     · rw [OnmL, Submodule.span_le]
       rintro x ⟨c, rfl⟩
-      simpa only [SetLike.mem_coe, Submodule.mem_comap, levelMixMap_apply] using
+      simpa only [SetLike.mem_coe, Submodule.mem_comap, levelMixMap_eq_levelMix] using
         hLM.grad a v c
   have hx : g ∈ (Onm W n 0).comap (levelMixMap W n p a v) := hle hg
   rwa [Submodule.mem_comap, levelMixMap_apply] at hx

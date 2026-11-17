@@ -13,6 +13,8 @@ Closure under finite coefficient convolution makes that assertion precise:
 every gamma partial derivative vanishes. The actual nonnegative raising
 current is exactly such a partial derivative, including the zero mode.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Screening
 open AddMonoidAlgebra VirasoroScreening MvPolynomial
 open scoped BigOperators
@@ -31,16 +33,16 @@ def gammaFree : Subalgebra ℂ WakFock where
 /-- An auxiliary expression whose every coefficient belongs to a fixed
 oscillator subalgebra. Finite convolution preserves this condition. -/
 def coefficientAlgebra (r : ℕ) (S : Subalgebra ℂ WakFock) : Subalgebra ℂ (Auxiliary r) where
-  carrier := {P | ∀ g, P g∈S}
+  carrier := {P | ∀ g, P.coeff g∈S}
   algebraMap_mem' z := by
     intro g
     rw [Algebra.algebraMap_eq_smul_one]
-    change (z • (1 : Auxiliary r)) g∈S
-    rw [AddMonoidAlgebra.smul_apply,AddMonoidAlgebra.one_def]
+    change (z • (1 : Auxiliary r)).coeff g∈S
+    rw [AddMonoidAlgebra.coeff_smul_apply,AddMonoidAlgebra.one_def]
     classical
     by_cases h : (0 : Fin r → ℤ)=g
-    · subst g; simpa using S.smul_mem (S.one_mem) z
-    · simp [AddMonoidAlgebra.single_apply,h]
+    · subst g; simpa using! S.smul_mem (S.one_mem) z
+    · simp [AddMonoidAlgebra.coeff_single,Finsupp.single_apply,h]
   zero_mem' := by intro g; exact S.zero_mem
   add_mem' hp hq := by intro g; exact S.add_mem (hp g) (hq g)
   one_mem' := by
@@ -48,12 +50,12 @@ def coefficientAlgebra (r : ℕ) (S : Subalgebra ℂ WakFock) : Subalgebra ℂ (
     classical
     rw [AddMonoidAlgebra.one_def]
     by_cases h : (0 : Fin r → ℤ)=g
-    · subst g; simpa using S.one_mem
-    · simp [AddMonoidAlgebra.single_apply,h]
+    · subst g; simpa using! S.one_mem
+    · simp [AddMonoidAlgebra.coeff_single,Finsupp.single_apply,h]
   mul_mem' hp hq := by
     intro g
     classical
-    rw [AddMonoidAlgebra.mul_apply]
+    rw [AddMonoidAlgebra.coeff_mul]
     apply S.sum_mem
     intro x hx
     apply S.sum_mem
@@ -71,8 +73,8 @@ theorem single_mem_coefficientAlgebra (r : ℕ) (S : Subalgebra ℂ WakFock)
   intro x
   classical
   by_cases h : g=x
-  · subst x; simpa using hp
-  · simp [AddMonoidAlgebra.single_apply,h]
+  · subst x; simpa using! hp
+  · simp [AddMonoidAlgebra.coeff_single,Finsupp.single_apply,h]
 
 /-- Beta and boson creation generators have no gamma dependence. -/
 theorem X_mem_gammaFree (a : Fin 3) (j : ℕ) (ha : a≠1) :

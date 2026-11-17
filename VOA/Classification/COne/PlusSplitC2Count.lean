@@ -35,8 +35,8 @@ theorem neutral_monomial_mem (m : ℕ) (o w : R) (ρ σ τ : ℂ)
   induction b using Nat.strong_induction_on generalizing a with
   | _ b ih =>
     rcases b with _ | _ | b
-    · simpa using ho a
-    · simpa using how a
+    · simpa using! ho a
+    · simpa using! how a
     · have heq : o ^ a * w ^ (b + 2) =
           ρ • (o ^ (a + 2) * w ^ (b + 1)) + σ • (o ^ (a + 4) * w ^ b) := by
         rw [pow_add w b 2, h8]
@@ -126,10 +126,9 @@ theorem W_mul_E (hm2 : 2 ≤ m) :
     exact PlusZhuNormalForms.mixed_denominator_ne_zero m hm2
   have h := congrArg (fun x : A₂ (V2mPlus m hm) => (scalarC (cα m) dC)⁻¹ • x)
     (PlusC2Charged.W_E_relation m hm)
-  dsimp only at h
   rw [smul_add, smul_smul, inv_mul_cancel₀ hd, one_smul, smul_zero] at h
   apply eq_neg_of_add_eq_zero_left at h
-  simpa only [smul_smul, neg_smul, neg_mul] using h
+  simpa only [smul_smul, neg_smul, neg_mul] using! h
 
 theorem E_mul_neutral_mem (hm2 : 2 ≤ m) {x : A₂ (V2mPlus m hm)}
     (hx : x ∈ neutralSpan m hm) : e m hm * x ∈ chargedSpan m hm := by
@@ -137,7 +136,7 @@ theorem E_mul_neutral_mem (hm2 : 2 ≤ m) {x : A₂ (V2mPlus m hm)}
   | mem x hx =>
     obtain ⟨i, rfl⟩ := hx
     rcases i with i | i
-    · simpa [neutralList, mul_comm] using omega_power_E_mem m hm hm2 i.val
+    · simpa [neutralList, mul_comm] using! omega_power_E_mem m hm hm2 i.val
     · change e m hm * (o m hm ^ i.val * w m hm) ∈ _
       rw [show e m hm * (o m hm ^ i.val * w m hm) =
         o m hm ^ i.val * (w m hm * e m hm) by ring, W_mul_E m hm hm2,
@@ -168,7 +167,7 @@ theorem c2_span_eq_top (hm5 : 5 ≤ m) : neutralSpan m hm ⊔ chargedSpan m hm =
     exact Submodule.mem_sup_right (Submodule.smul_mem _ _
       (E_mul_neutral_mem m hm (by omega) (sec0_mem_neutralSpan m hm hm5 q)))
   have h1 : sectorP m hm (1 : ℤ) ≤ T := by
-    rw [sectorP, Submodule.span_le]
+    refine Submodule.span_le.mpr ?_
     rintro _ ⟨q, rfl⟩
     exact (sup_le hO hE) (sectorOneViaE_holds m hm (by omega) q)
   apply top_unique
@@ -201,7 +200,7 @@ theorem finrank_c2_le (hm5 : 5 ≤ m) :
   have h := finrank_range_le_card (R := ℂ) (spanningList m hm)
   change Module.finrank ℂ (Submodule.span ℂ (Set.range (spanningList m hm))) ≤ _ at h
   rw [spanningList_span m hm hm5, finrank_top] at h
-  simpa only [Fintype.card_sum, Fintype.card_fin, Nat.add_assoc] using h
+  simpa only [Fintype.card_sum, Fintype.card_fin, Nat.add_assoc] using! h
 
 /-- The sharp Zhu upper bound follows without a Schur-to-Zhu identity. -/
 theorem finrank_zhu_le (hm5 : 5 ≤ m) :

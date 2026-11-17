@@ -61,7 +61,7 @@ theorem coreCoefficientRaising_apply (a b c : ℕ)
         (coreCoefficientAt a b c φ) (fun _ _ _ => rfl) (List.finRange j) u
         (coreCoefficientMap a b c π σ)
       simpa only [coreCoefficientAt, coreCoefficientMap, coreCoefficientTranslate,
-        LinearMap.coe_mk, AddHom.coe_mk, mul_comm σ φ] using ht
+        LinearMap.coe_mk, AddHom.coe_mk, mul_comm σ φ] using! ht
   | add P T hP hT => simp only [map_add, LinearMap.add_apply, mul_add, hP, hT]
 
 /-- All defining core relations hold in the full coefficient-map space. -/

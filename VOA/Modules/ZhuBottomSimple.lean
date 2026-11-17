@@ -110,7 +110,7 @@ variable {U : AMod W} {P : LWModule W}
 -- the canonical direct-sum instances.  Register those same instances at the bridged type.
 noncomputable local instance inducedCarrierAddCommGroup (T : AMod W) :
     AddCommGroup (DJCarrier W T.toAmModZero) :=
-  DirectSum.instAddCommGroup (fun n => DJPiece W T.toAmModZero n)
+  DirectSum.instAddCommGroup (β := fun n => DJPiece W T.toAmModZero n)
 
 noncomputable local instance inducedCarrierModule (T : AMod W) :
     Module ℂ (DJCarrier W T.toAmModZero) :=
@@ -164,9 +164,9 @@ noncomputable def universalMap (e : AModBottomEmbedding U P) :
 /-- On the vacuum tensor, the universal map is the original bottom embedding. -/
 theorem universalMap_bottom (e : AModBottomEmbedding U P) (x : U.carrier) :
     e.universalMap (djVacTensor W U.toAmModZero x) = e.carrierMap x := by
-  simp only [universalMap, djVacTensor_def, oLevUnivMap_incl,
-    oLevPieceMap_mk, Nat.cast_zero, sub_zero, oLevW_zero_eq_oMod,
-    oMod_vacuum, LinearMap.id_coe, id_eq]
+  simp only [universalMap]
+  erw [oLevUnivMap_incl, oLevPieceMap_mk]
+  simp only [Nat.cast_zero, sub_zero, oLevW_zero_eq_oMod, oMod_vacuum, LinearMap.id_coe, id_eq]
   rfl
 
 /-- The universal map intertwines every mode. -/
@@ -304,8 +304,7 @@ noncomputable def universalLinEquiv (e : AModBottomEmbedding U P)
     (x : DJCarrier W U.toAmModZero) :
     e.universalLinEquiv Pr hP hU (Submodule.Quotient.mk x) = e.universalMap x := by
   unfold universalLinEquiv
-  rw [LinearEquiv.trans_apply, Submodule.quotEquivOfEq_mk]
-  rfl
+  erw [LinearEquiv.trans_apply, Submodule.quotEquivOfEq_mk]
 
 /-- The quotient equivalence intertwines all vertex-operator modes. -/
 theorem universalLinEquiv_act (e : AModBottomEmbedding U P)
@@ -317,8 +316,9 @@ theorem universalLinEquiv_act (e : AModBottomEmbedding U P)
         ((djLU Pr U.toAmModZero hU P.h (genHL0 U P.h e.omegaScalar)).toWeakModule.act a n x) =
       P.isMod.toWeakModule.act a n (e.universalLinEquiv Pr hP hU x) := by
   refine Submodule.Quotient.induction_on _ x (fun z => ?_)
-  rw [djLU_act_mk, e.universalLinEquiv_mk, e.universalLinEquiv_mk,
-    e.universalMap_intertwine]
+  erw [djLU_act_mk]
+  exact (e.universalLinEquiv_mk Pr hP hU _).trans ((e.universalMap_intertwine n a z).trans
+    (congrArg (P.isMod.toWeakModule.act a n) (e.universalLinEquiv_mk Pr hP hU z).symm))
 
 /-- Every Zhu embedding into the bottom of an irreducible lowest-weight module is surjective.
 The proof identifies the target with `L(U)` and uses that `L(U)`'s lowest-weight space is `U`. -/

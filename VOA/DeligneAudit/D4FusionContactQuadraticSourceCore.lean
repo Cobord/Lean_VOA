@@ -44,7 +44,7 @@ theorem qcolumn_column (a b : Fin 8) :
     qcolumn R w (column a b) = quadratic R w a b := by
   rcases column_indices a b with h | h
   · simp only [qcolumn, h.1, h.2]
-  · simpa only [qcolumn, h.1, h.2] using quadratic_symm R w b a
+  · simpa only [qcolumn, h.1, h.2] using! quadratic_symm R w b a
 
 variable {R w} {m : ℕ}
 
@@ -54,7 +54,7 @@ private theorem levi_as_zeroIndex : ∀ i : Fin 3,
 /-- The Levi operator genuinely descends to the quotient by length one. -/
 def leviOp (h : HighestRel R w m) (i : Fin 3) : Module.End ℂ (Q R w) :=
   (piece R w 1).mapQ (piece R w 1) (R.op (leviIndex i) 0) (by
-    simpa only [levi_as_zeroIndex] using zero_piece_invariant h (Fin.natAdd 7 i) 1)
+    simpa only [levi_as_zeroIndex] using! zero_piece_invariant h (Fin.natAdd 7 i) 1)
 
 private theorem levi_apply (i : Fin 3) (a : Fin 8) (v : V) :
     R.op (leviIndex i) 0 (R.op (radIndex a.castSucc) 0 v) =

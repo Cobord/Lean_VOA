@@ -19,14 +19,14 @@ theorem x_transport_coeff_count (rs : List ℕ) (s x y z : ℕ)
   | nil =>
       by_cases hs : s = 0
       · subst s
-        simpa using hv
+        simpa using! hv
       · simp [hs]
   | cons r rs ih =>
       change PowerSeries.coeff s
         (transportCurrent (xOp ρ) r *
           (rs.map (transportCurrent (xOp ρ))).prod) v ∈ _
       rw [PowerSeries.coeff_mul]
-      change (∑ q ∈ Finset.antidiagonal s,
+      change (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         PowerSeries.coeff q.1 (transportCurrent (xOp ρ) r) *
           PowerSeries.coeff q.2
             (rs.map (transportCurrent (xOp ρ))).prod) • v ∈ _
@@ -36,7 +36,7 @@ theorem x_transport_coeff_count (rs : List ℕ) (s x y z : ℕ)
       have ht := ih q.2 x y z hv
       have hx := xyzCountSpan_op ρ w 1 (r + q.1)
         (x + rs.length) y z (Or.inl rfl) ht
-      simpa [transportCurrent, xOp, mul_smul, Nat.add_assoc] using hx
+      simpa [transportCurrent, xOp, mul_smul, Nat.add_assoc] using! hx
 
 theorem y_transport_coeff_count (rs : List ℕ) (s x y z : ℕ)
     {v : V} (hv : v ∈ xyzCountSpan ρ w x y z) :
@@ -46,14 +46,14 @@ theorem y_transport_coeff_count (rs : List ℕ) (s x y z : ℕ)
   | nil =>
       by_cases hs : s = 0
       · subst s
-        simpa using hv
+        simpa using! hv
       · simp [hs]
   | cons r rs ih =>
       change PowerSeries.coeff s
         (transportCurrent (yOp ρ) r *
           (rs.map (transportCurrent (yOp ρ))).prod) v ∈ _
       rw [PowerSeries.coeff_mul]
-      change (∑ q ∈ Finset.antidiagonal s,
+      change (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         PowerSeries.coeff q.1 (transportCurrent (yOp ρ) r) *
           PowerSeries.coeff q.2
             (rs.map (transportCurrent (yOp ρ))).prod) • v ∈ _
@@ -63,7 +63,7 @@ theorem y_transport_coeff_count (rs : List ℕ) (s x y z : ℕ)
       have ht := ih q.2 x y z hv
       have hy := xyzCountSpan_op ρ w 4 (r + q.1)
         x (y + rs.length) z (Or.inr (Or.inl rfl)) ht
-      simpa [transportCurrent, yOp, mul_smul, Nat.add_assoc] using hy
+      simpa [transportCurrent, yOp, mul_smul, Nat.add_assoc] using! hy
 
 end VOA.DeligneAudit.D4Levi
 

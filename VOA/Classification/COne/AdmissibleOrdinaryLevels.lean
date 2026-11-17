@@ -73,7 +73,7 @@ theorem exists_homogeneous_eigenvector (hC2 : C2Cofinite W)
     ⟨⟨⟨x, hx⟩, 0, fun h => hx0 (congrArg Subtype.val h)⟩⟩
   have hpres : ∀ y ∈ N.lev k, L0 N.toWeakModule y ∈ N.lev k := by
     intro y hy
-    simpa using N.act_lev W.conformal_mem hy (p := 1)
+    simpa using! N.act_lev W.conformal_mem hy (p := 1)
   let f : Module.End ℂ (N.lev k) := (L0 N.toWeakModule).restrict hpres
   obtain ⟨c, hc⟩ := f.exists_eigenvalue
   obtain ⟨y, hy⟩ := hc.exists_hasEigenvector
@@ -87,7 +87,7 @@ theorem wordL_eigenvalue (D : GenData W) (N : AdmissibleModule W M)
     L0 N.toWeakModule (wordL D N.toWeakModule l x) =
       (c + (degree D l : ℂ)) • wordL D N.toWeakModule l x := by
   induction l with
-  | nil => simpa using hx
+  | nil => simpa using! hx
   | cons a l ih =>
     rw [wordL_cons, L0_commutator_weak N.toWeakModule (D.gen_mem a.1), ih,
       map_smul, ← add_smul, degree_cons]

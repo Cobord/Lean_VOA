@@ -165,7 +165,7 @@ theorem dop_iterate_mem (NN : Submodule (ratRing 0) (PowerSeries ℂ)) (κ σ : 
   induction i with
   | zero =>
     intro a j
-    simpa using mul_mem_of_ratRing NN (X_pow_mem 0 a) (hmem j)
+    simpa using! mul_mem_of_ratRing NN (X_pow_mem 0 a) (hmem j)
   | succ i ih =>
     intro a j
     rw [Function.iterate_succ_apply, DOp_X_pow_mul κ σ (μ j) a (n₀ + j) (hA j),
@@ -188,7 +188,7 @@ theorem exists_dop_relation (NN : Submodule (ratRing 0) (PowerSeries ℂ)) (hN :
     (fun j => (⟨D^[j] H, hH j⟩ : NN))
   refine ⟨m, fun k => (r k : PowerSeries ℂ), fun k => (r k).2, ?_⟩
   have := congrArg Subtype.val hr
-  simpa [Submodule.coe_sum, Subalgebra.smul_def] using this
+  simpa [Submodule.coe_sum, Subalgebra.smul_def] using! this
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱] {W : VertexOperatorAlgebra 𝒱}
 
@@ -257,7 +257,7 @@ theorem pt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
         simp only [Finset.mem_range] at hk
         exact X_mul_binom_mul_mem_pull
           (IH' _ _ _ _ (by omega) _ _ _ _ hw' (mode_mem_weight_nat hu hw₂ hk) hw₃) k (by omega)
-    · simp only []; rw [QT_zero_w₁]; exact Submodule.zero_mem _
+    · rw [QT_zero_w₁]; exact Submodule.zero_mem _
     · intro x y _ _ hx hy; rw [QT_add_w₁]; exact Submodule.add_mem _ hx hy
     · intro a x _ hx; rw [QT_smul_w₁]; exact Submodule.smul_mem _ a hx
   by_cases c2 : B₂ < N₂
@@ -280,7 +280,7 @@ theorem pt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
         simp only [Finset.mem_range] at hi
         exact mem_pull_of_le
           (IH' _ _ _ _ (by omega) _ _ _ _ hw₁ hw' (mode_mem_weight_nat hu hw₃ hi)) (by omega)
-    · simp only []; rw [QT_zero_w₂]; exact Submodule.zero_mem _
+    · rw [QT_zero_w₂]; exact Submodule.zero_mem _
     · intro x y _ _ hx hy; rw [QT_add_w₂]; exact Submodule.add_mem _ hx hy
     · intro a x _ hx; rw [QT_smul_w₂]; exact Submodule.smul_mem _ a hx
   by_cases c3 : B₃ < N₃
@@ -303,7 +303,7 @@ theorem pt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
         simp only [Finset.mem_range] at hk
         exact mem_pull_of_le
           (IH' _ _ _ _ (by omega) _ _ _ _ hw₁ (mode_mem_weight_nat hu hw₂ hk) hw') (by omega)
-    · simp only []; rw [QT_zero_w₃]; exact Submodule.zero_mem _
+    · rw [QT_zero_w₃]; exact Submodule.zero_mem _
     · intro x y _ _ hx hy; rw [QT_add_w₃]; exact Submodule.add_mem _ hx hy
     · intro a x _ hx; rw [QT_smul_w₃]; exact Submodule.smul_mem _ a hx
   by_cases c4 : B₄ < N₄

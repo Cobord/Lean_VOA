@@ -52,7 +52,7 @@ theorem zeroFiber_grading_lt36 {N : ℤ} (hpos : 0 < N) (hN : N < 36)
     | add a b _ _ ha hb => rw [map_add]; exact Submodule.add_mem _ ha hb
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
   have h := hp y (grading_lt_100 N (by omega) hy)
-  simpa only [piHom_of_mem Wi hy, LinearMap.mem_ker, LinearMap.comp_apply] using h
+  simpa only [piHom_of_mem Wi hy, LinearMap.mem_ker, LinearMap.comp_apply] using! h
 
 theorem zeroFiber_lowerDesc36 {y : (orbifold ico).carrier}
     (hy : y ∈ lowerDesc Wi 36) : f (mk Wi y) = 0 := by
@@ -67,7 +67,7 @@ theorem zeroFiber_lowerDesc36 {y : (orbifold ico).carrier}
       obtain ⟨c, hc⟩ := hx
       rw [← hc, map_smul, map_smul, map_smul]
       have h := zeroFiber_vacWord f hf [m] (by simp)
-      simpa only [virWord, map_zero, smul_zero] using congrArg (fun z => c • z) h
+      simpa only [virWord, map_zero, smul_zero] using! congrArg (fun z => c • z) h
     · rw [show -(m : ℤ) - 1 = -((m + 1 : ℕ) : ℤ) by omega,
         mk_L_neg Wi hx (m + 1) (by omega)]
       simp only [map_smul, map_add, hf, zeroFiber_grading_lt36 f hf (by omega) (by omega) hx,

@@ -174,7 +174,7 @@ def codRestrictToMultiplicationRange
     E →ₗ[K] LinearMap.range (multiplication (K := K) C) :=
   f.codRestrict (LinearMap.range (multiplication (K := K) C)) (fun e ↦ by
     rcases hdiv e with ⟨q, hq⟩
-    exact ⟨q, by simpa using hq.symm⟩)
+    exact ⟨q, by simpa using! hq.symm⟩)
 
 /-- Canonical linear residualization of a pointwise divisible linear polynomial family. -/
 def residualOfDivisibility
@@ -300,10 +300,10 @@ theorem toCompatibleResidual_injective (D : P3LinearResidualization W E) :
   apply D.full_pair_injective
   have hx : D.residualXZ e = D.residualXZ f := by
     have h := congrArg (fun q : W.compatibleResidualSpace ↦ q.1.1.1) hef
-    simpa using h
+    simpa using! h
   have hy : D.residualYY e = D.residualYY f := by
     have h := congrArg (fun q : W.compatibleResidualSpace ↦ q.1.2.1) hef
-    simpa using h
+    simpa using! h
   apply Prod.ext
   · change D.fullXZ e = D.fullXZ f
     rw [D.factorXZ e, D.factorXZ f, hx]

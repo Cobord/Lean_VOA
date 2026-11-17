@@ -127,7 +127,7 @@ theorem exists_homogeneous_symbolLift (k : ℂ) (hk : k + 2 ≠ 0)
       have hweight : currentWordWeight l = N := by
         exact_mod_cast (currentWordWeight_cast l).trans hlN
       refine ⟨currentWordSymbol l, ?_, symbolAlg_currentWordSymbol k hk l⟩
-      simpa [hweight] using currentWordSymbol_isHomogeneous l
+      simpa [hweight] using! currentWordSymbol_isHomogeneous l
   | zero =>
       exact ⟨0, MvPolynomial.isHomogeneous_zero (Fin 3) ℂ N, by simp⟩
   | add x y _ _ hx hy =>
@@ -137,7 +137,7 @@ theorem exists_homogeneous_symbolLift (k : ℂ) (hk : k + 2 ≠ 0)
   | smul c x _ hx =>
       obtain ⟨p, hp, hpmap⟩ := hx
       refine ⟨c • p, ?_, ?_⟩
-      · simpa [Algebra.smul_def] using hp.C_mul c
+      · simpa [Algebra.smul_def] using! hp.C_mul c
       · rw [map_smul, hpmap, map_smul]
 
 /-- The conformal-homogeneity field of a boundary candidate supplies the homogeneous lift used

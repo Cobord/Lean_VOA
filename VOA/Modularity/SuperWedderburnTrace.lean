@@ -146,6 +146,7 @@ theorem matrixSuperParity_isCompl {n : Nat} (epsilon : Fin n → ZMod 2) :
     · intro i j hij
       simp [A1, hij]
     · ext i j
+      rw [Matrix.add_apply]
       rcases zmod2_cases (epsilon i + epsilon j) with hij | hij <;> simp [A0, A1, hij]
 
 theorem matrixSuperParity_isInternal {n : Nat} (epsilon : Fin n → ZMod 2) :

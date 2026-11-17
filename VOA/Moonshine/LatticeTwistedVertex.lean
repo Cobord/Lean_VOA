@@ -185,8 +185,14 @@ theorem mulBySubPow_map {M M' : Type*} [AddCommGroup M] [Module ℂ M] [AddCommG
   | zero => rfl
   | succ N ih =>
     funext m n
-    simp only [mulBySubPow_succ, LinearMap.comp_apply, mulBySub_apply, ih]
-    exact (hφ _ _).symm
+    have h1 : mulBySubPow N (fun m n => φ (H m n)) (m - 1) n
+        = φ (mulBySubPow N H (m - 1) n) := congrFun (congrFun ih (m - 1)) n
+    have h2 : mulBySubPow N (fun m n => φ (H m n)) m (n - 1)
+        = φ (mulBySubPow N H m (n - 1)) := congrFun (congrFun ih m) (n - 1)
+    show mulBySubPow N (fun m n => φ (H m n)) (m - 1) n
+        - mulBySubPow N (fun m n => φ (H m n)) m (n - 1)
+      = φ (mulBySubPow N H (m - 1) n - mulBySubPow N H m (n - 1))
+    rw [h1, h2, hφ]
 
 /-- Locality survives `− ⊗ 1`. -/
 theorem Local.rTensor {a b : FormalDist (End ℂ (FockT r))} (h : Local a b) :
@@ -196,8 +202,9 @@ theorem Local.rTensor {a b : FormalDist (End ℂ (FockT r))} (h : Local a b) :
   have hb : bracketDist (fun n => (a n).rTensor Tm) (fun n => (b n).rTensor Tm)
       = fun m n => (bracketDist a b m n).rTensor Tm := by
     funext m n
-    rw [bracketDist_apply, bracketDist_apply, LinearMap.rTensor_sub, LinearMap.rTensor_mul,
-      LinearMap.rTensor_mul]
+    show (a m).rTensor Tm * (b n).rTensor Tm - (b n).rTensor Tm * (a m).rTensor Tm
+      = (a m * b n - b n * a m).rTensor Tm
+    rw [LinearMap.rTensor_sub, LinearMap.rTensor_mul, LinearMap.rTensor_mul]
   rw [hb, mulBySubPow_map (fun f => f.rTensor Tm) (fun f g => LinearMap.rTensor_sub f g), hN]
   funext m n
   exact LinearMap.rTensor_zero Tm

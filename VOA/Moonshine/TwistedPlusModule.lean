@@ -242,7 +242,8 @@ instance plusWeight_finiteDimensional (α : ℂ) : FiniteDimensional ℂ (plusWe
     ((plusSub θ).subtype.comp (plusWeight θ α).subtype) (fun x => x.2)) ?_
   intro x y hxy
   have := congrArg Subtype.val hxy
-  simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at this
+  (try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply,
+    Submodule.subtype_apply] at this)
   exact Subtype.ext (Subtype.ext this)
 
 /-- **`M⁺` is an ordinary `𝒱^⟨g⟩`-module** (`OrdVModule`), with `Y_{M⁺}(u)₍ₙ₎ = T.YM u (2n)`

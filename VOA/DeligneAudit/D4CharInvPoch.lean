@@ -35,7 +35,7 @@ theorem gtInvPoch_succ (q : R) (h : PochhammerUnits q) (n : ℕ) :
     _ = 1 - q ^ (n + 1) := by rw [gtPoch_mul_invPoch, one_mul]
     _ = _ := by
       have hn : CarrierChain.qpochGen q (n + 1) * gtInvPoch q h (n + 1) = 1 := by
-        simpa only [Nat.cast_add, Nat.cast_one] using gtPoch_mul_invPoch q h (n + 1)
+        simpa only [Nat.cast_add, Nat.cast_one] using! gtPoch_mul_invPoch q h (n + 1)
       rw [mul_left_comm, hn, mul_one]
 
 /-- Integer lowering, valid also at d = 0 and on the entire negative half-line. -/
@@ -56,7 +56,7 @@ theorem gtInvPoch_lower (q : R) (h : PochhammerUnits q) (d : ℤ) :
 /-- The equivalent raising equation needs no nonnegativity hypothesis. -/
 theorem gtInvPoch_raise (q : R) (h : PochhammerUnits q) (d : ℤ) :
     (1 - q ^ (d + 1).toNat) * gtInvPoch q h (d + 1) = gtInvPoch q h d := by
-  simpa using (gtInvPoch_lower q h (d + 1)).symm
+  simpa using! (gtInvPoch_lower q h (d + 1)).symm
 
 end
 

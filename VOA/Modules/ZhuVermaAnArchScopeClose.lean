@@ -78,7 +78,9 @@ variable {W : VertexOperatorAlgebra 𝒱}
 
 /-! ## (a) `hirr` as a TERM — irreducibility of the canonical realization `L(U)` -/
 
-/-- **`RealizeIrreducible` is a TERM for the canonical assignment `realize := F.K`.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`RealizeIrreducible` is a TERM for the canonical assignment `realize := F.K`.**
 
 If an `InducedAssignment W` `A` realizes each bottom `U` as the irreducible quotient `L(U) = F.K U`
 (`hrealize : ∀ U, A.realize U = F.K U`), then `A.RealizeIrreducible` holds **unconditionally**: each
@@ -120,7 +122,9 @@ namespace CanonicalAssignmentData
 
 variable (C : CanonicalAssignmentData W)
 
-/-- **The canonical induced assignment `U ↦ L(U)` as a TERM.**  Its `isoInvariant` field is the
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The canonical induced assignment `U ↦ L(U)` as a TERM.**  Its `isoInvariant` field is the
 proven `MUFunctorialData.isoInvariant` (the functoriality-of-`L(·)` discharge, `hiso` as a term); its
 `realizes` field is the carried bottom-survival iso. -/
 noncomputable def toInducedAssignment : InducedAssignment W where

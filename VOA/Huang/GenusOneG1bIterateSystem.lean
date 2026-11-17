@@ -190,7 +190,6 @@ theorem exists_uniform_rat {Cc : κ → κ → R2} (hC : ∀ f g, Cc f g ∈ Rat
   · exact Finset.single_le_sum (f := c) (fun _ _ => Nat.zero_le _) (Finset.mem_univ (f, g))
   · have := Finset.single_le_sum (f := fun fg : κ × κ => d fg + Et) (fun _ _ => Nat.zero_le _)
       (Finset.mem_univ (f, g))
-    simp only at this
     omega
 
 theorem coeff_thetaR2 (lam : ℂ) (F : R2) (n : ℕ) :

@@ -100,7 +100,9 @@ theorem crossCFirstDiffTowerEq_forall_of_aOutUCoreLev0Core (W : VertexOperatorAl
 
 /-! ## PHASE 4 TROPHY — the single Zhu bijection from `AoutUCoreLev0Core`. -/
 
-/-- **`zhuBijection_trophy` — the FINAL main theorem: the Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` whose
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**`zhuBijection_trophy` — the FINAL main theorem: the Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` whose
 ONLY genuine mathematical hypothesis is the single collapse `AoutUCoreLev0Core`.**
 
 Given

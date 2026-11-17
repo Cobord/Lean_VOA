@@ -71,9 +71,8 @@ theorem sector_finrank_le_profile_sum {K : Type*} [Field K] [CharZero K]
           (multiplicityResidualTerm (K := ℚ) r.val
             (Fintype.card (ResidualIndex a R.val)) (Fintype.card (ResidualIndex b R.val))
               (Fintype.card (Fin c))) := by
-      simp_rw [coeff_canonical_eq_sourceTerm]
       exact Fintype.sum_equiv (boundedPartitionProfileEquiv (m + 1)
-        (Fintype.card (Fin R.val))) _ _ (fun _ => rfl)
+        (Fintype.card (Fin R.val))) _ _ (fun lam => coeff_canonical_eq_sourceTerm lam D)
     _ = _ := by
       simp only [Fintype.card_fin, card_residualIndex a R.val hRa,
         card_residualIndex b R.val hRb, hshift]

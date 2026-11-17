@@ -76,7 +76,7 @@ theorem mk_mkQ_L4vac :
       WLY.conformalVector_mem_grading_two (0 : ℤ)
     simpa only [VertexOperatorAlgebra.L_def,
       show ((-1 : ℤ) + 1) = 0 by norm_num,
-      show (2 + 2 - 0 - 1 : ℤ) = 3 by norm_num] using h
+      show (2 + 2 - 0 - 1 : ℤ) = 3 by norm_num] using! h
   have hfirst := mk_L_neg_one_of_mem_grading WLY WLY.conformalVector_mem_grading_two
   have hsecond := mk_L_neg_one_of_mem_grading WLY hmem
   rw [htrans, map_smul] at hsecond
@@ -108,7 +108,7 @@ theorem leeYang_zhu_polynomial :
 theorem rho_omega_polynomial (U : AMod WLY) :
     (5 : ℂ) • (U.ρ omegaA * U.ρ omegaA) + U.ρ omegaA = 0 := by
   have h := congrArg U.ρ leeYang_zhu_polynomial
-  simpa only [map_add, map_smul, map_zero, AMod_rho_Amul] using h
+  simpa only [map_add, map_smul, map_zero, AMod_rho_Amul] using! h
 
 /-- On a nonzero Zhu module where `[omega]` is scalar, that scalar is `0` or `-1/5`. -/
 theorem omegaScalar_eq_zero_or_neg_one_fifth (U : AMod WLY) [Nontrivial U.carrier]
@@ -122,7 +122,7 @@ theorem omegaScalar_eq_zero_or_neg_one_fifth (U : AMod WLY) [Nontrivial U.carrie
   have hpoly : 5 * h ^ 2 + h = 0 := by
     by_contra hne
     have hx0 : x = 0 := eq_zero_of_smul_eq_zero hne (by
-      simpa only [add_smul, mul_smul, one_smul, pow_two] using happ)
+      simpa only [add_smul, mul_smul, one_smul, pow_two] using! happ)
     exact hx hx0
   have hfac : h * (5 * h + 1) = 0 := by
     calc
@@ -155,7 +155,7 @@ noncomputable def admissibleBottomRhoV (N : AdmissibleModule WLY M) :
     (VirUniv leeYangC ⧸ maxIdealVir leeYangC) →ₗ[ℂ] Module.End ℂ (N.lev 0) where
   toFun v :=
     { toFun := fun x => ⟨oLevW N.toWeakModule 0 v (x : M), by
-          simpa using oLevW_mem_lev (admissibleAdmLev N) 0 v x.2⟩
+          simpa using! oLevW_mem_lev (admissibleAdmLev N) 0 v x.2⟩
       map_add' := by
         intro x y
         apply Subtype.ext

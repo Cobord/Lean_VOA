@@ -30,7 +30,7 @@ theorem wordL_mem_level (D : GenData W) (N : AdmissibleModule W M)
     {k : ℤ} {x : M} (hx : x ∈ N.lev k) (l : List (Ltr D)) :
     wordL D N.toWeakModule l x ∈ N.lev (k + degree D l) := by
   induction l with
-  | nil => simpa using hx
+  | nil => simpa using! hx
   | cons a l ih =>
     have h := N.act_lev (D.gen_mem a.1) ih (p := a.2)
     rw [wordL_cons, degree_cons]

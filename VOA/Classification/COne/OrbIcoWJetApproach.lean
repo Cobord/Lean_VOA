@@ -18,7 +18,7 @@ theorem square_tendsto_nonreal :
     Tendsto (fun s : ℂ => s^2) nonrealNhdsOne nonrealNhdsOne := by
   have hc : Tendsto (fun s : ℂ => s^2) nonrealNhdsOne (𝓝 (1 : ℂ)) := by
     have h : ContinuousAt (fun s : ℂ => s^2) 1 := by fun_prop
-    simpa using h.tendsto.mono_left nhdsWithin_le_nhds
+    simpa using! h.tendsto.mono_left nhdsWithin_le_nhds
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ hc
   have hr : ∀ᶠ s in nonrealNhdsOne, s.re≠0 :=
     ((Complex.continuous_re.continuousAt).eventually_ne (by norm_num : (1 : ℂ).re≠0)).filter_mono

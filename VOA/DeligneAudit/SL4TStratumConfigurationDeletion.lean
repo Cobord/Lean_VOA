@@ -35,10 +35,10 @@ theorem fullFlagDoublesIn_delete (B k : ℕ) (Y : Finset (Fin B))
     refine ⟨ha, ?_, ?_⟩
     · intro he
       have hz := h 0 he.symm
-      simpa using hz
+      simpa using! hz
     · intro i hi
       have hs := h i.succ hi
-      simpa using hs
+      simpa using! hs
   · rintro ⟨ha, hne, h⟩
     refine ⟨ha, ?_⟩
     intro i
@@ -46,7 +46,7 @@ theorem fullFlagDoublesIn_delete (B k : ℕ) (Y : Finset (Fin B))
     · intro hi
       exact (hne hi.symm).elim
     · intro hi
-      simpa using h i hi
+      simpa using! h i hi
 
 /-- A configuration after deleting the first position, retaining all original site labels. -/
 abbrev FullFlagDeletedConfiguration (B k j : ℕ) (Y : Finset (Fin B))
@@ -70,7 +70,7 @@ def fullFlagStratumConfiguration_deleteEquiv (B k j : ℕ) (Y : Finset (Fin B)) 
     let g : FullFlagConfiguration (B + 1) k := ⟨Fin.cons f.1 f.2.val, by
       intro b
       rw [configurationFiber_card_delete]
-      simpa only [Fin.cons_zero, Fin.cons_succ] using f.2.property.1 b⟩
+      simpa only [Fin.cons_zero, Fin.cons_succ] using! f.2.property.1 b⟩
     exact ⟨g, by
       rw [fullFlagDoublesIn_delete]
       exact f.2.property.2⟩

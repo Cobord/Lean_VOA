@@ -81,7 +81,7 @@ theorem wardBSATop_normalized (h b t a : ℂ) (N n : ℕ) (u : ℕ → ℂ) (r :
         funext k
         exact ih j j.isLt k
       rw [hh]
-      simpa only [Nat.cast_add,Nat.cast_one] using
+      simpa only [Nat.cast_add,Nat.cast_one] using!
         wardTopStep_normalized h b a (n+1) j r (by omega) (fusionTopCoeff b t (h-a) N u)
 
 /-- The undivided normalized source is exactly the actual full source,

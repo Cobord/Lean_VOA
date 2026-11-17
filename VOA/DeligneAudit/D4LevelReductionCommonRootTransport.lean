@@ -69,7 +69,7 @@ theorem commonRoot_polynomialTransport (ρ : R →ₐ[ℂ] T) (hρ : Function.Su
       exact hIJ hq
   have hmem : Polynomial.C x * X ^ n ∈ (L.map φ).comap φ := by
     change φ (Polynomial.C x * X ^ n) ∈ L.map φ
-    simpa [φ] using hsource hx
+    simpa [φ] using! hsource hx
   rw [Ideal.comap_map_of_surjective φ hφ] at hmem
   have hL : Polynomial.C x * X ^ n ∈ L :=
     (sup_le le_rfl hker) hmem
@@ -137,16 +137,16 @@ theorem TwoRelationChain.export {A B : Ideal R[X]} {I J : Ideal R} {ns : List (�
       refine ⟨w, G, rfl, htop, ?_, ?_, ?_⟩
       · intro i hi
         cases i with
-        | zero => simpa only [G, w, h0] using hs
-        | succ i => exact hstep i (by simpa using hi)
+        | zero => simpa only [G, w, h0] using! hs
+        | succ i => exact hstep i (by simpa using! hi)
       · intro i hi
         cases i with
-        | zero => simpa only [G, w, List.getD_cons_zero] using hu
-        | succ i => exact hunion i (by simpa using hi)
+        | zero => simpa only [G, w, List.getD_cons_zero] using! hu
+        | succ i => exact hunion i (by simpa using! hi)
       · intro i hi
         cases i with
-        | zero => simpa only [G, w, List.getD_cons_zero] using hc
-        | succ i => exact hcommon i (by simpa using hi)
+        | zero => simpa only [G, w, List.getD_cons_zero] using! hc
+        | succ i => exact hcommon i (by simpa using! hi)
 
 end
 

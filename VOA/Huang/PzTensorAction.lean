@@ -310,7 +310,8 @@ theorem tauHom_conformal_one {G : HomPair P₁ P₂ → ℂ} (hG : G ∈ bilin P
   rw [hB.smulR (pairRight x _ _) x x.α₂ rfl rfl (by simp only [pairRight]; push_cast; ring)
     (by simp only [pairRight, hω]
         have := P₂.isMod.L0_weight x.α₂ x.w₂ x.h₂
-        convert this using 3)]
+        convert this using 3
+        norm_num)]
   -- the left terms
   set L := lowBound P₁.h x.α₁ (2 - ((0 : ℕ) : ℤ)) with hLdef
   have hzero : ∀ r : ℕ, L ≤ r → G (pairLeft x (VOA.VertexOperatorAlgebra.L_one_pow_mem W

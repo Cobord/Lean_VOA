@@ -27,7 +27,7 @@ theorem rz_zero_alloc_mem_iff (k s : ℕ) (ys : List ℕ) :
             List.mem_flatMap, List.mem_map]
           constructor
           · rintro ⟨q, hq, zs, hzs, heq⟩
-            have hqsum := Finset.mem_antidiagonal.mp
+            have hqsum := Finset.HasAntidiagonal.mem_antidiagonal.mp
               (Finset.mem_toList.mp hq)
             have hrest := (ih q.2 zs).mp hzs
             simp only [List.cons.injEq] at heq
@@ -37,10 +37,10 @@ theorem rz_zero_alloc_mem_iff (k s : ℕ) (ys : List ℕ) :
             simp only [List.length_cons, List.sum_cons]
             omega
           · rintro ⟨hlen, hsum⟩
-            have hyslen : ys.length = k := by simpa using hlen
-            have hq : (y, ys.sum) ∈ Finset.antidiagonal s := by
-              apply Finset.mem_antidiagonal.mpr
-              simpa using hsum
+            have hyslen : ys.length = k := by simpa using! hlen
+            have hq : (y, ys.sum) ∈ Finset.HasAntidiagonal.antidiagonal s := by
+              apply Finset.HasAntidiagonal.mem_antidiagonal.mpr
+              simpa using! hsum
             exact ⟨(y, ys.sum), Finset.mem_toList.mpr hq, ys,
               (ih ys.sum ys).mpr ⟨hyslen, rfl⟩, by simp⟩
 
@@ -57,14 +57,14 @@ theorem rz_zero_alloc_nodup (k s : ℕ) :
         exact (ih q.2).map (by
           intro x y hxy
           exact (List.cons.inj hxy).2)
-      · apply (Finset.nodup_toList (Finset.antidiagonal s)).imp
+      · apply (Finset.nodup_toList (Finset.HasAntidiagonal.antidiagonal s)).imp
         intro q r hne ys hysq hysr
         obtain ⟨zs, hzs, heq⟩ := List.mem_map.mp hysq
         obtain ⟨ts, hts, heq'⟩ := List.mem_map.mp hysr
         have hqsum := (rz_zero_alloc_mem_iff k q.2 zs).mp hzs
         have hrsum := (rz_zero_alloc_mem_iff k r.2 ts).mp hts
         have hh : (q.1 :: zs) = (r.1 :: ts) := by
-          simpa using heq.trans heq'.symm
+          simpa using! heq.trans heq'.symm
         have hhead : q.1 = r.1 := (List.cons.inj hh).1
         have htail : zs = ts := (List.cons.inj hh).2
         apply hne
@@ -98,10 +98,10 @@ theorem rz_zero_alloc_finset_eq_image (k s : ℕ) :
         simp only [List.length_ofFn] at hlen
         subst n
         refine ⟨⟨e, ?_⟩, rfl⟩
-        simpa [rz_sum_ofFn] using hsum
+        simpa [rz_sum_ofFn] using! hsum
   · rintro ⟨e, rfl⟩
     apply (rz_zero_alloc_mem_iff k s (List.ofFn e.1)).mpr
-    simpa [rz_sum_ofFn] using e.2
+    simpa [rz_sum_ofFn] using! e.2
 
 theorem rz_zero_alloc_sum_eq_vector_sum {A : Type*} [AddCommMonoid A]
     (k s : ℕ) (f : List ℕ → A) :

@@ -46,7 +46,7 @@ theorem loopOp_smul (x : σ) (r : ℕ) (s : SymAlg (K := K) m)
     loopOp f m x r (s • y) = s • loopOp f m x r y := by
   funext t
   simp only [loopOp, LinearMap.coe_mk, AddHom.coe_mk, smul_apply_sym, Finset.mul_sum, mul_neg]
-  congr 1
+  refine congrArg Neg.neg ?_
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun c _ => ?_
   ring
 
@@ -111,7 +111,7 @@ def fiberRep (hQ : RelationsStable f Q) (hJ : JacobiCoord f) : CurrentModule f (
         rw [hsum]
         congr 1
         apply Subtype.ext
-        simpa using h
+        simpa using! h
 
 /-! ## Degrees -/
 

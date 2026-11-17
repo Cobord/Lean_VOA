@@ -218,7 +218,7 @@ theorem fock_bilinear {n : ℕ} (hn : 3 ≤ n) (v1 v2 : ℕ × Fin (rank leech))
     (hw : v1.1 + v2.1 + 2 = n) : (X v1 * X v2 : Fk) ∈ T0 n := by
   obtain ⟨i, c⟩ := v1
   obtain ⟨j, f⟩ := v2
-  simp only at hw
+  try simp only at hw
   by_cases hcf : c = f
   · subst hcf
     -- the diagonal: linear algebra in the quotient

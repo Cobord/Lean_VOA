@@ -52,7 +52,7 @@ theorem tensorIntertwiner_logShift_pair_coefficient (f : M₄ →ₗ[ℂ] ℂ) (
     (logShift ell η.1 (a+b-γ-1) 0 x y)=_
   rw [logShift_eq_sum η.2.logFinite K hK,map_sum]
   rw [tsum_eq_sum (s := Finset.range K) (fun k hk => by
-    rw [hc k (by simpa only [Finset.mem_range,not_lt] using hk),mul_zero])]
+    rw [hc k (by simpa only [Finset.mem_range,not_lt] using! hk),mul_zero])]
   simp only [map_smul,shc,Nat.choose_zero_right,Nat.cast_one,one_mul,Nat.sub_zero,smul_eq_mul]
   exact Finset.sum_congr rfl fun k _ => congrArg (fun q => ell^k*q) (hp k)
 

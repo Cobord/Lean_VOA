@@ -21,11 +21,12 @@ theorem keyLayer_eq_bot_of_count
     (k : RadicalKey) (j : Fin 6)
     (hj : rootWeight m j < keyCount j k) :
     keyLayer ρ w k = ⊥ := by
-  rw [keyLayer, eq_bot_iff, Submodule.span_le]
+  rw [eq_bot_iff]
+  apply Submodule.span_le.mpr
   intro z hz
   obtain ⟨l, hk, rfl⟩ := hz
   have hc : rootWeight m j < l.countP (fun p => p.1 = j) := by
-    simpa [← keyCount_wordKey j l, hk] using hj
+    simpa [← keyCount_wordKey j l, hk] using! hj
   rw [radicalWord_zero_of_count ρ w m h j l hc]
   exact Submodule.zero_mem _
 

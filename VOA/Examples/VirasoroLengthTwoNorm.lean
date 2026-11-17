@@ -35,7 +35,7 @@ theorem Lop_nat_negWordVir_single_self (c : ℂ) (j : ℕ) :
     show (j : ℤ) + (-(j : ℤ) - 2) = -2 by ring,
     show ((j : ℤ) : ℂ) - ((-(j : ℤ) - 2 : ℤ) : ℂ) = 2 * (j : ℂ) + 2 by
       push_cast; ring, zero_add] at h
-  simpa only [negWordVir_cons, negWordVir_nil] using h
+  simpa only [negWordVir_cons, negWordVir_nil] using! h
 
 theorem Lop_nat_negWordVir_single_eq_zero_of_gt (c : ℂ) (r i : ℕ)
     (hri : i + 2 < r) : Lop c (r : ℤ) (negWordVir c [i]) = 0 := by
@@ -46,7 +46,7 @@ theorem Lop_nat_negWordVir_single_eq_zero_of_gt (c : ℂ) (r i : ℕ)
     if_neg (by omega : ¬((r : ℤ) + (-(i : ℤ) - 2) = 0)), zero_smul, add_zero,
     Lop_vacuum c hsum, smul_zero,
     add_zero] at h
-  simpa only [negWordVir_cons, negWordVir_nil] using h
+  simpa only [negWordVir_cons, negWordVir_nil] using! h
 
 theorem Lop_lengthTwo_top_pair_zero (c : ℂ) (m : ℕ) (hm : 3 ≤ m) :
     Lop c ((2 * m - 2 : ℕ) : ℤ) (negWordVir c [2 * m - 4, 0]) =
@@ -91,7 +91,7 @@ theorem Lop_lengthTwo_top_pair_succ (c : ℂ) (m j : ℕ) (hm : 3 ≤ m)
     push_cast
     ring
   rw [hmode, hcoef, Lop_nat_negWordVir_single_self] at h
-  simpa only [negWordVir_cons, zero_add, smul_smul] using h
+  simpa only [negWordVir_cons, zero_add, smul_smul] using! h
 
 theorem Lop_lengthTwo_top_pair_diag (c : ℂ) (m : ℕ) (hm : 3 ≤ m) :
     Lop c ((2 * m - 2 : ℕ) : ℤ) (negWordVir c [m - 2, m - 2]) =
@@ -376,7 +376,7 @@ theorem canB_lengthTwoQ_mixed (c : ℂ) (m : ℕ) (hm : 3 ≤ m) :
         (c + (lengthTwoRho m : ℂ)) := by
   have hadj := canB_adj c ((2 * m - 2 : ℕ) : ℤ) (lengthTwoQ c m) (negWordVir c [0])
   have hT : (canB c).form (negWordVir c [0]) (negWordVir c [0]) = c / 2 := by
-    simpa only [negWordVir_cons, negWordVir_nil] using canB_L2_L2 c
+    simpa only [negWordVir_cons, negWordVir_nil] using! canB_L2_L2 c
   rw [Lop_lengthTwoQ_top c m hm, map_smul, LinearMap.smul_apply, smul_eq_mul, hT] at hadj
   have hneg :
       Lop c (-((2 * m - 2 : ℕ) : ℤ)) (negWordVir c [0]) =
@@ -480,7 +480,7 @@ theorem canB_lengthTwoQ_single_zero (c : ℂ) (m : ℕ) (hm : 2 ≤ m) :
     (canB c).form (lengthTwoQ c m) (negWordVir c [2 * m - 2]) = 0 := by
   have hqp :
       (virasoroVOA c).L 1 (lengthTwoQ c m) = 0 := by
-    simpa only [virasoroVOA_L_eq_Lop] using lengthTwoQ_quasiPrimary c m hm
+    simpa only [virasoroVOA_L_eq_Lop] using! lengthTwoQ_quasiPrimary c m hm
   have horth := (canB c).form_quasiPrimary_Lneg1_pow_succ hqp
     (negWordVir c [0]) (2 * m - 3)
   simp only [virasoroVOA_L_eq_Lop] at horth
@@ -518,7 +518,7 @@ theorem lengthTwoNormSummand_mul_choose (m j : ℕ) (hm : 3 ≤ m) (hj : j ≤ 2
   have hmul :
       (Nat.choose (2 * m - 1) (j + 3) : ℚ) * (Nat.choose (j + 3) 3 : ℚ) =
         (Nat.choose (2 * m - 1) 3 : ℚ) * (Nat.choose (2 * m - 4) j : ℚ) := by
-    exact_mod_cast (by simpa [show 2 * m - 1 - 3 = 2 * m - 4 by omega] using hmulNat)
+    exact_mod_cast (by simpa [show 2 * m - 1 - 3 = 2 * m - 4 by omega] using! hmulNat)
   have hsym :
       Nat.choose (2 * m - 1) (j + 3) = Nat.choose (2 * m - 1) (2 * m - 4 - j) := by
     apply Nat.choose_symm_of_eq_add
@@ -639,7 +639,6 @@ theorem canB_lengthTwoQ_self_of_three_le (c : ℂ) (m : ℕ) (hm : 3 ≤ m) :
   have hchoose : (Nat.choose (2 * m - 1) 3 : ℚ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt (Nat.choose_pos (by omega : 3 ≤ 2 * m - 1)))
   have hhalfC := congrArg (fun q : ℚ => (q : ℂ)) hhalf
-  dsimp only at hhalfC
   have hchooseC : (Nat.choose (2 * m - 1) 3 : ℂ) ≠ 0 := by
     exact_mod_cast hchoose
   rw [hhalfC]

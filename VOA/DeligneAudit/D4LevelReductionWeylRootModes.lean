@@ -110,7 +110,7 @@ theorem sl4_nonHighest_mode_zero (e : Fin 15) (he : e ≠ 8)
       subst a
       subst b
       have hj := hw.cartan_zero j
-      fin_cases j <;> simpa [weightABC] using hj
+      fin_cases j <;> simpa [weightABC] using! hj
     · exact hw.cartan_pos j s (by omega)
   have hc₁ := hc 0
   have hc₂ := hc 1
@@ -123,7 +123,7 @@ theorem sl4_nonHighest_mode_zero (e : Fin 15) (he : e ≠ 8)
 omit [FiniteDimensional ℂ V] in
 /-- The highest-root current satisfies the quadratic Garland relation at its total weight. -/
 theorem sl4Highest_quadratic_relation (s : ℕ) (hs : 2 * a + b + 1 ≤ s + 2) :
-    ∑ x ∈ Finset.antidiagonal s, Q.op 8 x.1 (Q.op 8 x.2 v) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, Q.op 8 x.1 (Q.op 8 x.2 v) = 0 := by
   have hS := coreHighest_currentRelations Q
   have hn := a3_highest_nilpotence Q v a b a hw
   have hpos : ∀ m, coreHighestCartan Q (m + 1) v = 0 := by
@@ -133,7 +133,7 @@ theorem sl4Highest_quadratic_relation (s : ℕ) (hs : 2 * a + b + 1 ≤ s + 2) :
     have h₂ := hw.cartan_pos 2 (m + 1) (by omega)
     simp only [simpleH] at h₀ h₁ h₂
     simp [coreHighestCartan, h₀, h₁, h₂]
-  exact Garland.garland_two (fun k => by simpa [Nat.add_comm] using hS.hEF 1 k)
+  exact Garland.garland_two (fun k => by simpa [Nat.add_comm] using! hS.hEF 1 k)
     (fun m k => hS.hHF (m + 1) k) hS.hFF (hw.raising 2 (by decide) 1)
     hpos hn s (by omega)
 

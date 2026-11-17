@@ -130,6 +130,6 @@ theorem jointGram_row_relation (hk0 : k ≠ 0) (n h : ℤ) (r : JointIndex n h �
       map_smul, LinearMap.smul_apply, smul_eq_mul] using hr j)
   have hz : (I).mkQ (∑ i, r i • currentPBWBasis k hk i.val) = 0 :=
     (Submodule.Quotient.mk_eq_zero _).mpr hm
-  simpa only [map_sum, map_smul, ← jointWord_state, universalWord_mkQ] using hz
+  simpa only [map_sum, map_smul, ← jointWord_state, universalWord_mkQ] using! hz
 
 end VOA.AffineSl2GeneralRigidity

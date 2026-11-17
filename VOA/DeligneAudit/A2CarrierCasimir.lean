@@ -92,10 +92,12 @@ theorem casimir_sq_mem_I2ns : casimir * casimir ∈ I2ns :=
 theorem casimir_isHomogeneous : casimir.IsHomogeneous 2 := by
   rw [← mem_homogeneousSubmodule]
   unfold casimir
+  -- closed structurally at instance transparency (as `hom_tac` in `A2Relations`); unrestricted
+  -- `apply` unfolds the summands and times out on Lean 4.35
   repeat' first
+    | with_reducible_and_instances apply Submodule.add_mem
+    | with_reducible_and_instances apply ofNat_mul_mem
     | exact q_mem _ _
-    | apply ofNat_mul_mem
-    | apply Submodule.add_mem
 
 /-! ### Jet-level consequences (the mixed and Casimir-square jet relations of step B1) -/
 

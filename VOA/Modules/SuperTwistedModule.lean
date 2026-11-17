@@ -334,7 +334,8 @@ noncomputable def toIdentityTwist (A : SuperOrdVModule W M) :
   boundedBelow := A.boundedBelow
   weight_mode := by
     intro h α u hu x hx k
-    simpa only [Nat.cast_one, div_one] using A.weight_mode u hu x hx k
+    simpa only [Nat.cast_one, div_one, LinearMap.coe_mk, AddHom.coe_mk] using
+      A.weight_mode u hu x hx k
 
 @[simp] theorem toIdentityTwist_act (A : SuperOrdVModule W M)
     (u : 𝒱) (k : ℤ) (x : M) : A.toIdentityTwist.act u k x = A.act u k x := by

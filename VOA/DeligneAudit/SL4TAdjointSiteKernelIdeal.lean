@@ -44,7 +44,7 @@ theorem adjointSite_compoundHighMode_mem_higherRadical (B h : ℕ)
   have hhigh : (ρ.op 7 0 ^ (n + 1)) w ∈ higherRadicalCountClosure ρ w ![0, n, 1] := by
     have hk : higherRadicalCounts ![0, n, 1] ⟨0, n + 1, 0, 0⟩ := by
       simp [higherRadicalCounts]
-    simpa using zeroModeWord_mem_higherRadical ρ w ![0, n, 1] 0 (n + 1) 0 hk
+    simpa using! zeroModeWord_mem_higherRadical ρ w ![0, n, 1] 0 (n + 1) 0 hk
   have h₁ : ρ.op 10 h (ρ.op 11 0 ((ρ.op 7 0 ^ (n + 1)) w)) ∈
       higherRadicalCountClosure ρ w ![0, n, 1] := by
     rw [op_comm_of_zero_bracket ρ bracket_lastPair_last h 0]
@@ -120,7 +120,7 @@ theorem adjointSite_middleRadicalShift_mem_higherRadical (B h : ℕ) (hh : 0 < h
   have hgW : ρ.op 9 h W = 0 := by
     apply middleLowering_kills_radicalLayer ρ w h hg ![0, m, d 2] rfl W
     rw [hWdef]
-    simpa using zeroModeWord_mem_radicalCountLayer ρ w ![0, m, d 2]
+    simpa using! zeroModeWord_mem_radicalCountLayer ρ w ![0, m, d 2]
   have hyh : ρ.op 7 h W = ρ.op 9 h (ρ.op 6 0 W) - ρ.op 6 0 (ρ.op 9 h W) := by
     rw [op_comm_of_single_bracket ρ bracket_middle_first h 0 W]
     simp
@@ -131,7 +131,7 @@ theorem adjointSite_middleRadicalShift_mem_higherRadical (B h : ℕ) (hh : 0 < h
       omega
     have hxW : ρ.op 6 0 W ∈ higherRadicalCountClosure ρ w d := by
       rw [hWdef]
-      simpa using zeroModeWord_mem_higherRadical ρ w d 1 m (d 2) hk
+      simpa using! zeroModeWord_mem_higherRadical ρ w d 1 m (d 2) hk
     exact a3LeviClosure_inv ρ _ 3 h hxW
   · rw [hd0, pow_one]
     have hx2 : ρ.op 6 0 (ρ.op 6 0 w) = 0 := lowering_square_of_label_one ρ w _ hW 0 rfl
@@ -336,14 +336,14 @@ theorem adjointSite_kernelIdeal_le_kernel (h : ℕ) (hh : 0 < h)
         ![a₀, n, c₀] e₁ e₂ hv))) ?_) ?_
     · split_ifs with h₁
       · apply hmode 3
-        have ha : a₀ = 0 := by simpa [mixedLabelBlockParams] using h₁
+        have ha : a₀ = 0 := by simpa [mixedLabelBlockParams] using! h₁
         subst ha
-        simpa using adjointSite_middleAlphabet_mode_zero ρ w B h hh hW ht hg ![0, n, c₀] rfl
+        simpa using! adjointSite_middleAlphabet_mode_zero ρ w B h hh hW ht hg ![0, n, c₀] rfl
           e₁ e₂ hv 1
       · exact bot_le
     · split_ifs with h₃
       · apply hmode 4
-        have hc : c₀ = 1 := by simpa [mixedLabelBlockParams] using h₃
+        have hc : c₀ = 1 := by simpa [mixedLabelBlockParams] using! h₃
         subst hc
         rcases Nat.le_one_iff_eq_zero_or_eq_one.mp hd.1 with rfl | rfl
         · exact adjointSite_compoundAlphabet_unmarked_zero ρ w B hW h hh hg n e₁ e₂ hv

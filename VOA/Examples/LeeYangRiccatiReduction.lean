@@ -85,7 +85,10 @@ lemma pd_of_form {M : Matrix n n ℝ} (h1 : M.IsHermitian)
 
 lemma psd_mulVec_eq_zero [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosSemidef) {x : n → ℝ}
     (h : x ⬝ᵥ M *ᵥ x = 0) : M *ᵥ x = 0 :=
-  (hM.dotProduct_mulVec_zero_iff x).mp (by simpa using h)
+  by
+    first
+    | exact (hM.dotProduct_mulVec_zero_iff x).mp (by simpa using h)
+    | exact hM.dotProduct_mulVec_zero_iff.mp (by simpa using h)
 
 omit [Fintype n] in
 /-- A real Hermitian matrix is symmetric. -/

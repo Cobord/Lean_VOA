@@ -12,6 +12,8 @@ Descendant energies and charges add to those of the starting vector. These
 statements concern actual simultaneous eigenspaces and the full canonical
 radical, and are valid for arbitrary starting vectors in those spaces.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open NormalOrdering (currentWord)
@@ -25,11 +27,10 @@ theorem degree_word_eigen (k h : ℂ) (w : List (Fin 3×ℤ)) (v : Verma k h) (z
     rho k h (AffineLie.ell0 kappaForm kappaForm_isInvariant) (currentWord (mode k h) w v)=
       (z-(wordEnergy w : ℂ)) • currentWord (mode k h) w v := by
   induction w with
-  | nil => simpa [currentWord,wordEnergy] using hv
+  | nil => simpa [currentWord,wordEnergy] using! hv
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ (Verma k h) => T (currentWord (mode k h) w v))
         (degree_mode_comm k h an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply,sub_eq_iff_eq_add] at hc
       simp only [currentWord,Module.End.mul_apply,wordEnergy,List.map_cons,List.sum_cons,Int.cast_add,Int.cast_neg]
@@ -43,11 +44,10 @@ theorem cartan_word_eigen (k h : ℂ) (w : List (Fin 3×ℤ)) (v : Verma k h) (z
     mode k h 2 0 (currentWord (mode k h) w v)=
       (z+2*(wordCharge w : ℂ)) • currentWord (mode k h) w v := by
   induction w with
-  | nil => simpa [currentWord,wordCharge] using hv
+  | nil => simpa [currentWord,wordCharge] using! hv
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ (Verma k h) => T (currentWord (mode k h) w v))
         (cartan_mode_comm k h an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply,sub_eq_iff_eq_add] at hc
       simp only [currentWord,Module.End.mul_apply,wordCharge,List.map_cons,List.sum_cons,Int.cast_add]

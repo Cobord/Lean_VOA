@@ -24,7 +24,7 @@ theorem keyLayer_le_exact_degree (ρ : CurrentModule D4sector.f V) (w : V)
   refine Submodule.subset_span ⟨r.map (fun p => (radicalColour p.1, p.2)), ?_, rfl⟩
   have hd := graded_key_word_degree [] r
   simpa only [List.nil_append, SectorGraded.wordDeg, List.map_nil, List.sum_nil,
-    zero_add, hk] using hd
+    zero_add, hk] using! hd
 
 /-- The part of a key orbit with exact total degree N, including the radical seed degree. -/
 def gradedKeyOrbit (ρ : CurrentModule D4sector.f V) (w : V) (k : RadicalKey)
@@ -40,7 +40,7 @@ theorem gradedKeyOrbit_le (ρ : CurrentModule D4sector.f V) (w : V)
   rintro v ⟨l, r, hl, hk, hd, rfl⟩
   constructor
   · refine Submodule.subset_span ⟨l ++ r.map (fun p => (radicalColour p.1, p.2)), ?_, rfl⟩
-    exact (graded_key_word_degree l r).trans (by simpa only [hk] using hd)
+    exact (graded_key_word_degree l r).trans (by simpa only [hk] using! hd)
   · exact Submodule.subset_span ⟨l, r, hl, hk, rfl⟩
 
 /-- Keys above the requested degree contribute no vectors, even before taking a quotient. -/
@@ -64,12 +64,13 @@ theorem projUG_keyOrbit (R : RelSpec 28) (k : RadicalKey) (N : ℕ) :
       (wordOp (univRepG D4sector.f R)
         (l ++ r.map fun p => (radicalColour p.1, p.2)) (wUG D4sector.f R)) ∈
       gradedKeyOrbit (univRepG D4sector.f R) (wUG D4sector.f R) k N
-    rw [wordOp_univG, projUG_mk]
+    rw [wordOp_univG D4sector.f R (l ++ r.map fun p => (radicalColour p.1, p.2)),
+      projUG_mk D4sector.f R N (l ++ r.map fun p => (radicalColour p.1, p.2))]
     split_ifs with hd
-    · rw [← wordOp_univG]
+    · rw [← wordOp_univG D4sector.f R (l ++ r.map fun p => (radicalColour p.1, p.2))]
       refine Submodule.subset_span ⟨l, r, hl, hk, ?_, rfl⟩
       have hh := (graded_key_word_degree l r).symm.trans hd
-      simpa only [hk] using hh
+      simpa only [hk] using! hh
     · exact Submodule.zero_mem _
   · intro v hv
     have hh := gradedKeyOrbit_le (univRepG D4sector.f R) (wUG D4sector.f R) k N hv
@@ -95,9 +96,9 @@ theorem projUG_cyclic (R : RelSpec 28) (N : ℕ) :
     change projUG D4sector.f R N
       (wordOp (univRepG D4sector.f R) l (wUG D4sector.f R)) ∈
       cycDeg (univRepG D4sector.f R) (wUG D4sector.f R) N
-    rw [wordOp_univG, projUG_mk]
+    rw [wordOp_univG D4sector.f R l, projUG_mk D4sector.f R N]
     split_ifs with hd
-    · rw [← wordOp_univG]
+    · rw [← wordOp_univG D4sector.f R l]
       exact Submodule.subset_span ⟨l, hd, rfl⟩
     · exact Submodule.zero_mem _
   · intro v hv
@@ -114,9 +115,8 @@ theorem d4_universal_degree_eq_keys (n N : ℕ) :
     (keyPrefix_top (univRepG D4sector.f (ravFam D4sector n 0))
       (wUG D4sector.f (ravFam D4sector n 0)) n
       (univG_sat D4sector.f (ravFam D4sector n 0)))
-  dsimp only at hh
-  rw [projUG_cyclic] at hh
-  simpa [keyPrefix, Submodule.map_iSup, projUG_keyOrbit] using hh.symm
+  rw [projUG_cyclic (ravFam D4sector n 0) N] at hh
+  simpa [keyPrefix, Submodule.map_iSup, projUG_keyOrbit (ravFam D4sector n 0)] using! hh.symm
 
 end
 

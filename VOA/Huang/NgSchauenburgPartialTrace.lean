@@ -27,6 +27,10 @@ def partialTraceLeftLinear (P : Pivotal C) (U X Y : C) :
       Preadditive.comp_add, Preadditive.add_comp]
   map_smul' := by intros; simp [partialTraceLeft]
 
+private theorem partialTraceLeftLinear_apply (P : Pivotal C) (U X Y : C)
+    (g : U ⊗ X ⟶ U ⊗ Y) : P.partialTraceLeftLinear U X Y g = P.partialTraceLeft U g :=
+  rfl
+
 /-- A right-hand spectator strand may be kept outside the partial trace. -/
 theorem partialTraceLeft_whisker (P : Pivotal C) (U : C) {X Y : C}
     (f : U ⊗ X ⟶ U ⊗ Y) (V : C) :
@@ -49,7 +53,7 @@ theorem hom_ext_trace {X Y : C} {f g : X ⟶ Y}
   apply F.tracePairing_injective Y X
   apply LinearMap.ext
   intro q
-  simpa only [tracePairing_apply, F.scalarTrace_comp_comm q] using h q
+  simpa only [tracePairing_apply, F.scalarTrace_comp_comm q] using! h q
 
 /-- Dinaturality in the closed strand, including noninvertible morphisms. -/
 theorem partialTraceLeft_dinatural {U V X Y : C} (a : U ⟶ V)
@@ -113,8 +117,8 @@ theorem partialTraceLeft_eq_sum_channels (U : C) {X Y : C}
       intro i _
       apply Finset.sum_congr rfl
       intro a _
-      simpa only [Pivotal.partialTraceLeftLinear, LinearMap.coe_mk,
-        AddHom.coe_mk, Category.assoc] using
+      rw [Pivotal.partialTraceLeftLinear_apply]
+      simpa only [Category.assoc] using
         F.partialTraceLeft_dinatural (F.compositionDual (F.simpleHomBasis U i) a)
           (F.simpleHomBasis U i a ▷ X ≫ f)
 

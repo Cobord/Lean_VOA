@@ -107,10 +107,16 @@ theorem uenvDegreeOp_mul (W : VertexOperatorAlgebra 𝒱) (y z : UEnv W) :
   simp only [uenvDegreeOp_apply]
   noncomm_ring
 
+section LieOfRing
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- On a Lie generator, the enveloping Euler operator is induced by the Lie bracket. -/
 theorem uenvDegreeOp_uι_eq_lie (W : VertexOperatorAlgebra 𝒱) (x : VHatCarrier W) :
     uenvDegreeOp W (uι W x) = uι W ⁅degreeElement W, x⁆ := by
   rw [uenvDegreeOp_apply, ← Ring.lie_def, ← (uι W).map_lie]
+
+end LieOfRing
 
 /-- A homogeneous Lie element remains an Euler eigenvector after the enveloping inclusion. -/
 theorem uenvDegreeOp_uι {d : ℤ} {x : VHatCarrier W} (hx : x ∈ deg W d) :
@@ -287,8 +293,7 @@ theorem levCover_iSupIndep (P : ParabolicRep W n U) : iSupIndep (levCover P) := 
     have hab' : a - (n : ℤ) = b - (n : ℤ) := Int.cast_injective hab
     omega
   have heig : iSupIndep (fun k : ℤ => Module.End.eigenspace (indDegreeOp P) (μ k)) := by
-    simpa only [Function.comp_apply] using
-      (Module.End.eigenspaces_iSupIndep (indDegreeOp P)).comp hμ
+    exact (Module.End.eigenspaces_iSupIndep (indDegreeOp P)).comp hμ
   exact heig.mono (fun k => levCover_le_eigenspace P k)
 
 /-- A faithful equivariant realization of the parabolic module separates the canonical bottom

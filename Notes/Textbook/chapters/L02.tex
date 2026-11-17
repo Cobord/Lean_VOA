@@ -121,7 +121,8 @@ level used) provides a model of these, so they are the background logic of ordin
 \texttt{\#print axioms foo} lists the axioms that the proof of \lean{foo} reaches; a report that is a
 subset of these three is called \emph{\texttt{\#print axioms}-clean}.
 
-\paragraph{2. Mathlib.} The pinned version is Mathlib v4.30.0; its definitions (Lie algebras,
+\paragraph{2. Mathlib.} The pinned version is Mathlib commit \texttt{b63f6e8a}, used with Lean v4.35.0-rc3 (releases
+before v1.1 pinned Mathlib v4.30.0); its definitions (Lie algebras,
 universal enveloping algebras, tensor products, quotients, bases, \ldots) are taken to mean what their
 names say. Chapter~\ref{ch:01} and Section~\ref{l02:sec:lean} explain the ones used here.
 
@@ -2014,7 +2015,7 @@ reported ``7107 library files scanned; \ldots; 0 sanctioned axiom declaration(s)
 been moved out, and a re-run on the working tree of 28 October 2026 printed ``Repository check passed: 10353
 library files scanned; \ldots; 0 sanctioned axiom declaration(s)''). The axiom audit
 \texttt{scripts/audit/run\_axiom\_audits.py} treats any reappearance of \lean{pbw} in an axiom list as a
-failure (according to the commit message of the revision that made \lean{pbw} a theorem; not re-run for this chapter). Mathlib v4.30.0 still contains no PBW theorem
+failure (according to the commit message of the revision that made \lean{pbw} a theorem; not re-run for this chapter). Mathlib, at the pinned commit \texttt{b63f6e8a} as at v4.30.0, still contains no PBW theorem
 (Section~\ref{l02:sec:lean}); the library proves the \emph{relative} consequence above, and the PBW basis of
 the affine vacuum module (Section~\ref{l02:sec:pbwbasis}), but not the PBW basis theorem for $U(\ltwog)$
 itself (Theorem~\ref{l02:thm:pbw}).
@@ -2900,13 +2901,13 @@ File \leanpath{VOA/Foundations/LatticeAlgebraTwisted.lean}.
 noncomputable def twMul (f g : L.carrier →₀ ℂ) : L.carrier →₀ ℂ := twMulL L f g
 
 theorem twMul_e (α β : L.carrier) :
-    twMul L (latticeAlgebra.e α) (latticeAlgebra.e β)
+    twMul L (Finsupp.single α (1 : ℂ)) (Finsupp.single β (1 : ℂ))
       = Finsupp.single (α + β) (latticeCocycle L α β) := by
 
 theorem twMul_assoc (f g h : L.carrier →₀ ℂ) :
     twMul L (twMul L f g) h = twMul L f (twMul L g h) := by
 
-theorem one_twMul (g : L.carrier →₀ ℂ) : twMul L (latticeAlgebra.e 0) g = g := by
+theorem one_twMul (g : L.carrier →₀ ℂ) : twMul L (Finsupp.single 0 (1 : ℂ)) g = g := by
 \end{leancode}
 
 \begin{dictionary}
@@ -3347,6 +3348,6 @@ Beginners}, the sections on the super case.
 \textbf{Lean.} The consistency of Lean's type theory relative to set theory with inaccessible cardinals is
 M.~Carneiro, \emph{The Type Theory of Lean}, Master's thesis, Carnegie Mellon University, 2019. Mathlib's
 universal enveloping algebra is in \leanpath{Mathlib/\allowbreak Algebra/\allowbreak Lie/\allowbreak UniversalEnveloping.lean}
-(pinned version v4.30.0).
+(pinned commit \texttt{b63f6e8a}).
 
 \endgroup

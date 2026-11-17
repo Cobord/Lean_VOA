@@ -35,7 +35,7 @@ theorem conformalPolynomial_bottom (N : OrdVModule W M) {h : ℂ}
   have hp (n : ℕ) : actA N hl ((omegaL W ^ n) (mk W W.vacuum)) =
       h ^ n • (1 : Module.End ℂ (N.weight h)) := by
     induction n with
-    | zero => simpa only [pow_zero, Module.End.one_apply, one_smul] using actA_one N hl
+    | zero => simpa only [pow_zero, Module.End.one_apply, one_smul] using! actA_one N hl
     | succ n ih =>
       rw [pow_succ', Module.End.mul_apply]
       change actA N hl (Amul (zhuRingData_holds W) (mk W W.conformalVector) _) = _

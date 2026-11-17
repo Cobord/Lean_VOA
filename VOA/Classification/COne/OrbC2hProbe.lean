@@ -122,7 +122,7 @@ theorem plusProbe_virWord_bad (ks : List ℕ) (p : VP 4 four_ge_one)
     rw [virWord, plusProbe_L]
     by_cases hk : k = 1
     · subst k
-      rw [ih (by simpa using h), mul_zero]
+      rw [ih (by simpa using! h), mul_zero]
     · rw [if_neg hk, zero_mul]
 
 theorem virError_le_ker_plusProbe (p : VP 4 four_ge_one) :
@@ -141,7 +141,7 @@ theorem remainder_probe (X : VP 4 four_ge_one) (n : ℤ) (p q : ℕ) (a b : ℂ)
   change plusProbe (modeRemainder _ _ _ _ _ _ _ _) = 0 at hh
   rw [modeRemainder, map_sub, map_add, map_smul, map_smul,
     plusProbe_L_pow, plusProbe_L_pow, plusProbe_vacuum] at hh
-  simpa [smul_eq_mul, mul_assoc] using sub_eq_zero.mp hh
+  simpa [smul_eq_mul, mul_assoc] using! sub_eq_zero.mp hh
 
 /-- The two scalar measurements exclude every existential witness X and t. -/
 theorem not_cubicSeedRemainders_of_probes

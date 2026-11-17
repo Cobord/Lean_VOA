@@ -140,7 +140,9 @@ namespace FinalScorecard
 
 variable {W : VertexOperatorAlgebra 𝒱}
 
-/-- **A `FinalScorecard W` with the `hiso` field plugged as a term from `MUFunctorialData`.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**A `FinalScorecard W` with the `hiso` field plugged as a term from `MUFunctorialData`.**
 
 Every field is the genuine remaining obligation of the generalized-Verma / Frenkel–Zhu theory, with
 `hiso` *not carried as a function* but **derived** from the structural functoriality datum
@@ -164,7 +166,9 @@ end FinalScorecard
 
 /-! ## The single tightest headline — the definitive minimal leaf list, `hiso` a term -/
 
-/-- **`zhuBijection_assembled` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_assembled` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem
 5.3.4, assembled on the tightest minimal leaves.**
 
 Given the genuinely-remaining hypotheses after the sibling drives close —
@@ -203,7 +207,9 @@ theorem zhuBijection_assembled {W : VertexOperatorAlgebra 𝒱}
   zhuBijection_final_scorecard A hall hirr F
     (InducedAssignment.hiso_from_functorial F Dfun) G
 
-/-- **`zhuBijection_assembled_of_scorecard` — the same headline routed through the assembled
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_assembled_of_scorecard` — the same headline routed through the assembled
 `FinalScorecard` bundle.**  Identical content to `zhuBijection_assembled`, packaged through the single
 object `FinalScorecard.ofFunctorial …` (the definitive hypothesis bundle, `hiso` a term, as one term). -/
 theorem zhuBijection_assembled_of_scorecard {W : VertexOperatorAlgebra 𝒱}

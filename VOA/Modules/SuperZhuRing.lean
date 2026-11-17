@@ -560,7 +560,7 @@ noncomputable def superAmul : V.superA hV →ₗ[ℂ] V.superA hV →ₗ[ℂ] V.
 
 @[simp] theorem superAmul_mk (u v : 𝒱) :
     hZ.superAmul (V.superMk hV u) (V.superMk hV v) = V.superMk hV (V.superZhuMul hV u v) := by
-  rw [superAmul, V.superDescendBilin_apply]; rfl
+  exact V.superDescendBilin_apply hV _ _ _ u v
 
 /-- Associativity of the descended product. -/
 theorem superAmul_assoc (p q r : V.superA hV) :

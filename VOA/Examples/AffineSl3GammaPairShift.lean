@@ -12,6 +12,8 @@ The same ghost-charge argument applies to every pair of gamma colours.
 This supplies the index-shift identities needed for the mixed lowering
 current, not merely the three pairs used in self-commutation.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

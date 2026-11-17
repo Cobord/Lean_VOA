@@ -85,12 +85,12 @@ theorem gtCauchyWeight_dominant (q : R) (h : PochhammerUnits q) (r : ℕ) {N : �
   have hpos : ∀ i, 0 ≤ lam i := by
     intro i
     refine Fin.cases (by omega) (fun j => ?_) i
-    refine Fin.cases (by simpa using hb) (fun k => ?_) j
+    refine Fin.cases (by simpa using! hb) (fun k => ?_) j
     simp [ht]
   apply Fin.antitone_iff_succ_le.mpr
   intro i
   refine Fin.cases ?_ (fun j => ?_) i
-  · simpa using hra.trans' hbr
+  · simpa using! hra.trans' hbr
   · rw [ht]
     exact hpos _
 

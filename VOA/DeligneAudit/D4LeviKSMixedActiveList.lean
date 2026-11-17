@@ -42,7 +42,7 @@ theorem rxActiveIndex_shape (a b c : ℕ) :
         (fun i : Fin (c + (a + b)) =>
           (List.replicate c (5 : Fin 6) ++
             List.replicate (a + b) (1 : Fin 6))[i.val]'(by
-              simpa using i.isLt)) := by
+              simpa using! i.isLt)) := by
   funext i
   let p := (finSumFinEquiv (m := c) (n := a + b)).symm i
   rcases hp : p with z | x
@@ -63,7 +63,7 @@ theorem ryActiveIndex_shape (b c : ℕ) :
         (fun i : Fin (c + b) =>
           (List.replicate c (5 : Fin 6) ++
             List.replicate b (4 : Fin 6))[i.val]'(by
-              simpa using i.isLt)) := by
+              simpa using! i.isLt)) := by
   funext i
   let p := (finSumFinEquiv (m := c) (n := b)).symm i
   rcases hp : p with z | y

@@ -455,7 +455,10 @@ noncomputable def red : L.carrier →+ (Fin L.bRank → ZMod 2) where
   toFun α i := ((latticeBasis L).repr α i : ZMod 2)
   map_zero' := by
     funext i; simp only [map_zero, Finsupp.zero_apply, Pi.zero_apply]; exact Int.cast_zero
-  map_add' α β := by ext i; simp
+  map_add' α β := by
+    ext i
+    simp
+    try exact Int.cast_add _ _
 
 theorem red_apply (α : L.carrier) (i : Fin L.bRank) :
     red L α i = ((latticeBasis L).repr α i : ZMod 2) := rfl
@@ -483,7 +486,10 @@ theorem red_eq_zero_iff (α : L.carrier) : red L α = 0 ↔ ∃ γ, α = 2 • �
     simp [Int.mul_ediv_cancel' (hdiv i)]
   · rintro ⟨γ, rfl⟩
     ext i
-    simp only [red_apply, map_nsmul, Finsupp.smul_apply, Pi.zero_apply, nsmul_eq_mul]
+    show (((latticeBasis L).repr (2 • γ) i : ℤ) : ZMod 2) = 0
+    rw [map_nsmul]
+    change (((2 : ℕ) • (latticeBasis L).repr γ i : ℤ) : ZMod 2) = 0
+    rw [nsmul_eq_mul]
     push_cast
     rw [show (2 : ZMod 2) = 0 from rfl, zero_mul]
 
@@ -513,7 +519,7 @@ theorem latticeCocycle_add_two_nsmul (α β γ : L.carrier) :
 theorem cocMat_add_transpose (hEven : L.Even) :
     cocMat L + (cocMat L)ᵀ = (gramMat L).map (Int.cast : ℤ → ZMod 2) := by
   ext i j
-  simp only [add_apply, transpose_apply, cocMat, gramMat, of_apply, map_apply]
+  simp only [Matrix.add_apply, transpose_apply, cocMat, gramMat, of_apply, map_apply]
   rcases lt_trichotomy j i with h | rfl | h
   · rw [if_pos h, if_neg (by omega), add_zero]
   · rw [if_neg (lt_irrefl _), add_zero, eq_comm, ZMod.intCast_zmod_eq_zero_iff_dvd]

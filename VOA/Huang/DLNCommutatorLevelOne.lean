@@ -44,33 +44,45 @@ private theorem det_mod (γ : SL2Z) (n : ℕ) :
     (γ 0 0 : ZMod n) * (γ 1 1 : ZMod n) -
       (γ 0 1 : ZMod n) * (γ 1 0 : ZMod n) = 1 := by
   have h : γ 0 0 * γ 1 1 - γ 0 1 * γ 1 0 = 1 := by
-    simpa only [Matrix.det_fin_two] using γ.property
-  simpa only [Int.cast_mul, Int.cast_sub, Int.cast_one] using
+    simpa only [Matrix.det_fin_two] using! γ.property
+  simpa only [Int.cast_mul, Int.cast_sub, Int.cast_one] using!
     congrArg (fun z : ℤ => (z : ZMod n)) h
 
 private theorem residue3_S (γ : SL2Z) : residue3 (ModularGroup.S * γ) = residue3 γ := by
-  simpa [residue3, ModularGroup.S, Matrix.mul_apply, Fin.sum_univ_two] using
+  have e : ∀ i j, ((ModularGroup.S * γ : SL2Z) : Matrix (Fin 2) (Fin 2) ℤ) i j =
+      ((!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ) * (γ : Matrix (Fin 2) (Fin 2) ℤ)) i j :=
+    fun _ _ => rfl
+  simpa [residue3, e, Matrix.mul_apply, Fin.sum_univ_two] using!
     weight3_S _ _ _ _ (det_mod γ 3)
 
 private theorem residue3_T (γ : SL2Z) :
     residue3 (ModularGroup.T * γ) = 1 + residue3 γ := by
-  simpa [residue3, ModularGroup.T, Matrix.mul_apply, Fin.sum_univ_two] using
+  have e : ∀ i j, ((ModularGroup.T * γ : SL2Z) : Matrix (Fin 2) (Fin 2) ℤ) i j =
+      ((!![1, 1; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ) * (γ : Matrix (Fin 2) (Fin 2) ℤ)) i j :=
+    fun _ _ => rfl
+  simpa [residue3, e, Matrix.mul_apply, Fin.sum_univ_two] using!
     weight3_T _ _ _ _ (det_mod γ 3)
 
 private theorem residue4_S (γ : SL2Z) :
     residue4 (ModularGroup.S * γ) = 1 + residue4 γ := by
-  simpa [residue4, ModularGroup.S, Matrix.mul_apply, Fin.sum_univ_two] using
+  have e : ∀ i j, ((ModularGroup.S * γ : SL2Z) : Matrix (Fin 2) (Fin 2) ℤ) i j =
+      ((!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ) * (γ : Matrix (Fin 2) (Fin 2) ℤ)) i j :=
+    fun _ _ => rfl
+  simpa [residue4, e, Matrix.mul_apply, Fin.sum_univ_two] using!
     weight4_S _ _ _ _ (det_mod γ 4)
 
 private theorem residue4_T (γ : SL2Z) :
     residue4 (ModularGroup.T * γ) = 1 + residue4 γ := by
-  simpa [residue4, ModularGroup.T, Matrix.mul_apply, Fin.sum_univ_two] using
+  have e : ∀ i j, ((ModularGroup.T * γ : SL2Z) : Matrix (Fin 2) (Fin 2) ℤ) i j =
+      ((!![1, 1; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ) * (γ : Matrix (Fin 2) (Fin 2) ℤ)) i j :=
+    fun _ _ => rfl
+  simpa [residue4, e, Matrix.mul_apply, Fin.sum_univ_two] using!
     weight4_T _ _ _ _ (det_mod γ 4)
 
 private theorem ST_cube : (ModularGroup.S * ModularGroup.T) ^ 3 = ModularGroup.S ^ 2 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [ModularGroup.S, ModularGroup.T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [ModularGroup.coe_S, ModularGroup.coe_T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 
 private theorem character_S_mul_T_cube {A : Type*} [CommGroup A] (χ : SL2Z →* A) :
     χ ModularGroup.S * χ ModularGroup.T ^ 3 = 1 := by
@@ -80,7 +92,7 @@ private theorem character_S_mul_T_cube {A : Type*} [CommGroup A] (χ : SL2Z →*
   calc
     χ ModularGroup.S ^ 2 * (χ ModularGroup.S * χ ModularGroup.T ^ 3) =
         χ ModularGroup.S ^ 3 * χ ModularGroup.T ^ 3 := by rw [← mul_assoc, ← pow_succ]
-    _ = χ ModularGroup.S ^ 2 * 1 := by simpa using h
+    _ = χ ModularGroup.S ^ 2 * 1 := by simpa using! h
 
 private theorem character_S_four {A : Type*} [CommGroup A] (χ : SL2Z →* A) :
     χ ModularGroup.S ^ 4 = 1 := by
@@ -88,7 +100,7 @@ private theorem character_S_four {A : Type*} [CommGroup A] (χ : SL2Z →* A) :
   have h : ModularGroup.S ^ 4 = 1 := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [ModularGroup.S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+      simp [ModularGroup.coe_S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
   rw [h, map_one]
 
 private theorem character_S_cube {A : Type*} [CommGroup A] (χ : SL2Z →* A) :
@@ -98,7 +110,7 @@ private theorem character_S_cube {A : Type*} [CommGroup A] (χ : SL2Z →* A) :
       χ ModularGroup.T ^ 3 * χ ModularGroup.T ^ 9 := by
     calc
       χ ModularGroup.S ^ 3 * χ ModularGroup.T ^ 9 = 1 := by
-        simpa only [mul_pow, ← pow_mul, one_pow] using h
+        simpa only [mul_pow, ← pow_mul, one_pow] using! h
       _ = _ := by rw [← pow_add]; exact (character_pow_twelve χ ModularGroup.T).symm
   exact mul_right_cancel he
 
@@ -121,7 +133,7 @@ private theorem induction_ST (P : SL2Z → Prop) (h1 : P 1)
 private theorem character_four_residue {A : Type*} [CommGroup A] (χ : SL2Z →* A) (γ : SL2Z) :
     χ γ ^ 4 = (χ ModularGroup.T ^ 4) ^ (residue3 γ).val := by
   have ht : (χ ModularGroup.T ^ 4) ^ 3 = 1 := by
-    simpa only [← pow_mul] using character_pow_twelve χ ModularGroup.T
+    simpa only [← pow_mul] using! character_pow_twelve χ ModularGroup.T
   induction γ using induction_ST with
   | h1 =>
     simp [residue3, weight3]
@@ -137,7 +149,7 @@ private theorem character_cube_residue {A : Type*} [CommGroup A] (χ : SL2Z →*
     χ γ ^ 3 = (χ ModularGroup.T ^ 3) ^ (residue4 γ).val := by
   letI : Fact (1 < 4) := ⟨by decide⟩
   have ht : (χ ModularGroup.T ^ 3) ^ 4 = 1 := by
-    simpa only [← pow_mul] using character_pow_twelve χ ModularGroup.T
+    simpa only [← pow_mul] using! character_pow_twelve χ ModularGroup.T
   induction γ using induction_ST with
   | h1 =>
     simp [residue4, weight4]
@@ -169,7 +181,7 @@ theorem character_eq_one_of_mem_gamma_twelve {A : Type*} [CommGroup A]
     (gamma_le_of_dvd (by norm_num : 3 ∣ 12) hγ)
   have h3 := character_cube_eq_one_of_mem_gamma_four χ
     (gamma_le_of_dvd (by norm_num : 4 ∣ 12) hγ)
-  simpa only [show 4 = 3 + 1 from rfl, pow_succ, h3, one_mul] using h4
+  simpa only [show 4 = 3 + 1 from rfl, pow_succ, h3, one_mul] using! h4
 
 /-- The commutator subgroup of the integral modular group contains `Γ(12)`. -/
 theorem gamma_twelve_le_commutator : Gamma 12 ≤ commutator SL2Z := by
@@ -180,7 +192,7 @@ theorem gamma_twelve_le_commutator : Gamma 12 ≤ commutator SL2Z := by
 /-- The exact level-one case of the arithmetic relative-commutator contract. -/
 theorem relativeCommutatorCongruence_one :
     Gamma (12 * 1) ≤ ⁅(⊤ : Subgroup SL2Z), Gamma 1⁆ := by
-  simpa only [Nat.mul_one, Gamma_one_top, ← commutator_def] using
+  simpa only [Nat.mul_one, Gamma_one_top, ← commutator_def] using!
     gamma_twelve_le_commutator
 
 /-- A representation which is scalar on the entire modular group kills `Γ(12)`. -/

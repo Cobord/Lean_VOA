@@ -20,7 +20,7 @@ variable {R : Type*} [CommRing R]
   ext i j; fin_cases i <;> fin_cases j <;> simp [torus]
 
 @[simp] theorem torus_mul (u v : Rˣ) : torus (u * v) = torus u * torus v := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [torus, Matrix.mul_apply, Fin.sum_univ_two, mul_comm]
 
 theorem torus_commute (u v : Rˣ) : Commute (torus u) (torus v) := by
@@ -43,36 +43,32 @@ def weyl (u : Rˣ) : Matrix.SpecialLinearGroup (Fin 2) R :=
 
 theorem weyl_eq_roots (u : Rˣ) :
     weyl u = upperRoot (u : R) * lowerRoot (-(↑u⁻¹ : R)) * upperRoot (u : R) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [weyl, upperRoot, lowerRoot, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem weyl_upper_conj (u : Rˣ) (t : R) :
     weyl u * upperRoot t * (weyl u)⁻¹ = lowerRoot (-((↑u⁻¹ : R) ^ 2 * t)) := by
-  rw [Matrix.SpecialLinearGroup.SL2_inv_expl]
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [weyl, upperRoot, lowerRoot, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]; fin_cases i <;> fin_cases j <;>
+    simp [weyl, upperRoot, lowerRoot, Matrix.adjugate_fin_two, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
       pow_two, mul_assoc, mul_comm, mul_left_comm]
 
 theorem weyl_lower_conj (u : Rˣ) (t : R) :
     weyl u * lowerRoot t * (weyl u)⁻¹ = upperRoot (-((u : R) ^ 2 * t)) := by
-  rw [Matrix.SpecialLinearGroup.SL2_inv_expl]
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [weyl, upperRoot, lowerRoot, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]; fin_cases i <;> fin_cases j <;>
+    simp [weyl, upperRoot, lowerRoot, Matrix.adjugate_fin_two, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
       pow_two, mul_assoc, mul_comm, mul_left_comm]
 
 theorem weyl_torus_conj (u v : Rˣ) :
     weyl u * torus v * (weyl u)⁻¹ = torus v⁻¹ := by
   have huv : (u : R) * ((v : R) * (↑u⁻¹ : R)) = v := by
     rw [mul_left_comm (u : R) (v : R), Units.mul_inv, mul_one]
-  rw [Matrix.SpecialLinearGroup.SL2_inv_expl]
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [weyl, torus, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]; fin_cases i <;> fin_cases j <;>
+    simp [weyl, torus, Matrix.adjugate_fin_two, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two,
       mul_assoc, mul_comm, huv]
 
 theorem weyl_mul_weyl_one_inv (u : Rˣ) :
     weyl u * (weyl (1 : Rˣ))⁻¹ = torus u := by
-  rw [Matrix.SpecialLinearGroup.SL2_inv_expl]
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [weyl, torus, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]; fin_cases i <;> fin_cases j <;>
+    simp [weyl, torus, Matrix.adjugate_fin_two, Matrix.mul_apply, Fin.sum_univ_two]
 
 end VOA.Huang.DLNSchur

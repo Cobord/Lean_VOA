@@ -54,7 +54,7 @@ theorem fractionalChargeMode_invariant_iff {n : ℕ} (hn : 0 < n)
       mode ((latticeModule 1 le_rfl j).YM (latChargeGen (latP 1) β)) k x ∈ S) := by
   constructor
   · intro h β k x hx
-    simpa only [fractionalChargeMode_recover hn] using h β ((n : ℤ)*k+a*β) x hx
+    simpa only [fractionalChargeMode_recover hn] using! h β ((n : ℤ)*k+a*β) x hx
   · intro h β ℓ x hx
     unfold fractionalChargeMode
     split_ifs

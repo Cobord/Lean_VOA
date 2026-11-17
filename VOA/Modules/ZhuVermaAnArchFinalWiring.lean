@@ -153,7 +153,9 @@ end FinalScorecard
 
 /-! ## The single tightest headline — the definitive hypothesis bundle, hypotheses spelled out flat -/
 
-/-- **`zhuBijection_final` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4, on
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_final` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4, on
 the minimal remaining hypotheses (the definitive hypothesis bundle).**
 
 Given **exactly** the genuinely-remaining hypotheses after the sibling drives close —

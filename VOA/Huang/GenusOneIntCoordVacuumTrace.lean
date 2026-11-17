@@ -30,7 +30,7 @@ theorem vacuumInnerCoeff_mem_grading
   rw [show α + β - (α + β - 1 - (k : ℂ)) - 1 = ((k : ℤ) : ℂ) by
     push_cast; ring] at h
   change vacuumInnerCoeff Y wa wb α β k ∈ adjWeight W ((k : ℤ) : ℂ) at h
-  simpa only [adjWeight_cast] using h
+  simpa only [adjWeight_cast] using! h
 
 variable {ι : Type w} [Fintype ι] [DecidableEq ι] (D : VOA.ModularData W ι)
 
@@ -39,7 +39,8 @@ theorem vacuum_traceFunction_eq (x : ι) (v : V) (τ : UpperHalfPlane) :
     traceFunction (moduleIntertwiner (lwOf D x).isMod) (lwOf D x).h v τ =
       traceFun D.Mfam D.h x v τ := by
   simp only [traceFunction, trace_moduleIntertwiner, traceFun, torusOnePoint, lwOf]
-  rfl
+  exact congrArg (fun f => qEvalAt f (D.h x - W.centralCharge / 24) τ)
+    (trace_moduleIntertwiner (D.Mfam x).isMod v)
 
 /-- Evaluate a fixed inner-mode row of the vacuum iterate. This equality of
 total sums needs no convergence assumption; convergence is supplied separately. -/
@@ -53,7 +54,8 @@ theorem vacuum_iterate_row (hv : W.vacuum ≠ 0)
       ((lwOf D x).h + j) z 1 k * qFactor (lwOf D x) τ j) =
       z ^ ((k : ℂ) - α - β) *
         traceFun D.Mfam D.h x (vacuumInnerCoeff Y wa wb α β k) τ := by
-  simp only [iterateTerm_eq_onePoint _ _ hwa hwb, Complex.one_cpow, mul_one]
+  simp only [iterateTerm_eq_onePoint (Q := vacuumLW W hv) (N := lwOf D x)
+    (moduleIntertwiner (lwOf D x).isMod) Y hwa hwb, Complex.one_cpow, mul_one]
   have he : -((α + β - 1 - (vacuumLW W hv).h) - (k : ℂ)) - 1 =
       (k : ℂ) - α - β := by change -((α + β - 1 - 0) - _) - 1 = _; ring
   rw [he]
@@ -127,7 +129,7 @@ theorem vacuumChannel_plane_expansion (hV : StronglyRational W)
       (lwOf_irreducible D a) (lwOf_irreducible D b) (lwOf_irreducible D x)
       ((isSimple_iff_adjointModule_isIrreducible W).mp hV.simple)
       (Q := vacuumLW W hv) (moduleIntertwiner (lwOf D x).isMod) (epsInt F c) hwa hwb τ
-    refine ⟨δ, hδ, fun z hz hnorm => hs z 1 ?_ one_ne_zero (by simpa using hnorm)⟩
+    refine ⟨δ, hδ, fun z hz hnorm => hs z 1 ?_ one_ne_zero (by simpa using! hnorm)⟩
     exact fun he => by simp [he] at hz
   choose r hrpos hrs using hr
   let δ : ℝ := Finset.univ.inf' ⟨a, Finset.mem_univ a⟩ r

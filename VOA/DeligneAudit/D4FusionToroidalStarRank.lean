@@ -36,7 +36,7 @@ private theorem finiteSinglesStar_injective {V : Type*} [AddCommGroup V] [Module
   intro x y h
   funext i
   apply Subtype.ext
-  simpa only [finiteSinglesStar_apply] using congrArg (fun z : ℕ →₀ V => z i) h
+  simpa only [finiteSinglesStar_apply] using! congrArg (fun z : ℕ →₀ V => z i) h
 
 private theorem finiteSinglesStar_range {V : Type*} [AddCommGroup V] [Module ℂ V]
     (D : ℕ) (A : ℕ → Submodule ℂ V)
@@ -65,7 +65,7 @@ private theorem finiteSinglesStar_range {V : Type*} [AddCommGroup V] [Module ℂ
         have : x ∈ (⊥ : Submodule ℂ V) := by
           rw [← hvanish j (Nat.le_of_not_gt hj)]
           exact hx
-        simpa using this
+        simpa using! this
       subst x
       simp
 
@@ -165,7 +165,7 @@ theorem gr_finrank_eq [FiniteDimensional ℂ (UModG f R)]
     change (∑ i : Fin D, a (i.val + 1)) +
       Module.finrank ℂ (UModG f R) = ∑ i : Fin D, a i.val
     rw [hs₁, hs₀, ← hzero]
-    simpa only [hlast, add_zero] using hshift D
+    simpa only [hlast, add_zero] using! hshift D
   have hq := (grKernel f R m).finrank_quotient_add_finrank
   change Module.finrank ℂ (Gr f R m) +
     Module.finrank ℂ (grKernel f R m) =

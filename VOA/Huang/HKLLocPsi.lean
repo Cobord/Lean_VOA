@@ -253,7 +253,7 @@ theorem differentiableAt_glueFun {r : ℂ} (h0 : r ≠ 0) (h1 : 1 + r ≠ 0) :
         filter_upwards [Metric.ball_mem_nhds (-2 : ℂ) (show (0 : ℝ) < 1 / 4 by norm_num)]
           with z hz
         have hz' : z ∈ Metric.ball ((-2 : ℝ) : ℂ) (1 / 4) := by
-          simpa using hz
+          simpa using! hz
         have hre := re_ball hz'
         rcases lt_trichotomy z.im 0 with hzi | hzi | hzi
         · rw [glueFun_lower hm hzi]

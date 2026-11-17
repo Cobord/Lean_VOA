@@ -58,7 +58,6 @@ theorem qget_rowTrip (br : ℕ → ℕ → SV) (n x : ℕ) {a : ℕ} (ha : a < n
   have : ∀ c, qget ((br x c).map fun p => (c, p.1, p.2)) a b = if c = a then sget (br x a) b else 0 := by
     intro c
     have hm := qget_map_snd (br x c) c (fun k => k) a b
-    simp only at hm
     rw [hm]
     by_cases h : c = a
     · subst h; simp [sget, id]
@@ -87,7 +86,6 @@ theorem qget_colTrip (col : ℕ → ℕ → SV) (n x : ℕ) (a : ℕ) {b : ℕ} 
   have : ∀ e, qget ((col x e).map fun p => (p.1, e, p.2)) a b = if e = b then sget (col x b) a else 0 := by
     intro e
     have hm := qget_map_fst (col x e) e (fun k => k) a b
-    simp only at hm
     rw [hm]
     by_cases h : e = b
     · subst h; simp [sget, id]
@@ -133,7 +131,7 @@ theorem castQZ_opAQc {br : ℕ → ℕ → SV} {col : ℕ → ℕ → SV} (hn : 
     castQZ (S := S) (opAQc col x L) = opAZ (fun x c e => fZ br x c e) ⟨x, hx⟩ (castQZ L) := by
   funext a b
   simp only [castQZ, opAQc, opAZ]
-  have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by simpa [qRange] using hL
+  have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by simpa [qRange] using! hL
   clear hL
   induction L with
   | nil => simp [qget]
@@ -141,7 +139,6 @@ theorem castQZ_opAQc {br : ℕ → ℕ → SV} {col : ℕ → ℕ → SV} (hn : 
     rw [List.flatMap_cons, qget_append, ih (fun u hu => hL' u (List.mem_cons_of_mem _ hu))]
     have ht := hL' t List.mem_cons_self
     have hm := qget_map_fst (col x t.1) t.2.1 (fun k => -(k * t.2.2)) a b
-    simp only at hm
     rw [hm, sget_map_mul, col_of_check hcol (by rw [← hn]; exact a.2) ht.1]
     simp only [qget_cons, mul_add, Finset.sum_add_distrib, neg_add]
     congr 1
@@ -157,7 +154,7 @@ theorem castQZ_opBQc {br : ℕ → ℕ → SV} {col : ℕ → ℕ → SV} (hn : 
     castQZ (S := S) (opBQc col x L) = opBZ (fun x c e => fZ br x c e) ⟨x, hx⟩ (castQZ L) := by
   funext a b
   simp only [castQZ, opBQc, opBZ]
-  have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by simpa [qRange] using hL
+  have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by simpa [qRange] using! hL
   clear hL
   induction L with
   | nil => simp [qget]
@@ -165,7 +162,6 @@ theorem castQZ_opBQc {br : ℕ → ℕ → SV} {col : ℕ → ℕ → SV} (hn : 
     rw [List.flatMap_cons, qget_append, ih (fun u hu => hL' u (List.mem_cons_of_mem _ hu))]
     have ht := hL' t List.mem_cons_self
     have hm := qget_map_snd (col x t.2.1) t.1 (fun k => -(k * t.2.2)) a b
-    simp only at hm
     rw [hm]
     have e2 : (((col x t.2.1).map fun p => if p.1 = (b : ℕ) then -(p.2 * t.2.2) else 0).sum) =
         -(fZ br x b t.2.1 * t.2.2) := by

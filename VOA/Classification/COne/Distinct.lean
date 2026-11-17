@@ -47,6 +47,8 @@ dimensions.
 
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Classification.COne
 
 open VOA VOA.LatGen VOA.LatGen.Triplet VOA.IntegralLattice Module
@@ -107,7 +109,7 @@ variable (m : ℕ) (hm : 1 ≤ m)
 theorem normLE_latP_lt (k : ℕ) (hk : k < m) :
     normLE (latP m) (latP_posDef m hm) k = {0} := by
   ext v
-  rw [mem_normLE, halfNorm_latP, Finset.mem_singleton]
+  rw [mem_normLE, halfNorm_latP m v, Finset.mem_singleton]
   have key : ∀ w : ℤ, ((m : ℤ) * w ^ 2 ≤ k ↔ w = 0) := by
     intro w
     constructor
@@ -136,7 +138,7 @@ open Classical in
 theorem normLE_latP_self :
     normLE (latP m) (latP_posDef m hm) m = {0, a1 m, -a1 m} := by
   ext v
-  rw [mem_normLE, halfNorm_latP, Finset.mem_insert, Finset.mem_insert, Finset.mem_singleton]
+  rw [mem_normLE, halfNorm_latP m v, Finset.mem_insert, Finset.mem_insert, Finset.mem_singleton]
   have key : ∀ w : ℤ, ((m : ℤ) * w ^ 2 ≤ m ↔ w = 0 ∨ w = 1 ∨ w = -1) := by
     intro w
     constructor
@@ -167,17 +169,19 @@ theorem V2m_finrank_self :
     change ¬ ((1 : ℤ) = -1); omega
   rw [Finset.sum_insert h01, Finset.sum_insert h1, Finset.sum_singleton, rank_latP]
   have e0 : ((m : ℤ) - LatGen.halfNorm (latP m) 0).toNat = m := by
-    rw [halfNorm_latP]; simp
+    change ((m : ℤ) - LatGen.halfNorm (latP m) (0 : ℤ)).toNat = m
+    rw [halfNorm_latP m 0]; simp
   have e1 : ((m : ℤ) - LatGen.halfNorm (latP m) (a1 m)).toNat = 0 := by
     rw [halfNorm_latP]; simp
   have e2 : ((m : ℤ) - LatGen.halfNorm (latP m) (-a1 m)).toNat = 0 := by
-    rw [halfNorm_latP]; change ((m : ℤ) - (m : ℤ) * (-1 : ℤ) ^ 2).toNat = 0; simp
+    change ((m : ℤ) - LatGen.halfNorm (latP m) (-1 : ℤ)).toNat = 0
+    rw [halfNorm_latP m (-1)]; simp
   rw [e0, e1, e2, fockCount_zero]
 open Classical in
 theorem normLE_latP_mid (k : ℕ) (h1 : m ≤ k) (h2 : k < 4 * m) :
     normLE (latP m) (latP_posDef m hm) k = {0, a1 m, -a1 m} := by
   ext v
-  rw [mem_normLE, halfNorm_latP, Finset.mem_insert, Finset.mem_insert, Finset.mem_singleton]
+  rw [mem_normLE, halfNorm_latP m v, Finset.mem_insert, Finset.mem_insert, Finset.mem_singleton]
   have key : ∀ w : ℤ, ((m : ℤ) * w ^ 2 ≤ k ↔ w = 0 ∨ w = 1 ∨ w = -1) := by
     intro w
     constructor
@@ -208,11 +212,13 @@ theorem V2m_finrank_mid (k : ℕ) (h1 : m ≤ k) (h2 : k < 4 * m) :
     change ¬ ((1 : ℤ) = -1); omega
   rw [Finset.sum_insert h01, Finset.sum_insert h1', Finset.sum_singleton, rank_latP]
   have e0 : ((k : ℤ) - LatGen.halfNorm (latP m) 0).toNat = k := by
-    rw [halfNorm_latP]; simp
+    change ((k : ℤ) - LatGen.halfNorm (latP m) (0 : ℤ)).toNat = k
+    rw [halfNorm_latP m 0]; simp
   have e1 : ((k : ℤ) - LatGen.halfNorm (latP m) (a1 m)).toNat = k - m := by
     rw [halfNorm_latP]; change ((k : ℤ) - (m : ℤ) * (1 : ℤ) ^ 2).toNat = k - m; omega
   have e2 : ((k : ℤ) - LatGen.halfNorm (latP m) (-a1 m)).toNat = k - m := by
-    rw [halfNorm_latP]; change ((k : ℤ) - (m : ℤ) * (-1 : ℤ) ^ 2).toNat = k - m; omega
+    change ((k : ℤ) - LatGen.halfNorm (latP m) (-1 : ℤ)).toNat = k - m
+    rw [halfNorm_latP m (-1)]; change ((k : ℤ) - (m : ℤ) * (-1 : ℤ) ^ 2).toNat = k - m; omega
   rw [e0, e1, e2]; ring
 
 end Lattice

@@ -111,7 +111,7 @@ theorem jetDouble_antidiagonal (j : ℕ) :
   rw [hA, ← hw, wzSum, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro r hr
-  have hrj : r ≤ j := by simpa [Nat.lt_succ_iff] using Finset.mem_range.mp hr
+  have hrj : r ≤ j := by simpa [Nat.lt_succ_iff] using! Finset.mem_range.mp hr
   obtain ⟨t, rfl⟩ : ∃ t, j = r + t := ⟨j - r, by omega⟩
   rw [jetDouble, wzTerm, show r + t - r = t by omega, show 2 * r + t = r + t + r by omega,
     show 2 * r + 2 * t + 1 = 2 * (r + t) + 1 by omega]
@@ -138,7 +138,7 @@ theorem euler_cube_mul_jetSeries :
     rw [PowerSeries.coeff_mul]
     apply Finset.sum_eq_zero
     intro ij hij
-    rw [coeff_jetTerm_eq_zero ij.1 r (by have := Finset.mem_antidiagonal.mp hij; omega),
+    rw [coeff_jetTerm_eq_zero ij.1 r (by have := Finset.HasAntidiagonal.mem_antidiagonal.mp hij; omega),
       zero_mul]
   rw [coeff_indexBounded_sum _ hE d d le_rfl,
     coeff_indexBounded_sum _ (fun d r h => coeff_alternatingTerm_mul_eq_zero d r h _) d d le_rfl,
@@ -147,7 +147,7 @@ theorem euler_cube_mul_jetSeries :
   rw [sum_triangle_shift (fun r j => PowerSeries.coeff d (jetDouble r (j - r))) d]
   apply Finset.sum_congr rfl
   intro r hr
-  have hrd : r ≤ d := by simpa [Nat.lt_succ_iff] using Finset.mem_range.mp hr
+  have hrd : r ≤ d := by simpa [Nat.lt_succ_iff] using! Finset.mem_range.mp hr
   rw [mul_comm, euler_cube_mul_jetTerm,
     coeff_indexBounded_sum _ (fun d t h => coeff_jetDouble_eq_zero r t d (by omega)) d d le_rfl,
     map_sum]
@@ -162,7 +162,6 @@ theorem jetFermionicIdentity : JetFermionicIdentity := by
   unfold JetFermionicIdentity AffineSl2BoundaryCharacter.product
   have h := congrArg (fun f => f * (reciprocalEuler : PowerSeries ℚ) ^ 3)
     euler_cube_mul_jetSeries
-  simp only at h
   have hinv : (euler : PowerSeries ℚ) ^ 3 * reciprocalEuler ^ 3 = 1 := by
     rw [← mul_pow, euler_mul_reciprocal, one_pow]
   calc

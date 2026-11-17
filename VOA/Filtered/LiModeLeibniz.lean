@@ -77,6 +77,9 @@ theorem liFiltration_mode_leibniz_defect (W : VertexOperatorAlgebra V)
         W.smul y (-1) (W.smul x (n : ℤ) z) ∈
       liFiltration W (p + q + r - n + 1) := by
   have h := adjointGfil_mode_leibniz_defect W n hx hy hz
-  simpa only [liFiltration, Nat.cast_add, Nat.cast_sub hn, Nat.cast_one] using h
+  have e : (p : ℤ) + q + r - (n : ℤ) + 1 = ((p + q + r - n + 1 : ℕ) : ℤ) := by
+    push_cast [Nat.cast_sub hn]; ring
+  rw [e] at h
+  exact h
 
 end VOA

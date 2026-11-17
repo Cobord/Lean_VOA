@@ -31,6 +31,8 @@ open VOA.AffineLie
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {E : Type u} [AddCommGroup E] [Module ℂ E]

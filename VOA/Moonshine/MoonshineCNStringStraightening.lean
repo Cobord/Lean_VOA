@@ -105,7 +105,7 @@ theorem stringNegativeWord_mem_sortedSpan (D : ℕ → Module.End ℂ H)
   | cons i rest ih =>
       have h := stringSortedSpan_stable D x
         (stringNegativeMode_sorted_insert D hcomm x (stringWordEnergy rest)) i ih
-      simpa only [stringWordEnergy_cons, Nat.add_assoc, Nat.add_left_comm,
+      simpa only [stringNegativeWord, stringWordEnergy_cons, Nat.add_assoc, Nat.add_left_comm,
         Nat.add_comm] using h
 
 /-- Nonempty words straighten using only nonempty words; no vacuum term is introduced. -/

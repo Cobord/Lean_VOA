@@ -23,7 +23,7 @@ private theorem comm_end (a b : Fin 28) :
       ∑ c : Fin 28, contactF a b c • R.op c 0 := by
   ext v
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.sum_apply,
-    LinearMap.smul_apply] using R.comm a b 0 0 v
+    LinearMap.smul_apply] using! R.comm a b 0 0 v
 
 theorem highest_EF : highestE R * center R - center R * highestE R = highestH R := by
   have hs : (∑ c : Fin 28, contactF 15 27 c • R.op c 0) = -highestH R := by
@@ -69,10 +69,10 @@ theorem center_cube_of_known (h : HighestRel R w 1)
   have hE : highestE R w = 0 := by
     change -R.op 15 0 w = 0
     rw [h.raising 15 (by decide) 0, neg_zero]
-  have h0 : R.op 0 0 w = 0 := by simpa using h.cartan_zero 0 (by decide)
-  have h1 : R.op 1 0 w = w := by simpa using h.cartan_zero 1 (by decide)
-  have h2 : R.op 2 0 w = 0 := by simpa using h.cartan_zero 2 (by decide)
-  have h3 : R.op 3 0 w = 0 := by simpa using h.cartan_zero 3 (by decide)
+  have h0 : R.op 0 0 w = 0 := by simpa using! h.cartan_zero 0 (by decide)
+  have h1 : R.op 1 0 w = w := by simpa using! h.cartan_zero 1 (by decide)
+  have h2 : R.op 2 0 w = 0 := by simpa using! h.cartan_zero 2 (by decide)
+  have h3 : R.op 3 0 w = 0 := by simpa using! h.cartan_zero 3 (by decide)
   have hH : highestH R w = ((2 : ℤ) : ℂ) • w := by
     simp only [highestH, LinearMap.add_apply, h0, h1, h2, h3, zero_add, add_zero,
       Int.cast_ofNat, two_smul ℂ w]
@@ -83,10 +83,10 @@ theorem center_cube_of_known (h : HighestRel R w 1)
       (-2 : ℂ) • center R v := by
     intro v
     exact congrArg (fun T : Module.End ℂ V => T v) (highest_HF R)
-  have hk : (center R)^[N] w = 0 := by simpa only [Module.End.pow_apply] using hN
+  have hk : (center R)^[N] w = 0 := by simpa only [Module.End.pow_apply] using! hN
   have hs := (VOA.DeligneAudit.CLFilt.hw_pow (highestE R) (center R) (highestH R)
     hEF hHF hE hH N hk).2 (by norm_num : 0 ≤ (2 : ℤ))
-  simpa only [Module.End.pow_apply] using hs
+  simpa only [Module.End.pow_apply] using! hs
 
 end
 end VOA.DeligneAudit.D4FusionContact

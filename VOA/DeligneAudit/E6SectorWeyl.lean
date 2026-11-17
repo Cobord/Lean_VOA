@@ -39,9 +39,9 @@ theorem entryMatrix_toEntries_diag (l : List (ℕ × ℕ × ℤ)) (hl : inRange7
   intro e1 e2
   exfalso
   have e1' : t.1 = 77 := by
-    have := congrArg Fin.val e1; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.1] using this
+    have := congrArg Fin.val e1; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.1] using! this
   have e2' : t.2.1 = 77 := by
-    have := congrArg Fin.val e2; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.2] using this
+    have := congrArg Fin.val e2; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.2] using! this
   simp [e1', e2'] at h1
 
 theorem e6_diag : ∀ r, E6data.fullMatrix r ((77 : Fin 78), (77 : Fin 78)) = 0 := by
@@ -64,7 +64,7 @@ theorem e6_raising : ∀ e : Fin 78, (6 ≤ e.val ∧ e.val < 42) → ∀ y, fE6
   intro e he y
   have := List.all_eq_true.mp (List.all_eq_true.mp h e (List.mem_range'_1.mpr ⟨he.1, by omega⟩)) y
     (List.mem_range.mpr y.2)
-  rw [fE6_eq]; simpa using this
+  rw [fE6_eq]; simpa using! this
 
 
 theorem e6_cartan : ∀ h : Fin 78, h.val < 6 → ∀ y : Fin 78,

@@ -27,11 +27,11 @@ theorem vacDescData_sound (s : ℂ) (hs : s ≠ 0) (w : List ℕ) :
 
 def vacLevelCoefficient (N : ℕ) (a : VermaPartitions N → ℂ)
     (s : ℂ) (d : (ℕ × Fin 1) →₀ ℕ) : ℂ :=
-  ∑ w : VermaPartitions N, a w * coeff d (fockRawEval s (vacDescData w.val))
+  ∑ w : VermaPartitions N, a w * (fockRawEval s (vacDescData w.val)).coeff d
 
 theorem vacLevelCoefficient_sound (N : ℕ) (a : VermaPartitions N → ℂ)
     (s : ℂ) (hs : s ≠ 0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    coeff d (vacFamilyMap s (vermaLevelState (familyCharge s) (vacFamilyWeight s) N a)) =
+    (vacFamilyMap s (vermaLevelState (familyCharge s) (vacFamilyWeight s) N a)).coeff d =
       vacLevelCoefficient N a s d := by
   simp only [vermaLevelState, map_sum, map_smul, vacLevelCoefficient,
     MvPolynomial.coeff_sum, coeff_smul, vacDescData_sound s hs]

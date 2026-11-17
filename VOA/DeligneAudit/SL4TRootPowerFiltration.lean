@@ -74,7 +74,7 @@ theorem rootPowerFiltration_finrank [FiniteDimensional ℂ A] (z : A) (N : ℕ)
   rw [hz, Ideal.span_singleton_zero] at ht
   have hzero : Module.finrank ℂ (⊥ : Ideal A) = 0 :=
     Module.finrank_zero_of_subsingleton
-  simpa only [hzero, add_zero] using ht
+  simpa only [hzero, add_zero] using! ht
 
 end
 

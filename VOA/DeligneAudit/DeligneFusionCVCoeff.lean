@@ -33,7 +33,7 @@ private theorem cutoff_monomial_commute {F : ℕ → Module.End ℂ V}
     apply current_series_commute
     intro i j
     by_cases hi : A ≤ i <;> by_cases hj : A + 1 ≤ j
-    · simpa only [fromMode, if_pos hi, if_pos hj] using hFF i j
+    · simpa only [fromMode, if_pos hi, if_pos hj] using! hFF i j
     · simp [fromMode, hi, hj]
     · simp [fromMode, hi, hj]
     · simp [fromMode, hi, hj]
@@ -48,7 +48,7 @@ private theorem coeff_monomial_mul_add {R : Type*} [Semiring R]
     (p q : ℕ) (a : R) (P : PowerSeries R) :
     PowerSeries.coeff (p + q) (PowerSeries.monomial p a * P) =
       a * PowerSeries.coeff q P := by
-  simpa only [PowerSeries.coeff, PowerSeries.monomial, Finsupp.single_add] using
+  simpa only [PowerSeries.coeff, PowerSeries.monomial, Finsupp.single_add] using!
     (MvPowerSeries.coeff_add_monomial_mul
       (Finsupp.single () p) (Finsupp.single () q) P a)
 
@@ -82,7 +82,7 @@ theorem cutoff_split_two {F : ℕ → Module.End ℂ V}
         PowerSeries.monomial A (F A) ^ 2 +
           2 • (PowerSeries.monomial A (F A) * Garland.Fs (fromMode F (A + 1))) +
           Garland.Fs (fromMode F (A + 1)) ^ 2 := by
-    simpa only [two_mul, add_mul, two_nsmul] using hc.add_sq
+    simpa only [two_mul, add_mul, two_nsmul] using! hc.add_sq
   have heq := congrArg (PowerSeries.coeff (2 * A + j - 1)) hsquare
   rw [← cutoff_series_split F A] at heq
   have hindex : 2 * A + j - 1 = A + (A + j - 1) := by omega

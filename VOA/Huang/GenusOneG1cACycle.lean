@@ -68,7 +68,6 @@ theorem aProduct_dictionary (c : TransferChoice F D a b) (γ : ℂ) (x : ι) :
   change _ = (∑ j, aPhase F c γ x j • representedProduct F (P₁ := lwOf D a) (P₂ := lwOf D b)
         (P₃ := lwOf D x) (P₄ := lwOf D x) (Q := lwOf D (c.lab x j)) (muInt F H c x j)
         (nuInt F c x j)).val n u v
-  rw [intertwiner_sum_apply]
   have hterm : ∀ j, (aPhase F c γ x j • representedProduct F (P₁ := lwOf D a)
       (P₂ := lwOf D b) (P₃ := lwOf D x) (P₄ := lwOf D x) (Q := lwOf D (c.lab x j))
       (muInt F H c x j) (nuInt F c x j)).val n u v =
@@ -78,24 +77,28 @@ theorem aProduct_dictionary (c : TransferChoice F D a b) (γ : ℂ) (x : ι) :
     intro j
     change aPhase F c γ x j • (muInt F H c x j).val n u
       (((F (famObj D b) (famObj D x)).lift (lwOf D (c.lab x j)).isMod (nuInt F c x j)).val v) = _
-    rw [hl j, muInt_apply]
-    rfl
-  simp only [hterm]
+    rw [hl j]
+    exact congrArg (aPhase F c γ x j • ·) (muInt_apply F H c x j n u ((c.proj x j).val v))
+  refine Eq.trans ?_ ((intertwiner_sum_apply Finset.univ (fun j => aPhase F c γ x j •
+    representedProduct F (P₁ := lwOf D a) (P₂ := lwOf D b) (P₃ := lwOf D x) (P₄ := lwOf D x)
+    (Q := lwOf D (c.lab x j)) (muInt F H c x j) (nuInt F c x j)) n u v).trans
+    (Finset.sum_congr rfl fun j _ => hterm j)).symm
   have hT : (aTwist F c γ x).val v =
       ∑ j, aPhase F c γ x j • (c.inc x j).val ((c.proj x j).val v) := by
     unfold aTwist
     rw [Ordinary.sum_val_apply]
     rfl
-  set Y := (F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner with hY
-  calc _ = (vacuumProduct F H c x).val (Y.val n u ((aTwist F c γ x).val v)) := by
-        change (tensorHom F (𝟙 (famObj D a)) (aTwist F c γ x) ≫ vacuumProduct F H c x).val
-          (Y.val n u v) = _
-        rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
-    _ = _ := by
-        rw [hT, map_sum]
-        simp only [LinearMap.map_smul]
-        exact (map_sum (vacuumProduct F H c x).val _ _).trans
-          (Finset.sum_congr rfl fun j _ => (vacuumProduct F H c x).val.map_smul _ _)
+  calc _ = (vacuumProduct F H c x).val ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u ((aTwist F c γ x).val v)) :=
+        congrArg (vacuumProduct F H c x).val
+          (tensorHom_intertwiner F (𝟙 (famObj D a)) (aTwist F c γ x) n u v)
+    _ = _ := (congrArg (fun z => (vacuumProduct F H c x).val ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u z)) hT).trans
+        ((congrArg (vacuumProduct F H c x).val ((map_sum ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u)
+          (fun j => aPhase F c γ x j • (c.inc x j).val ((c.proj x j).val v)) Finset.univ).trans
+          (Finset.sum_congr rfl fun j _ => ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u).map_smul (aPhase F c γ x j)
+            ((c.inc x j).val ((c.proj x j).val v))))).trans
+        ((map_sum (vacuumProduct F H c x).val _ Finset.univ).trans
+          (Finset.sum_congr rfl fun j _ => (vacuumProduct F H c x).val.map_smul (aPhase F c γ x j)
+            ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u ((c.inc x j).val ((c.proj x j).val v))))))
 
 /-- `Ω` lists the Schur scalars of the A-transported vacuum coefficients. -/
 def IsACycleScalar (c : TransferChoice F D a b)
@@ -142,7 +145,6 @@ theorem assoc_aHom_decomp (c : TransferChoice F D a b)
       (evalAssoc F H (famObj D a) (famObj D b) (famObj D x)).hom ≫ aHom F H c γ x =
         Ω x • (leftUnitor F (famObj D x)).hom := by
     have h2 := congrArg (fun f => (leftUnitor F (famObj D x)).hom ≫ f) hb
-    simp only at h2
     rw [Iso.hom_inv_id_assoc] at h2
     rw [h2, Linear.comp_smul, Category.comp_id]
   have h1 : 𝟙 (tensorObj F (famObj D a) (famObj D b)) = c.ε ≫ η' + aNonVac F c η' := by
@@ -182,7 +184,7 @@ theorem tensorHom_split_left {X Y Z T : Ordinary W} {r : ℕ} (Ms : Fin r → Or
     intro s
     classical
     induction s using Finset.induction_on with
-    | empty => simpa using tensorHom_zero_left' F
+    | empty => simpa using! tensorHom_zero_left' F
     | insert k s hk ih =>
       rw [Finset.sum_insert hk, Finset.sum_insert hk, TensorCat.tensorHom_add_left, ih]
   nth_rewrite 1 [hsplit]
@@ -287,8 +289,10 @@ theorem acycle_fourPoint (hV : StronglyRational W) (hv : W.vacuum ≠ 0)
           (evalAssoc F H (famObj D a) (famObj D b) (famObj D x)).hom ≫
             aHom F H c γ x))).trans
       (representedIterate_evaluation F _ _ d)
-  rw [hdec, iterateEvaluation_add F hs, iterateEvaluation_smul F hs,
-    iterateEvaluation_sum F _ _ (fun k => (hs _ _ _ _ _).1 _), hP, hI0] at h4
+  rw [hdec, iterateEvaluation_add F hs (Ω x • A) (∑ k, B k) (TensorCat.ordinaryTest d),
+    iterateEvaluation_smul F hs (Ω x) A (TensorCat.ordinaryTest d),
+    iterateEvaluation_sum F B (TensorCat.ordinaryTest d) (fun k => (hs _ _ _ _ _).1 _), hP,
+    hI0] at h4
   rw [← h4]
   exact congrArg _ (Finset.sum_congr rfl fun k _ => hIk k)
 

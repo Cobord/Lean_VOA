@@ -152,7 +152,7 @@ theorem k85TargetL_negOne_top :
   rw [k85FockField_of_eq 0 0 rfl] at h
   norm_num at h
   rw [k85FockField_of_eq 2 1 rfl, LatExp.EEC_vacuum, LatExp.EEC_vacuum] at h
-  simpa [k85TargetTop, LatExp.cSchurC_zero] using h
+  simpa [k85TargetTop, LatExp.cSchurC_zero] using! h
 
 theorem k85TargetL_negOne_sq_top :
     k85TargetL (-1) (k85TargetL (-1) k85TargetTop) =
@@ -253,7 +253,6 @@ theorem k85EEC_sourceSingular_negOne :
   rw [k85EEC_sourceSingular_normalForm]
   norm_num [k85BPZStepTwo, k85BPZStepFour]
   rw [← k85TargetL_negOne_top]
-  rw [show Int.toNat 3 = 3 by rfl]
   rw [k85TargetSingularThree, k85TargetSingularTwo, map_add, map_smul, map_smul,
     k85TargetL_negOne_negTwo_top, k85TargetL_negOne_cube_top]
   simp only [smul_add, smul_smul]

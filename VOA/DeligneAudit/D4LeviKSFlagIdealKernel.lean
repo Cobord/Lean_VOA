@@ -42,17 +42,17 @@ theorem ksFlagMaximalRelationSpan_le_ker
   · have hkey' : keyEnum m ⟨i, hi⟩ = pairFinalKey a b c (s + r) := by
       rw [hdeg]
       exact hkey
-    simpa [hdeg] using rzFullHSymm_mul_shifted_mem_ker
+    simpa [hdeg] using! rzFullHSymm_mul_shifted_mem_ker
       ρ w m i a b c s r h hc hks hi hkey' U
   · have hkey' : keyEnum m ⟨i, hi⟩ = pairFinalKey a b c (s + r) := by
       rw [hdeg]
       exact hkey
-    simpa [hdeg] using ry_gen_maximal_mul_shifted_mem_ker
+    simpa [hdeg] using! ry_gen_maximal_mul_shifted_mem_ker
       ρ w m i a b c s r h hb hks hi hkey' U
   · have hkey' : keyEnum m ⟨i, hi⟩ = pairFinalKey a b c (s + r) := by
       rw [hdeg]
       exact hkey
-    simpa [hdeg] using rx_gen_maximal_mul_shifted_mem_ker
+    simpa [hdeg] using! rx_gen_maximal_mul_shifted_mem_ker
       ρ w m i a b c s r h hx hks hi hkey' U
 
 end VOA.DeligneAudit.D4Levi

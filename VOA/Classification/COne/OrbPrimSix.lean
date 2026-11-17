@@ -71,14 +71,13 @@ theorem gco_eight_five : gco (-8) 5 = 792 := by
 
 theorem Y_chargeGen (a : ℤ) : V2v.Y (latChargeGen (latP 1) a) = Yeαvec (latP 1) a := by
   have hw := YfullGen_word (latP 1) (latP_even 1) (latP_posDef 1 le_rfl) [] a
-  rw [YwordLatGen_nil] at hw
   exact hw
 
 theorem smul_chargeGen_state (a b : ℤ) (n : ℤ) (q : FockN (rank (latP 1))) :
     V2v.smul (latChargeGen (latP 1) a) n (latStateGen (latP 1) q b) =
       latticeCocycle (latP 1) a b •
         latStateGen (latP 1) (EEVec (latP 1) a (-n - 1 - (latP 1).form a b) q) (a + b) := by
-  rw [PreVertexAlgebra.smul_def, Y_chargeGen, mode_apply, Yeαvec_tmul]
+  rw [PreVertexAlgebra.smul_def, Y_chargeGen, mode_apply, Yeαvec_tmul (latP 1) a b]
   rfl
 
 theorem fo_chargeGen_three :
@@ -87,15 +86,14 @@ theorem fo_chargeGen_three :
   rw [fo_eq]
   change V2v.smul (latChargeGen (latP 1) (-1 : ℤ)) 0
     (latStateGen (latP 1) (vacuumN _) (3 : ℤ)) = _
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_pos (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) (-1 : ℤ), latP_form, if_pos (by norm_num)]
   norm_num
-  rfl
 
 theorem w40_w30 : V2v.smul (wv 4 0) (-12) (wv 3 0) = 0 := by
   rw [wv_zero, wv_zero]
   change V2v.smul (latChargeGen (latP 1) ((4 : ℕ) : ℤ)) (-12)
     (latStateGen (latP 1) (vacuumN _) ((3 : ℕ) : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_neg (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) ((4 : ℕ) : ℤ), latP_form, if_neg (by norm_num)]
   simp [latStateGen]
 
 /-- The `e^{6α}`-coefficient of `w_{4,0}₍₋₁₂₎ w_{3,1}`. -/
@@ -114,8 +112,9 @@ theorem EEVec_four_vSchur :
     (Screen.vSchur_mem_gradingWN (latP 1) (-1 : ℤ) 5)]
   rw [show max (0 : ℤ) (-5) = 0 by norm_num, show ((5 : ℕ) : ℤ) + (-5) = 0 by norm_num,
     Finset.Icc_self, Finset.sum_singleton, show ((0 : ℤ) - (-5)).toNat = 5 by rfl,
-    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero, one_mul,
-    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ 5 5 le_rfl, Nat.sub_self, vSchur_zero,
+    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero (latP 1) (4 : ℤ), one_mul,
+    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) (-1 : ℤ) (4 : ℤ) 5 5 le_rfl, Nat.sub_self,
+    vSchur_zero (latP 1) (-1 : ℤ),
     latP_form]
   have : (((2 * ((1 : ℕ) : ℤ) * (-1 : ℤ) * (4 : ℤ) : ℤ)) : ℂ) = -8 := by norm_num
   rw [this, gco_eight_five]
@@ -140,7 +139,7 @@ theorem w40_w31 : V2v.smul (wv 4 0) (-12) (wv 3 1) =
     EEVec_four_vSchur, smul_smul]
   rw [show latStateGen (latP 1) ((792 : ℂ) • vacuumN (rank (latP 1))) ((4 : ℤ) + (2 : ℤ)) =
       (792 : ℂ) • latChargeGen (latP 1) (6 : ℤ) from by
-    rw [latChargeGen, latStateGen_csmul]; rfl]
+    exact latStateGen_csmul (L := latP 1) _ _ _]
   rw [smul_smul, kappa6]
   congr 1
   ring
@@ -207,6 +206,7 @@ theorem second_wv : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 1 ≤ t → t ≤ 
       refine Submodule.sub_mem _ ?_ (Submodule.smul_mem _ _ (wv_grading _ _))
       have h := V2v.smul_mem_grading (wv_grading 4 i) (wv_grading 3 j) (-12)
       convert h using 2
+      all_goals norm_num
     have hho : ho (Φ i j) = (((2 * 6 : ℕ) : ℂ) - 2 * ((t - 1 : ℕ) : ℂ)) • Φ i j := by
       subst hij
       simp only [hΦ]
@@ -329,7 +329,7 @@ theorem six_T2 : ∃ c d : ℂ, c ≠ 0 ∧ (V2m 1 le_rfl).smul (T2 I4) (-12) (T
     have hmem : ∀ a b : ℕ, 1 ≤ a + b → a + b ≤ 13 → a ≤ 8 → b ≤ 6 →
         Φ a b ∈ lowerDesc V2v 36 := fun a b h1 h2 ha hb => by
       have := second_wv (a + b) a b rfl h1 h2 ha hb
-      simpa using this
+      simpa using! this
     set c3 : ℂ := Complex.I * (-2 * eps1)
     have key : (V2m 1 le_rfl).smul (T2 I4) (-12) (T2 I3) - (c3 * kappa6) • T2 I6 -
         (0 : ℂ) • T2 (I3 * I3) =

@@ -13,6 +13,9 @@ namespace VOA.NearVOA
 open Module (End)
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {H : Type*} [AddCommGroup H] [Module ℂ H] (V : NearVOA H)
 
 theorem smul_smul_scalar_left (c : ℂ) (u : H) (n : ℤ) (x : H) :

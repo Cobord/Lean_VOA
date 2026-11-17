@@ -83,7 +83,7 @@ private theorem iterateTerm_sum {X : Type*} [AddCommGroup X] [Module ℂ X]
   conv_rhs at h =>
     rw [finsum_eq_single _ (0 : ℤ)
       (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])]
-  simpa [iterateTerm, cbz_zero_left] using h
+  simpa [iterateTerm, cbz_zero_left] using! h
 
 /-- States whose fields are intertwined by a specified linear map. -/
 def intertwinedStates {X Y : Type*} [AddCommGroup X] [Module ℂ X]
@@ -133,7 +133,7 @@ theorem conformalEval_hom (W : VertexOperatorAlgebra E) {c : ℂ}
     have hh := conformalEval_L W hc (n - 1) x
     rw [← virasoroVOA_L_eq_Lop] at hh
     simpa only [VertexOperatorAlgebra.L_def,
-      sub_add_cancel, PreVertexAlgebra.smul_def] using hh
+      sub_add_cancel, PreVertexAlgebra.smul_def] using! hh
   have hw (w : List ℕ) : negWordVir c w ∈ S := by
     induction w with
     | nil => exact hvac
@@ -141,7 +141,7 @@ theorem conformalEval_hom (W : VertexOperatorAlgebra E) {c : ℂ}
       rw [negWordVir_cons]
       have hh := intertwinedStates_product (virasoroVOA c) W F homega ih (-(i : ℤ) - 1)
       simpa only [← virasoroVOA_L_eq_Lop, VertexOperatorAlgebra.L_def,
-        PreVertexAlgebra.smul_def, show -(i : ℤ) - 2 + 1 = -(i : ℤ) - 1 by omega] using hh
+        PreVertexAlgebra.smul_def, show -(i : ℤ) - 2 + 1 = -(i : ℤ) - 1 by omega] using! hh
   have htop : S = ⊤ := by
     apply top_unique
     rw [← negSpanVir_eq_top c, negSpanVir]

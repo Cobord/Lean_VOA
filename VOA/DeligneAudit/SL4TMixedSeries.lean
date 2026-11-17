@@ -27,7 +27,7 @@ theorem mixedAlphabet_series_inverse (i : Fin 5) :
     · subst n
       simp [mixedE, mixedH]
     · have h := congrArg (mixedAlphabet i) (complete_relation n (by omega))
-      simpa [mixedE, mixedH, PowerSeries.coeff_one, hn] using h
+      simpa [mixedE, mixedH, PowerSeries.coeff_one, hn] using! h
   have h := congrArg (PowerSeries.rescale (-1 : MixedPoly)) hs
   simp only [map_mul, map_one, PowerSeries.rescale_mk] at h
   have he : (fun n => (-1 : MixedPoly) ^ n * ((-1) ^ n * mixedE i n)) = mixedE i := by
@@ -48,7 +48,7 @@ theorem mixedG1prime_convolution (n : ℕ) :
           (PowerSeries.mk (mixedE 3) *
             PowerSeries.mk (fun n => (-1) ^ n * mixedH 3 n)) := by ring
       _ = _ := by rw [mixedAlphabet_series_inverse, mul_one]
-  simpa only [PowerSeries.coeff_mk] using congrArg (PowerSeries.coeff n) h
+  simpa only [PowerSeries.coeff_mk] using! congrArg (PowerSeries.coeff n) h
 
 /-- The analogous convolution for the second relative complement. -/
 theorem mixedG2prime_convolution (n : ℕ) :
@@ -61,7 +61,7 @@ theorem mixedG2prime_convolution (n : ℕ) :
           (PowerSeries.mk (mixedE 4) *
             PowerSeries.mk (fun n => (-1) ^ n * mixedH 4 n)) := by ring
       _ = _ := by rw [mixedAlphabet_series_inverse, mul_one]
-  simpa only [PowerSeries.coeff_mk] using congrArg (PowerSeries.coeff n) h
+  simpa only [PowerSeries.coeff_mk] using! congrArg (PowerSeries.coeff n) h
 
 /-- The top convolution isolates one product using only the finite relative window. -/
 theorem mixedConv_top {R : Type*} [CommRing R] (φ : MixedPoly →+* R)
@@ -90,7 +90,7 @@ theorem mixedG1prime_top (q : MixedParams) (hq : MixedValid q) :
   rw [← hp, ← mixedG1prime_convolution]
   apply (mixedConv_top (mixedEvaluation q).toRingHom _ _ _ _ ?_ ?_).symm
   · intro j hj
-    exact mixedRelation_zero q hq _ (Or.inl ⟨3, j, by simpa [mixedLengths] using hj, rfl⟩)
+    exact mixedRelation_zero q hq _ (Or.inl ⟨3, j, by simpa [mixedLengths] using! hj, rfl⟩)
   · intro j hj hu
     apply mixedRelation_zero q hq
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨j, hj, by omega, rfl⟩))))
@@ -106,7 +106,7 @@ theorem mixedG2prime_top (q : MixedParams) (hq : MixedValid q) :
   rw [← hp, ← mixedG2prime_convolution]
   apply (mixedConv_top (mixedEvaluation q).toRingHom _ _ _ _ ?_ ?_).symm
   · intro j hj
-    exact mixedRelation_zero q hq _ (Or.inl ⟨4, j, by simpa [mixedLengths] using hj, rfl⟩)
+    exact mixedRelation_zero q hq _ (Or.inl ⟨4, j, by simpa [mixedLengths] using! hj, rfl⟩)
   · intro j hj hu
     apply mixedRelation_zero q hq
     exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨j, hj, by omega, rfl⟩))))

@@ -33,6 +33,11 @@ with `κ₊ e_{γ₊} t = −½ t`, `κ₋ e_{γ₋} t = ½ t` for all pairs (`I
 umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -279,7 +284,7 @@ theorem eV_sq_codeword {b : lam0.carrier} {D : Finset (Fin 24)} (hb : gv (inclN 
   have hne := latChargeGen_ne_zero' (-inclN b)
   have hc := latCob_ne_zero lam0 golayN inclN b
   have h2 := smul_left_injective ℂ hne h1
-  simp only at h2
+  try simp only at h2
   have h3 : xi (ind D) = (eV b)⁻¹ * (eV b)⁻¹ := mul_right_cancel₀ hc (by rw [mul_comm, h2])
   rw [h3, mul_inv]
 
@@ -375,7 +380,10 @@ theorem aP_codeword (k : Fin 12) :
 
 theorem γ_eq (i : ℕ) (hi : i < 12) : leechLagrangian.γ i = inclΛ (aP 0 ⟨i, by omega⟩) := by
   change γL i = _
-  rw [γL, dif_pos hi]
+  first
+  | rw [γL, dif_pos hi]
+  | rw [show γL i = (⟨gamVec ⟨i, hi⟩, gamVec_mem _⟩ : ↥Leech.carrier) from by
+        unfold γL; exact dif_pos hi]
   apply Subtype.ext
   change gamVec ⟨i, hi⟩ = (2 : ℤ) • apv 0 ⟨i, by omega⟩
   exact gamVec_eq ⟨i, hi⟩

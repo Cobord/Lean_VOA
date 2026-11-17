@@ -33,7 +33,7 @@ theorem levelTruncationBound_of_truncatedCoreRank (a b c : ℕ)
 theorem levelTruncationBound_singleAdjoint (b c : ℕ)
     (hbound : TruncatedCoreRankBound 1 b c) :
     LevelTruncationBound (1 + b + c) b ((b : ℤ) + 2) := by
-  simpa only [Nat.cast_one, mul_one, add_comm] using
+  simpa only [Nat.cast_one, mul_one, add_comm] using!
     levelTruncationBound_of_truncatedCoreRank 1 b c hbound
 
 /-- All interior single-adjoint levels in the site and grade indices reduce to the core estimate. -/
@@ -41,7 +41,7 @@ theorem levelTruncationBound_singleAdjoint_interior (m κ : ℕ) (hκ : κ + 2 �
     (hbound : TruncatedCoreRankBound 1 κ (m - κ - 1)) :
     LevelTruncationBound m κ ((κ : ℤ) + 2) := by
   have hm : 1 + κ + (m - κ - 1) = m := by omega
-  simpa only [hm] using levelTruncationBound_singleAdjoint κ (m - κ - 1) hbound
+  simpa only [hm] using! levelTruncationBound_singleAdjoint κ (m - κ - 1) hbound
 
 end
 

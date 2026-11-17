@@ -96,7 +96,7 @@ theorem polynomialHomogeneous_C {a : A} {e : ℤ} (ha : a ∈ 𝒜 e) :
   rw [coeff_C]
   split_ifs with hl
   · subst hl
-    simpa using ha
+    simpa using! ha
   · exact Submodule.zero_mem _
 
 theorem polynomialHomogeneous_X_pow (n : ℕ) :
@@ -115,7 +115,7 @@ theorem PolynomialHomogeneous.mul {δ ε : ℤ} {f g : A[X]} (hf : PolynomialHom
   rw [coeff_mul]
   apply Submodule.sum_mem
   intro x hx
-  have hn := Finset.mem_antidiagonal.mp hx
+  have hn := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
   have h := SetLike.mul_mem_graded (hf x.1) (hg x.2)
   have hdeg : δ - (x.1 : ℤ) + (ε - (x.2 : ℤ)) = δ + ε - (n : ℤ) := by
     rw [← hn]
@@ -146,7 +146,7 @@ theorem polynomialHomogeneous_X_pow_modByMonic (P : A[X]) (r : ℕ) (hP : P.Moni
   induction n with
   | zero =>
       rw [pow_zero, (modByMonic_eq_self_iff hP).mpr]
-      · simpa using polynomialHomogeneous_X_pow (𝒜 := 𝒜) 0
+      · simpa using! polynomialHomogeneous_X_pow (𝒜 := 𝒜) 0
       · rw [degree_one, hdeg]
         exact_mod_cast hrpos
   | succ n ih =>

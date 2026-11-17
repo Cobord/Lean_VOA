@@ -41,7 +41,7 @@ theorem word_mem (l : List ℕ) (hl : l.all (fun x => decide (x < 133)) = true) 
   have h := wordA_single (l.map (Fin.ofNat 133))
   rw [map_ofNat_val l hl] at h
   rw [← h]
-  exact Submodule.subset_span ⟨_, by simpa using hlen, rfl⟩
+  exact Submodule.subset_span ⟨_, by simpa using! hlen, rfl⟩
 
 theorem mem_of_word (l : List ℕ) (hl : l.all (fun x => decide (x < 133)) = true ∧ l.length ≤ 2)
     {c : Fin 133} (lam : ℤ) (hlam : lam ≠ 0)

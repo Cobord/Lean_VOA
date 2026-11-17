@@ -25,7 +25,7 @@ theorem count_profileParts {m : ℕ} (r : Fin m → ℕ) (a : ℕ) :
 theorem count_profileParts_index {m : ℕ} (r : Fin m → ℕ) (i : Fin m) :
     (profileParts r).count (i.val + 1) = r i := by
   rw [count_profileParts]
-  simpa only [Nat.add_left_inj, ← Fin.ext_iff, Finset.mem_univ, if_true] using
+  simpa only [Nat.add_left_inj, ← Fin.ext_iff, Finset.mem_univ, if_true] using!
     (Finset.sum_ite_eq' Finset.univ i r)
 
 theorem mem_profileParts_iff {m : ℕ} (r : Fin m → ℕ) (a : ℕ) :
@@ -120,7 +120,7 @@ theorem sum_canonicalMap_profile {m : ℕ}
     (canonicalMap_rawParts (σ := ρ) lam.val)
   have he' : (∑ j, g (blockSize (canonicalMap (σ := ρ) lam.val) j)) =
       (lam.val.parts.map g).sum := by
-    simpa only [rawParts, Multiset.map_map, Function.comp_def] using he
+    simpa only [rawParts, Multiset.map_map, Function.comp_def] using! he
   rw [he', ← profileParts_partitionProfile]
   exact sum_map_profileParts _ _
 
@@ -168,7 +168,7 @@ theorem card_canonicalMap_size (lam : Nat.Partition (Fintype.card ρ)) (a : ℕ)
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, eq_comm]
 
 private theorem reciprocal_zero : (QSeries.reciprocalQFactorial 0 : PowerSeries ℚ) = 1 := by
-  simpa using (QSeries.qFactorial_mul_reciprocal (R := ℚ) 0)
+  simpa using! (QSeries.qFactorial_mul_reciprocal (R := ℚ) 0)
 
 /-- A count-factorial product is independent of the cutoff once all actual
 partition parts lie below it. Empty multiplicities contribute the unit. -/
@@ -184,7 +184,7 @@ theorem factorial_product_eq_support {R : ℕ} (lam : Nat.Partition R)
   · intro a ha
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le (hN a (Multiset.mem_toFinset.mp ha)))
   · intro a _ ha
-    rw [Multiset.count_eq_zero_of_notMem (by simpa using ha)]
+    rw [Multiset.count_eq_zero_of_notMem (by simpa using! ha)]
     exact reciprocal_zero
 
 /-- The canonical invariant denominator reindexes to exactly one factorial

@@ -57,8 +57,8 @@ theorem L_neg_mem_djSpan (u v : V) (m : ℕ) {s : V} (hs : s ∈ djSpan W u v) :
     obtain ⟨⟨ks, ⟨z, hz⟩⟩, rfl⟩ := hy
     exact virWord_mem_djSpan W u v (m :: ks) hz
   | zero => simp
-  | add x y _ _ hx hy => simpa using (djSpan W u v).add_mem hx hy
-  | smul a x _ hx => simpa using (djSpan W u v).smul_mem a hx
+  | add x y _ _ hx hy => simpa using! (djSpan W u v).add_mem hx hy
+  | smul a x _ hx => simpa using! (djSpan W u v).smul_mem a hx
 
 theorem L_neg_two_pow_eq_virWord (n : ℕ) (x : V) :
     ((W.L (-2)) ^ n) x = virWord W (List.replicate n 1) x := by
@@ -88,8 +88,8 @@ theorem dongJiangVirasoroSpan_iff_towerSpan (u v : V) :
         obtain ⟨⟨ks, ⟨z, hz⟩⟩, rfl⟩ := hy
         exact mk₂_virWord_mem W _ z (hbase z hz) ks
       | zero => simp
-      | add x y _ _ hx hy => simpa using (towerSpan W _).add_mem hx hy
-      | smul a x _ hx => simpa using (towerSpan W _).smul_mem a hx
+      | add x y _ _ hx hy => simpa using! (towerSpan W _).add_mem hx hy
+      | smul a x _ hx => simpa using! (towerSpan W _).smul_mem a hx
     apply top_unique
     intro y _
     obtain ⟨x, rfl⟩ := mk₂_surjective W y

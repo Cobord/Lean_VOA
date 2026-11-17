@@ -39,7 +39,7 @@ theorem PhiU_symm_mem_of_support {d : ℕ} {m : ℤ} {p : MvPolynomial LexLetter
     PhiU.symm p ∈ uDeg (layerIndex d m) := by
   rw [p.as_sum, map_sum]
   refine Submodule.sum_mem _ fun μ hμ => ?_
-  have h := PhiU_symm_monomial_mem μ (coeff μ p)
+  have h := PhiU_symm_monomial_mem μ (p.coeff μ)
   rwa [(hp μ hμ).1, (hp μ hμ).2] at h
 
 theorem PhiU_support_of_mem {t : ℕ} {m : ℤ} {x : USpace} (hx : x ∈ uDeg (layerIndex t m)) :
@@ -85,7 +85,7 @@ theorem uDer_mem (q : LexLetter) (i : (ℤ × ℤ) × ℂ) :
   · obtain ⟨t, m, rfl⟩ := hi
     have hsupp := PhiU_support_of_mem hx
     have hx' : uDer q x = ∑ μ ∈ (PhiU x).support,
-        PhiU.symm (pderiv q (monomial μ (coeff μ (PhiU x)))) := by
+        PhiU.symm (pderiv q (monomial μ ((PhiU x).coeff μ))) := by
       rw [uDer, LinearMap.comp_apply, LinearMap.comp_apply]
       conv_lhs => rw [show (PhiU.toLinearMap x) = PhiU x from rfl, (PhiU x).as_sum]
       simp only [map_sum, Derivation.coeFn_coe, LinearEquiv.coe_coe]
@@ -95,7 +95,7 @@ theorem uDer_mem (q : LexLetter) (i : (ℤ × ℤ) × ℂ) :
     by_cases hq : μ q = 0
     · rw [hq, Nat.cast_zero, mul_zero, monomial_zero, map_zero]; exact Submodule.zero_mem _
     · obtain ⟨hdeg, hen⟩ := hsupp μ hμ
-      have h := PhiU_symm_monomial_mem (μ - Finsupp.single q 1) (coeff μ (PhiU x) * (μ q : ℂ))
+      have h := PhiU_symm_monomial_mem (μ - Finsupp.single q 1) ((PhiU x).coeff μ * (μ q : ℂ))
       have e : layerIndex (μ - Finsupp.single q 1).degree (enOf (μ - Finsupp.single q 1)) =
           layerIndex t m - eq q := by
         have h1 := degree_sub_single hq
@@ -123,7 +123,7 @@ theorem mDer_mem_matterB (q : LexLetter) (i : KF × ℤ) :
   unfold KoszulConcrete.matterB matterF at hx ⊢
   split_ifs at hx ⊢ with h1 h2 h3 h4 h3 h4
   · have := mDer_mem q _ x hx
-    simpa [sub_eq_add_neg] using this
+    simpa [sub_eq_add_neg] using! this
   all_goals first
     | (rw [Submodule.mem_bot] at hx; rw [hx, map_zero]; exact Submodule.zero_mem _)
     | (simp only [Prod.snd_add, Prod.fst_add, add_zero] at *; contradiction)
@@ -245,25 +245,25 @@ theorem symDer_pderiv_comm (c : Fin 3) (q : LexLetter) (p : MvPolynomial LexLett
         rw [pderiv_X_of_ne, smul_zero]
         intro h; apply hb
         have := congrArg (fun x => (ofLex x).1) h
-        simpa using this.symm
+        simpa using! this.symm
       · simp
       · intro b _ hb
         rw [pderiv_X_of_ne, smul_zero]
         intro h; apply hb
         have := congrArg (fun x => (ofLex x).1) h
-        simpa [shiftLetter] using this
+        simpa [shiftLetter] using! this
       · simp
     · rw [Finset.sum_eq_zero, Finset.sum_eq_zero]
       · intro b _
         rw [pderiv_X_of_ne, smul_zero]
         intro h; apply hj
         have := congrArg (fun x => (ofLex x).2) h
-        simpa using this
+        simpa using! this
       · intro b _
         rw [pderiv_X_of_ne, smul_zero]
         intro h; apply hj
         have := congrArg (fun x => (ofLex x).2) h
-        simpa [shiftLetter] using this
+        simpa [shiftLetter] using! this
   have := congrArg (fun D => D p) key
   simp only [Derivation.commutator_apply, Derivation.neg_apply, derivation_sum_apply,
     Derivation.smul_apply] at this

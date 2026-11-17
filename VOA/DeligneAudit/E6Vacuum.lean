@@ -183,7 +183,7 @@ theorem e6_sym_chain : ∀ (steps : List (ℕ × ℕ × ℕ)) (known : List ℕ)
       ∀ t ∈ known ++ steps.map (·.2.2), E6cd.sym (quadP 78 (Pq t)) = 0 := by
   intro steps
   induction steps with
-  | nil => intro known hk _ t ht; simpa using hk t (by simpa using ht)
+  | nil => intro known hk _ t ht; simpa using! hk t (by simpa using! ht)
   | cons st rest ih =>
     intro known hk h t ht
     simp only [propOK, Bool.and_eq_true] at h

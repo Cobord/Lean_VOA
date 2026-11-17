@@ -122,10 +122,10 @@ theorem lex_degree_cons {k : ℕ} {r : MvPolynomial (Fin (k + 1)) ℂ} (hr : r �
   have hdm := MonomialOrder.degree_mem_support (m := MonomialOrder.lex) hr
   set E := (MonomialOrder.lex).degree r with hEdef
   have hE : E = Finsupp.cons (E 0) E.tail := (Finsupp.cons_tail E).symm
-  have hcoef : coeff E.tail (p.coeff (E 0)) ≠ 0 := by
+  have hcoef : (p.coeff (E 0)).coeff E.tail ≠ 0 := by
     rw [hp, finSuccEquiv_coeff_coeff, Finsupp.cons_tail]; exact mem_support_iff.mp hdm
   have hj : E 0 ≤ p.natDegree :=
-    Polynomial.le_natDegree_of_ne_zero fun h => hcoef (by rw [h, coeff_zero])
+    Polynomial.le_natDegree_of_ne_zero fun h => hcoef (by rw [h]; rfl)
   have h2 : (MonomialOrder.lex).toSyn E ≤ (MonomialOrder.lex).toSyn D := by
     rw [MonomialOrder.lex_le_iff, hE, hD]
     rcases hj.lt_or_eq with hlt | heq
@@ -168,7 +168,7 @@ theorem not_win_of_vanish : ∀ (k : ℕ) (P : (Fin k → ℂ) → Prop) (r : Mv
         exact hv _ (hsv v hvs)
       · rw [hs]; exact Nat.lt_succ_of_le Polynomial.natDegree_map_le
     have := congrArg (fun q => Polynomial.coeff q p.natDegree) hq
-    simpa only [Polynomial.coeff_map, Polynomial.coeff_zero] using this
+    simpa only [Polynomial.coeff_map, Polynomial.coeff_zero, Polynomial.leadingCoeff] using this
 
 /-! ### The `n`-equal game -/
 

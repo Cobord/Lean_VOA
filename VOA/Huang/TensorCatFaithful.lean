@@ -36,7 +36,7 @@ theorem irreducible_productEvaluation_eq_zero
     have hh := congrFun hI (ordinaryTest d)
     rw [productEvaluation_sum F _ _ (fun j =>
       representedProduct_summable F hV i₁ i₂ i₃ i₄ _ _ d)] at hh
-    simpa only [representedProduct_evaluation, Pi.zero_apply] using hh
+    simpa only [representedProduct_evaluation, Pi.zero_apply] using! hh
   have hf := formal_products_zero_of_values_zero hV i₁ i₂ i₃ i₄
     (fun j => (C j).Q) (fun j => (C j).left) (fun j => (C j).right) hv
   apply Subtype.ext
@@ -68,7 +68,7 @@ theorem irreducible_iterateEvaluation_eq_zero
     have hh := congrFun hI (ordinaryTest d)
     rw [iterateEvaluation_sum F _ _ (fun j =>
       representedIterate_summable F hV i₁ i₂ i₃ i₄ _ _ d)] at hh
-    simpa only [representedIterate_evaluation, Pi.zero_apply] using hh
+    simpa only [representedIterate_evaluation, Pi.zero_apply] using! hh
   have hf := formal_iterates_zero_of_values_zero hV i₁ i₂ i₃ i₄
     (fun j => (C j).Q) (fun j => (C j).outer) (fun j => (C j).inner) hv
   apply Subtype.ext

@@ -40,7 +40,7 @@ theorem isClosed_K : IsClosed K :=
   (isClosed_eq Complex.continuous_im continuous_const).inter
     (isClosed_le continuous_const Complex.continuous_re)
 
-theorem ofReal_mem_K {r : ℝ} (hr : 0 ≤ r) : (r : ℂ) ∈ K := ⟨by simp, by simpa using hr⟩
+theorem ofReal_mem_K {r : ℝ} (hr : 0 ≤ r) : (r : ℂ) ∈ K := ⟨by simp, by simpa using! hr⟩
 
 theorem mul_mem_K {z w : ℂ} (hz : z ∈ K) (hw : w ∈ K) : z * w ∈ K := by
   obtain ⟨hz1, hz2⟩ := hz
@@ -62,7 +62,7 @@ theorem term_eq (N : OrdVModule W M) {h : ℂ} (hh : h.im = 0)
           Real.exp (-2 * Real.pi * τ.im * (h.re + n - W.centralCharge.re / 24)) : ℝ) : ℂ) := by
   have eh : h = (h.re : ℂ) := Complex.ext (by simp) (by simp [hh])
   have ec : W.centralCharge = (W.centralCharge.re : ℂ) := Complex.ext (by simp) (by simp [hc])
-  have eτ : (τ : ℂ) = (τ.im : ℂ) * I := Complex.ext (by simpa using hτ) (by simp)
+  have eτ : (τ : ℂ) = (τ.im : ℂ) * I := Complex.ext (by simpa using! hτ) (by simp)
   rw [Complex.ofReal_mul, Complex.ofReal_exp]
   push_cast
   congr 2
@@ -229,7 +229,7 @@ theorem vacColumn_mem_K (hNice : Nice W) {ι : Type*} [Fintype ι] [DecidableEq 
         rw [hh0]
         by_cases hn : n = 0
         · subst hn; rw [if_pos (by simp), if_pos rfl, Nat.cast_zero]
-        · rw [if_neg (by simpa using hn), if_neg hn]
+        · rw [if_neg (by simpa using! hn), if_neg hn]
       change (∑' n : ℕ, _) = _
       rw [tsum_congr this, tsum_ite_eq, hh0, add_zero, ModuleEquiv.finrank_weight_eq f0,
         show (0 : ℂ) = ((0 : ℕ) : ℂ) by simp, adjointModule_weight_nat, Nat.cast_zero,

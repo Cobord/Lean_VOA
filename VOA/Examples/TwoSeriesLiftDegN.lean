@@ -153,10 +153,15 @@ def Pi0 : DP →ₐ[ℂ] D0 :=
       rw [Polynomial.map_mul, TrivSqZeroExt.inr_mul_inl, op_smul_eq_mul])
 
 theorem Pi0_fst (x : DP) : (Pi0 x).fst = (x.fst).map piA := by
-  simp [Pi0, TrivSqZeroExt.lift_def]
+  -- Lean 4.35 port: `simp` no longer uses `TrivSqZeroExt.lift_def` here; unfold it by `show` (rfl).
+  show (((TrivSqZeroExt.inlAlgHom ℂ P0 P0).comp mapA) x.fst +
+    ((TrivSqZeroExt.inrHom P0 P0).restrictScalars ℂ ∘ₗ mapA.toLinearMap) x.snd).fst = _
+  simp
 
 theorem Pi0_snd (x : DP) : (Pi0 x).snd = (x.snd).map piA := by
-  simp [Pi0, TrivSqZeroExt.lift_def]
+  show (((TrivSqZeroExt.inlAlgHom ℂ P0 P0).comp mapA) x.fst +
+    ((TrivSqZeroExt.inrHom P0 P0).restrictScalars ℂ ∘ₗ mapA.toLinearMap) x.snd).snd = _
+  simp
 
 theorem Pi0_inl (p : Pl) : Pi0 (TrivSqZeroExt.inl p) = TrivSqZeroExt.inl (p.map piA) := by
   ext <;> simp [Pi0_fst, Pi0_snd]
@@ -559,7 +564,7 @@ theorem decomp_monomial (n N : ℕ) (hn : 1 ≤ n) (i : ℕ) (c : ℂ) (j : ℕ)
       have hp : sD ^ i = sD ^ (N + 1) * sD ^ (i - (N + 1)) := by
         rw [← pow_add, show N + 1 + (i - (N + 1)) = i by omega]
       rw [hp, sub_eq_zero]
-      congr 1
+      refine congrArg (fun y : D0 => c • y) ?_
       ring
   · refine ⟨(c * (-1) ^ i) • PowerSeries.coeff (j + i) (tSer ^ n),
       Submodule.smul_mem _ _ (Submodule.subset_span ⟨j + i, rfl⟩), 0, fun l => by simp, ?_⟩
@@ -567,7 +572,7 @@ theorem decomp_monomial (n N : ℕ) (hn : 1 ≤ n) (i : ℕ) (c : ℂ) (j : ℕ)
     have h := W0_mono (show n + i ≤ n + N by omega) (shift_iter n hn i j)
     convert Submodule.smul_mem _ c h using 1
     rw [smul_sub, mul_smul, smul_mul_assoc]
-    congr 1
+    refine congrArg₂ (fun a b : D0 => a - b) rfl ?_
     rw [show ∀ y : D0, ((-1 : ℂ) ^ i) • y = (-1 : D0) ^ i * y from fun y => by
       rw [Algebra.smul_def]; simp]
 
@@ -612,7 +617,7 @@ theorem fst_eval₂ (H : Polynomial TPoly) :
       Polynomial.eval₂ ((TrivSqZeroExt.fstHom ℂ P0 P0).toRingHom.comp th0.toRingHom)
         Polynomial.X H := by
   have := Polynomial.hom_eval₂ H th0.toRingHom (TrivSqZeroExt.fstHom ℂ P0 P0).toRingHom sD
-  simpa using this
+  simpa using! this
 
 /-- **The high part vanishes**: if `θ0(F) + s^{N+1} H(s) ∈ W0 (n + N)` with `F` and all
 coefficients of `H` of `T`-degree `n`, then `H = 0`. -/
@@ -680,7 +685,7 @@ abbrev pw (E : ℕ) : TPoly →ₗ[ℂ] TPoly := weightedHomogeneousComponent wT
 
 theorem isWH_listProd : ∀ l : List ℕ,
     IsWeightedHomogeneous wT ((l.map X).prod : TPoly) (l.map fun m => m + 1).sum
-  | [] => by simpa using isWeightedHomogeneous_one (R := ℂ) wT
+  | [] => by simpa using! isWeightedHomogeneous_one (R := ℂ) wT
   | x :: l => by
     rw [List.map_cons, List.prod_cons, List.map_cons, List.sum_cons]
     exact (isWeightedHomogeneous_X ℂ wT x).mul (isWH_listProd l)
@@ -721,12 +726,14 @@ theorem coeff_tSer_pow_isWH : ∀ n j : ℕ,
   | n + 1, j => by
     rw [pow_succ, PowerSeries.coeff_mul]
     refine IsWeightedHomogeneous.sum _ _ _ fun p hp => ?_
-    have hpj := Finset.mem_antidiagonal.mp hp
+    have hpj := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     rw [tSer, PowerSeries.coeff_mk]
     have := (coeff_tSer_pow_isWH n p.1).mul (isWeightedHomogeneous_X ℂ wT p.2)
     convert this using 1
-    simp only [wT]
-    omega
+    all_goals first
+      | rfl
+      | omega
+      | (simp only [wT]; omega)
 
 theorem pw_jetSpanT {n : ℕ} (E : ℕ) {G : TPoly} (hG : G ∈ jetSpanT n) : pw E G ∈ jetSpanT n := by
   induction hG using Submodule.span_induction with
@@ -756,7 +763,7 @@ theorem boxInclusion_degN {n r : ℕ} (hn : 1 ≤ n) (d : ℤ) (N : ℕ) (hk : r
   rintro τ ⟨hτ, hT⟩
   rcases lt_or_ge (d - r) 0 with hneg | hpos
   · rw [tMonW_neg _ _ hneg] at hτ
-    have h0 : τ = 0 := by simpa using hτ
+    have h0 : τ = 0 := by simpa using! hτ
     rw [h0]; exact Submodule.zero_mem _
   obtain ⟨E, hE⟩ : ∃ E : ℕ, d - r = (E : ℤ) := ⟨(d - r).toNat, (Int.toNat_of_nonneg hpos).symm⟩
   rw [hE] at hτ ⊢
@@ -872,7 +879,7 @@ theorem boxSingularTail_one (r : ℕ) : BoxSingularTail 1 r := by
   have h0 : τ = 0 := by
     have := hτ.1
     rw [tMonW_one_eq_bot (by omega)] at this
-    simpa using this
+    simpa using! this
   rw [h0]; exact Submodule.zero_mem _
 
 /-- **The tail of `BoxInclusion` in the slots of `T`-degree `> n`.** -/
@@ -895,7 +902,7 @@ theorem boxInclusion_succ_of_slot0 {n : ℕ} (hn : 1 ≤ n)
     BoxInclusion n (n + 1) := by
   refine boxInclusion_of_tail (boxInclusionTail_of_high hn fun d N hN hk => ?_)
   obtain rfl : N = 0 := by omega
-  simpa using h0 d
+  simpa using! h0 d
 
 /-- **Affine GU ⇒ GU of `M(2, 2n+3)`**, `#print axioms`-clean, conditional only on `hA`,
 detection `det` and the ideal-elimination input in the slots of `T`-degree `> n` with `r > n`

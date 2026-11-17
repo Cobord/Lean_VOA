@@ -44,9 +44,9 @@ theorem radical_op_maps_key (j : Fin 6) (s : ℕ) (k : RadicalKey)
       rw [wordKey_cons, hk]
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (keyLayer ρ w (keyInsert j s k)).add_mem hx hy
+      simpa using! (keyLayer ρ w (keyInsert j s k)).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (keyLayer ρ w (keyInsert j s k)).smul_mem c hx
+      simpa using! (keyLayer ρ w (keyInsert j s k)).smul_mem c hx
 
 theorem source_cartan_pos (m : ℕ)
     (h : VOA.DeligneAudit.UnivG.Sat D4sector.f ρ w
@@ -55,7 +55,7 @@ theorem source_cartan_pos (m : ℕ)
     ρ.op (leviColour (VOA.DeligneAudit.A3Sector.simpleH i)) r w = 0 := by
   have hs : VOA.DeligneAudit.UnivG.Sat D4sector.f ρ w
       (VOA.DeligneAudit.UnivG.ravSpec D4sector m (2 * m)) := by
-    simpa [VOA.DeligneAudit.UnivG.ravFam] using h
+    simpa [VOA.DeligneAudit.UnivG.ravFam] using! h
   have hc : D4sector.cartan
       (leviColour (VOA.DeligneAudit.A3Sector.simpleH i)) := by
     change (leviColour (VOA.DeligneAudit.A3Sector.simpleH i)).val < 4
@@ -108,9 +108,9 @@ theorem cartan_pos_maps_key (m : ℕ)
       exact cartan_pos_word ρ w m h i r hr l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (keyLayer ρ w (keyShift r k)).add_mem hx hy
+      simpa using! (keyLayer ρ w (keyShift r k)).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (keyLayer ρ w (keyShift r k)).smul_mem c hx
+      simpa using! (keyLayer ρ w (keyShift r k)).smul_mem c hx
 
 theorem cartan_pos_mem_higher (m : ℕ)
     (h : VOA.DeligneAudit.UnivG.Sat D4sector.f ρ w

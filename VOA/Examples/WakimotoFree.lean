@@ -102,6 +102,8 @@ namespace VOA.Wak
 open scoped BigOperators
 open MvPolynomial
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §1  The Fock space and the elementary operators -/
 
 /-- The **Wakimoto Fock space** `MvPolynomial (Fin 3 × ℕ) ℂ`.  Family `0` carries the `β`
@@ -1096,7 +1098,7 @@ theorem eq_mulL_of_lie_mulX {S : Module.End ℂ WakFock}
 
 /-- The coefficient identity behind "all partials vanish ⇒ constant". -/
 theorem coeff_X_mul_pderiv (v : Fin 3 × ℕ) (d : Fin 3 × ℕ →₀ ℕ) (Q : WakFock) :
-    coeff d (X v * pderiv v Q) = (d v : ℂ) * coeff d Q := by
+    (X v * pderiv v Q).coeff d = (d v : ℂ) * Q.coeff d := by
   induction Q using MvPolynomial.induction_on' with
   | monomial s a =>
       rw [X_mul_pderiv_monomial, coeff_smul, coeff_monomial]
@@ -1104,17 +1106,18 @@ theorem coeff_X_mul_pderiv (v : Fin 3 × ℕ) (d : Fin 3 × ℕ →₀ ℕ) (Q :
       · subst h; simp [nsmul_eq_mul]
       · simp [h]
   | add p q hp hq =>
-      rw [map_add, mul_add, coeff_add, coeff_add, hp, hq]; ring
+      rw [map_add, mul_add, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_add,
+        Finsupp.add_apply, Finsupp.add_apply, hp, hq]; ring
 
 /-- A polynomial all of whose partial derivatives vanish is a constant. -/
 theorem eq_C_of_pderiv_eq_zero {Q : WakFock} (h : ∀ v, pderiv v Q = 0) :
-    Q = MvPolynomial.C (coeff 0 Q) := by
+    Q = MvPolynomial.C (Q.coeff 0) := by
   rw [← MvPolynomial.vars_eq_empty_iff_eq_C]
   by_contra hne
   obtain ⟨v, hv⟩ := Finset.nonempty_iff_ne_empty.mpr hne
   rw [MvPolynomial.mem_vars_iff_mem_support] at hv
   obtain ⟨d, hd, hdv⟩ := hv
-  have h0 : coeff d (X v * pderiv v Q) = 0 := by rw [h v, mul_zero, coeff_zero]
+  have h0 : (X v * pderiv v Q).coeff d = 0 := by rw [h v, mul_zero]; simp
   rw [coeff_X_mul_pderiv] at h0
   rcases mul_eq_zero.mp h0 with hc | hc
   · exact absurd (Nat.cast_eq_zero.mp hc) (Finsupp.mem_support_iff.mp hdv)
@@ -1392,7 +1395,7 @@ theorem exists_smul_id_of_lie_modes {k : ℂ} (hk : k + 2 ≠ 0) {S : Module.End
       · exact absurd h0 hc
       · exact h0
   obtain ⟨lam, hQ⟩ : ∃ lam : ℂ, S (1 : WakFock) = MvPolynomial.C lam :=
-    ⟨coeff 0 (S (1 : WakFock)), eq_C_of_pderiv_eq_zero hd⟩
+    ⟨(S (1 : WakFock)).coeff 0, eq_C_of_pderiv_eq_zero hd⟩
   refine ⟨lam, ?_⟩
   rw [hS, hQ]
   refine LinearMap.ext fun P => ?_

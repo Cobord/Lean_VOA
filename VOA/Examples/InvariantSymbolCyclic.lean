@@ -159,7 +159,7 @@ theorem toGap_injective {N : ℤ} {r D : ℕ} (hD : ((r * (r + 1) + D : ℕ) : �
   apply Fin.ext
   have := key (r - i) (by omega)
   rw [show r - (r - (i : ℕ)) = i by omega] at this
-  simpa [b, c, extTuple_of_lt] using this
+  simpa [b, c, extTuple_of_lt] using! this
 
 theorem card_sorted_le {N : ℤ} {r D : ℕ} (hD : ((r * (r + 1) + D : ℕ) : ℤ) = N) :
     Nat.card (Sorted r D) ≤ LeeYangTransferAssembly.gapTwoCoefficient N r := by
@@ -201,7 +201,7 @@ theorem cartanEval_isSymmetric (r : ℕ) (F : MvPolynomial ℕ ℂ) : (cartanEva
 theorem cartanGen_isHomogeneous (r m : ℕ) : (cartanGen r m).IsHomogeneous (m + 1) := by
   have h : (psum (Fin r) ℂ (m + 1)).IsHomogeneous (m + 1) :=
     IsHomogeneous.sum _ _ _ fun i _ => isHomogeneous_X_pow i (m + 1)
-  simpa using (isHomogeneous_C (Fin r) (2 : ℂ)).mul h
+  simpa using! (isHomogeneous_C (Fin r) (2 : ℂ)).mul h
 
 theorem cartanEval_monomial_isHomogeneous (r : ℕ) (α : ℕ →₀ ℕ) (c : ℂ) :
     (cartanEval r (monomial α c)).IsHomogeneous (Finsupp.weight modeWeight α) := by
@@ -232,9 +232,9 @@ def sortedExp {r D : ℕ} (β : Sorted r D) : Fin r →₀ ℕ :=
 /-- A symmetric homogeneous polynomial of degree `D` vanishing at all weakly decreasing
 exponent vectors is zero. -/
 theorem eq_zero_of_sorted_coeff {r D : ℕ} (φ : MvPolynomial (Fin r) ℂ) (hs : φ.IsSymmetric)
-    (hh : φ.IsHomogeneous D) (h : ∀ β : Sorted r D, coeff (sortedExp β) φ = 0) : φ = 0 := by
+    (hh : φ.IsHomogeneous D) (h : ∀ β : Sorted r D, φ.coeff (sortedExp β) = 0) : φ = 0 := by
   ext γ
-  rw [coeff_zero]
+  show _ = (0 : ℂ)
   by_contra hne
   have hdeg : ∑ i, γ i = D := by
     have h1 := hh hne
@@ -252,7 +252,6 @@ theorem eq_zero_of_sorted_coeff {r D : ℕ} (φ : MvPolynomial (Fin r) ℂ) (hs 
     intro i
     have := Finset.single_le_sum (s := Finset.univ) (f := fun i => g (τ i))
       (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
-    simp only at this
     omega
   let β : Sorted r D := ⟨fun i => ⟨g (τ i), hle i⟩, hanti, hsum⟩
   have hβ := h β
@@ -279,11 +278,11 @@ theorem pairConst_ne_zero (α : ℕ →₀ ℕ) : pairConst α ≠ 0 := by
 
 /-- The pairing, as a sum over the support of the oscillator polynomial `P`. -/
 def pairSum (F P : MvPolynomial ℕ ℂ) : ℂ :=
-  ∑ α ∈ P.support, coeff α F * coeff α P * pairConst α
+  ∑ α ∈ P.support, F.coeff α * P.coeff α * pairConst α
 
 theorem pairSum_eq_of_subset (F P : MvPolynomial ℕ ℂ) (s : Finset (ℕ →₀ ℕ))
     (hs : P.support ⊆ s) :
-    pairSum F P = ∑ α ∈ s, coeff α F * coeff α P * pairConst α := by
+    pairSum F P = ∑ α ∈ s, F.coeff α * P.coeff α * pairConst α := by
   apply Finset.sum_subset hs
   intro α _ hα
   rw [notMem_support_iff.mp hα]; ring
@@ -294,7 +293,8 @@ theorem pairSum_eq_of_subset (F P : MvPolynomial ℕ ℂ) (s : Finset (ℕ →�
 def modePairing : MvPolynomial ℕ ℂ →ₗ[ℂ] MvPolynomial ℕ ℂ →ₗ[ℂ] ℂ :=
   LinearMap.mk₂ ℂ pairSum
     (fun F G P => by
-      simp only [pairSum, coeff_add, add_mul, Finset.sum_add_distrib])
+      simp only [pairSum, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, add_mul,
+        Finset.sum_add_distrib])
     (fun c F P => by
       simp only [pairSum, coeff_smul, smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl fun _ _ => by ring)
@@ -304,7 +304,8 @@ def modePairing : MvPolynomial ℕ ℂ →ₗ[ℂ] MvPolynomial ℕ ℂ →ₗ[�
         pairSum_eq_of_subset F P (P.support ∪ Q.support) Finset.subset_union_left,
         pairSum_eq_of_subset F Q (P.support ∪ Q.support) Finset.subset_union_right,
         ← Finset.sum_add_distrib]
-      exact Finset.sum_congr rfl fun _ _ => by rw [coeff_add]; ring)
+      exact Finset.sum_congr rfl fun _ _ => by
+        rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply]; ring)
     (fun c F P => by
       simp only [smul_eq_mul]
       rw [pairSum_eq_of_subset F (c • P) P.support (support_smul), pairSum, Finset.mul_sum]
@@ -313,7 +314,7 @@ def modePairing : MvPolynomial ℕ ℂ →ₗ[ℂ] MvPolynomial ℕ ℂ →ₗ[�
 theorem modePairing_apply (F P : MvPolynomial ℕ ℂ) : modePairing F P = pairSum F P := rfl
 
 theorem modePairing_monomial (α : ℕ →₀ ℕ) (P : MvPolynomial ℕ ℂ) :
-    modePairing (monomial α 1) P = coeff α P * pairConst α := by
+    modePairing (monomial α 1) P = P.coeff α * pairConst α := by
   classical
   rw [modePairing_apply, pairSum_eq_of_subset _ P (insert α P.support)
     (Finset.subset_insert _ _)]
@@ -346,7 +347,7 @@ theorem finrank_le_gapTwoCoefficient_of_cyclicEvaluation
   · have hzero : ∀ x, ev x = 0 := by
       intro x
       ext α
-      rw [coeff_zero]
+      show _ = (0 : ℂ)
       by_contra hne
       have := hdeg x hne
       have := weight_modeWeightZ_nonneg α
@@ -384,7 +385,7 @@ theorem finrank_le_gapTwoCoefficient_of_cyclicEvaluation
     apply hinj
     rw [map_zero]
     ext α
-    rw [coeff_zero]
+    show _ = (0 : ℂ)
     by_cases hα : Finsupp.weight modeWeightZ α = (D : ℤ)
     · have hmem : (monomial α (1 : ℂ)) ∈ H0 :=
         (mem_weightedHomogeneousSubmodule _ _ _ _).mpr (isWeightedHomogeneous_monomial _ _ _ hα)

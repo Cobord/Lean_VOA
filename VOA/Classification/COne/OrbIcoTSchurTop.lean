@@ -28,17 +28,21 @@ def topCoeff (w : List ℕ) : ℚ := (w.map fun n => ((n + 11).choose 11 : ℚ))
 theorem topCoeff_sound (w : List ℕ) :
     aExpVec (latP 1) (6 : ℤ) w.sum (shWord w) = (topCoeff w : ℂ) • vacuumN _ := by
   induction w with
-  | nil => simp [topCoeff, shWord_nil, aExpVec_zero, vacuumN]
+  | nil =>
+    simp [topCoeff, shWord_nil, aExpVec_zero (latP 1) ((6 : ℤ) : (latP 1).carrier), vacuumN]
   | cons i w ih =>
-    rw [List.sum_cons, shWord_cons, aExpVec_mul, Finset.sum_eq_single i]
-    · rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ i i le_rfl,
-        gco_m12, Nat.sub_self, vSchur_zero, Nat.add_sub_cancel_left, ih,
-        smul_mul_smul_comm]
+    rw [List.sum_cons, shWord_cons, aExpVec_mul (latP 1) ((6 : ℤ) : (latP 1).carrier),
+      Finset.sum_eq_single i]
+    · rw [sh, aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) ((-1 : ℤ) : (latP 1).carrier)
+          ((6 : ℤ) : (latP 1).carrier) i i le_rfl,
+        gco_m12, Nat.sub_self, vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier),
+        Nat.add_sub_cancel_left, ih, smul_mul_smul_comm]
       simp [topCoeff, vacuumN]
     · intro k hk hki
       rcases lt_or_gt_of_ne hki with hlt | hgt
       · rw [aExp_shWord_of_lt w 6 (i + w.sum - k) (by omega), mul_zero]
-      · rw [sh, aExpVec_vSchur_of_lt (latP 1) _ _ hgt, zero_mul]
+      · rw [sh, aExpVec_vSchur_of_lt (latP 1) ((-1 : ℤ) : (latP 1).carrier)
+          ((6 : ℤ) : (latP 1).carrier) hgt, zero_mul]
     · intro hi
       exact (hi (Finset.mem_range.mpr (by omega))).elim
 

@@ -206,7 +206,7 @@ theorem self35_zeroFiber {T : Type*} [AddCommGroup T] [Module ℂ T]
       high82_holds f hf,
       smul_zero, add_zero]
   rw [hh] at h
-  simpa only [evalConst, List.headD_cons, Rat.cast_one, one_smul, add_zero] using h.symm
+  simpa only [evalConst, List.headD_cons, Rat.cast_one, one_smul, add_zero] using! h.symm
 
 /-- This gives actual divisibility by the conformal class, before any rationality theorem. -/
 theorem self35_conformal_divisible : ∃ z : A Wi, omegaL Wi z = selfMode 35 := by

@@ -84,7 +84,6 @@ theorem mem_of_sum_eigen (T : M →ₗ[ℂ] M) (P : Submodule ℂ M) (hT : ∀ x
       intro c hc
       have hck : c - k ≠ 0 := sub_ne_zero.mpr (fun h => hk (h ▸ hc))
       have := Submodule.smul_mem _ (c - k)⁻¹ (hih c hc)
-      simp only at this
       rwa [smul_smul, inv_mul_cancel₀ hck, one_smul] at this
     intro c hc
     rcases Finset.mem_insert.mp hc with rfl | hc
@@ -339,7 +338,7 @@ section Lowering
 open MvPolynomial
 
 theorem coeff_pderivN {r : ℕ} (s : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin r) (p : FockN r) :
-    coeff s (pderiv x p) = ((s x : ℂ) + 1) * coeff (s + Finsupp.single x 1) p := by
+    (pderiv x p).coeff s = ((s x : ℂ) + 1) * p.coeff (s + Finsupp.single x 1) := by
   classical
   induction p using MvPolynomial.induction_on' with
   | monomial t a =>
@@ -362,7 +361,9 @@ theorem coeff_pderivN {r : ℕ} (s : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin 
             · rw [Finsupp.single_eq_of_ne' (Ne.symm hy)] at this ⊢; omega
           rw [htx, Nat.cast_zero, mul_zero]
         · rfl
-  | add p q hp hq => rw [map_add, coeff_add, hp, hq, coeff_add, mul_add]
+  | add p q hp hq =>
+      rw [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq,
+        AddMonoidAlgebra.coeff_add, Finsupp.add_apply, mul_add]
 
 /-- A nonzero Fock vector of positive weight has a nonzero partial derivative. -/
 theorem exists_pderiv_ne_zero {r w : ℕ} {q : FockN r} (hq : q ∈ gradingWN r w) (hw : w ≠ 0)
@@ -383,7 +384,7 @@ theorem exists_pderiv_ne_zero {r w : ℕ} {q : FockN r} (hq : q ∈ gradingWN r 
     rw [Finsupp.single_le_iff]; omega
   set t : (ℕ × Fin r) →₀ ℕ := s - Finsupp.single x 1 with ht
   have hc := coeff_pderivN t x q
-  rw [h0, coeff_zero, ht, tsub_add_cancel_of_le hle] at hc
+  rw [h0, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ht, tsub_add_cancel_of_le hle] at hc
   have hne : ((t x : ℕ) : ℂ) + 1 ≠ 0 := Nat.cast_add_one_ne_zero _
   rcases mul_eq_zero.mp hc.symm with h | h
   · exact hne h
@@ -414,8 +415,9 @@ theorem chi_mul (n : ℤ) :
   rw [sum_rankOne] at hcc hcl
   rw [latP_form] at hcc
   rw [glueIota_delta] at hcl
-  rw [chi, add_mul, hcc, mul_comm _ (chargeCoord _ _ _), hcl]
-  push_cast; ring
+  rw [chi, add_mul, hcc]
+  push_cast at hcl ⊢
+  linear_combination hcl
 
 include hm in
 theorem chargeCoord_one_ne_zero : chargeCoord (latP m) (1 : ℤ) (a0 m) ≠ 0 := by
@@ -446,11 +448,17 @@ theorem latticeModule_hVec_mode (n : ℤ) (p : FockN (rank (latP m))) (γ : ℤ)
     (latP_posDef m hm) (glueLat_even m j) (glueLat_posDef m hm j) (glueIota_isometry m j) (a0 m)
     n p γ
 
+/-- `latStateGen_csmul` with an integer charge (Lean 4.35: the `(latP m).carrier`-typed
+argument blocks `rw` with the generic lemma). -/
+theorem latStateGen_csmulZ (c : ℂ) (p : FockN (rank (latP m))) (γ : ℤ) :
+    latStateGen (latP m) (c • p) γ = c • latStateGen (latP m) p γ :=
+  latStateGen_csmul (L := latP m) (c := c) (p := p) (γ := γ)
+
 theorem latticeModule_zeroMode (p : FockN (rank (latP m))) (γ : ℤ) :
     mode ((latticeModule m hm j).YM (hVec (latP m) (a0 m))) 0 (latStateGen (latP m) p γ)
       = chi m j γ • latStateGen (latP m) p γ := by
   rw [latticeModule_hVec_mode, if_pos rfl, oscN_zero, LinearMap.zero_apply, zero_add,
-    latStateGen_csmul]
+    latStateGen_csmulZ]
 
 theorem latticeCocycle_ne_zero (L : IntegralLattice) (α β : L.carrier) :
     latticeCocycle L α β ≠ 0 := by
@@ -484,7 +492,7 @@ theorem submod_eq_top_of_vac (P : WeakModule.Submodule' (latticeModule m hm j).t
   have h := submod_charge_step m hm j P (β - γ₀) γ₀ (vacuumN (rank (latP m))) 0 h0
   rw [Nat.cast_zero, EEVec_vacuum, if_pos le_rfl, Int.toNat_zero, vSchur_zero] at h
   convert h using 2
-  exact (Int.sub_add_cancel β γ₀).symm
+  exact congrArg (latStateGen (latP m) (vacuumN (rank (latP m)))) (Int.sub_add_cancel β γ₀).symm
 
 include hm in
 /-- **Lowering**: a submodule containing a nonzero `q ⊗ e^γ` (`q` homogeneous) contains
@@ -501,7 +509,7 @@ theorem submod_vac_of_state (P : WeakModule.Submodule' (latticeModule m hm j).to
     rw [gradingWN_zero_eq_span_one] at hq
     obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.mp hq
     have hc : c ≠ 0 := by rintro rfl; exact hq0 (zero_smul _ _)
-    rw [latStateGen_csmul] at hx
+    rw [latStateGen_csmulZ] at hx
     have h2 := P.carrier.smul_mem c⁻¹ hx
     rwa [smul_smul, inv_mul_cancel₀ hc, one_smul] at h2
   · obtain ⟨⟨k, a⟩, hk⟩ := exists_pderiv_ne_zero hq hw hq0
@@ -513,7 +521,7 @@ theorem submod_vac_of_state (P : WeakModule.Submodule' (latticeModule m hm j).to
     subst ha
     have hact := P.act_mem (hVec (latP m) (a0 m)) n hx
     rw [WeakModule.act_def, latticeModule_hVec_mode, if_neg (by omega), add_zero,
-      oscN_apply_pos _ _ _ hn, show (n - 1).toNat = k by omega, one_smul, latStateGen_csmul] at hact
+      oscN_apply_pos _ _ _ hn, show (n - 1).toNat = k by omega, one_smul, latStateGen_csmulZ] at hact
     have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
     have hx' := P.carrier.smul_mem (n : ℂ)⁻¹ hact
     rw [smul_smul, inv_mul_cancel₀ hn0, one_smul] at hx'
@@ -585,7 +593,8 @@ theorem submod_exists_state (P : WeakModule.Submodule' (latticeModule m hm j).to
     have h2 : k.2 = k₀.2 := chi_injective m hm j hc
     obtain ⟨_, _, _, hk1, _⟩ := hcomp k hk
     obtain ⟨_, _, _, hk01, _⟩ := hcomp k₀ hk₀
-    rw [mu2, mu2, h2, Complex.ofReal_inj, add_left_inj, Nat.cast_inj] at hμ
+    unfold mu2 at hμ
+    rw [h2, Complex.ofReal_inj, add_left_inj, Nat.cast_inj] at hμ
     exact Prod.ext (by omega) h2
   set t1 := f.support.filter (fun k => chi m j k.2 = chi m j k₀.2) with ht1
   have hy := sum_filter_eigen_mem Z P.carrier (fun x hx => P.act_mem _ 0 hx) f.support f
@@ -820,7 +829,7 @@ theorem adjoint_latChargeGen (β n t : ℤ) (p : FockN (rank (latP m))) :
           latStateGen (latP m) (EEVec (latP m) β (t - 2 * m * β * n) p) (β + n) := by
   change (latticeVOAGen (latP m) (latP_even m) (latP_posDef m hm)).Y (latChargeGen (latP m) β) t
     (latStateGen (latP m) p n) = _
-  rw [latVOA_Y_latChargeGen, Yeαvec_tmul, latP_form]
+  erw [latVOA_Y_latChargeGen, Yeαvec_tmul, latP_form]
   rfl
 
 /-- **C4b (4): `V_{L+λ_0} ≅ V_L`** (the adjoint module), via `p ⊗ e^{nα} ↦ c(n) p ⊗ e^{nα}`. -/
@@ -881,8 +890,8 @@ theorem latticeModule_zeroMode_eigen (j : ℤ) {μ : ℂ} {y : LatModuleGen (lat
   have hc : (coordEα (latP m) n) ∘ₗ mode ((latticeModule m hm j).YM (hVec (latP m) (a0 m))) 0
       = chi m j n • coordEα (latP m) n := by
     refine linearMap_ext_latStateGen (latP m) fun p (γ : ℤ) => ?_
-    rw [LinearMap.comp_apply, latticeModule_zeroMode, map_smul, LinearMap.smul_apply,
-      latStateGen, coordEα_apply]
+    rw [LinearMap.comp_apply, latticeModule_zeroMode, map_smul, LinearMap.smul_apply]
+    erw [coordEα_apply]
     by_cases h : n = γ
     · rw [if_pos h, h]
     · rw [if_neg h, smul_zero, smul_zero]

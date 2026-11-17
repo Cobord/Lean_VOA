@@ -24,7 +24,7 @@ theorem rzRawWord_operator (ρ : CurrentModule D4sector.f V) (w : V)
   let Zs := zs.map fun r => ((5 : Fin 6), r)
   have hp : (Xs ++ Ys ++ Ms ++ Zs).Perm
       (Ys ++ Ms ++ Xs ++ Zs) := by
-    simpa only [List.append_assoc] using
+    simpa only [List.append_assoc] using!
       (List.perm_append_comm (l₁ := Xs) (l₂ := Ys ++ Ms)).append_right Zs
   rw [radicalWord_perm ρ w hp]
   rw [← pairRadicalOp_apply]
@@ -60,7 +60,7 @@ theorem rzRawSourceGenerator_word_bridge
         modes ((Finset.univ.toList : List (Fin l)).map β)
       simp only [List.map_map, Function.comp_def] at hw
       rw [hw]
-      simpa only [List.map_map, Function.comp_def] using
+      simpa only [List.map_map, Function.comp_def] using!
         congrArg₂ (· + ·) rfl ih
 
 end VOA.DeligneAudit.D4Levi

@@ -55,24 +55,25 @@ theorem polynomialWord_degree (k : ℂ) (w : List (Fin 3×ℤ))
   induction w with
   | nil =>
     intro j hj
-    simp only [loweringCount,polynomialWord,PolynomialModule.single_apply]
+    simp only [loweringCount] at hj
+    simp only [polynomialWord,PolynomialModule.coeff_single,Finsupp.single_apply]
     rw [if_neg (by omega)]
   | cons an w ih =>
     have htail : ∀ bn∈w,bn.1=2→bn.2≠0 := fun bn hb => hw bn (List.mem_cons_of_mem _ hb)
     have hl := chargeLinear_nonzero_mode an.1 an.2 (hw an (by simp))
     simp only [loweringCount,polynomialWord]
     by_cases ha : an.1=1
-    · simpa [ha,Nat.add_comm] using polynomialCurrent_degree k an.1 an.2 (ih htail)
+    · simpa [ha,Nat.add_comm] using! polynomialCurrent_degree k an.1 an.2 (ih htail)
     · simp only [ha,ite_false,zero_add]
-      exact polynomialCurrent_degree_constant k an.1 an.2 (by simpa [ha] using hl) (ih htail)
+      exact polynomialCurrent_degree_constant k an.1 an.2 (by simpa [ha] using! hl) (ih htail)
 
 /-- The top coefficient equals an actual operator word in which every F
 letter is replaced by gamma. It may still vanish; no nonvanishing is assumed. -/
 theorem polynomialWord_top (k : ℂ) (w : List (Fin 3×ℤ))
     (hw : ∀ an∈w,an.1=2→an.2≠0) (P : WakFock) :
-    polynomialWord k w P (loweringCount w)=currentWord (leadingCurrent k) w P := by
+    (polynomialWord k w P).coeff (loweringCount w)=currentWord (leadingCurrent k) w P := by
   induction w with
-  | nil => simp [polynomialWord,loweringCount,currentWord,PolynomialModule.single_apply]
+  | nil => simp [polynomialWord,loweringCount,currentWord,PolynomialModule.coeff_single]
   | cons an w ih =>
     have htail : ∀ bn∈w,bn.1=2→bn.2≠0 := fun bn hb => hw bn (List.mem_cons_of_mem _ hb)
     have hl := chargeLinear_nonzero_mode an.1 an.2 (hw an (by simp))
@@ -83,7 +84,7 @@ theorem polynomialWord_top (k : ℂ) (w : List (Fin 3×ℤ))
       rw [polynomialCurrent_top k 1 an.2 hd,ih htail]
       simp [leadingCurrent,chargeLinear]
     · simp only [ha,ite_false,zero_add]
-      rw [polynomialCurrent_top_constant k an.1 an.2 (by simpa [ha] using hl),ih htail]
+      rw [polynomialCurrent_top_constant k an.1 an.2 (by simpa [ha] using! hl),ih htail]
       simp [leadingCurrent,ha]
 
 /-- Actual creation words have no Cartan zero letter, including when the

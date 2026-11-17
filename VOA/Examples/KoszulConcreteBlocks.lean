@@ -345,7 +345,7 @@ theorem toPi_injective (b : ℤ × ℤ) (s : ℕ → ℤ)
     by_cases hq : ∃ p, s p = j2
     · obtain ⟨p, rfl⟩ := hq
       have := congrArg (fun f => (f p : K)) hx
-      simpa using this
+      simpa using! this
     · push Not at hq
       exact B.pr_eq_zero_of_bot (hs j2 hq) _
   · exact B.pr_deg_ne x.2 hj

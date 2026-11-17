@@ -44,17 +44,17 @@ noncomputable def a2OrderedKeys (p q : ℕ) : List A2RadicalKey :=
 
 theorem mem_a2OrderedKeys (p q : ℕ) (k : A2RadicalKey) :
     k ∈ a2OrderedKeys p q ↔ k ∈ a2KeyBox p q := by
-  simpa only [a2OrderedKeys] using
+  simpa only [a2OrderedKeys] using!
     (Finset.mem_sort (s := a2KeyBox p q) (r := a2KeyDescLE q))
 
 theorem length_a2OrderedKeys (p q : ℕ) :
     (a2OrderedKeys p q).length = (a2KeyBox p q).card := by
-  simpa only [a2OrderedKeys] using
+  simpa only [a2OrderedKeys] using!
     (Finset.length_sort (s := a2KeyBox p q) (r := a2KeyDescLE q))
 
 theorem pairwise_a2OrderedKeys (p q : ℕ) :
     (a2OrderedKeys p q).Pairwise (a2KeyDescLE q) := by
-  simpa only [a2OrderedKeys] using
+  simpa only [a2OrderedKeys] using!
     (Finset.pairwise_sort (a2KeyBox p q) (a2KeyDescLE q))
 
 end VOA.DeligneAudit.A3Sector

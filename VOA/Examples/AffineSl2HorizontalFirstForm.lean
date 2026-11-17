@@ -60,7 +60,7 @@ theorem horizontalPairPolynomial_highest (k : ℂ) :
   apply Polynomial.funext
   intro h
   rw [horizontalPairPolynomial_eval,eval_X]
-  simpa [indexedWord,lowerLetter,currentWord] using horizontal_norm k h
+  simpa [indexedWord,lowerLetter,currentWord] using! horizontal_norm k h
 
 /-- Every nonempty relative creation word is orthogonal to the horizontal
 highest vector at all highest weights, by positive principal degree. -/

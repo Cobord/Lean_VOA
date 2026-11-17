@@ -34,7 +34,7 @@ theorem pairSymmetricRestriction_injective_zero (a c : ℕ) :
   intro P Q h
   apply Subtype.ext
   apply pairRestriction_injective_zero a c
-  simpa only [pairSymmetricRestriction_apply] using congrArg Subtype.val h
+  simpa only [pairSymmetricRestriction_apply] using! congrArg Subtype.val h
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
@@ -45,7 +45,7 @@ theorem pairKernelPrefix_zero
     PairKernelPrefix ρ w m i a 0 c := by
   intro P hP
   have hzero : P = 0 :=
-    pairSymmetricRestriction_injective_zero a c (by simpa using hP)
+    pairSymmetricRestriction_injective_zero a c (by simpa using! hP)
   subst P
   simp [xyzEvaluation]
 

@@ -20,7 +20,7 @@ open scoped BigOperators TensorProduct
 theorem cGhost_bGhost_product (a b : Fin 3) (n : ℤ) (hn : 0 ≤ n) :
     mode (sl2GhostSVA.Y (cGhost a)) n (bGhost b) =
       if a = b ∧ n = 0 then sl2GhostSVA.vacuum else 0 := by
-  simpa using ghostGenerator_nonneg_product a b 1 0 n hn
+  simpa using! ghostGenerator_nonneg_product a b 1 0 n hn
 
 /-- A `c` zero mode contracts exactly the antighost in a bilinear. -/
 theorem cGhost_zero_ghostBilinear (a c b : Fin 3) :

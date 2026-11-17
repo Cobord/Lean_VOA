@@ -45,11 +45,11 @@ noncomputable def gammaState : Fock := X (Sum.inr 0)
 
 /-- The beta state has the beta field. -/
 theorem YBG_betaState : YBG betaState = betaZ := by
-  simpa only [betaState, bgSVA_Y] using bgSVA_Y_beta
+  simpa only [betaState, bgSVA_Y] using! bgSVA_Y_beta
 
 /-- The gamma state has the gamma field. -/
 theorem YBG_gammaState : YBG gammaState = gammaZ := by
-  simpa only [gammaState, bgSVA_Y] using bgSVA_Y_gamma
+  simpa only [gammaState, bgSVA_Y] using! bgSVA_Y_gamma
 
 /-- The `(-2)`-product by the beta creation state is multiplication by the first higher beta
 oscillator. -/
@@ -103,7 +103,7 @@ The induction is the exact translation identity for the polynomial Fock represen
 theorem mulX_beta_succ_mem_superO₂ (k : ℕ) (v : Fock) :
     mulX (Sum.inl (k + 1)) v ∈ superO₂ bgSVOA := by
   induction k generalizing v with
-  | zero => simpa using mulX_beta_one_mem_superO₂ v
+  | zero => simpa using! mulX_beta_one_mem_superO₂ v
   | succ n ih =>
       have hnonzero : ((n : ℂ) + 2) ≠ 0 := by
         have hcast : ((n : ℂ) + 2) = ((n + 2 : ℕ) : ℂ) := by push_cast; ring
@@ -124,7 +124,7 @@ theorem mulX_beta_succ_mem_superO₂ (k : ℕ) (v : Fock) :
 theorem mulX_gamma_succ_mem_superO₂ (k : ℕ) (v : Fock) :
     mulX (Sum.inr (k + 1)) v ∈ superO₂ bgSVOA := by
   induction k generalizing v with
-  | zero => simpa using mulX_gamma_one_mem_superO₂ v
+  | zero => simpa using! mulX_gamma_one_mem_superO₂ v
   | succ n ih =>
       have hnonzero : ((n : ℂ) + 2) ≠ 0 := by
         have hcast : ((n : ℂ) + 2) = ((n + 2 : ℕ) : ℂ) := by push_cast; ring
@@ -166,7 +166,7 @@ theorem der_beta_zero_mem_superPoissonRelSpan (v : Fock) :
   have h := superZeroMode_mem_superPoissonRelSpan bgSVOA gammaState v
   change bgSVOA.smul gammaState 0 v ∈ superPoissonRelSpan bgSVOA at h
   rw [gammaState_smul_zero] at h
-  simpa using (superPoissonRelSpan bgSVOA).neg_mem h
+  simpa using! (superPoissonRelSpan bgSVOA).neg_mem h
 
 /-- The beta--gamma Poisson relation span is all of the Fock space.  This uses the zero mode of
 the beta state and algebraic integration in the level-zero gamma variable; it is independent of
@@ -212,12 +212,13 @@ theorem zeroFock_betaTower_linearIndependent :
   have hqzero : q = 0 := by
     rw [Finsupp.linearCombination_apply, Finsupp.sum] at hell
     rw [hq]
-    simpa only [Finsupp.sum] using hell
+    simpa only [Finsupp.sum] using! hell
   ext m
-  have hcm : MvPolynomial.coeff (Finsupp.single (0 : Fin 2) m) q = ell m := by
+  have hcm : q.coeff (Finsupp.single (0 : Fin 2) m) = ell m := by
     rw [hq, Finsupp.sum]
-    rw [show MvPolynomial.coeff (Finsupp.single (0 : Fin 2) m)
-          (∑ n ∈ ell.support, ell n • (MvPolynomial.X (0 : Fin 2) : BetaGamma.ZeroFock) ^ n)
+    rw [show (∑ n ∈ ell.support,
+            ell n • (MvPolynomial.X (0 : Fin 2) : BetaGamma.ZeroFock) ^ n).coeff
+          (Finsupp.single (0 : Fin 2) m)
           = (MvPolynomial.lcoeff (R := ℂ) (σ := Fin 2) (Finsupp.single (0 : Fin 2) m))
               (∑ n ∈ ell.support, ell n • (MvPolynomial.X (0 : Fin 2) : BetaGamma.ZeroFock) ^ n) from by
           rw [MvPolynomial.lcoeff_apply], map_sum]
@@ -234,7 +235,7 @@ theorem zeroFock_betaTower_linearIndependent :
           intro he
           exact h (by
             have he0 := congrArg (fun t : Fin 2 →₀ ℕ => t 0) he
-            simpa using he0.symm)), mul_zero]
+            simpa using! he0.symm)), mul_zero]
     rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq ell.support m (fun n => ell n)]
     by_cases hm : m ∈ ell.support
     · rw [if_pos hm]

@@ -45,7 +45,7 @@ theorem cubicModel_zhuAlgEquiv : Nonempty (VOA.A cubicModel ≃ₐ[ℂ] (Fin 21 
   letI := finiteDimensional_A_of_C2Cofinite cubicModel OrbA4.cubicModel_c2Cofinite_holds
   obtain ⟨χ, hχ, -⟩ := OrbRat6.cubicZhuCharacterTable_holds
   exact ⟨PlusSplitting.characterAlgEquiv χ hχ
-    (by simpa using OrbSgl.cubicZhuDimensionBound_holds)⟩
+    (by simpa using! OrbSgl.cubicZhuDimensionBound_holds)⟩
 
 /-- `dim A(W) = 21`. -/
 theorem cubicModel_zhu_finrank : Module.finrank ℂ (VOA.A cubicModel) = 21 := by

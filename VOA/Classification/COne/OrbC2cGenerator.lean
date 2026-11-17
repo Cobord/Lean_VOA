@@ -55,7 +55,7 @@ theorem hasN_state (m : ℕ) (hm : 1 ≤ m) :
   | .prod n a b => by
     have h := hasN_smul_left m hm (hasN_state m hm a) (hasN_state m hm b) n
     change HasN m hm _ (normR _)
-    simpa only [HasN, ls_normR] using h
+    simpa only [HasN, ls_normR] using! h
 
 theorem state_eq_of_cert (m : ℕ) (hm : 1 ≤ m) (a b : NeutralExpr)
     (h : normR a.poly = normR b.poly) : a.state m hm = b.state m hm :=
@@ -121,7 +121,7 @@ theorem J_primary_low_modes (m : ℕ) (hm : 1 ≤ m) :
   · intro n
     have h := NeutralExpr.state_eq_of_cert m hm (.vir (n.val + 1) .j) (.scale 0 .vac)
       (by fin_cases n <;> decide +kernel)
-    simpa only [NeutralExpr.state, NeutralExpr.vir, Rat.cast_zero, zero_smul] using h
+    simpa only [NeutralExpr.state, NeutralExpr.vir, Rat.cast_zero, zero_smul] using! h
 
 /-- Symbolic charged computation, retaining the charge parameter before specializing m. -/
 theorem J_three_E (m : ℕ) (hm : 1 ≤ m) :

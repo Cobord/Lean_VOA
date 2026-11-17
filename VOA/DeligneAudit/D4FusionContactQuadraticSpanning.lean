@@ -38,7 +38,7 @@ theorem evaluate_elimination (b : Fin 36 → V) (j : Fin 36) :
         ∑ n : Fin 9, normalCoeff j n • basis (normalColumn n) := by
     funext k
     simpa only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
-      ite_apply, Pi.zero_apply] using elimination j k
+      ite_apply, Pi.zero_apply, eliminationRhs] using elimination j k
   have hh := congrArg (evalZ b) he
   simpa only [evalZ_basis, map_add, map_sum, map_smul, apply_ite, map_zero] using hh
 

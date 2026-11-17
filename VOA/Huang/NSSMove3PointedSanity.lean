@@ -63,6 +63,8 @@ theorem twoBlockTrace_holds (a b v : ZMod 3) (n k : ℕ) :
     push_cast
     ring
   · unfold indicator forwardCrossing
+    have hA : ∀ x y : ZMod 3, -(x - y) = y - x := by decide
+    rw [hA a b]
     congr 2
     push_cast
     ring

@@ -33,6 +33,10 @@ anti-diagonal relation `D(ℓ,n+1) = −D(ℓ+1,n)` on the discrepancy `D = BL �
 namespace VOA
 open Module (End)
 open scoped BigOperators
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
@@ -381,7 +385,7 @@ theorem borcherds (W : VertexOperatorAlgebra 𝒱) (u v x : 𝒱) (ℓ m n : ℤ
       have key := antidiag_pin
         (fun ℓ' n' => BL W u v x ℓ' (-(k : ℤ) - 1) n' - BR W u v x ℓ' (-(k : ℤ) - 1) n')
         (fun ℓ' n' => by
-          dsimp only
+          try dsimp only
           have hbl := BL_rec W u v x ℓ' (-(k : ℤ) - 1) n'
           have hbr := BR_rec W u v x ℓ' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) from by ring] at hbl hbr
@@ -389,7 +393,7 @@ theorem borcherds (W : VertexOperatorAlgebra 𝒱) (u v x : 𝒱) (ℓ m n : ℤ
           rw [hbl, hbr] at hih
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
-        (fun n' => by dsimp only; rw [borcherds_boundary W u v x (-(k : ℤ) - 1) n', sub_self])
+        (fun n' => by (try dsimp only); rw [borcherds_boundary W u v x (-(k : ℤ) - 1) n', sub_self])
         ℓ n
       exact sub_eq_zero.mp key
 

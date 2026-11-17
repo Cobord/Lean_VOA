@@ -153,15 +153,16 @@ noncomputable def YemαFam (m t : ℤ) (n : ℤ) : ℂ →ₗ[ℂ] (B →ₗ[ℂ
 
 /-- The **general-charge lattice vertex operator** `Y(e^{mα},z)` as a `FormalDist (End LatModule)`,
 extending the proved charge-`+1` `Yeα` to every integer charge `m`. -/
-noncomputable def Yemα (m t : ℤ) : LatModule →ₗ[ℂ] LatModule :=
-  TensorProduct.lift (Finsupp.lsum ℂ (YemαFam m t)).flip
+noncomputable def Yemα (m : ℤ) : FormalDist (Module.End ℂ LatModule) := fun t =>
+  TensorProduct.lift ((Finsupp.lsum ℂ (YemαFam m t)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap).flip
 
 /-- The defining action of `Y(e^{mα},z)` on a basis state `p ⊗ e^{nα}`. -/
 theorem Yemα_tmul (m t n : ℤ) (p : B) :
     Yemα m t (p ⊗ₜ[ℂ] eVec n) = (EEC (m : ℂ) (t - 2 * m * n) p) ⊗ₜ[ℂ] eVec (n + m) := by
   rw [Yemα, TensorProduct.lift.tmul]
-  change (Finsupp.lsum ℂ (YemαFam m t)) (eVec n) p = _
-  rw [eVec, Finsupp.lsum_single, YemαFam, LinearMap.toSpanSingleton_apply, one_smul,
+  change (Finsupp.lsum ℂ (YemαFam m t)) (Finsupp.single n 1) p = _
+  rw [Finsupp.lsum_single, YemαFam, LinearMap.toSpanSingleton_apply, one_smul,
     LinearMap.comp_apply, LinearMap.flip_apply, TensorProduct.mk_apply]
 
 /-- The genuine creation series of `Y(e^{mα},z)`: `zᵗ`-coefficient `cSchurC m t ⊗ e^{mα}` for `t≥0`. -/

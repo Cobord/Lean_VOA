@@ -34,7 +34,7 @@ theorem jacobi_mode_commutator (u v x : V) (m n : ℤ) :
   rw [finsum_eq_single _ (0 : ℤ)
     (fun i hi => by rw [cbz_zero_left, if_neg hi, mul_zero, zero_smul])] at h
   simpa only [cbz_zero_left, if_pos rfl, mul_one, one_smul, negOnePow,
-    Even.zero, if_pos, zero_add, add_zero, sub_zero] using h
+    Even.zero, if_pos, zero_add, add_zero, sub_zero, FirstOrderDeformation.smul₁_def] using h
 
 /-- A current product above the first positive mode has negative weight and
 therefore vanishes in a VOA of CFT type. -/

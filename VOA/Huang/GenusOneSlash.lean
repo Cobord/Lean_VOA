@@ -78,7 +78,7 @@ theorem insertionSerre_sSlash (α : ℂ) {f : ℂ → ℂ}
   rw [hp, insertionSerre, zhuGC_one hz, zhuGC_one (mobiusC_mem_imGT ModularGroup.S hz)]
   have hG' : G2C (mobiusC ModularGroup.S z) / z ^ (2 : ℕ) =
       G2C z - (2 * (Real.pi : ℂ) * Complex.I) / z := by
-    simpa only [div_eq_mul_inv] using hG
+    simpa only [div_eq_mul_inv] using! hG
   have hi := two_pi_I_ne_zero
   field_simp at hG' ⊢
   linear_combination -α * z ^ (-α) * f (mobiusC ModularGroup.S z) * hG'

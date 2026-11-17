@@ -17,7 +17,7 @@ theorem thetaY_iter_mem_coupled {ι : Type*}
     ∀ i p j, (thetaY μ)^[i] (Q p j) ∈ NN := by
   intro i
   induction i with
-  | zero => intro p j; simpa using hmem p j
+  | zero => intro p j; simpa using! hmem p j
   | succ i ih =>
     intro p j
     rw [Function.iterate_succ_apply]

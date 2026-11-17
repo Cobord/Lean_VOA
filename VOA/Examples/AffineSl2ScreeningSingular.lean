@@ -13,6 +13,8 @@ and by the horizontal raising operator. Its energy, Cartan weight and
 nonvanishing are actual statements in the charged Wakimoto representation.
 These results do not yet identify a universal Verma Gram determinant root.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Screening
 open Module (End)
 noncomputable section
@@ -30,10 +32,9 @@ theorem state_positive_lowering (r q M : ℕ) (hr : 0<r) (hq : 0<q)
   have hH : Charged.H k ((q : ℂ)*(k+2)-(r : ℂ)-1) (n-1) (state r q M)=0 := by
     have hh := state_positive_cartan r q M (n-1).toNat hq (by omega)
       k ((q : ℂ)*(k+2)-(r : ℂ)-1) hMk
-    simpa only [Int.toNat_of_nonneg (by omega : 0≤n-1)] using hh
+    simpa only [Int.toNat_of_nonneg (by omega : 0≤n-1)] using! hh
   have hc := congrArg (fun T : End ℂ WakFock => T (state r q M))
     (Charged.hf k ((q : ℂ)*(k+2)-(r : ℂ)-1) hk (n-1) 1)
-  dsimp only at hc
   rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
     state_lowering r q M hr hq k hMk,hH,map_zero,map_zero,sub_self,
     LinearMap.smul_apply,sub_add_cancel] at hc
@@ -52,7 +53,7 @@ theorem state_positive_current (r q M : ℕ) (hr : 0<r) (hq : 0<q)
   · change Charged.H k ((q : ℂ)*(k+2)-(r : ℂ)-1) n (state r q M)=0
     have h := state_positive_cartan r q M n.toNat hq (by omega)
       k ((q : ℂ)*(k+2)-(r : ℂ)-1) hMk
-    simpa only [Int.toNat_of_nonneg (by omega : 0≤n)] using h
+    simpa only [Int.toNat_of_nonneg (by omega : 0≤n)] using! h
 
 /-- The integer-screening construction supplies an ACTUAL nonzero joint
 weight vector satisfying all affine highest-weight equations. This is an

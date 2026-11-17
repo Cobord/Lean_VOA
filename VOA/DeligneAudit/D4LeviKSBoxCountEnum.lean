@@ -8,10 +8,10 @@ theorem keyEnum_injective (m : ℕ) : Function.Injective (keyEnum m) := by
   intro i j hij
   rcases lt_trichotomy i j with hlt | heq | hgt
   · have hless := keyEnum_descending m i j hlt
-    exact False.elim ((keyLess_irrefl m (keyEnum m i)) (by simpa [hij] using hless))
+    exact False.elim ((keyLess_irrefl m (keyEnum m i)) (by simpa [hij] using! hless))
   · exact heq
   · have hless := keyEnum_descending m j i hgt
-    exact False.elim ((keyLess_irrefl m (keyEnum m i)) (by simpa [hij] using hless))
+    exact False.elim ((keyLess_irrefl m (keyEnum m i)) (by simpa [hij] using! hless))
 
 theorem ksBoxCount_enum_sum (m : ℕ) :
     (∑ i : Fin (globalKeyBox m).card,

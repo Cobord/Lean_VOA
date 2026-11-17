@@ -68,7 +68,7 @@ theorem projectiveCongruence_of_mixed_primitive_rescaling
     ?_ γ hγ z
   intro r s hrs hrN w
   have hmod : Int.ModEq M.toRibbon.twistOrder r 1 :=
-    (ZMod.intCast_eq_intCast_iff r 1 _).mp (by simpa using hrN)
+    (ZMod.intCast_eq_intCast_iff r 1 _).mp (by simpa using! hrN)
   simp only [equivariantIndicator, LinearMap.coe_mk, AddHom.coe_mk,
     hscale a r s hrs hmod]
 

@@ -16,13 +16,15 @@ theorem L_sector (n d : ℤ) (hn : n ≠ 0) (p : FockN (rank (latP 1))) :
   rw [show (V2m 1 le_rfl).L n = LLGen (latP 1) n from
     OrbSpan.latticeVOAGen_L _ _ _ _]
   change LLGen (latP 1) n (latStateGen (latP 1) p d) = _
-  rw [LLGen_tmul _ (latP_posDef 1 le_rfl), if_neg hn, add_zero]
-  exact (map_add (sector d) _ _).symm
+  rw [LLGen_tmul (latP 1) (latP_posDef 1 le_rfl) n p (d : (latP 1).carrier), if_neg hn, add_zero]
+  exact ((sector d).map_add _ _).symm
 
 theorem sector_injective (d : ℤ) : Function.Injective (sector d) := by
   intro p q h
-  have hh := congrArg (coordEα (latP 1) d) h
-  simpa [sector, latStateGen, coordEα_apply] using hh
+  have key : ∀ r : FockN (rank (latP 1)),
+      coordEα (latP 1) (d : (latP 1).carrier) (sector d r) = r := fun r =>
+    (coordEα_apply (latP 1) (d : (latP 1).carrier) (d : (latP 1).carrier) r).trans (if_pos rfl)
+  exact (key p).symm.trans ((congrArg (coordEα (latP 1) (d : (latP 1).carrier)) h).trans (key q))
 
 theorem fockL_neg_X (k : ℕ) (hk : 0 < k) (d : ℤ) (i : ℕ)
     (p : FockN (rank (latP 1))) :
@@ -39,7 +41,7 @@ theorem fockL_neg_X (k : ℕ) (hk : 0 < k) (d : ℤ) (i : ℕ)
   have hq : chargeOsc (latP 1) d (-(k : ℤ)) (X (i, a0 1) * p) =
       X (i, a0 1) * chargeOsc (latP 1) d (-(k : ℤ)) p := by
     rw [show -(k : ℤ) = -(((k - 1 : ℕ) : ℤ) + 1) by omega,
-      chargeOsc_neg_eq_mulLeft_vVar]
+      chargeOsc_neg_eq_mulLeft_vVar (latP 1) (d : (latP 1).carrier) (k - 1)]
     simp only [LinearMap.mulLeft_apply]
     ring
   simp only [fockL, LinearMap.add_apply]
@@ -59,7 +61,7 @@ theorem virOnWord_sound (k : ℕ) (hk : 0 < k) (d : ℤ) (G : RawPoly ℕ)
     fockL d (-(k : ℤ)) (evalWord (xvc (a0 1) (cα 1)) w) =
       evRc (a0 1) (cα 1) (virOnWord k G w) := by
   induction w with
-  | nil => simpa only [evalWordC_nil, virOnWord] using hG
+  | nil => simpa only [evalWordC_nil, virOnWord] using! hG
   | cons i w ih =>
     cases i with
     | zero =>

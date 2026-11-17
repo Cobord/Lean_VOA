@@ -125,24 +125,24 @@ theorem W1_eq : W1 = lat (fib nbox EY1) wW := by
 /-! ## Constant term in `x` -/
 
 /-- The `x⁰`-coefficient, `ℚ[x^{±1}]⟦r⟧ → ℚ⟦r⟧`. -/
-def ctx (F : PowerSeries L) : PowerSeries ℚ := PowerSeries.mk fun n => (coeff n F) 0
+def ctx (F : PowerSeries L) : PowerSeries ℚ := PowerSeries.mk fun n => (coeff n F).coeff 0
 
 theorem ctx_lat {ι : Type*} (S : ℕ → Finset ι) (w : ι → L) :
-    ctx (lat S w) = lat S (fun i => (w i) 0) := by
+    ctx (lat S w) = lat S (fun i => (w i).coeff 0) := by
   ext n : 1
-  rw [ctx, coeff_mk, coeff_lat, coeff_lat]
+  rw [ctx, coeff_mk, coeff_lat, coeff_lat, AddMonoidAlgebra.coeff_sum]
   exact Finsupp.finset_sum_apply _ _ _
 
-theorem L_sub_apply (f g : L) (i : ℤ) : (f - g) i = f i - g i := Finsupp.sub_apply f g i
+theorem L_sub_apply (f g : L) (i : ℤ) : (f - g).coeff i = f.coeff i - g.coeff i := Finsupp.sub_apply _ _ i
 
-theorem mono_apply (j i : ℤ) : (mono j) i = if j = i then 1 else 0 := by
+theorem mono_apply (j i : ℤ) : (mono j).coeff i = if j = i then 1 else 0 := by
   rw [mono]; exact Finsupp.single_apply
 
-theorem cst_mul_apply (c : ℚ) (f : L) (i : ℤ) : (cst c * f) i = c * f i := by
-  rw [cst_apply]; exact AddMonoidAlgebra.single_zero_mul_apply _ _ _
+theorem cst_mul_apply (c : ℚ) (f : L) (i : ℤ) : (cst c * f).coeff i = c * f.coeff i := by
+  rw [cst_apply]; exact AddMonoidAlgebra.coeff_single_zero_mul _ _ _
 
 theorem wW_mul_wW_zero (i i' : ℕ × ℕ) :
-    (wW i * wW i') 0 = if i.2 = i'.2 then -2 * ((i.2 : ℚ) + 1) ^ 4 else 0 := by
+    (wW i * wW i').coeff 0 = if i.2 = i'.2 then -2 * ((i.2 : ℚ) + 1) ^ 4 else 0 := by
   rw [wW, wW, show cst (((i.2 : ℚ) + 1) ^ 2) * wY i * (cst (((i'.2 : ℚ) + 1) ^ 2) * wY i') =
     cst (((i.2 : ℚ) + 1) ^ 2 * ((i'.2 : ℚ) + 1) ^ 2) * (wY i * wY i') by rw [map_mul]; ring,
     cst_mul_apply, wY, wY]
@@ -178,7 +178,7 @@ theorem ctx_W1_sq_even (N : ℕ) :
   rw [ctx_W1_sq_coeff, ← Finset.sum_filter]
   rw [Finset.mul_sum]
   rw [show ∑ d ∈ (N + 1).divisors, -2 * ((N + 1 : ℕ) : ℚ) * (d : ℚ) ^ 3 =
-      ∑ d ∈ (N + 1).divisors, ∑ _q ∈ Finset.antidiagonal ((N + 1) / d - 1), -2 * (d : ℚ) ^ 4 by
+      ∑ d ∈ (N + 1).divisors, ∑ _q ∈ Finset.HasAntidiagonal.antidiagonal ((N + 1) / d - 1), -2 * (d : ℚ) ^ 4 by
     refine Finset.sum_congr rfl fun d hd => ?_
     rw [Finset.sum_const, Finset.Nat.card_antidiagonal, nsmul_eq_mul]
     have hd' := Nat.dvd_of_mem_divisors hd
@@ -197,11 +197,11 @@ theorem ctx_W1_sq_even (N : ℕ) :
     dsimp only at h1 h2; subst h2
     have h3 := EY1_add k k' p
     have h4 : (k + k' + 1) * (p + 1) = N + 1 := by omega
-    simp only [Finset.mem_sigma, Nat.mem_divisors, Finset.mem_antidiagonal]
+    simp only [Finset.mem_sigma, Nat.mem_divisors, Finset.HasAntidiagonal.mem_antidiagonal]
     refine ⟨⟨⟨k + k' + 1, by rw [← h4, mul_comm]⟩, by omega⟩, ?_⟩
     rw [← h4, Nat.mul_div_cancel _ (by omega)]; omega
   · rintro ⟨d, ⟨k, k'⟩⟩ hy
-    simp only [Finset.mem_sigma, Nat.mem_divisors, Finset.mem_antidiagonal] at hy
+    simp only [Finset.mem_sigma, Nat.mem_divisors, Finset.HasAntidiagonal.mem_antidiagonal] at hy
     obtain ⟨⟨⟨t, ht⟩, -⟩, h⟩ := hy
     have hd : 0 < d := by rcases d with _ | d; · simp at ht
                           · omega

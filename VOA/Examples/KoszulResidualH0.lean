@@ -183,7 +183,7 @@ theorem EVB_dN (s : Finset LexLetter) (v : BRSTSpace) : EVB hA (dN hA s v) = 0 :
 def jU : ASpace ⊗[ℂ] BSpace →ₗ[ℂ] MatterSpace :=
   (TensorProduct.mk ℂ (ASpace ⊗[ℂ] BSpace) USpace).flip (PhiU.symm 1)
 
-theorem uConst_eq (u : USpace) : uConst u = coeff 0 (PhiU u) • PhiU.symm 1 := by
+theorem uConst_eq (u : USpace) : uConst u = (PhiU u).coeff 0 • PhiU.symm 1 := by
   apply PhiU.injective
   rw [PhiU_uConst, map_smul, LinearEquiv.apply_symm_apply, homogeneousComponent_zero,
     smul_eq_C_mul, mul_one]
@@ -346,7 +346,7 @@ theorem range_comp_iff {n : ℤ} (hp : IsPosOn ((endpointKahler hA).geometry n).
     (fun a b hb q q1 hq v hv => hN_mem_blkW hA hp hb hq hv)
     (dN_hN_add hA _) (EVB_dN hA _)
     (fun c v hv hv0 hev => ΔN_EVB_injective hA n.toNat
-      (by have := goodSup_le_lapSup (blkW_le_goodSup hA hp _ hv); simpa using this) hv0 hev)
+      (by have := goodSup_le_lapSup (blkW_le_goodSup hA hp _ hv); simpa using! this) hv0 hev)
     hb x
 
 end

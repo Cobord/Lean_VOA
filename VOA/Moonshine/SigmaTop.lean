@@ -39,6 +39,11 @@ is not expected to.  Open, as named hypotheses of `topSigmaV3_of_offdiag`: (i) `
 umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -136,14 +141,16 @@ theorem cw_complete (a b : Fin (rank leech)) : ∑ j, cw j a * cw j b = if a = b
   have hMM : ((1 / 8 : ℂ) • M) * M.transpose = 1 := by
     ext j k
     rw [Matrix.smul_mul, Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply]
-    simp only [M, Matrix.transpose_apply]
+    simp only [Matrix.transpose_apply]
+    simp only [M]
     rw [show (∑ i, cw j (e.symm i) * cw k (e.symm i)) = ∑ a, cw j a * cw k a from
       Fintype.sum_equiv e.symm _ _ (fun _ => rfl), cw_orth]
     split_ifs <;> norm_num
   have h2 := mul_eq_one_comm.mp hMM
   have h3 := congrFun (congrFun h2 (e a)) (e b)
   rw [Matrix.mul_smul, Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply] at h3
-  simp only [M, Matrix.transpose_apply, Equiv.symm_apply_apply, smul_eq_mul] at h3
+  simp only [Matrix.transpose_apply] at h3
+  simp only [M, Equiv.symm_apply_apply, smul_eq_mul] at h3
   split_ifs with hab
   · rw [if_pos (congrArg e hab)] at h3
     have : ∑ j, cw j a * cw j b = 8 * ((1 / 8) * ∑ j, cw j a * cw j b) := by ring
@@ -183,7 +190,7 @@ theorem neg_not_mem_halfFourChi {m : leech.carrier} (hm : m ∈ halfFourChi 1) :
 open Classical in
 theorem coefN_frameX0P {n m : leech.carrier} (hn : n ∈ halfFourChi 1) (hm : m ∈ halfFourChi 1) :
     coefN n (frameX0P m) = if n = m then 1 else 0 := by
-  change MvPolynomial.coeff 0 (coordEα leech n (frameX0 m)) = _
+  change (coordEα leech n (frameX0 m)).coeff 0 = _
   rw [frameX0, map_add, coordEα_latChargeGen, coordEα_latChargeGen,
     if_neg (show n ≠ -m from fun h => neg_not_mem_halfFourChi hm (h ▸ hn)), add_zero]
   split_ifs <;> simp [vacuumN]

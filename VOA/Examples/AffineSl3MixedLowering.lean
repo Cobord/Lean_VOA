@@ -12,6 +12,8 @@ The mixed simple-lowering bracket depends only on total Fourier index.
 This is proved on the actual oscillator representation before defining
 F12. It does not yet assert the negative Serre relations.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

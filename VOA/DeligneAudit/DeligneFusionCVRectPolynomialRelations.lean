@@ -83,11 +83,11 @@ theorem canonical_coefficient_zero (R : CurrentModule bracketTable V) (w : V)
   have hh := cyclic_rel R w h
   have hF : ∀ s, N ≤ s → R'.op 3 s = 0 := by
     intro s hs
-    simpa only [currentMode, Bool.false_eq_true, ↓reduceIte] using
+    simpa only [currentMode, Bool.false_eq_true, ↓reduceIte] using!
       high_currentMode_zero R w h false s hs
   have hG : ∀ s, N ≤ s → R'.op 5 s = 0 := by
     intro s hs
-    simpa only [currentMode, ↓reduceIte] using high_currentMode_zero R w h true s hs
+    simpa only [currentMode, ↓reduceIte] using! high_currentMode_zero R w h true s hs
   have hz : canonicalOperatorEval R' N
       (PowerSeries.coeff j (CVRectSplit.reverseLeft N N ^ p * CVRectSplit.reverseRight N N ^ q))
         w' = 0 := by
@@ -99,13 +99,13 @@ theorem canonical_coefficient_zero (R : CurrentModule bracketTable V) (w : V)
       obtain ⟨k, hk⟩ := CVRectCutoff.excess_cv_region r n e (p + q) j hj hdegree
       apply theta_cvrel_mixed R' (hh.raising 1 (by decide) 0) ?_ p q _ k
         (CVRectCutoff.multiplicity_pos hj) hk
-      simpa only [Nat.add_zero] using hh.highest
+      simpa only [Nat.add_zero] using! hh.highest
     · rw [CVRectReflection.coeff_two_color_high _ _ (N - 1) p q j
         (finiteCurrent_natDegree_le N _) (finiteCurrent_natDegree_le N _) (by omega),
         LinearMap.zero_apply]
   rw [← vectorEval_cyclic_coe]
   simpa only [canonicalOperatorEval, AlgHom.comp_apply,
-    vectorEval] using congrArg (fun v : CVRectSingle.cyclicSpan R w => (v : V)) hz
+    vectorEval] using! congrArg (fun v : CVRectSingle.cyclicSpan R w => (v : V)) hz
 
 /-- The canonical coefficient ideal maps into the genuine polynomial annihilator ideal. -/
 theorem canonicalCoefficientIdeal_le (R : CurrentModule bracketTable V) (w : V)

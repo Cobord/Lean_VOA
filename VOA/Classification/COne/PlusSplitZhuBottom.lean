@@ -32,7 +32,7 @@ noncomputable def bottomRhoV (N : AdmissibleModule W M) :
     𝒱 →ₗ[ℂ] Module.End ℂ (N.lev 0) where
   toFun v :=
     { toFun := fun x => ⟨oLevW N.toWeakModule 0 v (x : M), by
-          simpa using oLevW_mem_lev (bottomAdmLev N) 0 v x.2⟩
+          simpa using! oLevW_mem_lev (bottomAdmLev N) 0 v x.2⟩
       map_add' := by intro x y; apply Subtype.ext; exact map_add _ _ _
       map_smul' := by intro c x; apply Subtype.ext; exact map_smul _ _ _ }
   map_add' := by intro u v; ext x; simp
@@ -84,7 +84,7 @@ theorem oLevW_mem_modeSubmodule (A : WeakModule W M)
     exact (ofR A P).act_mem a (w - 1) hx
   · simp
   · intro a b ha hb
-    simpa using P.add_mem ha hb
+    simpa using! P.add_mem ha hb
 
 /-- Zhu semisimplicity supplies a zero-mode-stable complement inside level
 zero to its intersection with any weak submodule. -/
@@ -115,7 +115,7 @@ theorem exists_bottom_complement
     constructor
     · rintro ⟨y, hy, he⟩
       have : y = x := Subtype.ext he
-      simpa only [this] using hy
+      simpa only [this] using! hy
     · intro hx; exact ⟨x, hx, rfl⟩
   refine ⟨S, ?_, ?_, ?_, ?_⟩
   · rintro x ⟨y, _, rfl⟩; exact y.2

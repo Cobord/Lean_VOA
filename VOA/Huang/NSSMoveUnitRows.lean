@@ -26,7 +26,7 @@ theorem diagonalSMove_of_base
     rw [map_mul, LinearEquiv.mul_apply]
   have hzero (w : W) : I 0 (-m) (σ ModularGroup.T w) = I 0 (-m) w := by
     have h := hT 0 (-m) (σ ModularGroup.T w)
-    simpa only [add_zero, hc, inv_mul_cancel, map_one, le_one_apply] using h
+    simpa only [add_zero, hc, inv_mul_cancel, map_one, le_one_apply] using! h
   have hminus := rowT_zpow σ I hT m 0 (-1) z
   have hplus := hT m 0 (σ ModularGroup.S⁻¹ z)
   simp only [zero_add, neg_neg, zpow_one, neg_one_mul] at hminus hplus

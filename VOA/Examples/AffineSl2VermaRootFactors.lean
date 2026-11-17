@@ -60,7 +60,7 @@ theorem jointDescendant_null_row (k h : ℂ) (n m : ℕ) (c d : ℤ)
       contravariant k h (b e : Verma k h) (b j : Verma k h) := by
     intro e
     have hh := congrArg (fun A => A e j) (weightGramPolynomial_eval k h (n+m) (c+d))
-    simpa only [Matrix.map_apply,gramMatrix,b,jointBasis_apply] using hh
+    simpa only [Matrix.map_apply,gramMatrix,b,jointBasis_apply] using! hh
   simp_rw [he]
   have hs := congrArg (jointSpace k h (n+m) (c+d)).subtype
     (b.sum_equivFun (jointDescendant k h n m c d v i))
@@ -68,7 +68,7 @@ theorem jointDescendant_null_row (k h : ℂ) (n m : ℕ) (c d : ℤ)
   have hh := congrArg (fun u => contravariant k h u (b j : Verma k h)) hs
   have hz := LinearMap.congr_fun (descendant_radical k h (Wak.Charged.occupationWord i.val) v hv) (b j)
   simpa only [map_sum,LinearMap.sum_apply,map_smul,LinearMap.smul_apply,smul_eq_mul,
-    LinearMap.zero_apply,jointDescendant] using hh.trans hz
+    LinearMap.zero_apply,jointDescendant] using! hh.trans hz
 
 /-- A nonzero actual radical vector forces the FULL occupation descendant
 multiplicity in every higher joint determinant. Singularity is unnecessary

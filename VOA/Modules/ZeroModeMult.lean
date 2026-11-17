@@ -401,7 +401,7 @@ theorem oMod_zhuMul_expand (hu : u ∈ W.grading a) (hv : v ∈ W.grading β) (h
       = ∑ m ∈ Finset.range (a.toNat + 1),
           cbz a m • mode (N.YM (W.smul u ((m : ℤ) - 1) v)) (a + β - m - 1) x := by
   rw [zhuMul_homogeneous W hu v, map_sum]
-  rw [LinearMap.coeFn_sum, Finset.sum_apply]
+  rw [LinearMap.sum_apply]
   refine Finset.sum_congr rfl (fun m hm => ?_)
   rw [map_smul, LinearMap.smul_apply]
   congr 1

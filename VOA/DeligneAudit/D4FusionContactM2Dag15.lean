@@ -28,7 +28,7 @@ theorem node5406_mem : rowEval varIndex node5406 ∈ candidateIdeal := by
     (1) (-1) (by decide) node5406_check
   · rw [node5406Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0694_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node5186 node5186_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node5186 node5186_mem)
 
 def node5409 : WordRow := [([3, 8, 10, 13], 2), ([3, 8, 11, 12], 4), ([4, 8, 11, 11], 2), ([4, 9, 10, 11], 1), ([5, 8, 10, 11], 1), ([6, 8, 9, 11], 3), ([6, 9, 9, 10], 2), ([7, 8, 8, 11], 1)]
 
@@ -46,7 +46,7 @@ theorem node5409_mem : rowEval varIndex node5409 ∈ candidateIdeal := by
     (1) (-1) (by decide) node5409_check
   · rw [node5409Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0694_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node2586 node2586_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node2452 node2452_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2655 node2655_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node3421 node3421_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node3647 node3647_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5055 node5055_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3509 node3509_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node5198 node5198_mem))))))))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node2586 node2586_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node2452 node2452_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2655 node2655_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node3421 node3421_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node3647 node3647_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5055 node5055_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3509 node3509_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node5198 node5198_mem))))))))
 
 def node5411 : WordRow := [([5, 8, 11, 12], 2), ([5, 9, 10, 12], 2), ([6, 8, 9, 13], 3), ([6, 9, 9, 12], 4), ([7, 8, 8, 13], -1)]
 
@@ -64,7 +64,7 @@ theorem node5411_mem : rowEval varIndex node5411 ∈ candidateIdeal := by
     (2) (-2) (by decide) node5411_check
   · rw [node5411Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0694_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node3036 node3036_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node2465 node2465_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node3105 node3105_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node4090 node4090_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5046 node5046_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5057 node5057_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (4) node3555 node3555_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node5062 node5062_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node5072 node5072_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node4368 node4368_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3835 node3835_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3841 node3841_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node2905 node2905_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (4) node5080 node5080_mem) (rowEval_scale_mem varIndex candidateIdeal (-4) node5214 node5214_mem)))))))))))))))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node3036 node3036_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node2465 node2465_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node3105 node3105_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node4090 node4090_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5046 node5046_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5057 node5057_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (4) node3555 node3555_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node5062 node5062_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node5072 node5072_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node4368 node4368_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3835 node3835_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node3841 node3841_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-4) node2905 node2905_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (4) node5080 node5080_mem) (rowEval_scale_mem varIndex candidateIdeal (-4) node5214 node5214_mem)))))))))))))))
 
 def node5412 : WordRow := [([1, 8, 14, 14], 2), ([2, 5, 14, 14], -1), ([2, 8, 13, 14], -1), ([3, 4, 14, 14], -1), ([3, 8, 12, 14], -1), ([4, 8, 11, 14], -1), ([5, 8, 10, 14], -1), ([6, 8, 9, 14], -1), ([7, 8, 8, 14], -1)]
 
@@ -208,7 +208,7 @@ theorem node5436_mem : rowEval varIndex node5436 ∈ candidateIdeal := by
     (1) (-1) (by decide) node5436_check
   · rw [node5436Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0697_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node4644 node4644_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node4644 node4644_mem)
 
 def node5437 : WordRow := [([6, 9, 10, 14], 1), ([7, 8, 10, 14], -1), ([8, 10, 10, 13], -1), ([8, 10, 11, 12], -1)]
 
@@ -334,7 +334,7 @@ theorem node5486_mem : rowEval varIndex node5486 ∈ candidateIdeal := by
     (1) (-2) (by decide) node5486_check
   · rw [node5486Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0708_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4203 node4203_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4531 node4531_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4211 node4211_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node4523 node4523_mem) (rowEval_scale_mem varIndex candidateIdeal (1) node4256 node4256_mem)))))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4203 node4203_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4531 node4531_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node4211 node4211_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node4523 node4523_mem) (rowEval_scale_mem varIndex candidateIdeal (1) node4256 node4256_mem)))))
 
 def node5487 : WordRow := [([9, 10, 10, 13], 1), ([9, 10, 11, 12], 1)]
 
@@ -352,7 +352,7 @@ theorem node5487_mem : rowEval varIndex node5487 ∈ candidateIdeal := by
     (1) (1) (by decide) node5487_check
   · rw [node5487Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0708_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node4963 node4963_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node4963 node4963_mem)
 
 def node5488 : WordRow := [([9, 11, 12, 12], 1)]
 
@@ -370,7 +370,7 @@ theorem node5488_mem : rowEval varIndex node5488 ∈ candidateIdeal := by
     (1) (1) (by decide) node5488_check
   · rw [node5488Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0708_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5282 node5282_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node5331 node5331_mem))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node5282 node5282_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node5331 node5331_mem))
 
 def node5491 : WordRow := [([8, 11, 13, 16], 1), ([9, 10, 13, 16], 1), ([9, 11, 12, 16], 1)]
 
@@ -514,7 +514,7 @@ theorem node5543_mem : rowEval varIndex node5543 ∈ candidateIdeal := by
     (1) (-1) (by decide) node5543_check
   · rw [node5543Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0720_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node4945 node4945_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node4945 node4945_mem)
 
 def node5544 : WordRow := [([4, 11, 12, 14], 1), ([5, 10, 12, 14], -1), ([8, 10, 12, 13], -1), ([9, 10, 12, 12], -1)]
 
@@ -748,7 +748,7 @@ theorem node5623_mem : rowEval varIndex node5623 ∈ candidateIdeal := by
     (1) (-1) (by decide) node5623_check
   · rw [node5623Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0739_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node5327 node5327_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node5327 node5327_mem)
 
 def node5626 : WordRow := [([2, 13, 14, 16], 1), ([3, 12, 14, 16], -1), ([8, 11, 12, 16], -1), ([9, 10, 12, 16], -1)]
 
@@ -1072,7 +1072,7 @@ theorem node5737_mem : rowEval varIndex node5737 ∈ candidateIdeal := by
     (1) (-6) (by decide) node5737_check
   · rw [node5737Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0770_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node3939 node3939_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node0884 node0884_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2938 node2938_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1205 node1205_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2486 node2486_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1491 node1491_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2236 node2236_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1744 node1744_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0915 node0915_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0942 node0942_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0965 node0965_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node1756 node1756_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node1503 node1503_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node1244 node1244_mem))))))))))))))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node3939 node3939_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (1) node0884 node0884_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2938 node2938_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1205 node1205_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2486 node2486_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1491 node1491_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node2236 node2236_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node1744 node1744_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0915 node0915_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0942 node0942_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (2) node0965 node0965_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node1756 node1756_mem) (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-2) node1503 node1503_mem) (rowEval_scale_mem varIndex candidateIdeal (-2) node1244 node1244_mem))))))))))))))
 
 def node5740 : WordRow := [([0, 16, 17, 17], 1)]
 

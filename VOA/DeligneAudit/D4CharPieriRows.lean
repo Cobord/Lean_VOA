@@ -74,7 +74,7 @@ theorem pieri_e_step_rows (q : Rˣ) (z : R) (N : ℕ) (lam : Fin (N + 1) → ℤ
         have := hlam (show i.castSucc ≤ i.succ by change i.val ≤ i.val + 1; omega)
         omega
       simp_rw [pieri_left_row_product, pieri_right_row_product]
-      simpa only [mul_assoc] using pieri_e_step q z N
+      simpa only [mul_assoc] using! pieri_e_step q z N
         (fun i => lam i.castSucc - lam i.succ) (fun i => lam i.castSucc - μ i) ha
 
 end

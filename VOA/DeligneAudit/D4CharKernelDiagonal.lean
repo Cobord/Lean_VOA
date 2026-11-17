@@ -41,17 +41,17 @@ theorem gtBiCollapse_diagonal (a b : R) (F : PowerSeries R) :
     rw [coeff_expand_mul, coeff_rescale, Finset.sum_eq_single (k, k)]
     · simp [mul_pow, mul_assoc]
     · intro p hp hne
-      have hp := Finset.mem_antidiagonal.mp hp
+      have hp := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
       have he : p.2 ≠ p.1 := by
         intro he
         apply hne
         apply Prod.ext <;> dsimp <;> omega
       simp [Ne.symm he]
-    · simp [Finset.mem_antidiagonal, two_mul]
+    · simp [Finset.HasAntidiagonal.mem_antidiagonal, two_mul]
   · rw [coeff_expand_of_not_dvd _ _ _ hn]
     apply Finset.sum_eq_zero
     intro p hp
-    have hp := Finset.mem_antidiagonal.mp hp
+    have hp := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     have he : p.2 ≠ p.1 := by
       intro he
       apply hn

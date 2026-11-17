@@ -119,7 +119,7 @@ theorem fullFlagPowerLayerRoot_lower_pow (B N k i : ℕ) (hN : 0 < N)
   rw [fullFlagPowerLayerRoot, ← map_pow]
   apply Ideal.Quotient.eq_zero_iff_mem.mpr
   exact alphabetRoot_powerLayer_mem xs _ z N k i (List.mem_ofFn.mpr ⟨j, rfl⟩) hN
-    (by simpa only [xs, List.length_ofFn] using hlen) he (fullFlagRoot_pow _ _ _) hi
+    (by simpa only [xs, List.length_ofFn] using! hlen) he (fullFlagRoot_pow _ _ _) hi
 
 /-- The later power layers are quotients of the smaller flag with cutoff lowered by one. -/
 theorem fullFlagPowerLayer_lower_rank_le (B N k i : ℕ) (hN : 0 < N)

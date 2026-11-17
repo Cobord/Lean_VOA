@@ -953,24 +953,24 @@ theorem Gfield_eq_jumpSum (W : VertexOperatorAlgebra 𝒱) (u c : 𝒱) {M : ℕ
       have hminM : ∀ a, a ≤ N + 1 → a ≤ M → a ≤ min (N + 1) M := fun a h1 h2 => le_min h1 h2
       -- Bijection `r ↦ s = N − r` (`i` maps Term2 indices to jump-sum indices).
       refine Finset.sum_nbij' (fun r => N - r) (fun s => N - s) ?_ ?_ ?_ ?_ ?_
-      · intro r hr; rw [Finset.mem_Ico] at hr ⊢; dsimp only
+      · intro r hr; rw [Finset.mem_Ico] at hr ⊢; try dsimp only
         have hrN : r ≤ N := by omega
         have hub : N - r + 1 ≤ min (N + 1) M := hminM (N - r + 1) (by omega) (by omega)
         omega
-      · intro s hs; rw [Finset.mem_Ico] at hs ⊢; dsimp only
+      · intro s hs; rw [Finset.mem_Ico] at hs ⊢; try dsimp only
         have hsN : s ≤ N := by omega
         have hsM : s < M := by omega
         have hub : N - s ≤ min m' N := hminm (N - s) (by omega) (by omega)
         omega
-      · intro r hr; rw [Finset.mem_Ico] at hr; dsimp only
+      · intro r hr; rw [Finset.mem_Ico] at hr; try dsimp only
         have hrN : r ≤ N := by omega
         omega
-      · intro s hs; rw [Finset.mem_Ico] at hs; dsimp only
+      · intro s hs; rw [Finset.mem_Ico] at hs; try dsimp only
         have hsN : s ≤ N := by omega
         omega
       · intro r hr
         rw [Finset.mem_Ico] at hr
-        dsimp only
+        try dsimp only
         -- jump-sum index `s = N − r`.
         have hsr : (N - r) ≤ N := by omega
         have hrm : r ≤ m' := by omega

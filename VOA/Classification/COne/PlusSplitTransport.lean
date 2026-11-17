@@ -205,7 +205,7 @@ theorem modeMap_eq_iff (π : A.Hom B) {P Q : Submodule (modeAlg A) X}
   constructor
   · intro he
     have := congrArg (modeComap π) he
-    simpa only [modeComap_map, sup_eq_left.mpr hP, sup_eq_left.mpr hQ] using this
+    simpa only [modeComap_map, sup_eq_left.mpr hP, sup_eq_left.mpr hQ] using! this
   · exact congrArg _
 
 /-- Relative complements pull back along an arbitrary weak-module map when

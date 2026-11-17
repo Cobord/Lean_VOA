@@ -69,7 +69,7 @@ theorem positiveEllipticArray_support (d : ℕ) :
   have he : j - i - 1 + 1 = j - i := by omega
   refine ⟨(j - i - 1, l), ?_⟩
   apply Prod.ext
-  · simpa only [positiveFourierIndex, he] using hl.symm
+  · simpa only [positiveFourierIndex, he] using! hl.symm
   · simp only [positiveFourierIndex, he]
     rw [Nat.mul_add, Nat.mul_one, ← hl]
     omega
@@ -151,7 +151,7 @@ theorem ellipticSeries_eval_fourier (d : ℕ) {x y : ℂ}
     positiveEllipticArray_eval d hx hy]
   have hswap : (∑' p : ℕ × ℕ, positiveEllipticArray d p.2 p.1 * y ^ p.2 * x ^ p.1) =
       ∑' p : ℕ × ℕ, positiveEllipticArray d p.1 p.2 * y ^ p.1 * x ^ p.2 := by
-    simpa only [Equiv.prodComm_apply, Prod.fst_swap, Prod.snd_swap] using
+    simpa only [Equiv.prodComm_apply, Prod.fst_swap, Prod.snd_swap] using!
       (Equiv.prodComm ℕ ℕ).tsum_eq
         (fun p : ℕ × ℕ => positiveEllipticArray d p.1 p.2 * y ^ p.1 * x ^ p.2)
   rw [hswap, positiveEllipticArray_eval d hy hx, mul_comm y x, ← tsum_mul_left,

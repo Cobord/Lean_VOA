@@ -106,10 +106,10 @@ theorem polyWidthSource_convolution (H K t : ℂ) (N n : ℕ) (u : ℕ → ℂ) 
     refine ⟨q,Finset.mem_range.mpr hqr,?_,rfl⟩
     have he : (polyWidthSource H K t (monomial (n-q) 1)).coeff n=
         OrbIcoW.scalarWidth H K t (n-q) q := by
-      simpa only [Nat.sub_add_cancel hqn] using
+      simpa only [Nat.sub_add_cancel hqn] using!
         polyWidthSource_monomial_width H K t (n-q) q (Finset.mem_range.mp hq)
     rw [he]
-    simpa only [if_pos hqn,mul_comm] using hne
+    simpa only [if_pos hqn,mul_comm] using! hne
   · intro q hq hne
     have hqn : q≤n := by simp only [Finset.mem_range] at hq; omega
     have hq7 : q<7 := by
@@ -118,7 +118,7 @@ theorem polyWidthSource_convolution (H K t : ℂ) (N n : ℕ) (u : ℕ → ℂ) 
       rw [polyWidthSource_monomial_above H K t (n-q) n (by omega),mul_zero]
     have he : (polyWidthSource H K t (monomial (n-q) 1)).coeff n=
         OrbIcoW.scalarWidth H K t (n-q) q := by
-      simpa only [Nat.sub_add_cancel hqn] using
+      simpa only [Nat.sub_add_cancel hqn] using!
         polyWidthSource_monomial_width H K t (n-q) q hq7
     rw [if_pos hqn,he]
     ring

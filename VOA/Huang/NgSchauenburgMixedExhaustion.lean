@@ -66,7 +66,7 @@ theorem surjective_of_positive_mass {I J : Type*} [Fintype I] [Fintype J]
   classical
   intro j
   by_contra hj
-  have hnot : j ∉ Finset.univ.image f := by simpa using hj
+  have hnot : j ∉ Finset.univ.image f := by simpa using! hj
   have hlt := Finset.sum_lt_sum_of_subset (Finset.subset_univ (Finset.univ.image f))
     (Finset.mem_univ j) hnot (hw j) (fun k _ _ => (hw k).le)
   rw [Finset.sum_image (fun a _ b _ h => hf h)] at hlt
@@ -86,7 +86,7 @@ theorem mixedCenterLabel_surjective_of_globalDimension (F : SphericalFusion C)
   simp only [← he]
   rw [← SphericalFusion.globalDimension, hd]
   simp only [mixedCenterLabel_dimension F M Z hc, Fintype.sum_prod_type]
-  simpa only [mixedCenter_dimension] using mixedCenter_dimension_mass F
+  simpa only [mixedCenter_dimension] using! mixedCenter_dimension_mass F
 
 /-- Exhaustion by mixed objects is exactly the remaining dimension equality,
 for a supplied trace-compatible spherical fusion center. -/
@@ -111,7 +111,7 @@ theorem mixedCenter_exhaustion_iff_globalDimension (F : SphericalFusion C)
         (e.sum_comp (fun a => Z.dimension (Z.simple a) ^ 2)).symm
       _ = F.globalDimension ^ 2 := by
         simp only [mixedCenterLabel_dimension F M Z hc, Fintype.sum_prod_type]
-        simpa only [mixedCenter_dimension] using mixedCenter_dimension_mass F
+        simpa only [mixedCenter_dimension] using! mixedCenter_dimension_mass F
   · intro hd a
     obtain ⟨p, hp⟩ := mixedCenterLabel_surjective_of_globalDimension F M Z hc hd a
     exact ⟨p.1, p.2, ⟨eqToIso (congrArg Z.simple hp.symm) ≪≫

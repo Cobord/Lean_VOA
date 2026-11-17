@@ -369,7 +369,7 @@ theorem DD_X_mul (v : Fin r → ℂ) (x : ℕ × Fin r) (a : ℤ) (y : FockT r) 
   rw [DD_apply_range v a _ (k + Q) hQX, DD_apply_range v a y (k + Q) (fun q hq => hQ q (by omega)),
     DD_apply_range v _ y Q hQ, Finset.mul_sum, Finset.smul_sum]
   simp only [EpC_X_mul, mul_sub, Finset.sum_sub_distrib]
-  congr 1
+  refine congrArg₂ (· - ·) ?_ ?_
   · exact Finset.sum_congr rfl fun q _ => by ring
   · rw [Finset.sum_range_add]
     rw [Finset.sum_eq_zero (fun q hq => by

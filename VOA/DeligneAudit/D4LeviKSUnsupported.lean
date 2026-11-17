@@ -19,9 +19,9 @@ theorem xyzSpan_eq_bot_of_excluded (k : RadicalKey)
   apply le_antisymm ?_ bot_le
   rw [xyzSpan, Submodule.span_le]
   rintro v ⟨l, hk, hE, hU, hUp, rfl⟩
-  have he0 : k.e = 0 := by simpa [← hk, wordKey] using hE
-  have hu0 : k.u = 0 := by simpa [← hk, wordKey] using hU
-  have hup0 : k.up = 0 := by simpa [← hk, wordKey] using hUp
+  have he0 : k.e = 0 := by simpa [← hk, wordKey] using! hE
+  have hu0 : k.u = 0 := by simpa [← hk, wordKey] using! hU
+  have hup0 : k.up = 0 := by simpa [← hk, wordKey] using! hUp
   rcases he with h | h | h <;> contradiction
 
 /-- Lemma 0 removes every key containing a non-XYZ radical letter. -/

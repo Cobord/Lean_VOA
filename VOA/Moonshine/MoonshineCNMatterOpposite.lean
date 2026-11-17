@@ -12,6 +12,9 @@ namespace VOA.Moonshine.ConwayNorton
 open AutMonster IntegralLattice LatGen
 open scoped TensorProduct BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 def moonshineMatterOppositeModes (n : ℤ) :
     moonshineMatterSpace →ₗ[ℂ] Module.End ℂ moonshineMatterSpace :=
   moonshineMatterNearVOA.oppositeModes moonshineMatterVirasoroOne_locallyNilpotent n

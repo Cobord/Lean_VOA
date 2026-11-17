@@ -124,7 +124,7 @@ theorem sum_sectorProfiles_le_source (m N : ℕ) :
   rw [← sum_masterTerm_eq_source]
   have h := sum_le_sum_of_injection (sectorToMaster m N) (sectorToMaster_injective m N)
     (masterTerm m N) (masterTerm_nonneg m N)
-  simpa only [Fintype.sum_sigma, masterTerm, sectorToMaster] using h
+  simpa only [Fintype.sum_sigma, masterTerm, sectorToMaster] using! h
 
 /-- The global Gordon Hilbert bound for the actual auxiliary arc quotient. -/
 theorem auxiliaryPiece_finrank_le_source {K : Type*} [Field K] [CharZero K] (m N : ℕ) :
@@ -137,7 +137,7 @@ theorem auxiliaryPiece_finrank_le_source {K : Type*} [Field K] [CharZero K] (m N
   intro t _
   have hN : N - (t.val.1.val + t.val.2.1.val + t.val.2.2.val) +
       t.val.1.val + t.val.2.1.val + t.val.2.2.val = N := by have h := t.property; omega
-  simpa only [hN] using sector_finrank_le_profile_sum (K := K) m
+  simpa only [hN] using! sector_finrank_le_profile_sum (K := K) m
     (N - (t.val.1.val + t.val.2.1.val + t.val.2.2.val))
     t.val.1.val t.val.2.1.val t.val.2.2.val
 

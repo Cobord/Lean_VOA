@@ -73,7 +73,7 @@ theorem iterate_formal_system (hV : StronglyRational W)
         PowerSeries.coeff (n - p) (Phi (Y₁ j) (Y₂ j) (xs g) (ys g)) := by
     intro j f n
     exact rows_euler (F := fun f => Phi (Y₁ j) (Y₂ j) (xs f) (ys f))
-      (fun f => by simpa only [phiVec_apply] using heul f j) hnum f n
+      (fun f => by simpa only [phiVec_apply] using! heul f j) hnum f n
   have hph : ∀ j f n (s : ℝ), 0 < s → s < 1 →
       SumAt (PowerSeries.coeff n (Phi (Y₁ j) (Y₂ j) (xs f) (ys f))) (((1 + s : ℝ) : ℂ)⁻¹) := by
     intro j f n s hs0 _
@@ -176,7 +176,6 @@ theorem iterateModeGrowth_holds (hV : StronglyRational W)
     hr0 hr1.le (by positivity) hμA hsys hA₁ hrow
   refine ⟨C, r⁻¹, hC0, inv_nonneg.mpr hr0.le, fun n k => ?_⟩
   have h := hbound f₀ n k
-  simp only at h
   rw [hx0, hy0, ha0, hb0, coeff_iterRow] at h
   have hrk : 0 < r ^ k := pow_pos hr0 k
   rw [inv_pow, mul_assoc, ← div_eq_mul_inv, ← mul_div_assoc, le_div_iff₀ hrk]

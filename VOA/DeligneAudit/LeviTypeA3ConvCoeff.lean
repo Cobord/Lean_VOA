@@ -21,7 +21,7 @@ theorem a3_bWord_coeff_count (i : Fin 3) (ls : List ℕ)
   | nil =>
       by_cases hs : s = 0
       · subst s
-        simpa [bWord] using hv
+        simpa [bWord] using! hv
       · simp [bWord, hs]
   | cons x xs ih =>
       change PowerSeries.coeff s
@@ -37,7 +37,7 @@ theorem a3_bWord_coeff_count (i : Fin 3) (ls : List ℕ)
       have h := a3CountSpan_op ρ w i (x + z.1) _ _ _ htail
       fin_cases i <;>
         simpa [bTail, mul_smul, Nat.add_assoc, Nat.add_comm,
-          Nat.add_left_comm] using h
+          Nat.add_left_comm] using! h
 
 theorem a3_fCurrent_pow_preserves (j : Fin 2)
     (S : Submodule ℂ V) (n s : ℕ)
@@ -49,7 +49,7 @@ theorem a3_fCurrent_pow_preserves (j : Fin 2)
   | zero =>
       by_cases hs : s = 0
       · subst s
-        simpa [fCurrent] using hv
+        simpa [fCurrent] using! hv
       · simp [hs]
   | succ n ih =>
       rw [pow_succ, PowerSeries.coeff_mul, Finset.sum_smul]
@@ -59,7 +59,7 @@ theorem a3_fCurrent_pow_preserves (j : Fin 2)
         fin_cases j
         · exact a3LeviClosure_inv ρ S 3 z.2 hv
         · exact a3LeviClosure_inv ρ S 4 z.2 hv
-      simpa [fCurrent, mul_smul] using ih z.1 hf
+      simpa [fCurrent, mul_smul] using! ih z.1 hf
 
 end VOA.DeligneAudit.A3Sector
 

@@ -43,13 +43,13 @@ theorem weaken (h : CV3Rel R w (0, 0) (0, 0) ϱ 1) :
       using h.lowering_first
   · simpa only [Prod.snd, Nat.mul_zero, Nat.zero_add, Nat.add_zero, Nat.add_comm]
       using h.lowering_second
-  · simpa only [Prod.fst, Nat.zero_add, Nat.add_zero] using h.first
-  · simpa only [Prod.snd, Nat.zero_add, Nat.add_zero] using h.second
+  · simpa only [Prod.fst, Nat.zero_add, Nat.add_zero] using! h.first
+  · simpa only [Prod.snd, Nat.zero_add, Nat.add_zero] using! h.second
   · intro m s k hm hreg
     have ht := tail_two_le_two_ones (ϱ.1 + ϱ.2) k
     change 1 + m * k + T k (parts (ϱ.1 + ϱ.2) 0 2) ≤ s + m at hreg
     apply h.highest m s k hm
-    simpa only [Prod.fst, Prod.snd, Nat.zero_add] using
+    simpa only [Prod.fst, Prod.snd, Nat.zero_add] using!
       (show 1 + m * k + T k (parts (ϱ.1 + ϱ.2) 1 0) ≤ s + m by omega)
 
 /-- The source theta partition truncates one mode earlier than its weakening. -/
@@ -62,8 +62,8 @@ theorem theta_high (h : CV3Rel R w (0, 0) (0, 0) ϱ 1)
 /-- The source simple final one gives the top first-root square. -/
 theorem first_square (h : CV3Rel R w (0, 0) (0, 0) ϱ 1) :
     (R.op 3 ϱ.1 ^ 2) w = 0 := by
-  have hCV : CVRel (R.op 3) (parts ϱ.1 0 1) w := by simpa using h.first
-  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using
+  have hCV : CVRel (R.op 3) (parts ϱ.1 0 1) w := by simpa using! h.first
+  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using!
     top_square_of_cvrel (CVRoots.sl2_first R).hFF (by omega : 1 ≤ 1) hCV
 
 /-- The strong theta truncation kills all high opposite modes on the descendant. -/
@@ -87,7 +87,7 @@ theorem descendant_second_cv (h : CV3Rel R w (0, 0) (0, 0) ϱ 1) :
     rw [comm_apply]
     simp [Fin.sum_univ_eight, bracketTable, h.raising 1 (by decide) s]
   · intro s hs
-    simpa only [Prod.fst, Nat.zero_add, Nat.add_zero, Nat.add_sub_cancel_right] using
+    simpa only [Prod.fst, Nat.zero_add, Nat.add_zero, Nat.add_sub_cancel_right] using!
       CVKernelGeneralHW.first_cartan_pos hw 7 (by decide) s hs
   · have hn := CVKernelGeneralHW.first_lowering_second hw
     rw [← Module.End.pow_apply] at hn
@@ -109,7 +109,7 @@ theorem descendant_second_coefficient (h : CV3Rel R w (0, 0) (0, 0) ϱ 1)
     Q (R.op 4) m s (R.op 3 ϱ.1 w) = 0 := by
   apply coefficient_zero_of_cvrel_parts (descendant_second_cv h) m s
   simpa only [clippedSum_parts, Nat.mul_zero, Nat.zero_add, Nat.add_zero, Nat.one_mul,
-    Nat.min_eq_right hm, Nat.min_eq_right (by omega : 1 ≤ m)] using hs
+    Nat.min_eq_right hm, Nat.min_eq_right (by omega : 1 ≤ m)] using! hs
 
 private theorem negative_first_second (N k : ℕ) :
     (-R.op 3 N) * R.op 4 k - R.op 4 k * (-R.op 3 N) = R.op 5 (N + k) := by
@@ -184,9 +184,9 @@ theorem theta_second_two_graded (h : CV3Rel R w (0, 0) (0, 0) ϱ 1) (r s : ℕ)
       clippedSum (parts ϱ.2 0 1) (r + 2) < s + r + 2) :
     gradedOrderedCoeff R w 0 2 r s = 0 := by
   apply gradedOrderedCoeff_zero R w 0 2 r s
-  have hz := theta_second_two h r s (by simpa only [Nat.add_assoc] using hs)
+  have hz := theta_second_two h r s (by simpa only [Nat.add_assoc] using! hs)
   have he : orderedCoeff R w 0 2 r s = 0 := by
-    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using hz
+    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using! hz
   rw [he]
   exact Submodule.zero_mem _
 
@@ -197,7 +197,7 @@ theorem first_theta_two_graded (h : CV3Rel R w (0, 0) (0, 0) ϱ 1) (p s : ℕ)
     gradedOrderedCoeff R w p 2 0 s = 0 := by
   apply gradedOrderedCoeff_zero_of_swap R w p 2 0 s
   apply theta_second_two_graded (cv3Rel_swap h) p s
-  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using hs
+  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using! hs
 
 end
 end VOA.DeligneAudit.A2.CVResidualThetaRelations

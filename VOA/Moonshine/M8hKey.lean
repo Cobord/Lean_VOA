@@ -66,6 +66,11 @@ named residual `SigmaKey D β t` (FLM's three-point identities on cyclic vectors
 NOT a construction of `V♮`.  Imported by the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.M8hKey
@@ -174,7 +179,7 @@ theorem key_Ts_iff {v : VPlus} (hv : v ∈ frameSector 1) {y : TP} (hy : y ∈ T
   rw [sigNat_Ts D hy, YnatU_apply, YnatT_apply]
   simp only [map_zero]
   have e := sigNat_V0 D ⟨_, hm⟩
-  simp only at e
+  try simp only at e
   rw [e, Prod.mk.injEq, ← sig0_V0]
   simp
 

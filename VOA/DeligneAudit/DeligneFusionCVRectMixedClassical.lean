@@ -170,7 +170,7 @@ theorem first_outer_raise (hE : ρ.op 0 0 w = 0) (b c : ℕ) :
 theorem first_outer_weight {m : ℕ} (hH : ρ.op 6 0 w = (m : ℂ) • w) (b c : ℕ) :
     ρ.op 6 0 (outer ρ w b c) = ((m : ℂ) - b + c) • outer ρ w b c := by
   have hh := h1_zero_word ρ w (m : ℂ) hH (outerWord b c) (outerWord_letters b c)
-  simpa only [outerWord_eval, outerWord_index] using hh
+  simpa only [outerWord_eval, outerWord_index] using! hh
 
 /-- The actual first-root string on an outer vector is sharp modulo lower
 outer blocks. All quotient highest-weight and nilpotence facts are derived

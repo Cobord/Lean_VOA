@@ -26,7 +26,7 @@ theorem halfBraidingLoop_opposite_braided (F : SphericalFusion C)
   change F.toPivotal.partialTraceLeft U
     ((β_ U X).hom ≫ f ▷ U ≫ (β_ Y U).hom) = _
   rw [braiding_naturality_left]
-  simpa only [monodromyLoop, monodromy, Category.assoc] using
+  simpa only [monodromyLoop, monodromy, Category.assoc] using!
     F.toPivotal.partialTraceLeft_postcomp U (monodromy U X) f
 
 /-- The killing ring is used in the base category, with its own simple labels. -/
@@ -34,12 +34,15 @@ theorem halfBraidingAverage_opposite_braided (F : SphericalFusion C) (M : Modula
     {X Y : C} (f : X ⟶ Y) :
     halfBraidingAverage F (oppositeBraidedCenter X) (Center.ofBraidedObj Y) f =
       F.simpleProjector F.unitLabel X ≫ f := by
-  simp only [halfBraidingAverage, LinearMap.smul_apply, LinearMap.sum_apply,
-    halfBraidingLoop_opposite_braided]
+  rw [halfBraidingAverage]
+  erw [LinearMap.smul_apply, LinearMap.sum_apply]
   change F.globalDimension⁻¹ • (∑ i, F.dimension (F.simple i) •
-    (monodromyLoop F.toPivotal (F.simple i) X ≫ f)) = _
+    (halfBraidingLoop F.toPivotal (oppositeBraidedCenter X) (Center.ofBraidedObj Y)
+      (F.simple i) f)) = _
+  simp only [halfBraidingLoop_opposite_braided]
   rw [← normalized_monodromy_killingRing F M X]
   simp only [Linear.smul_comp, Preadditive.sum_comp]
+  rfl
 
 /-- A map which factors through the tensor unit intertwines the two braidings. -/
 theorem braided_comm_of_unit_factor {X Y : C}
@@ -66,7 +69,7 @@ theorem unitProjector_braided_comm (F : SphericalFusion C)
   have h := braided_comm_of_unit_factor
     (F.compositionDual (F.simpleHomBasis X F.unitLabel) a ≫ F.unitIso.hom)
     (F.unitIso.inv ≫ F.simpleHomBasis X F.unitLabel a ≫ f) U
-  simpa only [Category.assoc, Iso.hom_inv_id_assoc] using h
+  simpa only [Category.assoc, Iso.hom_inv_id_assoc] using! h
 
 /-- Centrality of the actual average for arbitrary underlying maps between
 the inverse-braided and braided embeddings of a modular category. -/
@@ -88,8 +91,9 @@ theorem opposite_braided_comm_iff (F : SphericalFusion C) (M : Modular F)
   constructor
   · intro h
     let g : oppositeBraidedCenter X ⟶ Center.ofBraidedObj Y := ⟨f, h⟩
-    simpa only [halfBraidingAverage_opposite_braided F M] using
-      halfBraidingAverage_central F g
+    have h2 := halfBraidingAverage_central F g
+    rw [halfBraidingAverage_opposite_braided F M (X := X) (Y := Y) g.f] at h2
+    exact h2
   · intro h U
     conv_lhs => rw [← h]
     rw [unitProjector_braided_comm F f U, h]
@@ -117,10 +121,11 @@ theorem opposite_braided_hom_eq_zero (F : SphericalFusion C) (M : Modular F)
     (f : oppositeBraidedCenter (F.simple i) ⟶ Center.ofBraidedObj Y) : f = 0 := by
   apply Center.ext
   have h := halfBraidingAverage_central F f
-  rw [halfBraidingAverage_opposite_braided F M] at h
+  rw [halfBraidingAverage_opposite_braided F M (X := F.simple i) (Y := Y) f.f] at h
   have hp : F.simpleProjector F.unitLabel (F.simple i) = 0 := by
-    simpa [hi] using F.comp_simpleProjector F.unitLabel i (𝟙 (F.simple i))
-  simpa only [hp, zero_comp] using h.symm
+    simpa [hi] using! F.comp_simpleProjector F.unitLabel i (𝟙 (F.simple i))
+  rw [hp] at h
+  exact h.symm.trans zero_comp
 
 variable [RightRigidCategory (Center C)] [HasKernels (Center C)]
   [HasFiniteBiproducts (Center C)]

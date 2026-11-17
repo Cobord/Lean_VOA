@@ -73,8 +73,8 @@ theorem weakMarkedFlag_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m) (V Y : Finset
     (hV : V.Nonempty) :
     (Vᶜ ∩ Y).card * (V ∩ Y).card * m.factorial +
         singlyMarkedOneDoubleCount 0 (V ∩ Y).card (V \ Y).card * (m - 1).factorial ≤
-      Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-        quotientRoot (weakMarkedFlagIdeal (m + 2) V m) i}).restrictScalars ℂ) := by
+      Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+        quotientRoot (weakMarkedFlagIdeal (m + 2) V m) i)}).restrictScalars ℂ) := by
   classical
   induction m with
   | zero => omega
@@ -84,8 +84,8 @@ theorem weakMarkedFlag_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m) (V Y : Finset
         subst hU
         rw [weakMarkedFlagIdeal_univ_eq_unmarked (B + 1 + 2) (B + 1) (by omega)]
         have hprod : (B + 1 + 2 - Yᶜ.card).choose 2 * (B + 1 + 2 - 2).factorial ≤
-            Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-              quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i}).restrictScalars ℂ) :=
+            Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+              quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i)}).restrictScalars ℂ) :=
           unmarkedFlag_oneDouble_product_finrank_ge (B + 1 + 2) (by omega) Yᶜ
         refine le_trans (le_of_eq ?_) hprod
         have hy := Finset.card_le_univ Y
@@ -103,8 +103,8 @@ theorem weakMarkedFlag_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m) (V Y : Finset
       have hk : 2 * 1 ≤ B + 2 := by omega
       change (Vᶜ ∩ Y).card * (V ∩ Y).card * (B + 1).factorial +
           singlyMarkedOneDoubleCount 0 (V ∩ Y).card (V \ Y).card * (B + 1 - 1).factorial ≤
-        Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-          quotientRoot (weakMarkedFlagIdeal (B + 3) V (B + 2 - 1)) i}).restrictScalars ℂ)
+        Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+          quotientRoot (weakMarkedFlagIdeal (B + 3) V (B + 2 - 1)) i)}).restrictScalars ℂ)
       set r := quotientRoot (weakMarkedFlagIdeal (B + 3) V (B + 2 - 1)) with hr
       have hcut : ∀ y, r y ^ (B + 2) = 0 := fun y => weakMarkedFlag_cutoff _ _ _ y
       have hcount : ∀ y, y ∉ V →
@@ -122,8 +122,8 @@ theorem weakMarkedFlag_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m) (V Y : Finset
           exact Finset.card_pos.mpr hV
       -- the lower layers receive the child stratum, the top layer the doubly marked zero pair
       have hlower : ∀ y (hy : y ∉ V) (i : ℕ), i < B →
-          Module.finrank ℂ ((Ideal.span {∏ j ∈ (deletedGroup y Y)ᶜ,
-              quotientRoot (weakMarkedFlagIdeal (B + 2) (deletedGroup y V) B) j}
+          Module.finrank ℂ ((Ideal.span {(∏ j ∈ (deletedGroup y Y)ᶜ,
+              quotientRoot (weakMarkedFlagIdeal (B + 2) (deletedGroup y V) B) j)}
               ).restrictScalars ℂ) ≤
             Module.finrank ℂ ((((Ideal.span {∏ j ∈ deletedGroup y Yᶜ, r (y.succAbove j)} :
               Ideal (WeakMarkedFlagRing (B + 3) V (B + 2 - 1))).restrictScalars ℂ).map
@@ -135,8 +135,8 @@ theorem weakMarkedFlag_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m) (V Y : Finset
         rw [← deletedGroup_compl y Y]
         exact hl
       have htop : ∀ y (hy : y ∉ V),
-          Module.finrank ℂ ((Ideal.span {∏ j ∈ (deletedGroup y Y)ᶜ,
-              quotientRoot (doublyMarkedFlagIdeal (B + 2) (deletedGroup y V) B) j}
+          Module.finrank ℂ ((Ideal.span {(∏ j ∈ (deletedGroup y Y)ᶜ,
+              quotientRoot (doublyMarkedFlagIdeal (B + 2) (deletedGroup y V) B) j)}
               ).restrictScalars ℂ) ≤
             Module.finrank ℂ ((((Ideal.span {∏ j ∈ deletedGroup y Yᶜ, r (y.succAbove j)} :
               Ideal (WeakMarkedFlagRing (B + 3) V (B + 2 - 1))).restrictScalars ℂ).map

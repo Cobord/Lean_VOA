@@ -77,7 +77,7 @@ theorem g2CertData_sc (a b g : Fin 14) :
   rw [basis_eq_vec g2Checks a, basis_eq_vec g2Checks b,
     lie_vec g2Checks (by simp [inRange]) (by simp [inRange])]
   change (Pi.basisFun ℂ (Fin 14)).repr _ g = _
-  rw [Pi.basisFun_repr]
+  erw [Pi.basisFun_repr]
   simp [vec, brL, coef_scale]
 
 /-- The form table is `g2Gm`. -/

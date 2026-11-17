@@ -245,7 +245,7 @@ theorem tensorDeg_evenZero {V W : Type*} [AddCommGroup V] [Module ℂ V] [AddCom
       simp only [Prod.fst_sub, Prod.snd_sub] at h1 h2
       refine ⟨?_, by omega⟩
       have := h1.add hb.1
-      simpa using this
+      simpa using! this
     rw [hW _ hib, Submodule.map₂_bot_right]
   · rw [hV b hb, Submodule.map₂_bot_left]
 
@@ -321,7 +321,7 @@ theorem ghostParity_odd (j : ℤ) (hj : ¬ Even j) (w : ℂ) (x : BRSTSpace)
     apply hj
     have := he.add hb.1
     rw [hb.2] at this
-    simpa using this
+    simpa using! this
   · rw [matterDeg_evenZero b hb, Submodule.mem_bot] at hm
     rw [hm, TensorProduct.zero_tmul, map_zero, neg_zero]
 

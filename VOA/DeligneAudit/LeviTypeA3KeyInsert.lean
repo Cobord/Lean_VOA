@@ -49,9 +49,9 @@ theorem a3RadicalOp_maps_key (i : Fin 3) (s : ℕ) (k : A3RadicalKey)
           Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (a3KeyLayer ρ w (a3KeyInsert i s k)).add_mem hx hy
+      simpa using! (a3KeyLayer ρ w (a3KeyInsert i s k)).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (a3KeyLayer ρ w (a3KeyInsert i s k)).smul_mem c hx
+      simpa using! (a3KeyLayer ρ w (a3KeyInsert i s k)).smul_mem c hx
 
 end VOA.DeligneAudit.A3Sector
 

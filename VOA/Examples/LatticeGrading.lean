@@ -43,12 +43,12 @@ noncomputable def bigrad (wn : ℤ × ℤ) : Submodule ℂ LatModule :=
 /-- The `eVec n`-coordinate extraction `LatModule = B ⊗ ℂ{ℤ} → B`, sending
 `p ⊗ eVec n' ↦ (if n = n' then p else 0)`. Built as `rid ∘ rTensor (lapply n)`. -/
 noncomputable def coordE (n : ℤ) : LatModule →ₗ[ℂ] B :=
-  (TensorProduct.rid ℂ B).toLinearMap.comp (LinearMap.lTensor B (Finsupp.lapply n))
+  (TensorProduct.rid ℂ B).toLinearMap.comp (LinearMap.lTensor B
+    ((Finsupp.lapply n).comp (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap))
 
 theorem coordE_apply (n n' : ℤ) (p : B) :
     coordE n (p ⊗ₜ[ℂ] eVec n') = (if n = n' then p else 0) := by
   rw [coordE, LinearMap.comp_apply, LinearMap.lTensor_tmul]
-  show (TensorProduct.rid ℂ B) (p ⊗ₜ[ℂ] (Finsupp.lapply n) (eVec n')) = _
   show (TensorProduct.rid ℂ B) (p ⊗ₜ[ℂ] (Finsupp.single n' (1:ℂ) n)) = _
   rw [Finsupp.single_apply]
   by_cases h : n' = n
@@ -149,12 +149,12 @@ theorem bigrad_iSup_eq_top : iSup bigrad = ⊤ := by
   rw [Submodule.span_le]
   rintro _ ⟨p, g, rfl⟩
   -- `p ⊗ₜ g = ∑_{n ∈ g.support} (p ⊗ₜ single n (g n))`, each in `iSup bigrad`
-  have hg : g = ∑ n ∈ g.support, (g n) • eVec n := by
-    conv_lhs => rw [← Finsupp.sum_single g]
+  have hg : g = ∑ n ∈ g.coeff.support, (g.coeff n) • eVec n := by
+    conv_lhs => rw [← AddMonoidAlgebra.sum_coeff_single g]
     rw [Finsupp.sum]
     refine Finset.sum_congr rfl (fun n _ => ?_)
-    rw [eVec, show ((g n) • AddMonoidAlgebra.single n (1:ℂ) : LatGrp)
-        = AddMonoidAlgebra.single n (g n) from by
+    rw [eVec, show ((g.coeff n) • AddMonoidAlgebra.single n (1:ℂ) : LatGrp)
+        = AddMonoidAlgebra.single n (g.coeff n) from by
       rw [AddMonoidAlgebra.smul_single, smul_eq_mul, mul_one]]
   rw [SetLike.mem_coe, hg, TensorProduct.tmul_sum]
   refine Submodule.sum_mem _ (fun n _ => ?_)

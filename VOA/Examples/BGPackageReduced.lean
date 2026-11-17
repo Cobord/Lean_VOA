@@ -246,18 +246,18 @@ theorem antighostZero_transpose_inconsistent
   have hvrel : vac ∈ relativeWeight 0 := by
     refine ⟨vacuum_mem_relativeCarrier leeYangA, ?_⟩
     have := brstDeg_le_weight Gh _ hvdeg
-    simpa [wtIndex] using this
+    simpa [wtIndex] using! this
   have hρrel := ρ_maps vac hvrel
   have hρghost : ρ vac ∈ leeYangBRSTComplex.ghost 0 := by
     have := brstDeg_le_ghost Gh _ (ρ_deg vac hvrel hvdeg)
-    simpa [ghIndex] using this
+    simpa [ghIndex] using! this
   set w : BRSTSpace :=
     ((ASVA.vacuum ⊗ₜ[ℂ] BSVA.vacuum) ⊗ₜ[ℂ] USVA.vacuum) ⊗ₜ[ℂ] cGhost a with hw
   have hbw : bB a 0 w = vac := by
     rw [hw, hvac, bB, LinearMap.lTensor_tmul]
     congr 1
     have := bGhost_cGhost_product a a 0 le_rfl
-    simpa using this
+    simpa using! this
   have hbρ : bB a 0 (ρ vac) = 0 := by
     have h := ((mem_relativeCarrier _ _).mp hρrel.1).2 a
     rwa [antighostZero_eq] at h

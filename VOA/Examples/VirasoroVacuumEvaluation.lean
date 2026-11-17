@@ -12,6 +12,8 @@ Mode commutators extend to the full Lie algebra and then its enveloping algebra.
 Vacuum evaluation kills the defining left ideal, so it descends to the actual
 universal vacuum module. No independence or PBW assumption is used here.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirDeformModes
 open Module (End)
 open LieAlgebra LieAlgebra.Extension UniversalEnvelopingAlgebra VirModule

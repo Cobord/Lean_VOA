@@ -46,7 +46,7 @@ theorem newtonEnd_le_comap (H : ℕ → Module.End ℂ W) (N : Submodule ℂ W)
   | h n ih =>
     intro x hx
     cases n with
-    | zero => simpa [newtonEnd] using hx
+    | zero => simpa [newtonEnd] using! hx
     | succ n =>
       simp only [Submodule.mem_comap, newtonEnd, LinearMap.smul_apply, LinearMap.sum_apply,
         Module.End.mul_apply]
@@ -98,7 +98,7 @@ theorem newtonEnd_realizes (H : ℕ → Module.End ℂ W) (qm : W →ₗ[ℂ] M)
   | h n ih =>
     intro ψ y hy
     cases n with
-    | zero => simpa only [newtonEnd, newtonCoeff, Module.End.one_apply, one_mul] using hy
+    | zero => simpa only [newtonEnd, newtonCoeff, Module.End.one_apply, one_mul] using! hy
     | succ n =>
       simp only [newtonEnd, newtonCoeff, LinearMap.smul_apply, LinearMap.sum_apply,
         Module.End.mul_apply, smul_mul_assoc, Finset.sum_mul, map_smul, map_sum]
@@ -109,7 +109,7 @@ theorem newtonEnd_realizes (H : ℕ → Module.End ℂ W) (qm : W →ₗ[ℂ] M)
 
 /-- The elementary symmetric polynomial of degree larger than the number of variables is zero. -/
 theorem esymm_eq_zero_of_lt (k f : ℕ) (hkf : k < f) : MvPolynomial.esymm (Fin k) ℂ f = 0 := by
-  rw [MvPolynomial.esymm, Finset.powersetCard_eq_empty.mpr (by simpa using hkf),
+  rw [MvPolynomial.esymm, Finset.powersetCard_eq_empty.mpr (by simpa using! hkf),
     Finset.sum_empty]
 
 /-- **The vanishing of `e_f` of fewer than `f` shifts.** If `[H_s, Y(n)] = Y(s + n)` and `H_s`
@@ -126,7 +126,7 @@ theorem newtonEnd_shift_pow_eq_zero (H Y : ℕ → Module.End ℂ W)
     intro s hs a
     have he := positionModeEvaluation_cartan (fun (_ : Fin k) n => Y n) (List.finRange k)
       (List.nodup_finRange k) β (H s) 0 (fun _ => 1) s
-      (fun i n => by simpa using hc s hs n)
+      (fun i n => by simpa using! hc s hs n)
       (fun b => by simp [β, hu s hs]) a
     rw [he]
     congr 2

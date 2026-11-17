@@ -189,7 +189,10 @@ noncomputable def dSA (S : Finset (Fin 24)) : lam0.carrier :=
   if h : Even S.card then (⟨(2 : ℤ) • ind S, two_ind_mem S h⟩ : ↥Leech.subA) else 0
 
 theorem inclN_dSA {S : Finset (Fin 24)} (h : Even S.card) : inclN (dSA S) = dl S := by
-  unfold dSA; rw [dif_pos h]; rfl
+  first
+  | (unfold dSA; rw [dif_pos h]; rfl)
+  | exact (congrArg inclN
+      (show dSA S = (⟨(2 : ℤ) • ind S, two_ind_mem S h⟩ : ↥Leech.subA) from dif_pos h)).trans rfl
 
 variable {D : Finset (Fin 24)} (hDA : ind D ∈ Leech.subA)
 
@@ -393,8 +396,12 @@ theorem form_aSA (S' : Finset (Fin 24)) (he : Even S'.card) (hS' : S' ⊆ D) (hD
     by_cases h1 : l ∈ D <;> by_cases h2 : l ∈ S' <;> simp [h1, h2]
     exact absurd (hS' h2) h1
   rw [dotProduct, Finset.sum_congr rfl (fun l _ => this l)]
-  simp only [ind, Finset.sum_boole, Finset.filter_mem_eq_inter, Finset.univ_inter, hD8]
-  norm_num
+  first
+  | (simp only [ind, Finset.sum_boole, Finset.filter_mem_eq_inter, Finset.univ_inter, hD8]
+     norm_num)
+  | (unfold ind
+     simp only [Finset.sum_boole, Finset.filter_mem_eq_inter, Finset.univ_inter, hD8]
+     norm_num)
 
 /-- **The zero mode of `σ(u_{γ_S})` on `h_v(−½) ⊗ x`.** -/
 theorem actT_sig_lV_aSA {S : Finset (Fin 24)} (h : Even S.card) (hS : S ⊆ D)
@@ -444,8 +451,10 @@ theorem sum_even_pm (D : Finset (Fin 24)) (f : Fin 24 → ℂ) (hf : ∀ i ∈ D
       = ((if ∀ i ∈ D, f i = 1 then 2 ^ D.card else 0) + (if ∀ i ∈ D, f i = -1 then 2 ^ D.card else 0)) / 2 := by
   rw [sum_even_prod, prod_one_add_pm D f hf,
     prod_one_add_pm D (fun i => -f i) (fun i hi => by rcases hf i hi with h | h <;> simp [h])]
-  congr 2
-  simp only [neg_eq_iff_eq_neg]
+  first
+  | (simp only [neg_eq_iff_eq_neg]; done)
+  | (congr 2
+     simp only [neg_eq_iff_eq_neg])
 
 /-! ## §8  The terms `e_{γ_{S'}} τ⋆(n)` -/
 
@@ -496,7 +505,10 @@ theorem dSA_eq_sum {S' : Finset (Fin 24)} (he : _root_.Even S'.card) :
   apply valA_injective
   rw [map_sub, map_sum, map_zsmul]
   change (show ↥Leech.subA from dSA S').1 = ∑ i ∈ S', apv 0 i - _ • apv 0 0
-  unfold dSA; rw [dif_pos he]
+  first
+  | (unfold dSA; rw [dif_pos he])
+  | refine Eq.trans (congrArg Subtype.val
+      (show dSA S' = (⟨(2 : ℤ) • ind S', two_ind_mem S' he⟩ : ↥Leech.subA) from dif_pos he)) ?_
   change (2 : ℤ) • ind S' = _
   obtain ⟨m, hm⟩ := he
   rw [hm, show (m + m) / 2 = m by omega]
@@ -570,7 +582,10 @@ theorem valA_aSA {S' : Finset (Fin 24)} (he : _root_.Even S'.card) :
     valA (aSA hDA S') = ind D - (2 : ℤ) • ind S' := by
   rw [aSA, map_sub]
   change ind D - (show ↥Leech.subA from dSA S').1 = _
-  unfold dSA; rw [dif_pos he]
+  first
+  | (unfold dSA; rw [dif_pos he])
+  | exact congrArg (fun x => ind D - x) (congrArg Subtype.val
+      (show dSA S' = (⟨(2 : ℤ) • ind S', two_ind_mem S' he⟩ : ↥Leech.subA) from dif_pos he))
 
 omit hD8 in
 theorem lv_inclΛ (a : lam0.carrier) : lv (inclΛ a) = (2 : ℤ) • valA a := rfl
@@ -861,9 +876,9 @@ theorem I_zpow_cD {S : Finset (Fin 24)} (hS : S ⊆ D) :
   unfold cD ind
   by_cases h0 : (0 : Fin 24) ∈ D
   · by_cases h0S : (0 : Fin 24) ∈ S
-    · simp only [h0, h0S, if_true]; norm_num; rw [zpow_two, Complex.I_mul_I]; norm_num
+    · simp only [h0, h0S, if_true]; norm_num; try (rw [zpow_two, Complex.I_mul_I]; norm_num)
     · simp only [h0, h0S, if_true, if_false]; norm_num
-      rw [show (2 : ℤ) = ((2 : ℕ) : ℤ) from rfl, zpow_natCast, Complex.I_sq]
+      try rw [show (2 : ℤ) = ((2 : ℕ) : ℤ) from rfl, zpow_natCast, Complex.I_sq]
   · have h0S : (0 : Fin 24) ∉ S := fun h' => h0 (hS h')
     simp [h0, h0S]
 
@@ -1245,7 +1260,7 @@ theorem octad_in {t : TLeechT} (ht : IsSeed t) {S : Finset (Fin 24)} (h : _root_
           = -∑ i ∈ (D.erase b).erase l₀, (if i ∈ S then (-1 : ℤ) else 1) := by
         rw [← Finset.sum_neg_distrib]
         exact Finset.sum_congr rfl fun i hi => by rw [hrest i hi]; ring
-      simp only at e2 e3
+      try simp only at e2 e3
       rw [e1, e2, e4, hpb3, hpl₀]
       rw [hsI, hcard, hm] at e3
       push_cast at e3 ⊢
@@ -1339,7 +1354,7 @@ theorem octad_in {t : TLeechT} (ht : IsSeed t) {S : Finset (Fin 24)} (h : _root_
         have e4 : ∑ i ∈ (D.erase b).erase l₀, (if i ∈ S then (-1 : ℤ) else 1) * pS S n i
             = ∑ i ∈ (D.erase b).erase l₀, (if i ∈ S then (-1 : ℤ) else 1) :=
           Finset.sum_congr rfl fun i hi => by rw [hrest i hi]; ring
-        simp only at e2 e3
+        try simp only at e2 e3
         rw [e1, e2, e4, hpb3, hpl₀]
         rw [hsI, hcard, hm] at e3
         push_cast at e3 ⊢

@@ -85,14 +85,17 @@ theorem seeds_homogeneous (i : Fin 5) : octaSeeds i ∈ W.grading (seedWeight i)
     rw [orb_mem_grading, Tav_coe (show IsS4Inv (I3 * I3) from
       ⟨isA4Inv_mul isA4Inv_I3 isA4Inv_I3, by simp [s3_I3]⟩)]
     convert T2_grad (I3_hom.mul I3_hom) using 1
+    all_goals first | rfl | (norm_num <;> rfl)
   · change Tav (I3 * I6) ∈ W.grading 81
     rw [orb_mem_grading, Tav_coe (show IsS4Inv (I3 * I6) from
       ⟨isA4Inv_mul isA4Inv_I3 isA4Inv_I6, by simp [s3_I3, s3_I6]⟩)]
     convert T2_grad (I3_hom.mul I6_hom) using 1
+    all_goals first | rfl | (norm_num <;> rfl)
   · change Tav (I6 * I6) ∈ W.grading 144
     rw [orb_mem_grading, Tav_coe (show IsS4Inv (I6 * I6) from
       ⟨isA4Inv_mul isA4Inv_I6 isA4Inv_I6, by simp [s3_I6]⟩)]
     convert T2_grad (I6_hom.mul I6_hom) using 1
+    all_goals first | rfl | (norm_num <;> rfl)
 
 theorem towers_all : towerSpan W (fun i => mk₂ W (octaSeeds i)) = ⊤ :=
   towerSpan_eq_top_of_gradedDescent W octaSeeds
@@ -121,7 +124,7 @@ theorem octa_zhu_finite :
   have h := finrank_A_le_of_towers W octaSeeds (fun i => (seedWeight i : ℤ))
     seeds_homogeneous (fun _ => 25) (fun _ => 25) towers25
     (fun i _ ha => pow_mem_towerSub W (mk W (octaSeeds i)) ha)
-  simpa using h
+  simpa using! h
 
 /-- A monic conformal relation exists; positivity of its roots remains open. -/
 theorem exists_monic_conformal_annihilator :

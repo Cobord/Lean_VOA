@@ -36,12 +36,12 @@ theorem hypSugawara_negative_filtered (κ ell : ℂ) (j d w : ℕ)
   intro e he
   have hs := (hypBFiltered_mem d w p).mp hp e (mem_support_iff.mp he)
   have hl := hypSugawara_negative_leading_filtered κ ell j _ _
-    (monomial e (coeff e p)) (hypBHomogeneous_monomial e _)
-  have hl' : hypSugawara κ ell (-(j + 1 : ℤ)) (monomial e (coeff e p)) -
-      κ • (X (j, 1) * monomial e (coeff e p)) ∈
+    (monomial e (p.coeff e)) (hypBHomogeneous_monomial e _)
+  have hl' : hypSugawara κ ell (-(j + 1 : ℤ)) (monomial e (p.coeff e)) -
+      κ • (X (j, 1) * monomial e (p.coeff e)) ∈
       hypBFiltered (d + 1) (w + j + 1) :=
     hypBFiltered_mono (by omega) hl
-  have hm : monomial e (coeff e p) ∈ hypBFiltered d w :=
+  have hm : monomial e (p.coeff e) ∈ hypBFiltered d w :=
     hypBFiltered_of_homogeneous (hypBHomogeneous_monomial e _) hs
   have ha := (hypBFiltered (d + 1) (w + j + 1)).add_mem hl'
     ((hypBFiltered (d + 1) (w + j + 1)).smul_mem κ (hypBFiltered_mul_b j d w _ hm))
@@ -95,9 +95,9 @@ theorem hypOneFamily_bHomogeneous_zero (p : hypFock) (hp : p ∈ hypOneFamily 0)
   obtain ⟨f, rfl⟩ := hp
   induction f using MvPolynomial.induction_on with
   | C c =>
-    simpa only [AlgHom.toLinearMap_apply, rename_C] using
-      And.intro (isWeightedHomogeneous_C hypBCountWeight c)
-        (isWeightedHomogeneous_C hypBLevelWeight c)
+    simp only [AlgHom.toLinearMap_apply, rename_C]
+    exact And.intro (isWeightedHomogeneous_C hypBCountWeight c)
+      (isWeightedHomogeneous_C hypBLevelWeight c)
   | add f g hf hg =>
     simpa only [map_add] using (hypBHomogeneous 0 0).add_mem hf hg
   | mul_X f j hf =>

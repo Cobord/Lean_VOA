@@ -50,7 +50,7 @@ theorem Adm.mul {F G : PowerSeries R} (hF : Adm F) (hG : Adm G) : Adm (F * G) :=
   intro m
   rw [coeff_mul]
   refine Finset.dvd_sum fun p hp => ?_
-  rw [← Finset.mem_antidiagonal.mp hp, pow_add]
+  rw [← Finset.HasAntidiagonal.mem_antidiagonal.mp hp, pow_add]
   exact mul_dvd_mul (hF p.1) (hG p.2)
 
 theorem Adm_CC (r : R) : Adm (CC r) := by
@@ -110,7 +110,7 @@ theorem SS_mul_dvd (M : ℕ) {F G : PowerSeries R} (hF : Adm F) (hG : Adm G) :
     qq ^ (M + 1) ∣ (SS M F * SS M G - SS M (F * G)) := by
   classical
   set B := Finset.range (M + 1) ×ˢ Finset.range (M + 1) with hB
-  set T := (Finset.range (M + 1)).biUnion Finset.antidiagonal with hT
+  set T := (Finset.range (M + 1)).biUnion Finset.HasAntidiagonal.antidiagonal with hT
   set g : ℕ × ℕ → R := fun p => coeff p.1 F * coeff p.2 G with hg
   have h1 : SS M F * SS M G = ∑ p ∈ B, g p := by
     rw [SS, SS, Finset.sum_mul_sum, hB, Finset.sum_product]
@@ -121,11 +121,11 @@ theorem SS_mul_dvd (M : ℕ) {F G : PowerSeries R} (hF : Adm F) (hG : Adm G) :
       simp only [Function.onFun]
       rw [Finset.disjoint_left]
       intro p hpa hpb
-      exact hab ((Finset.mem_antidiagonal.mp hpa).symm.trans (Finset.mem_antidiagonal.mp hpb))
+      exact hab ((Finset.HasAntidiagonal.mem_antidiagonal.mp hpa).symm.trans (Finset.HasAntidiagonal.mem_antidiagonal.mp hpb))
   have hsub : T ⊆ B := by
     intro p hp
     obtain ⟨m, hm, hpm⟩ := Finset.mem_biUnion.mp hp
-    have := Finset.mem_antidiagonal.mp hpm
+    have := Finset.HasAntidiagonal.mem_antidiagonal.mp hpm
     rw [Finset.mem_range] at hm
     rw [hB, Finset.mem_product, Finset.mem_range, Finset.mem_range]
     omega
@@ -136,7 +136,7 @@ theorem SS_mul_dvd (M : ℕ) {F G : PowerSeries R} (hF : Adm F) (hG : Adm G) :
     by_contra hc
     apply hp.2
     exact Finset.mem_biUnion.mpr ⟨p.1 + p.2, Finset.mem_range.mpr (by omega),
-      Finset.mem_antidiagonal.mpr rfl⟩
+      Finset.HasAntidiagonal.mem_antidiagonal.mpr rfl⟩
   have : qq ^ (p.1 + p.2) ∣ g p := by rw [pow_add]; exact mul_dvd_mul (hF p.1) (hG p.2)
   exact (pow_dvd_pow qq hbig).trans this
 
@@ -148,7 +148,7 @@ theorem ev_mul {F G : PowerSeries R} (hF : Adm F) (hG : Adm G) : ev (F * G) = ev
   rw [map_sub, sub_eq_zero] at h0
   rw [← h0, coeff_mul, coeff_mul]
   refine Finset.sum_congr rfl fun u hu => ?_
-  have hu' := Finset.mem_antidiagonal.mp hu
+  have hu' := Finset.HasAntidiagonal.mem_antidiagonal.mp hu
   rw [coeff_ev_eq hF (show u.1 ≤ N by omega), coeff_ev_eq hG (show u.2 ≤ N by omega)]
 
 theorem ev_add (F G : PowerSeries R) : ev (F + G) = ev F + ev G := by

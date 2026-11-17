@@ -58,7 +58,7 @@ theorem mixedSMove_iff_factorized (F : SphericalFusion C) (M : Modular F)
   · intro h i j
     have he := h (mixedRepresentation ρ ModularGroup.S (Pi.single (i,j) 1))
     rw [hc, hb] at he
-    simpa only [mixedRow, equivariantIndicator_basis, mixedFamily] using he.symm
+    simpa only [mixedRow, equivariantIndicator_basis, mixedFamily] using! he.symm
   · intro h
     have he : mixedRow F a m l = (mixedRow F a l (-m)).comp
         (mixedRepresentation ρ ModularGroup.S).toLinearMap := by
@@ -68,11 +68,11 @@ theorem mixedSMove_iff_factorized (F : SphericalFusion C) (M : Modular F)
       change mixedRow F a m l (Pi.single p 1) =
         mixedRow F a l (-m) (mixedRepresentation ρ ModularGroup.S (Pi.single p 1))
       rw [hb p.1 p.2]
-      simpa only [mixedRow, equivariantIndicator_basis, mixedFamily] using h p.1 p.2
+      simpa only [mixedRow, equivariantIndicator_basis, mixedFamily] using! h p.1 p.2
     intro z
     have hx := congrArg (fun f : (F.Label × F.Label → ℂ) →ₗ[ℂ] ℂ =>
       f (mixedRepresentation ρ ModularGroup.S⁻¹ z)) he
-    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe, hd] using hx.symm
+    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe, hd] using! hx.symm
 
 /-- An explicit representation-free categorical residual for the positive-product,
 off-diagonal rows. This is the finite-sum identity still to be proved. -/

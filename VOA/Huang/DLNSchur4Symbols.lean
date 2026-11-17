@@ -42,7 +42,7 @@ theorem torus_lifts_commute [IsCyclic Rˣ]
       (Subgroup.mem_center_iff.mp hz _).symm)).mul_left
     ((show Commute (c ^ i) (b * (c ^ j)⁻¹) from
       Subgroup.mem_center_iff.mp hw' _).mul_right ((Commute.refl c).zpow_zpow i j))
-  simpa using H
+  simpa using! H
 
 end Cyclic
 

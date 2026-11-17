@@ -110,7 +110,7 @@ theorem grRaising_comm {ε ν ϱ : Weight} {j : ℕ} (h : CV3Rel R w ε ν ϱ j)
       R.op (negRoot a) r (R.op (raisingRoot b) 0 (nword R w l)) =
         raisingTail R b a r (nword R w l) := by
     apply sub_eq_iff_eq_add.mpr
-    simpa only [add_comm] using (raising_comm R b a r (nword R w l))
+    simpa only [add_comm] using! (raising_comm R b a r (nword R w l))
   rw [he]
   cases b <;> fin_cases a
   · exact symbol_zero_of_mem R w (cartan_nword_mem R w h false r l)

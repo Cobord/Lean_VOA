@@ -125,7 +125,7 @@ theorem deg_iSup_top (W : VertexOperatorAlgebra 𝒱) : (⨆ d : ℤ, deg W d) =
     (motive := fun a => gen W a m ∈ ⨆ d : ℤ, deg W d) ha ?_ ?_ ?_
   · intro w b hb
     exact Submodule.mem_iSup_of_mem (w - m - 1) (gen_mem_deg W hb m)
-  · dsimp only
+  · try dsimp only
     rw [gen_zero_left]; exact Submodule.zero_mem _
   · intro a₁ a₂ h₁ h₂
     rw [gen_add_left]
@@ -183,7 +183,7 @@ theorem uenvDeg_uι_mul (W : VertexOperatorAlgebra 𝒱) {e d : ℤ} {x : VHatCa
     refine Submodule.mem_iSup_of_mem e ?_
     rw [show e + d - e = d from by ring]
     exact mem_uenvStep W hx hy'
-  · dsimp only
+  · try dsimp only
     rw [mul_zero]; exact Submodule.zero_mem _
   · intro y₁ y₂ h₁ h₂
     rw [mul_add]
@@ -218,13 +218,13 @@ theorem uenvDegLen_mul (W : VertexOperatorAlgebra 𝒱) (r : ℕ) :
         have hstep : y' * z ∈ uenvDeg W ((d - e) + d') := ih hy'' hz
         have := uenvDeg_uι_mul W hx hstep
         rwa [show e + ((d - e) + d') = d + d' from by ring] at this
-      · dsimp only
+      · try dsimp only
         rw [zero_mul]; exact Submodule.zero_mem _
       · intro y₁ y₂ _ _ h₁ h₂
         rw [add_mul]; exact Submodule.add_mem _ h₁ h₂
       · intro c y₁ _ h₁
         rw [smul_mul_assoc]; exact Submodule.smul_mem _ _ h₁
-    · dsimp only
+    · try dsimp only
       rw [zero_mul]; exact Submodule.zero_mem _
     · intro y₁ y₂ h₁ h₂
       rw [add_mul]; exact Submodule.add_mem _ h₁ h₂
@@ -236,7 +236,7 @@ theorem uenvDeg_mul (W : VertexOperatorAlgebra 𝒱) {d d' : ℤ} {y z : UEnv W}
     (motive := fun y => y * z ∈ uenvDeg W (d + d')) hy ?_ ?_ ?_
   · intro r y hy'
     exact uenvDegLen_mul W r hy' hz
-  · dsimp only
+  · try dsimp only
     rw [zero_mul]; exact Submodule.zero_mem _
   · intro y₁ y₂ h₁ h₂
     rw [add_mul]; exact Submodule.add_mem _ h₁ h₂
@@ -258,7 +258,7 @@ theorem uenvDeg_iSup_top (W : VertexOperatorAlgebra 𝒱) : (⨆ d : ℤ, uenvDe
       refine Submodule.mem_iSup_of_mem d ?_
       have := uenvDeg_uι_mul W hx' (one_mem_uenvDeg W)
       rwa [mul_one, add_zero] at this
-    · dsimp only
+    · try dsimp only
       rw [map_zero]; exact Submodule.zero_mem _
     · intro x₁ x₂ h₁ h₂
       rw [map_add]; exact Submodule.add_mem _ h₁ h₂
@@ -270,11 +270,11 @@ theorem uenvDeg_iSup_top (W : VertexOperatorAlgebra 𝒱) : (⨆ d : ℤ, uenvDe
         (motive := fun b => a * b ∈ ⨆ d : ℤ, uenvDeg W d) hb ?_ ?_ ?_
       · intro d' b hb'
         exact Submodule.mem_iSup_of_mem (d + d') (uenvDeg_mul W ha' hb')
-      · dsimp only
+      · try dsimp only
         rw [mul_zero]; exact Submodule.zero_mem _
       · intro b₁ b₂ h₁ h₂
         rw [mul_add]; exact Submodule.add_mem _ h₁ h₂
-    · dsimp only
+    · try dsimp only
       rw [zero_mul]; exact Submodule.zero_mem _
     · intro a₁ a₂ h₁ h₂
       rw [add_mul]; exact Submodule.add_mem _ h₁ h₂
@@ -319,7 +319,7 @@ theorem levCover_spanning (P : ParabolicRep W n U) : (⨆ k : ℤ, levCover P k)
     · intro d y hy'
       refine Submodule.mem_iSup_of_mem (d + (n : ℤ)) (mem_levCover P ?_ u)
       rwa [show d + (n : ℤ) - (n : ℤ) = d from by ring]
-    · dsimp only
+    · try dsimp only
       rw [TensorProduct.zero_tmul, map_zero]; exact Submodule.zero_mem _
     · intro y₁ y₂ h₁ h₂
       rw [TensorProduct.add_tmul, map_add]
@@ -339,7 +339,7 @@ theorem actMode_levCover (P : ParabolicRep W n U) {w p k : ℤ} {a : 𝒱} (ha :
     refine mem_levCover P ?_ u
     have := uenvDeg_uι_mul W (gen_mem_deg W ha p) hy
     rwa [show w - p - 1 + (k - (n : ℤ)) = k + (w - p - 1) - (n : ℤ) from by ring] at this
-  · dsimp only
+  · try dsimp only
     rw [map_zero]; exact Submodule.zero_mem _
   · intro z₁ z₂ _ _ h₁ h₂
     rw [map_add]; exact Submodule.add_mem _ h₁ h₂
@@ -372,7 +372,7 @@ theorem levBar_spanning (P : ParabolicRep W n U) : (⨆ k : ℤ, levBar P k) = �
     (motive := fun y => (Submodule.Quotient.mk y : IndBar P) ∈ ⨆ k : ℤ, levBar P k) hy ?_ ?_ ?_
   · intro k y hy'
     exact Submodule.mem_iSup_of_mem k (mem_levBar P hy')
-  · dsimp only
+  · try dsimp only
     rw [Submodule.Quotient.mk_zero]; exact Submodule.zero_mem _
   · intro y₁ y₂ h₁ h₂
     rw [Submodule.Quotient.mk_add]

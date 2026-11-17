@@ -23,7 +23,7 @@ theorem subGr_op (hU : ∀ c s, U ≤ U.comap (A.op c 0 s))
   · rw [grOp_single A w m c 0 s d hs x hx]
     apply Submodule.subset_span
     refine ⟨d + s, A.op c 0 s x, ?_, hU c s hu, rfl⟩
-    simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+    simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using!
       evalFbelow_op A w c 0 s (d + 1) hx
   · rw [grOp_high_zero A w m c 0 s (Nat.le_of_not_lt hs)]
     exact Submodule.zero_mem _

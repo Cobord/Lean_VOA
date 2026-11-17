@@ -242,19 +242,13 @@ instance : (sqZero G V).LaxMonoidal where
   μ_natural_left f X' := by
     apply ModuleCat.MonoidalCategory.tensor_ext
     intro p q
-    simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.whiskerRight_apply,
-      ModuleCat.hom_ofHom, TensorProduct.lift.tmul]
-    refine Prod.ext ?_ ?_
-    · exact (μ_whiskerRight_apply G f p.1 q.1).symm
-    · exact mulSnd_natural_left G V f X' p q
+    exact Prod.ext (μ_whiskerRight_apply G f p.1 q.1).symm
+      (mulSnd_natural_left G V f X' p q)
   μ_natural_right X' f := by
     apply ModuleCat.MonoidalCategory.tensor_ext
     intro p q
-    simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.whiskerLeft_apply,
-      ModuleCat.hom_ofHom, TensorProduct.lift.tmul]
-    refine Prod.ext ?_ ?_
-    · exact (μ_whiskerLeft_apply G f p.1 q.1).symm
-    · exact mulSnd_natural_right G V X' f p q
+    exact Prod.ext (μ_whiskerLeft_apply G f p.1 q.1).symm
+      (mulSnd_natural_right G V X' f p q)
   associativity Y Y' Y'' := by
     apply ModuleCat.MonoidalCategory.tensor_ext₃'
     intro p q r
@@ -291,10 +285,8 @@ instance : (sqZero G V).LaxBraided where
     apply ModuleCat.MonoidalCategory.tensor_ext
     intro p q
     simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.braiding_hom_apply]
-    rw [sqZero_μ_apply, sqZero_μ_apply, sqZero_map_fst]
-    refine Prod.ext ?_ ?_
-    · exact μ_braid_apply G p.1 q.1
-    · exact mulSnd_braid G V Y Y' p q
+    rw [sqZero_μ_apply, sqZero_μ_apply]
+    exact Prod.ext (μ_braid_apply G p.1 q.1) (mulSnd_braid G V Y Y' p q)
 
 instance [G.Additive] : (sqZero G V).Additive where
   map_add {Y Y' f g} := by

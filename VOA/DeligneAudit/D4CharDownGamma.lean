@@ -37,7 +37,7 @@ theorem gtBiCoeff_diagonal_mul (c : ℕ → R) (F : GTBiSeries R) (n m : ℕ) :
     rw [if_pos (by omega)]
   · intro k hk hn
     have hk := Finset.mem_range.mp hk
-    have hn : ¬ k < min n m + 1 := by simpa using hn
+    have hn : ¬ k < min n m + 1 := by simpa using! hn
     rw [if_neg (by omega)]
 
 theorem gtDiagonalSeries_isUnit (c : ℕ → R) (hc : c 0 = 1) :
@@ -81,10 +81,10 @@ theorem gtMixedGamma_convolution_cancel (q : R) (h : PochhammerUnits q)
     change gtBiCoeff n m (gtMixedGamma q h x y * A) =
       gtBiCoeff n m (gtMixedGamma q h x y * B)
     simp only [gtMixedGamma, gtBiCoeff_diagonal_mul]
-    simpa [A, B, gtBiCoeff] using hh n m
+    simpa [A, B, gtBiCoeff] using! hh n m
   have he := gtMixedGamma_cancel q h x y A B he
   funext n m
-  simpa [A, B, gtBiCoeff] using congrArg (gtBiCoeff (R := R) n m) he
+  simpa [A, B, gtBiCoeff] using! congrArg (gtBiCoeff (R := R) n m) he
 
 end
 

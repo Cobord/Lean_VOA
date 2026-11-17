@@ -66,7 +66,7 @@ theorem polyOp_pair_mem (x : Fin 8) (a b : Fin m) (hab : a ≠ b) (P : Polynomia
   classical
   have h := polyOp_mem x (Lpair a b * P) hv
   rw [Finset.sum_eq_add_of_mem a b (Finset.mem_univ a) (Finset.mem_univ b) hab] at h
-  · simpa only [Polynomial.eval_mul, Gpair] using h
+  · simpa only [Polynomial.eval_mul, Gpair] using! h
   · intro k _ hk
     rw [Polynomial.eval_mul, eval_Lpair_other a b k (by tauto), zero_mul, zero_smul]
 

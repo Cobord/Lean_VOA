@@ -67,7 +67,7 @@ theorem twisted_fixed_iterate (P : TwistedModule g n M) {h : V} (hg : g h = h)
   rw [finsum_eq_single _ (0 : ℕ) (fun i hi => by
     rw [Int.cast_zero, zero_div, TwistedReduction.cbinom_zero_left, if_neg hi, zero_smul])] at hJ
   simpa only [Nat.cast_zero, zero_mul, add_zero, zero_add, sub_zero, Int.cast_zero,
-    zero_div, cbinom_zero, one_smul, sub_mul] using hJ.symm
+    zero_div, cbinom_zero, one_smul, sub_mul] using! hJ.symm
 
 end General
 
@@ -90,7 +90,7 @@ theorem torus_charge_derivative (P : TwistedModule (charU 1 le_rfl u) n M)
     field_simp
     ring
   simpa only [Pi.smul_apply, LinearMap.smul_apply, add_sub_cancel_right,
-    show q + (n : ℤ) - 2 * n = q - n by ring, hc] using h
+    show q + (n : ℤ) - 2 * n = q - n by ring, hc] using! h
 
 /-- The top nonzero charged mode sends a Heisenberg vacuum vector to another
 Heisenberg vacuum vector. -/

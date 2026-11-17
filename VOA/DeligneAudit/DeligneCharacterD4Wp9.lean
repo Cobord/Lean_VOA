@@ -47,23 +47,21 @@ theorem ιR_single (v : D4K.V) (c : P) : ιR (AddMonoidAlgebra.single v c) = D4K
   rw [show (AddMonoidAlgebra.single (Multiplicative.toAdd (Multiplicative.ofAdd v)) (1 : D4K.Kq)) =
     D4K.mon v 1 from rfl, D4K.algebraMap_mul_mon, mul_one]
 
-theorem ιR_apply (f : R') (v : D4K.V) : (ιR f) v = coeK (f v) := by
+theorem ιR_apply (f : R') (v : D4K.V) : (ιR f).coeff v = coeK (f.coeff v) := by
   induction f using AddMonoidAlgebra.induction_linear with
-  | zero => rw [map_zero]; show (0 : D4K.Kq) = coeK (0 : P); rw [map_zero]
+  | zero => simp only [map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   | add f g hf hg =>
-      rw [map_add]
-      show (ιR f) v + (ιR g) v = coeK ((f + g) v)
-      rw [hf, hg, show (f + g) v = f v + g v from rfl, map_add]
+      rw [map_add, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
+        Finsupp.add_apply, hf, hg, map_add]
   | single w c =>
-      rw [ιR_single, D4K.mon]
-      show (Finsupp.single w (coeK c)) v = coeK ((Finsupp.single w c) v)
-      rw [Finsupp.single_apply, Finsupp.single_apply]
+      rw [ιR_single, D4K.mon, AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_single,
+        Finsupp.single_apply, Finsupp.single_apply]
       split_ifs <;> simp
 
 theorem ιR_injective : Function.Injective ιR := by
   intro f g h
-  refine Finsupp.ext fun v => ?_
-  have := congrArg (fun F => F v) h
+  refine AddMonoidAlgebra.coeff_injective (Finsupp.ext fun v => ?_)
+  have := congrArg (fun F : D4K.R => F.coeff v) h
   simp only [ιR_apply] at this
   exact coeK_injective this
 

@@ -65,7 +65,7 @@ theorem psEval_Cq {q : ℂ} (hq1 : ‖1 - q‖ ≤ 1) {c : ℕ → PowerSeries �
     (hx : ‖chartX q v‖ < 1) :
     psEval (Cq q b p i) v = psEval (c i) (chartX q v) := by
   have hc : c i ∈ SubexpPS := mem_subexpPS_of_mul_eq' (a := 1) (by simp)
-    (by simpa using hcp)
+    (by simpa using! hcp)
   have h1v : 1 - v ≠ 0 := by
     intro h; rw [sub_eq_zero] at h; rw [← h] at hv; simp at hv
   set x := chartX q v with hxdef
@@ -73,7 +73,6 @@ theorem psEval_Cq {q : ℂ} (hq1 : ‖1 - q‖ ≤ 1) {c : ℕ → PowerSeries �
     intro h; rw [sub_eq_zero] at h; rw [← h] at hx; simp at hx
   -- the value of `cᵢ` at `x`
   have hval := congrArg (fun A => psEval A x) hcp
-  simp only at hval
   rw [psEval_mul (SubexpPS.pow_mem one_sub_X_mem_subexp b) hc hx, psEval_one_sub_X_pow hx,
     psEval_coe] at hval
   have hcx : psEval (c i) x = (p i).eval x / (1 - x) ^ b := by

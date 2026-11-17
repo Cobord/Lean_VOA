@@ -145,7 +145,7 @@ theorem E_le_normalSpan {N₀ : ℕ} (hN₀ : ∀ n : ℤ, (N₀ : ℤ) ≤ n �
         refine IHd _ ?_ s'' hsp (by rw [grade_perm D hps, hgl'']) b hb le_rfl
         rw [hlen_eq, hsum_eq]
         omega
-      have := Submodule.add_mem _ hs_mem (hlow _ hG1 (by simpa using hd2))
+      have := Submodule.add_mem _ hs_mem (hlow _ hG1 (by simpa using! hd2))
       rwa [add_sub_cancel] at this
     have hrest : wordL D A (List.replicate Q a ++ l') b ∈ normalSpan D A B Q (degree D l) := by
       have := (sup_le (hlow _ hG1) hspan) hblock

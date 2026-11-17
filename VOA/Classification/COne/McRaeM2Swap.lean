@@ -119,7 +119,7 @@ theorem injHull_of_cover (hC2 : C2Cofinite W) {X : Type u} [AddCommGroup X] [Mod
   · intro a b hab
     exact iota_injective Sg (hqt hab)
   · intro N hN
-    rw [modeMap_homComp]
+    refine (modeMap_homComp (A := B) qt (iotaHom Sg) ⊤).le.trans ?_
     exact le_trans (modeMap_mono qt le_top)
       (transpose_le_of_superfluous G (contra Sg) D.p hq hG (isGenGraded_contra Sg hSg)
         D.superfluous (isSimple_contra Sg hSg hB) N hN)

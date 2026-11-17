@@ -45,7 +45,7 @@ theorem low_endpoint_middle_product_mem (i j : Fin 9) (z : MiddlePair b) :
   have hh := (Submodule.subset_span (R := ℂ)
     (s := Set.range fun w : RefinedLowWord b => polyWord w.val) ⟨⟨l,hl⟩,rfl⟩)
   simpa only [refinedLowSpan,l,polyWord,List.map_cons,List.map_nil,List.prod_cons,
-    List.prod_nil,mul_one,mul_assoc,modeX,dif_pos hpred,dif_pos htop] using hh
+    List.prod_nil,mul_one,mul_assoc,modeX,dif_pos hpred,dif_pos htop] using! hh
 
 theorem low_endpoint_middle_mem (i j : Fin 9) {p : MvPolynomial (Vars m) ℂ}
     (hp : p ∈ middleSpan b) :
@@ -56,17 +56,19 @@ theorem low_endpoint_middle_mem (i j : Fin 9) {p : MvPolynomial (Vars m) ℂ}
       exact low_endpoint_middle_product_mem b i j z
   | zero => simp only [mul_zero]; exact (refinedLowSpan b).zero_mem
   | add p q _ _ ihp ihq =>
-      simpa only [mul_add] using (refinedLowSpan b).add_mem ihp ihq
+      simpa only [mul_add] using! (refinedLowSpan b).add_mem ihp ihq
   | smul a p _ ih =>
-      simpa only [mul_smul_comm] using (refinedLowSpan b).smul_mem a ih
+      simpa only [mul_smul_comm] using! (refinedLowSpan b).smul_mem a ih
 
 theorem leading_endpoint_nearest_product_mem (i j k l : Fin 9) :
     modeX m i b.lower.val * modeX m j b.top.val *
       (modeX m k b.top.val * modeX m l (b.top.val-1)) ∈ refinedLeadingSpan b := by
-  have hh := (Submodule.subset_span (R := ℂ)
-    (s := Set.range fun x : Fin 9 × Fin 9 × Fin 9 × Fin 9 =>
-      modeX m x.1 b.lower.val * modeX m x.2.1 (b.top.val-1) *
-        modeX m x.2.2.1 b.top.val * modeX m x.2.2.2 b.top.val) ⟨(i,l,j,k),rfl⟩)
+  have hh : modeX m i b.lower.val * modeX m l (b.top.val-1) *
+      modeX m j b.top.val * modeX m k b.top.val ∈ refinedLeadingSpan b :=
+    Submodule.subset_span (R := ℂ)
+      (s := Set.range fun x : Fin 9 × Fin 9 × Fin 9 × Fin 9 =>
+        modeX m x.1 b.lower.val * modeX m x.2.1 (b.top.val-1) *
+          modeX m x.2.2.1 b.top.val * modeX m x.2.2.2 b.top.val) ⟨(i,l,j,k),rfl⟩
   convert hh using 1; ring
 
 theorem leading_endpoint_nearest_mem (i j : Fin 9) {p : MvPolynomial (Vars m) ℂ}
@@ -78,9 +80,9 @@ theorem leading_endpoint_nearest_mem (i j : Fin 9) {p : MvPolynomial (Vars m) �
       exact leading_endpoint_nearest_product_mem b i j k l
   | zero => simp only [mul_zero]; exact (refinedLeadingSpan b).zero_mem
   | add p q _ _ ihp ihq =>
-      simpa only [mul_add] using (refinedLeadingSpan b).add_mem ihp ihq
+      simpa only [mul_add] using! (refinedLeadingSpan b).add_mem ihp ihq
   | smul a p _ ih =>
-      simpa only [mul_smul_comm] using (refinedLeadingSpan b).smul_mem a ih
+      simpa only [mul_smul_comm] using! (refinedLeadingSpan b).smul_mem a ih
 
 /-- Literal endpoint modes have no high-mode or quotient assumption. -/
 theorem h0Deriv_lower_mode (i : Fin 9) :
@@ -116,7 +118,7 @@ theorem h0Deriv_polar_middle_mem (ha : b.lower.val + 1 < b.top.val)
   · have hh := (refinedLowSpan b).smul_mem (h0Weight i : ℂ)
       (low_endpoint_middle_mem b i j hp)
     apply Submodule.mem_sup_right
-    simpa only [mul_smul_comm,smul_mul_assoc,mul_assoc,mul_comm,mul_left_comm] using hh
+    simpa only [mul_smul_comm,smul_mul_assoc,mul_assoc,mul_comm,mul_left_comm] using! hh
 
 end
 

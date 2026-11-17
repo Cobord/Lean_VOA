@@ -56,9 +56,9 @@ theorem current_mode_parityInvol (A : AffineSl2Action V k) (a : Fin 3)
       (TensorVA.parGr V).parityInvol (mode (V.Y (A.current a)) n x) := by
   obtain ⟨x₀, hx₀, x₁, hx₁, rfl⟩ := (TensorVA.parGr V).exists_parity_decomp x
   have h₀ : mode (V.Y (A.current a)) n x₀ ∈ V.parity 0 := by
-    simpa using V.parity_mode (A.current a) (A.current_even a) x₀ hx₀ n
+    simpa using! V.parity_mode (A.current a) (A.current_even a) x₀ hx₀ n
   have h₁ : mode (V.Y (A.current a)) n x₁ ∈ V.parity 1 := by
-    simpa using V.parity_mode (A.current a) (A.current_even a) x₁ hx₁ n
+    simpa using! V.parity_mode (A.current a) (A.current_even a) x₁ hx₁ n
   simp only [map_add, (TensorVA.parGr V).parityInvol_even hx₀,
     (TensorVA.parGr V).parityInvol_odd hx₁, map_neg,
     (TensorVA.parGr V).parityInvol_even h₀,
@@ -85,14 +85,14 @@ theorem exists_parity_decomp_coset (A : AffineSl2Action V k) {x : M}
         mode (V.Y (A.current a)) n x₁ = 0 := by
       rw [← map_add, heq, hx a n hn]
     have h₀ : mode (V.Y (A.current a)) n x₀ ∈ V.parity 0 := by
-      simpa using V.parity_mode (A.current a) (A.current_even a) x₀ hx₀ n
+      simpa using! V.parity_mode (A.current a) (A.current_even a) x₀ hx₀ n
     have h₁ : mode (V.Y (A.current a)) n x₁ ∈ V.parity 1 := by
-      simpa using V.parity_mode (A.current a) (A.current_even a) x₁ hx₁ n
+      simpa using! V.parity_mode (A.current a) (A.current_even a) x₁ hx₁ n
     have hz : mode (V.Y (A.current a)) n x₀ = 0 := by
       apply Submodule.disjoint_def.mp (TensorVA.parGr V).isCompl01.disjoint _ h₀
       rw [eq_neg_of_add_eq_zero_left hsum]
       exact (V.parity 1).neg_mem h₁
-    exact ⟨hz, by simpa only [hz, zero_add] using hsum⟩
+    exact ⟨hz, by simpa only [hz, zero_add] using! hsum⟩
   exact ⟨x₀, fun a n hn => (hparts a n hn).1, hx₀,
     x₁, fun a n hn => (hparts a n hn).2, hx₁, heq⟩
 
@@ -122,7 +122,7 @@ theorem mode_mem_cosetSubspace (A : AffineSl2Action V k)
   intro a m hm
   have hc := congrArg (fun f : End ℂ M => f y)
     (current_mode_coset_mode_commute A H hx a m n)
-  simpa only [Module.End.mul_apply, hy a m hm, map_zero] using hc
+  simpa only [Module.End.mul_apply, hy a m hm, map_zero] using! hc
 
 /-- In particular the intrinsic translation of a coset state stays in the coset. -/
 theorem translation_mem_cosetSubspace (A : AffineSl2Action V k)

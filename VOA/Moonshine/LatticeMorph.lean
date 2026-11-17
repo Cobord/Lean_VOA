@@ -700,7 +700,10 @@ theorem latMatrix_id : latMatrix L L LinearMap.id = 1 := by
   ext j i
   simp only [latMatrix, Matrix.of_apply, LinearMap.id_apply, coordR, coord, Module.Basis.repr_self,
     Matrix.one_apply, Finsupp.single_apply]
-  split_ifs with h1 h2 h2 <;> simp_all [eq_comm]
+  split_ifs with h1 h2 h2 <;> first
+    | (simp_all [eq_comm]; done)
+    | (subst h1; erw [Module.Basis.repr_self, Finsupp.single_eq_same]; simp)
+    | (erw [Module.Basis.repr_self, Finsupp.single_eq_of_ne h1]; simp)
 
 theorem oscMatrix_id (hL : L.PosDef) : oscMatrix L L LinearMap.id = 1 := by
   rw [oscMatrix, frameMatrix, latMatrix_id, Matrix.mul_one,

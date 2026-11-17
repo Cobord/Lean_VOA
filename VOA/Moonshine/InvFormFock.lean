@@ -3,6 +3,7 @@ Copyright (c) 2026 Fedor K. Popov. All rights reserved.
 Released under the Apache 2.0 license; see the LICENSE file.
 Authors: Fedor K. Popov
 -/
+import Mathlib.RingTheory.MvPolynomial.Basic
 import VOA.Moonshine.LatticeTwistedEOps
 
 /-!
@@ -47,12 +48,13 @@ noncomputable def fockWt (d : (ℕ × Fin r) →₀ ℕ) : ℂ :=
 
 /-- **The invariant form on `S[θ]`**: monomials orthogonal, `F(X^d,X^d) = fockWt d`. -/
 noncomputable def fockForm (r : ℕ) : LinearMap.BilinForm ℂ (FockT r) :=
-  Finsupp.lsum ℂ fun d => LinearMap.smulRight LinearMap.id (fockWt d • lcoeff ℂ d)
+  (basisMonomials (ℕ × Fin r) ℂ).constr ℂ fun d => fockWt d • lcoeff ℂ d
 
 theorem fockForm_monomial (d : (ℕ × Fin r) →₀ ℕ) (a : ℂ) (q : FockT r) :
-    fockForm r (monomial d a) q = a * (fockWt d * coeff d q) := by
-  rw [fockForm]
-  erw [Finsupp.lsum_single]
+    fockForm r (monomial d a) q = a * (fockWt d * q.coeff d) := by
+  have hm : monomial d a = a • (basisMonomials (ℕ × Fin r) ℂ) d := by
+    rw [coe_basisMonomials, smul_monomial, smul_eq_mul, mul_one]
+  rw [fockForm, hm, map_smul, Module.Basis.constr_basis]
   simp
 
 theorem fockForm_monomial_monomial (d e : (ℕ × Fin r) →₀ ℕ) (a b : ℂ) :
@@ -79,7 +81,7 @@ theorem fockForm_symm (p q : FockT r) : fockForm r p q = fockForm r q p := by
 theorem fockWt_zero : fockWt (0 : (ℕ × Fin r) →₀ ℕ) = 1 := by
   simp [fockWt]
 
-theorem fockForm_one (q : FockT r) : fockForm r 1 q = coeff 0 q := by
+theorem fockForm_one (q : FockT r) : fockForm r 1 q = q.coeff 0 := by
   rw [show (1 : FockT r) = monomial 0 1 from rfl, fockForm_monomial, fockWt_zero, one_mul, one_mul]
 
 theorem fockWt_add_single (d : (ℕ × Fin r) →₀ ℕ) (v : ℕ × Fin r) :
@@ -172,7 +174,7 @@ theorem constantCoeff_sM_succ (v : Fin r → ℂ) (p : ℕ) : constantCoeff (sM 
   have hp : ((p : ℂ) + 1) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero p
   exact (mul_eq_zero.mp h).resolve_left hp
 
-theorem coeff_zero_sMz (v : Fin r → ℂ) (a : ℤ) : coeff 0 (sMz v a) = if a = 0 then 1 else 0 := by
+theorem coeff_zero_sMz (v : Fin r → ℂ) (a : ℤ) : (sMz v a).coeff 0 = if a = 0 then 1 else 0 := by
   rw [← constantCoeff_eq]
   by_cases ha : a < 0
   · rw [sMz_of_neg v ha, map_zero, if_neg (by omega)]

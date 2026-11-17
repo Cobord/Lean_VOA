@@ -146,7 +146,7 @@ theorem top_eq_span_iterProd (hm2 : 2 ≤ m) :
     exact smul_mem_iterProdSpan _ _ (show EP m hm ∈ Set.range (gP m hm) from ⟨2, rfl⟩) le_rfl
       (PP_sec0_mem m hm q)
   have h1 : sectorP m hm (1 : ℤ) ≤ O₂ (V2mPlus m hm) ⊔ T := by
-    rw [sectorP, Submodule.span_le]
+    refine Submodule.span_le.mpr ?_
     rintro _ ⟨f, rfl⟩
     exact (sup_le_sup_left hE _) (sectorOneViaE_holds m hm hm2 f)
   refine le_antisymm ?_ le_top
@@ -171,8 +171,8 @@ theorem plusVacuumTop_holds (hm2 : 2 ≤ m) : PlusVacuumTop m hm := by
     · change oMod N (V2mPlus m hm).conformalVector x = 0 • x
       rw [oMod_homogeneous N (V2mPlus m hm).conformal_mem, show (2 : ℤ) - 1 = 1 by norm_num,
         N.L0_weight 0 x hx]
-    · simpa using hW
-    · simpa using hE)
+    · simpa using! hW
+    · simpa using! hE)
   have hA := hΦ (VP m hm) (adjointModule (V2mPlus m hm)) 0 (isLowestWeight_adjoint _) _
     (vacuum_mem_adjoint_weight _) 0 (fun i => by
       rw [Pi.zero_apply, zero_smul]

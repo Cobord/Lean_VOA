@@ -87,7 +87,7 @@ theorem level_ne_zero {n : ℕ} (hn : 1 ≤ n) : level n ≠ 0 := by
   field_simp [hden] at h
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt (zero_lt_one.trans_le hn))
   apply hn0
-  simpa [denominator] using h
+  simpa [denominator] using! h
 
 @[simp] theorem level_one : level 1 = (-4 / 3 : ℂ) := by
   norm_num [level, denominator]
@@ -459,7 +459,7 @@ noncomputable def classicalData43
   highestSymbol := by
     rw [map_mul, map_pow, pow_one, symbolAlg_eSym, symbolAlg_casSym]
     exact mk₂_sl2Singular_casimir
-  maximalGeneration := by simpa [candidate43] using hmax
+  maximalGeneration := by simpa [candidate43] using! hmax
 
 /-- At `p=5`, only maximal generation remains an input as well. -/
 noncomputable def classicalData85
@@ -474,7 +474,7 @@ noncomputable def classicalData85
   highestSymbol := by
     rw [map_mul, map_pow, symbolAlg_eSym, symbolAlg_casSym]
     exact mk₂_sl2Singular85_casimir_sq
-  maximalGeneration := by simpa [candidate85] using hmax
+  maximalGeneration := by simpa [candidate85] using! hmax
 
 /-- At `p=3`, irreducibility of the singular quotient supplies all representation-theoretic data
 needed by the already proved candidate and symbol calculation. -/

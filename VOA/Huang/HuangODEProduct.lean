@@ -343,7 +343,7 @@ theorem moveB (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
 
 theorem cbz_neg_one_nat (k : ℕ) : cbz (-1) (k : ℤ) = (-1 : ℂ) ^ k := by
   have h := cbz_neg_one_sub 0 k
-  simpa using h
+  simpa using! h
 
 /-- **Move `𝒞`** (innermost vector `u₋₁w₃`, Huang's `𝒞`): a regular relation. -/
 theorem moveC (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
@@ -669,7 +669,7 @@ theorem qt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun k hk => mul_mem_of_ratRing NN (X_mul_binom_mem k) ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw' (mode_mem_weight_nat hu hw₂ hk) hw₃
-    · simp only []; rw [QT_zero_w₁]; exact NN.zero_mem
+    · rw [QT_zero_w₁]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₁]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₁]; exact smul_mem_of_ratRing NN a hx
   by_cases c2 : B₂ < N₂
@@ -690,7 +690,7 @@ theorem qt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun i hi => ?_
         simp only [Finset.mem_range] at hi
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw₁ hw' (mode_mem_weight_nat hu hw₃ hi)
-    · simp only []; rw [QT_zero_w₂]; exact NN.zero_mem
+    · rw [QT_zero_w₂]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₂]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₂]; exact smul_mem_of_ratRing NN a hx
   by_cases c3 : B₃ < N₃
@@ -712,7 +712,7 @@ theorem qt_mem (hY₁ : IsIntertwiningOperator A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun k hk => smul_mem_of_ratRing NN _ ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw₁ (mode_mem_weight_nat hu hw₂ hk) hw'
-    · simp only []; rw [QT_zero_w₃]; exact NN.zero_mem
+    · rw [QT_zero_w₃]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₃]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₃]; exact smul_mem_of_ratRing NN a hx
   by_cases c4 : B₄ < N₄
@@ -897,7 +897,7 @@ theorem Lm1_iterate_mem_weight {M : Type u} [AddCommGroup M] [Module ℂ M]
     {A : OrdVModule W M} {h : ℂ} {N : ℕ} {w : M} (hw : w ∈ A.weight (h + N)) (j : ℕ) :
     (⇑A.Lm1)^[j] w ∈ A.weight (h + ((N + j : ℕ) : ℂ)) := by
   induction j with
-  | zero => simpa using hw
+  | zero => simpa using! hw
   | succ j ih =>
     rw [Function.iterate_succ_apply']
     exact Lm1_mem_weight ih
@@ -910,7 +910,7 @@ theorem theta_iter_mem {a : ℂ} (NN : Submodule (ratRing a) (PowerSeries ℂ))
     (μ : ℂ) : ∀ i j, (thetaShift μ)^[i] (Q j) ∈ NN := by
   intro i
   induction i with
-  | zero => intro j; simpa using hmem j
+  | zero => intro j; simpa using! hmem j
   | succ i ih =>
     intro j
     rw [Function.iterate_succ_apply]

@@ -30,7 +30,7 @@ theorem add_pow_apply_zero {X : Type*} [AddCommGroup X] [Module ℂ X]
   apply Finset.sum_eq_zero
   rintro ⟨a,b⟩ hab
   suffices ((D^a)*(S^b)) v=0 by rw [LinearMap.smul_apply,this,smul_zero]
-  obtain ha | hb : j≤a ∨ q≤b := by have := Finset.mem_antidiagonal.mp hab; omega
+  obtain ha | hb : j≤a ∨ q≤b := by have := Finset.HasAntidiagonal.mem_antidiagonal.mp hab; omega
   · rw [(h.pow_pow a b).eq,Module.End.mul_apply,Module.End.pow_map_zero_of_le ha hj,map_zero]
   · rw [pow_eq_zero_of_le hb hq,mul_zero,LinearMap.zero_apply]
 

@@ -59,11 +59,11 @@ theorem exists_coefficient_bounds (hC2 : C2Cofinite W)
     rw [spectrumFun_zero_of_input hC2 N₅ hfg₅ Y₁.1 Y₂.1 f x y z a b c β h]
     exact logCoeff_zero isOpen_overlapDomain overlapDomain_subset overlapDomain_nonempty _ _
   by_cases ha : N₁.weight a=⊥
-  · exact hzero (Or.inl (by simpa only [ha,Submodule.mem_bot] using hx))
+  · exact hzero (Or.inl (by simpa only [ha,Submodule.mem_bot] using! hx))
   by_cases hb : N₂.weight b=⊥
-  · exact hzero (Or.inr (Or.inl (by simpa only [hb,Submodule.mem_bot] using hy)))
+  · exact hzero (Or.inr (Or.inl (by simpa only [hb,Submodule.mem_bot] using! hy)))
   by_cases hc : N₃.weight c=⊥
-  · exact hzero (Or.inr (Or.inr (Or.inl (by simpa only [hc,Submodule.mem_bot] using hz))))
+  · exact hzero (Or.inr (Or.inr (Or.inl (by simpa only [hc,Submodule.mem_bot] using! hz))))
   by_cases hβ : N₄.weight β=⊥
   · exact hzero (Or.inr (Or.inr (Or.inr (eq_zero_of_supportedAt_bot hf hβ))))
   obtain ⟨hlog,hweight⟩ := hB a b c β f x y z ha hb hc hβ hx hy hz

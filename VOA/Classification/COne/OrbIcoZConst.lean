@@ -98,7 +98,7 @@ theorem equalConstCheck_sound (f : A W →ₗ[ℂ] T)
     (hf : ∀ z, f (omegaL W z) = 0) (a : ℤ → A W) {r s : ModeRel}
     (h : equalRelCheck r s = true) : evalConst W f a r = evalConst W f a s := by
   have hh := congrArg f (equalRelCheck_sound W a h)
-  simpa only [project_evalRel W f hf] using hh
+  simpa only [project_evalRel W f hf] using! hh
 
 /-- Constant mixed-mode recursion agrees with the actual mixed modes after projection. -/
 theorem constWord_sound (f : A W →ₗ[ℂ] T)

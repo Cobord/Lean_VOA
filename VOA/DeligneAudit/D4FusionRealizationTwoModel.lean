@@ -23,7 +23,7 @@ theorem source_cyclic :
     Submodule.span ℂ (Set.range fun l : List (Fin 28 × ℕ) =>
       wordOp sourceRep l sourceGenerator) = ⊤ := by
   simpa only [D1TensorG.D4Check.currentRep,D1TensorG.D4Check.highest,
-    points_two,sourceRep,sourceGenerator] using D1TensorG.D4Check.current_cyclic 2
+    points_two,sourceRep,sourceGenerator] using! D1TensorG.D4Check.current_cyclic 2
 
 theorem source_dimension : Module.finrank ℂ Source = 841 := by
   exact (D1TensorG.D4Check.dimension 2).trans (by decide)

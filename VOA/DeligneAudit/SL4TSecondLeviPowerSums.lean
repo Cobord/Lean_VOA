@@ -59,7 +59,7 @@ theorem secondLeviFirstAlphabet_mem_powerSumAlgebra (e₁ e₂ : ℕ)
     have hm : secondLeviModePowerSum (B := B) e₁ e₂ 0 (s + 1) ∈
         secondLeviPowerSumAlgebra e₁ e₂ :=
       Algebra.subset_adjoin (Or.inl (Or.inr ⟨s, rfl⟩))
-    simpa [psum, map_sum, map_pow, aeval_X, secondLeviModePowerSum] using hm
+    simpa [psum, map_sum, map_pow, aeval_X, secondLeviModePowerSum] using! hm
 
 /-- A symmetric polynomial in the second alphabet lies in the coefficient power-sum algebra. -/
 theorem secondLeviSecondAlphabet_mem_powerSumAlgebra (e₁ e₂ : ℕ)
@@ -74,7 +74,7 @@ theorem secondLeviSecondAlphabet_mem_powerSumAlgebra (e₁ e₂ : ℕ)
     have hm : secondLeviModePowerSum (B := B) e₁ e₂ 1 (s + 1) ∈
         secondLeviPowerSumAlgebra e₁ e₂ :=
       Algebra.subset_adjoin (Or.inr ⟨s, rfl⟩)
-    simpa [psum, map_sum, map_pow, aeval_X, secondLeviModePowerSum] using hm
+    simpa [psum, map_sum, map_pow, aeval_X, secondLeviModePowerSum] using! hm
 
 theorem secondLeviModeOrbitSum_mem_powerSumAlgebra (e₁ e₂ : ℕ)
     (P : MvPolynomial (SecondLeviModeSlot e₁ e₂) B) :
@@ -114,7 +114,7 @@ theorem secondLeviSymmetricModes_le_powerSumAlgebra (e₁ e₂ : ℕ) :
     (secondLeviModeOrbitSum_mem_powerSumAlgebra e₁ e₂ P) (n : ℂ)⁻¹
   rw [he] at hm
   change (n : ℂ)⁻¹ • ((n : ℂ) • P) ∈ secondLeviPowerSumAlgebra e₁ e₂ at hm
-  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using hm
+  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using! hm
 
 end
 

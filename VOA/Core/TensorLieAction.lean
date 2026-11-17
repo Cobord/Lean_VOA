@@ -19,6 +19,9 @@ namespace VOA
 noncomputable section
 open scoped TensorProduct
 open Module (End)
+
+-- Lean 4.35 port: Mathlib `b63f6e8a` makes `LieRing.ofAssociativeRing` a def; on v4.30 this is a no-op.
+attribute [local instance 100] LieRing.ofAssociativeRing
 variable {L V W : Type*} [LieRing L] [LieAlgebra ℂ L]
 variable [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
 

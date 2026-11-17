@@ -34,7 +34,7 @@ theorem finite_iSup_rank (m L : ℕ) (O : Fin m → Submodule ℂ V)
     simp [Finset.sup_eq_iSup]
   rw [he] at hh
   refine ⟨hh.1, ?_⟩
-  simpa [Nat.mul_comm] using hh.2
+  simpa [Nat.mul_comm] using! hh.2
 
 theorem supported_key_dominant (m : ℕ) (k : RadicalKey)
     (hs : ksCorrectedSupported m k) : ∀ i : Fin 3, 0 ≤ keyLabel m i k := by

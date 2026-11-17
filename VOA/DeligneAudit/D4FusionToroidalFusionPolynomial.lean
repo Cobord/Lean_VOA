@@ -96,9 +96,9 @@ theorem evalOp_high_rewrite (c : Fin n) (i s : ℕ) (hs : N ≤ s) :
     polyOp_zero_of_roots ρ z p c i (shiftedPointPolynomial_root z s)
   rw [polyOp, p.sum_over_range (by intro k; simp), hd,
     Finset.sum_range_succ] at hzero
-  have htop : p.coeff s = 1 := by simpa only [hd] using hm.coeff_natDegree
+  have htop : p.coeff s = 1 := by simpa only [hd] using! hm.coeff_natDegree
   rw [htop] at hzero
-  simpa only [one_smul] using eq_neg_of_add_eq_zero_right hzero
+  simpa only [one_smul] using! eq_neg_of_add_eq_zero_right hzero
 
 end
 

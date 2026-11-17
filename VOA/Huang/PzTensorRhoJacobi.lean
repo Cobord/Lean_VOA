@@ -118,7 +118,7 @@ theorem loc_eq {c d : 𝒱} {β : M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] ℂ} (htr : 
             * InR A₂ c p (ℓ - t) β (mode (A₁.YM d) s y₁) y₂ := by
     intro s
     rw [coef_lemma ℓ q s (fun i => rhoL A₁ A₂ c (ℓ + p - i) β (mode (A₁.YM d) s y₁) y₂) (K + 1)
-      (fun i hi => by dsimp only; rw [hX i (by omega)]; simp)]
+      (fun i hi => by rw [hX i (by omega)]; simp)]
     rw [← finsum_add_distrib
       (hfs_of _ 0 (max s 0) fun t ht => by
         rcases ht with ht | ht
@@ -368,8 +368,8 @@ theorem mixed_eq_1 (a b : 𝒱) (ℓ m n : ℤ) (β : M₁ →ₗ[ℂ] M₂ →�
   have := mix_lemma ℓ m (fun r j => β (mode (A₁.YM a) r y₁) (mode (A₂.YM b) (n + j) y₂)) Na
     (Nb - n) (fun r j h => by
       rcases h with h | h
-      · dsimp only; rw [hNa r h]; simp
-      · dsimp only; rw [hNb _ (by omega)]; simp)
+      · rw [hNa r h]; simp
+      · rw [hNb _ (by omega)]; simp)
   unfold InR
   rw [this]
 
@@ -383,8 +383,8 @@ theorem mixed_eq_2 (a b : 𝒱) (ℓ m n : ℤ) (β : M₁ →ₗ[ℂ] M₂ →�
   have := mix_lemma ℓ n (fun s j => β (mode (A₁.YM b) s y₁) (mode (A₂.YM a) (m + j) y₂)) Nb
     (Na - m) (fun s j h => by
       rcases h with h | h
-      · dsimp only; rw [hNb s h]; simp
-      · dsimp only; rw [hNa _ (by omega)]; simp)
+      · rw [hNb s h]; simp
+      · rw [hNa _ (by omega)]; simp)
   unfold InR
   rw [this]
 
@@ -447,33 +447,33 @@ theorem lhs_split {a b : 𝒱} {β : M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] ℂ} (hta
   have e1 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i)
       * β y₁ (mode (A₂.YM a) (ℓ + m - i) (mode (A₂.YM b) (n + i) y₂))) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z1 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z1 i hi]; simp)
   have e2 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i) * ∑ᶠ r, cbz (ℓ + m - i) r
       * β (mode (A₁.YM a) r y₁) (mode (A₂.YM b) (n + i) y₂)) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z1 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z1 i hi]; simp)
   have e3 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i) * ∑ᶠ s, cbz (n + i) s
       * rhoL A₁ A₂ a (ℓ + m - i) β (mode (A₁.YM b) s y₁) y₂) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z3 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z3 i hi]; simp)
   have e4 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i)
       * β y₁ (mode (A₂.YM b) (ℓ + n - i) (mode (A₂.YM a) (m + i) y₂))) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z2 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z2 i hi]; simp)
   have e5 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i) * ∑ᶠ s, cbz (ℓ + n - i) s
       * β (mode (A₁.YM b) s y₁) (mode (A₂.YM a) (m + i) y₂)) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z2 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z2 i hi]; simp)
   have e6 := finsum_eq_Icc' (fun i => (negOnePow i * cbz ℓ i) * ∑ᶠ r, cbz (m + i) r
       * rhoL A₁ A₂ b (ℓ + n - i) β (mode (A₁.YM a) r y₁) y₂) 0 K (fun i hi => by
     rcases hi with hi | hi
-    · dsimp only; rw [cbz_neg hi]; ring
-    · dsimp only; rw [z4 i hi]; simp)
+    · rw [cbz_neg hi]; ring
+    · rw [z4 i hi]; simp)
   beta_reduce at e1 e2 e3 e4 e5 e6
   rw [e1, e2, e3, e4, e5, e6]
   rw [finsum_eq_Icc' _ 0 K (fun i hi => by

@@ -168,7 +168,7 @@ theorem exists_omegaScalar_of_isSimpleAMod {W : VertexOperatorAlgebra 𝒱}
         = U.ρ (mk W b) * U.ρ (mk W W.conformalVector) := by
       rw [← U.ρ_mul, ← U.ρ_mul, h3]
     have hap := congrArg (fun t : Module.End ℂ U.carrier => t y) heq
-    simpa [hφ, Module.End.mul_apply] using hap
+    simpa [hφ, Module.End.mul_apply] using! hap
   -- membership in the eigenspace, stated pointwise
   have hmemK : ∀ y : U.carrier,
       y ∈ LinearMap.ker (φ - h • (1 : Module.End ℂ U.carrier)) ↔ φ y = h • y := by

@@ -67,7 +67,7 @@ theorem insertionConnection_peel (z : ℂ) (w : M) :
   obtain ⟨K, hK⟩ := sqL_tail_eventually_zero A w
   have hp := finsum_nat_peel_module (K := K) (f := fun m : ℕ =>
     zhuGC (m + 1) z • sqL A (2 * (m + 1) - 2 : ℤ) w)
-    (fun m hm => by dsimp only; rw [hK m hm, smul_zero])
+    (fun m hm => by rw [hK m hm, smul_zero])
   change sqL A (-2) w - _ = _
   rw [hp]
   norm_num only at *
@@ -90,6 +90,7 @@ theorem insertion_connection_tail_support (z : ℂ) (w : M) :
   apply hm
   convert (show zhuGC (m + 2) z • sqL A (2 * ((m + 1 : ℕ) + 1) - 2 : ℤ) w = 0 by
     rw [hK (m + 1) (by omega), smul_zero]) using 1
+  rw [show (2 * ((m + 1 : ℕ) + 1) - 2 : ℤ) = 2 * ((m : ℤ) + 2) - 2 by push_cast; ring]
 
 /-- The connection field of `InsertionCoordinateCovariance`, with no analytic
 block hypothesis and with the quasimodular anomaly explicit. -/

@@ -78,7 +78,7 @@ theorem iproj_eq_zero_of_c0 {x : BRSTSpace} (hx : x ∈ ⨆ (k : KF) (_ : k.2 = 
   intro hk z hz
   exact iproj_eq_zero_of_weight (hIB hA)
     (brstDegF_isInternal hA LevelOneUnitary.bUnitary unitWeight unitWeight_pos)
-    (fun j : KF × ℤ => j.1) blockB_le_brstDegF hz (fun e => hj (by simp only at e; rw [e]; exact hk))
+    (fun j : KF × ℤ => j.1) blockB_le_brstDegF hz (fun e => hj (by rw [e]; exact hk))
 
 include hA in
 /-- **A block vector lies in the `c₀`-free joint pieces of its block.** -/
@@ -291,7 +291,7 @@ theorem ΔN_add_injective (N : ℕ) {q0 : ℤ} {c : ℕ} (hc : 1 ≤ q0 + c) {v 
       (LinearMap.id : Module.End ℂ MatterSpace)) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro w hw
-    exact mL_add_injective hA (sN N) hk1 (by simpa using hw)
+    exact mL_add_injective hA (sN N) hk1 (by simpa using! hw)
   apply rTensor_injective_ghost hf
   rw [map_zero, ← h, ΔN, LinearMap.add_apply, NbB_lapSup N q0 hv]
   rw [show TensorProduct.map (mL hA (sN N) + (k : ℂ) • (LinearMap.id : Module.End ℂ MatterSpace))

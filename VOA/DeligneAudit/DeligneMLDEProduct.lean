@@ -131,7 +131,7 @@ def fQ : PowerSeries ℚ := infProd fun k => (1 + X ^ (k + 1)) ^ 8
 theorem prodFactors_fQ : ProdFactors fun k => ((1 + X ^ (k + 1)) ^ 8 : PowerSeries ℚ) := by
   have h := (prodFactors_one_add (R := ℚ) 1 (fun k => k + 1) fun k => Nat.lt_succ_self k).pow 8
   intro k
-  simpa using h k
+  simpa using! h k
 
 theorem coeff_fQ (N : ℕ) : coeff N fQ = (A2.productCoeff N : ℚ) := by
   rw [fQ, infProd, coeff_mk]

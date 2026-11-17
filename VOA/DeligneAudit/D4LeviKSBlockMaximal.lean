@@ -27,7 +27,7 @@ noncomputable def ksBlockMaximalSpan (q n d : ℕ) :
 /-- Complement removal, as an identity of ordinary symmetric polynomials. -/
 theorem ksHsymm_subset_identity (k l s : ℕ) :
     rename (Fin.castAdd l) (hsymm (Fin k) ℂ s) =
-      ∑ p ∈ Finset.antidiagonal s,
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
         hsymm (Fin (k + l)) ℂ p.1 *
           (ksEPoly (List.ofFn fun j : Fin l =>
             (X (Fin.natAdd k j) : MvPolynomial (Fin (k + l)) ℂ))).coeff p.2 := by
@@ -38,8 +38,10 @@ theorem ksHsymm_subset_identity (k l s : ℕ) :
   have hcat : vs ++ ws = List.ofFn fun i : Fin (k + l) =>
       (X i : MvPolynomial (Fin (k + l)) ℂ) := List.ofFn_add.symm
   have hc : PowerSeries.coeff s (ksHSeries vs) =
-      rename (Fin.castAdd l) (hsymm (Fin k) ℂ s) :=
-    ksHSeries_coeff_aeval k s (fun i => X (Fin.castAdd l i))
+      rename (Fin.castAdd l) (hsymm (Fin k) ℂ s) := by
+    -- Lean 4.35 Mathlib: `rename` is no longer definitionally `aeval (X ∘ f)`
+    rw [rename_eq_aeval]
+    exact ksHSeries_coeff_aeval k s (fun i => X (Fin.castAdd l i))
   rw [← hc, ksHSeries_remove_coeff vs ws s, hcat]
   simp only [ksHSeries_coeff_hsymm, ws]
 
@@ -56,10 +58,10 @@ theorem ksBlockGarlandSeed_mem_maximal (q k l s d : ℕ) (β : Fin l → ℕ)
   rw [ksBlockGarlandSeed, ksHsymm_subset_identity, Finset.sum_mul, ksOrbitSum_sum]
   apply Submodule.sum_mem
   intro p hp
-  have hps := Finset.mem_antidiagonal.mp hp
+  have hps := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
   by_cases hj : l < p.2
   · have hz : (ksEPoly W).coeff p.2 = 0 :=
-      ksEPoly_coeff_eq_zero W p.2 (by simpa [W] using hj)
+      ksEPoly_coeff_eq_zero W p.2 (by simpa [W] using! hj)
     change rzOrbitSum _ ((hsymm _ _ p.1 * (ksEPoly W).coeff p.2) * B) ∈ _
     simp [hz, rzOrbitSum]
   · have hr : (hsymm (Fin (k + l)) ℂ p.1 * (ksEPoly W).coeff p.2) * B =

@@ -50,7 +50,7 @@ theorem tauH (h : Fin 52) (hh : h.val ∈ ([0, 1, 2] : List ℕ)) :
 
 theorem tauN (h : Fin 52) (hh : h.val ∈ ([3] : List ℕ)) :
     ((τZ h : ℤ) : ℂ) = -((thetaN h : ℕ) : ℂ) := by
-  have h3 : h.val = 3 := by simpa using hh
+  have h3 : h.val = 3 := by simpa using! hh
   simp [τZ, thetaN, h3]
 
 theorem truncUp (x : Fin 52) (hx : x.val ∈ negL ∨ x.val ∈ ([26, 13, 46, 47] : List ℕ)) :
@@ -175,7 +175,7 @@ theorem op_comm_f4 (a b : Fin 52) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 theorem sum_single_f4 {a b z : Fin 52} {c : ℤ}
     (h : ∀ e : Fin 52, fZ br a b e = if e = z then c else 0) :
@@ -213,7 +213,7 @@ theorem f4_thetaNil : ThetaNilG F4sector := by
     have := hL (47 : Fin 52) (show ((47 : Fin 52) : ℕ) ∈ ([26, 13, 46, 47] : List ℕ) by decide)
     change (ρ.op (47 : Fin 52) 0)^[k * lowExpS 47 + 1] w = 0 at this
     rw [Module.End.pow_apply]
-    simpa [lowExpS] using this
+    simpa [lowExpS] using! this
   have h26 := hz 26 (by decide)
   have h13 := hz 13 (by decide)
   have h46 := hz 46 (by decide)
@@ -226,9 +226,11 @@ theorem f4_thetaNil : ThetaNilG F4sector := by
       fun x => op_comm_f4 (ρ := ρ) 26 x
     have e1 : (adL (ρ.op (26 : Fin 52) 0))^[1] (ρ.op (47 : Fin 52) 0) =
         (-1 : ℂ) • ρ.op (12 : Fin 52) 0 := by
-      rw [Function.iterate_one, hs, sum_single_f4 c4]; norm_num
+      rw [Function.iterate_one]
+      exact (hs 47).trans ((sum_single_f4 (ρ := ρ) (a := 26) (b := 47) c4).trans (by simp))
     have e2 : (adL (ρ.op (26 : Fin 52) 0))^[1 + 1] (ρ.op (47 : Fin 52) 0) = 0 := by
-      rw [Function.iterate_succ_apply', e1, map_smul, hs, sum_zero_f4 c5, smul_zero]
+      have e5 := (hs 12).trans (sum_zero_f4 (ρ := ρ) (a := 26) (b := 12) c5)
+      rw [Function.iterate_succ_apply', e1, map_smul, e5, smul_zero]
     have h := nil_of_ad _ h26 e2 hX
     rw [e1, smul_pow, LinearMap.smul_apply, smul_eq_zero] at h
     exact h.resolve_left (pow_ne_zero _ (by norm_num))
@@ -238,22 +240,28 @@ theorem f4_thetaNil : ThetaNilG F4sector := by
       fun x => op_comm_f4 (ρ := ρ) 29 x
     have e2 : (adL (ρ.op (29 : Fin 52) 0))^[2] (ρ.op (47 : Fin 52) 0) =
         (2 : ℂ) • ρ.op (49 : Fin 52) 0 := by
-      simp only [Function.iterate_succ_apply', Function.iterate_zero_apply]
-      rw [hs, sum_single_f4 c6, map_smul, hs, sum_single_f4 c7, smul_smul]; norm_num
+      have e6 := (hs 47).trans (sum_single_f4 (ρ := ρ) (a := 29) (b := 47) c6)
+      have e7 := (hs 48).trans (sum_single_f4 (ρ := ρ) (a := 29) (b := 48) c7)
+      change adL (ρ.op (29 : Fin 52) 0) (adL (ρ.op (29 : Fin 52) 0) (ρ.op (47 : Fin 52) 0)) = _
+      rw [e6, map_smul, e7, smul_smul]; norm_num
     have e3 : (adL (ρ.op (29 : Fin 52) 0))^[2 + 1] (ρ.op (47 : Fin 52) 0) = 0 := by
-      rw [Function.iterate_succ_apply', e2, map_smul, hs, sum_zero_f4 c8, smul_zero]
+      have e8 := (hs 49).trans (sum_zero_f4 (ρ := ρ) (a := 29) (b := 49) c8)
+      rw [Function.iterate_succ_apply', e2, map_smul, e8, smul_zero]
     have h := nil_of_ad _ h29 e3 hX
     rw [e2, smul_pow, LinearMap.smul_apply, smul_eq_zero] at h
     exact h.resolve_left (pow_ne_zero _ (by norm_num))
   have hXY : ρ.op (12 : Fin 52) 0 * ρ.op (49 : Fin 52) 0 -
       ρ.op (49 : Fin 52) 0 * ρ.op (12 : Fin 52) 0 = ρ.op (45 : Fin 52) 0 := by
-    rw [op_comm_f4, sum_single_f4 c9]; simp
+    exact (op_comm_f4 (ρ := ρ) 12 49).trans
+      ((sum_single_f4 (ρ := ρ) (a := 12) (b := 49) c9).trans (by simp))
   have hXZ : ρ.op (12 : Fin 52) 0 * ρ.op (45 : Fin 52) 0 =
       ρ.op (45 : Fin 52) 0 * ρ.op (12 : Fin 52) 0 := by
-    rw [← sub_eq_zero, op_comm_f4, sum_zero_f4 c10]
+    rw [← sub_eq_zero]
+    exact (op_comm_f4 (ρ := ρ) 12 45).trans (sum_zero_f4 (ρ := ρ) (a := 12) (b := 45) c10)
   have hYZ : ρ.op (49 : Fin 52) 0 * ρ.op (45 : Fin 52) 0 =
       ρ.op (45 : Fin 52) 0 * ρ.op (49 : Fin 52) 0 := by
-    rw [← sub_eq_zero, op_comm_f4, sum_zero_f4 c11]
+    rw [← sub_eq_zero]
+    exact (op_comm_f4 (ρ := ρ) 49 45).trans (sum_zero_f4 (ρ := ρ) (a := 49) (b := 45) c11)
   exact Garland.heis_nilpotent hXY hYZ hXZ hY1 hY2
 
 /-- **Ravinder's kernel lemma for `F₄`, unconditional.** -/

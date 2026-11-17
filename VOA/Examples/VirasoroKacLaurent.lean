@@ -42,7 +42,7 @@ theorem kacLaurent_eq_zero_of_infinite (P : ℂ[T;T⁻¹]) (S : Set ℂ)
     change Q.eval t = 0
     rw [← kacLaurentEval_polynomial t (hne t ht),hQ,map_mul,hz t ht,zero_mul]
   rw [hq,map_zero] at hQ
-  exact (LaurentPolynomial.isUnit_T (R := ℂ) (n:ℤ)).mul_right_eq_zero.mp (by simpa only [mul_comm] using hQ.symm)
+  exact (LaurentPolynomial.isUnit_T (R := ℂ) (n:ℤ)).mul_right_eq_zero.mp (by simpa only [mul_comm] using! hQ.symm)
 
 /-- Central charge 13-6T-6/T as a genuine Laurent polynomial. -/
 noncomputable def kacLaurentCharge : ℂ[T;T⁻¹] :=

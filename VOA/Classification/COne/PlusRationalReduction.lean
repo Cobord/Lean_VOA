@@ -86,7 +86,7 @@ theorem isSemisimpleModule_of_finiteLength_twoStepSplitting
   letI := hN
   letI := hA
   apply IsSemisimpleModule.of_sSup_simples_eq_top
-  simpa only [isSimpleModule_iff_isAtom] using sSup_atoms_eq_top_of_twoStepSplitting hs
+  simpa only [isSimpleModule_iff_isAtom] using! sSup_atoms_eq_top_of_twoStepSplitting hs
 
 /-- It suffices to check finite length and length-two splitting on cyclic submodules.
 This is valid for arbitrary modules over arbitrary rings. -/

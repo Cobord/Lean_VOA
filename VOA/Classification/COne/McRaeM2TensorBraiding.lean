@@ -83,7 +83,7 @@ def tensorBraidEquiv (r : ℤ) :
     (tensorBraid hC2 N₂ N₁ h₂ h₁ (-r-1)).toLinearMap
     (by
       have h := tensorBraid_inverse_comp hC2 N₂ N₁ h₂ h₁ (-r-1)
-      simpa only [show -(-r-1)-1 = r by ring] using h)
+      simpa only [show -(-r-1)-1 = r by ring] using! h)
     (tensorBraid_inverse_comp hC2 N₁ N₂ h₁ h₂ r)
 
 end VOA.C2Rigid.LocalInjective

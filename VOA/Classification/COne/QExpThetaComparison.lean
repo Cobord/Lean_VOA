@@ -67,7 +67,7 @@ theorem thetaLog_eq_productLog_of_productComparison (hp : ThetaProductComparison
   have hd : jacobiTheta₂' (x - ((τ : ℂ) + 1) / 2) τ =
       c * _root_.deriv (fun y => thetaShiftedProduct y τ) x := by
     apply HasDerivAt.unique (f := fun y => jacobiTheta₂ (y - ((τ : ℂ) + 1) / 2) τ)
-    · simpa only [mul_one] using hθ
+    · simpa only [mul_one] using! hθ
     · rw [hfun]
       exact hP
   rw [weightOneThetaLog, hd, he, mul_div_mul_left _ _ hc]

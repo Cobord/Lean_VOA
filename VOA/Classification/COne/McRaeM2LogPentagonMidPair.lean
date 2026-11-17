@@ -141,13 +141,15 @@ theorem fivePointTerm_middle_summable_norm (N P Q R : LogModuleCat W)
     (F := fun γ δ => fivePointTerm hC2 N P Q R .middle a b c d β x y z w r s f γ δ) h h'
     (Complex.exp (e₁*(β-a-h'))*Complex.exp (e₃*(h-b-c))) Prod.swap Prod.swap_injective hG ?_
   intro p
-  simp only []
-  rw [fivePointTerm_middle_eq, midPointProfile_eq_polynomial _ _ _ _ _ _ _
+  -- 4.35: the carriers of `tensorIntertwiner` and `tensorObject` agree only up to
+  -- default-transparency defeq, so the profile lemmas are applied in term mode.
+  refine (fivePointTerm_middle_eq hC2 N P Q R a b c d β x y z w r s f _ _).trans ?_
+  refine (midPointProfile_eq_polynomial _ _ _ _ _ _ _
     (tensorObject hC2 N (tensorObject hC2 (tensorObject hC2 P Q) R)).finiteGeneration
     N.finiteGeneration R.finiteGeneration P.finiteGeneration Q.finiteGeneration
     (tensorObject hC2 P Q).finiteGeneration
-    (tensorObject hC2 (tensorObject hC2 P Q) R).finiteGeneration,
-    Prod.fst_swap, Prod.snd_swap, fullLogMidProductCoefficient_eq]
+    (tensorObject hC2 (tensorObject hC2 P Q) R).finiteGeneration
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).trans ?_
   have h1 : a+(h'+(p.2 : ℂ))-β-1=a+h'-β-1+(p.2 : ℂ) := by ring
   have h2 : d+(h+(p.1 : ℂ))-(h'+(p.2 : ℂ))-1=d+h-h'-1-(p.2 : ℂ)+(p.1 : ℂ) := by ring
   have h3 : b+c-(h+(p.1 : ℂ))-1=b+c-h-1-(p.1 : ℂ) := by ring
@@ -162,7 +164,8 @@ theorem fivePointTerm_middle_summable_norm (N P Q R : LogModuleCat W)
     congr 1
     ring
   rw [hexp]
-  ring
+  have key : ∀ E X Y Z : ℂ, E*(X*Y)*Z=E*(Z*X*Y) := fun E X Y Z => by ring
+  exact key _ _ _ _
 
 -- Actual fourfold point-block signatures require a larger elaboration budget.
 set_option maxHeartbeats 4000000 in
@@ -210,11 +213,14 @@ theorem fivePointTerm_pair_summable_norm (N P Q R : LogModuleCat W)
     (Complex.exp (e₁*(β-h-h'))*Complex.exp (e₃*(h-a-b))) _ hσ hG ?_
   intro p
   simp only []
-  rw [fivePointTerm_pair_eq, pairPointProfile_eq_polynomial _ _ _ _ _ _ _
+  -- 4.35: the carriers of `tensorIntertwiner` and `tensorObject` agree only up to
+  -- default-transparency defeq, so the profile lemmas are applied in term mode.
+  refine (fivePointTerm_pair_eq hC2 N P Q R a b c d β x y z w r s f _ _).trans ?_
+  refine (pairPointProfile_eq_polynomial _ _ _ _ _ _ _
     (tensorObject hC2 (tensorObject hC2 N P) (tensorObject hC2 Q R)).finiteGeneration
     R.finiteGeneration Q.finiteGeneration N.finiteGeneration P.finiteGeneration
-    (tensorObject hC2 N P).finiteGeneration (tensorObject hC2 Q R).finiteGeneration,
-    fullLogPairCoefficient_eq]
+    (tensorObject hC2 N P).finiteGeneration (tensorObject hC2 Q R).finiteGeneration
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).trans ?_
   have h1 : (h+(p.1 : ℂ))+(h'+(p.2 : ℂ))-β-1=h+h'-β-1+((p.1+p.2 : ℕ) : ℂ) := by push_cast; ring
   have h2 : c+d-(h'+(p.2 : ℂ))-1=c+d-h'-1-((p.1+p.2 : ℕ) : ℂ)+(p.1 : ℂ) := by push_cast; ring
   have h3 : a+b-(h+(p.1 : ℂ))-1=a+b-h-1-(p.1 : ℂ) := by ring
@@ -230,6 +236,7 @@ theorem fivePointTerm_pair_summable_norm (N P Q R : LogModuleCat W)
     push_cast
     ring
   rw [hexp]
-  ring
+  have key : ∀ E X Y Z : ℂ, E*(X*Y)*Z=E*(Z*X*Y) := fun E X Y Z => by ring
+  exact key _ _ _ _
 
 end VOA.Huang.LogAssocFivePoint

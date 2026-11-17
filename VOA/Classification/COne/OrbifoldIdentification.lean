@@ -53,7 +53,7 @@ theorem ci_scaleIota (k : (latP (m * n ^ 2)).carrier) :
 
 theorem scaleIota_isometry (a b : (latP (m * n ^ 2)).carrier) :
     (latP m).form (scaleIota m n a) (scaleIota m n b) = (latP (m * n ^ 2)).form a b := by
-  rw [latP_form, latP_form]
+  refine (latP_form m _ _).trans (Eq.trans ?_ (latP_form (m * n ^ 2) a b).symm)
   change 2 * (m : ℤ) * ((n : ℤ) * ci _ a) * ((n : ℤ) * ci _ b) = 2 * ((m * n ^ 2 : ℕ) : ℤ) * ci _ a * ci _ b
   push_cast; ring
 

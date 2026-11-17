@@ -75,7 +75,7 @@ theorem eisensteinSeries_mem (j : ℕ) : eisensteinSeries j ∈ bidiscAlgebra :=
   intro r hr
   obtain ⟨C, hC⟩ := subexponential_zhuG j r hr
   have hC0 : 0 ≤ C := (norm_nonneg (zhuG j 0)).trans
-    (by simpa only [pow_zero, mul_one] using hC 0)
+    (by simpa only [pow_zero, mul_one] using! hC 0)
   refine ⟨‖(2 * (Real.pi : ℂ) * Complex.I) ^ (2 * j)‖ * C, fun i k => ?_⟩
   simp only [eisensteinSeries, coeff_ofArray]
   split_ifs with hik
@@ -113,7 +113,7 @@ theorem fourierCoefficient_bound (a : coefficientAlgebra fourierGenerators)
     ∃ G : ℝ, 0 ≤ G ∧ ∀ i j, ‖coeff a.val i j‖ ≤ G * r ^ i * r ^ j := by
   obtain ⟨G, hG0, hG⟩ := joint_bound
     (coefficientAlgebra_le_bidisc fourierGenerators fourierGenerators_mem a.property) hr
-  exact ⟨G, hG0, fun i j => by simpa [pow_add, mul_assoc] using hG i j⟩
+  exact ⟨G, hG0, fun i j => by simpa [pow_add, mul_assoc] using! hG i j⟩
 
 /-- Absolute convergence of each coefficient-ring element on the product bidisc. -/
 theorem fourierCoefficient_summable (a : coefficientAlgebra fourierGenerators)

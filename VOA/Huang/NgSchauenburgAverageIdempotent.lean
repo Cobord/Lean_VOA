@@ -55,7 +55,7 @@ theorem halfBraidingAverage_comp_simple (F : SphericalFusion C)
   apply Finset.sum_congr rfl
   intro j _
   congr 1
-  simpa only [SphericalFusion.fusionMultiplicity, mul_comm] using
+  simpa only [SphericalFusion.fusionMultiplicity, mul_comm] using!
     F.fusion_dimension_target i (F.simple j)
 
 /-- The average followed by any loop is absorbed with its categorical dimension. -/
@@ -76,7 +76,7 @@ theorem halfBraidingLoop_comp_average (F : SphericalFusion C)
   apply Finset.sum_congr rfl
   intro j _
   congr 1
-  simpa only [mul_comm] using F.fusion_dimension_source U (F.simple j)
+  simpa only [mul_comm] using! F.fusion_dimension_source U (F.simple j)
 
 /-- Idempotence of the dimension-weighted cup-cap average itself. -/
 theorem halfBraidingAverage_idempotent (F : SphericalFusion C) (X Y : Center C) :
@@ -100,7 +100,7 @@ theorem halfBraidingAverage_fixed_iff_loops (F : SphericalFusion C)
   · intro hf U
     have h := congrArg (fun L : Module.End ℂ (X.1 ⟶ Y.1) => L f)
       (halfBraidingLoop_comp_average F X Y U)
-    simpa only [LinearMap.comp_apply, LinearMap.smul_apply, hf] using h
+    simpa only [LinearMap.comp_apply, LinearMap.smul_apply, hf] using! h
   · intro h
     simp only [halfBraidingAverage, LinearMap.smul_apply, LinearMap.sum_apply, h,
       smul_smul, ← pow_two, ← Finset.sum_smul]

@@ -30,13 +30,13 @@ theorem xyzSpan_le_keyLayer (k : RadicalKey) :
 theorem keyLayer_le_xyzSpan_of_no_excluded (k : RadicalKey)
     (he : k.e = 0) (hu : k.u = 0) (hup : k.up = 0) :
     keyLayer ρ w k ≤ xyzSpan ρ w k := by
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hk, rfl⟩
   apply Submodule.subset_span
   refine ⟨l, hk, ?_, ?_, ?_, rfl⟩
-  · simpa [← hk, wordKey] using he
-  · simpa [← hk, wordKey] using hu
-  · simpa [← hk, wordKey] using hup
+  · simpa [← hk, wordKey] using! he
+  · simpa [← hk, wordKey] using! hu
+  · simpa [← hk, wordKey] using! hup
 
 /-- The zero-U, zero-U' base: any E letters annihilate the source. -/
 theorem keyLayer_le_xyzSpan_of_no_U

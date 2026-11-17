@@ -78,7 +78,7 @@ theorem qt_mem (hY₁ : IsGradedJacobiFamily A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun k hk => mul_mem_of_ratRing NN (X_mul_binom_mem k) ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw' (mode_mem_weight_nat hu hw₂ hk) hw₃
-    · simp only []; rw [QT_zero_w₁]; exact NN.zero_mem
+    · rw [QT_zero_w₁]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₁]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₁]; exact smul_mem_of_ratRing NN a hx
   by_cases c2 : B₂ < N₂
@@ -99,7 +99,7 @@ theorem qt_mem (hY₁ : IsGradedJacobiFamily A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun i hi => ?_
         simp only [Finset.mem_range] at hi
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw₁ hw' (mode_mem_weight_nat hu hw₃ hi)
-    · simp only []; rw [QT_zero_w₂]; exact NN.zero_mem
+    · rw [QT_zero_w₂]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₂]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₂]; exact smul_mem_of_ratRing NN a hx
   by_cases c3 : B₃ < N₃
@@ -121,7 +121,7 @@ theorem qt_mem (hY₁ : IsGradedJacobiFamily A₁ A₅ A₄ Y₁)
       · refine NN.sum_mem fun k hk => smul_mem_of_ratRing NN _ ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw₁ (mode_mem_weight_nat hu hw₂ hk) hw'
-    · simp only []; rw [QT_zero_w₃]; exact NN.zero_mem
+    · rw [QT_zero_w₃]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QT_add_w₃]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QT_smul_w₃]; exact smul_mem_of_ratRing NN a hx
   by_cases c4 : B₄ < N₄

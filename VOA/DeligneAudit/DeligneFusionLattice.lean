@@ -27,8 +27,8 @@ abbrev WA : VertexOperatorAlgebra (LatModuleGen a2) := latticeVOAGen a2 a2_even 
 def lv (a b : ℤ) : a2.carrier := ![a, b]
 
 theorem form_lv (a b c d : ℤ) : a2.form (lv a b) (lv c d) = 2 * a * c - a * d - b * c + 2 * b * d := by
-  change (ofCartan (CartanMatrix.A 2) (CartanMatrix.A_isSymm 2)).form (lv a b) (lv c d) = _
-  rw [ofCartan_form, Matrix.toBilin'_apply']
+  change Matrix.toBilin' (CartanMatrix.A 2) (![a, b] : Fin 2 → ℤ) (![c, d] : Fin 2 → ℤ) = _
+  rw [Matrix.toBilin'_apply']
   simp [lv, Matrix.mulVec, dotProduct, Fin.sum_univ_two, CartanMatrix.A]
   ring
 
@@ -67,7 +67,7 @@ abbrev s22 : ℂ := latticeCocycle a2 r2 r2
 theorem s12_s21 : s12 * s21 = -1 := by
   have h := latticeCocycle_comm a2 a2_even r1 r2
   rw [show a2.form r1 r2 = -1 by rw [r1, r2, form_lv]; norm_num] at h
-  simpa using h
+  simpa using! h
 
 theorem lv_eq (a b : ℤ) : lv a b = a • r1 + b • r2 := by
   change (![a, b] : Fin 2 → ℤ) = a • (![1, 0] : Fin 2 → ℤ) + b • (![0, 1] : Fin 2 → ℤ)
@@ -421,10 +421,10 @@ theorem lowering_vanish (N : ℕ) (c : Fin 8) (δa δb : ℤ) (s : ℂ) (hXc : X
     intro k
     induction k with
     | zero =>
-        refine ⟨by simpa using ch_chargeSec N N, ?_⟩
+        refine ⟨by simpa using! ch_chargeSec N N, ?_⟩
         have := latChargeGen_mem_grading a2 (lv (N : ℤ) N)
         rw [halfNorm_lv] at this
-        simpa using this
+        simpa using! this
     | succ k ih =>
         rw [Function.iterate_succ_apply']
         refine ⟨?_, latRep_grading ih.2⟩

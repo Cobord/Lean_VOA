@@ -223,8 +223,12 @@ EXACT_AXIOM_OVERRIDES = {
         frozenset({"propext"}),
     "VOA.InverseDS.VirasoroVerma.verma_length_eq_energy_iff":
         frozenset({"propext", "Quot.sound"}),
-    "VOA.VirasoroSpecialization.map_mulVec":
-        frozenset({"propext", "Quot.sound"}),
+    # Lean 4.35 / Mathlib b63f6e8a port: these four proofs no longer use Classical.choice;
+    # VOA.VirasoroSpecialization.map_mulVec now does (so it uses the default three-axiom set).
+    "VOA.AffineSl3.HighestModule.lower_modeWeightCost": frozenset({"propext"}),
+    "VOA.AffineSl3.HighestModule.lower_wordDegree_nonpos": frozenset({"propext", "Quot.sound"}),
+    "VOA.AffineSl3.HighestModule.mixedLowerWord_length": frozenset({"propext", "Quot.sound"}),
+    "VOA.AffineVOA.HighestModule.wordPrincipal_append": frozenset({"propext"}),
     "VOA.InverseDS.VirasoroVerma.verma_length_le_energy":
         frozenset({"propext", "Quot.sound"}),
     "VOA.VirDeformModes.NormalOrdering.adjoint_partitionWord":

@@ -41,7 +41,7 @@ theorem gtQ_two_oneRow (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
   have he : gtEval q u 2 ![(c : ℤ), (d : ℤ)] =
       ((u 0 : R) * (u 1 : R)) ^ d *
         gtEval q u 2 ![((c - d : ℕ) : ℤ), 0] := by
-    simpa only [Nat.sub_add_cancel hd, zero_add] using
+    simpa only [Nat.sub_add_cancel hd, zero_add] using!
       gtEval_two_shift q u (c - d) 0 d
   rw [gtQ_two_eq, he]
   simp only [gtOneRowCoeff, gtQ_oneRow_eq]
@@ -86,7 +86,8 @@ theorem gtGP_two_normalized (q : R) (h : PochhammerUnits q)
   simp only [sub_zero, h₁, h₂, h₃, Int.toNat_natCast] at hn
   simp only [← gtInvPoch_nat] at hn
   convert hn using 1
-  ring
+  · rfl
+  · ring
 
 end
 

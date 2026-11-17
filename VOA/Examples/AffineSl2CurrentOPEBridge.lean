@@ -18,6 +18,8 @@ Thus a concrete free-field triple does not have to construct a representation of
 Lie algebra by hand: the three current OPEs are the only nonformal commutator input.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA
 
 open Module (End)

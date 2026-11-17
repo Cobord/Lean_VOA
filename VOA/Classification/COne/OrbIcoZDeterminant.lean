@@ -75,7 +75,7 @@ theorem det_fin_four_formula {R : Type*} [CommRing R] (m : Matrix (Fin 4) (Fin 4
 
 theorem zp_det4PL (m : Fin 4 → Fin 4 → PL) :
     zp (det4PL m) = Matrix.det (fun i j => zp (m i j)) := by
-  rw [det_fin_four_formula]
+  rw [det_fin_four_formula (fun i j => zp (m i j) : Matrix (Fin 4) (Fin 4) (Polynomial ℂ))]
   simp only [det4PL, zp_paddL, zp_pmulL, zp_pscaleL, zp]
   simp only [Rat.cast_neg, Rat.cast_one, Polynomial.C_neg, Polynomial.C_1]
   ring

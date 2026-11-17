@@ -12,6 +12,8 @@ Transpose opposite-index currents while interchanging E and F. This is a
 bilinear algebraic dual: no complex conjugation is present. Both scalar
 parameters are preserved, as is the self-adjoint degree operator.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 noncomputable section
@@ -43,7 +45,6 @@ theorem dualMode_comm (k h : ℂ) (a b : Fin 3) (m n : ℤ) :
   intro v
   have hc := congrArg (fun T : End ℂ (Verma k h) => f (T v))
     (mode_comm k h (adjointColour b) (adjointColour a) (-n) (-m))
-  dsimp only at hc
   simp only [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,LinearMap.add_apply,
     LinearMap.sum_apply,LinearMap.smul_apply,map_sub,map_add,map_sum,map_smul] at hc
   change f (mode k h (adjointColour b) (-n) (mode k h (adjointColour a) (-m) v))-
@@ -73,7 +74,6 @@ theorem dualDegree_comm (k h : ℂ) (a : Fin 3) (n : ℤ) :
   intro v
   have hc := congrArg (fun T : End ℂ (Verma k h) => f (T v))
     (degree_mode_comm k h (adjointColour a) (-n))
-  dsimp only at hc
   simp only [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,
     LinearMap.smul_apply,map_sub,map_smul,Int.cast_neg] at hc
   change f (mode k h (adjointColour a) (-n) (rho k h _ v))-

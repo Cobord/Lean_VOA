@@ -158,12 +158,12 @@ theorem finsum_pow_mul_eq_lambert (s : ℕ) (F : ℕ → ℂ) (hF0 : F 0 = 0)
     ∑ᶠ p : ℕ × ℕ, ((p.1 : ℂ)) ^ s * F (p.1 * p.2) = ∑ᶠ n : ℕ, lambertCoeff s n * F n := by
   have hkey := finsum_prod_eq_finsum_divisorsAntidiagonal
     (fun d j => ((d : ℂ)) ^ s * F (d * j)) hfin
-    (fun d j h => by dsimp only; rw [h, hF0, mul_zero])
+    (fun d j h => by (try dsimp only); rw [h, hF0, mul_zero])
   refine hkey.trans ?_
   refine finsum_congr (fun n => ?_)
   rw [lambertCoeff, Finset.sum_mul]
   exact Finset.sum_congr rfl
-    (fun p hp => by dsimp only; rw [(Nat.mem_divisorsAntidiagonal.mp hp).1])
+    (fun p hp => by (try dsimp only); rw [(Nat.mem_divisorsAntidiagonal.mp hp).1])
 
 /-! ## The recursion's right-hand side in Lambert form -/
 

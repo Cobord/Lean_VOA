@@ -62,7 +62,7 @@ theorem productChannelFaithful_of_coefficient_separation (hV : StronglyRational 
   have hs := hsep P₁ P₂ P₃ P₄ i₁ i₂ i₃ i₄ t hf
   funext j
   apply formalProductTensorMap_injective (iR j)
-  simpa only [map_zero] using hs j
+  simpa only [map_zero] using! hs j
 
 theorem associativityBoth_of_coefficient_separation (hV : StronglyRational W)
     (R : ι → LWModule W) (hR : CompleteIrredundantFamily R)

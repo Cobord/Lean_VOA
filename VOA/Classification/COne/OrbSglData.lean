@@ -104,7 +104,7 @@ theorem wsP_L2 : (P8).L 2 wsP = 0 := by
 theorem virWord_mem {V : Type*} [AddCommGroup V] [Module ℂ V] (W : VertexOperatorAlgebra V)
     {x : V} {d : ℤ} (hx : x ∈ W.grading d) :
     ∀ ks : List ℕ, virWord W ks x ∈ W.grading (d + (wWt ks : ℤ))
-  | [] => by simpa using hx
+  | [] => by simpa [virWord, wWt] using hx
   | k :: ks => by
     have h := virWord_mem W hx ks
     have h2 := W.grading_mode W.conformalVector W.conformal_mem _ h (-(k : ℤ) - 1 + 1)

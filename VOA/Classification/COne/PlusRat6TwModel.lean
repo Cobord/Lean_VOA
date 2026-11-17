@@ -67,8 +67,8 @@ theorem GT_span (d : ℕ) {x : FockT (rank (latP m)) ⊗[ℂ] ℂ} (hx : x ∈ G
     apply Submodule.smul_mem
     rw [MvPolynomial.as_sum (y : FockT (rank (latP m))), TensorProduct.sum_tmul]
     refine Submodule.sum_mem _ (fun s hs => ?_)
-    rw [show MvPolynomial.monomial s (MvPolynomial.coeff s (y : FockT (rank (latP m)))) =
-        MvPolynomial.coeff s (y : FockT (rank (latP m))) • MvPolynomial.monomial s (1 : ℂ) by
+    rw [show MvPolynomial.monomial s ((y : FockT (rank (latP m))).coeff s) =
+        (y : FockT (rank (latP m))).coeff s • MvPolynomial.monomial s (1 : ℂ) by
       rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one], ← TensorProduct.smul_tmul']
     apply Submodule.smul_mem
     exact Submodule.subset_span ⟨s, hy (MvPolynomial.mem_support_iff.mp hs), rfl⟩

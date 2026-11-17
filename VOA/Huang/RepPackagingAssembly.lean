@@ -124,7 +124,7 @@ theorem realization_isRep (P : PivotalStructure M.C) (hdual : M.RibbonDualInput)
     IsRepRealization (M.realization D hD P hdual hS hqdim htensor hsym) := by
   refine ⟨M.F, M.stronglyRational, ?_⟩
   letI := monoidalCategoryOfStronglyRational_pbw M.F M.stronglyRational
-  refine ⟨M.E.functor, inferInstance, M.additive, M.linearFunctor, M.monoidalFunctor, ?_, ?_, ?_⟩
+  refine ⟨M.E.functor, M.E.isEquivalence_functor, M.additive, M.linearFunctor, M.monoidalFunctor, ?_, ?_, ?_⟩
   · exact M.braiding_eq
   · exact map_modelTwist M.E
   · exact fun a => ⟨modelSimpleIso M.E D a⟩

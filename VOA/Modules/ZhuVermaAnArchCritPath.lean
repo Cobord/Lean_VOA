@@ -145,7 +145,9 @@ end CritPathData
 
 /-! ## The single cleanest headline conditional theorem -/
 
-/-- **`zhuBijection_critpath` — the full `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4, on the
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_critpath` — the full `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4, on the
 minimal critical path.**
 
 Given **exactly** the minimal remaining hypothesis set —
@@ -190,7 +192,9 @@ theorem zhuBijection_critpath_of_bottomSurvives {W : VertexOperatorAlgebra 𝒱}
     Function.Bijective (forwardMap W) :=
   InducedAssignment.zhuBijection_of_bottomSurvives B hall hirr hgen
 
-/-- **Critical path via generation-from-bottom.** Identical content, with the injective half
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**Critical path via generation-from-bottom.** Identical content, with the injective half
 supplied as the canonical `L(U)`-family `F` + functoriality `hiso` + the lifting family `R`
 (`RealizesIrrFamily`, the universal property of `M(U)`). -/
 theorem zhuBijection_critpath_of_genFromBottom {W : VertexOperatorAlgebra 𝒱}

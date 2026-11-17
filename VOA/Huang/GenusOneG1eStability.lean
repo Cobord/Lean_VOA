@@ -110,7 +110,7 @@ omit [DecidableEq ι] in
 theorem lab_injective (W : VertexOperatorAlgebra 𝒱) : Function.Injective (lab W ι) := by
   intro i j h
   unfold lab at h
-  exact ULift.ext _ _ ((Fintype.equivFin ι).symm.injective h)
+  exact ULift.ext ((Fintype.equivFin ι).symm.injective h)
 
 /-- **One-point S-closure for the intertwiners `(M_y / M_k M_y)` of a `ModularData` family**
 (`insertionSClosure_of_stronglyRational_pbw`, re-indexed): for every outer intertwiner `Y` there

@@ -46,6 +46,9 @@ namespace VOA
 
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## The Witt algebra as operators on `ℤ →₀ ℂ` -/
 
 /-- The Witt algebra `𝔚`, carrier `ℤ →₀ ℂ`: finite `ℂ`-combinations of the generators

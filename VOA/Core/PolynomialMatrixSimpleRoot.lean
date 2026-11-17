@@ -107,7 +107,7 @@ theorem adjugate_tangent_adjugate (M : Matrix ι ι R[X]) (z : R)
       M.det.derivative.eval z • evaluate M.adjugate z := by
   have hp := (evaluate_adjugate_products M z hz).2
   have he := congrArg (fun A => tangent A z) (Matrix.mul_adjugate M)
-  dsimp only at he
+  try dsimp only at he
   rw [tangent_mul] at he
   have hs : tangent (M.det • (1 : Matrix ι ι R[X])) z =
       M.det.derivative.eval z • (1 : Matrix ι ι R) := by

@@ -65,7 +65,8 @@ theorem mk_primary_Lneg {a y : V} {d : ℤ}
         (mk W (W.smul a k y)) +
       ((15 * ((n : ℤ) - 1) + k : ℤ) : ℂ) • mk W (W.smul a (k - n) y) := by
   have hg : W.smul a k y ∈ W.grading (15 + d - k) := by
-    convert W.grading_mode a ha y hy k using 2; ring
+    convert W.grading_mode a ha y hy k using 2
+    all_goals first | rfl | ring
   have he := L_smul_primary ha hp (-(n : ℤ)) k y
   have he' := congrArg (mk W) he
   rw [map_add, map_smul, mk_L_neg W hg n hn] at he'

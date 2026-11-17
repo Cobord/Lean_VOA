@@ -28,22 +28,22 @@ theorem radical_mode_zero (ρ : CurrentModule bracketTable V) (w : V)
   have hmid (t : ℕ) (ht : a + b ≤ t) : ρ.op (F 1) t w = 0 := by
     have hprev : a ≤ t - b := by omega
     have hz₀ : ρ.op (F 0) (t - b) w = 0 := by
-      simpa [simpleF_zero] using h₀ (t - b) hprev
+      simpa [simpleF_zero] using! h₀ (t - b) hprev
     have hz₁ : ρ.op (leviF 0) b w = 0 := by
-      simpa [simpleF_levi_one] using h₁ b (le_refl b)
+      simpa [simpleF_levi_one] using! h₁ b (le_refl b)
     have hbr := levi_comm_one ρ b (t - b) w
-    simpa [hz₀, hz₁, Nat.add_sub_of_le (by omega : b ≤ t)] using hbr.symm
+    simpa [hz₀, hz₁, Nat.add_sub_of_le (by omega : b ≤ t)] using! hbr.symm
   intro hs
   fin_cases i
-  · exact h₀ s (by simpa [F, simpleF] using hs)
-  · exact hmid s (by simpa using hs)
-  · have hs' : a + b + c ≤ s := by simpa using hs
+  · exact h₀ s (by simpa [F, simpleF] using! hs)
+  · exact hmid s (by simpa using! hs)
+  · have hs' : a + b + c ≤ s := by simpa using! hs
     have hprev : a + b ≤ s - c := by omega
     have hz₂ : ρ.op (leviF 1) c w = 0 := by
-      simpa [simpleF_levi_two] using h₂ c (le_refl c)
+      simpa [simpleF_levi_two] using! h₂ c (le_refl c)
     have hbr := levi_comm_two ρ c (s - c) w
     simpa [hmid (s - c) hprev, hz₂,
-      Nat.add_sub_of_le (by omega : c ≤ s)] using hbr.symm
+      Nat.add_sub_of_le (by omega : c ≤ s)] using! hbr.symm
 
 /-- The radical current operators commute as elements of the endomorphism ring. -/
 theorem radicalOp_comm (ρ : CurrentModule bracketTable V)

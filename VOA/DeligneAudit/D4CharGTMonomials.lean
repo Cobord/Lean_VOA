@@ -64,13 +64,12 @@ def gtPoly (q : R) : (N : ℕ) → (Fin N → ℤ) → AddMonoidAlgebra R (ℕ �
 
 /-- The coefficient of a branch is a translated coefficient of its shorter row. -/
 theorem gtPoly_coeff_succ (q : R) (N : ℕ) (lam : Fin (N + 1) → ℤ) (a : ℕ →₀ ℤ) :
-    gtPoly q (N + 1) lam a = ∑ μ ∈ gtRows lam,
-      gtPsi q lam μ * gtPoly q N μ
+    (gtPoly q (N + 1) lam).coeff a = ∑ μ ∈ gtRows lam,
+      gtPsi q lam μ * (gtPoly q N μ).coeff
         (-Finsupp.single N ((∑ i, lam i) - ∑ i, μ i) + a) := by
   classical
-  change (gtPoly q (N + 1) lam).coeff a = _
-  simp only [gtPoly, AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
-  simp only [AddMonoidAlgebra.coeff, AddMonoidAlgebra.single_mul_apply]
+  simp only [gtPoly, AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply,
+    AddMonoidAlgebra.coeff_single_mul_apply]
 
 /-- A formal Laurent variable over any coefficient ring. -/
 def gtLaurentVariable (R : Type*) [CommRing R] (i : ℕ) :

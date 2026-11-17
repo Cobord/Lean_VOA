@@ -33,11 +33,11 @@ theorem rectangular_source_bound (h : CV3Rel R w ε ν ϱ 0)
   have hx : ∀ t, (parts ϱ.1 ν.1 ε.1).length ≤ t → R.op 3 t w = 0 := by
     intro t ht
     apply trunc_of_cvrel h.first
-    simpa only [Nat.add_zero] using ht
+    simpa only [Nat.add_zero] using! ht
   have hz : ∀ t, (parts ϱ.2 ν.2 ε.2).length ≤ t → R.op 4 t w = 0 := by
     intro t ht
     apply trunc_of_cvrel h.second
-    simpa only [Nat.add_zero] using ht
+    simpa only [Nat.add_zero] using! ht
   have hy : ∀ t, (parts ϱ.1 ν.1 ε.1).length + (parts ϱ.2 ν.2 ε.2).length +
       ([] : List ℕ).length ≤ t → R.op 5 t w = 0 := by
     intro t ht
@@ -48,9 +48,9 @@ theorem rectangular_source_bound (h : CV3Rel R w ε ν ϱ 0)
     (parts ϱ.1 ν.1 ε.1) (parts ϱ.2 ν.2 ε.2) [] hx hy hz (by
       intro p q r s hs
       apply orderedCoeff_all_small_mem h hε p q r s
-      simpa only [clippedSum, List.map_nil, List.sum_nil, Nat.add_zero] using hs)
+      simpa only [clippedSum, List.map_nil, List.sum_nil, Nat.add_zero] using! hs)
   refine ⟨hb.1, ?_⟩
-  simpa only [parts, starWeight_parts, List.map_nil, List.prod_nil, mul_one] using hb.2
+  simpa only [parts, starWeight_parts, List.map_nil, List.prod_nil, mul_one] using! hb.2
 
 end
 
@@ -69,7 +69,7 @@ theorem sharpRectangularBases : SharpRectangularBases := by
   have hspan : currentCyclic (cvUnivRep ε ν ϱ 0) (cv_wU ε ν ϱ 0) = ⊤ :=
     cv_span_top ε ν ϱ 0
   obtain ⟨hFD, hdim⟩ := rectangular_source_bound (cvUniv_rel ε ν ϱ 0) hε hspan
-  exact ⟨hFD, by simpa only [cvCount, pow_zero, mul_one] using hdim⟩
+  exact ⟨hFD, by simpa only [cvCount, pow_zero, mul_one] using! hdim⟩
 
 end
 

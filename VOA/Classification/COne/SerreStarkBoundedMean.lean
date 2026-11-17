@@ -107,7 +107,7 @@ theorem exists_nf_bound {N : ℕ} (h4 : 4 ∣ N) (hN : 0 < N) {f : ℂ → ℂ}
   have hmem : g * q.out ∈ H := by
     have : (QuotientGroup.mk (q.out) : SL(2, ℤ) ⧸ H) = QuotientGroup.mk g⁻¹ := q.out_eq
     have := H.inv_mem (QuotientGroup.eq.1 this)
-    simpa using this
+    simpa using! this
   have hg : g = (g * q.out) * (q.out)⁻¹ := by group
   have hδw := im_mobius_pos (q.out)⁻¹ hw0
   rw [hg, mobius_mul _ _ hw0, nf_mobius h4 hf hmem hδw]

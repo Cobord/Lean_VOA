@@ -262,7 +262,7 @@ theorem mem_span_of_genEigen (hG : SerreStarkGenEigen24) {N : ℕ} (hN : 0 < N) 
     exact hG N hN h24 χ μ x hx
   · simp
   · intro x y hx hy
-    simpa using Submodule.add_mem _ hx hy
+    simpa using! Submodule.add_mem _ hx hy
 
 /-- Serre–Stark's `θ_{ψ,t}` (with `4 r² t ∣ N`) lie in the span of the `θ_{n₀,r,t}`. -/
 theorem span_charThetaSet_le_thetaSpan {N : ℕ} (hN : 0 < N) :
@@ -282,7 +282,7 @@ theorem span_charThetaSet_le_thetaSpan {N : ℕ} (hN : 0 < N) :
   refine Submodule.sum_mem _ fun j hj => Submodule.smul_mem _ _ (Submodule.subset_span ?_)
   have hp : ((j : ℤ), r, t) ∈ thetaIndex N := by
     rw [mem_thetaIndex_iff hN]
-    exact ⟨by positivity, by simpa using Finset.mem_range.1 hj, hr, ht, hdiv⟩
+    exact ⟨by positivity, by simpa using! Finset.mem_range.1 hj, hr, ht, hdiv⟩
   exact ⟨⟨_, hp⟩, rfl⟩
 
 /-- Under the residual, `M_{1/2}(Γ₁(N), θ)` is spanned by theta series (`24 ∣ N`). -/

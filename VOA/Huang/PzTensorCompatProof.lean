@@ -45,7 +45,7 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱] {W : VertexOperat
 
 theorem one_add_X_mul_geom : (1 + X : PowerSeries ℂ) * geom (-1) = 1 := by
   have := one_sub_mul_geom (-1)
-  simpa [sub_eq_add_neg] using this
+  simpa [sub_eq_add_neg] using! this
 
 theorem one_add_X_mul_binPS (N : ℤ) : (1 + X : PowerSeries ℂ) * binPS N = binPS (N + 1) := by
   unfold binPS
@@ -521,7 +521,7 @@ theorem coeffCompat_holds (hV : StronglyRational W) : CoeffCompat W := by
   have hw : ∀ i : ℕ, mode (P₃.isMod.YM a) i w₃ ∈ P₃.isMod.weight (α₃ + γ - i - 1) := by
     intro i
     have := VOA.mode_mem_weight P₃.isMod ha h₃ i
-    simpa using this
+    simpa using! this
   -- (iii) the weight bound
   obtain ⟨Sw, hSw⟩ : ∃ Sw : ℕ, ∀ s : ℕ, Sw ≤ s → ∀ i : ℕ,
       coefFun Y₁ Y₂ f (mode (P₃.isMod.YM a) i w₃) (α₃ + γ - i - 1) h₄
@@ -569,15 +569,12 @@ theorem coeffCompat_holds (hV : StronglyRational W) : CoeffCompat W := by
       (h₄ - γ + q + 1) (n - γ + ell + 1 - s) k x) ell (Nf := Nf) (K := K)
     (le_trans (le_max_left _ _) (le_max_left _ _))
     (fun s i hi => by
-      simp only
       rw [hNf ell le_rfl i hi]
       exact coefFun_eq_zero_of Y₁ Y₂ 0 w₃ α₃ _ _ k x (Or.inr (Or.inr (Or.inr rfl))))
   have cY := Ypart (fun s i => coefFun Y₁ Y₂ f (mode (P₃.isMod.YM a) i w₃) (α₃ + γ - i - 1)
       h₄ (n - γ + ell + 1 - s) k x) ell (N₃ := N₃) (K := K)
     (fun s hs i => by
-      simp only
       rw [hSw s (by omega) i, Pi.zero_apply])
-  simp only at cX cY
   rw [hL, cR]
   simp only [hR, mul_sub, Finset.sum_sub_distrib]
   rw [← cX, ← cY]

@@ -70,7 +70,7 @@ theorem loggps_coeff_zero (S : Finset ℂ) (c₀ : ℂ) (A : ℂ → Polynomial 
     simp only [B,Polynomial.coeff_smul,smul_eq_mul,mul_comm]
   have hCdegree : ∀ w,(C w).natDegree≤K := by
     intro w
-    simpa only [C,Polynomial.natDegree_taylor] using hBdegree w
+    simpa only [C,Polynomial.natDegree_taylor] using! hBdegree w
   have hCsupp : ∀ w,C w≠0 → ∃ h∈S,∃ n : ℕ,w=h+n := by
     intro w hw
     apply hsupp w
@@ -97,10 +97,10 @@ theorem loggps_coeff_zero (S : Finset ℂ) (c₀ : ℂ) (A : ℂ → Polynomial 
   have hC0 : C w=0 := by
     apply Polynomial.ext
     intro k
-    simpa only [Polynomial.coeff_zero] using hcore w k
+    simpa only [Polynomial.coeff_zero] using! hcore w k
   have hB0 : B w=0 := by
     apply (Polynomial.taylor_injective (Real.log (R/2) : ℂ))
-    simpa only [C,map_zero] using hC0
+    simpa only [C,map_zero] using! hC0
   have hn : ((R/2 : ℝ) : ℂ)^(w-c₀)≠0 := by
     exact (Complex.cpow_ne_zero_iff).mpr (Or.inl (by exact_mod_cast hq.ne'))
   have hA0 : A w=0 := (smul_eq_zero.mp hB0).resolve_left hn

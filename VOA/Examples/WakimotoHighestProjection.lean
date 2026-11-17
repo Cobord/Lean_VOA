@@ -13,6 +13,8 @@ highest-weight creation mode, including F_0. It proves that nonempty creation
 words have zero constant coefficient. This supplies the actual scalar
 projection for general two-parameter highest-weight pairings.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial
@@ -82,7 +84,6 @@ theorem currentWord_principal (k lam : ℂ) (w : List (Fin 3×ℤ)) :
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ WakFock => T (currentWord (J k lam) w 1))
         (principalD_J k lam an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply] at hc
       simp only [currentWord,Module.End.mul_apply,wordPrincipal,Int.cast_add,add_smul]

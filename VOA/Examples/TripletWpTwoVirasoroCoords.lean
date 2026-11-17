@@ -54,8 +54,9 @@ theorem oscN_pair_neg_vacuum_eq_ATwo (i j : ℕ) :
   have hc := sum_chargeCoord Ltwo (latP_posDef 2 (by norm_num)) alphaTwo alphaTwo
   rw [Fintype.sum_unique, latP_form_alpha] at hc
   norm_num at hc
-  have hc' : chargeCoord Ltwo alphaTwo aTwo * chargeCoord Ltwo alphaTwo aTwo = 4 := by
-    simpa using hc
+  have hc' : chargeCoord Ltwo alphaTwo aTwo * chargeCoord Ltwo alphaTwo aTwo = 4 :=
+    (by simpa using hc :
+      chargeCoord Ltwo alphaTwo default * chargeCoord Ltwo alphaTwo default = 4)
   rw [oscN_apply_neg (rank Ltwo) 1 aTwo (by omega),
     oscN_apply_neg (rank Ltwo) 1 aTwo (by omega), vacuumN, mul_one,
     ATwo, ATwo, vVar, vVar, Fintype.sum_unique]

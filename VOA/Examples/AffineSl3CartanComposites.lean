@@ -12,6 +12,8 @@ Colour deltas retain multiplicities in the gamma pair. A second finite
 normal-ordering boundary gives the linear gamma correction in the cubic
 product, needed for the Cartan-lowering relations.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

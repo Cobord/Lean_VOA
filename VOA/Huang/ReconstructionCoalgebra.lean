@@ -138,10 +138,10 @@ def conjLin (X Y : D) : RAlg ω →ₗ[ℂ] (ω.obj X ⊗ ω.obj Y ⟶ ω.obj X 
 /-- `ev_{X,Y}(a ⊗ b) = ext a X ⊗ ext b Y`. -/
 def evPair (X Y : D) : RAlg ω ⊗[ℂ] RAlg ω →ₗ[ℂ] (ω.obj X ⊗ ω.obj Y ⟶ ω.obj X ⊗ ω.obj Y) :=
   TensorProduct.lift (LinearMap.mk₂ ℂ (fun a b => extMor ω a X ⊗ₘ extMor ω b Y)
-    (fun a a' b => by dsimp only; rw [extMor_add, MonoidalPreadditive.add_tensor])
-    (fun t a b => by dsimp only; rw [extMor_smul, end_smul_tensor])
-    (fun a b b' => by dsimp only; rw [extMor_add, MonoidalPreadditive.tensor_add])
-    (fun t a b => by dsimp only; rw [extMor_smul, end_tensor_smul]))
+    (fun a a' b => by rw [extMor_add, MonoidalPreadditive.add_tensor])
+    (fun t a b => by rw [extMor_smul, end_smul_tensor])
+    (fun a b b' => by rw [extMor_add, MonoidalPreadditive.tensor_add])
+    (fun t a b => by rw [extMor_smul, end_tensor_smul]))
 
 @[simp] theorem evPair_tmul (X Y : D) (a b : RAlg ω) :
     evPair ω X Y (a ⊗ₜ b) = extMor ω a X ⊗ₘ extMor ω b Y := rfl
@@ -203,7 +203,7 @@ theorem evS_comul (a : RAlg ω) (p : F.ι × F.ι) :
 theorem evPair_comul (a : RAlg ω) (X Y : D) : evPair ω X Y (comulLin ω a) = conjTensor ω a X Y :=
   natural2_eq ω (T := fun X Y => evPair ω X Y (comulLin ω a)) (T' := fun X Y => conjTensor ω a X Y)
     (fun f g => evPair_natural ω _ f g) (fun f g => conjTensor_natural ω a f g)
-    (fun i j => by dsimp only; rw [← evS_apply ω _ (i, j), evS_comul]) X Y
+    (fun i j => by rw [← evS_apply ω _ (i, j), evS_comul]) X Y
 
 /-- The counit, as the scalar by which `ext a` acts on `ω 𝟙`. -/
 def counitLin : RAlg ω →ₗ[ℂ] ℂ where
@@ -239,8 +239,11 @@ def evS3 : RAlg ω ⊗[ℂ] (RAlg ω ⊗[ℂ] RAlg ω) ≃ₗ[ℂ]
 
 theorem evS3_tmul (a : RAlg ω) (t : RAlg ω ⊗[ℂ] RAlg ω) (p : F.ι × (F.ι × F.ι)) :
     evS3 ω (a ⊗ₜ t) p = (a p.1 ⊗ₘ evS ω t p.2 : _ ⟶ _) := by
-  rw [evS3, LinearEquiv.trans_apply, TensorProduct.congr_tmul, LinearEquiv.refl_apply]
-  exact piEndTensorEquiv_tmul _ _ a _ p
+  have h : TensorProduct.congr (LinearEquiv.refl ℂ (RAlg ω)) (evS ω) (a ⊗ₜ t) = a ⊗ₜ evS ω t := by
+    rw [TensorProduct.congr_tmul, LinearEquiv.refl_apply]
+  exact (congrArg (fun u => piEndTensorEquiv (fun i => ω.obj (F.simple i))
+      (fun p : F.ι × F.ι => ω.obj (F.simple p.1) ⊗ ω.obj (F.simple p.2)) u p) h).trans
+    (piEndTensorEquiv_tmul _ _ a _ p)
 
 theorem evS3_lTensor_comul (u : RAlg ω ⊗[ℂ] RAlg ω) (i j k : F.ι) :
     evS3 ω (comulLin ω |>.lTensor (RAlg ω) u) (i, (j, k)) =

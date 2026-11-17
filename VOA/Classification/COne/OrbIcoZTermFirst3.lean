@@ -20,6 +20,6 @@ theorem detTermFirst3_check :
 theorem detTermFirst3_sound : zp detTermFirst3 =
     (zp matrixEntry7_3 * zp commonMinor3) := by
   have hh := (zp_eq_of_trim detTermFirst3_check).symm
-  simpa [zp_pscaleL, zp_pmulL] using hh
+  simpa [zp_pscaleL, zp_pmulL] using! hh
 
 end VOA.Classification.COne.OrbIcoZ

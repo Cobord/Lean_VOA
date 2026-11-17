@@ -12,7 +12,7 @@ def linearEvaluation_relationAlgebra {R W : Type*}
     (f : R →ₗ[ℂ] W) : Subalgebra ℂ R where
   carrier := {P | ∀ Q, f Q = 0 → f (P * Q) = 0}
   zero_mem' := by intro Q hQ; simp
-  one_mem' := by intro Q hQ; simpa using hQ
+  one_mem' := by intro Q hQ; simpa using! hQ
   add_mem' := by
     intro P U hP hU Q hQ
     simp only [add_mul, map_add, hP Q hQ, hU Q hQ, add_zero]

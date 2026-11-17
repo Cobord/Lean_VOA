@@ -44,7 +44,7 @@ theorem kernel_ann_existsG (hC2 : C2Cofinite W) (A : WeakModule W M) (B : WeakMo
     simp only [List.mem_map, Vs, pairs, List.mem_filter, List.mem_flatMap, List.mem_range] at hz
     obtain ⟨v, ⟨p, ⟨⟨s, hs, hp⟩, hQ⟩, rfl⟩, hv⟩ := hz
     obtain ⟨t, ht, rfl⟩ := hp
-    exact hne s t (by simpa using hQ) (by omega) (by omega) (neg_eq_zero.mp hv)
+    exact hne s t (by simpa using! hQ) (by omega) (by omega) (neg_eq_zero.mp hv)
   have hann := kernel_annihilate hC2 A B P hP χ hk₀P hk₀0 hk₀ he hχk hχe hkL heL he0 hlow D hmid
     d hdD (annW a b L Vs) (WDeg_annW a b ha hb L Vs) (by
       intro y hy

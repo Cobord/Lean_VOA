@@ -33,9 +33,7 @@ def dg : ℤ × ℤ →+ ℤ := AddMonoidHom.fst ℤ ℤ + AddMonoidHom.snd ℤ 
 def diag : L2 →+* L := AddMonoidAlgebra.mapDomainRingHom ℚ dg
 
 theorem diag_emb (f : ℤ →+ ℤ × ℤ) (x : L) : diag (emb f x) = embL (dg.comp f) x := by
-  rw [diag, emb, embL, AddMonoidAlgebra.mapDomainRingHom_apply, AddMonoidAlgebra.mapDomainRingHom_apply,
-    AddMonoidAlgebra.mapDomainRingHom_apply]
-  exact (Finsupp.mapDomain_comp).symm
+  rw [diag, emb, embL, AddMonoidAlgebra.mapDomainRingHom_comp, RingHom.comp_apply]
 
 theorem map_diag_map_emb (f : ℤ →+ ℤ × ℤ) (F : PowerSeries L) :
     PowerSeries.map diag (PowerSeries.map (emb f) F) = PowerSeries.map (embL (dg.comp f)) F := by
@@ -44,8 +42,7 @@ theorem map_diag_map_emb (f : ℤ →+ ℤ × ℤ) (F : PowerSeries L) :
 theorem embL_id_eq (g : ℤ →+ ℤ) (hg : ∀ j, g j = j) (x : L) : embL g x = x := by
   have : g = AddMonoidHom.id ℤ := AddMonoidHom.ext hg
   subst this
-  rw [embL, AddMonoidAlgebra.mapDomainRingHom_apply]
-  exact Finsupp.mapDomain_id
+  rw [embL, AddMonoidAlgebra.mapDomainRingHom_id, RingHom.id_apply]
 
 theorem map_embL_id (g : ℤ →+ ℤ) (hg : ∀ j, g j = j) (F : PowerSeries L) :
     PowerSeries.map (embL g) F = F := by
@@ -135,7 +132,7 @@ theorem ev_Psi : PowerSeries.map ev1L Psi = 0 := by
     simp only [ev_negSign_mono]
     rw [negSign_eq, negSign_eq]
     split_ifs <;> first | ring1 | (exfalso; omega)
-  · intro j _ _; simp only; omega
+  · intro j _ _; (try simp only); omega
   · intro j hj
     rw [mem_fib hbox_pent] at hj ⊢
     rw [pentExp_one_sub]; exact hj

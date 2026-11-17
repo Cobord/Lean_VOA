@@ -235,15 +235,15 @@ theorem RgenRest_block_finsum (W : VertexOperatorAlgebra 𝒱) (n : ℕ) {K : �
   rw [ZhuHR.rangeSmul_eq_finsumZ
       (fun q : ℤ => ((q - ((n : ℤ) + (j : ℤ) + 1) + 1 - K : ℤ) : ℂ) * cbz ((K : ℤ) + n) q)
       (fun q => W.smul a q c) (-((n : ℤ) + (j : ℤ) + 1))
-      (fun q hq => by simp only; rw [cbz_apply_neg _ hq, mul_zero])
+      (fun q hq => by (try simp only); rw [cbz_apply_neg _ hq, mul_zero])
       (fun q hq => by
-        simp only; rw [cbz_lt (by positivity) (by push_cast at hq ⊢; omega), mul_zero])]
+        (try simp only); rw [cbz_lt (by positivity) (by push_cast at hq ⊢; omega), mul_zero])]
   rw [ZhuHR.rangeSmul_eq_finsumZ
       (fun q : ℤ => ((q - ((n : ℤ) + (j : ℤ) + 1) : ℤ) : ℂ) * cbz ((K : ℤ) + n) q)
       (fun q => W.smul a q c) (-((n : ℤ) + (j : ℤ) + 1) - 1)
-      (fun q hq => by simp only; rw [cbz_apply_neg _ hq, mul_zero])
+      (fun q hq => by (try simp only); rw [cbz_apply_neg _ hq, mul_zero])
       (fun q hq => by
-        simp only; rw [cbz_lt (by positivity) (by push_cast at hq ⊢; omega), mul_zero])]
+        (try simp only); rw [cbz_lt (by positivity) (by push_cast at hq ⊢; omega), mul_zero])]
   -- split the RHS combined finsum into the two single-bracket finsums.
   rw [show (∑ᶠ p : ℤ,
         ((p + 1 - K) * cbz ((K : ℤ) + n) (p + n + (j : ℤ) + 1)

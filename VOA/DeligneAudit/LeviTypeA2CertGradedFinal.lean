@@ -20,7 +20,7 @@ private theorem a2KeyEnum_first_le (p q : ℕ)
   simp only [a2KeyBox, Finset.mem_biUnion, Finset.mem_image] at hmem
   obtain ⟨a, ha, b, _, d, _, hkey⟩ := hmem
   have heq : a = (a2KeyEnum p q i).d₁ := by
-    simpa using congrArg A2RadicalKey.d₁ hkey
+    simpa using! congrArg A2RadicalKey.d₁ hkey
   have := Finset.mem_range.mp ha
   omega
 

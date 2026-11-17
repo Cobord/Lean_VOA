@@ -211,9 +211,15 @@ theorem cubicSign_U_low (k : ℤ) (hk : k = 6 ∨ k = 7 ∨ k = 8) :
   rw [cubicSign_act_U]
   change (V2m 4 four_ge_one).smul Uc k hV = 0
   rcases hk with rfl | rfl | rfl
-  · rw [inner_6]; simp [Z6, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson]
-  · rw [inner_7]; simp [Z7, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson]
-  · rw [inner_8]; simp [Z8, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson]
+  · rw [inner_6]
+    simp [Z6, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson,
+      latStateGen_zero_boson (latP 4) (-1 : ℤ), latStateGen_zero_boson (latP 4) (1 : ℤ)]
+  · rw [inner_7]
+    simp [Z7, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson,
+      latStateGen_zero_boson (latP 4) (-1 : ℤ), latStateGen_zero_boson (latP 4) (1 : ℤ)]
+  · rw [inner_8]
+    simp [Z8, evalSt_cons, sector, PlusUnitary.evRc_nil, latStateGen_zero_boson,
+      latStateGen_zero_boson (latP 4) (-1 : ℤ), latStateGen_zero_boson (latP 4) (1 : ℤ)]
 
 theorem cubicSign_omega_mode (p : ℤ) (x : (signSubmodule 4 four_ge_one).carrier) :
     ((mode (cubicSign.YM cubicModel.conformalVector) p x : (signSubmodule 4 four_ge_one).carrier) :
@@ -394,7 +400,8 @@ theorem cubicSign_FS : evalW cubicSign FS eS = 0 := by
     (Q := []) (by rw [cert_S]; rfl)
   rw [st_append, st_append, st_scaleR, st_scaleR] at h
   have h0 : st ([] : RawPoly ℕ) = 0 := by
-    simp [st, PlusUnitary.evRc_nil, sector, latStateGen_zero_boson]
+    simp [st, PlusUnitary.evRc_nil, sector, latStateGen_zero_boson,
+      latStateGen_zero_boson (latP 4) (0 : ℤ)]
   rw [h0] at h
   rw [← h]
   push_cast

@@ -106,7 +106,7 @@ theorem gMode_anmCirc_expand (n : ℕ) {Mc β : ℤ} {c d : 𝒱}
   rw [resHom_homogeneous W (0 : ℤ) ((n : ℤ) + 2) hc d]
   -- Simplify the index/range to `s = 0`, pole `n+2`.
   simp only [add_zero, Nat.cast_zero]
-  rw [map_sum, LinearMap.coeFn_sum, Finset.sum_apply]
+  rw [map_sum, LinearMap.sum_apply]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [map_smul, LinearMap.smul_apply]
   congr 1

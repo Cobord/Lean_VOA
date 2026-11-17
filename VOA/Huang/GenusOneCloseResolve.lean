@@ -128,11 +128,11 @@ theorem defect_pair_step (P : ι → LWModule W) (hB : InsertionTopBimoduleExist
     intro i _
     by_cases hi : (P i).h = b + W.centralCharge / 24
     · have ht := trace_mem_QSeriesAt (Y i) ⟨(P i).realized, (P i).isLow⟩ w
-      simpa only [hi, add_sub_cancel_right] using ht
+      simpa only [hi, add_sub_cancel_right] using! ht
     · rw [hY i hi, trace_zero_apply]
       exact (QSeriesAt b).zero_mem
   exact ⟨Y, hY, htrace, fun w => Cusp.support_sub_succ (hHb w) (htrace w)
-    (by simpa only [Finset.sum_apply] using he w)⟩
+    (by simpa only [Finset.sum_apply] using! he w)⟩
 
 /-- **Formal log elimination and spanning for a pair.** -/
 theorem defect_pair_resolve (P : ι → LWModule W) (hB : InsertionTopBimoduleExists A P)
@@ -150,7 +150,7 @@ theorem defect_pair_resolve (P : ι → LWModule W) (hB : InsertionTopBimoduleEx
     intro n
     induction n with
     | zero =>
-      refine ⟨fun w => by simpa using hGb w, 0, fun i hi => absurd rfl hi, fun w => ?_⟩
+      refine ⟨fun w => by simpa using! hGb w, 0, fun i hi => absurd rfl hi, fun w => ?_⟩
       have hz : (∑ i, trace ((0 : ∀ i, IntertwiningOperator A (P i).isMod (P i).isMod) i)) =
           0 := by
         apply LinearMap.ext
@@ -158,7 +158,7 @@ theorem defect_pair_resolve (P : ι → LWModule W) (hB : InsertionTopBimoduleEx
         rw [LinearMap.coe_sum, Finset.sum_apply]
         exact Finset.sum_eq_zero fun i _ => trace_zero_apply v
       rw [hz, sub_zero]
-      simpa using hHb w
+      simpa using! hHb w
     | succ n ih =>
       obtain ⟨hGn, Z, hZ, hHn⟩ := ih
       have hH' : IsDefectBlock A (H - ∑ i, trace (Z i)) (κ • G) :=
@@ -170,8 +170,8 @@ theorem defect_pair_resolve (P : ι → LWModule W) (hB : InsertionTopBimoduleEx
         have h := Cusp.support_shift (hGn w) 1 (fun k hk' => by
           have : k = 0 := by omega
           subst k
-          simpa using (mul_eq_zero.mp (hk w)).resolve_left hκ)
-        simpa using h
+          simpa using! (mul_eq_zero.mp (hk w)).resolve_left hκ)
+        simpa using! h
       · intro i hi
         change Z i + Y i ≠ 0 at hi
         by_cases hz : Z i = 0

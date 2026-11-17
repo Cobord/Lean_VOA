@@ -201,9 +201,13 @@ theorem eq_deltaDeriv_zero_of_mulBySub_eq_zero {f : FormalDist₂ 𝒲} (hf : mu
             show m - -(k : ℤ) + 1 = m - (-(k : ℤ) - 1) from by ring,
             show n + -(k : ℤ) - 1 = n + (-(k : ℤ) - 1) from by ring]
   ext m n
-  rw [hgen (m + 1) m n, deltaDeriv_apply]
-  simp only [Finset.range_zero, Finset.prod_empty, one_smul, Nat.cast_zero]
-  rw [show m - (m + 1) = (-1 : ℤ) from by ring, show n + (m + 1) = m + n + 1 + 0 from by ring]
+  calc f m n = f (m - (m + 1)) (n + (m + 1)) := hgen (m + 1) m n
+    _ = f (-1) (m + n + 1 + ((0 : ℕ) : ℤ)) := by
+        rw [show m - (m + 1) = (-1 : ℤ) from by ring,
+          show n + (m + 1) = m + n + 1 + ((0 : ℕ) : ℤ) from by push_cast; ring]
+    _ = (∏ i ∈ Finset.range 0, (-m - 1 - (i : ℤ))) • f (-1) (m + n + 1 + ((0 : ℕ) : ℤ)) := by
+        rw [Finset.range_zero, Finset.prod_empty, one_smul]
+    _ = deltaDeriv 0 (fun n => f (-1) n) m n := rfl
 
 /-- **Existence** half of Proposition 5.1.2: if `(z₁-z₂)ᴺ f = 0` then `f` is a finite sum
 `∑_{j<N} cⱼ · ∂ʲδ(z₁/z₂)`. Proven by induction on `N`, peeling off the top term

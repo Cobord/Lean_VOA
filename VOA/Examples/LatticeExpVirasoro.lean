@@ -526,15 +526,15 @@ theorem Trec_Yemα_DCovariant (m : ℤ) : Reconstruction.DCovariant Trec (Yemα 
         map_add (Yemα m (s + 1)) y1 y2]
       exact (smul_add _ _ _).symm
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero]; simp
       | add g1 g2 h1 h2 =>
           erw [TensorProduct.tmul_add]
           simp only [map_add, h1, h2]
           exact (smul_add _ _ _).symm
       | single k a =>
-          rw [(Finsupp.smul_single_one k a).symm,
-            show (Finsupp.single k 1 : LatGrp) = eVec k from rfl]
+          rw [show (AddMonoidAlgebra.single k a : LatGrp) = a • eVec k by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, map_smul, Trec_Yemα_on_state]
           rw [← Int.cast_smul_eq_zsmul ℂ (s + 1) (Yemα m (s + 1) (p ⊗ₜ[ℂ] eVec k)),
             ← Int.cast_smul_eq_zsmul ℂ (s + 1) (a • Yemα m (s + 1) (p ⊗ₜ[ℂ] eVec k)), smul_comm]

@@ -14,6 +14,8 @@ The computations retain the central operator K throughout. They therefore apply
 to the actual first-order modes, not just to a formal substitution into a scalar
 Gram determinant. Only the Virasoro commutators and vacuum annihilation are used.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirDeformModes
 open Module (End)
 open VertexOperatorAlgebra Deform
@@ -168,7 +170,7 @@ theorem leeYang_simple_singular4 :
   simp only [LeeYang.leeYangSingular, map_add, map_smul] at h
   simp only [LeeYang.L2L2vac, LeeYang.L4vac, ← VirModule.virasoroVOA_L_eq_Lop,
     VirQuotForm.mkQ_L] at h
-  simpa only [neg_smul, sub_eq_add_neg] using h
+  simpa only [neg_smul, sub_eq_add_neg] using! h
 
 /-- Taylor evaluation of the actual weight-four singular polynomial at the
 Lee–Yang central charge. Its derivative is −55, so it detects every nonzero
@@ -225,6 +227,6 @@ theorem leeYang_exists_fixed_central_modes
       A.L = normalizedL D β ∧ A.central = LeeYang.leeYangC • 1 := by
   obtain ⟨α, β, A, ha, hb, hL, hK⟩ := virasoroSimple_exists_normalizedData _ D hD
   have hz := leeYang_actual_central_variation_zero D hD α β ha hb
-  exact ⟨β, A, hL, by simpa only [hz, zero_smul, add_zero] using hK⟩
+  exact ⟨β, A, hL, by simpa only [hz, zero_smul, add_zero] using! hK⟩
 
 end VOA.VirDeformModes

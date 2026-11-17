@@ -25,7 +25,7 @@ theorem monoMap_shift_graded (m : ℕ) (b : Bool) (k : ℕ) (w : Fin 9 → ℤ) 
   rw [← Int.cast_smul_eq_zsmul ℂ] at hh
   have hc := (Submodule.smul_mem_iff
     (MvPolynomial.weightedHomogeneousSubmodule ℂ (modeWeight m w t) (n + 0 + t*k)) hn).mp hh
-  simpa only [add_zero] using hc
+  simpa only [add_zero] using! hc
 
 /-- Every arbitrary plain-shift word has its exact whole-source multidegree. -/
 theorem shifted_seed_graded (m : ℕ) (j : AllM.SeedIndex m) (modes : List ℕ)
@@ -52,7 +52,7 @@ def sourceWord (m : ℕ) (j : AllM.SeedIndex m) (modes : List ℕ) (l : List (Fi
 theorem sourceWord_pbw (m : ℕ) (j : AllM.SeedIndex m) (modes : List ℕ) (l : List (Fin 18 × ℕ)) :
     (sourceWord m j modes l).IsWeightedHomogeneous (modeWeight m (fun _ => 1) 0) j.val.2.1 := by
   apply word_pbw_graded
-  simpa only [zero_mul,add_zero,mul_one] using shifted_seed_graded m j modes (fun _ => 1) 0
+  simpa only [zero_mul,add_zero,mul_one] using! shifted_seed_graded m j modes (fun _ => 1) 0
 
 theorem sourceWord_current (m : ℕ) (j : AllM.SeedIndex m) (modes : List ℕ)
     (l : List (Fin 18 × ℕ)) :
@@ -61,7 +61,7 @@ theorem sourceWord_current (m : ℕ) (j : AllM.SeedIndex m) (modes : List ℕ)
   have hp := shifted_seed_graded m j modes (fun _ => 0) 1
   simp only [mul_zero,one_mul,zero_add] at hp
   have hh := word_current_graded ℂ m l hp
-  simpa only [Nat.cast_add] using hh
+  simpa only [Nat.cast_add] using! hh
 
 theorem category_zero_iff : ∀ a : Fin 18, category a = 0 ↔ 10 ≤ a.val := by decide +kernel
 
@@ -73,11 +73,13 @@ theorem c_sourceWord_degree (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = tru
   have hcolor : cWeight (sourceColor j.val.1) = 1 := by rw [hj]; rfl
   simp only [hcolor,mul_one,zero_mul,add_zero] at hp
   have hh := word_graded ℂ m cWeight 0 (fun _ => -1) l (fun x hx i => ?_) hp
-  · convert hh using 1
-    simp [wordGrade,sub_eq_add_neg]
+  · have he : (j.val.2.1 : ℤ) + wordGrade (fun _ => -1) 0 l = (j.val.2.1 : ℤ) - l.length := by
+      simp [wordGrade,sub_eq_add_neg]
+    rw [he] at hh
+    exact hh
   · rcases contact_c_rule x.1 i ((category_zero_iff x.1).mp (hl x hx)) with hz | hw
     · exact Or.inl hz
-    · exact Or.inr (by simpa only [sub_eq_add_neg] using hw)
+    · exact Or.inr (by simpa only [sub_eq_add_neg] using! hw)
 
 /-- More contacts than original C factors kill the entire source. -/
 theorem c_sourceWord_too_many_contacts (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = true)
@@ -86,7 +88,7 @@ theorem c_sourceWord_too_many_contacts (m : ℕ) (j : AllM.SeedIndex m) (hj : j.
   apply graded_negative_zero (fun x => ?_) (c_sourceWord_degree m j hj modes l hl)
   · exact sub_neg.mpr (by exact_mod_cast hlen)
   · change 0 ≤ cWeight x.1 + 0*x.2.val
-    simpa only [zero_mul,add_zero] using cWeight_nonneg x.1
+    simpa only [zero_mul,add_zero] using! cWeight_nonneg x.1
 
 theorem u_sourceWord_axis_degree (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = false)
     (modes : List ℕ) (l : List (Fin 18 × ℕ)) (hl : ∀ x ∈ l, category x.1 = 1) (d : Fin 3) :
@@ -98,7 +100,7 @@ theorem u_sourceWord_axis_degree (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 
   simp only [hcolor,mul_zero,zero_mul,add_zero] at hp
   have hh := word_graded ℂ m (bitWeight d) 0 (axisIncrement d) l
     (fun x hx i => negative_bit_rule x.1 d i ((category_one_iff x.1).mp (hl x hx))) hp
-  simpa only [zero_add] using hh
+  simpa only [zero_add] using! hh
 
 /-- Each negative-root direction is individually bounded by the original U power. -/
 theorem u_sourceWord_too_many_axis (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = false)
@@ -109,7 +111,7 @@ theorem u_sourceWord_too_many_axis (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.
     (u_sourceWord_axis_degree m j hj modes l hl d) (sourceWord_pbw m j modes l) hne
   · omega
   · change bitWeight d x.1 + 0*x.2.val ≤ 1 + 0*x.2.val
-    simpa only [zero_mul,add_zero] using bitWeight_le_one d x.1
+    simpa only [zero_mul,add_zero] using! bitWeight_le_one d x.1
 
 /-- A C source contributes to C degree zero only after exactly r contacts. -/
 theorem c_sourceWord_component_zero (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 = true)

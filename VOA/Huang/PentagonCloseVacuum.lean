@@ -57,9 +57,9 @@ theorem rightMode_vacuum_eq_zero (X : Ordinary W) (x : X.carrier) {n : ℂ}
     (F X vacuumObject).intertwiner.val n x W.vacuum = 0 := by
   have h := congrArg (fun f : tensorObj F X vacuumObject ⟶ tensorObj F X vacuumObject =>
     f.val ((F X vacuumObject).intertwiner.val n x W.vacuum)) (rightUnitor F X).hom_inv_id
-  simp only [Ordinary.comp_apply, rightUnitor_intertwiner, Ordinary.id_apply,
-    skew_moduleIntertwiner_vacuum_eq_zero X x hn, map_zero] at h
-  exact h.symm
+  have e : (rightUnitor F X).hom.val ((F X vacuumObject).intertwiner.val n x W.vacuum) = 0 :=
+    (rightUnitor_intertwiner F X n x W.vacuum).trans (skew_moduleIntertwiner_vacuum_eq_zero X x hn)
+  exact h.symm.trans ((congrArg (rightUnitor F X).inv.val e).trans (map_zero _))
 
 theorem vacuum_mem_weight_zero : (W.vacuum : V) ∈ (vacuumObject (W := W)).isMod.weight 0 := by
   change W.vacuum ∈ adjWeight W 0
@@ -174,8 +174,11 @@ theorem evalAssoc_vacuum_scalar (X Y : Ordinary W) {α γ δ : ℂ} {x : X.carri
     simp
   have hiter (c : ℝ) (h0 : 0 < c) (h1 : c < 1) :
       iterateEvaluation F I (dc c h0 h1) = ∑' j : ℕ, A j * (c : ℂ) ^ j := by
-    rw [iterateEvaluation, ← hinj.tsum_eq (hsupp c h0 h1)]
-    exact tsum_congr (hterm c h0 h1)
+    calc iterateEvaluation F I (dc c h0 h1)
+        = ∑' w : ℂ, iterateWeightTerm F I (dc c h0 h1) w := rfl
+      _ = ∑' j : ℕ, iterateWeightTerm F I (dc c h0 h1) (α + j) :=
+        (hinj.tsum_eq (hsupp c h0 h1)).symm
+      _ = ∑' j : ℕ, A j * (c : ℂ) ^ j := tsum_congr (hterm c h0 h1)
   have hJ (n m : ℂ) : J.val n x ((F vacuumObject Y).intertwiner.val m W.vacuum y) =
       (F X Y).intertwiner.val n x (if m = -1 then y else 0) := by
     change g.val _ = _
@@ -184,7 +187,8 @@ theorem evalAssoc_vacuum_scalar (X Y : Ordinary W) {α γ δ : ℂ} {x : X.carri
     rfl
   have hprod (c : ℝ) (h0 : 0 < c) (h1 : c < 1) :
       productEvaluation F J (dc c h0 h1) = P * (1 + (c : ℂ)) ^ (δ - α - γ) := by
-    rw [productEvaluation, tsum_eq_single γ]
+    show ∑' w : ℂ, productWeightTerm F J (dc c h0 h1) w = _
+    rw [tsum_eq_single γ]
     · simp only [productWeightTerm, dc]
       erw [hJ]; rw [if_pos (by ring)]
     · intro w hw
@@ -225,7 +229,7 @@ theorem evalAssoc_vacuum_scalar (X Y : Ordinary W) {α γ δ : ℂ} {x : X.carri
         exact continuousAt_cpow_const (by simp [Complex.slitPlane])
       · fun_prop
     have := hc.tendsto.mono_left (nhdsWithin_le_nhds (s := Set.Ioi 0))
-    simpa using this
+    simpa using! this
   have heq : (fun c : ℝ => ∑' j : ℕ, A j * (c : ℂ) ^ j) =ᶠ[𝓝[>] 0]
       (fun c : ℝ => P * (1 + (c : ℂ)) ^ (δ - α - γ)) := by
     filter_upwards [Ioo_mem_nhdsGT (show (0 : ℝ) < 1 by norm_num)] with c hc
@@ -263,20 +267,21 @@ theorem evalAssoc_vacuumCreation : VacuumCreationCompatibility F (evalAssoc F H)
       (tensorObj F X vacuumObject).isMod.weight α := by
     have := FusionTop.mem_weight (F X vacuumObject).intertwiner.property hx
       (vacuum_mem_weight_zero (W := W)) (-1)
-    convert this using 2; ring
+    have e : α + 0 - -1 - 1 = α := by ring
+    rw [e] at this
+    exact this
   have h2 : tripleMode F X vacuumObject Y (-1) q x W.vacuum y ∈
       (tensorObj F (tensorObj F X vacuumObject) Y).isMod.weight δ :=
     FusionTop.mem_weight (F (tensorObj F X vacuumObject) Y).intertwiner.property h1 hy q
   have hA := hom_mem_weight
     ((evalAssoc F H X vacuumObject Y).hom ≫ tensorHom F (𝟙 X) (leftUnitor F Y).hom).property h2
   have hB := FusionTop.mem_weight (F X Y).intertwiner.property hx hy q
-  rw [← sub_eq_zero]
+  refine sub_eq_zero.mp ?_
   apply ordinary_eq_zero_of_supported (tensorObj F X Y) (Submodule.sub_mem _ hA hB)
   intro f hf
   have hs := evalAssoc_vacuum_scalar F H X Y hx hy hf
   rw [hq] at hs
-  rw [map_sub, sub_eq_zero]
-  exact hs
+  exact (map_sub f _ _).trans (sub_eq_zero.mpr hs)
 
 /-- The strongly rational instance, for the associator of
 `monoidalCategoryOfStronglyRationalSewing`. -/

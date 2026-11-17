@@ -30,7 +30,7 @@ theorem a3_cartan_weight_word (b c : ℕ)
         (radicalWord (radicalOp ρ) l • w) := by
   induction l with
   | nil =>
-      simpa [radicalWord, a3WordKey, a3KeyLabel] using h i
+      simpa [radicalWord, a3WordKey, a3KeyLabel] using! h i
   | cons x l ih =>
       rcases x with ⟨j, s⟩
       have hc := levi_cartan_comm ρ i j 0 s

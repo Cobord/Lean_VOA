@@ -24,7 +24,7 @@ def flowSeries (a : ℕ → ℂ) (r : ℕ) : PowerSeries ℂ :=
 using Mathlib's power-series derivative, rather than an assumed flow identity. -/
 theorem flowSeries_succ (a : ℕ → ℂ) (r : ℕ) :
     flowSeries a (r + 1) = PowerSeries.X ^ 2 *
-      ((PowerSeries.derivative ℂ) (flowSeries a r) * PowerSeries.mk a) := by
+      ((PowerSeries.derivative (R := ℂ)) (flowSeries a r) * PowerSeries.mk a) := by
   ext n
   cases n with
   | zero => simp [flowSeries, pow_two, mul_assoc]

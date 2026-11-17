@@ -45,7 +45,7 @@ theorem keyPrefix_step_rank
     · have hdom : ∀ j : Fin 3, 0 ≤ keyLabel m j k := by
         intro j
         exact le_of_not_gt (fun hj => hneg ⟨j, hj⟩)
-      simpa [S, keyOrbitLength, hneg] using
+      simpa [S, keyOrbitLength, hneg] using!
         key_orbit_rank ρ w m h k hdom
   have hT : T = F ⊔ ⨆ _ : Fin 1, keyOrbit ρ w k := by
     change keyPrefix ρ w m (i + 1) =
@@ -55,7 +55,7 @@ theorem keyPrefix_step_rank
   have hh := VOA.DeligneAudit.A3Sector.a3_step_quot_rank_of_orbits
     F T 1 L (fun _ : Fin 1 => keyOrbit ρ w k) hT
     (fun _ => horbit.1) (fun _ => horbit.2)
-  simpa [L, F, T, S, k] using hh
+  simpa [L, F, T, S, k] using! hh
 
 end VOA.DeligneAudit.D4Levi
 

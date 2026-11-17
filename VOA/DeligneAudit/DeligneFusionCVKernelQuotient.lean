@@ -26,7 +26,7 @@ theorem second_cutoff_at_base (h : CV3Rel R w (0, 0) ν ϱ j) :
   apply cvrel_cutoff (CVRoots.sl2_second R).hFF h.second
     (ν.2 + ϱ.2) 2 _ (by omega)
   have ht : T (ν.2 + ϱ.2) (parts ϱ.2 ν.2 (0 + j)) = j := by
-    simpa only [Nat.zero_add, Nat.add_comm ν.2 ϱ.2] using parts_tail ϱ.2 ν.2 j
+    simpa only [Nat.zero_add, Nat.add_comm ν.2 ϱ.2] using! parts_tail ϱ.2 ν.2 j
   rw [ht]
   omega
 
@@ -59,17 +59,16 @@ theorem second_kernel_theta_boundary (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤
   have hc2 : (2 : ℂ) • R.op 4 B v + t2 = 0 := by
     have he := congrArg (fun T : Module.End ℂ V => T w)
       (cutoff_split_two (CVRoots.sl2_second R).hFF B j hj)
-    dsimp only at he
     rw [second_cutoff_at_base h] at he
     simpa only [LinearMap.add_apply, LinearMap.smul_apply, Module.End.mul_apply,
-      ← Nat.cast_smul_eq_nsmul ℂ, Nat.cast_ofNat] using he.symm
+      ← Nat.cast_smul_eq_nsmul ℂ, Nat.cast_ofNat] using! he.symm
   have hcomm : R.op 3 a (R.op 4 B v) = -R.op 5 z v := by
     rw [comm_apply 3 4]
     simp [Fin.sum_univ_eight, bracketTable, hXv,
       show a + B = z by dsimp [a, z]; omega]
   have hneg : (2 : ℂ) • (-R.op 5 z v) = 0 := by
     have he := congrArg (fun x : V => R.op 3 a x) hc2
-    simpa only [map_add, map_smul, map_zero, htail, add_zero, hcomm] using he
+    simpa only [map_add, map_smul, map_zero, htail, add_zero, hcomm] using! he
   exact neg_eq_zero.mp ((smul_eq_zero.mp hneg).resolve_left (by norm_num))
 
 /-- All highest-root modes at the stronger target cutoff kill the second
@@ -91,7 +90,7 @@ theorem second_kernel_first_trunc (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j)
     R.op 3 q (R.op 4 (ν.2 + ϱ.2 + j - 1) w) = 0 := by
   have hq0 : R.op 3 q w = 0 := by
     by_cases heq : q = ν.1 + ϱ.1 + j - 1
-    · simpa only [heq] using hfirst
+    · simpa only [heq] using! hfirst
     · apply trunc_of_cvrel h.first q
       simp only [parts_length]
       omega
@@ -112,10 +111,9 @@ theorem first_cutoff_in_quotient (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j)
   · subst s
     have he := congrArg (fun T : Module.End ℂ V => T w)
       (cutoff_split_two (CVRoots.sl2_first R).hFF A j hj)
-    dsimp only at he
     rw [first_cutoff_two h] at he
     simpa only [LinearMap.add_apply, LinearMap.smul_apply, Module.End.mul_apply,
-      hfirst', map_zero, smul_zero, zero_add] using he.symm
+      hfirst', map_zero, smul_zero, zero_add] using! he.symm
   · apply cvrel_cutoff (CVRoots.sl2_first R).hFF h.first
       (ν.1 + ϱ.1 + 1) 2 s (by omega)
     have ht : T (ν.1 + ϱ.1 + 1) (parts ϱ.1 ν.1 (0 + j)) = j - 1 := by
@@ -136,7 +134,7 @@ theorem f2_QFrom_first (R : CurrentModule bracketTable V) {w : V} {L b p : ℕ}
     (CVCrossRoot.thetaKernel R L)
   · intro k v hv
     by_cases hk : p ≤ k
-    · simpa only [fromMode, if_pos hk] using CVCrossRoot.thetaKernel_f1 R L k hv
+    · simpa only [fromMode, if_pos hk] using! CVCrossRoot.thetaKernel_f1 R L k hv
     · simp only [fromMode, if_neg hk, LinearMap.zero_apply]
       exact (CVCrossRoot.thetaKernel R L).zero_mem
   · intro k v hv

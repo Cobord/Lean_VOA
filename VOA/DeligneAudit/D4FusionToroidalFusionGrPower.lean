@@ -19,10 +19,10 @@ variable (A : ToroidalAction f V) (w : V) (m : ℕ)
 
 theorem zeroMode_pow_mem (c : Fin n) (i : ℕ) : ∀ k : ℕ,
     ((A.op c i 0) ^ k) w ∈ evalFbelow A w 1
-  | 0 => by simpa using generator_mem A w
+  | 0 => by simpa using! generator_mem A w
   | k + 1 => by
       rw [pow_succ', Module.End.mul_apply]
-      simpa using evalFbelow_op A w c i 0 1 (zeroMode_pow_mem c i k)
+      simpa using! evalFbelow_op A w c i 0 1 (zeroMode_pow_mem c i k)
 
 theorem grZeroMode_pow (c : Fin n) (i : ℕ) (hm : 0 < m) : ∀ k : ℕ,
     ((grOp A w m c i 0) ^ k) (grGenerator A w) =

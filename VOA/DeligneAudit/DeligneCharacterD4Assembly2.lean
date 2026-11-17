@@ -284,7 +284,7 @@ theorem Ikernel_recursion (hF : D4F.D4FiniteIdentity) :
   have hinv : smap ctThetaP Ahalf = -smap ctThetaP (C xx2 * iotaS Ahalf) := by
     rw [smap_ctThetaP_inv Ahalf, ← smap_neg, ← neg_mul, ← map_neg]
     congr 3
-    exact Finsupp.single_neg _ _
+    exact AddMonoidAlgebra.single_neg _ _
   have hW' : smap ctTheta W = smap ctThetaP Ahalf + smap ctThetaP Ahalf := by
     rw [smap_ctTheta_eq, hclaim, smap_sub]
     nth_rewrite 2 [hinv]

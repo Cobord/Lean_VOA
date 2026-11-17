@@ -122,7 +122,8 @@ theorem conformalVector_ne_zero (W : SuperNearVOA 𝒱) {u : 𝒱} (hu : u ≠ 0
     rw [SuperNearVOA.L_def, mode_apply, hY]
     rfl
   have hvir := W.virasoro_L 2 (-2)
-  rw [hL 2, hL (-2), hL (2 + -2), lie_zero, smul_zero, zero_add,
+  rw [hL 2, hL (-2), hL (2 + -2), LieRing.of_associative_ring_bracket, mul_zero, sub_zero,
+    smul_zero, zero_add,
     if_pos (show (2 : ℤ) + -2 = 0 from by decide)] at hvir
   have happ := congrArg (fun T : End ℂ 𝒱 => T W.vacuum) hvir
   simp only [LinearMap.zero_apply, LinearMap.smul_apply, Module.End.one_apply] at happ

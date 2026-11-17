@@ -568,7 +568,7 @@ theorem node0157_mem : rowEval varIndex node0157 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0157_check
   · rw [node0157Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0006_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node0128 node0128_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node0128 node0128_mem)
 
 def node0158 : WordRow := [([0, 6, 7], 1), ([1, 6, 6], 1)]
 
@@ -766,7 +766,7 @@ theorem node0182_mem : rowEval varIndex node0182 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0182_check
   · rw [node0182Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0008_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node0090 node0090_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node0090 node0090_mem)
 
 def node0185 : WordRow := [([2, 3, 4], 1)]
 
@@ -910,7 +910,7 @@ theorem node0218_mem : rowEval varIndex node0218 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0218_check
   · rw [node0218Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0010_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node0130 node0130_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node0130 node0130_mem)
 
 def node0219 : WordRow := [([0, 6, 9], 1), ([1, 6, 8], 1), ([2, 5, 6], -1), ([3, 4, 6], -1)]
 
@@ -946,7 +946,7 @@ theorem node0220_mem : rowEval varIndex node0220 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0220_check
   · rw [node0220Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0010_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node0161 node0161_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node0161 node0161_mem)
 
 def node0221 : WordRow := [([0, 8, 9], 1), ([1, 8, 8], 1), ([2, 5, 8], -1), ([3, 4, 8], -1)]
 
@@ -1126,7 +1126,7 @@ theorem node0231_mem : rowEval varIndex node0231 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0231_check
   · rw [node0231Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0011_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node0218 node0218_mem) (rowEval_scale_mem varIndex candidateIdeal (-1) node0143 node0143_mem))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node0218 node0218_mem) (rowEval_scale_mem varIndex candidateIdeal (-1) node0143 node0143_mem))
 
 def node0233 : WordRow := [([2, 5, 7], 1), ([3, 4, 7], 1), ([3, 5, 6], 1)]
 
@@ -1144,7 +1144,7 @@ theorem node0233_mem : rowEval varIndex node0233 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0233_check
   · rw [node0233Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0011_mem
-  · simpa only [rowEval_append,add_assoc] using (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node0220 node0220_mem) (rowEval_scale_mem varIndex candidateIdeal (-1) node0172 node0172_mem))
+  · simpa only [rowEval_append,add_assoc] using! (candidateIdeal.add_mem (rowEval_scale_mem varIndex candidateIdeal (-1) node0220 node0220_mem) (rowEval_scale_mem varIndex candidateIdeal (-1) node0172 node0172_mem))
 
 def node0234 : WordRow := [([3, 5, 7], 1)]
 
@@ -1162,7 +1162,7 @@ theorem node0234_mem : rowEval varIndex node0234 ∈ candidateIdeal := by
     (1) (-1) (by decide) node0234_check
   · rw [node0234Raw,rowEval_multiply]
     exact Ideal.mul_mem_right _ _ node0011_mem
-  · simpa only [rowEval_append,add_assoc] using (rowEval_scale_mem varIndex candidateIdeal (-1) node0173 node0173_mem)
+  · simpa only [rowEval_append,add_assoc] using! (rowEval_scale_mem varIndex candidateIdeal (-1) node0173 node0173_mem)
 
 end
 end VOA.DeligneAudit.D4FusionContact.M2Certificate.Dag

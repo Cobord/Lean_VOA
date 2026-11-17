@@ -31,7 +31,7 @@ theorem a3_raising_word_zero_no_source (a b c : ℕ)
     ρ.op (leviE i) r (radicalWord (radicalOp ρ) l • w) = 0 := by
   induction l with
   | nil =>
-      simpa [radicalWord] using h.raising (leviE i)
+      simpa [radicalWord] using! h.raising (leviE i)
         (by fin_cases i <;> decide) r
   | cons x l ih =>
       rcases x with ⟨j, s⟩
@@ -40,7 +40,7 @@ theorem a3_raising_word_zero_no_source (a b c : ℕ)
         subst j
         simp at hl
       have ht : l.countP (fun x => x.1 = a3RaiseSource i) = 0 := by
-        simpa [hj] using hl
+        simpa [hj] using! hl
       have hc := a3_raising_comm ρ i j r s
         (radicalWord (radicalOp ρ) l • w)
       rw [a3RaiseTarget_eq, if_neg hj] at hc

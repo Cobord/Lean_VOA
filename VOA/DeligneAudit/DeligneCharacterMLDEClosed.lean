@@ -224,7 +224,7 @@ theorem eq_mldeCoeff_of_HOde (t : ℕ) (H : PowerSeries ℚ)
     coeff (N + (t + 1)) (H * Qk (12 * t + 10)) / c = mldeCoeff (6 * t + 6) N := by
   have := DeligneMLDE.eq_mldeCoeff_of_isAKSolution
     (isAKSolution_of_HOde ramanujanIdentities t H hH hlow c hc hc0) N
-  simpa [gOf] using this
+  simpa [gOf] using! this
 
 /-! ## Low coefficients of `H·P⁻ᵏ` from those of `H` -/
 
@@ -256,7 +256,7 @@ theorem getD_lmul (l m : List ℤ) (i : ℕ) (hi : i < l.length) :
 theorem Agrees.mul {f g : PowerSeries ℚ} {l m : List ℤ} (hf : Agrees f l) (hg : Agrees g m)
     (hlm : l.length = m.length) : Agrees (f * g) (lmul l m) := by
   intro i hi
-  have hi' : i < l.length := by simpa [lmul] using hi
+  have hi' : i < l.length := by simpa [lmul] using! hi
   rw [getD_lmul l m i hi', coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ
     (fun a b => coeff a f * coeff b g)]
   push_cast

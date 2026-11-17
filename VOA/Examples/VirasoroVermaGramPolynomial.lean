@@ -109,7 +109,7 @@ theorem vermaGramPolynomial_eval (c h : ℂ) (n : ℕ) :
     (vermaGramPolynomial n).map
       (MvPolynomial.aeval (fun i : Fin 2 => if i=0 then c else h)).toRingHom =
       vermaGramMatrix c h n := by
-  simpa [vermaGramPolynomial] using vermaAlgebraGramMatrix_eval
+  simpa [vermaGramPolynomial] using! vermaAlgebraGramMatrix_eval
     (MvPolynomial.X (0 : Fin 2)) (MvPolynomial.X (1 : Fin 2))
     (MvPolynomial.aeval (fun i : Fin 2 => if i=0 then c else h)) n
 
@@ -179,7 +179,7 @@ theorem exists_vermaLevelState (c h : ℂ) (n : ℕ) (v : Verma c h)
   have he := congrArg (fun x : sortedSpan c h n => (x : Verma c h))
     ((vermaLevelBasis c h n).sum_repr ⟨v, hv⟩)
   simpa only [vermaLevelState, a, Submodule.coe_sum, Submodule.coe_smul,
-    vermaLevelBasis, Module.Basis.mk_apply, vermaLevelWord] using he
+    vermaLevelBasis, Module.Basis.mk_apply, vermaLevelWord] using! he
 
 /-- A nonzero actual Verma Gram determinant excludes positive-level
 singular states. No genericity assumption replaces the displayed determinant
@@ -208,8 +208,10 @@ theorem vermaGramMatrix_kernel_iff_radical (c h : ℂ) (n : ℕ)
     intro w
     simp only [vermaSortedBasis_apply, LinearMap.zero_apply]
     by_cases he : energyHW w.val = n
-    · have hw := congrFun hk (⟨w.val, w.property, he⟩ : VermaPartitions n)
-      rw [vermaGramMatrix_mulVec, vermaContravariant_symm] at hw
+    · have hw := (vermaGramMatrix_mulVec c h n a
+        (⟨w.val, w.property, he⟩ : VermaPartitions n)).symm.trans
+        (congrFun hk (⟨w.val, w.property, he⟩ : VermaPartitions n))
+      rw [vermaContravariant_symm] at hw
       exact hw
     · exact vermaContravariant_orthogonal c h n (energyHW w.val) _ _
         (vermaLevelState_mem c h n a)

@@ -448,7 +448,8 @@ def FinCoords.regular (A : Type*) [Ring A] : FinCoords A A where
 
 @[simp] theorem FinCoords.regular_rawTrace (f : Module.End A A) :
     (FinCoords.regular A).rawTrace f = f 1 := by
-  simp [FinCoords.rawTrace, FinCoords.regular]
+  change (∑ _ : Fin 1, f 1) = f 1
+  exact Fin.sum_univ_one _
 
 /-- On the left regular module the Hattori–Stallings trace of right multiplication by `a`
 is the class of `a`. -/

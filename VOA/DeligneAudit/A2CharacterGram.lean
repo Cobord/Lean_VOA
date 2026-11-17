@@ -101,7 +101,7 @@ theorem quad_mem (a b : Fin 8) : quad k a b ∈ gradingZA k 2 := by
   have h0 := vacuumA_mem_gradingZA_zero k
   have h1 := J_mem_gradingZA k b (-1) 0 h0
   have h2 := J_mem_gradingZA k a (-1) _ h1
-  simpa [quad] using h2
+  simpa [quad] using! h2
 
 end Universal
 
@@ -336,9 +336,8 @@ theorem state_linearIndependent : LinearIndependent ℂ state := by
     intro t
     have hzero : simpleProjection (-3 / 2) hk
         (∑ s, g s • quad (-3 / 2) (pairs s).1 (pairs s).2) = 0 := by
-      simpa [state, map_sum, map_smul] using hg
+      simpa [state, map_sum, map_smul] using! hg
     have happ := congrArg (fun x => SJ (pairs t).1 1 (SJ (pairs t).2 1 x)) hzero
-    simp only at happ
     have h0 : SJ (pairs t).1 1 (SJ (pairs t).2 1 (0 : SimpleSpace (-3 / 2) hk)) = 0 := by
       rw [← map_zero (simpleProjection (-3 / 2) hk), SJ_proj, map_zero, SJ_proj, map_zero,
         map_zero]
@@ -389,7 +388,7 @@ theorem finrank_grading_two_ge :
   let f : Fin 36 → (simpleVOA (-3 / 2) hk).grading 2 := fun s => ⟨state s, state_mem s⟩
   have hf : LinearIndependent ℂ f :=
     LinearIndependent.of_comp (Submodule.subtype _) state_linearIndependent
-  simpa using hf.fintype_card_le_finrank
+  simpa using! hf.fintype_card_le_finrank
 
 end
 

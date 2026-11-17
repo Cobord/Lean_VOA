@@ -137,7 +137,6 @@ is the cube of the Euler product. -/
 theorem jacobi_cube : (alternatingTheta : PowerSeries K) = euler ^ 3 := by
   have h := congrArg (fun f : PowerSeries K => f * euler)
     (alternatingTheta_mul_reciprocalEuler (K := K))
-  dsimp only at h
   have hunit : (reciprocalEuler : PowerSeries K) * euler = 1 := by
     rw [mul_comm, euler_mul_reciprocal]
   rw [mul_assoc, hunit, mul_one] at h

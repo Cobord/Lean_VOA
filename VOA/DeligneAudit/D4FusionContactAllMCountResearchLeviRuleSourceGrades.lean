@@ -18,7 +18,7 @@ theorem word_graded (m : ℕ) (w : Fin 9 → ℤ) (t : ℤ) (δ : Fin 18 → ℤ
     (wordOp (representation K m) l p).IsWeightedHomogeneous
       (modeWeight m w t) (n + wordGrade δ t l) := by
   induction l with
-  | nil => simpa only [wordOp,wordGrade,List.map_nil,List.sum_nil,add_zero] using hp
+  | nil => simpa only [wordOp,wordGrade,List.map_nil,List.sum_nil,add_zero] using! hp
   | cons x l ih =>
       have ht := ih (fun y hy => hl y (List.mem_cons_of_mem _ hy))
       change (deriv K m x.1 x.2 (wordOp (representation K m) l p)).IsWeightedHomogeneous _ _
@@ -34,7 +34,7 @@ theorem word_pbw_graded (m : ℕ) (l : List (Fin 18 × ℕ))
     (wordOp (representation K m) l p).IsWeightedHomogeneous (modeWeight m (fun _ => 1) 0) r := by
   have h := word_graded K m (fun _ => 1) 0 (fun _ => 0) l
     (fun _ _ _ => Or.inr (by ring)) hp
-  simpa only [wordGrade,zero_mul,add_zero,List.map_const',List.sum_replicate,nsmul_zero] using h
+  simpa only [wordGrade,zero_mul,add_zero,List.map_const',List.sum_replicate,nsmul_zero] using! h
 
 /-- Current degree is increased by the sum of all nonnegative letter modes. -/
 theorem word_current_graded (m : ℕ) (l : List (Fin 18 × ℕ))

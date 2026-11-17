@@ -30,6 +30,9 @@ theorem rightBendEquiv_symm_id_cup (P : Pivotal C) (Y A : C) :
     (rightBendEquiv P A (A ⊗ Yᘁ) Y).symm (𝟙 _) =
       (ρ_ A).inv ≫ A ◁ P.cup Y ≫ (α_ A Yᘁ Y).inv := by
   dsimp [rightBendEquiv, homCongr, rightDuality, tensorRightHomEquiv, Pivotal.cup]
+  try rw [show ((A ⊗ Yᘁ) ◁ᵢ P.j Y).symm.hom = (A ⊗ Yᘁ) ◁ (P.j Y).inv from rfl]
+  try rw [show ((A ⊗ Yᘁ) ◁ᵢ (P.j Y).symm).hom = (A ⊗ Yᘁ) ◁ (P.j Y).inv from rfl]
+  try rw [show ((A ⊗ Yᘁ) ◁ᵢ P.j Y).inv = (A ⊗ Yᘁ) ◁ (P.j Y).inv from rfl]
   monoidal
 
 /-- Forward sewing, using only the specified cup, cap and ordinary braiding. -/

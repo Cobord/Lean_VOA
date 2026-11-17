@@ -104,7 +104,7 @@ theorem norm_mul_le_of_fusion (S : ι → ι → ℂ) (s : ι → ℝ) (hs : ∀
   have hbx : ‖S b x‖ = m * s b := by rw [hm, div_mul_cancel₀ _ (hs b).ne']
   have hm0 : 0 ≤ m := div_nonneg (norm_nonneg _) (hs b).le
   rcases hm0.eq_or_lt with h0 | h0
-  · have : ‖S a x‖ = 0 := le_antisymm (by simpa [← h0] using hle a) (norm_nonneg _)
+  · have : ‖S a x‖ = 0 := le_antisymm (by simpa [← h0] using! hle a) (norm_nonneg _)
     rw [this, zero_mul]; exact (mul_pos (hs a) (hs x)).le
   -- the Verlinde relation at `(a, b, x)`, in norms
   have h1 : ‖S a x‖ * ‖S b x‖ ≤ s x * (m * (s a * s b / s v0)) := by

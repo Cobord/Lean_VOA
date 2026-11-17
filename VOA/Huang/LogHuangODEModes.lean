@@ -36,7 +36,7 @@ theorem jacobi_commutator {A₁ : WeakModule W M₁} {A₂ : WeakModule W M₂}
       = ∑ᶠ i : ℤ, cbz m i • Y (m + n - i) (mode (A₁.YM u) i w₁) w₂ := by
   have h := hY.jacobi u w₁ w₂ 0 m n
   rw [finsum_eq_single _ (0 : ℤ)] at h
-  · simpa [cbz_zero_left, negOnePow] using h
+  · simpa [cbz_zero_left, negOnePow] using! h
   · intro i hi
     simp [cbz_zero_left, hi]
 

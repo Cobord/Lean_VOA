@@ -53,10 +53,10 @@ def cyclicSpan (R : CurrentModule bracketTable V) (w : V) : Submodule ℂ V :=
 variable {R : CurrentModule bracketTable V} {w : V} {k : ℕ}
 
 theorem first_pos (h : RectRel R w k) (q : ℕ) (hq : 1 ≤ q) : R.op 3 q w = 0 :=
-  trunc_of_cvrel h.first q (by simpa using hq)
+  trunc_of_cvrel h.first q (by simpa using! hq)
 
 theorem theta_pos (h : RectRel R w k) (q : ℕ) (hq : 1 ≤ q) : R.op 5 q w = 0 :=
-  trunc_of_cvrel h.highest q (by simpa using hq)
+  trunc_of_cvrel h.highest q (by simpa using! hq)
 
 theorem second_all (h : RectRel R w k) (q : ℕ) : R.op 4 q w = 0 :=
   trunc_of_cvrel h.second q (by simp)
@@ -67,7 +67,7 @@ theorem mixed_power_zero (h : RectRel R w k) (a b : ℕ) (hab : k < a + b) :
   have hp := theta_cvrel_mixed R (h.raising 1 (by decide) 0) h.highest
     a b 0 0 (by omega) (by simp [T]; omega)
   simpa [mixedCoeff, PowerSeries.coeff_zero_eq_constantCoeff_apply,
-    Garland.Fs, Module.End.mul_apply] using hp
+    Garland.Fs, Module.End.mul_apply] using! hp
 
 theorem triangle_power_mem (h : RectRel R w k) (a b : ℕ) :
     (R.op 3 0 ^ a) ((R.op 5 0 ^ b) w) ∈ triangleSpan R w k := by
@@ -85,7 +85,7 @@ theorem block_kills_of_mem (R : CurrentModule bracketTable V) (d : Fin 8)
   | [], q, hq, _ => by simp at hq
   | r :: l, q, hq, hkill => by
       rcases List.mem_cons.mp hq with hqr | hq
-      · have hkillr : R.op d r v = 0 := by simpa only [hqr] using hkill
+      · have hkillr : R.op d r v = 0 := by simpa only [hqr] using! hkill
         rw [Fx_cons, Module.End.mul_apply,
           comm_block_apply R d (R.op d r) (hdd r) l v, hkillr, map_zero]
       · rw [Fx_cons, Module.End.mul_apply,
@@ -204,39 +204,39 @@ theorem card_index_three : Fintype.card (Index 3) = 10 := by decide
 
 theorem rectRel_fund (h : CV3Rel R w (1, 0) (0, 0) (0, 0) 0) : RectRel R w 1 := by
   refine ⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa using h.cartan_first
-  · simpa using h.cartan_second
-  · simpa [parts] using h.first
-  · simpa [parts] using h.second
-  · simpa [parts] using h.highest
+  · simpa using! h.cartan_first
+  · simpa using! h.cartan_second
+  · simpa [parts] using! h.first
+  · simpa [parts] using! h.second
+  · simpa [parts] using! h.highest
 
 theorem rectRel_double (h : CV3Rel R w (0, 0) (1, 0) (0, 0) 0) : RectRel R w 2 := by
   refine ⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa using h.cartan_first
-  · simpa using h.cartan_second
-  · simpa [parts] using h.first
-  · simpa [parts] using h.second
-  · simpa [parts] using h.highest
+  · simpa using! h.cartan_first
+  · simpa using! h.cartan_second
+  · simpa [parts] using! h.first
+  · simpa [parts] using! h.second
+  · simpa [parts] using! h.highest
 
 theorem rectRel_triple (h : CV3Rel R w (0, 0) (0, 0) (1, 0) 0) : RectRel R w 3 := by
   refine ⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa using h.cartan_first
-  · simpa using h.cartan_second
-  · simpa [parts] using h.first
-  · simpa [parts] using h.second
-  · simpa [parts] using h.highest
+  · simpa using! h.cartan_first
+  · simpa using! h.cartan_second
+  · simpa [parts] using! h.first
+  · simpa [parts] using! h.second
+  · simpa [parts] using! h.highest
 
 theorem single_fund_bound (h : CV3Rel R w (1, 0) (0, 0) (0, 0) 0) :
     FiniteDimensional ℂ (cyclicSpan R w) ∧ Module.finrank ℂ (cyclicSpan R w) ≤ 3 := by
-  simpa only [card_index_one] using rectangle_bound (rectRel_fund h)
+  simpa only [card_index_one] using! rectangle_bound (rectRel_fund h)
 
 theorem single_double_bound (h : CV3Rel R w (0, 0) (1, 0) (0, 0) 0) :
     FiniteDimensional ℂ (cyclicSpan R w) ∧ Module.finrank ℂ (cyclicSpan R w) ≤ 6 := by
-  simpa only [card_index_two] using rectangle_bound (rectRel_double h)
+  simpa only [card_index_two] using! rectangle_bound (rectRel_double h)
 
 theorem single_triple_bound (h : CV3Rel R w (0, 0) (0, 0) (1, 0) 0) :
     FiniteDimensional ℂ (cyclicSpan R w) ∧ Module.finrank ℂ (cyclicSpan R w) ≤ 10 := by
-  simpa only [card_index_three] using rectangle_bound (rectRel_triple h)
+  simpa only [card_index_three] using! rectangle_bound (rectRel_triple h)
 
 end
 

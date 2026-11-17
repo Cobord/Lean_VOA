@@ -65,7 +65,9 @@ variable {W : VertexOperatorAlgebra 𝒱}
 
 /-! ## The `RightInverse` half — unconditional from `InducedAssignment` -/
 
-/-- **`forwardMap ∘ invFun = id` as a `Function.RightInverse`** (Theorem 5.3.4 round-trip).
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap ∘ invFun = id` as a `Function.RightInverse`** (Theorem 5.3.4 round-trip).
 Unconditional from `InducedAssignment`: a repackaging of `InducedAssignment.forwardMap_invFun`. -/
 theorem forwardMap_rightInverse (A : InducedAssignment W) :
     Function.RightInverse A.invFun (forwardMap W) :=
@@ -73,7 +75,9 @@ theorem forwardMap_rightInverse (A : InducedAssignment W) :
 
 /-! ## The `LeftInverse` half — gated on the single rigidity predicate `RealizesSelf` -/
 
-/-- **The rigidity / universal-property input** for the second round-trip of Theorem 5.3.4: every
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The rigidity / universal-property input** for the second round-trip of Theorem 5.3.4: every
 bundled lowest-weight `𝒱`-module `P` is isomorphic to the assignment's chosen realization of its own
 bottom `P.toAMod`. Equivalently, *every irreducible `𝒱`-module is the induced module of its bottom*.
 This is the exact remaining content of `invFun ∘ forwardMap = id` and the single open input beyond
@@ -81,7 +85,9 @@ This is the exact remaining content of `invFun ∘ forwardMap = id` and the sing
 def RealizesSelf (A : InducedAssignment W) : Prop :=
   ∀ P : LWModule W, LWModule.Iso W (A.realize P.toAMod) P
 
-/-- **`invFun ∘ forwardMap = id` on representatives**, given rigidity: for a bundled lowest-weight
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`invFun ∘ forwardMap = id` on representatives**, given rigidity: for a bundled lowest-weight
 module `P`, `invFun (forwardMap [P]) = [P]`. Proof: `forwardMap [P] = [P.toAMod]` (`forwardMap_mk`),
 then `invFun [P.toAMod] = [A.realize P.toAMod]` (`invFun_mk`), which is `[P]` by `RealizesSelf`. -/
 theorem invFun_forwardMap_mk (A : InducedAssignment W) (hself : A.RealizesSelf) (P : LWModule W) :
@@ -90,7 +96,9 @@ theorem invFun_forwardMap_mk (A : InducedAssignment W) (hself : A.RealizesSelf) 
   rw [forwardMap_mk, invFun_mk]
   exact Quotient.sound (hself P)
 
-/-- **`invFun ∘ forwardMap = id` as a `Function.LeftInverse`** (Theorem 5.3.4 round-trip), given the
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`invFun ∘ forwardMap = id` as a `Function.LeftInverse`** (Theorem 5.3.4 round-trip), given the
 rigidity input `RealizesSelf`. -/
 theorem forwardMap_leftInverse (A : InducedAssignment W) (hself : A.RealizesSelf) :
     Function.LeftInverse A.invFun (forwardMap W) := by
@@ -99,18 +107,24 @@ theorem forwardMap_leftInverse (A : InducedAssignment W) (hself : A.RealizesSelf
 
 /-! ## The headline bijection -/
 
-/-- **`forwardMap` is injective**, given `RealizesSelf` (a left inverse exists). -/
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap` is injective**, given `RealizesSelf` (a left inverse exists). -/
 theorem forwardMap_injective (A : InducedAssignment W) (hself : A.RealizesSelf) :
     Function.Injective (forwardMap W) :=
   (A.forwardMap_leftInverse hself).injective
 
-/-- **`forwardMap` is surjective**, unconditionally from `InducedAssignment` (a right inverse
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap` is surjective**, unconditionally from `InducedAssignment` (a right inverse
 exists). -/
 theorem forwardMap_surjective (A : InducedAssignment W) :
     Function.Surjective (forwardMap W) :=
   A.forwardMap_rightInverse.surjective
 
-/-- **`forwardMap` is bijective** given an `InducedAssignment` with rigid realizations: the easy
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap` is bijective** given an `InducedAssignment` with rigid realizations: the easy
 direction `[M] ↦ [M_h]` is a bijection of iso-classes with two-sided inverse `A.invFun`. This is
 Theorem 5.3.4, wired down to exactly the `M(U)` existence (`InducedAssignment`) plus the
 irreducible-rigidity input (`RealizesSelf`). -/
@@ -118,7 +132,9 @@ theorem forwardMap_bijective (A : InducedAssignment W) (hself : A.RealizesSelf) 
     Function.Bijective (forwardMap W) :=
   ⟨A.forwardMap_injective hself, A.forwardMap_surjective⟩
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` as an `Equiv`** (Theorem 5.3.4), given an
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` as an `Equiv`** (Theorem 5.3.4), given an
 `InducedAssignment` with rigid realizations. The forward function is `forwardMap W` (`[M] ↦ [M_h]`)
 and the inverse is `A.invFun` (`[U] ↦ [M(U)]`); both round-trips hold. -/
 noncomputable def zhuEquiv (A : InducedAssignment W) (hself : A.RealizesSelf) :
@@ -128,15 +144,19 @@ noncomputable def zhuEquiv (A : InducedAssignment W) (hself : A.RealizesSelf) :
   left_inv := A.forwardMap_leftInverse hself
   right_inv := A.forwardMap_rightInverse
 
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`). -/
 @[simp] theorem zhuEquiv_apply (A : InducedAssignment W) (hself : A.RealizesSelf)
     (x : LWModuleIsoClass W) : A.zhuEquiv hself x = forwardMap W x := rfl
 
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`). -/
 @[simp] theorem zhuEquiv_symm_apply (A : InducedAssignment W) (hself : A.RealizesSelf)
     (y : AModIsoClass W) : (A.zhuEquiv hself).symm y = A.invFun y := rfl
 
 end InducedAssignment
 
-/-- **Theorem 5.3.4, wired to exactly the `M(U)` existence.** Given an `InducedAssignment W` `h`
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**Theorem 5.3.4, wired to exactly the `M(U)` existence.** Given an `InducedAssignment W` `h`
 (the generalized-Verma / Frenkel–Zhu lifting data — the single carrier-existence object reducing the
 hard direction) together with the irreducible-rigidity input `h.RealizesSelf`, the forward map
 `forwardMap W : Φ(𝒱) → Irr A(𝒱)`, `[M] ↦ [M_h]`, is a **bijection** with two-sided inverse
@@ -151,7 +171,9 @@ theorem zhuBijection_of_inducedAssignment {W : VertexOperatorAlgebra 𝒱}
     Function.Bijective (forwardMap W) :=
   h.forwardMap_bijective hself
 
-/-- **Theorem 5.3.4 as an `Equiv`**, wired to exactly the `M(U)` existence: from an
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**Theorem 5.3.4 as an `Equiv`**, wired to exactly the `M(U)` existence: from an
 `InducedAssignment W` with rigid realizations, the explicit bijection
 `Φ(𝒱) ≃ Irr A(𝒱)` with forward `forwardMap` and inverse `invFun`. -/
 noncomputable def zhuEquiv_of_inducedAssignment {W : VertexOperatorAlgebra 𝒱}

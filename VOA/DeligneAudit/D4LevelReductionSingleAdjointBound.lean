@@ -23,14 +23,14 @@ theorem coreSingleAdjoint_finrank_le (b c : ℕ)
     (fun i => costs.getD i 0) (by
       intro i hi
       dsimp only [costs]
-      rw [List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map]
+      rw [List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map]
       unfold singleAdjointCellCost
       split_ifs with hsubset
       · exact coreCell_singleAdjoint_subset_rank b c Q π h hhigh i hi hsubset
       · exact coreCell_singleAdjoint_pair_rank b c Q π h F i hi)
   have hs : (∑ i ∈ Finset.range (coreCellCatalog 1 b c).length, costs.getD i 0) =
       costs.sum := by
-    simpa only [costs, List.length_map, List.map_id] using SL4T.list_sum_getD costs id
+    simpa only [costs, List.length_map, List.map_id] using! SL4T.list_sum_getD costs id
   rw [hs, singleAdjoint_cellCost_sum] at hb
   exact hb
 
@@ -40,7 +40,7 @@ theorem truncatedCoreRankBound_singleAdjoint (b c : ℕ) (hc : 1 ≤ c) :
   intro V _ _ _ Q π h hcyclic hhigh
   have hb := coreSingleAdjoint_finrank_le b c Q π h hcyclic hhigh
   rw [← levelTarget_singleAdjoint b c hc] at hb
-  simpa only [Nat.cast_one, mul_one, add_comm] using hb
+  simpa only [Nat.cast_one, mul_one, add_comm] using! hb
 
 /-- All universal D4 levels with one adjoint site and positive central count satisfy their bound. -/
 theorem levelTruncationBound_singleAdjoint_positiveCenter (b c : ℕ) (hc : 1 ≤ c) :

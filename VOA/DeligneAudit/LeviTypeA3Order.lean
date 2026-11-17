@@ -42,17 +42,17 @@ noncomputable def a3OrderedKeys (a b c j : ℕ) : List A3RadicalKey :=
 
 theorem mem_a3OrderedKeys (a b c j : ℕ) (k : A3RadicalKey) :
     k ∈ a3OrderedKeys a b c j ↔ k ∈ a3DepthKeyBox a b c j := by
-  simpa only [a3OrderedKeys] using
+  simpa only [a3OrderedKeys] using!
     (Finset.mem_sort (s := a3DepthKeyBox a b c j) (r := a3KeyDescLE b c))
 
 theorem length_a3OrderedKeys (a b c j : ℕ) :
     (a3OrderedKeys a b c j).length = (a3DepthKeyBox a b c j).card := by
-  simpa only [a3OrderedKeys] using
+  simpa only [a3OrderedKeys] using!
     (Finset.length_sort (s := a3DepthKeyBox a b c j) (r := a3KeyDescLE b c))
 
 theorem pairwise_a3OrderedKeys (a b c j : ℕ) :
     (a3OrderedKeys a b c j).Pairwise (a3KeyDescLE b c) := by
-  simpa only [a3OrderedKeys] using
+  simpa only [a3OrderedKeys] using!
     (Finset.pairwise_sort (a3DepthKeyBox a b c j) (a3KeyDescLE b c))
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]

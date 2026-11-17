@@ -94,7 +94,7 @@ theorem u3_of_ok (a : Fin 133) (c : List ℕ) (h : u3OK a c = true) :
   simp only [u3OK, Bool.and_eq_true, decide_eq_true_eq] at h
   obtain ⟨⟨hL, hb⟩, hc⟩ := h
   have := mem_of_u3Check relQ (quadraticIdeal rel) qQ a _ hL _
-    (fun t ht => relQ_mem _ (by simpa using List.all_eq_true.mp hb t ht)) hc
+    (fun t ht => relQ_mem _ (by simpa using! List.all_eq_true.mp hb t ht)) hc
   rw [quadraticRelation_cas, ← Xn_fin]
   exact this
 

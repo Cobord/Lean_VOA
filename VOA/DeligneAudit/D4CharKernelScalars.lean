@@ -42,7 +42,6 @@ theorem rsJmap_injective : Function.Injective D4K.jmap := by
   apply PowerSeries.ext
   intro n
   have he := congrArg (fun F : D4K.Kq => F.coeff (2 * (n : ℤ))) h
-  dsimp only at he
   rw [D4K.jmap_coeff_even, D4K.jmap_coeff_even] at he
   exact_mod_cast he
 
@@ -57,7 +56,7 @@ theorem rsJmap_invPoch (n : ℕ) :
       map_pow, D4K.jmap_X]
   rw [map_mul, hp, map_one] at h
   apply eq_inv_of_mul_eq_one_left
-  simpa only [mul_comm] using h
+  simpa only [mul_comm] using! h
 
 /-- The integral Euler inverse specializes to D4K.eInv. -/
 theorem rsJmap_eulerInv :

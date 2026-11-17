@@ -16,7 +16,7 @@ theorem globalOrderedKeys_mem (m : ℕ) (k : RadicalKey) :
 
 theorem globalOrderedKeys_length (m : ℕ) :
     (globalOrderedKeys m).length = (globalKeyBox m).card := by
-  simpa only [globalOrderedKeys, globalKeyBox, orderedKeys] using
+  simpa only [globalOrderedKeys, globalKeyBox, orderedKeys] using!
     (Finset.length_sort (s := keyBox (6 * m) (2 * m * (6 * m)))
       (r := keyDescLE m))
 
@@ -31,7 +31,7 @@ noncomputable def keyEnum (m : ℕ) :
 theorem keyEnum_mem (m : ℕ) (j : Fin (globalKeyBox m).card) :
     keyEnum m j ∈ globalKeyBox m := by
   apply (globalOrderedKeys_mem m _).mp
-  simpa only [keyEnum] using
+  simpa only [keyEnum] using!
     (List.get_mem (globalOrderedKeys m)
       (Fin.cast (globalOrderedKeys_length m).symm j))
 
@@ -42,14 +42,14 @@ theorem keyEnum_cover (m : ℕ) (k : RadicalKey)
     (globalOrderedKeys_mem m k).mpr hk
   obtain ⟨j, hj⟩ := List.mem_iff_get.mp hk'
   refine ⟨Fin.cast (globalOrderedKeys_length m) j, ?_⟩
-  simpa [keyEnum] using hj
+  simpa [keyEnum] using! hj
 
 theorem keyEnum_descending (m : ℕ)
     (i j : Fin (globalKeyBox m).card) (hij : i < j) :
     keyLess m (keyEnum m j) (keyEnum m i) := by
   let i' := Fin.cast (globalOrderedKeys_length m).symm i
   let j' := Fin.cast (globalOrderedKeys_length m).symm j
-  have hlt : i' < j' := by simpa [i', j'] using hij
+  have hlt : i' < j' := by simpa [i', j'] using! hij
   have hrel := (List.pairwise_iff_get.mp (globalOrderedKeys_pairwise m)) i' j' hlt
   have hne : i' ≠ j' := ne_of_lt hlt
   have hnodup : (globalOrderedKeys m).Nodup := by

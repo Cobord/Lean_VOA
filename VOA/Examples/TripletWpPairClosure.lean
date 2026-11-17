@@ -354,7 +354,7 @@ theorem chargeOsc_vSchur (L : IntegralLattice) (hPos : L.PosDef)
   have h := congrArg (fun f : Module.End ℂ (HeisenbergN.FockN (rank L)) =>
       f (HeisenbergN.vacuumN (rank L)))
     (chargeOsc_comp_EminusVec L hPos alpha beta m N hm)
-  dsimp only at h
+  try dsimp only at h
   simp only [LinearMap.comp_apply, LinearMap.add_apply, EminusVec_vacuum,
     chargeOsc_vacuum L beta (m : ℤ) (by positivity : (0 : ℤ) ≤ (m : ℤ)), map_zero,
     zero_add] at h

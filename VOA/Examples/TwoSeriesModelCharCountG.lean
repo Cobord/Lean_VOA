@@ -57,14 +57,14 @@ theorem card_boxE_awt : ∀ (P : List ℕ) (e B : ℕ), e ≤ B →
   | r :: P, e, B, hB => by
     classical
     rw [rqfL, PowerSeries.coeff_mul]
-    have hc : ∀ p ∈ Finset.antidiagonal e,
+    have hc : ∀ p ∈ Finset.HasAntidiagonal.antidiagonal e,
         PowerSeries.coeff p.1 (reciprocalQFactorial r : PowerSeries ℚ) *
           PowerSeries.coeff p.2 (rqfL P) =
         ∑ γ ∈ (Fintype.piFinset fun _ : Fin r => Finset.range (B + 1)),
           ∑ x ∈ boxE P B, (if awt γ = p.1 then (1 : ℚ) else 0) *
             (if awtE P x = p.2 then (1 : ℚ) else 0) := by
       intro p hp
-      have hp' := Finset.mem_antidiagonal.mp hp
+      have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
       rw [coeff_reciprocalQFactorial_eq_card r p.1 B (by omega),
         ← card_boxE_awt P p.2 B (by omega), Finset.card_filter, Finset.card_filter]
       push_cast
@@ -87,11 +87,11 @@ theorem card_boxE_awt : ∀ (P : List ℕ) (e B : ℕ), e ≤ B →
         split_ifs with h1 h2 <;> try simp
         exact absurd (Prod.ext h1.symm h2.symm) hne
       · intro hn
-        exact absurd (Finset.mem_antidiagonal.mpr he) hn
+        exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr he) hn
     · rw [if_neg he]
       apply Finset.sum_eq_zero
       intro p hp
-      have hp' := Finset.mem_antidiagonal.mp hp
+      have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
       split_ifs with h1 h2 <;> try simp
       exact absurd (by rw [h1, h2]; exact hp') he
 
@@ -147,7 +147,7 @@ theorem profSum : ∀ (k B Nb : ℕ), Nb ≤ B →
       · intro P hP
         simp only [profs, Finset.mem_filter, Finset.mem_singleton] at hP
         obtain ⟨rfl, h'⟩ := hP
-        exact absurd h'.symm (by simpa [nbL] using h)
+        exact absurd h'.symm (by simpa [nbL] using! h)
   | k + 1, B, Nb, hNb => by
     classical
     rw [bet]
@@ -158,7 +158,7 @@ theorem profSum : ∀ (k B Nb : ℕ), Nb ≤ B →
       simp only [List.cons.injEq] at h
       exact Prod.ext h.1 h.2
     rw [profs, Finset.filter_image, Finset.sum_image (fun p hp q hq h => hinj (by
-      simpa using (Finset.mem_filter.mp hp).1) (by simpa using (Finset.mem_filter.mp hq).1) h)]
+      simpa using! (Finset.mem_filter.mp hp).1) (by simpa using! (Finset.mem_filter.mp hq).1) h)]
     rw [Finset.sum_filter, Finset.sum_product]
     -- regroup by `N_1 = nbL P`
     rw [Finset.sum_comm]

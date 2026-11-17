@@ -91,9 +91,9 @@ theorem relationCoefficient_zero (f : BasePoly ℂ) :
       (fun i : Fin 3 => MvPolynomial.X (i,0) : Fin 3 → JetPoly ℂ) f := by
   induction f using MvPolynomial.induction_on with
   | C c => simp [InfiniteJet.relationCoefficient,PowerSeries.algebraMap_apply]
-  | add f g hf hg => simpa [InfiniteJet.relationCoefficient] using congrArg₂ (·+·) hf hg
+  | add f g hf hg => simpa [InfiniteJet.relationCoefficient] using! congrArg₂ (·+·) hf hg
   | mul_X f i hf =>
-      simpa [InfiniteJet.relationCoefficient,InfiniteJet.generatorSeries] using
+      simpa [InfiniteJet.relationCoefficient,InfiniteJet.generatorSeries] using!
         congrArg (· * MvPolynomial.X (i,0)) hf
 
 /-- The original generators retain the intrinsic sl2 Poisson bracket after quotienting. -/

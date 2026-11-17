@@ -55,7 +55,7 @@ theorem innerSet_finite (D : GenData W) (Q Bm : ℕ) : (InnerSet D Q Bm).Finite 
       have := List.sum_le_card_nsmul (m.dedup.map fun x => m.count x) Q (fun y hy => by
         obtain ⟨x, _, rfl⟩ := List.mem_map.mp hy
         exact le_of_lt (hcount x))
-      simpa using this
+      simpa using! this
     have h2 : m.dedup.length ≤ Al.card := by
       rw [← List.toFinset_card_of_nodup (List.nodup_dedup m)]
       refine Finset.card_le_card ?_
@@ -63,16 +63,14 @@ theorem innerSet_finite (D : GenData W) (Q Bm : ℕ) : (InnerSet D Q Bm).Finite 
       rw [List.mem_toFinset, List.mem_dedup] at he
       exact hAlm e he
     have h3 : (m.dedup.map fun x => m.count x).sum ≤ Al.card * Q :=
-      le_trans (by simpa using h1) (Nat.mul_le_mul_right Q h2)
+      le_trans (by simpa using! h1) (Nat.mul_le_mul_right Q h2)
     convert h3 using 4
-    congr 1
-    apply lawful_beq_subsingleton
   refine Set.Finite.subset ?_ hsub
   have hfin := (List.finite_length_le (↥Al) L).image (List.map Subtype.val)
   refine hfin.subset ?_
   rintro m ⟨hlen, hmem⟩
   refine ⟨m.pmap (fun e he => (⟨e, he⟩ : ↥Al)) hmem, ?_, ?_⟩
-  · simpa [Set.mem_setOf_eq, List.length_pmap] using hlen
+  · simpa [Set.mem_setOf_eq, List.length_pmap] using! hlen
   · simp [List.map_pmap]
 
 /-- **Finite lowest-weight generation of admissible modules** over a `C₂`-cofinite VOA

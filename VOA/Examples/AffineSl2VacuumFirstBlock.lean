@@ -98,7 +98,7 @@ theorem vacuumAdaptedGram_first (k : ℂ) (n : ℕ) (c : ℤ)
     (i j : Wak.Charged.JointIndex n (c+1)) :
     (vacuumAdaptedGram k n c (Sum.inr i) (Sum.inr j)).coeff 1=gramMatrix k (-2) n (c+1) i j := by
   have he := horizontalPairPolynomial_first k i.val.toMultiset.toList j.val.toMultiset.toList
-  simpa only [gramMatrix,occupationBasis_apply] using he
+  simpa only [gramMatrix,occupationBasis_apply] using! he
 
 /-- The first possible adapted determinant coefficient is the actual vacuum
 Chevalley determinant times the actual weight-minus-two Verma determinant. -/

@@ -12,6 +12,8 @@ All colours are retained in the gamma-pair contraction, so repeated
 colours contribute twice. Locally finite beta-gamma-gamma sums then give
 actual polynomial operators, rather than formal infinite expressions.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

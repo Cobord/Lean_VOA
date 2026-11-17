@@ -46,10 +46,10 @@ theorem gamma_le_of_dvd {n N : ℕ} (hd : n ∣ N) :
     exact Int.ModEq.of_dvd (by exact_mod_cast hd)
       ((ZMod.intCast_eq_intCast_iff a b N).mp h)
   rw [CongruenceSubgroup.Gamma_mem] at hγ ⊢
-  exact ⟨by simpa using lower (γ 0 0) 1 (by simpa using hγ.1),
-    by simpa using lower (γ 0 1) 0 (by simpa using hγ.2.1),
-    by simpa using lower (γ 1 0) 0 (by simpa using hγ.2.2.1),
-    by simpa using lower (γ 1 1) 1 (by simpa using hγ.2.2.2)⟩
+  exact ⟨by simpa using! lower (γ 0 0) 1 (by simpa using! hγ.1),
+    by simpa using! lower (γ 0 1) 0 (by simpa using! hγ.2.1),
+    by simpa using! lower (γ 1 0) 0 (by simpa using! hγ.2.2.1),
+    by simpa using! lower (γ 1 1) 1 (by simpa using! hγ.2.2.2)⟩
 
 theorem KernelContainsGamma.of_dvd {ρ : SL2Z →* Matrix ι ι ℂ} {n N : ℕ}
     (h : KernelContainsGamma ρ n) (hd : n ∣ N) : KernelContainsGamma ρ N :=
@@ -64,7 +64,7 @@ theorem KernelContainsGamma.eq_of_reduction {ρ : SL2Z →* Matrix ι ι ℂ} {N
     change reduction N (δ⁻¹ * γ) = 1
     rw [map_mul, he, ← map_mul, inv_mul_cancel, map_one]
   have hh := congrArg (fun M => ρ δ * M) (h _ hg)
-  simpa only [← map_mul, mul_inv_cancel_left, mul_one] using hh
+  simpa only [← map_mul, mul_inv_cancel_left, mul_one] using! hh
 
 /-- DLN's exact-order target, retaining finite order to exclude the vacuous
 `orderOf = 0`, `Γ(0) = {1}` case. -/
@@ -130,7 +130,8 @@ theorem galoisCase_of_verlinde (D : VOA.Classification.COne.ModularData V)
   let G : Matrix D.ι D.ι ℂ := fun a b => if π a = b then ε a else 0
   have hG : S.map σ = G * S := by
     ext a b
-    simpa [G, Matrix.mul_apply] using hrow a b
+    rw [Matrix.map_apply, hrow a b, Matrix.mul_apply]
+    simp [G]
   have hr : ρ γ = G := by
     apply H.invertible.mul_right_cancel
     exact hcompat.symm.trans hG

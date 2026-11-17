@@ -26,7 +26,7 @@ theorem twoRoot_boundary_power_mem (x z : A) (N k : ℕ) (hN : 0 < N)
   rw [Finset.sum_eq_single (N - 1)] at h
   · apply Ideal.Quotient.eq_zero_iff_mem.mp
     change q (x ^ (N - 1) * z ^ k) = 0
-    simpa only [map_mul, map_pow, show N + k - 1 - (N - 1) = k by omega] using h
+    simpa only [map_mul, map_pow, show N + k - 1 - (N - 1) = k by omega] using! h
   · intro a ha hne
     by_cases hax : N ≤ a
     · rw [pow_eq_zero_of_le hax hqx, zero_mul]
@@ -42,7 +42,7 @@ theorem fullFlag_boundary_power_mem (x z : A) (xs : List A) (N k : ℕ)
     x ^ (N - 1) * z ^ k ∈ Ideal.span {z ^ (k + 1)} := by
   apply twoRoot_boundary_power_mem x z N k hN hx
   have h := twoRoot_complete_vanish x z xs he (N + k - 1) (by omega)
-  simpa only [show N + k - 1 + 1 = N + k by omega] using h
+  simpa only [show N + k - 1 + 1 = N + k by omega] using! h
 
 /-- Multiplication transports the cutoff improvement to all later power layers. -/
 theorem fullFlag_boundary_power_layer (x z : A) (xs : List A) (N k i : ℕ)

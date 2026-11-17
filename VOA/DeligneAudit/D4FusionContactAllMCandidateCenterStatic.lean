@@ -70,7 +70,7 @@ theorem contact_centerPolar_mem (m : ℕ) (e : Fin 8) (k p : ℕ) (l : List (Fin
   · apply Ideal.subset_span
     refine ⟨p - 1,e :: l,t + k,by simp only [List.length_cons]; omega,?_⟩
     simp only [centerPolar,List.map_cons,List.prod_cons]
-    congr 1
+    refine congrArg (PowerSeries.coeff (t + k)) ?_
     ring
   · apply Submodule.sum_mem
     intro a ha
@@ -132,7 +132,7 @@ theorem monoMap_monoCenter_mem (m : ℕ) {x : MonoRing ℂ m} (hx : x ∈ monoCe
   | mem x hx =>
       obtain ⟨r,t,h,rfl⟩ := hx
       rw [monoMap_seed]
-      exact Ideal.subset_span ⟨r,[],t,by simpa using h,by simp [centerPolar]⟩
+      exact Ideal.subset_span ⟨r,[],t,by simpa using! h,by simp [centerPolar]⟩
   | zero => rw [map_zero]; exact zero_mem _
   | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
   | smul a x _ ih => rw [smul_eq_mul,map_mul]; exact Ideal.mul_mem_left _ _ ih
@@ -141,12 +141,12 @@ theorem monoMap_monoCenter_mem (m : ℕ) {x : MonoRing ℂ m} (hx : x ∈ monoCe
 theorem center_source_mem_centerPolar (m : ℕ) (i : OrbitSourceIndex m)
     (hb : i.seed.val.1 = true) : orbitSourcePoly m i ∈ centerPolarIdeal m := by
   have hth : 2 * m < i.seed.val.2.1 + i.seed.val.2.2 := by
-    simpa only [AllM.seedThreshold,hb,if_true] using i.seed.property.2
+    simpa only [AllM.seedThreshold,hb,if_true] using! i.seed.property.2
   have hseed : monoSeed m i.seed ∈ monoCenterIdeal m :=
     Ideal.subset_span ⟨i.seed.val.2.1,i.seed.val.2.2,hth,rfl⟩
   have hcat : ∀ x ∈ i.outer, category x.1 = 0 := by
     intro x hx
-    simpa only [branchCategory,hb,if_true] using i.branch x hx
+    simpa only [branchCategory,hb,if_true] using! i.branch x hx
   rw [orbitSourcePoly,sourceWord,← outer_eq_contacts i.outer hcat]
   have hc : sourceColor i.seed.val.1 = 8 := by simp [sourceColor,hb]
   rw [hc]
@@ -180,7 +180,7 @@ theorem centerPolar_mem_candidate (m p : ℕ) (l : List (Fin 8)) (t : ℕ)
   rw [hprod,List.length_map,show p + n - n = p by omega,mul_one,map_nsmul] at hword
   have hc : (((p + n).descFactorial n : ℕ) : ℂ) • centerPolar m p l t ∈
       (AllM.candidateIdeal m).restrictScalars ℂ := by
-    simpa only [Nat.cast_smul_eq_nsmul ℂ,centerPolar] using hword
+    simpa only [Nat.cast_smul_eq_nsmul ℂ,centerPolar] using! hword
   have hne : (((p + n).descFactorial n : ℕ) : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.descFactorial_pos.mpr (by omega)).ne'
   exact (Submodule.smul_mem_iff _ hne).mp hc

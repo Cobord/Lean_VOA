@@ -191,7 +191,7 @@ theorem finrank_vermaRadicalLevel_one_sq_first (μ : ℕ) :
     have h0 : Fintype.card (VermaPartitions 0) = 1 :=
       Fintype.card_eq_one_iff.mpr ⟨⟨[], sortedWord_nil, rfl⟩, fun w =>
         Subtype.ext ((verma_energy_zero_iff w.val).mp w.property.2)⟩
-    simpa [h0] using this
+    simpa [h0] using! this
 
 /-! ## The named lower bound and the reduction -/
 

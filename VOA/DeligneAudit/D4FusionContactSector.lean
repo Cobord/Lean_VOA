@@ -26,15 +26,15 @@ theorem highestRel_of_localWeyl (h : LocalWeylRelG D4sector R w m) :
     exact h.cartan_pos c hc r hr
   · intro c hc
     by_cases h1 : c.val = 1
-    · simpa only [D4sector, thetaD4, h1, if_true, Nat.mul_one] using h.cartan_zero c hc
-    · simpa only [D4sector, thetaD4, h1, if_false, Nat.mul_zero, Nat.cast_zero] using
+    · simpa only [D4sector, thetaD4, h1, if_true, Nat.mul_one] using! h.cartan_zero c hc
+    · simpa only [D4sector, thetaD4, h1, if_false, Nat.mul_zero, Nat.cast_zero] using!
         h.cartan_zero c hc
   · intro i
     have hi : D4sector.lowering (leviIndex i) := by
       change 16 ≤ (leviIndex i).val ∧ (leviIndex i).val < 20
       fin_cases i <;> decide
     have he : D4sector.lowExp (leviIndex i) = 0 := by fin_cases i <;> rfl
-    simpa only [he, Nat.mul_zero, Nat.zero_add, Function.iterate_one] using h.lowering _ hi
+    simpa only [he, Nat.mul_zero, Nat.zero_add, Function.iterate_one] using! h.lowering _ hi
 
 /-- The three outer simple negative roots kill the actual source in
 every current mode, uniformly in the adjoint multiplicity. -/

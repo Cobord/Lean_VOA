@@ -24,10 +24,11 @@ theorem ambientMultiplication_monodromy (G : Subgroup (Aut W))
         ambientMultiplication G F := by
   apply tensor_hom_ext F
   intro n a b
-  rw [← Category.assoc, Ordinary.comp_apply,
-    braidingP_monodromy Phase.upper F (ambient G) (ambient G) n a b]
-  erw [map_smul]
-  rw [ambientMultiplication_intertwiner]
+  rw [← Category.assoc]
+  refine (congrArg (fun z => (ambientMultiplication G F).val z)
+    (braidingP_monodromy Phase.upper F (ambient G) (ambient G) n a b)).trans ?_
+  refine (map_smul (ambientMultiplication G F).val _ _).trans ?_
+  rw [ambientMultiplication_intertwiner G F n a b]
   by_cases hn : ∃ k : ℤ, n = (k : ℂ)
   · obtain ⟨k, rfl⟩ := hn
     have hp : Phase.upper.c (k : ℂ) * Phase.upper.c (k : ℂ) = 1 := by
@@ -37,11 +38,13 @@ theorem ambientMultiplication_monodromy (G : Subgroup (Aut W))
           (2 * Real.pi * Complex.I) * ((-(k + 1) : ℤ) : ℂ) := by push_cast; ring
       rw [harg]
       exact tw_int (-(k + 1))
-    rw [hp, one_smul]
+    rw [hp]
+    exact one_smul ℂ (moduleModes (adjointModule W) (k : ℂ) a b)
   · have hz : moduleModes (adjointModule W) n a b = 0 := by
       have hn' : ¬ ∃ k : ℤ, (k : ℂ) = n := fun h =>
         hn (h.imp fun _ hk => hk.symm)
       simp [moduleModes, hn']
+      rfl
     rw [hz]
     change (Phase.upper.c n * Phase.upper.c n) • (0 : V) = 0
     exact smul_zero _

@@ -111,20 +111,20 @@ theorem norm_le_of_coeff_lt_Gamma {N : ℕ} (hN : 0 < N) {k : ℤ}
   have hs (τ : ℍ) : HasSum
       (fun n : ℕ => (qExpansion (N : ℝ) F).coeff n *
         cexp (2 * (Real.pi / (N : ℝ)) * I * n * τ)) (F τ) := by
-    simpa only [smul_eq_mul, qParam_nat_pow_exp N] using
+    simpa only [smul_eq_mul, qParam_nat_pow_exp N] using!
       hasSum_qExpansion hNR
         (SlashInvariantFormClass.periodic_comp_ofComplex F (nat_mem_strictPeriods_Gamma N))
         (ModularFormClass.holo F) (ModularFormClass.bdd_at_infty F) τ
   obtain ⟨K, hK⟩ := norm_le_of_exponential_coeff_lt
     (p := Real.pi / (N : ℝ)) (div_pos Real.pi_pos hNR)
     (fun τ : ℍ => F τ) (fun n : ℕ => (qExpansion (N : ℝ) F).coeff n)
-    (by simpa only [Complex.ofReal_div] using hs) (N * B) hc
+    (by simpa only [Complex.ofReal_div] using! hs) (N * B) hc
   refine ⟨K, fun τ hτ => ?_⟩
   have he : 2 * (Real.pi / (N : ℝ)) * (N * B : ℕ) * τ.im =
       2 * Real.pi * B * τ.im := by
     push_cast
     field_simp
-  simpa only [he] using hK τ hτ
+  simpa only [he] using! hK τ hτ
 
 /-- A full-level modular form with zero coefficients below the cutoff is zero. -/
 theorem eq_zero_of_coeff_lt_Gamma {N : ℕ} [NeZero N] {k : ℤ}
@@ -153,7 +153,7 @@ theorem eq_zero_of_coeff_lt_Gamma {N : ℕ} [NeZero N] {k : ℤ}
     have hq₀ : SlashInvariantForm.quotientFunc F q₀ τ = F τ := by simp [q₀]
     rw [hq₀]
     have hP : ∏ q ∈ Finset.univ.erase q₀, ‖SlashInvariantForm.quotientFunc F q τ‖ ≤ P :=
-      Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
+      Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun q _ => hMA q τ (hAq q))
     calc
       _ ≤ (K * Real.exp (-(2 * Real.pi * B * τ.im))) * P :=
         mul_le_mul (hK τ hτ1) hP
@@ -205,7 +205,7 @@ theorem finrank_Gamma_le (N : ℕ) [NeZero N] (k : ℤ) :
     Module.finrank ℂ
       (ModularForm (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) k) ≤
         fullLevelSturmBound N k := by
-  simpa using LinearMap.finrank_le_finrank_of_injective (fullLevelCoeffMap_injective N k)
+  simpa using! LinearMap.finrank_le_finrank_of_injective (fullLevelCoeffMap_injective N k)
 
 /-- The concrete cutoff separates all full-level weight-two forms. -/
 theorem fullLevelWeightTwoJetSeparation_sturm {N : ℕ} (hN : 0 < N) :
@@ -243,7 +243,7 @@ theorem fullLevelWeightTwoSturmMatching24_of_slash_and_span
   refine ⟨d, a, b, a', b', c, fun n _ => ?_⟩
   have hec := congrArg (fun p : PowerSeries ℂ => p.coeff n) he
   simpa only [map_sum, PowerSeries.coeff_smul, smul_eq_mul, PowerSeries.coeff_mul,
-    E, weightOneModularForm_coeff, weightTwoProductCoeff] using hec
+    E, weightOneModularForm_coeff, weightTwoProductCoeff] using! hec
 
 /-- Under slash laws, the remaining finite rank assertion is exactly the
 original analytic product span, rather than a weaker conclusion. -/

@@ -24,8 +24,7 @@ theorem a2_step_quot_rank_of_orbits
         Module.finrank ℂ (s.sup P : Submodule ℂ (V ⧸ F)) ≤ ∑ j ∈ s, L := by
     induction s using Finset.induction_on with
     | empty =>
-        exact ⟨by simpa using
-          (inferInstance : FiniteDimensional ℂ (⊥ : Submodule ℂ (V ⧸ F))), by simp⟩
+        exact ⟨by rw [Finset.sup_empty]; infer_instance, by simp⟩
     | @insert j s hj ih =>
         haveI : FiniteDimensional ℂ (P j) := hfinite j
         haveI : FiniteDimensional ℂ (s.sup P : Submodule ℂ (V ⧸ F)) := ih.1
@@ -57,7 +56,7 @@ theorem a2_step_quot_rank_of_orbits
         Module.finrank ℂ (LinearMap.range f) := e.finrank_eq
     _ = Module.finrank ℂ (T.map F.mkQ) := by rw [hrange]
     _ ≤ m * L := by
-      simpa only [Finset.sum_const, Finset.card_fin, nsmul_eq_mul] using h.2
+      simpa only [Finset.sum_const, Finset.card_fin, nsmul_eq_mul] using! h.2
     _ = L * m := Nat.mul_comm _ _
 
 end

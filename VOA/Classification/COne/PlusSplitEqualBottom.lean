@@ -28,7 +28,7 @@ theorem spectrum_lower_bound_of_equal_factorBottoms (A : WeakModule W M)
     intro x hx
     exact he ⟨hp hx, hx⟩
   · apply ht.2 a
-    simpa only [FactorWeight, Submodule.restrictScalars_top, top_inf_eq] using hp
+    simpa only [FactorWeight, Submodule.restrictScalars_top, top_inf_eq] using! hp
 
 /-- Construct a grading at an intrinsic spectral lower bound, retaining the
 given weak action and putting every generalized h-vector at level zero. -/

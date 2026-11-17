@@ -115,7 +115,7 @@ theorem lamT_inD (w : M) (y₀ : bot P₂) :
     rcases lt_or_ge k 0 with hk | hk
     · have : b = 0 := by
         have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W hb (j := 0) (by omega)
-        simpa using h
+        simpa using! h
       subst this
       exact ⟨0, 0, fun q => by rw [OppBase.ys_zero_a]⟩
     obtain ⟨k, rfl⟩ : ∃ k' : ℕ, k = k' := ⟨k.toNat, (Int.toNat_of_nonneg hk).symm⟩
@@ -148,7 +148,7 @@ theorem lamT_yR (w : M) (y₀ : bot P₂) (b : V) (n : ℤ) :
     rcases lt_or_ge k 0 with hk | hk
     · have : b = 0 := by
         have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W hb (j := 0) (by omega)
-        simpa using h
+        simpa using! h
       subst this
       have h0 := OppBase.yR_smul_a neg_one_ne_zero' hD (0 : ℂ) (0 : V) n
       rw [zero_smul, zero_smul] at h0
@@ -239,7 +239,7 @@ theorem lamT_yL (w : M) (y₀ : bot P₂) {k : ℕ} {b : V} (hb : b ∈ W.gradin
     Polynomial.eval_one, Polynomial.eval_comp, add_neg_cancel, neg_add_cancel]
   have hB0 : B'.eval 0 * (-1 : ℂ) ^ kk' = 1 := by
     have := congrArg (Polynomial.eval 0) hAB
-    simpa [lz, L] using this
+    simpa [lz, L] using! this
   by_cases hnk : (n' : ℤ) = k
   · have : n' = k := by omega
     subst this
@@ -304,7 +304,7 @@ theorem phiT_lowest (w : M) : LowestSet (Lt P₃) (Set.range (phiT A T Pr hrat h
   rcases lt_trichotomy k 0 with hk | rfl | hk
   · have : a = 0 := by
       have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W ha (j := 0) (by omega)
-      simpa using h
+      simpa using! h
     subst this
     have h0 := OppBase.yR_smul_a neg_neg_one_ne_zero
       ((inD_iff_trans (Qm P₃) _).1 (lamT_inD A T Pr hrat hP₃ w u)) (0 : ℂ) (0 : V) n
@@ -327,7 +327,7 @@ theorem phiT_act (w : M) (a : V) (u : (pBotAmMod P₂).carrier) :
     rcases lt_trichotomy k 0 with hk | rfl | hk
     · have : a = 0 := by
         have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W ha (j := 0) (by omega)
-        simpa using h
+        simpa using! h
       subst this
       simp only [map_zero, LinearMap.zero_apply]
     · rw [W.vacuum_grade, Submodule.mem_span_singleton] at ha

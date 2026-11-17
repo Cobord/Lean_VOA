@@ -51,7 +51,7 @@ theorem d4SchurQ_eq_rhs (N : ℕ) : D4K.d4SchurQ N = (1 / 2 : ℚ) * coeff (2 * 
   rw [D4K.d4SchurQ, rhsCT, coeff_diagS, Finset.mul_sum]
   simp only [coeff_mk]
   rw [sum_range_even (fun k => (1 / 2 : ℚ) * coeff (2 * N - k) (ctP (coeff k kernelM')))
-    (fun m => by simp only; rw [show ctP (coeff (2 * m + 1) kernelM') = cK (2 * m + 1) from rfl, cK_odd,
+    (fun m => by rw [show ctP (coeff (2 * m + 1) kernelM') = cK (2 * m + 1) from rfl, cK_odd,
       map_zero, mul_zero])]
   refine Finset.sum_congr rfl fun m hm => ?_
   have hmN : m ≤ N := by rw [Finset.mem_range] at hm; omega
@@ -63,11 +63,11 @@ def etaP : P := infProd fun k => 1 - X ^ (2 * k + 2)
 
 theorem pf_etaP : ProdFactors fun k => (1 : P) - X ^ (2 * k + 2) := by
   have h := prodFactors_one_add (R := ℚ) (-1) (fun k => 2 * k + 2) (fun k => by show k < 2 * k + 2; omega)
-  simpa [sub_eq_add_neg] using h
+  simpa [sub_eq_add_neg] using! h
 
 theorem map_cst_etaP : PowerSeries.map cst etaP = etaR := by
   have hpf : ProdFactors fun k => (1 : PowerSeries L) - X ^ (2 * k + 2) := by
-    have h := pf_sub (1 : L) (fun k => 2 * k + 2) (fun k => by show k < 2 * k + 2; omega); simpa using h
+    have h := pf_sub (1 : L) (fun k => 2 * k + 2) (fun k => by show k < 2 * k + 2; omega); simpa using! h
   rw [etaR]
   apply eq_infProd_of_agree hpf
   intro N

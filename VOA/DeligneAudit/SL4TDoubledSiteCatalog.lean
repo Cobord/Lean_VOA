@@ -31,7 +31,7 @@ theorem doubledSiteReducedParams_first_valid (q : MixedParams) (k : Fin 10)
     (h : MixedValid (doubledSiteReducedParams q k)) :
     MixedValid (mixedBNext q (doubledSitePairStates k).1) := by
   have hv := mixedBPrevious_valid _ h (doubledSitePairStates k).2
-  simpa only [doubledSiteReducedParams, mixedBPrevious_next] using hv
+  simpa only [doubledSiteReducedParams, mixedBPrevious_next] using! hv
 
 /-- The catalog count shift is precisely the shortened-cutoff shift of its pair. -/
 theorem doubledSitePairStates_level (k : Fin 10) :

@@ -62,9 +62,10 @@ theorem pair_tensor_mode_coefficient {d : ℤ} {u : V} (hu : u∈W.grading d) (p
           (2*d-p-2-j) B.1 := by
       change (mode ((maximalCompatibleSpace N₁.toWeakModule N₂.toWeakModule).field
         ((W.L 1^j) u)) (2*d-p-2-j) (χ B) : BilinearDual (M₁ := M₁) (M₂ := M₂))=_
-      rw [CompatibleSpace.mode_field,CompatibleSpace.action_homogeneous _ _
-        (VertexOperatorAlgebra.L_one_pow_mem W hu j)]
-      rfl
+      rw [CompatibleSpace.mode_field]
+      exact (CompatibleSpace.action_homogeneous
+        (maximalCompatibleSpace N₁.toWeakModule N₂.toWeakModule) _
+        (VertexOperatorAlgebra.L_one_pow_mem W hu j) (χ B)).trans rfl
     simp only [hm]
     exact Huang.PzTensorY4.twist_twist N₁.toWeakModule N₂.toWeakModule hu p B.1
   change C2Rigid.dualPairing N.toGW (χ B) (mode ((contraLog N).YM u) p ξ)=_

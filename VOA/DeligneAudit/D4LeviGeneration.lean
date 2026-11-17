@@ -72,8 +72,8 @@ theorem positive_inv
       obtain ⟨l, r, hl, hr, rfl⟩ := hz
       exact positive_on_normal ρ w hpos l r hl hr a s ha
   | zero => simp
-  | add x y _ _ hx hy => simpa using (leviSpan ρ w).add_mem hx hy
-  | smul c x _ hx => simpa using (leviSpan ρ w).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (leviSpan ρ w).add_mem hx hy
+  | smul c x _ hx => simpa using! (leviSpan ρ w).smul_mem c hx
 
 theorem cycSubG_eq_leviSpan
     (hpos : ∀ a s, IsPositive a → ρ.op a s w = 0) :
@@ -98,7 +98,7 @@ theorem source_generation (m : ℕ)
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0)) :
     cycSubG ρ w = leviSpan ρ w := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   apply cycSubG_eq_leviSpan ρ w
   intro a s ha
   obtain ⟨i, rfl⟩ := ha

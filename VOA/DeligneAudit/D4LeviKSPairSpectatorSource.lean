@@ -56,7 +56,7 @@ theorem pairXZ_uZero_source_prefix
         (pairXZ_uZero_source_higher m a b c deg hb d)
         (keyLayer_le_orbit ρ w _ (radicalWord_mem_key ρ w _))
   | add P Q ihP ihQ =>
-      simpa only [map_add, LinearMap.add_apply] using
+      simpa only [map_add, LinearMap.add_apply] using!
         (higherOrbit ρ w m (pairFinalKey a b c deg)).add_mem ihP ihQ
 
 /-- The complete single-mode spectator transfer for a Y multiplicity of
@@ -83,7 +83,7 @@ theorem pairXZ_one_spectator_transfer
           keyPrefix ρ w m i ∧ True
     exact ⟨pairXZ_uZero_source_prefix ρ w m i a 1 c deg h hi
       hkey (by omega) Q, trivial⟩
-  simpa using pairSpectator_transfer_of_sources ρ w m i h hi [r]
+  simpa using! pairSpectator_transfer_of_sources ρ w m i h hi [r]
     (pairXZRecolourOperator ρ a 1 c 0 Q) hsource
 
 end VOA.DeligneAudit.D4Levi

@@ -55,7 +55,7 @@ theorem rsGT_oneRow (k : ℕ) :
     (fun j => D4K.mon (((k : ℤ) - 2 * j) • D4K.xv) (qbinom D4K.qq k j)) (k + 1)]
   apply Finset.sum_congr rfl
   intro r hr
-  have hrk : r ≤ k := by simpa using Finset.mem_range.mp hr
+  have hrk : r ≤ k := by simpa using! Finset.mem_range.mp hr
   simp only [gtPsi, Fin.prod_univ_succ, Fin.prod_univ_zero, mul_one,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_succ,
     Fin.castSucc_zero, sub_zero, Int.toNat_natCast, Int.toNat_sub, gtEval_one,

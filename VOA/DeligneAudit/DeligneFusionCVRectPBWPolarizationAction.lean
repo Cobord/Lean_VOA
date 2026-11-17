@@ -61,7 +61,7 @@ theorem cartan_nword_mem {ε ν ϱ : Weight} {j : ℕ} (h : CV3Rel R w ε ν ϱ 
       have he' : R.op (cartanRoot b) s (R.op (negRoot x.1) x.2 (nword R w l)) =
           R.op (negRoot x.1) x.2 (R.op (cartanRoot b) s (nword R w l)) +
             cartanCoeff b x.1 • R.op (negRoot x.1) (s + x.2) (nword R w l) := by
-        simpa only [add_comm] using (sub_eq_iff_eq_add.mp he)
+        simpa only [add_comm] using! (sub_eq_iff_eq_add.mp he)
       rw [nword_cons, he']
       apply Submodule.add_mem
       · exact Pbelow_op R w x.1 x.2 (l.length + 1) ih
@@ -85,7 +85,7 @@ theorem raising_comm (b : Bool) (a : Fin 3) (r : ℕ) (v : V) :
   rw [Nat.zero_add] at he
   have he' := sub_eq_iff_eq_add.mp he
   cases b <;> fin_cases a <;>
-    simpa [raisingRoot, raisingTail, negRoot, Fin.sum_univ_eight, bracketTable, add_comm] using he'
+    simpa [raisingRoot, raisingTail, negRoot, Fin.sum_univ_eight, bracketTable, add_comm] using! he'
 
 theorem raising_nword_mem {ε ν ϱ : Weight} {j : ℕ} (h : CV3Rel R w ε ν ϱ j)
     (b : Bool) (l : List NegLtr) :

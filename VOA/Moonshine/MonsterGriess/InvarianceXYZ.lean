@@ -45,6 +45,11 @@ set_option linter.style.show false
 
 /-! ### From `CFSG/Monster/Code/LoopIdentities.lean` and `CFSG/Monster/Spin/Defs.lean` -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess.Code
 
 theorem θ_add_Ω (d f : C) : θ (d + ⟨Ω, Ω_mem_C⟩) f = θ d f := by

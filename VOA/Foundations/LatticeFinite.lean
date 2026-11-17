@@ -73,7 +73,11 @@ theorem gram_pos_int (hPos : L.PosDef) (v : Fin (latRank L) → ℤ) (hv : v ≠
     simp only [Basis.equivFun_apply] at hi
     rw [coord]; exact hi
   have hαne : α ≠ 0 := by
-    rw [hα, Ne, LinearEquiv.map_eq_zero_iff]; exact hv
+    -- Lean 4.35 port: `rw` with `map_eq_zero_iff` is blocked by the `latRank` synonym.
+    intro h
+    apply hv
+    rw [← h1, h]
+    exact map_zero _
   rw [← hcoord, ← form_eq_gram]
   exact hPos α hαne
 

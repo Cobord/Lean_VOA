@@ -64,7 +64,7 @@ theorem conductor_isWeightedHomogeneous (m d : ℕ) :
     exact (MvPolynomial.weightedHomogeneousSubmodule K (fun _ => 1) 1).sub_mem
       (MvPolynomial.isWeightedHomogeneous_X K (fun _ => 1) ij.1.2)
       (MvPolynomial.isWeightedHomogeneous_X K (fun _ => 1) ij.1.1)
-  simpa using hfactor.pow (order ij)
+  simpa using! hfactor.pow (order ij)
 
 theorem factor_prime {m d : ℕ} (ij : Pair m d) : Prime (factor (K := K) ij) :=
   collisionFactor_prime ij.1.2 ij.1.1 (ne_of_lt ij.2)

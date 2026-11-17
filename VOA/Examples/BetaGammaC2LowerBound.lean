@@ -59,10 +59,10 @@ theorem beta_mem_chargeGrading {c : ℂ} {p : Fock} (hp : p ∈ chargeGrading c)
   rw [beta]
   by_cases hn : 0 ≤ n
   · rw [if_pos hn]
-    simpa only [chargeWt_inr, sub_neg_eq_add] using
+    simpa only [chargeWt_inr, sub_neg_eq_add] using!
       (der_mem_chargeGrading (Sum.inr n.toNat) hp)
   · rw [if_neg hn]
-    simpa only [chargeWt_inl, add_comm] using
+    simpa only [chargeWt_inl, add_comm] using!
       (mulX_mem_chargeGrading (Sum.inl (-n - 1).toNat) hp)
 
 theorem gamma_mem_chargeGrading {c : ℂ} {p : Fock} (hp : p ∈ chargeGrading c) (n : ℤ) :
@@ -71,10 +71,10 @@ theorem gamma_mem_chargeGrading {c : ℂ} {p : Fock} (hp : p ∈ chargeGrading c
   by_cases hn : 0 ≤ n
   · rw [if_pos hn, LinearMap.neg_apply]
     exact Submodule.neg_mem _ (by
-      simpa only [chargeWt_inl] using
+      simpa only [chargeWt_inl] using!
         (der_mem_chargeGrading (Sum.inl n.toNat) hp))
   · rw [if_neg hn]
-    simpa only [chargeWt_inr, sub_eq_add_neg, add_comm] using
+    simpa only [chargeWt_inr, sub_eq_add_neg, add_comm] using!
       (mulX_mem_chargeGrading (Sum.inr (-n - 1).toNat) hp)
 
 def ChargeFieldBG (f : FormalDist (Module.End ℂ Fock)) (D : ℂ) : Prop :=
@@ -83,12 +83,12 @@ def ChargeFieldBG (f : FormalDist (Module.End ℂ Fock)) (D : ℂ) : Prop :=
 theorem betaZ_ChargeField : ChargeFieldBG betaZ 1 := by
   intro j c x hx
   rw [betaZ_eq]
-  simpa only [add_comm] using beta_mem_chargeGrading hx (-j - 1)
+  simpa only [add_comm] using! beta_mem_chargeGrading hx (-j - 1)
 
 theorem gammaZ_ChargeField : ChargeFieldBG gammaZ (-1) := by
   intro j c x hx
   rw [gammaZ_eq]
-  simpa only [sub_eq_add_neg, add_comm] using gamma_mem_chargeGrading hx (-j - 1)
+  simpa only [sub_eq_add_neg, add_comm] using! gamma_mem_chargeGrading hx (-j - 1)
 
 def letterCharge : ℕ ⊕ ℕ → ℤ
   | Sum.inl _ => 1
@@ -104,8 +104,8 @@ theorem chargeWt_eq_letterCharge (i : ℕ ⊕ ℕ) :
 theorem bgBase_ChargeField (i : ℕ ⊕ ℕ) :
     ChargeFieldBG (bgBase i) (letterCharge i : ℂ) := by
   cases i with
-  | inl k => simpa using betaZ_ChargeField
-  | inr k => simpa using gammaZ_ChargeField
+  | inl k => simpa using! betaZ_ChargeField
+  | inr k => simpa using! gammaZ_ChargeField
 
 theorem bgGenField_ChargeField (i : ℕ ⊕ ℕ) :
     ChargeFieldBG (bgGenField i) (letterCharge i : ℂ) := by
@@ -124,7 +124,7 @@ theorem idFieldBG_ChargeField : ChargeFieldBG idField 0 := by
   rw [idField_apply]
   by_cases hj : j = 0
   · subst hj
-    simpa using hx
+    simpa using! hx
   · rw [if_neg hj, LinearMap.zero_apply]
     exact Submodule.zero_mem _
 
@@ -142,13 +142,13 @@ theorem ChargeFieldBG.nprod (ε : ℂ) {a b : FormalDist (Module.End ℂ Fock)}
     change a m (b (s - m) x) ∈ _
     have hb' := hcb (s - m) c x hx
     have ha' := hca m (Db + c) _ hb'
-    simpa [add_assoc] using ha'
+    simpa [add_assoc] using! ha'
   · rw [if_neg h0, LinearMap.smul_apply]
     refine Submodule.smul_mem _ _ ?_
     change b (s - m) (a m x) ∈ _
     have ha' := hca m c x hx
     have hb' := hcb (s - m) (Da + c) _ ha'
-    simpa [add_assoc, add_comm, add_left_comm] using hb'
+    simpa [add_assoc, add_comm, add_left_comm] using! hb'
 
 def wordCharge : BGWord → ℤ
   | [] => 0
@@ -177,7 +177,7 @@ theorem stWordBG_mem_chargeGrading (l : BGWord) :
       exact MvPolynomial.isWeightedHomogeneous_one ℂ chargeWt
   | cons i rest ih =>
       rw [stWordBG_cons, wordCharge_cons, Int.cast_add]
-      simpa only [chargeWt_eq_letterCharge] using mulX_mem_chargeGrading i ih
+      simpa only [chargeWt_eq_letterCharge] using! mulX_mem_chargeGrading i ih
 
 def wordWeight2 : BGWord → ℕ
   | [] => 0
@@ -232,7 +232,7 @@ noncomputable def betaZeroCoeff (n : ℕ) : Fock →ₗ[ℂ] ℂ :=
   MvPolynomial.lcoeff ℂ (betaZeroExp n)
 
 theorem betaZeroCoeff_eq_coeff (n : ℕ) (p : Fock) :
-    betaZeroCoeff n p = coeff (betaZeroExp n) p := rfl
+    betaZeroCoeff n p = p.coeff (betaZeroExp n) := rfl
 
 theorem betaZeroCoeff_zero_of_weight_ne (n : ℕ) {w : ℂ} {p : Fock}
     (hp : p ∈ gradingBG w) (hne : w ≠ (n : ℂ) / 2) :
@@ -260,7 +260,7 @@ theorem betaZeroCoeff_word_smul_neg_two (n : ℕ) (l₁ l₂ : BGWord) :
     rw [mode_apply, YBG_word]
     have h := YwordBG_WtField l₁ 1 (bgWeight l₂) (stWordBG l₂)
       (stWordBG_mem_gradingBG l₂)
-    simpa only [Int.cast_one] using h
+    simpa only [Int.cast_one] using! h
   by_cases heq : bgWeight l₁ + bgWeight l₂ + 1 = (n : ℂ) / 2
   · have hcharge :
         bgSVOA.smul (stWordBG l₁) (-2) (stWordBG l₂) ∈
@@ -296,7 +296,7 @@ theorem betaZeroCoeff_superO₂_zero (n : ℕ) {p : Fock} (hp : p ∈ superO₂ 
 theorem betaZeroExp_injective : Function.Injective betaZeroExp := by
   intro m n h
   have h0 := congrArg (fun d : (ℕ ⊕ ℕ) →₀ ℕ => d (Sum.inl 0)) h
-  simpa [betaZeroExp] using h0
+  simpa [betaZeroExp] using! h0
 
 @[simp] theorem betaZeroCoeff_betaZeroPow_self (n : ℕ) :
     betaZeroCoeff n (betaZeroPow n) = 1 := by
@@ -327,7 +327,7 @@ theorem betaZeroClass_linearIndependent :
   have hmem : (∑ k ∈ s, c k • betaZeroPow k) ∈ superO₂ bgSVOA := by
     have hq : (superO₂ bgSVOA).mkQ (∑ k ∈ s, c k • betaZeroPow k) = 0 := by
       rw [map_sum]
-      simpa only [map_smul, betaZeroClass] using hc
+      simpa only [map_smul, betaZeroClass] using! hc
     rwa [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hq
   have hz := betaZeroCoeff_superO₂_zero j hmem
   have hcoeff : betaZeroCoeff j (∑ k ∈ s, c k • betaZeroPow k) = c j := by

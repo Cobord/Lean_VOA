@@ -1107,7 +1107,7 @@ noncomputable def fockWt (d : (ℕ × Fin r) →₀ ℕ) : ℂ :=
   d.prod fun v m => cVar v ^ m * (m.factorial : ℂ)
 
 noncomputable def fockForm (r : ℕ) : LinearMap.BilinForm ℂ (FockT r) :=
-  Finsupp.lsum ℂ fun d => LinearMap.smulRight LinearMap.id (fockWt d • lcoeff ℂ d)
+  (basisMonomials (ℕ × Fin r) ℂ).constr ℂ fun d => fockWt d • lcoeff ℂ d
 \end{leancode}
 (\leanpath{VOA/Moonshine/InvFormFock.lean}.)
 \begin{dictionary}

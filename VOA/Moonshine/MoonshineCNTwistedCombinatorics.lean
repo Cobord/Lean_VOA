@@ -69,7 +69,7 @@ theorem bigradedConv_congr {f f' g : ℕ × ℕ → ℂ} {γ : ℕ × ℕ}
     (h : ∀ δ, δ.1 ≤ γ.1 → δ.2 ≤ γ.2 → f δ = f' δ) :
     bigradedConv f g γ = bigradedConv f' g γ := by
   refine sum_congr rfl fun a ha => sum_congr rfl fun n hn => ?_
-  rw [mem_antidiagonal] at ha hn
+  rw [HasAntidiagonal.mem_antidiagonal] at ha hn
   rw [h _ (by simp only; omega) (by simp only; omega)]
 
 theorem bigradedConv_comm (f g : ℕ × ℕ → ℂ) (γ : ℕ × ℕ) :
@@ -89,17 +89,17 @@ theorem sum_antidiagonal_ite_fst (M x : ℕ) (h : ℕ × ℕ → ℂ) :
   · rw [if_pos hx, sum_eq_single (x, M - x)]
     · simp
     · rintro ⟨a, b⟩ hab hne
-      rw [mem_antidiagonal] at hab
+      rw [HasAntidiagonal.mem_antidiagonal] at hab
       change a + b = M at hab
       rw [if_neg]
       intro h1
       change a = x at h1
       exact hne (Prod.ext h1 (show b = M - x by omega))
     · intro hn
-      exact absurd (mem_antidiagonal.mpr (show x + (M - x) = M by omega)) hn
+      exact absurd (HasAntidiagonal.mem_antidiagonal.mpr (show x + (M - x) = M by omega)) hn
   · rw [if_neg hx]
     refine sum_eq_zero fun a ha => if_neg ?_
-    rw [mem_antidiagonal] at ha
+    rw [HasAntidiagonal.mem_antidiagonal] at ha
     omega
 
 /-- Shifted sums are convolutions: `Σ_x [d x ≤ γ] f x F(γ − d x) = (φ ⋆ F)(γ)` with

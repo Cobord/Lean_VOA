@@ -53,7 +53,7 @@ theorem mem_binDeg_of_hom {P : P2} {d : ℕ} (hP : P.IsHomogeneous d) : P ∈ bi
   have hd : e 0 + e 1 = d := by
     by_contra hne
     exact (mem_support_iff.mp he) (hP.coeff_eq_zero (by rw [deg2]; exact hne))
-  rw [show monomial e (coeff e P) = coeff e P • monomial e (1 : ℂ) by
+  rw [show monomial e (P.coeff e) = P.coeff e • monomial e (1 : ℂ) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨e, hd, rfl⟩)
 
@@ -104,7 +104,7 @@ theorem top_bin (s m : ℕ) {P Q : P2} (hP : P ∈ binDeg (2 * s)) (hQ : Q ∈ b
         tbm_of_deg (show (e + f) 0 + (e + f) 1 = 2 * (s + m) by
           simp only [Finsupp.add_apply]; omega)]
       have := top_wv s m _ (e 1) (f 1) rfl (by omega) (by omega)
-      simpa only [Finsupp.add_apply] using this
+      simpa only [Finsupp.add_apply] using! this
     | zero => simp
     | add y z _ _ hy hz =>
       rw [map_add, PreVertexAlgebra.smul_add_right, mul_add, map_add, smul_add]
@@ -136,9 +136,9 @@ theorem psi_gen_hom (i : Fin 3) :
       MvPolynomial.C (-2 * eps1) * (X 0 * X 1)] i : P2).IsHomogeneous 2 := by
   fin_cases i
   · exact (isHomogeneous_X_pow _ _).sub (isHomogeneous_X_pow _ _)
-  · simpa using ((isHomogeneous_X_pow (R := ℂ) (0 : Fin 2) 2).add
+  · simpa using! ((isHomogeneous_X_pow (R := ℂ) (0 : Fin 2) 2).add
       (isHomogeneous_X_pow _ _)).C_mul Complex.I
-  · simpa using ((isHomogeneous_X ℂ (0 : Fin 2)).mul (isHomogeneous_X ℂ (1 : Fin 2))).C_mul
+  · simpa using! ((isHomogeneous_X ℂ (0 : Fin 2)).mul (isHomogeneous_X ℂ (1 : Fin 2))).C_mul
       (-2 * eps1)
 
 theorem psi_hom {F : P3} {n : ℕ} (hF : F.IsHomogeneous n) : (psi F).IsHomogeneous (2 * n) :=
@@ -231,17 +231,17 @@ theorem psi_wP : psi wP = X 0 * X 1 := by
 
 theorem uP_hom : uP.IsHomogeneous 1 := by
   unfold uP
-  simpa using ((isHomogeneous_X ℂ (0 : Fin 3)).sub
+  simpa using! ((isHomogeneous_X ℂ (0 : Fin 3)).sub
     ((isHomogeneous_X ℂ (1 : Fin 3)).C_mul Complex.I)).C_mul (1 / 2 : ℂ)
 
 theorem vP_hom : vP.IsHomogeneous 1 := by
   unfold vP
-  simpa using ((isHomogeneous_X ℂ (0 : Fin 3)).neg.sub
+  simpa using! ((isHomogeneous_X ℂ (0 : Fin 3)).neg.sub
     ((isHomogeneous_X ℂ (1 : Fin 3)).C_mul Complex.I)).C_mul (1 / 2 : ℂ)
 
 theorem wP_hom : wP.IsHomogeneous 1 := by
   unfold wP
-  simpa using (isHomogeneous_X ℂ (2 : Fin 3)).C_mul (-(1 / 2 : ℂ) * eps1)
+  simpa using! (isHomogeneous_X ℂ (2 : Fin 3)).C_mul (-(1 / 2 : ℂ) * eps1)
 
 theorem binMono_eq (a b : ℕ) :
     (X 0 ^ a * X 1 ^ b : P2) = monomial (Finsupp.single 0 a + Finsupp.single 1 b) 1 := by
@@ -284,6 +284,7 @@ theorem T2_rank (n : ℕ) : 2 * n + 1 ≤
   have hli : LinearIndependent ℂ (fun k : Fin (2 * n + 1) => wv n k) := by
     have := (vn_linearIndependent n).units_smul (fun k => Units.mk0 (cnk n k) (cnk_ne_zero n k))
     convert this using 1
+    all_goals exact funext fun k => rfl
   have hsp : Submodule.span ℂ (Set.range fun k : Fin (2 * n + 1) => wv n k) ≤
       Submodule.span ℂ (T2 '' {F | F.IsHomogeneous n}) :=
     Submodule.span_le.mpr (by rintro _ ⟨k, rfl⟩; exact wv_mem_span_T2 n k (by omega))

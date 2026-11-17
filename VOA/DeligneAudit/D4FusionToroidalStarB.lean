@@ -178,7 +178,7 @@ theorem truncSum_mem (hz : Function.Injective z) (N : ℕ) (hN : m ≤ N + 1) :
       exact trunc_term_mem f hJ hskew z c₀ N p.1 p.2 hab (by omega)
   have h := Submodule.sub_mem _ hY hdiff
   rw [← Finset.sum_sub_distrib] at h
-  simpa only [sub_sub_cancel] using h
+  simpa only [sub_sub_cancel] using! h
 
 /-! ## The graded statement -/
 

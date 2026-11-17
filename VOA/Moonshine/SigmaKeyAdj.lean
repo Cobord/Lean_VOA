@@ -38,6 +38,11 @@ genuinely three-point identity `KeySkew`.
 `KeySkew`.  Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -244,7 +249,7 @@ theorem leechBV_qp_two {v : VPlus} (hv2 : v ∈ leechVOAPlus.grading 2)
   have e := sum_L1_qp (W := leechVOAPlus) hqp 2
     (fun j w => leechBV a (leechVOAPlus.smul w (2 * 2 - n - 2 - (j : ℤ)) b))
     (fun j => by simp [leechVOAPlus.smul_zero_left])
-  simp only at e
+  try simp only at e
   rw [show (2 : ℤ).toNat + 1 = 2 + 1 from rfl, e]
   rw [show (2 : ℤ) * 2 - n - 2 - ((0 : ℕ) : ℤ) = 2 - n by push_cast; ring]
   norm_num
@@ -257,7 +262,7 @@ theorem TPForm_qp_two {v : VPlus} (hv2 : v ∈ leechVOAPlus.grading 2)
   have e := sum_L1_qp (W := leechVOAPlus) hqp 2
     (fun j w => TPForm a (mode (plusModule.YM w) (2 * 2 - n - 2 - (j : ℤ)) b))
     (fun j => by simp)
-  simp only at e
+  try simp only at e
   rw [show (2 : ℤ).toNat + 1 = 2 + 1 from rfl, e]
   rw [show (2 : ℤ) * 2 - n - 2 - ((0 : ℕ) : ℤ) = 2 - n by push_cast; ring]
   norm_num

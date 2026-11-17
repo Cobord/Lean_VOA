@@ -176,7 +176,7 @@ theorem multSpace_trivial_ne_bot (G : Subgroup (Aut W)) (hW : W.IsSimple) :
   intro h0
   have h1 := congrArg (fun φ : ℂ →ₗ[ℂ] 𝒱 => φ 1) h0
   simp only [LinearMap.zero_apply] at h1
-  exact hW.vacuum_ne_zero (by simpa [multSpaceTrivialEquiv, v] using h1)
+  exact hW.vacuum_ne_zero (by simpa [multSpaceTrivialEquiv, v] using! h1)
 
 /-- The weight-`n` piece `W_n` as a representation of `G`. -/
 def gradedRep (G : Subgroup (Aut W)) (n : ℤ) : Representation ℂ G (W.grading n) :=

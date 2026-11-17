@@ -70,14 +70,14 @@ theorem tensorDeg_preserve_sum (dV : ι → Submodule ℂ V) (dW : ι → Submod
     (hT : ∀ i, ∀ x ∈ dV i, T x ∈ dV i) (hS : ∀ i, ∀ y ∈ dW i, S y ∈ dW i) (a : ι) :
     ∀ z ∈ tensorDeg dV dW a, F z ∈ tensorDeg dV dW a := by
   refine tensorDeg_induction dV dW a (fun z => F z ∈ tensorDeg dV dW a)
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_
   intro b x hx y hy
   rw [hF]
   have e : b + (a - b) = a := by abel
   refine Submodule.add_mem _ ?_ ?_
-  · simpa only [e] using tmul_mem_tensorDeg dV dW (hT b x hx) hy
-  · simpa only [e] using tmul_mem_tensorDeg dV dW hx (hS _ y hy)
+  · simpa only [e] using! tmul_mem_tensorDeg dV dW (hT b x hx) hy
+  · simpa only [e] using! tmul_mem_tensorDeg dV dW hx (hS _ y hy)
 
 /-- `1 ⊗ S` shifts the tensor grading by `δ` if `S` does. -/
 theorem tensorDeg_shift_right (dV : ι → Submodule ℂ V) (dW : ι → Submodule ℂ W)
@@ -86,12 +86,12 @@ theorem tensorDeg_shift_right (dV : ι → Submodule ℂ V) (dW : ι → Submodu
     (hS : ∀ i, ∀ y ∈ dW i, S y ∈ dW (i + δ)) (a : ι) :
     ∀ z ∈ tensorDeg dV dW a, F z ∈ tensorDeg dV dW (a + δ) := by
   refine tensorDeg_induction dV dW a (fun z => F z ∈ tensorDeg dV dW (a + δ))
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_
   intro b x hx y hy
   rw [hF]
   have e : b + (a - b + δ) = a + δ := by abel
-  simpa only [e] using tmul_mem_tensorDeg dV dW hx (hS _ y hy)
+  simpa only [e] using! tmul_mem_tensorDeg dV dW hx (hS _ y hy)
 
 end Generic
 

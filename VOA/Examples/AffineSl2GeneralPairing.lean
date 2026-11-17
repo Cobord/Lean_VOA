@@ -88,7 +88,7 @@ theorem simple_normalized_word_tangent (D : FirstOrderDeformation (simple k hk))
   have h := congrArg TrivSqZeroExt.snd
     (simple_normalized_word_pairing k hk hk0 D hD hnorm δ hδ w)
   rw [VirRigidTangent.aeval_dual] at h
-  simpa [vacuumPair_apply] using h
+  simpa [vacuumPair_apply] using! h
 
 include hk0 in
 /-- Scalar specialization of the same constructed polynomial is the actual
@@ -107,7 +107,7 @@ theorem wordPolynomial_eval (w : List (Fin 3 × ℤ)) :
   have h := congrArg TrivSqZeroExt.fst
     (simple_normalized_word_pairing k hk hk0 D hD hn 0 hd w)
   rw [VirRigidTangent.aeval_dual] at h
-  simpa [vacuumPair_apply, liftedCurrentWord_fst] using h.symm
+  simpa [vacuumPair_apply, liftedCurrentWord_fst] using! h.symm
 
 /-- Reversing a word and negating its literal mode indices gives the adjoint
 indices. Each weight-one adjoint also contributes a separate minus sign. -/

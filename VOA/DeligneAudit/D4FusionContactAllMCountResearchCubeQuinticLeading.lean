@@ -71,7 +71,7 @@ theorem quintic_multiplier_weighted (m : ℕ) :
   have h1 := actualMode_weighted m 0 1
   have h2 := actualMode_weighted m (m-1) 2
   have h := h1.mul h2
-  simpa [actualMode,cubeSign,cubeColor,sourceEnergy] using h
+  simpa [actualMode,cubeSign,cubeColor,sourceEnergy] using! h
 
 /-- Uniform leading color part of the actual whole quintic row. -/
 theorem quinticLowRow_sub_head_mem (m : ℕ) :
@@ -80,14 +80,14 @@ theorem quinticLowRow_sub_head_mem (m : ℕ) :
     (quintic_multiplier_weighted m)
   change (modeX m 1 0 * modeX m 2 (m-1)) *
     (AllMNormal.lowCubicPolar m - cubicPolarHead m (m-2)) ∈ currentColorLow m 12 at h
-  simpa only [mul_sub,AllMNormal.quinticLowRow,quinticHead] using h
+  simpa only [mul_sub,AllMNormal.quinticLowRow,quinticHead] using! h
 
 theorem quinticHead_mem_candidate_sup_low (m : ℕ) :
     quinticHead m ∈ (AllM.candidateIdeal m).restrictScalars ℂ ⊔ currentColorLow m 12 := by
   have hsource : AllMNormal.quinticLowRow m ∈
       (AllM.candidateIdeal m).restrictScalars ℂ ⊔ currentColorLow m 12 :=
     Submodule.mem_sup_left (AllMNormal.quinticLowRow_mem m)
-  simpa only [sub_sub_cancel] using Submodule.sub_mem _ hsource
+  simpa only [sub_sub_cancel] using! Submodule.sub_mem _ hsource
     (Submodule.mem_sup_right (quinticLowRow_sub_head_mem m))
 
 theorem quinticHead_mem_ann_sup_low

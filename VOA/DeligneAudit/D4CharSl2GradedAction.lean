@@ -45,11 +45,11 @@ theorem sl2LowerDegree_cartan (F K : ℕ → Module.End ℂ V) (c : ℂ)
         apply Submodule.add_mem
         · apply Submodule.smul_mem
           exact Submodule.subset_span ⟨(s + k) :: l, by simp; omega, rfl⟩
-        · simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
+        · simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using!
             sl2LowerDegree_lower F y (l.sum + s) k ih
   apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
-  simpa only [hl] using hw l
+  simpa only [hl] using! hw l
 
 theorem sl2LowerDegree_raise {E H F : ℕ → Module.End ℂ V}
     (hS : CVsl2.SL2 E H F) (y : V) (hE : ∀ s, E s y = 0)
@@ -71,13 +71,13 @@ theorem sl2LowerDegree_raise {E H F : ℕ → Module.End ℂ V}
         apply Submodule.add_mem
         · have hl : (l.map F).prod y ∈ sl2LowerDegree F y l.sum :=
             Submodule.subset_span ⟨l, rfl, rfl⟩
-          simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
+          simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using!
             sl2LowerDegree_cartan F H (-2) hS.hHF y hH0 hHpos l.sum (s + k) hl
-        · simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
+        · simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using!
             sl2LowerDegree_lower F y (l.sum + s) k ih
   apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
-  simpa only [hl] using hw l
+  simpa only [hl] using! hw l
 
 end
 

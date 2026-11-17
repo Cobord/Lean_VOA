@@ -115,7 +115,7 @@ def universalCreation (n : ℤ) (i : ℕ) :
     UniversalWeight L n →ₗ[ℂ] UniversalWeight L (n + i + 2) :=
   ((Lop L.c (-(i : ℤ) - 2)).comp (UniversalWeight L n).subtype).codRestrict _
     (fun x => by
-      simpa only [add_assoc] using Lop_neg_maps_grading L.c i x.2)
+      simpa only [add_assoc] using! Lop_neg_maps_grading L.c i x.2)
 
 theorem universalPrefix_le_of_generators
     (F : ∀ n : ℤ, ℕ → Submodule ℂ (UniversalWeight L n))

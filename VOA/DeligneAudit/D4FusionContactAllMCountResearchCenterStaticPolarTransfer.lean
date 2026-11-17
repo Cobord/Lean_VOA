@@ -34,7 +34,7 @@ theorem Gen.coeff_mem (m : ℕ) (g : Gen) :
       quadraticCubicPolarIdeal m := by
   cases g with
   | qq a1 b1 c1 a2 b2 c2 =>
-      simpa only [Gen.poly,map_mul,jetDerivative_zero] using
+      simpa only [Gen.poly,map_mul,jetDerivative_zero] using!
         coeff_jet_product_mem (quadraticCubicPolarIdeal m)
           (currentMap m (orbit ℂ 2 a1 b1 c1)) (currentMap m (orbit ℂ 2 a2 b2 c2))
           2 2 m 0 0 (2 * m - 3)
@@ -42,7 +42,7 @@ theorem Gen.coeff_mem (m : ℕ) (g : Gen) :
           (fun k hk => quadraticCubicPolar_coeff_mem m 2 a2 b2 c2 k (Or.inl rfl) hk)
           (by omega)
   | qc a1 b1 c1 a2 b2 c2 =>
-      simpa only [Gen.poly,map_mul,jetDerivative_zero] using
+      simpa only [Gen.poly,map_mul,jetDerivative_zero] using!
         coeff_jet_product_mem (quadraticCubicPolarIdeal m)
           (currentMap m (orbit ℂ 2 a1 b1 c1)) (currentMap m (orbit ℂ 3 a2 b2 c2))
           2 3 m 0 0 (2 * m - 3)
@@ -50,7 +50,7 @@ theorem Gen.coeff_mem (m : ℕ) (g : Gen) :
           (fun k hk => quadraticCubicPolar_coeff_mem m 3 a2 b2 c2 k (Or.inr rfl) hk)
           (by omega)
   | lc i a2 b2 c2 =>
-      simpa only [Gen.poly,map_mul,currentMap_X,jetDerivative_zero] using
+      simpa only [Gen.poly,map_mul,currentMap_X,jetDerivative_zero] using!
         coeff_jet_product_mem (quadraticCubicPolarIdeal m)
           (actualCurrent m i) (currentMap m (orbit ℂ 3 a2 b2 c2))
           1 3 m 0 0 (2 * m - 3)
@@ -88,7 +88,7 @@ theorem Cert.actual_coeff_mem (C : Cert) (hC : C.valid) (m : ℕ) :
   have hc : ((C.mult : ℤ) : ℂ) • PowerSeries.coeff (2 * m - 3)
         ((C.target.map (actualCurrent m)).prod) ∈
       (quadraticCubicPolarIdeal m).restrictScalars ℂ := by
-    simpa only [Int.cast_smul_eq_zsmul ℂ] using hm
+    simpa only [Int.cast_smul_eq_zsmul ℂ] using! hm
   exact (Submodule.smul_mem_iff ((quadraticCubicPolarIdeal m).restrictScalars ℂ)
     (Int.cast_ne_zero.mpr hC.2)).mp hc
 

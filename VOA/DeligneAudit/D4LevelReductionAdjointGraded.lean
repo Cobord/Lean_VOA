@@ -23,11 +23,11 @@ private theorem adjointModePolynomial_homogeneous (l : List ℕ) :
     MvPolynomial.IsWeightedHomogeneous om (adjointModePolynomial l) (l.length, l.sum) := by
   induction l with
   | nil =>
-      simpa [adjointModePolynomial] using MvPolynomial.isWeightedHomogeneous_one ℂ om
+      simpa [adjointModePolynomial] using! MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s l ih =>
       have hz : MvPolynomial.IsWeightedHomogeneous om (z s) (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
-      simpa [adjointModePolynomial, Nat.add_comm] using hz.mul ih
+      simpa [adjointModePolynomial, Nat.add_comm] using! hz.mul ih
 
 private theorem adjointModePolynomial_evaluation (l : List ℕ) :
     Sl2Weyl.evAlg (rootF ρ 1) (rootF_comm ρ 1) (adjointModePolynomial l) =
@@ -44,13 +44,13 @@ theorem adjointKey_le_gradedBox (m a d : ℕ) (ha : a ≤ m)
     keyLayer ρ w (adjointLetterKey a d) ≤
       Submodule.span ℂ (adjointBoxVector ρ w '' (adjointGradedBox m a d : Set _)) := by
   classical
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hcol := adjointKey_word_colours a d l hl
   have hlen : l.length = a := by
     have hd := wordKey_depth l
     rw [hl] at hd
-    simpa [keyDepth, adjointLetterKey] using hd.symm
+    simpa [keyDepth, adjointLetterKey] using! hd.symm
   have heval : radicalWord ρ w l = ((l.map Prod.snd).map (rootF ρ 1)).prod w := by
     clear hl hlen
     induction l with
@@ -68,7 +68,7 @@ theorem adjointKey_le_gradedBox (m a d : ℕ) (ha : a ≤ m)
       (PowerSeries.coeff s (Garland.Fs (rootF ρ 1) ^ r)) w = 0 := by
     intro r s hr hs
     apply radical_garland_zero ρ w m h 1 r s hr
-    simpa [rootWeight] using hs
+    simpa [rootWeight] using! hs
   have hb := span_box_graded (rootF ρ 1) (rootF_comm ρ 1) w m hk
     (adjointModePolynomial_homogeneous (l.map Prod.snd))
   rw [adjointModePolynomial_evaluation, ← heval] at hb
@@ -79,7 +79,7 @@ theorem adjointKey_le_gradedBox (m a d : ℕ) (ha : a ≤ m)
   · refine (A3Sector.mem_a2BoxModeSet m a ha f).mpr ⟨?_, hf⟩
     have hfst := congrArg Prod.fst hw
     simpa [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum,
-      Prod.fst_sum, om, hlen] using hfst
+      Prod.fst_sum, om, hlen] using! hfst
   · have hd : (l.map Prod.snd).sum = d := congrArg RadicalKey.degree hl
     exact (congrArg Prod.snd hw).trans hd
 
@@ -91,7 +91,7 @@ theorem adjointKey_finrank_le_gradedBox (m a d : ℕ) (ha : a ≤ m)
   classical
   let B := (adjointGradedBox m a d).image (adjointBoxVector ρ w)
   have hle : keyLayer ρ w (adjointLetterKey a d) ≤ Submodule.span ℂ (B : Set V) := by
-    simpa only [B, Finset.coe_image] using adjointKey_le_gradedBox ρ w m a d ha h
+    simpa only [B, Finset.coe_image] using! adjointKey_le_gradedBox ρ w m a d ha h
   haveI : FiniteDimensional ℂ (Submodule.span ℂ (B : Set V)) :=
     FiniteDimensional.span_of_finite ℂ B.finite_toSet
   exact (Submodule.finrank_mono hle).trans

@@ -73,14 +73,14 @@ theorem block_residual_dvd (m D : ℕ) (f : ρ → τ) (u : τ)
     (X (Sum.inl u) - X (Sum.inr d) : MvPolynomial (Target τ α β γ) K) ∣ clusterEval f F := by
   let hf : Fin m ↪ {x : ρ // f x = u} :=
     (Function.Embedding.nonempty_of_card_le (by
-      simpa [Fintype.card_fin, ← blockSize_eq_card_fiber] using hu)).some
+      simpa [Fintype.card_fin, ← blockSize_eq_card_fiber] using! hu)).some
   let h : Fin m ↪ ρ := hf.trans (Function.Embedding.subtype _)
   have hh (j : Fin m) : f (h j) = u := (hf j).property
   apply block_residual_factor m D sourceColor F hF (clusterIndex f)
     (Sum.inl u) (Sum.inr d) (by simp) (residualColor d) (residualSelection h d)
     (residualSelection_color h d)
   · rcases d with d | (d | d) <;> rfl
-  · rintro (j | j) <;> simp [clusterIndex, pairIndex, residualSelection, hh]
+  · rintro (j | j) <;> exact congrArg Sum.inl (hh j)
 
 /-- Select an e-relation entirely inside `m+1` distinct paired variables. -/
 def largeSelection {m : ℕ} (h : Fin (m + 1) ↪ ρ) :
@@ -100,7 +100,7 @@ theorem large_block_eval_eq_zero (m D : ℕ) (f : ρ → τ) (u : τ)
     clusterEval f F = 0 := by
   let hf : Fin (m + 1) ↪ {x : ρ // f x = u} :=
     (Function.Embedding.nonempty_of_card_le (by
-      simpa [Fintype.card_fin, ← blockSize_eq_card_fiber] using hu)).some
+      simpa [Fintype.card_fin, ← blockSize_eq_card_fiber] using! hu)).some
   let h : Fin (m + 1) ↪ ρ := hf.trans (Function.Embedding.subtype _)
   have hh (j : Fin (m + 1)) : f (h j) = u := (hf j).property
   have hz := functionalModel_selected_vanish (A := MvPolynomial (Target τ α β γ) K)
@@ -113,7 +113,10 @@ theorem large_block_eval_eq_zero (m D : ℕ) (f : ρ → τ) (u : τ)
       simp [clusterEval]
     rw [heq]
     exact hz
-  · rintro (j | (j | j)) <;> simp [largeSelection, clusterIndex, pairIndex, hh]
+  · rintro (j | (j | j))
+    · exact congrArg (fun t => X (Sum.inl t)) (hh 0)
+    · exact congrArg (fun t => X (Sum.inl t)) (hh j.succ)
+    · exact congrArg (fun t => X (Sum.inl t)) (hh j.succ)
 
 /-- Permute the paired e/f labels simultaneously. -/
 def pairSourcePerm (e : Equiv.Perm ρ) : Equiv.Perm (Source ρ α β γ) :=

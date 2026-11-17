@@ -155,7 +155,7 @@ theorem topCoeff_ExF_one (w : ℕ) {F : FockN (rank (latP m))} (hF : F ∈ ExF (
     rw [monoWt_single, monoDeg_single] at hs
     simp at hs
   · simp [topCoeff]
-  · intro x y _ _ hx hy; simp only [topCoeff, coeff_add] at hx hy ⊢; rw [hx, hy, add_zero]
+  · intro x y _ _ hx hy; simp only [topCoeff, MvPolynomial.coeff_add] at hx hy ⊢; rw [hx, hy, add_zero]
   · intro c x _ hx; simp only [topCoeff, coeff_smul, smul_eq_mul] at hx ⊢; rw [hx, mul_zero]
 
 theorem phi_ExFil_one (w : ℕ) {x : LatModuleGen (latP m)} (hx : x ∈ ExFil (latP m) 1 0) :
@@ -192,7 +192,7 @@ theorem smul_neg_two_mem_ExFil (p q : FockN (rank (latP m))) {n : ℤ} (hn : n �
   rintro _ ⟨l, -, rfl⟩
   have h := word_smul_le_neg_two_mem_ExFil (latP m) (latP_even m) (latP_posDef m hm) l hn hq
   rw [wordStateLatGen_eq] at h
-  simpa using h
+  simpa using! h
 
 /-- **`Φ_w` vanishes on `O₂(M(1)⁺)`.** -/
 theorem phi_O₂ (w : ℕ) {x : (m1Sub m hm).carrier} (hx : x ∈ O₂ (M1P m hm)) :
@@ -260,7 +260,7 @@ theorem topCoeff_FilF (w : ℕ) {e : ℤ} (hw : e < w) {F : FockN (rank (latP m)
     rw [Finsupp.sum_single_index rfl] at hs
     omega
   · simp [topCoeff]
-  · intro x y _ _ hx hy; simp only [topCoeff, coeff_add] at hx hy ⊢; rw [hx, hy, add_zero]
+  · intro x y _ _ hx hy; simp only [topCoeff, MvPolynomial.coeff_add] at hx hy ⊢; rw [hx, hy, add_zero]
   · intro c x _ hx; simp only [topCoeff, coeff_smul, smul_eq_mul] at hx ⊢; rw [hx, mul_zero]
 
 /-- **The powers of `ω`**: `ω₍₋₁₎^k 𝟙 = P_k ⊗ e⁰` with `deg P_k ≤ 2k` and
@@ -345,14 +345,14 @@ theorem sigmaN_monomial' (t : (ℕ × Fin (rank (latP m))) →₀ ℕ) (c : ℂ)
 
 /-- `σ` acts on the coefficient of a monomial by the sign `(−1)^deg`. -/
 theorem coeff_sigmaN (s : (ℕ × Fin (rank (latP m))) →₀ ℕ) (q : FockN (rank (latP m))) :
-    coeff s (sigmaN (rank (latP m)) q) = (-1 : ℂ) ^ (s.sum fun _ k => k) * coeff s q := by
+    (sigmaN (rank (latP m)) q).coeff s = (-1 : ℂ) ^ (s.sum fun _ k => k) * q.coeff s := by
   induction q using MvPolynomial.induction_on' with
   | monomial t c =>
     rw [sigmaN_monomial', coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with h
     · subst h; rfl
     · simp
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq, mul_add]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
 
 theorem topCoeff_sigmaN (w : ℕ) (q : FockN (rank (latP m))) :
     topCoeff m w (sigmaN (rank (latP m)) q) = (-1 : ℂ) ^ w * topCoeff m w q := by

@@ -90,7 +90,7 @@ theorem sum_gtMixedFiveRows {A : Type*} [AddCommMonoid A] (a b c d : ℤ)
         rwa [gtMixedFourRow_eta]
       · intro p hp
         apply (gtMixedFour_mem_five a b c d _ _ _ _).mpr
-        simpa only [hη] using Finset.mem_product.mp hp
+        simpa only [hη] using! Finset.mem_product.mp hp
       · intro μ _
         exact gtMixedFourRow_eta μ
       · intro p _

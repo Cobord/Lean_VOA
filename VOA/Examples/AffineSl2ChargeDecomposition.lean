@@ -115,8 +115,8 @@ private theorem finite_independent_sum_dimension {ι V : Type*}
     obtain ⟨hfd,hrk⟩ := ih
     rw [Finset.iSup_insert,Finset.sum_insert ha]
     have hd : Disjoint (p a) (⨆ i ∈ s,p i) := by
-      have := hp.disjoint_biSup (y := (s : Set ι)) (by simpa using ha)
-      simpa using this
+      have := hp.disjoint_biSup (y := (s : Set ι)) (by simpa using! ha)
+      simpa using! this
     refine ⟨inferInstance,?_⟩
     have h := Submodule.finrank_sup_add_finrank_inf_eq (p a) (⨆ i ∈ s,p i)
     rw [hd.eq_bot,finrank_bot,add_zero] at h
@@ -167,7 +167,7 @@ theorem energySpan_eq_grading (k : ℂ) (hk : k+2≠0) (N : ℕ) :
     rw [currentPBWBasis_apply]
     have h := creation_state_grading k hk (orderedPBWColorWord i.val)
     change _ ∈ (universal k hk).grading (currentEnergy i.val) at h
-    simpa only [i.property] using h
+    simpa only [i.property] using! h
   · rw [universal_grading_eq_joint_sum]
     refine iSup_le fun c => iSup_le fun hc => ?_
     apply Submodule.span_le.mpr

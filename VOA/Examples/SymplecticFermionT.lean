@@ -255,8 +255,8 @@ theorem chi_DCovariant (a : Fin 2) : VOA.Reconstruction.DCovariant T (chi a) := 
     · -- the zero mode: both sides vanish
       subst hm1
       have h0 : chi a (-1) = 0 := by
-        rw [chi, if_neg (by norm_num)]
-        change annSF a (-(-1) - 1).toNat = 0
+        change (if (0 : ℤ) ≤ -1 then creSF a (-1 : ℤ).toNat else annSF a (-(-1 : ℤ) - 1).toNat) = 0
+        rw [if_neg (by norm_num)]
         norm_num
       rw [h0, mul_zero, zero_mul, sub_zero, show ((-1 : ℤ) + 1) = 0 by ring, zero_smul]
     · -- annihilation side

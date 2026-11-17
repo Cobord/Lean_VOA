@@ -85,10 +85,10 @@ theorem gMode_weight (a : Fin 3) (e : Fin 2) (m : ℤ) {h : ℂ} {y : Sl2GhostSp
   match e with
   | 0 =>
     have := sl2GhostSVA.grading_mode (bGhost a) (bGhost_weight a) y hy m
-    convert this using 2; simp; try ring
+    convert this using 2 <;> first | (simp; try ring; done) | rfl
   | 1 =>
     have := sl2GhostSVA.grading_mode (cGhost a) (cGhost_weight a) y hy m
-    convert this using 2; simp; try ring
+    convert this using 2 <;> first | (simp; try ring; done) | rfl
 
 theorem eq_zero_of_grading_neg {y : Sl2GhostSpace} {z : ℤ} (hz : z < 0)
     (hy : y ∈ sl2GhostSVA.grading (z : ℂ)) : y = 0 := by

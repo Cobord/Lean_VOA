@@ -109,7 +109,9 @@ theorem exists_unit_modularForm : ∀ k : ℕ, Even k → 4 ≤ k →
       · rw [ModularForm.coe_mcast, ModularForm.coe_mul]
         exact Subalgebra.mul_mem _ E4_mem_E46 hGmem
       · rw [ModularForm.coe_mcast, ModularForm.coe_mul]
-        simpa using hE4.mul hGlim
+        have h := hE4.mul hGlim
+        rw [mul_one] at h
+        exact h.congr fun z => by simp
 
 /-! ## The structure theorem -/
 
@@ -156,7 +158,8 @@ theorem levelOne_coe_mem_E46 : ∀ (k : ℤ) (f : ModularForm 𝒮ℒ k),
     have hdiff : Tendsto (⇑(f - c • F) : UpperHalfPlane → ℂ) atImInfty (𝓝 0) := by
       have hstep : Tendsto (fun z : UpperHalfPlane => f z - c * F z) atImInfty (𝓝 (c - c * 1)) :=
         hflim.sub (hFlim.const_mul c)
-      simpa using hstep
+      rw [mul_one, sub_self] at hstep
+      exact hstep.congr fun z => by simp
     have hcoeff : (qExpansion 1 (⇑(f - c • F) : UpperHalfPlane → ℂ)).coeff 0 = 0 := by
       rw [qExpansion_coeff_zero (h := 1) one_pos
         (ModularFormClass.analyticAt_cuspFunction_zero (F := ModularForm 𝒮ℒ k)

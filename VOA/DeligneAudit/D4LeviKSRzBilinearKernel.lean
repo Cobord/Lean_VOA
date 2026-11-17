@@ -52,7 +52,7 @@ theorem rzBilinearTarget_mem_ker
             (fun j => q j)).sum + s) := by
     rw [hdegree p hp q hq]
     exact hkey
-  simpa [hdegree p hp q hq] using
+  simpa [hdegree p hp q hq] using!
     rzTargetGenerator_mem_ker ρ w m i a b k l s
       (fun i => p i) (fun j => q j) h hk hks hi hkey'
 

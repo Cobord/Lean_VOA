@@ -75,7 +75,7 @@ theorem tcount_cons (T : Finset (Fin 3 × (ℕ × Fin 2))) (a : Fin 3) (p : ℕ 
   · simp [tcount, h]
   · rw [if_neg h]
     simp only [tcount, List.filter_cons]
-    rw [if_neg (by simpa using h)]
+    rw [if_neg (by simpa using! h)]
     simp
 
 theorem NT_Cr_eigen (T : Finset (Fin 3 × (ℕ × Fin 2))) (a : Fin 3) (p : ℕ × Fin 2)
@@ -132,12 +132,12 @@ theorem ghostDegF_induction (k : KF) (Φ : Sl2GhostSpace → Prop) (h0 : Φ 0)
   intro b x hx z hz
   revert hx
   refine (fun hx => tensorDeg_induction fockDegF fockDegF b
-    (fun x => Φ (x ⊗ₜ[ℂ] z)) (by simpa using h0)
+    (fun x => Φ (x ⊗ₜ[ℂ] z)) (by simpa using! h0)
     (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [TensorProduct.add_tmul]; exact hadd _ _ hx hy)
     (fun c x hx => by beta_reduce at hx ⊢; rw [← TensorProduct.smul_tmul']; exact hsmul _ _ hx)
     ?_ x hx)
   intro b' u hu v hv
-  refine fockDegF_induction _ (fun u => Φ ((u ⊗ₜ[ℂ] v) ⊗ₜ[ℂ] z)) (by simpa using h0)
+  refine fockDegF_induction _ (fun u => Φ ((u ⊗ₜ[ℂ] v) ⊗ₜ[ℂ] z)) (by simpa using! h0)
     (fun x y hx hy => by
       beta_reduce at hx hy ⊢
       rw [TensorProduct.add_tmul, TensorProduct.add_tmul]; exact hadd _ _ hx hy)
@@ -146,7 +146,7 @@ theorem ghostDegF_induction (k : KF) (Φ : Sl2GhostSpace → Prop) (h0 : Φ 0)
       rw [← TensorProduct.smul_tmul', ← TensorProduct.smul_tmul']; exact hsmul _ _ hx)
     ?_ u hu
   intro l0 hl0
-  refine fockDegF_induction _ (fun v => Φ ((stWordSF l0 ⊗ₜ[ℂ] v) ⊗ₜ[ℂ] z)) (by simpa using h0)
+  refine fockDegF_induction _ (fun v => Φ ((stWordSF l0 ⊗ₜ[ℂ] v) ⊗ₜ[ℂ] z)) (by simpa using! h0)
     (fun x y hx hy => by
       beta_reduce at hx hy ⊢
       rw [TensorProduct.tmul_add, TensorProduct.add_tmul]; exact hadd _ _ hx hy)
@@ -156,7 +156,7 @@ theorem ghostDegF_induction (k : KF) (Φ : Sl2GhostSpace → Prop) (h0 : Φ 0)
     ?_ v hv
   intro l1 hl1
   refine fockDegF_induction _ (fun z => Φ ((stWordSF l0 ⊗ₜ[ℂ] stWordSF l1) ⊗ₜ[ℂ] z))
-    (by simpa using h0)
+    (by simpa using! h0)
     (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [TensorProduct.tmul_add]; exact hadd _ _ hx hy)
     (fun c x hx => by beta_reduce at hx ⊢; rw [TensorProduct.tmul_smul]; exact hsmul _ _ hx)
     ?_ z hz
@@ -172,7 +172,7 @@ theorem ncnt_cons (p : ℕ × Fin 2) (l : SFWord) :
   · simp [ncnt, h]
   · rw [if_neg h]
     simp only [ncnt, List.filter_cons]
-    rw [if_neg (by simpa using h)]
+    rw [if_neg (by simpa using! h)]
     simp
 
 theorem c2_modeIdxF (p : ℕ × Fin 2) : c2 (modeIdxF p) = if p.2 = 1 then 2 else 0 := by

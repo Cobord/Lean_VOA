@@ -117,8 +117,9 @@ theorem L2_charge (δ : (latP m).carrier) :
 /-- `L(2)E = 0`. -/
 theorem L2_E : (V2mPlus m hm).smul (V2mPlus m hm).conformalVector 3 (EP m hm) = 0 := by
   apply Subtype.ext
-  rw [V2mPlus_smul_coe, omega_coe, EP_coe, PreVertexAlgebra.smul_add_right, L2_charge,
-    L2_charge, add_zero]
+  rw [V2mPlus_smul_coe, omega_coe, EP_coe, PreVertexAlgebra.smul_add_right,
+    L2_charge m hm ((1 : ℤ) : (latP m).carrier),
+    L2_charge m hm ((-1 : ℤ) : (latP m).carrier), add_zero]
   rfl
 
 end VOA.Classification.COne.PlusRat4

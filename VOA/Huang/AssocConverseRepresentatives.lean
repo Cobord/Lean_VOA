@@ -41,7 +41,7 @@ theorem exists_completeIrredundantFamily (hfin : Finite (Φ W)) :
     apply e.injective
     have h : (canonicalIrrModule (e i)).toΦ = (canonicalIrrModule (e j)).toΦ :=
       Quotient.sound hij
-    simpa using h
+    simpa using! h
 
 /-- DLM finiteness gives representatives without a PBW dependency; DLM remains
 an explicit hypothesis, not an axiom or a theorem proved in this file. -/

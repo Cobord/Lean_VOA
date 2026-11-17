@@ -84,7 +84,7 @@ theorem three_term_trichotomy (m r : ℕ) (rest q : List (Fin 6 × ℕ))
     subst q
     by_cases hs : s = 0
     · subst s
-      exact Or.inr (Or.inl (by simpa using
+      exact Or.inr (Or.inl (by simpa using!
         three_xzero_replacement_word ρ w r pre post))
     · left
       exact ⟨three_x_replacement_key r s pre post,
@@ -107,7 +107,7 @@ theorem four_term_trichotomy (m r : ℕ) (rest q : List (Fin 6 × ℕ))
     subst q
     by_cases hs : s = 0
     · subst s
-      exact Or.inr (Or.inl (by simpa using
+      exact Or.inr (Or.inl (by simpa using!
         four_xzero_replacement_word ρ w r pre post))
     · left
       exact ⟨four_x_replacement_key r s pre post,

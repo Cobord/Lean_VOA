@@ -46,6 +46,8 @@ open scoped BigOperators
 open Module (End)
 open VOA.AffineLie
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.Vir
 
 /-! ## SUBTASK A — the PreVertexAlgebra instance `affineVA k hk` on `WakModule k` -/

@@ -259,7 +259,7 @@ theorem gammaSlash_binProd [NeZero N] (l : List (Bin N)) (γ : SL(2, ℤ)) :
   | nil =>
     rw [coe_gammaSlash, List.map_nil, coe_binProd_nil]
     have := ModularForm.is_invariant_const γ (1 : ℂ)
-    simpa [Function.const] using this
+    simpa [Function.const] using! this
   | cons b l ih =>
     rw [coe_gammaSlash, List.map_cons, coe_binProd_cons, coe_binProd_cons]
     have hw : ((b :: l).length : ℤ) = 1 + (l.length : ℤ) := by simp; ring

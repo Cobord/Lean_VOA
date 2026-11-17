@@ -22,7 +22,7 @@ private theorem threeWords_yModeWord (r : ℕ) (rs : List ℕ) :
     threeWords r (yModeWord rs) = [] := by
   induction rs with
   | nil => rfl
-  | cons s rs ih => simpa [yModeWord, threeWords] using ih
+  | cons s rs ih => simpa [yModeWord, threeWords] using! ih
 
 /-- One f₃ mode converts any one of the `n+1` zero-mode U letters.
     After commuting radical letters, all resulting words coincide. -/
@@ -55,7 +55,7 @@ theorem threeWords_uZero_sum
             radicalWord ρ v
               (uZeroWord (n + 1) ++ yModeWord (r :: rs)) := by
         apply radicalWord_perm ρ v
-        simpa [yModeWord] using
+        simpa [yModeWord] using!
           (List.perm_append_comm (l₁ := [(4, r)])
             (l₂ := uZeroWord (n + 1))).append_right (yModeWord rs)
       rw [hrep, List.cons_append, threeWords]
@@ -146,7 +146,7 @@ theorem pairRadicalOp_perm (ρ : CurrentModule D4sector.f V)
     pairRadicalOp ρ l₁ = pairRadicalOp ρ l₂ := by
   apply LinearMap.ext
   intro v
-  simpa only [pairRadicalOp_apply] using radicalWord_perm ρ v hp
+  simpa only [pairRadicalOp_apply] using! radicalWord_perm ρ v hp
 
 /-- The arbitrary-mode `b!` conversion, with the Y modes in input order. -/
 theorem fThree_adjoint_uZero_factorial_ordered
@@ -161,7 +161,7 @@ theorem fThree_adjoint_uZero_factorial_ordered
         (-1 : ℂ) ^ rs.length •
           ((Nat.factorial rs.length : ℂ) •
             pairRadicalOp ρ (yModeWord rs.reverse)) := by
-    simpa [yModeWord] using h
+    simpa [yModeWord] using! h
   have hp : (yModeWord rs.reverse).Perm (yModeWord rs) := by
     exact (List.reverse_perm rs).map (fun r => ((4 : Fin 6), r))
   rw [pairRadicalOp_perm ρ hp] at h'
@@ -177,7 +177,7 @@ private theorem threeWords_zModeWord (r : ℕ) (zs : List ℕ) :
     threeWords r (zModeWord zs) = [] := by
   induction zs with
   | nil => rfl
-  | cons z zs ih => simpa [zModeWord, threeWords] using ih
+  | cons z zs ih => simpa [zModeWord, threeWords] using! ih
 
 theorem fThree_comm_zModeWord (ρ : CurrentModule D4sector.f V)
     (r : ℕ) (zs : List ℕ) :
@@ -204,7 +204,7 @@ theorem pairAdjoint_mul_right (F : ℕ → Module.End ℂ V)
             rw [← hB r]
             simp only [mul_assoc]
           _ = (F r * A - A * F r) * B := by rw [sub_mul]
-      simpa only [pairAdjoint, h] using ih (F r * A - A * F r)
+      simpa only [pairAdjoint, h] using! ih (F r * A - A * F r)
 
 /-- The `b!` U-to-Y formula with arbitrary Z spectator modes. -/
 theorem fThree_adjoint_uZero_z_factorial
@@ -231,7 +231,7 @@ theorem fThree_adjoint_uZero_z_factorial_word
           radicalWord ρ w (yModeWord rs ++ zModeWord zs)) := by
   have h := congrArg (fun A : Module.End ℂ V => A w)
     (fThree_adjoint_uZero_z_factorial ρ rs zs)
-  simpa only [LinearMap.smul_apply, pairRadicalOp_apply] using h
+  simpa only [LinearMap.smul_apply, pairRadicalOp_apply] using! h
 
 end VOA.DeligneAudit.D4Levi
 

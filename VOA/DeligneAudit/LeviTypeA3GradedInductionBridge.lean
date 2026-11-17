@@ -37,7 +37,7 @@ theorem a3_first_lower_le_effective (a b c : ℕ)
   intro v hv
   obtain ⟨xs, ys, hx, hy, hd, hs, rfl⟩ := hv
   simpa only [a3ConvA, a3ConvB, a3ConvSpectator, mul_assoc,
-    Module.End.mul_apply] using hword xs ys hx hy hd hs
+    Module.End.mul_apply] using! hword xs ys hx hy hd hs
 
 theorem a3_second_lower_le_effective (a b c : ℕ)
     (fs : List ℕ) (d₂ d₃ degree σ : ℕ)
@@ -59,7 +59,7 @@ theorem a3_second_lower_le_effective (a b c : ℕ)
   have hh := hword ys zs hy hz hd hs
   rw [← hr] at hh
   simpa only [a3ConvA, a3ConvB, a3ConvSpectator, mul_assoc,
-    Module.End.mul_apply] using hh
+    Module.End.mul_apply] using! hh
 
 end
 end VOA.DeligneAudit.A3Sector

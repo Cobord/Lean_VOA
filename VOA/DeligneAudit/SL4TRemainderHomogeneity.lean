@@ -24,7 +24,7 @@ theorem polynomialCoefficientsHomogeneous_constant (w : σ → ℤ)
   intro l
   by_cases hl : l = 0
   · subst l
-    simpa only [Polynomial.coeff_C_zero, Nat.cast_zero, sub_zero] using ha
+    simpa only [Polynomial.coeff_C_zero, Nat.cast_zero, sub_zero] using! ha
   · rw [Polynomial.coeff_C, if_neg hl]
     exact MvPolynomial.isWeightedHomogeneous_zero A w _
 
@@ -35,7 +35,7 @@ theorem polynomialCoefficientsHomogeneous_power (w : σ → ℤ) (m : ℕ) :
   rw [Polynomial.coeff_X_pow]
   by_cases hl : l = m
   · subst l
-    simpa only [if_true, sub_self] using MvPolynomial.isWeightedHomogeneous_one A w
+    simpa only [if_true, sub_self] using! MvPolynomial.isWeightedHomogeneous_one A w
   · rw [if_neg hl]
     exact MvPolynomial.isWeightedHomogeneous_zero A w _
 
@@ -57,7 +57,7 @@ theorem polynomialCoefficientsHomogeneous_mul (w : σ → ℤ)
   rw [Polynomial.coeff_mul]
   apply MvPolynomial.IsWeightedHomogeneous.sum
   intro ab hab
-  have hab' := Finset.mem_antidiagonal.mp hab
+  have hab' := Finset.HasAntidiagonal.mem_antidiagonal.mp hab
   convert (hp ab.1).mul (hq ab.2) using 1
   have hc : (ab.1 : ℤ) + ab.2 = l := by exact_mod_cast hab'
   omega
@@ -69,13 +69,13 @@ theorem alphabetCharacteristic_homogeneous (w : σ → ℤ) (xs : List (MvPolyno
   induction xs with
   | nil =>
       simpa only [alphabetCharacteristic_product, List.map_nil, List.prod_nil,
-        List.length_nil, Nat.cast_zero, pow_zero] using
+        List.length_nil, Nat.cast_zero, pow_zero] using!
         polynomialCoefficientsHomogeneous_power (A := A) w 0
   | cons x xs ih =>
       rw [show x :: xs = [x] ++ xs from rfl, alphabetCharacteristic_append,
         alphabetCharacteristic_singleton]
       have hx := polynomialCoefficientsHomogeneous_sub w Polynomial.X (Polynomial.C x) 1
-        (by simpa only [pow_one, Nat.cast_one] using
+        (by simpa only [pow_one, Nat.cast_one] using!
           polynomialCoefficientsHomogeneous_power (A := A) w 1)
         (polynomialCoefficientsHomogeneous_constant w x 1 (hxs x (by simp)))
       convert polynomialCoefficientsHomogeneous_mul w _ _ 1 xs.length hx
@@ -107,7 +107,7 @@ theorem alphabetPowerRemainder_homogeneous (w : σ → ℤ) (xs : List (MvPolyno
         rw [Polynomial.degree_one, Polynomial.degree_eq_natDegree hP.ne_zero, hd]
         exact_mod_cast hr
       rw [he]
-      simpa only [pow_zero] using polynomialCoefficientsHomogeneous_power (A := A) w 0
+      simpa only [pow_zero] using! polynomialCoefficientsHomogeneous_power (A := A) w 0
   | succ m ih =>
       have he : Polynomial.X ^ (m + 1) %ₘ P =
           Polynomial.X * (Polynomial.X ^ m %ₘ P) -
@@ -120,12 +120,12 @@ theorem alphabetPowerRemainder_homogeneous (w : σ → ℤ) (xs : List (MvPolyno
           exact dvd_mul_of_dvd_right (dvd_mul_right P _) Polynomial.X
         rw [hm]
         apply monic_remainder_variable_mul P _ xs.length hP hd hr
-        simpa only [Polynomial.degree_eq_natDegree hP.ne_zero, hd] using
+        simpa only [Polynomial.degree_eq_natDegree hP.ne_zero, hd] using!
           Polynomial.degree_modByMonic_lt (Polynomial.X ^ m) hP
       rw [he]
       apply polynomialCoefficientsHomogeneous_sub
       · convert polynomialCoefficientsHomogeneous_mul w Polynomial.X _ 1 m
-          (by simpa only [pow_one, Nat.cast_one] using
+          (by simpa only [pow_one, Nat.cast_one] using!
             polynomialCoefficientsHomogeneous_power (A := A) w 1) ih using 1 <;> push_cast <;> ring
       · convert polynomialCoefficientsHomogeneous_mul w _ P
           ((m : ℤ) - (xs.length - 1 : ℕ)) xs.length
@@ -146,7 +146,7 @@ theorem determinant_homogeneous_row_column {j : ℕ} (w : σ → ℤ)
   have hp := MvPolynomial.IsWeightedHomogeneous.prod Finset.univ
     (fun b => M (e b) b) (fun b => col b - row (e b)) (fun b _ => hM (e b) b)
   rw [Finset.sum_sub_distrib, Equiv.sum_comp e row] at hp
-  simpa only [Units.smul_def] using
+  simpa only [Units.smul_def] using!
     ((MvPolynomial.weightedHomogeneousSubmodule A w _).restrictScalars ℤ).smul_mem
       (e.sign : ℤ) hp
 

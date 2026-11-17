@@ -65,9 +65,11 @@ theorem screeningFockState_L1_zero (r s t : ℕ) (hr : 0 < r) (β : ℚ)
       (screeningFockState r s t β) = 0 := by
   apply MvPolynomial.ext
   intro e
-  rw [coeff_zero, ← fock_plainOccupation e]
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
+  rw [← fock_plainOccupation e]
   let d := plainOccupation e
-  change coeff (fockOccupation d) _ = 0
+  change (sectorVirasoro (screeningBackground β : ℂ) (screeningMomentum r s β : ℂ) 1
+    (screeningFockState r s t β)).coeff (fockOccupation d) = 0
   by_cases hd : Finsupp.weight (fun k => k+1) d + 1 = r*s
   · rw [screeningFockState_L1_coefficient r s t β _ _ d hd]
     norm_cast
@@ -76,8 +78,8 @@ theorem screeningFockState_L1_zero (r s t : ℕ) (hr : 0 < r) (β : ℚ)
   · have h := chargedFock_mode_coeff_zero (screeningBackground β : ℂ)
       (screeningMomentum r s β : ℂ) 1 (r*s) (screeningFockState r s t β)
       (screeningFockState_mem_grade r s t β) (fockOccupation d)
-      (by simpa only [fockOccupation_weight] using hd)
-    simpa only [Nat.cast_one] using h
+      (by simpa only [fockOccupation_weight] using! hd)
+    simpa only [Nat.cast_one] using! h
 
 /-- The ACTUAL second charged Virasoro mode also annihilates the finite
 state, including the low-energy truncation case rs<2. -/
@@ -87,9 +89,11 @@ theorem screeningFockState_L2_zero (r s t : ℕ) (hr : 0 < r) (β : ℚ)
       (screeningFockState r s t β) = 0 := by
   apply MvPolynomial.ext
   intro e
-  rw [coeff_zero, ← fock_plainOccupation e]
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
+  rw [← fock_plainOccupation e]
   let d := plainOccupation e
-  change coeff (fockOccupation d) _ = 0
+  change (sectorVirasoro (screeningBackground β : ℂ) (screeningMomentum r s β : ℂ) 2
+    (screeningFockState r s t β)).coeff (fockOccupation d) = 0
   by_cases hd : Finsupp.weight (fun k => k+1) d + 2 = r*s
   · rw [screeningFockState_L2_coefficient r s t β _ _ d hd]
     norm_cast
@@ -98,8 +102,8 @@ theorem screeningFockState_L2_zero (r s t : ℕ) (hr : 0 < r) (β : ℚ)
   · have h := chargedFock_mode_coeff_zero (screeningBackground β : ℂ)
       (screeningMomentum r s β : ℂ) 2 (r*s) (screeningFockState r s t β)
       (screeningFockState_mem_grade r s t β) (fockOccupation d)
-      (by simpa only [fockOccupation_weight] using hd)
-    simpa only [Nat.cast_ofNat] using h
+      (by simpa only [fockOccupation_weight] using! hd)
+    simpa only [Nat.cast_ofNat] using! h
 
 /-- At EVERY positive integer square parameter the explicitly defined
 screening polynomial is nonzero, has energy rs, and is killed by both actual

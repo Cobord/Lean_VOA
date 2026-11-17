@@ -15,7 +15,7 @@ theorem pairRestriction_Y_embedding (a b c : ℕ)
         (Sum.inr (Sum.inl y) : PairTarget a b c)) P := by
   induction P using MvPolynomial.induction_on with
   | C z => simp [pairRestriction]
-  | add P Q hP hQ => simpa only [map_add] using congrArg₂ (· + ·) hP hQ
+  | add P Q hP hQ => simpa only [map_add] using! congrArg₂ (· + ·) hP hQ
   | mul_X P y hP =>
       simp only [map_mul, hP]
       simp [pairRestriction, pairVariable]
@@ -29,7 +29,7 @@ theorem pairRestriction_Z_embedding (a b c : ℕ)
         (Sum.inr (Sum.inr z) : PairTarget a b c)) P := by
   induction P using MvPolynomial.induction_on with
   | C z => simp [pairRestriction]
-  | add P Q hP hQ => simpa only [map_add] using congrArg₂ (· + ·) hP hQ
+  | add P Q hP hQ => simpa only [map_add] using! congrArg₂ (· + ·) hP hQ
   | mul_X P z hP =>
       simp only [map_mul, hP]
       simp [pairRestriction, pairVariable]

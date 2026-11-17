@@ -149,7 +149,7 @@ theorem tensorOuterModes_jacobi_homogeneous {d : ℤ} {u : V} (hu : u∈W.gradin
       intro hz
       apply hi
       have he := congrArg Λ hz
-      simpa only [map_smul,smul_eq_mul,map_zero] using he
+      simpa only [map_smul,smul_eq_mul,map_zero] using! he
     have hSB : Function.HasFiniteSupport (fun i : ℤ => (negOnePow i*cbz ell i)*(negOnePow ell*Λ (B (m+i)))) := by
       refine hFB.subset ?_
       intro i hi

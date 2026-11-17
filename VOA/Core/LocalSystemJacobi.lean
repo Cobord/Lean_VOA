@@ -33,6 +33,9 @@ open Module (End)
 open scoped BigOperators
 open FieldCombinatorics
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {M : Type u} [AddCommGroup M] [Module ℂ M]
@@ -468,7 +471,7 @@ theorem field_borcherds_of_local {a b : Fld M} (h : Local a.1 b.1)
         (fun ell' n' => fieldBL a b x ell' (-(k : ℤ) - 1) n' -
           fieldBR a b x ell' (-(k : ℤ) - 1) n')
         (fun ell' n' => by
-          dsimp only
+          try dsimp only
           have hbl := fieldBL_rec a b x ell' (-(k : ℤ) - 1) n'
           have hbr := fieldBR_rec h x ell' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) by ring] at hbl hbr
@@ -477,7 +480,7 @@ theorem field_borcherds_of_local {a b : Fld M} (h : Local a.1 b.1)
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
         (fun n' => by
-          dsimp only
+          try dsimp only
           rw [field_borcherds_boundary h x (-(k : ℤ) - 1) n', sub_self])
         ell n
       exact sub_eq_zero.mp key

@@ -25,7 +25,7 @@ private theorem current_comm_end (a b : Fin 28) (r s : ℕ) :
       ∑ c : Fin 28, contactF a b c • R.op c (r+s) := by
   ext v
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.sum_apply,
-    LinearMap.smul_apply] using R.comm a b r s v
+    LinearMap.smul_apply] using! R.comm a b r s v
 
 theorem current_highest_EF (r s : ℕ) :
     currentHighestE R r * currentCenter R s - currentCenter R s * currentHighestE R r =
@@ -87,7 +87,7 @@ theorem current_highest_EE (r s : ℕ) :
     currentHighestE R r * currentHighestE R s = currentHighestE R s * currentHighestE R r := by
   have hh := current_comm_end R 15 15 r s
   simp only [highest_root_ee, zero_smul, Finset.sum_const_zero] at hh
-  simpa only [currentHighestE, neg_mul_neg] using sub_eq_zero.mp hh
+  simpa only [currentHighestE, neg_mul_neg] using! sub_eq_zero.mp hh
 
 variable {R} {w : V} {m : ℕ}
 
@@ -104,10 +104,10 @@ theorem current_highest_H_pos (h : HighestRel R w m) (r : ℕ) (hr : 1 ≤ r) :
 
 theorem current_highest_H_zero (h : HighestRel R w m) :
     currentHighestH R 0 w = (((2*m : ℕ) : ℤ) : ℂ) • w := by
-  have h0 : R.op 0 0 w = 0 := by simpa using h.cartan_zero 0 (by decide)
-  have h1 : R.op 1 0 w = (m : ℂ) • w := by simpa using h.cartan_zero 1 (by decide)
-  have h2 : R.op 2 0 w = 0 := by simpa using h.cartan_zero 2 (by decide)
-  have h3 : R.op 3 0 w = 0 := by simpa using h.cartan_zero 3 (by decide)
+  have h0 : R.op 0 0 w = 0 := by simpa using! h.cartan_zero 0 (by decide)
+  have h1 : R.op 1 0 w = (m : ℂ) • w := by simpa using! h.cartan_zero 1 (by decide)
+  have h2 : R.op 2 0 w = 0 := by simpa using! h.cartan_zero 2 (by decide)
+  have h3 : R.op 3 0 w = 0 := by simpa using! h.cartan_zero 3 (by decide)
   simp only [currentHighestH, LinearMap.add_apply, h0, h1, h2, h3, zero_add, add_zero]
   rw [← add_smul]
   congr 1

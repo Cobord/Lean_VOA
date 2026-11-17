@@ -61,7 +61,7 @@ theorem annihilator_degree_ge_thirteen {P : ℂ[X]} (hne : P ≠ 0)
 theorem omegaL_power_ne_zero (n : ℕ) : (omegaL W ^ n) (mk W W.vacuum) ≠ 0 := by
   intro hn
   have hP : (aeval (omegaL W) (X ^ n : ℂ[X])) (mk W W.vacuum) = 0 := by
-    simpa using hn
+    simpa using! hn
   have h := forced_roots hP 9
   have h1 : lam 9 = 1 := by
     change ((1 : ℚ) : ℂ) = 1

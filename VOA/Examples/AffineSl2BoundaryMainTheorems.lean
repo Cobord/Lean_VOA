@@ -24,7 +24,7 @@ theorem coeff_product_le_character (m : ℕ) (hm : 1 ≤ m) (N : ℕ) :
   have hc : (denominator m).Coprime 2 := by simp [denominator]
   have hlevel : 2/(denominator m : ℂ)-2 = level m := by unfold level; ring
   have hk : 2/(denominator m : ℂ)-2+2 ≠ 0 := by
-    simpa only [hlevel] using level_noncritical m
+    simpa only [hlevel] using! level_noncritical m
   have hbound := universal_grading_finrank_le_simple_add_rootOrder
     (2/(denominator m : ℂ)-2) hk N
   have hbound' :

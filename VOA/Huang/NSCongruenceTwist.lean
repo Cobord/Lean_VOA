@@ -56,7 +56,10 @@ theorem mixedCenter_halfBraiding_inv (X Y U : C) :
     ((mixedCenter X Y).2.β U).inv =
       (α_ U X Y).inv ≫ (β_ X U).inv ▷ Y ≫ (α_ X U Y).hom ≫
         X ◁ (β_ U Y).hom ≫ (α_ X Y U).inv := by
-  dsimp [mixedCenter, oppositeBraidedCenter, Center.ofBraidedObj]
+  refine Iso.inv_ext ?_
+  change ((α_ X Y U).hom ≫ X ◁ (β_ U Y).inv ≫ (α_ X U Y).inv ≫ (β_ X U).hom ▷ Y ≫
+      (α_ U X Y).hom) ≫ ((α_ U X Y).inv ≫ (β_ X U).inv ▷ Y ≫ (α_ X U Y).hom ≫
+        X ◁ (β_ U Y).hom ≫ (α_ X Y U).inv) = 𝟙 ((X ⊗ Y) ⊗ U)
   simp
 
 /-- **Factorization of the mixed curl.**  The partial trace of the inverse mixed self
@@ -68,7 +71,8 @@ theorem partialTrace_mixed_halfBraiding (F : SphericalFusion C) (A B : C) :
         F.toPivotal.partialTraceLeft B (β_ B B).hom := by
   set ta := F.toPivotal.partialTraceLeft A (β_ A A).inv with hta
   set tb := F.toPivotal.partialTraceLeft B (β_ B B).hom with htb
-  rw [F.partialTraceLeft_tensor A B]
+  refine (F.partialTraceLeft_tensor A B (X := A ⊗ B) (Y := A ⊗ B)
+    ((mixedCenter A B).2.β (A ⊗ B)).inv).trans ?_
   change F.toPivotal.partialTraceLeft B (F.toPivotal.partialTraceLeft A
     ((α_ A B (A ⊗ B)).inv ≫ ((mixedCenter A B).2.β (A ⊗ B)).inv ≫
       (α_ A B (A ⊗ B)).hom)) = _
@@ -159,7 +163,7 @@ theorem cup_monodromy (P : Pivotal C) (V T : C) :
     simp
   rw [braiding_tensor_left_hom, braiding_tensor_right_hom] at h3
   rw [comp_whiskerRight]
-  simpa only [Category.assoc, Iso.hom_inv_id_assoc] using h3
+  simpa only [Category.assoc, Iso.hom_inv_id_assoc] using! h3
 
 /-- **Lemma L2.**  The positive left curl is the ribbon twist.  Uses the ribbon unit, balance
 and duality axioms through `inverseMonodromy_evaluation`, and Lemma R. -/
@@ -225,12 +229,13 @@ theorem mixedTwistIdentity_holds (F : SphericalFusion C) (M : Modular F) :
   change (F.j (F.simple i ⊗ F.simple j)).hom = _
   rw [h2]
   erw [Linear.smul_comp, Category.id_comp]
-  rw [smul_smul]
   have hne_i := M.toRibbon.twistScalar_ne_zero i
   have hne_j := M.toRibbon.twistScalar_ne_zero j
   have hc : M.twistScalar i / M.twistScalar j * (M.twistScalar j * (M.twistScalar i)⁻¹) = 1 := by
     field_simp
-  rw [hc, one_smul]
+  exact ((smul_smul _ _ _).trans
+    ((congrArg (fun c : ℂ => c • (F.j (F.simple i ⊗ F.simple j)).hom) hc).trans
+      (one_smul ℂ _))).symm
 
 end Braided
 

@@ -36,7 +36,7 @@ theorem hasSum_expSubOneCoeff (k : ℕ) (y : ℂ) :
 
 theorem hasSum_expSubOneCoeff_log (k : ℕ) {z : ℂ} (hz : 1 + z ≠ 0) :
     HasSum (fun r : ℕ => expSubOneCoeff k r * log (1 + z) ^ r) (z ^ k) := by
-  simpa only [Complex.exp_log hz, add_sub_cancel_left] using
+  simpa only [Complex.exp_log hz, add_sub_cancel_left] using!
     hasSum_expSubOneCoeff k (log (1 + z))
 
 universe u w

@@ -56,7 +56,7 @@ theorem sixthProjection_ground_line (x : TwoSeed) (hx : x.val∈Wi.grading 36) :
         by_cases hw : w=[]
         · subst w
           have hg : (Xico : Sp)∈V2v.grading 36 := OrbIco.Xico_grading
-          simpa only [virWord,piHom_of_mem V2v hg] using
+          simpa only [virWord,piHom_of_mem V2v hg] using!
             (Submodule.subset_span (by simp : (Xico : Sp)∈{(Xico : Sp)}))
         · have hwpos : 0<OrbOctaR.wordWeight w := by
             cases w with
@@ -138,7 +138,7 @@ theorem sixthState_ground : (sixthState 36 (by omega)).val=OrbIcoT.icoSixthCoupl
 theorem vacuumState_ground : (vacuumState 0 (by omega)).val=vacuumCoefficient 0 • Wi.vacuum := by
   obtain ⟨c,hc,he⟩ := OrbIcoZ.self_top_nonzero
   have hprod : (productState 0 (by omega)).val=c • Wi.vacuum := by
-    simpa only [productState,Nat.cast_zero,sub_zero] using he
+    simpa only [productState,Nat.cast_zero,sub_zero] using! he
   have hp : (vacuumState 0 (by omega)).val=(productState 0 (by omega)).val := by
     change (productState 0 (by omega)).val-(sixthState 0 (by omega)).val=_
     rw [sixthState_below 0 (by omega),sub_zero]

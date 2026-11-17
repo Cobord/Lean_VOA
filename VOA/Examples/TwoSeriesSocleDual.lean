@@ -53,13 +53,12 @@ theorem grDeg_iSup (r : ℕ) : ⨆ d, grDeg L r d = ⊤ := by
     (motive := fun z hz => Submodule.Quotient.mk (p := grKer L r) (⟨z, hz⟩ : aFil L r) ∈
       ⨆ d, grDeg L r d)
     (fun d z hz => Submodule.mem_iSup_of_mem d (Submodule.mem_map.mpr ⟨_, hz, rfl⟩))
-    (by dsimp only
-        rw [show (⟨0, _⟩ : aFil L r) = 0 from rfl, Submodule.Quotient.mk_zero]
-        exact Submodule.zero_mem _)
+    (by
+        convert Submodule.zero_mem (⨆ d, grDeg L r d) using 1 <;>
+          exact Submodule.Quotient.mk_zero _)
     (fun a b ha hb hha hhb => by
-      dsimp only at hha hhb ⊢
-      rw [show (⟨a + b, _⟩ : aFil L r) = ⟨a, ha⟩ + ⟨b, hb⟩ from rfl, Submodule.Quotient.mk_add]
-      exact add_mem hha hhb) hy
+      convert add_mem hha hhb using 1 <;>
+        exact Submodule.Quotient.mk_add _ (x := (⟨a, ha⟩ : aFil L r)) (y := ⟨b, hb⟩)) hy
 
 theorem grDeg_neg (r : ℕ) (d : ℤ) (hd : d < 0) : grDeg L r d = ⊥ := by
   rw [eq_bot_iff]

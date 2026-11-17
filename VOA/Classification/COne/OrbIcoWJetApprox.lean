@@ -55,7 +55,7 @@ theorem neg (hf : JetApprox d f p) : JetApprox d (fun t => -f t) (-p) := by
 
 theorem sub (hf : JetApprox d f p) (hg : JetApprox d g q) :
     JetApprox d (fun t => f t-g t) (p-q) := by
-  simpa only [sub_eq_add_neg] using JetApprox.add hf hg.neg
+  simpa only [sub_eq_add_neg] using! JetApprox.add hf hg.neg
 
 theorem scale (c : ℂ) (hf : JetApprox d f p) :
     JetApprox d (fun t => c*f t) (Polynomial.C c*p) := by

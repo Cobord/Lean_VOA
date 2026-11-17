@@ -35,7 +35,7 @@ theorem T2_I3I6 : T2 (I3 * I6) = c3 •
     ring
   rw [T2_apply, h, ← smul_eq_C_mul, map_smul, map_add, map_add, map_add,
     map_smul, map_smul, map_smul, map_smul]
-  simpa only [pow_one] using congrArg (fun v => c3 • v)
+  simpa only [pow_one] using! congrArg (fun v => c3 • v)
     (show (2 : ℂ) • Tb (X 0 ^ 17 * X 1 ^ 1) + (-68 : ℂ) • Tb (X 0 ^ 13 * X 1 ^ 5) +
       (68 : ℂ) • Tb (X 0 ^ 5 * X 1 ^ 13) + (-2 : ℂ) • Tb (X 0 ^ 1 * X 1 ^ 17) = _ by
       rw [Tb_xy 17 1 9 rfl, Tb_xy 13 5 9 rfl, Tb_xy 5 13 9 rfl, Tb_xy 1 17 9 rfl])

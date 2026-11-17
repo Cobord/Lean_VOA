@@ -14,6 +14,8 @@ lowering mode F_0 and records powers of the highest Cartan weight as well
 as the central level. It computes actual words on any highest-weight vector,
 including the genuine charged Wakimoto representation.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestNormalOrdering
 open Module (End)
 open NormalOrdering (currentWord)
@@ -104,7 +106,6 @@ theorem push (J : Fin 3→ℤ→End ℂ E) (k : ℂ)
       (∑ c,fabc a b c • J c (m+n) x)+
       if m+n=0 then ((m : ℂ)*k*kappa a b) • x else 0 := by
   have hc := congrArg (fun T : End ℂ E => T x) (hJ a b m n)
-  dsimp only at hc
   rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
     LinearMap.add_apply,LinearMap.sum_apply] at hc
   simp only [LinearMap.smul_apply] at hc

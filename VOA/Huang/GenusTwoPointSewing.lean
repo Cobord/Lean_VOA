@@ -49,7 +49,7 @@ theorem productQSummable_of_sewing
     (w₁ : P₁.carrier) (w₂ : P₂.carrier) (α₁ α₂ z₁ z₂ : ℂ) (τ : UpperHalfPlane)
     (hs : ProductSewingSummable Y₁ Y₂ w₁ w₂ α₁ α₂ z₁ z₂ τ) :
     ProductQSummable Y₁ Y₂ w₁ w₂ α₁ α₂ z₁ z₂ τ := by
-  simpa only [ProductQSummable, productCoeff, tsum_mul_right] using hs.prod
+  simpa only [ProductQSummable, productCoeff, tsum_mul_right] using! hs.prod
 
 /-- Joint sewing estimate for the actual iterate terms, indexed by traced and
 intermediate levels. Intended local sewing region: `‖qParam τ‖ < ‖z₂‖ < 1`
@@ -91,7 +91,7 @@ theorem summable_iterate_q_of_sewing
     (hs : IterateSewingSummable Y₃ Y₄ w₁ w₂ α₁ α₂ z₀ z₂ τ) :
     Summable (fun n : ℕ => iterateCoeff Y₃ Y₄ w₁ w₂ α₁ α₂ (N.h + n) z₀ z₂ *
       qFactor N τ n) := by
-  simpa only [iterateCoeff, tsum_mul_right] using hs.prod
+  simpa only [iterateCoeff, tsum_mul_right] using! hs.prod
 
 /-- Fubini reduction to one-point traces, with the sole sewing hypothesis explicit. -/
 theorem iterateTrace_eq_tsum_onePoint (hC2 : C2Cofinite W) (iQ : Q.IsIrreducibleLW)

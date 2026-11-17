@@ -106,7 +106,9 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
 /-! ## The headline — the faithful Zhu bijection from DJ Lemma 2.8 + the collapse. -/
 
-/-- **`phase4_of_dj28` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection `Φ(𝒱) ↔ Irr A(𝒱)`
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection `Φ(𝒱) ↔ Irr A(𝒱)`
 resting on the published Dong–Jiang Lemma 2.8.**
 
 Hypotheses:
@@ -145,7 +147,9 @@ takes that full closure and the collapse, routing through `mUGradedAction_of_dj2
 (`ZhuVermaAnArchHingeCollapse`) so that the dependency surface is the genuine published DJ-2.8
 conclusion, not just the single instance. -/
 
-/-- **`phase4_of_dj28_full` — the faithful bijection from the full DJ-2.8 closure `DJ28IntoFull` + the
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_full` — the faithful bijection from the full DJ-2.8 closure `DJ28IntoFull` + the
 collapse `OnmCollapses`.**  `mUGradedAction_of_dj28_collapse` supplies `MUGradedAction W` from the
 three families landing in `OnmFull` plus the per-level collapse; `genFromBottomFinalFamily_of_G` lifts
 the residue family `G`; the `hall`-free `zhuBijectionIrr_scorecard` closes the bijection. -/
@@ -163,7 +167,9 @@ theorem phase4_of_dj28_full {W : VertexOperatorAlgebra 𝒱}
 
 /-! ## The collapse-free route — only the load-bearing slice into the partial ideal. -/
 
-/-- **`phase4_of_dj28_neededSlice` — the faithful bijection from the load-bearing slice alone,
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_neededSlice` — the faithful bijection from the load-bearing slice alone,
 bypassing the full-blanket collapse.**  Consumes only `NeededSliceMems W` (the three `M(U)`
 `𝒱`-action families directly into the partial ideal `Onm W n 0` — the minimal residual the faithful
 bijection actually needs, with the genuine load-bearing piece being the cross-circle `crossCirc`

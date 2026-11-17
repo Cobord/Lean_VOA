@@ -68,7 +68,6 @@ theorem affineWeightRootPolynomial_ne_zero (h : ℂ) (i : (Fin 3×ℕ)×ℕ)
   have hs' : realRootSlope i.1 = 0 := by exact_mod_cast hs
   have hhoriz := realRootSlope_zero_horizontal i hi hs'
   have he := congrArg (fun p : ℂ[X] => p.eval 0) hz
-  dsimp only at he
   rw [affineWeightRootPolynomial_eval] at he
   have hr : realRootWeight (0+2) i = (i.2 : ℂ) := by
     simp [realRootWeight,hhoriz,realRootSlope,realRootOffset]
@@ -157,7 +156,7 @@ theorem affineVacuumProduct_ne_zero (n : ℕ) (c : ℤ) : affineVacuumProduct n 
     apply Finset.prod_ne_zero_iff.mpr
     intro i hi
     exact pow_ne_zero _ (affineVacuumRoot_ne_zero n c i hi)
-  simpa [affineVacuumProduct,affineWeightRootPolynomial] using he
+  simpa [affineVacuumProduct,affineWeightRootPolynomial] using! he
 
 /-- Actual descendant-weighted count of nonhorizontal vacuum resonances. -/
 def vacuumOrder (k : ℂ) (n : ℕ) (c : ℤ) : ℕ :=
@@ -196,7 +195,7 @@ theorem affine_vacuum_polynomial_identity_all (n : ℕ) (c : ℤ) :
   have he := weightDeterminant_vacuum_coefficient k n c
   have hf : (weightDeterminant k n c).coeff (Fintype.card (JointIndex n (c+1))) =
       (affineLeadingPolynomial n c).eval k * (affineVacuumProduct n c).eval k := by
-    simpa [affineParabolicProduct,affineVacuumProduct] using
+    simpa [affineParabolicProduct,affineVacuumProduct] using!
       weightDeterminant_parabolic_coefficient_all k 0 n c
   rw [hf] at he
   have hm : (vacuumChevalleyPolynomial n c).det.eval k =
@@ -255,7 +254,6 @@ theorem vacuum_determinant_order_add_reflected (k : ℂ) (hk : k+2 ≠ 0)
       vacuumOrder k n c := by
   have he := congrArg (fun p : ℂ[X] => p.rootMultiplicity k)
     (affine_vacuum_polynomial_identity_all n c)
-  dsimp only at he
   rw [rootMultiplicity_mul (mul_ne_zero
     (vacuumChevalleyPolynomial_det_ne_zero n c)
     (affineMinusTwoPolynomial_ne_zero n (c+1))),

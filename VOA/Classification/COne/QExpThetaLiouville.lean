@@ -12,7 +12,7 @@ namespace VOA.Classification.COne.SSHecke
 /-- A nonzero value of the product, used to invoke the identity principle. -/
 theorem thetaShiftedProduct_half_ne_zero (τ : ℍ) : thetaShiftedProduct (1 / 2) τ ≠ 0 := by
   apply thetaShiftedProduct_ne_zero
-  simpa using theta_unitSquare_not_lattice τ (α := 0) (β := 1 / 2)
+  simpa using! theta_unitSquare_not_lattice τ (α := 0) (β := 1 / 2)
     (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
 
 /-- A shared nonzero multiplier becomes a period of the entire quotient.
@@ -74,7 +74,7 @@ def thetaPeriodPair (τ : ℍ) : PeriodPair where
       zero_im, zero_mul, mul_zero, zero_add, add_im, add_zero] at hi
     have hb : b = 0 := (mul_eq_zero.mp hi).resolve_right τ.im_pos.ne'
     subst b
-    simpa using he
+    simpa using! he
 
 /-- The quotient is constant; no normalization of that constant is used. -/
 theorem thetaProductQuotient_constant (τ : ℍ) (x y : ℂ) :
@@ -87,7 +87,7 @@ theorem thetaProductQuotient_constant (τ : ℍ) (x y : ℂ) :
   obtain ⟨m, k, rfl⟩ := PeriodPair.mem_lattice.mp hw
   have h1 := (thetaProductQuotient_period_one τ).int_mul m
   have ht := (thetaProductQuotient_period_tau τ).int_mul k
-  simpa only [thetaPeriodPair, mul_one] using h1.add_period ht z
+  simpa only [thetaPeriodPair, mul_one] using! h1.add_period ht z
 
 /-- Unconditional proportionality, before proving the scalar is nonzero. -/
 theorem theta_eq_scalar_mul_product (τ : ℍ) (x : ℂ) :

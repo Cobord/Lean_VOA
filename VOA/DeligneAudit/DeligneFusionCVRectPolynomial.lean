@@ -46,7 +46,7 @@ def OpAlgebra (R : CurrentModule bracketTable V) (N : ℕ) :
 instance opAlgebra_commutative (R : CurrentModule bracketTable V) (N : ℕ) :
     IsMulCommutative (OpAlgebra R N) := by
   apply Algebra.isMulCommutative_adjoin
-  rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩
+  rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ _
   exact colorOp_commute R x y
 
 def colorIn (R : CurrentModule bracketTable V) {N : ℕ} (x : Variables N) :
@@ -92,7 +92,7 @@ theorem vectorEval_mem (R : CurrentModule bracketTable V) (w : V) (N : ℕ)
   induction p using MvPolynomial.induction_on with
   | C c =>
       change operatorEval R N (MvPolynomial.C c) w ∈ CVRectSingle.cyclicSpan R w
-      simpa using (CVRectSingle.cyclicSpan R w).smul_mem c (word_mem R w [])
+      simpa using! (CVRectSingle.cyclicSpan R w).smul_mem c (word_mem R w [])
   | add p q hp hq =>
       change vectorEval R w N (p + q) ∈ _
       rw [map_add]
@@ -113,13 +113,13 @@ theorem first_block_mem_range (R : CurrentModule bracketTable V) (w : V) {N : �
     | cons s b ih =>
         obtain ⟨p, hp⟩ := ih (fun t ht => hb t (List.mem_cons_of_mem s ht))
         refine ⟨MvPolynomial.X (true, ⟨s, hb s List.mem_cons_self⟩) * p, ?_⟩
-        simpa [colorOp, hp] using vectorEval_X_mul R w (true, ⟨s, hb s List.mem_cons_self⟩) p
+        simpa [colorOp, hp] using! vectorEval_X_mul R w (true, ⟨s, hb s List.mem_cons_self⟩) p
   induction a with
   | nil => exact htheta
   | cons s a ih =>
       obtain ⟨p, hp⟩ := ih (fun t ht => ha t (List.mem_cons_of_mem s ht))
       refine ⟨MvPolynomial.X (false, ⟨s, ha s List.mem_cons_self⟩) * p, ?_⟩
-      simpa [colorOp, hp] using vectorEval_X_mul R w (false, ⟨s, ha s List.mem_cons_self⟩) p
+      simpa [colorOp, hp] using! vectorEval_X_mul R w (false, ⟨s, ha s List.mem_cons_self⟩) p
 
 /-- The polynomial action reaches the whole actual one-orientation cyclic
 submodule; no identification with an evaluation fusion model is used. -/
@@ -160,7 +160,7 @@ def quotientVectorEval (R : CurrentModule bracketTable V) (w : V) (N : ℕ)
     (MvPolynomial (Variables N) ℂ ⧸ J.restrictScalars ℂ) →ₗ[ℂ] V :=
   (J.restrictScalars ℂ).liftQ (vectorEval R w N) (by
     intro p hp
-    exact hJ hp)
+    exact hJ ((Submodule.restrictScalars_mem ℂ J p).1 hp))
 
 theorem quotientVectorEval_range (R : CurrentModule bracketTable V) (w : V)
     {e n r : ℕ} (h : CV3Rel R w (e, 0) (n, 0) (r, 0) 0)
@@ -168,8 +168,7 @@ theorem quotientVectorEval_range (R : CurrentModule bracketTable V) (w : V)
     (hJ : J ≤ annihilatorIdeal R w (r + n + e)) :
     LinearMap.range (quotientVectorEval R w (r + n + e) J hJ) =
       CVRectSingle.cyclicSpan R w := by
-  rw [quotientVectorEval, Submodule.range_liftQ]
-  exact vectorEval_range R w h
+  exact (Submodule.range_liftQ _ _ _).trans (vectorEval_range R w h)
 
 /-- A finite polynomial quotient upper bound transfers to the actual CV
 cyclic module. The separate relation theorem must prove the displayed

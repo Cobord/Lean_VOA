@@ -21,13 +21,13 @@ theorem denominator_coord (v : ℕ →₀ V) (hv : v ∈ denominator A w) (d : �
       obtain ⟨e, x, hx, rfl⟩ := hv
       by_cases he : e = d
       · subst d
-        simpa using hx
+        simpa using! hx
       · simp [he]
   | zero => simp
   | add x y hx hy ihx ihy =>
-      simpa only [Finsupp.add_apply] using Submodule.add_mem _ ihx ihy
+      simpa only [Finsupp.add_apply] using! Submodule.add_mem _ ihx ihy
   | smul a x hx ih =>
-      simpa only [Finsupp.smul_apply] using Submodule.smul_mem _ a ih
+      simpa only [Finsupp.smul_apply] using! Submodule.smul_mem _ a ih
 
 def pieceRepresentative (B : ℕ)
     (v : Π d : Fin B, evalFbelow A w (d.val + 1)) : numerator A w :=

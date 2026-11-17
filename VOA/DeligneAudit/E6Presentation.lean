@@ -127,7 +127,7 @@ theorem cl6_chain : ∀ (steps : List (ℕ × ℕ × ℕ)) (known : List ℕ),
       ∀ t ∈ known ++ steps.map (·.2.2), cl6 (quadP 78 (Pq t)) = 0 := by
   intro steps
   induction steps with
-  | nil => intro known hk _ t ht; simpa using hk t (by simpa using ht)
+  | nil => intro known hk _ t ht; simpa using! hk t (by simpa using! ht)
   | cons st rest ih =>
     intro known hk h t ht
     simp only [propOK, Bool.and_eq_true] at h
@@ -156,9 +156,12 @@ theorem cl6_rel (r : Fin 650) : cl6 (quadraticRelation (E6data.rel r)) = 0 := by
 theorem I2ns_le_ker : E6data.I ≤ RingHom.ker
     (MvPolynomial.aeval fun i =>
       liDegreeZeroClass W6 1 ⟨genS e6LieData k6 hk6 i, genS_weight_one e6LieData k6 hk6 i⟩).toRingHom := by
-  rw [DeligneCarrierData.I, quadraticIdeal, Ideal.span_le]
-  rintro _ ⟨r, rfl⟩
-  exact cl6_rel r
+  intro p hp
+  have hle : quadraticIdeal E6data.rel ≤ RingHom.ker cl6.toRingHom :=
+    Ideal.span_le.mpr (by
+      rintro _ ⟨r, rfl⟩
+      exact cl6_rel r)
+  exact hle hp
 
 /-- **The explicit E₆ presentation**: currents `J^a_{-1}|0⟩` of `L_{-3}(𝔢₆)` (carrier basis), ideal `I₂ⁿˢ`. -/
 def explicitPresentation : CurrentC2Presentation .E6 W6 where

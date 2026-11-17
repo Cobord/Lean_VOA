@@ -25,7 +25,7 @@ noncomputable def contentRelation (s t : Multiset ℕ) : Submodule ℂ NormalFor
 theorem single_mem_contentRelation (s t : Multiset ℕ) (b : Label) (a : ℂ)
     (h : t+(b.2:Multiset ℕ)=s) : Finsupp.single b a ∈ contentRelation s t := by
   have hb : Finsupp.single b (1:ℂ) ∈ contentRelation s t := Submodule.subset_span ⟨b,h,rfl⟩
-  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using Submodule.smul_mem _ a hb
+  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using! Submodule.smul_mem _ a hb
 
 /-- Adding a creation index adds the same index to the original content. -/
 theorem prepend_mem_contentRelation (i : ℕ) {s t : Multiset ℕ} {f : NormalForm}
@@ -38,8 +38,8 @@ theorem prepend_mem_contentRelation (i : ℕ) {s t : Multiset ℕ} {f : NormalFo
     rw [← Multiset.cons_coe, ← Multiset.singleton_add, add_comm ({i} : Multiset ℕ),
       ← add_assoc, hb]
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Central powers leave the multiset of creation indices unchanged. -/
 theorem centralShift_mem_contentRelation (p : ℕ) {s t : Multiset ℕ} {f : NormalForm}
@@ -50,8 +50,8 @@ theorem centralShift_mem_contentRelation (p : ℕ) {s t : Multiset ℕ} {f : Nor
     simp only [centralShift, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
     exact single_mem_contentRelation _ _ _ _ hb
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Remembering additional already-removed indices on both sides preserves
 the content equation. This combines successive contraction steps. -/
@@ -69,7 +69,7 @@ theorem contractionNormal_content (a : ℕ) (w : List ℕ) :
   | nil => exact Submodule.zero_mem _
   | cons i w ih =>
     apply Submodule.add_mem
-    · simpa [← Multiset.cons_coe, ← Multiset.singleton_add, add_comm] using prepend_mem_contentRelation i ih
+    · simpa [← Multiset.cons_coe, ← Multiset.singleton_add, add_comm] using! prepend_mem_contentRelation i ih
     · split_ifs with h
       · have hi : a=i := by omega
         subst i
@@ -90,8 +90,8 @@ theorem actContraction_content (a : ℕ) {s t : Multiset ℕ} {f : NormalForm}
       (centralShift_mem_contentRelation b.1 (contractionNormal_content a b.2))
     rwa [hb] at hh
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- A word of contractions records its entire multiset of annihilated
 indices, independently of the order in which the contractions act. -/
@@ -100,9 +100,9 @@ theorem applyContractions_content (u : List ℕ) {s t : Multiset ℕ} {f : Norma
     applyContractions (u.map (fun (a : ℕ) => (a:ℤ)+2)) f ∈
       contentRelation s (t+(u:Multiset ℕ)) := by
   induction u with
-  | nil => simpa [applyContractions] using h
+  | nil => simpa [applyContractions] using! h
   | cons a u ih =>
-    simpa [applyContractions, ← Multiset.cons_coe, ← Multiset.singleton_add, add_assoc, add_comm, add_left_comm] using actContraction_content a ih
+    simpa [applyContractions, ← Multiset.cons_coe, ← Multiset.singleton_add, add_assoc, add_comm, add_left_comm] using! actContraction_content a ih
 
 /-- Vacuum pairing vanishes unless all original indices have been removed.
 Indeed a retained empty creation word would force the two multisets equal. -/

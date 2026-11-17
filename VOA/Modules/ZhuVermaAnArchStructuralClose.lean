@@ -75,7 +75,9 @@ noncomputable def lumaxOfRegen (G : BimodGenuineConstructionAUniform W)
 
 end InducedAssignment
 
-/-- **`phase4_of_dj28_uniform_regen` — the faithful Zhu-5.3.4 bijection with the maximal-`J` residue
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_uniform_regen` — the faithful Zhu-5.3.4 bijection with the maximal-`J` residue
 reduced to `bottom_regen` alone.**
 
 Identical to `phase4_of_dj28_uniform_lumax`, but consuming the per-`U` generation-from-bottom

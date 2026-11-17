@@ -77,7 +77,7 @@ theorem towerSpan_of_gradedDescent (T : Set V) (h : GradedDescent W T) :
     by_cases hN : N < 0
     · rw [W.positivity N hN]
       exact bot_le
-    · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using hnat N.toNat
+    · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using! hnat N.toNat
   apply top_unique
   intro y _
   obtain ⟨x, rfl⟩ := mk₂_surjective W y
@@ -163,7 +163,7 @@ theorem primary_of_twoTowers {X : V} {d : ℤ} (hX : X ∈ W.grading d)
   have hxy : x - y ∈ O₂ W := (mk₂_eq_zero_iff W).mp (by rw [map_sub, hy, sub_self])
   have hp : piHom W N x ∈ K := by
     have := K.add_mem (hO _ hxy) hpy
-    simpa only [map_sub, sub_add_cancel] using this
+    simpa only [map_sub, sub_add_cancel] using! this
   rwa [piHom_of_mem W hx.1] at hp
 
 theorem orbifold_twoTowers_iff_primary (G : Subgroup (Aut (V2m 1 le_rfl)))

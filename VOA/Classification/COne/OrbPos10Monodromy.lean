@@ -25,7 +25,9 @@ def ambientSymmetry (G : Subgroup (Aut W)) (g : G) : ambient G ≅ ambient G :=
     { toLinearEquiv := g.1.toLinearEquiv
       map_act := fun a n x => by
         change g.1 (W.smul a.1 n x) = W.smul a.1 n (g.1 x)
-        rw [g.1.map_smul', a.2 g.1 g.2] }
+        exact (g.1.map_smul' a.1 n x).trans
+          (congrArg (fun y => W.smul y n (g.1.toLinearEquiv x))
+            (a.2 g.1 g.2 : g.1.toLinearEquiv a.1 = a.1)) }
 
 @[simp] theorem ambientSymmetry_apply (G : Subgroup (Aut W)) (g : G) (x : V) :
     (ambientSymmetry G g).hom.val x = g.1 x := rfl
@@ -45,13 +47,16 @@ theorem ambientSymmetry_mul (G : Subgroup (Aut W)) (g : G)
       ambientMultiplication G F ≫ (ambientSymmetry G g).hom := by
   apply tensor_hom_ext F
   intro n a b
-  rw [Ordinary.comp_apply, Ordinary.comp_apply, tensorHom_intertwiner,
-    ambientMultiplication_intertwiner, ambientMultiplication_intertwiner]
-  simp only [ambientSymmetry_apply]
+  refine (congrArg (ambientMultiplication G F).val
+    (tensorHom_intertwiner F (ambientSymmetry G g).hom (ambientSymmetry G g).hom n a b)).trans ?_
+  refine ((ambientMultiplication_intertwiner G F n _ _).trans ?_).trans
+    (congrArg (ambientSymmetry G g).hom.val (ambientMultiplication_intertwiner G F n a b)).symm
+  change moduleModes (adjointModule W) n (g.1 a) (g.1 b) =
+    g.1 (moduleModes (adjointModule W) n a b)
   unfold moduleModes
   split_ifs
   · exact (g.1.map_smul' a _ b).symm
-  · simp
+  · exact (map_zero g.1.toLinearEquiv).symm
 
 /-- The action respects the pinned monoid structure, not merely an unspecified
 algebra structure on the same underlying object. -/

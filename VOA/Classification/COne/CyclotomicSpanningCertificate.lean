@@ -103,7 +103,7 @@ theorem spanning_of_truncated_independent {N : ℕ} [NeZero N] {k : ℤ} {d : �
   have hf : LinearIndependent ℂ f := hi.of_comp _
   have hcard : Fintype.card (Fin d) = Module.finrank ℂ
       (ModularForm (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ)) k) := by
-    exact le_antisymm hf.fintype_card_le_finrank (by simpa using hd)
+    exact le_antisymm hf.fintype_card_le_finrank (by simpa using! hd)
   have hspan := hf.span_eq_top_of_card_eq_finrank' hcard
   intro F
   have hmem : F ∈ Submodule.span ℂ (Set.range f) := by rw [hspan]; trivial

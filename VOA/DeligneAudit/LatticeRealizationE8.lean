@@ -70,16 +70,16 @@ def e8LatData : LatData E8sector e8 e8_even e8_posDef where
   sg i := (u i : ℂ) * f (wt i)
   cv := hvec
   root i hi := by
-    have : 8 ≤ i.val := by simpa using hi
+    have : 8 ≤ i.val := by simpa using! hi
     rw [xs_root i this]
     rfl
   coroot i hi := by
-    rw [xs_cartan i (by simpa using hi)]
+    rw [xs_cartan i (by simpa using! hi)]
     rfl
   θ := wt 127
   raising e he := ⟨by simp only [decide_eq_false_iff_not]; exact fun h => by have := he.1; omega,
     by rw [e8_form_eq]; exact chk_raising e he⟩
-  cartan h hc := ⟨by simpa using hc, by rw [e8_form_eq]; exact chk_cartan h hc⟩
+  cartan h hc := ⟨by simpa using! hc, by rw [e8_form_eq]; exact chk_cartan h hc⟩
   cartanN h hc := hc.elim
   lowering i hi := ⟨by simp only [decide_eq_false_iff_not]; exact fun h => by have := lowering_ge hi; omega,
     by rw [e8_form_eq]; exact (chk_lowering i hi).1, by rw [e8_form_eq]; exact (chk_lowering i hi).2⟩

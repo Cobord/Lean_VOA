@@ -17,6 +17,8 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option linter.style.longLine false
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.SingularNorm
 open Module (End)
 variable {E : Type*} [AddCommGroup E] [Module ℂ E]

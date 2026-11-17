@@ -139,12 +139,13 @@ variable {R σ ι : Type*} [CommRing R] [IsDomain R]
 /-- Coefficient pivots prove polynomial linear independence: each member has a nonzero
 coefficient at its own pivot monomial and every other member has zero coefficient there. -/
 theorem linearIndependent_of_pivot (f : ι → MvPolynomial σ R) (pivot : ι → σ →₀ ℕ)
-    (hpivot : ∀ i, MvPolynomial.coeff (pivot i) (f i) ≠ 0)
-    (hoff : ∀ i j, i ≠ j → MvPolynomial.coeff (pivot i) (f j) = 0) :
+    (hpivot : ∀ i, (f i).coeff (pivot i) ≠ 0)
+    (hoff : ∀ i j, i ≠ j → (f j).coeff (pivot i) = 0) :
     LinearIndependent R f := by
   rw [linearIndependent_iff']
   intro s g hsum i hi
-  have hcoeff := congrArg (MvPolynomial.coeff (pivot i)) hsum
+  have hcoeff := congrArg (fun q : MvPolynomial σ R => q.coeff (pivot i)) hsum
+  beta_reduce at hcoeff
   simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, MvPolynomial.coeff_zero] at hcoeff
   rw [Finset.sum_eq_single i] at hcoeff
   · exact (mul_eq_zero.mp hcoeff).resolve_right (hpivot i)
@@ -219,13 +220,13 @@ def classicalTriWeight : Fin 3 × ℕ → ClassicalTriDegree := fun v =>
 
 /-- Polynomials all of whose monomials have triangular weight at least `d`. -/
 def classicalTriAtLeast (d : ClassicalTriDegree) : Submodule ℂ Wak.WakFock where
-  carrier := {P | ∀ e, MvPolynomial.coeff e P ≠ 0 →
+  carrier := {P | ∀ e, P.coeff e ≠ 0 →
     d ≤ Finsupp.weight classicalTriWeight e}
   zero_mem' := by simp
   add_mem' := by
     intro P Q hP hQ e he
     rw [MvPolynomial.coeff_add] at he
-    by_cases hp : MvPolynomial.coeff e P = 0
+    by_cases hp : P.coeff e = 0
     · exact hQ e (by simpa only [hp, zero_add] using he)
     · exact hP e hp
   smul_mem' := by
@@ -235,13 +236,13 @@ def classicalTriAtLeast (d : ClassicalTriDegree) : Submodule ℂ Wak.WakFock whe
 
 /-- Polynomials all of whose monomials have triangular weight strictly above `d`. -/
 def classicalTriAbove (d : ClassicalTriDegree) : Submodule ℂ Wak.WakFock where
-  carrier := {P | ∀ e, MvPolynomial.coeff e P ≠ 0 →
+  carrier := {P | ∀ e, P.coeff e ≠ 0 →
     d < Finsupp.weight classicalTriWeight e}
   zero_mem' := by simp
   add_mem' := by
     intro P Q hP hQ e he
     rw [MvPolynomial.coeff_add] at he
-    by_cases hp : MvPolynomial.coeff e P = 0
+    by_cases hp : P.coeff e = 0
     · exact hQ e (by simpa only [hp, zero_add] using he)
     · exact hP e hp
   smul_mem' := by
@@ -255,8 +256,8 @@ theorem classicalTriAtLeast_mul {a b : ClassicalTriDegree} {P Q : Wak.WakFock}
   intro e he
   rw [MvPolynomial.coeff_mul] at he
   obtain ⟨⟨u, v⟩, huv, hterm⟩ := Finset.exists_ne_zero_of_sum_ne_zero he
-  have hPu : MvPolynomial.coeff u P ≠ 0 := left_ne_zero_of_mul hterm
-  have hQv : MvPolynomial.coeff v Q ≠ 0 := right_ne_zero_of_mul hterm
+  have hPu : P.coeff u ≠ 0 := left_ne_zero_of_mul hterm
+  have hQv : Q.coeff v ≠ 0 := right_ne_zero_of_mul hterm
   have huv' : u + v = e := Finset.HasAntidiagonal.mem_antidiagonal.mp huv
   rw [← huv', map_add]
   exact classicalTri_add_le_add (hP u hPu) (hQ v hQv)
@@ -267,8 +268,8 @@ theorem classicalTriAbove_mul_atLeast {a b : ClassicalTriDegree} {P Q : Wak.WakF
   intro e he
   rw [MvPolynomial.coeff_mul] at he
   obtain ⟨⟨u, v⟩, huv, hterm⟩ := Finset.exists_ne_zero_of_sum_ne_zero he
-  have hPu : MvPolynomial.coeff u P ≠ 0 := left_ne_zero_of_mul hterm
-  have hQv : MvPolynomial.coeff v Q ≠ 0 := right_ne_zero_of_mul hterm
+  have hPu : P.coeff u ≠ 0 := left_ne_zero_of_mul hterm
+  have hQv : Q.coeff v ≠ 0 := right_ne_zero_of_mul hterm
   have huv' : u + v = e := Finset.HasAntidiagonal.mem_antidiagonal.mp huv
   rw [← huv', map_add]
   exact classicalTri_add_lt_add_of_lt_of_le (hP u hPu) (hQ v hQv)
@@ -279,8 +280,8 @@ theorem classicalTriAtLeast_mul_above {a b : ClassicalTriDegree} {P Q : Wak.WakF
   intro e he
   rw [MvPolynomial.coeff_mul] at he
   obtain ⟨⟨u, v⟩, huv, hterm⟩ := Finset.exists_ne_zero_of_sum_ne_zero he
-  have hPu : MvPolynomial.coeff u P ≠ 0 := left_ne_zero_of_mul hterm
-  have hQv : MvPolynomial.coeff v Q ≠ 0 := right_ne_zero_of_mul hterm
+  have hPu : P.coeff u ≠ 0 := left_ne_zero_of_mul hterm
+  have hQv : Q.coeff v ≠ 0 := right_ne_zero_of_mul hterm
   have huv' : u + v = e := Finset.HasAntidiagonal.mem_antidiagonal.mp huv
   rw [← huv', map_add]
   exact classicalTri_add_lt_add_of_le_of_lt (hP u hPu) (hQ v hQv)
@@ -291,7 +292,7 @@ theorem classicalTriAbove_component_eq_zero {d r : ClassicalTriDegree} {P : Wak.
   ext e
   rw [MvPolynomial.coeff_weightedHomogeneousComponent]
   split_ifs with he
-  · by_cases hc : MvPolynomial.coeff e P = 0
+  · by_cases hc : P.coeff e = 0
     · exact hc
     · exact (not_lt_of_ge hr (he ▸ hP e hc)).elim
   · rfl
@@ -302,7 +303,7 @@ theorem classicalTriAtLeast_component_eq_zero {d r : ClassicalTriDegree} {P : Wa
   ext e
   rw [MvPolynomial.coeff_weightedHomogeneousComponent]
   split_ifs with he
-  · by_cases hc : MvPolynomial.coeff e P = 0
+  · by_cases hc : P.coeff e = 0
     · exact hc
     · exact (not_lt_of_ge (hP e hc) (he ▸ hr)).elim
   · rfl
@@ -358,7 +359,7 @@ theorem mem_freeLiAtLeast_zero (P : Wak.WakFock) : P ∈ freeLiAtLeast 0 := by
   rw [MvPolynomial.as_sum P]
   exact Submodule.sum_mem _ fun e _ => by
     have hmono := monomial_mem_freeLiAtLeast (d := 0) e (Nat.zero_le _)
-    have hsmul := Submodule.smul_mem (freeLiAtLeast 0) (MvPolynomial.coeff e P) hmono
+    have hsmul := Submodule.smul_mem (freeLiAtLeast 0) (P.coeff e) hmono
     simpa only [MvPolynomial.smul_monomial, smul_eq_mul, mul_one] using hsmul
 
 /-- Multiplication by a variable of jet weight `r` raises the minimum free-Li weight by `r`. -/
@@ -1398,11 +1399,14 @@ def currentClassical (k : ℂ) (a : Fin 3) (n : ℕ) : Wak.WakFock :=
 theorem currentClassical_mul_mem_freeLiAtLeast (k : ℂ) (a : Fin 3) (n : ℕ)
     {d : ℕ} {P : Wak.WakFock} (hP : P ∈ freeLiAtLeast d) :
     currentClassical k a n * P ∈ freeLiAtLeast (d + n) := by
-  fin_cases a <;> simp only [currentClassical, Fin.zero_eta, Fin.mk_one, ↓reduceIte,
-    OfNat.ofNat] <;>
-    first | exact eClassical_mul_mem_freeLiAtLeast n hP |
-      exact fClassical_mul_mem_freeLiAtLeast k n hP |
-      exact hClassical_mul_mem_freeLiAtLeast k n hP
+  by_cases h0 : a = 0
+  · rw [currentClassical, if_pos h0]
+    exact eClassical_mul_mem_freeLiAtLeast n hP
+  by_cases h1 : a = 1
+  · rw [currentClassical, if_neg h0, if_pos h1]
+    exact fClassical_mul_mem_freeLiAtLeast k n hP
+  rw [currentClassical, if_neg h0, if_neg h1]
+  exact hClassical_mul_mem_freeLiAtLeast k n hP
 
 /-- A negative `e` current is exactly multiplication by its classical symbol. -/
 theorem Ecur_sub_classical_mem_freeLiAtLeast (n : ℕ) {d : ℕ} {P : Wak.WakFock} :
@@ -1577,7 +1581,9 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
   apply Finset.sum_eq_zero
   intro q hq
   by_cases hqf : (ofLex q).1 = 1
-  · simp [ev, hqf, hx]
+  · rw [if_pos hqf]
+    change (Finsupp.single ((2 : Fin 3), 0) (mu q)) x = 0
+    rw [Finsupp.single_apply, if_neg (Ne.symm hx)]
   · simp [ev, hqf]
 
 @[simp] theorem classicalPivotExponent_apply_b (mu : (Fin 3 ×ₗ ℕ) →₀ ℕ) (n : ℕ) :
@@ -1592,7 +1598,7 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
         if (ofLex q).1 = 1 then Finsupp.single ((2 : Fin 3), 0) m else 0)
           ((0 : Fin 3), n) = _
   rw [show ((0 : Fin 3), n) = ofLex (toLex ((0 : Fin 3), n)) by simp,
-    Finsupp.mapDomain_apply ofLex.injective]
+    Finsupp.mapDomain_apply_of_injective ofLex.injective]
   rw [classicalPivotExtra_apply_of_ne mu
     (ofLex (toLex ((0 : Fin 3), n))) (by simp), add_zero]
   simp
@@ -1609,7 +1615,7 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
         if (ofLex q).1 = 1 then Finsupp.single ((2 : Fin 3), 0) m else 0)
           ((1 : Fin 3), n) = _
   rw [show ((1 : Fin 3), n) = ofLex (toLex ((1 : Fin 3), n)) by simp,
-    Finsupp.mapDomain_apply ofLex.injective]
+    Finsupp.mapDomain_apply_of_injective ofLex.injective]
   rw [classicalPivotExtra_apply_of_ne mu
     (ofLex (toLex ((1 : Fin 3), n))) (by simp), add_zero]
   simp
@@ -1627,7 +1633,7 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
         if (ofLex q).1 = 1 then Finsupp.single ((2 : Fin 3), 0) m else 0)
           ((2 : Fin 3), n) = _
   rw [show ((2 : Fin 3), n) = ofLex (toLex ((2 : Fin 3), n)) by simp,
-    Finsupp.mapDomain_apply ofLex.injective]
+    Finsupp.mapDomain_apply_of_injective ofLex.injective]
   rw [classicalPivotExtra_apply_of_ne mu
     (ofLex (toLex ((2 : Fin 3), n))) (by
       intro h
@@ -1649,7 +1655,7 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
         if (ofLex q).1 = 1 then Finsupp.single ((2 : Fin 3), 0) m else 0)
           ((2 : Fin 3), 0) = _
   rw [show ((2 : Fin 3), 0) = ofLex (toLex ((2 : Fin 3), 0)) by simp,
-    Finsupp.mapDomain_apply ofLex.injective]
+    Finsupp.mapDomain_apply_of_injective ofLex.injective]
   simp only [ofLex_toLex]
   congr 1
   rw [classicalFCount]
@@ -1664,7 +1670,11 @@ private theorem classicalPivotExtra_apply_of_ne (mu : (Fin 3 ×ₗ ℕ) →₀ �
   rw [map_sum]
   apply Finset.sum_congr rfl
   intro q hq
-  by_cases hqf : (ofLex q).1 = 1 <;> simp [ev, hqf]
+  by_cases hqf : (ofLex q).1 = 1
+  · rw [if_pos hqf, if_pos hqf]
+    change (Finsupp.single ((2 : Fin 3), 0) (mu q)) ((2 : Fin 3), 0) = mu q
+    exact Finsupp.single_eq_same
+  · simp [ev, hqf]
 
 /-- The selected pivot exponent remembers the original affine PBW exponent.  The `b_n` and
 `c_n` coordinates recover the `e_n` and `f_n` multiplicities, the positive `A_n` coordinates
@@ -1869,7 +1879,7 @@ theorem currentClassical_sub_pivot_mem_classicalTriAbove (k : ℂ) (a : Fin 3) (
         MvPolynomial.X ((2 : Fin 3), 0) * MvPolynomial.X ((1 : Fin 3), n) := by
       norm_num [classicalCurrentPivot]
     rw [hpivot] at hadd
-    convert hadd using 1 <;> ring
+    convert hadd using 1 <;> first | rfl | ring
   · change hClassical k n - MvPolynomial.X ((2 : Fin 3), n) ∈ classicalTriAbove 0
     rw [hClassical, BG_one_neg, Wak.aV_of_pos (by omega)]
     have hindex : ((n : ℤ) + 1 - 1).toNat = n := by omega
@@ -2115,7 +2125,7 @@ theorem classicalPivotOrderedCreationState_linearIndependent :
       (fun mu => MvPolynomial.monomial (classicalPivotExponent mu) 1) from by
     funext mu
     exact classicalPivotOrderedCreationState_eq_monomial mu]
-  simpa only [Function.comp_apply] using hpivot
+  simpa only [Function.comp_def] using! hpivot
 
 /-- Minimum triangular degree of the ordered classical word. -/
 def classicalOrderedTriDegree (mu : (Fin 3 ×ₗ ℕ) →₀ ℕ) : ClassicalTriDegree :=
@@ -2174,7 +2184,7 @@ theorem classicalSubstitution_injective (k : ℂ) :
             (Finsupp.linearCombination ℂ
               (fun mu : (Fin 3 ×ₗ ℕ) →₀ ℕ => MvPolynomial.monomial mu 1)
               (b.repr z)) := by
-        simpa only [Function.comp_apply, AlgHom.toLinearMap_apply] using
+        simpa only [Function.comp_def, AlgHom.toLinearMap_apply] using!
           (Finsupp.apply_linearCombination ℂ (classicalSubstitution k).toLinearMap
             (fun mu : (Fin 3 ×ₗ ℕ) →₀ ℕ => MvPolynomial.monomial mu 1)
             (b.repr z)).symm
@@ -2198,7 +2208,7 @@ theorem classicalOrderedCreationState_linearIndependent_of_substitution_injectiv
       (fun mu => classicalSubstitution k (MvPolynomial.monomial mu 1)) from by
     funext mu
     exact classicalOrderedCreationState_eq_substitution_monomial k mu]
-  simpa only [Function.comp_apply, AlgHom.toLinearMap_apply] using himage
+  simpa only [Function.comp_def, AlgHom.toLinearMap_apply] using! himage
 
 /-- Minimum free-Li degree of an ordered affine PBW word. -/
 def orderedFreeLiDegree (mu : ((Fin 3 ×ₗ ℕ) →₀ ℕ)) : ℕ :=

@@ -192,7 +192,7 @@ theorem encCheck_of_encLin {kb : ℕ} {tab : ℕ → QV} {target : QV} {C : List
       obtain ⟨p, hp, hu'⟩ := List.mem_flatMap.mp hu
       obtain ⟨v, hv, rfl⟩ := List.mem_map.mp hu'
       exact h2 p hp v hv
-  · rw [absSum_append, absSum_smulQ, absSum_combQ]; simpa using h3
+  · rw [absSum_append, absSum_smulQ, absSum_combQ]; simpa using! h3
   · rw [encQ_append, encQ_smulQ, encQ_combQ, h4]; ring
 
 end VOA.DeligneAudit.DeligneDivisor

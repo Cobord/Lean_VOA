@@ -122,7 +122,7 @@ noncomputable def tcoeff (m : (ℕ × Fin r) →₀ ℕ) (x : FockT r ⊗[ℂ] T
   TensorProduct.equivFinsuppOfBasisLeft (basisMonomials (ℕ × Fin r) ℂ) x m
 
 theorem tcoeff_tmul (m : (ℕ × Fin r) →₀ ℕ) (p : FockT r) (t : Tm) :
-    tcoeff m (p ⊗ₜ t) = coeff m p • t := by
+    tcoeff m (p ⊗ₜ t) = p.coeff m • t := by
   rw [tcoeff, TensorProduct.equivFinsuppOfBasisLeft_apply_tmul_apply]
   rfl
 
@@ -157,7 +157,7 @@ theorem tcoeff_eq_zero_of_mem_twGrading {d : ℕ} {x : FockT r ⊗[ℂ] Tm}
   | add z₁ z₂ h₁ h₂ => rw [map_add, tcoeff_add, h₁, h₂, add_zero]
   | tmul p t =>
     rw [LinearMap.rTensor_tmul, Submodule.subtype_apply, tcoeff_tmul]
-    have hp : coeff m (p : FockT r) = 0 := by
+    have hp : (p : FockT r).coeff m = 0 := by
       by_contra hc
       exact hm (p.2 hc)
     rw [hp, zero_smul]
@@ -197,7 +197,7 @@ theorem twForm_orth_twGrading (BT : LinearMap.BilinForm ℂ Tm) {d d' : ℕ} (hd
     rw [p.as_sum, TensorProduct.sum_tmul, map_sum]
     refine Finset.sum_eq_zero fun m hm => ?_
     have hw : Finsupp.weight wT m = d' := hp (mem_support_iff.mp hm)
-    rw [show monomial m (coeff m p) = coeff m p • monomial m (1 : ℂ) by
+    rw [show monomial m (p.coeff m) = p.coeff m • monomial m (1 : ℂ) by
         rw [smul_monomial, smul_eq_mul, mul_one], ← TensorProduct.smul_tmul', map_smul,
       twForm_monomial_right, tcoeff_eq_zero_of_mem_twGrading hx (by rw [hw]; exact Ne.symm hdd),
       map_zero, LinearMap.zero_apply, mul_zero, smul_zero]

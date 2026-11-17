@@ -19,7 +19,7 @@ open HeisenbergN
 
 /-- The one-colour embedding preserves each oscillator multiplicity. -/
 theorem fockOccupation_apply (d : ℕ →₀ ℕ) (i : ℕ) : fockOccupation d (i,0) = d i := by
-  exact Finsupp.mapDomain_apply (fun _ _ h => congrArg Prod.fst h) d i
+  exact Finsupp.mapDomain_apply_of_injective (fun _ _ h => congrArg Prod.fst h) d i
 
 /-- Adding an oscillator commutes with the one-colour embedding. -/
 theorem fockOccupation_add_single (d : ℕ →₀ ℕ) (i : ℕ) :
@@ -54,8 +54,7 @@ screening state at every occupation of the required output energy. -/
 theorem screeningFockState_pderiv_coeff (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (i : ℕ)
     (hd : Finsupp.weight (fun j => j+1) d + (i+1) = r*s) :
-    MvPolynomial.coeff (fockOccupation d)
-      (MvPolynomial.pderiv (i,0) (screeningFockState r s t β)) =
+    (MvPolynomial.pderiv (i,0) (screeningFockState r s t β)).coeff (fockOccupation d) =
       ((β / ((i+1:ℕ):ℚ) * screeningPrefactor β d *
         screeningMoment r s t (powerSumSubstitution (Fin r)
           (MvPolynomial.monomial (d + Finsupp.single i 1) 1))) : ℂ) := by
@@ -72,8 +71,8 @@ indices. Repeated occurrences are handled by the two factorial cancellations. -/
 theorem screeningFockState_two_pderiv_coeff (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (i j : ℕ)
     (hd : Finsupp.weight (fun k => k+1) d + (i+1) + (j+1) = r*s) :
-    MvPolynomial.coeff (fockOccupation d)
-      (MvPolynomial.pderiv (i,0) (MvPolynomial.pderiv (j,0) (screeningFockState r s t β))) =
+    (MvPolynomial.pderiv (i,0) (MvPolynomial.pderiv (j,0) (screeningFockState r s t β))).coeff
+      (fockOccupation d) =
       (((β / ((i+1:ℕ):ℚ)) * (β / ((j+1:ℕ):ℚ)) * screeningPrefactor β d *
         screeningMoment r s t (powerSumSubstitution (Fin r)
           (MvPolynomial.monomial (d + Finsupp.single i 1 + Finsupp.single j 1) 1))) : ℂ) := by

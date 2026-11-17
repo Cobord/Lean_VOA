@@ -80,7 +80,7 @@ theorem vermaDescendant_mem_level (c h : ℂ) (w : List ℕ) (n : ℕ)
     (v : Verma c h) (hv : v ∈ sortedSpan c h n) :
     vermaDescendant c h w v ∈ sortedSpan c h (n+energyHW w) := by
   induction w with
-  | nil => simpa [vermaDescendant,energyHW] using hv
+  | nil => simpa [vermaDescendant,energyHW] using! hv
   | cons i w ih =>
     change vermaMode c h (-(i:ℤ)-1) _ ∈ _
     apply verma_mode_mem_level c h (n+energyHW w) _ _ ih
@@ -100,7 +100,7 @@ as states in the actual ambient level n+m. -/
 noncomputable def vermaGradedDescendant (c h : ℂ) (n m : ℕ)
     (v : sortedSpan c h n) (w : VermaPartitions m) : sortedSpan c h (n+m) :=
   ⟨vermaDescendant c h w.val v, by
-    simpa only [w.property.2] using vermaDescendant_mem_level c h w.val n v v.property⟩
+    simpa only [w.property.2] using! vermaDescendant_mem_level c h w.val n v v.property⟩
 
 /-- A nonzero starting state supplies one independent descendant for EVERY
 partition of m, including parts one. This count is inside the actual module. -/
@@ -125,7 +125,7 @@ noncomputable def vermaWeightGramPolynomial (c : ℂ) (n : ℕ) :
 matrix, with the normalization already proved by the universal construction. -/
 theorem vermaWeightGramPolynomial_eval (c h : ℂ) (n : ℕ) :
     (vermaWeightGramPolynomial c n).map (Polynomial.eval h)=vermaGramMatrix c h n := by
-  simpa [vermaWeightGramPolynomial] using
+  simpa [vermaWeightGramPolynomial] using!
     vermaAlgebraGramMatrix_eval (Polynomial.C c) Polynomial.X (Polynomial.aeval h) n
 
 /-- PBW coordinates of singular descendants are actual null rows of the
@@ -142,7 +142,7 @@ theorem vermaGradedDescendant_null_row (c h : ℂ) (n m : ℕ) (hn : 0<n)
     intro k
     have hh := congrArg (fun M => M k j) (vermaWeightGramPolynomial_eval c h (n+m))
     simpa only [Matrix.map_apply,vermaGramMatrix,b,vermaLevelBasis,
-      Module.Basis.mk_apply,vermaLevelWord] using hh
+      Module.Basis.mk_apply,vermaLevelWord] using! hh
   simp_rw [he]
   have hs := congrArg (sortedSpan c h (n+m)).subtype
     (b.sum_equivFun (vermaGradedDescendant c h n m v i))
@@ -151,7 +151,7 @@ theorem vermaGradedDescendant_null_row (c h : ℂ) (n m : ℕ) (hn : 0<n)
   have hz := LinearMap.congr_fun (vermaDescendant_radical c h i.val v
     (vermaContravariant_singular_radical c h n hn v v.property h1 h2)) (b j)
   simpa only [map_sum,LinearMap.sum_apply,map_smul,LinearMap.smul_apply,
-    smul_eq_mul,LinearMap.zero_apply] using hh.trans hz
+    smul_eq_mul,LinearMap.zero_apply] using! hh.trans hz
 
 /-- A nonzero positive-level singular state forces p(m) factors X-h in the
 actual level-(n+m) determinant, where p counts ALL partitions. This is a

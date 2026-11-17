@@ -611,7 +611,11 @@ theorem bgPair_lamHalf (hr : 1 ≤ r) :
 theorem bgPair_lamHalf_apply (hr : 1 ≤ r) (m : ℤ) :
     BgA.bgPair (latP r) (lamHalf r) m = (4 * (r : ℂ) - 1) / 2 * (m : ℂ) := by
   have hr' : ((r : ℂ)) ≠ 0 := Nat.cast_ne_zero.mpr (by omega : r ≠ 0)
-  rw [lamHalf, BgA.bgPair_latBg (latP r) (latP_posDef r hr), gHalf, latP_form, cHalf]
+  have h := BgA.bgPair_latBg (latP r) (latP_posDef r hr) (cHalf r) (gHalf r)
+    (show (latP r).carrier from m)
+  rw [lamHalf]
+  refine h.trans ?_
+  rw [gHalf, latP_form, cHalf]
   push_cast
   field_simp
   ring

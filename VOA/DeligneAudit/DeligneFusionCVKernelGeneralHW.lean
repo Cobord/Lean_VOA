@@ -76,9 +76,9 @@ theorem first_same_root (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.1 + j) :
     (List.replicate ϱ.1 3 ++ List.replicate ν.1 2) (ε.1 + j) hj (CVRoots.sl2_first R)
     (fun s => h.raising 0 (by decide) s)
     (fun p hp => h.cartan_pos 6 (by decide) p hp)
-    (by simpa only [parts, Prod.fst_zero, Nat.zero_add] using h.first)
+    (by simpa only [parts, Prod.fst_zero, Nat.zero_add] using! h.first)
   simpa only [parts, List.length_append, List.length_replicate,
-    Nat.add_comm ϱ.1 ν.1, Nat.add_assoc] using hs
+    Nat.add_comm ϱ.1 ν.1, Nat.add_assoc] using! hs
 
 /-- The first zero-mode power is sharp at the smaller highest weight. -/
 theorem first_lowering_first (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.1 + j) :
@@ -104,9 +104,9 @@ theorem first_lowering_second (h : CV3Rel R w ε ν ϱ j) :
     exact op4_op5 0 a x
   have hn : (R.op 4 0 ^ (ε.2 + 2 * ν.2 + 3 * ϱ.2 + j + 1)) w = 0 := by
     rw [Module.End.pow_apply]
-    simpa only [Prod.snd_zero, Nat.zero_add] using h.lowering_second
+    simpa only [Prod.snd_zero, Nat.zero_add] using! h.lowering_second
   have hz := Garland.Ypow_Xpow_apply hXY hYZ hn 1
-  simpa only [pow_one, Module.End.pow_apply, Nat.add_assoc, Nat.reduceAdd, a] using hz
+  simpa only [pow_one, Module.End.pow_apply, Nat.add_assoc, Nat.reduceAdd, a] using! hz
 
 /-- The highest-root zero mode has its sharp nilpotence degree on the first kernel vector. -/
 theorem first_lowering_highest (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.1 + j) :
@@ -126,12 +126,12 @@ theorem first_lowering_highest (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.1 + j)
   have hEF : ∀ x, R.op 2 0 (R.op 5 0 x) - R.op 5 0 (R.op 2 0 x) = H x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hEF 0 0)
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using hc
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using! hc
   have hHF : ∀ x, H (R.op 5 0 x) - R.op 5 0 (H x) = (-2 : ℂ) • R.op 5 0 x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hHF 0 0)
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply,
-      Module.End.mul_apply, Nat.zero_add] using hc
+      Module.End.mul_apply, Nat.zero_add] using! hc
   have hn : (R.op 5 0)^[
       ε.1 + ε.2 + 2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j + 1] u = 0 := by
     have hc : Commute (R.op 5 0) (R.op 3 (ν.1 + ϱ.1 + ε.1 + j - 1)) := by
@@ -154,7 +154,7 @@ theorem first_lowering_highest (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.1 + j)
       ε.1 + ε.2 + 2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j := by
     dsimp only [l₁, l₂]
     omega
-  simpa only [Int.toNat_natCast, he] using hs
+  simpa only [Int.toNat_natCast, he] using! hs
 
 /-- Every raising current kills the second-root top descendant. -/
 theorem second_raising (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j)
@@ -162,9 +162,9 @@ theorem second_raising (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j)
     R.op e k (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) = 0 := by
   have he' : e = 0 ∨ e = 1 ∨ e = 2 := by omega
   rcases he' with rfl | rfl | rfl
-  · simpa using first_raising (cv3Rel_swap h) hj 1 (by decide) k
-  · simpa using first_raising (cv3Rel_swap h) hj 0 (by decide) k
-  · simpa using first_raising (cv3Rel_swap h) hj 2 (by decide) k
+  · simpa using! first_raising (cv3Rel_swap h) hj 1 (by decide) k
+  · simpa using! first_raising (cv3Rel_swap h) hj 0 (by decide) k
+  · simpa using! first_raising (cv3Rel_swap h) hj 2 (by decide) k
 
 /-- Every positive Cartan current kills the second-root top descendant. -/
 theorem second_cartan_pos (h : CV3Rel R w ε ν ϱ j)
@@ -172,40 +172,40 @@ theorem second_cartan_pos (h : CV3Rel R w ε ν ϱ j)
     R.op hh k (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) = 0 := by
   have hh' : hh = 6 ∨ hh = 7 := by omega
   rcases hh' with rfl | rfl
-  · simpa using first_cartan_pos (cv3Rel_swap h) 7 (by decide) k hk
-  · simpa using first_cartan_pos (cv3Rel_swap h) 6 (by decide) k hk
+  · simpa using! first_cartan_pos (cv3Rel_swap h) 7 (by decide) k hk
+  · simpa using! first_cartan_pos (cv3Rel_swap h) 6 (by decide) k hk
 
 /-- The second-root descendant's first Cartan weight increases by one. -/
 theorem second_cartan_first (h : CV3Rel R w ε ν ϱ j) :
     R.op 6 0 (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) =
       ((ε.1 + 2 * ν.1 + 3 * ϱ.1 + j + 1 : ℕ) : ℂ) •
         R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w := by
-  simpa using first_cartan_second (cv3Rel_swap h)
+  simpa using! first_cartan_second (cv3Rel_swap h)
 
 /-- The second-root descendant's second Cartan weight decreases by two. -/
 theorem second_cartan_second (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j) :
     R.op 7 0 (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) =
       ((2 * ν.2 + 3 * ϱ.2 + (ε.2 + j - 2) : ℕ) : ℂ) •
         R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w := by
-  simpa using first_cartan_first (cv3Rel_swap h) hj
+  simpa using! first_cartan_first (cv3Rel_swap h) hj
 
 /-- Removing the final two parts one gives the second-root descendant's own CV relations. -/
 theorem second_same_root (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j) :
     CVRel (R.op 4) (parts ϱ.2 ν.2 (ε.2 + j - 2))
       (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) := by
-  simpa using first_same_root (cv3Rel_swap h) hj
+  simpa using! first_same_root (cv3Rel_swap h) hj
 
 /-- Sharp first zero-mode nilpotence of the second-root descendant. -/
 theorem second_lowering_first (h : CV3Rel R w ε ν ϱ j) :
     (R.op 3 0)^[ε.1 + 2 * ν.1 + 3 * ϱ.1 + j + 2]
       (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) = 0 := by
-  simpa using first_lowering_second (cv3Rel_swap h)
+  simpa using! first_lowering_second (cv3Rel_swap h)
 
 /-- Sharp second zero-mode nilpotence of the second-root descendant. -/
 theorem second_lowering_second (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j) :
     (R.op 4 0)^[2 * ν.2 + 3 * ϱ.2 + (ε.2 + j - 2) + 1]
       (R.op 4 (ν.2 + ϱ.2 + ε.2 + j - 1) w) = 0 := by
-  simpa using first_lowering_first (cv3Rel_swap h) hj
+  simpa using! first_lowering_first (cv3Rel_swap h) hj
 
 /-- Sharp highest-root nilpotence of the second-root descendant, with the sign removed. -/
 theorem second_lowering_highest (h : CV3Rel R w ε ν ϱ j) (hj : 2 ≤ ε.2 + j) :

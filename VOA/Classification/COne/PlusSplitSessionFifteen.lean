@@ -23,20 +23,20 @@ theorem vacuumWeightFourAnnihilation_iff_sign (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 
     VacuumWeightFourAnnihilation m hm ↔ PairSplitting m hm (.inr 1) (.inr 0) := by
   constructor
   · intro h M _ _ A P hP hmax hb ht
-    have hb' : FactorBottom A ⊥ P 1 := by simpa [weight] using hb
-    have ht' : FactorBottom A P ⊤ 0 := by simpa [weight] using ht
+    have hb' : FactorBottom A ⊥ P 1 := by simpa [weight] using! hb
+    have ht' : FactorBottom A P ⊤ 0 := by simpa [weight] using! ht
     obtain ⟨π, hπ, hk⟩ := adjoint_quotient_of_zero_bottom (V2mPlus_c2Cofinite m hm)
       (V2mPlus_pseudoUnitary_ge2 m hm hm2) A P hmax ht'
     obtain ⟨x, hx, he⟩ := exists_generalized_vacuum_lift (V2mPlus_c2Cofinite m hm) A π hπ
     have h₂ := h A P hP hmax hb' ht' π hk x hx he
     have hc := (complement_iff_weightFour_obstruction m hm A π
-      (by simpa only [hk] using hb') hx he).mpr h₂
-    simpa only [hk] using hc
+      (by simpa only [hk] using! hb') hx he).mpr h₂
+    simpa only [hk] using! hc
   · intro h M _ _ A P hP hmax hb ht π hk x hx he
     apply (complement_iff_weightFour_obstruction m hm A π
-      (by simpa only [hk] using hb) hx he).mp
+      (by simpa only [hk] using! hb) hx he).mp
     rw [hk]
-    exact h A P hP hmax (by simpa [weight] using hb) (by simpa [weight] using ht)
+    exact h A P hP hmax (by simpa [weight] using! hb) (by simpa [weight] using! ht)
 
 /-- One explicit degree-one mode identity suffices for all positive-integral
 vacuum-quotient rows, including numerical collisions at weight one. -/

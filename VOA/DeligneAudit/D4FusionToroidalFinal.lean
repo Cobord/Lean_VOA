@@ -48,8 +48,8 @@ theorem symbolLemma_surjective (m : ℕ) (hm : 1 ≤ m)
     | nil => exact hgen
     | cons a l ih =>
         change φ ((grToroidal_D4 m hm).op a.1 a.2.1 a.2.2 _) = _
-        rw [heq, ih]
-        rfl
+        exact (heq a.1 a.2.1 a.2.2 _).trans
+          (congrArg ((D4Fusion.gradedAction m).op a.1 a.2.1 a.2.2) ih)
   apply LinearMap.range_eq_top.mp
   apply top_unique
   rw [← graded_fusion_cyclic m, Submodule.span_le]

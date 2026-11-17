@@ -36,6 +36,9 @@ namespace VOA.Moonshine.VnatAxioms
 open Module (End)
 open VertexOperatorAlgebra VnatBlock
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u v
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱] (W : VertexOperatorAlgebra 𝒱)

@@ -79,7 +79,7 @@ theorem gs_one_eq_chq (hp2 : p ≠ 2) :
   simp_rw [fib, add_mul, one_mul, Finset.sum_add_distrib]
   have van : ∑ y : ZMod p, (ZMod.stdAddChar y : ℂ) = 0 :=
     AddChar.sum_eq_zero_of_ne_one (ZMod.isPrimitive_stdAddChar p one_ne_zero |> fun h => by
-      intro h1; have := h; simpa [AddChar.mulShift_apply, h1] using this)
+      intro h1; have := h; simpa [AddChar.mulShift_apply, h1] using! this)
   rw [van, add_zero]
 
 /-- **The twisted sum**: `Σ_{h mod p} (h/p) e(nh/p) = (n/p) g(p, 1)`. -/
@@ -109,7 +109,7 @@ theorem sum_leg_E (hp2 : p ≠ 2) (n : ℤ) :
   · intro x y h
     have := (ZMod.intCast_eq_intCast_iff _ _ _).2 h
     push_cast at this
-    simpa [ZMod.natCast_zmod_val] using this
+    simpa [ZMod.natCast_zmod_val] using! this
 
 end Twist
 

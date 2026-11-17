@@ -134,14 +134,14 @@ theorem relativeCarrier_mode (A : AffineSl2Action V k) (H : TranslationCovariant
     change totalCurrentZero A a (mode (TensorVA.tenY V sl2GhostSVA u) n v) =
       mode (TensorVA.tenY V sl2GhostSVA (totalCurrentZero A a u)) n v +
         mode (TensorVA.tenY V sl2GhostSVA u) n (totalCurrentZero A a v) at h
-    simpa only [hu.1 a, hv.1 a, map_zero, mode_zero, LinearMap.zero_apply, add_zero] using h
+    simpa only [hu.1 a, hv.1 a, map_zero, mode_zero, LinearMap.zero_apply, add_zero] using! h
   · intro a
     have h := odd_zeroMode_deriv hcomm (tensorAntighost_odd (V := V) a) u v n
     change antighostZero V a (mode (TensorVA.tenY V sl2GhostSVA u) n v) =
       mode (TensorVA.tenY V sl2GhostSVA (antighostZero V a u)) n v +
         mode (TensorVA.tenY V sl2GhostSVA (BRST.sgn (matterGhostSVA V hV hg) u)) n
           (antighostZero V a v) at h
-    simpa only [hu.2 a, hv.2 a, map_zero, mode_zero, LinearMap.zero_apply, add_zero] using h
+    simpa only [hu.2 a, hv.2 a, map_zero, mode_zero, LinearMap.zero_apply, add_zero] using! h
 
 /-- The finite state Cartan identity implies the full anticommutator of the
 actual charge with an actual antighost zero mode. -/
@@ -155,7 +155,7 @@ theorem semiInfiniteQ_antighostZero (A : AffineSl2Action V k)
   change semiInfiniteQ A * antighostZero V a -
       koszul 1 1 • (antighostZero V a * semiInfiniteQ A) =
     mode (TensorVA.tenY V sl2GhostSVA (semiInfiniteQ A (tensorAntighost V a))) 0 at h
-  simpa only [koszul_one_one, neg_one_smul, sub_neg_eq_add, hb] using h
+  simpa only [koszul_one_one, neg_one_smul, sub_neg_eq_add, hb] using! h
 
 /-- The finite state invariance calculation implies commutation of the charge
 with the total horizontal action. -/
@@ -186,7 +186,7 @@ theorem semiInfiniteQ_mem_relativeCarrier_of_cartan (A : AffineSl2Action V k)
   · intro a
     have h := congrArg (fun f : End ℂ (M ⊗[ℂ] Sl2GhostSpace) => f x)
       (semiInfiniteQ_totalCurrentZero A hV hg hcomm a (hJ a))
-    simpa only [Module.End.mul_apply, hx.1 a, map_zero] using h.symm
+    simpa only [Module.End.mul_apply, hx.1 a, map_zero] using! h.symm
   · intro a
     have h := congrArg (fun f : End ℂ (M ⊗[ℂ] Sl2GhostSpace) => f x)
       (semiInfiniteQ_antighostZero A hV hg hcomm a (hb a))

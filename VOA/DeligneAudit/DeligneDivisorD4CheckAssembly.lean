@@ -73,7 +73,7 @@ theorem check_family_join (F : ℕ → ℕ → Bool) (f : ℕ → Bool)
     rw [ha, hb]
     exact hR
   have h := check_family_append F f hF lo (mid - lo) (hi - mid) hL' hR'
-  simpa only [ht] using h
+  simpa only [ht] using! h
 
 theorem nodeChecks_join (lo mid hi : ℕ) (hlo : lo ≤ mid) (hmid : mid ≤ hi)
     (hL : nodeChecks lo mid = true) (hR : nodeChecks mid hi = true) :

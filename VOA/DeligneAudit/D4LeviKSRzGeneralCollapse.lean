@@ -30,11 +30,11 @@ theorem rz_zero_topSum {A : Type*} [Ring A] (y z : ℕ → A)
       intro t ht
       simp [zeroPositions, L]
     have ha := selected_aWord_zero y hy (List.replicate b 0) k T
-      (by simpa only [L] using hT) (by simpa only [L] using hz)
+      (by simpa only [L] using! hT) (by simpa only [L] using! hz)
     have hb := selected_bWord_zero z L k T hT hz
     have ha' : aWord y ((splitAt (List.finRange L.length) T).1.map L.get) =
         aWord y (List.replicate b 0) := by
-      simpa only [L] using ha
+      simpa only [L] using! ha
     dsimp only
     rw [ha', hb]
   rw [topSum_powersetCard]
@@ -58,7 +58,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 private theorem yOp_pairwise_comm (ρ : CurrentModule D4sector.f V)
     (r t : ℕ) : yOp ρ r * yOp ρ t = yOp ρ t * yOp ρ r := by
   ext v
-  simpa [yOp] using radical_ops_comm ρ 4 4 r t v
+  simpa [yOp] using! radical_ops_comm ρ 4 4 r t v
 
 /-- The Rz relation for every XYZ shape after all contracted Y modes
     are specialized to zero. The complete Z-current coefficient is the
@@ -75,7 +75,7 @@ theorem rz_zero_dressed_prefix
         (((xs.map (xOp ρ)).prod * (zs.map (zOp ρ)).prod) • w) ∈
       keyPrefix ρ w m i := by
   have hr := rz_top_prefix ρ w m h xs (List.replicate b 0) zs k s i
-    hk hks hi (by simpa using hkey)
+    hk hks hi (by simpa using! hkey)
   rw [rz_zero_topSum (yOp ρ) (zOp ρ) (yOp_pairwise_comm ρ) b k s] at hr
   have hprod : aWord (yOp ρ) (List.replicate b 0) = (yOp ρ 0) ^ b := by
     simp [aWord]
@@ -88,7 +88,7 @@ theorem rz_zero_dressed_prefix
         (((yOp ρ 0) ^ b * PowerSeries.coeff s (fCurrent (zOp ρ) ^ k)) •
           (((xs.map (xOp ρ)).prod * (zs.map (zOp ρ)).prod) • w)) ∈
         keyPrefix ρ w m i := by
-    simpa only [mul_smul, Nat.cast_smul_eq_nsmul] using hr
+    simpa only [mul_smul, Nat.cast_smul_eq_nsmul] using! hr
   exact (Submodule.smul_mem_iff (keyPrefix ρ w m i) hc).mp hsmul
 
 end VOA.DeligneAudit.D4Levi

@@ -92,7 +92,9 @@ namespace InducedAssignment
 
 variable {W : VertexOperatorAlgebra 𝒱}
 
-/-- **The assignment produces irreducible realizations.** For `realize := L(U)` (the irreducible
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The assignment produces irreducible realizations.** For `realize := L(U)` (the irreducible
 quotient — the *correct* choice, see the module doc), every realized module is irreducible. This is
 the defining property of `L(U)`, and is the input *without which* the scoped rigidity below cannot
 hold. Carried as a hypothesis, never an axiom. -/
@@ -122,7 +124,9 @@ variable {W : VertexOperatorAlgebra 𝒱}
 
 /-! ## The scoped (true) rigidity predicate and its reduction -/
 
-/-- **The rigidity predicate, correctly scoped to irreducibles.** Every *irreducible* bundled
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The rigidity predicate, correctly scoped to irreducibles.** Every *irreducible* bundled
 lowest-weight module `P` is isomorphic to the assignment's chosen realization of its own bottom. This
 is the *true* form of `RealizesSelf` (the unrestricted version is false on reducible `P`, e.g. on
 `M(U)` itself); it is the exact content that the bijection's injective half needs on the irreducible
@@ -130,7 +134,9 @@ classes of `Φ(𝒱)`. -/
 def RealizesSelfOnIrr (A : InducedAssignment W) : Prop :=
   ∀ P : LWModule W, P.IsIrreducibleLW → LWModule.Iso W (A.realize P.toAMod) P
 
-/-- **The bottom of any realization is `A(𝒱)`-isomorphic to the original `P`'s bottom.** For any
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The bottom of any realization is `A(𝒱)`-isomorphic to the original `P`'s bottom.** For any
 bundled lowest-weight `P`, `(A.realize P.toAMod).toAMod ≅ P.toAMod` as `A(𝒱)`-modules — directly
 from `A.realizes P.toAMod` (the realization's bottom *is* `P.toAMod`). This is the universal-property
 input that, **combined with irreducibility on both sides**, the rigidity crux upgrades to a
@@ -139,7 +145,9 @@ noncomputable def realizeBottomEquiv (A : InducedAssignment W) (P : LWModule W) 
     AModEquiv W (A.realize P.toAMod).toAMod P.toAMod :=
   A.realizes P.toAMod
 
-/-- **Headline reduction: scoped rigidity from `RealizeIrreducible` + `IrredBottomRigidity`.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**Headline reduction: scoped rigidity from `RealizeIrreducible` + `IrredBottomRigidity`.**
 
 Given that the assignment produces irreducible realizations (`hirr`) and that irreducibles are
 determined by their bottoms (`hrig`), the scoped rigidity `RealizesSelfOnIrr A` holds.
@@ -170,7 +178,9 @@ scope of the bijection statement.) -/
 def AllLWIrreducible (W : VertexOperatorAlgebra 𝒱) : Prop :=
   ∀ P : LWModule W, P.IsIrreducibleLW
 
-/-- **The literal `RealizesSelf` from the scoped rigidity, under the ambient irreducibility scope.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The literal `RealizesSelf` from the scoped rigidity, under the ambient irreducibility scope.**
 If every `LWModule` in play is irreducible (`AllLWIrreducible`), the literal `RealizesSelf` reduces
 to the (true) scoped `RealizesSelfOnIrr`. -/
 theorem realizesSelf_of_realizesSelfOnIrr (A : InducedAssignment W)
@@ -178,7 +188,9 @@ theorem realizesSelf_of_realizesSelfOnIrr (A : InducedAssignment W)
     A.RealizesSelf :=
   fun P => hself P (hall P)
 
-/-- **End-to-end: the literal `RealizesSelf` from the three honest inputs.** Under the ambient
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**End-to-end: the literal `RealizesSelf` from the three honest inputs.** Under the ambient
 irreducibility scope (`hall`), from `RealizeIrreducible A` (the assignment is `L(U)`) and the
 irreducible-uniqueness crux `IrredBottomRigidity W`, the literal `RealizesSelf A` holds — hence, via
 `zhuBijection_of_inducedAssignment`, the full Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)`.
@@ -192,7 +204,9 @@ theorem realizesSelf_of_rigidity (A : InducedAssignment W)
 
 end InducedAssignment
 
-/-- **The Zhu bijection from the rigidity reduction.** Packaging
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection from the rigidity reduction.** Packaging
 `InducedAssignment.realizesSelf_of_rigidity` into the headline of `ZhuVermaAnArchBijection`: given an
 `InducedAssignment W` `A` that produces irreducible realizations (`hirr`), the ambient irreducibility
 scope (`hall`), and the irreducible-uniqueness crux (`hrig`), the forward map `forwardMap W` is a

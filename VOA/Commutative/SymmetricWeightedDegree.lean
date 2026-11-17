@@ -25,7 +25,9 @@ theorem aeval_weightedHomogeneous (w : I → ℕ) (f : I → MvPolynomial J K)
     have hh := IsHomogeneous.prod e.support (fun i => f i ^ e i)
       (fun i => w i * e i) (fun i _ => (hf i).pow (e i))
     convert hh using 1
-    simpa [Finsupp.weight_apply, Finsupp.sum, nsmul_eq_mul, Nat.mul_comm] using he.symm
+    all_goals first
+      | rfl
+      | simpa [Finsupp.weight_apply, Finsupp.sum, nsmul_eq_mul, Nat.mul_comm] using he.symm
 
 /-- Extracting weighted degree before substitution is the same as extracting
 ordinary degree afterwards. -/
@@ -117,7 +119,7 @@ theorem weightedPiece_finrank [Finite I] (w : I → ℕ) (hw : ∀ i, w i ≠ 0)
   letI : Fintype ↥({e : I →₀ ℕ | Finsupp.weight w e = d} : Set (I →₀ ℕ)) :=
     (MvPolynomialFiniteHomogeneous.finite_weightFiber w hw d).fintype
   rw [weightedHomogeneousSubmodule_eq_finsupp_supported]
-  exact (Finsupp.supportedEquivFinsupp (M := K) (R := K)
+  exact (AddMonoidAlgebra.supportedEquivFinsupp (R := K) (S := K)
     {e : I →₀ ℕ | Finsupp.weight w e = d}).finrank_eq.trans
       (by
         rw [Module.finrank_finsupp_self]

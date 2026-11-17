@@ -14,7 +14,7 @@ theorem two_generator_raising_one (c : Fin 28) (hc : D4sector.raising c)
   have ht : [(c, 2 + s)] ∈ (ravFam D4sector 2 0).tails :=
     Or.inl ⟨c, 2 + s, hc, rfl⟩
   have h := two_syntax_tail [(c, 2 + s)] ht
-  interval_cases s <;> simpa [symbolLetters, wordOpT] using h
+  interval_cases s <;> simpa [symbolLetters, wordOpT] using! h
 
 theorem two_generator_cartan_one (c : Fin 28) (hc : D4sector.cartan c)
     (s : ℕ) (hs : s ≤ 1) :
@@ -22,7 +22,7 @@ theorem two_generator_cartan_one (c : Fin 28) (hc : D4sector.cartan c)
   have ht : [(c, 2 + s)] ∈ (ravFam D4sector 2 0).tails :=
     Or.inr (Or.inl ⟨c, 2 + s, hc, by omega, rfl⟩)
   have h := two_syntax_tail [(c, 2 + s)] ht
-  interval_cases s <;> simpa [symbolLetters, wordOpT] using h
+  interval_cases s <;> simpa [symbolLetters, wordOpT] using! h
 
 theorem two_generator_cartanN_one (c : Fin 28) (hc : D4sector.cartanN c)
     (s : ℕ) (hs : s ≤ 1) :
@@ -30,7 +30,7 @@ theorem two_generator_cartanN_one (c : Fin 28) (hc : D4sector.cartanN c)
   have ht : [(c, 2 + s)] ∈ (ravFam D4sector 2 0).tails :=
     Or.inr (Or.inr (Or.inr (Or.inr ⟨c, 2 + s, hc, by omega, rfl⟩)))
   have h := two_syntax_tail [(c, 2 + s)] ht
-  interval_cases s <;> simpa [symbolLetters, wordOpT] using h
+  interval_cases s <;> simpa [symbolLetters, wordOpT] using! h
 
 theorem two_generator_fusion_one_zero (c : Fin 28) (hc : D4sector.fusion c)
     (hne : c ≠ D4sector.c₀) :
@@ -41,7 +41,7 @@ theorem two_generator_fusion_one_zero (c : Fin 28) (hc : D4sector.fusion c)
       change c ≠ (27 : Fin 28) at hne
       simp [hne]⟩)))
   have h := two_syntax_tail [(c, 2)] ht
-  simpa [symbolLetters] using h
+  simpa [symbolLetters] using! h
 
 end
 

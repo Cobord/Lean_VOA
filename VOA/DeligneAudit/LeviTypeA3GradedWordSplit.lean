@@ -58,7 +58,7 @@ theorem a3_radicalWord_split_three (l : List (Fin 3 × ℕ)) :
             ((a3ColourModes 0 l).map fun t => ρ.op (F 0) t).prod =
             ((a3ColourModes 0 l).map fun t => ρ.op (F 0) t).prod *
               ρ.op (F 1) s := by
-          simpa [radicalOp] using
+          simpa [radicalOp] using!
             a3_colour_prod_comm ρ 1 0 s (a3ColourModes 0 l)
         simp [a3ColourModes_cons, radicalOp, aWord, ← mul_assoc]
         rw [hc]
@@ -68,13 +68,13 @@ theorem a3_radicalWord_split_three (l : List (Fin 3 × ℕ)) :
             ((a3ColourModes 0 l).map fun t => ρ.op (F 0) t).prod =
             ((a3ColourModes 0 l).map fun t => ρ.op (F 0) t).prod *
               ρ.op (F 2) s := by
-          simpa [radicalOp] using
+          simpa [radicalOp] using!
             a3_colour_prod_comm ρ 2 0 s (a3ColourModes 0 l)
         have hc1 : ρ.op (F 2) s *
             ((a3ColourModes 1 l).map fun t => ρ.op (F 1) t).prod =
             ((a3ColourModes 1 l).map fun t => ρ.op (F 1) t).prod *
               ρ.op (F 2) s := by
-          simpa [radicalOp] using
+          simpa [radicalOp] using!
             a3_colour_prod_comm ρ 2 1 s (a3ColourModes 1 l)
         simp [a3ColourModes_cons, radicalOp, aWord, ← mul_assoc]
         rw [hc0]
@@ -128,7 +128,7 @@ theorem a3SortedKeySpan_le_layer (k : A3RadicalKey) :
   intro v hv
   obtain ⟨xs, ys, zs, hx, hy, hz, hd, rfl⟩ := hv
   have hw := a3_three_mode_mem_key ρ w xs ys zs
-  simpa only [hx, hy, hz, hd] using hw
+  simpa only [hx, hy, hz, hd] using! hw
 
 theorem a3KeyLayer_eq_sorted (k : A3RadicalKey) :
     a3KeyLayer ρ w k = a3SortedKeySpan ρ w k :=

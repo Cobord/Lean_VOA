@@ -225,8 +225,8 @@ theorem koszul_one_intCast (g : ℤ) : koszul 1 ((g : ℤ) : ZMod 2) = (-1 : ℂ
 theorem TB_brstDeg {j g : ℤ} {w : ℂ} {u : BRSTSpace} (hu : u ∈ brstDeg bgGh ((j, g), w)) :
     TB u = ((-1 : ℂ) ^ g) • u := by
   refine tensorDeg_induction matterDeg ghostDeg ((j, g), w) (fun u => TB u = ((-1 : ℂ) ^ g) • u)
-    (by simp) (fun x y hx hy => by simp only at hx hy ⊢; rw [map_add, hx, hy, smul_add])
-    (fun c x hx => by simp only at hx ⊢; rw [map_smul, hx, smul_comm]) ?_ u hu
+    (by simp) (fun x y hx hy => by rw [map_add, hx, hy, smul_add])
+    (fun c x hx => by rw [map_smul, hx, smul_comm]) ?_ u hu
   intro b x hx y hy
   by_cases hb : ghIndex b = 0
   · have hyg := ghostDeg_le_ghost _ hy

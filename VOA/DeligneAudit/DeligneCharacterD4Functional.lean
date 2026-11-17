@@ -160,7 +160,9 @@ def killX (v : V) : V := Function.update v 0 0
 
 /-- `F ↦ CT_x θ(x) F(x)` for a coefficient family `θf` (`x^j ↦ θf(-j)`). -/
 def ctFun (θf : ℤ → Kq) : R →ₗ[Kq] R :=
-  Finsupp.linearCombination Kq fun v => mon (killX v) (θf (-(v 0)))
+  -- through `coeff`: in Lean 4.35 Mathlib `AddMonoidAlgebra` is a structure, not `Finsupp`
+  (Finsupp.linearCombination Kq fun v => mon (killX v) (θf (-(v 0)))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 theorem ctFun_mon (θf : ℤ → Kq) (v : V) (c : Kq) :
     ctFun θf (mon v c) = mon (killX v) (c * θf (-(v 0))) := by
@@ -169,7 +171,12 @@ theorem ctFun_mon (θf : ℤ → Kq) (v : V) (c : Kq) :
   rfl
 
 theorem mon_sub (v : V) (a b : Kq) : mon v a - mon v b = mon v (a - b) :=
-  (Finsupp.single_sub v a b).symm
+  (AddMonoidAlgebra.single_sub v a b).symm
+
+/-- Linear maps out of `R` agree once they agree on monomials. -/
+theorem lhom_ext_mon {N : Type*} [AddCommMonoid N] [Module Kq N] {f g : R →ₗ[Kq] N}
+    (h : ∀ v c, f (mon v c) = g (mon v c)) : f = g :=
+  AddMonoidAlgebra.lhom_ext' fun v => LinearMap.ext fun c => h v c
 
 /-- `CT_x Θ F`. -/
 abbrev ctTheta : R →ₗ[Kq] R := ctFun thK
@@ -186,7 +193,7 @@ theorem add_xv_zero (v : V) (j : ℤ) : (v + j • xv) 0 = v 0 + j := by simp [x
 /-- `Θ = (1-x²)Θ'`. -/
 theorem ctTheta_eq (f : R) : ctTheta f = ctThetaP ((1 - mon ((2 : ℤ) • xv) 1) * f) := by
   have : ctTheta = ctThetaP ∘ₗ LinearMap.mulLeft Kq (1 - mon ((2 : ℤ) • xv) 1) := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change ctTheta (mon v c) = ctThetaP ((1 - mon ((2 : ℤ) • xv) 1) * mon v c)
     rw [sub_mul, one_mul, mon_mul_mon, map_sub, ctFun_mon, ctFun_mon, ctFun_mon,
@@ -199,7 +206,7 @@ theorem ctThetaP_qshift (f : R) :
     ctThetaP f = ctThetaP (mon ((-4 : ℤ) • xv) (qq ^ (-3 : ℤ)) * twist chiX qq qq_ne_zero f) := by
   have : ctThetaP = ctThetaP ∘ₗ LinearMap.mulLeft Kq (mon ((-4 : ℤ) • xv) (qq ^ (-3 : ℤ))) ∘ₗ
       (twist chiX qq qq_ne_zero).toLinearMap := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change ctThetaP (mon v c) = ctThetaP (mon ((-4 : ℤ) • xv) (qq ^ (-3 : ℤ)) *
       twist chiX qq qq_ne_zero (mon v c))
@@ -216,7 +223,7 @@ theorem ctTheta_half (f : R) :
     ctTheta f = ctThetaP ((1 - mon ((-2 : ℤ) • xv) qq⁻¹) * twist chiX rr rr_ne_zero f) := by
   have : ctTheta = ctThetaP ∘ₗ LinearMap.mulLeft Kq (1 - mon ((-2 : ℤ) • xv) qq⁻¹) ∘ₗ
       (twist chiX rr rr_ne_zero).toLinearMap := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change ctTheta (mon v c) = ctThetaP ((1 - mon ((-2 : ℤ) • xv) qq⁻¹) *
       twist chiX rr rr_ne_zero (mon v c))
@@ -241,7 +248,7 @@ theorem ctThetaP_inv (f : R) :
     ctThetaP f = ctThetaP (mon ((2 : ℤ) • xv) (-1) * domHom negX f) := by
   have : ctThetaP = ctThetaP ∘ₗ LinearMap.mulLeft Kq (mon ((2 : ℤ) • xv) (-1)) ∘ₗ
       (domHom negX).toLinearMap := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change ctThetaP (mon v c) = ctThetaP (mon ((2 : ℤ) • xv) (-1) * domHom negX (mon v c))
     have h0 : (negX v + (2 : ℤ) • xv) 0 = -v 0 + 2 := by simp [negX, xv]; ring

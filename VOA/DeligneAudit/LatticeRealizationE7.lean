@@ -71,16 +71,16 @@ def e7LatData : LatData E7sector e7 e7_even e7_posDef where
   sg i := (u i : ℂ) * f (wt i)
   cv := hvec
   root i hi := by
-    have : 7 ≤ i.val := by simpa using hi
+    have : 7 ≤ i.val := by simpa using! hi
     rw [xs_root i this]
     rfl
   coroot i hi := by
-    rw [xs_cartan i (by simpa using hi)]
+    rw [xs_cartan i (by simpa using! hi)]
     rfl
   θ := wt 69
   raising e he := ⟨by simp only [decide_eq_false_iff_not]; exact fun h => by have := he.1; omega,
     by rw [e7_form_eq]; exact chk_raising e he⟩
-  cartan h hc := ⟨by simpa using hc, by rw [e7_form_eq]; exact chk_cartan h hc⟩
+  cartan h hc := ⟨by simpa using! hc, by rw [e7_form_eq]; exact chk_cartan h hc⟩
   cartanN h hc := hc.elim
   lowering i hi := ⟨by simp only [decide_eq_false_iff_not]; exact fun h => by have := lowering_ge hi; omega,
     by rw [e7_form_eq]; exact (chk_lowering i hi).1, by rw [e7_form_eq]; exact (chk_lowering i hi).2⟩

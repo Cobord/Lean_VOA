@@ -188,7 +188,9 @@ theorem MUGradedAction_of_ARDVecResidue (W : VertexOperatorAlgebra 𝒱)
 
 /-! ## The conditional Zhu bijection main theorem from the single open residual. -/
 
-/-- **`zhuBijection_trophy_of_ARDVecResidue` — the conditional main theorem from the single open
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**`zhuBijection_trophy_of_ARDVecResidue` — the conditional main theorem from the single open
 residual.**  Given the exact remaining vector sub-identity `ARDVecResidue` (= `ARDTowerDecomp` =
 `AoutUCoreLev0Core`) for all levels and homogeneous data, together with the term-level construction
 data of `zhuBijection_trophy` (the irreducibility scope `hall` and the carrier/bridge data

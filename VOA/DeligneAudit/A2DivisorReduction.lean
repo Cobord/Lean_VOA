@@ -89,6 +89,9 @@ theorem divisorComparison_of_pair (h : PairComparison) : DivisorComparison := by
   have hM := mem_Mspace_of_symmetric hwK hsym
   refine ⟨(wS m) ^ K, fun hmem => wS_not_mem p hp (p.isPrime.mem_of_pow_mem K hmem), ?_⟩
   convert hM using 1
+  all_goals first
+    | rfl
+    | (rw [Subalgebra.smul_def, SubmonoidClass.coe_pow]; rfl)
 
 end
 

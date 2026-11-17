@@ -83,8 +83,8 @@ theorem kernel_rows_of_twisted (l : Label m) (hm2 : 2 ≤ m)
     fin_cases i
     · norm_num [weight] at hl
     · norm_num [weight] at hl
-    · exact absurd (by simpa [weight] using hl) hhalf
-    · exact absurd (by simpa [weight] using hl) hhalf
+    · exact absurd (by simpa [weight] using! hl) hhalf
+    · exact absurd (by simpa [weight] using! hl) hhalf
     all_goals simp
 
 include hm2 in

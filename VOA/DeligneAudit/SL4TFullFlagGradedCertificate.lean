@@ -32,7 +32,7 @@ theorem elementarySymmetric_standardWeight {σ A : Type*} [Fintype σ] [CommRing
   have h := MvPolynomial.IsWeightedHomogeneous.prod t
     (fun i => (MvPolynomial.X i : MvPolynomial σ A)) (fun _ => (1 : ℤ))
     (fun i _ => MvPolynomial.isWeightedHomogeneous_X A (fun _ => (1 : ℤ)) i)
-  simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, hc] using h
+  simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, hc] using! h
 
 /-- The elementary and root-power relations of the full flag are homogeneous. -/
 theorem fullFlagTruncationIdeal_component_mem (B N : ℕ) (d : ℤ)
@@ -48,7 +48,7 @@ theorem fullFlagTruncationIdeal_component_mem (B N : ℕ) (d : ℤ)
     exact ⟨s, elementarySymmetric_standardWeight s⟩
   · obtain ⟨i, rfl⟩ := hg
     refine ⟨N, ?_⟩
-    simpa only [nsmul_eq_mul, mul_one] using
+    simpa only [nsmul_eq_mul, mul_one] using!
       (MvPolynomial.isWeightedHomogeneous_X ℂ (fun _ => (1 : ℤ)) i).pow N
 
 /-- Every subalphabet of the full flag has a homogeneous top-ideal correction certificate. -/
@@ -74,8 +74,8 @@ theorem fullFlag_remainderTopIdeal_strict_certificate (B N j : ℕ)
       positions.map (fullFlagRoot B N) := by simp [xs, List.map_map, fullFlagRoot]
   have h := remainderTopIdeal_quotient_strict_certificate (fun _ => (1 : ℤ))
     (fullFlagTruncationIdeal B N) (fullFlagTruncationIdeal_component_mem B N)
-    xs hx N j (by simpa [xs] using hj) a d ha (by rwa [he])
-  simpa only [he, xs, List.length_map] using h
+    xs hx N j (by simpa [xs] using! hj) a d ha (by rwa [he])
+  simpa only [he, xs, List.length_map] using! h
 
 end
 

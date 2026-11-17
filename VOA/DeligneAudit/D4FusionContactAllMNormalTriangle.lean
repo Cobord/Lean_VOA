@@ -33,22 +33,22 @@ theorem triangleCoeff_mem (m k s : ℕ)
     apply PowerSeries.ext
     intro n
     simpa [D₁, U, X, AllM.current, AllMWheels.direction, AllMWheels.sourceColor,
-      AllMWheels.targetColor, AllMWheels.actionCoeff] using action_mode m n 0
+      AllMWheels.targetColor, AllMWheels.actionCoeff] using! action_mode m n 0
   have h₂ : seriesDeriv D₂ U = Y := by
     apply PowerSeries.ext
     intro n
     simpa [D₂, U, Y, AllM.current, AllMWheels.direction, AllMWheels.sourceColor,
-      AllMWheels.targetColor, AllMWheels.actionCoeff] using action_mode m n 1
+      AllMWheels.targetColor, AllMWheels.actionCoeff] using! action_mode m n 1
   have h₃ : seriesDeriv D₃ U = Z := by
     apply PowerSeries.ext
     intro n
     simpa [D₃, U, Z, AllM.current, AllMWheels.direction, AllMWheels.sourceColor,
-      AllMWheels.targetColor, AllMWheels.actionCoeff] using action_mode m n 2
+      AllMWheels.targetColor, AllMWheels.actionCoeff] using! action_mode m n 2
   have h₂₁ : seriesDeriv D₂ X = T := by
     apply PowerSeries.ext
     intro n
     simpa [D₂, X, T, AllM.current, AllMWheels.direction, AllMWheels.sourceColor,
-      AllMWheels.targetColor, AllMWheels.actionCoeff] using action_mode m n 3
+      AllMWheels.targetColor, AllMWheels.actionCoeff] using! action_mode m n 3
   have hregion (i j : ℕ) (hij : i + j = s) (hj : j < m) : m < k + 2 + i := by omega
   have hZ (j : ℕ) (hj : m ≤ j) : PowerSeries.coeff j Z = 0 := by
     simp only [Z, AllM.current, map_neg, PowerSeries.coeff_mk]
@@ -77,16 +77,16 @@ theorem triangleCoeff_mem (m k s : ℕ)
   have he : Z * seriesDeriv D₂ (seriesDeriv D₁ (U ^ (k + 2))) -
       T * seriesDeriv D₃ (U ^ (k + 2)) =
       ((k + 2) * (k + 1) : ℕ) • (U ^ k * X * Y * Z) := by
-    simpa only [nsmul_eq_mul] using AllMWheels.triangle_identity
+    simpa only [nsmul_eq_mul] using! AllMWheels.triangle_identity
       (seriesDeriv D₁) (seriesDeriv D₂) (seriesDeriv D₃) U X Y Z T h₁ h₂ h₃ h₂₁ k
   rw [he, map_nsmul] at hrow
   have hp : PowerSeries.coeff s (U ^ k * X * Y * Z) ∈ AllM.candidateIdeal m := by
     apply AllMWheels.cancel_nat_factor (AllM.candidateIdeal m) ((k + 2) * (k + 1))
       (by positivity)
-    simpa only [nsmul_eq_mul] using hrow
+    simpa only [nsmul_eq_mul] using! hrow
   have hn : -triangleCoeff m k s ∈ AllM.candidateIdeal m := by
-    simpa only [U, X, Y, Z, triangleCoeff, mul_neg, map_neg] using hp
-  simpa only [neg_neg] using (AllM.candidateIdeal m).neg_mem hn
+    simpa only [U, X, Y, Z, triangleCoeff, mul_neg, map_neg] using! hp
+  simpa only [neg_neg] using! (AllM.candidateIdeal m).neg_mem hn
 
 end
 end VOA.DeligneAudit.D4FusionContact.Polynomial.AllMNormal

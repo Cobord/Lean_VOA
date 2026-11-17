@@ -81,8 +81,14 @@ theorem insertionTopRep_surjective (P : ι → LWModule W)
           (VOA.mk W a) • (Pi.single i y : ∀ j, (U j).carrier) := by
         ext j
         by_cases hj : j = i
-        · subst j; simp only [Pi.single_eq_same, Pi.smul_apply]; rfl
-        · simp [Pi.single_eq_of_ne hj]
+        · subst j
+          have hsy := Pi.single_eq_same (M := fun j => (U j).carrier) i y
+          simp only [Pi.single_eq_same, Pi.smul_apply]
+          rw [hsy]
+          rfl
+        · have hsy := Pi.single_eq_of_ne (M := fun j => (U j).carrier) hj y
+          simp only [Pi.single_eq_of_ne hj, Pi.smul_apply]
+          rw [hsy, smul_zero]
       rw [hs, f.map_smul]
       rfl
     obtain ⟨c, hc⟩ := bottom_endomorphism_scalar (P' i) (hP (e i)) g hg
@@ -114,7 +120,8 @@ theorem insertionTopRep_surjective (P : ι → LWModule W)
   have he := congrArg (fun t => t (Pi.single i y) i) ha
   change ((VOA.mk W v) • (Pi.single i y : ∀ j, (U j).carrier)) i =
     b' i ((Pi.single i y : ∀ j, (U j).carrier) i) at he
-  simp only [Pi.smul_apply, Pi.single_eq_same] at he
+  have hsy := Pi.single_eq_same (M := fun j => (U j).carrier) i y
+  rw [Pi.smul_apply, hsy] at he
   exact he
 
 end VOA.Huang.GenusOne

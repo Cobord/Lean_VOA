@@ -125,6 +125,12 @@ noncomputable def sqGen (k : ℕ) (m : ℤ) : PowerSeries ℂ :=
   ((onePlusXUnit ^ ((k : ℤ) - 1) : (PowerSeries ℂ)ˣ) : PowerSeries ℂ)
     * ((uUnit ^ m : (PowerSeries ℂ)ˣ) : PowerSeries ℂ)
 
+/-- `coeff_derivativeFun` restated with `derivativeFun` (Mathlib's alias is stated with `d⁄dX`). -/
+private theorem coeff_derivativeFun_zhu (f : PowerSeries ℂ) (n : ℕ) :
+    PowerSeries.coeff (R := ℂ) n (derivativeFun f)
+      = PowerSeries.coeff (R := ℂ) (n + 1) f * (n + 1) :=
+  coeff_derivativeFun f n
+
 theorem sqBracketCoeffZ_eq_coeff_sqGen (k : ℕ) (m : ℤ) (d : ℕ) :
     sqBracketCoeffZ k m (m + d) = coeff d (sqGen k m) := sqBracketCoeffZ_eq_coeff k m d
 
@@ -148,9 +154,10 @@ theorem sqGen_ode {k : ℕ} (hk : 1 ≤ k) (m : ℤ) :
   have hAode : (1 + X) * derivativeFun A = PowerSeries.C ((k : ℂ) - 1) * A := by
     have h := onePlusX_pow_ode (k - 1)
     rw [smul_eq_C_mul] at h
+    have hcast : ((k - 1 : ℕ) : ℂ) = (k : ℂ) - 1 := by rw [Nat.cast_sub hk, Nat.cast_one]
+    rw [hcast] at h
     rw [hA]
-    convert h using 3
-    rw [Nat.cast_sub hk, Nat.cast_one]
+    exact h
   -- `U′ = m·U'·u′`
   have hUder : derivativeFun U = PowerSeries.C (m : ℂ) * U' * derivativeFun uSeries := by
     rw [hU, derivativeFun_uUnit_zpow, hU', map_intCast]
@@ -184,7 +191,7 @@ theorem sqBracketCoeffZ_derivation {k : ℕ} (hk : 1 ≤ k) (m i : ℤ) :
     have h := congrArg (coeff (j + 1)) (sqGen_ode hk m)
     rw [map_sub, map_add] at h
     simp only [map_add, mul_assoc, mul_add, add_mul, one_mul, PowerSeries.coeff_C_mul,
-      coeff_succ_X_mul, coeff_derivativeFun, coeff_X_mul_derivativeFun] at h
+      coeff_succ_X_mul, coeff_derivativeFun_zhu, coeff_X_mul_derivativeFun] at h
     push_cast
     linear_combination -h
 

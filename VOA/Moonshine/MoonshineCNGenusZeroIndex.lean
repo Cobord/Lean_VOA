@@ -147,8 +147,15 @@ theorem commensurable_symmetryGroup_of_gamma1GL_le (hc : IsJDominated c)
   haveI : NeZero M := ⟨hM.ne'⟩
   set G := symmetryGroup (qSeriesFun c) with hG
   haveI := finiteIndex_comap_of_gamma1GL_le hΓ1
-  refine ⟨fun h0 => (Subgroup.IsArithmetic.is_commensurable (𝒢 := gamma1GL M)).1
-    (Subgroup.relIndex_eq_zero_of_le_left hΓ1 h0), ?_⟩
+  refine ⟨?_, ?_⟩
+  · try refine ⟨?_⟩
+    intro h0
+    first
+    | exact (Subgroup.IsArithmetic.is_commensurable (𝒢 := gamma1GL M)).1
+        (Subgroup.relIndex_eq_zero_of_le_left hΓ1 h0)
+    | exact (Subgroup.IsArithmetic.is_commensurable (𝒢 := gamma1GL M)).1.relIndex_ne_zero
+        (Subgroup.relIndex_eq_zero_of_le_left hΓ1 h0)
+  try refine ⟨?_⟩
   -- per coset representative, a bound for the elements `κ ∈ G` with `κ i = ρ σ`, `σ ∈ 𝒟`
   have hper : ∀ r : SL(2, ℤ) ⧸ G.comap (mapGL ℝ), ∃ B : ℝ, ∀ κ ∈ G, ∀ σ ∈ 𝒟,
       κ • UpperHalfPlane.I = mapGL ℝ (Quotient.out r)⁻¹ • σ → ∀ i j, |κ i j| ≤ B := by

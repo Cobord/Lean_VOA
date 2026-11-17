@@ -75,18 +75,18 @@ theorem vacuumProbe_L_pow (r : ℕ) (x : (orbifold ico).carrier) :
 theorem sixthProbe_errors :
     virError Wi Wi.vacuum ⊔ virError Wi Xico ≤ sixthProbe.ker := by
   have kill1 (v : (orbifold ico).carrier) : sixthProbe (Wi.L (-1) v) = 0 := by
-    simpa using sixthProbe_L 0 v
+    simpa using! sixthProbe_L 0 v
   have kill3 (v : (orbifold ico).carrier) : sixthProbe (Wi.L (-3) v) = 0 := by
-    simpa using sixthProbe_L 2 v
+    simpa using! sixthProbe_L 2 v
   exact sup_le (OrbOctaR.virError_le_ker_of_two_modes Wi _ kill1 kill3 _)
     (OrbOctaR.virError_le_ker_of_two_modes Wi _ kill1 kill3 _)
 
 theorem vacuumProbe_errors :
     virError Wi Wi.vacuum ⊔ virError Wi Xico ≤ vacuumProbe.ker := by
   have kill1 (v : (orbifold ico).carrier) : vacuumProbe (Wi.L (-1) v) = 0 := by
-    simpa using vacuumProbe_L 0 v
+    simpa using! vacuumProbe_L 0 v
   have kill3 (v : (orbifold ico).carrier) : vacuumProbe (Wi.L (-3) v) = 0 := by
-    simpa using vacuumProbe_L 2 v
+    simpa using! vacuumProbe_L 2 v
   exact sup_le (OrbOctaR.virError_le_ker_of_two_modes Wi _ kill1 kill3 _)
     (OrbOctaR.virError_le_ker_of_two_modes Wi _ kill1 kill3 _)
 

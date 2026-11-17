@@ -235,7 +235,7 @@ theorem transpose_surjective_of_injective (hinj : Function.Injective f.toLinearM
   · intro α h
     obtain ⟨g, hg⟩ := hres α h
     refine ⟨DirectSum.lof ℂ ℂ (fun β => Module.Dual ℂ (N₂.weight β)) α g, ?_⟩
-    rw [transpose_apply, transposeL_lof]
+    refine (transposeL_lof N₁ N₂ f hf α g).trans ?_
     rw [← hg]
     rfl
   · rintro a b ⟨x, hx⟩ ⟨y, hy⟩

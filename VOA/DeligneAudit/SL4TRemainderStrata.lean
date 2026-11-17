@@ -25,9 +25,8 @@ theorem remainderTopMinor_mem (xs : List A) (N j : ℕ) (cols : Fin j → ℕ) :
 theorem remainderTopMinor_map (f : A →+* D) (xs : List A) (N j : ℕ)
     (cols : Fin j → ℕ) :
     f (remainderTopMinor xs N j cols) = remainderTopMinor (xs.map f) N j cols := by
-  rw [remainderTopMinor, RingHom.map_det]
   unfold remainderTopMinor
-  congr 1
+  refine (RingHom.map_det f _).trans (congrArg Matrix.det ?_)
   ext a b
   exact (alphabetPowerRemainder_map f xs _ _).trans (by rw [List.length_map])
 

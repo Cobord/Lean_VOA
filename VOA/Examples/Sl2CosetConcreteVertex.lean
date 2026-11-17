@@ -62,7 +62,7 @@ instance cosetGradingC_finite (h : ℂ) : FiniteDimensional ℂ (cosetGradingC A
 def cosetY : cosetSubspace A →ₗ[ℂ] (End ℂ (cosetSubspace A))⟦z^±⟧ where
   toFun x := fun j => (V.Y x j).restrict (fun y hy => by
     have h := mode_mem_cosetSubspace A H x.2 hy (-j - 1)
-    simpa only [mode_apply, show -(-j - 1) - 1 = j by omega] using h)
+    simpa only [mode_apply, show -(-j - 1) - 1 = j by omega] using! h)
   map_add' x y := by
     funext j
     ext z
@@ -115,7 +115,7 @@ def cosetVertexAlgebraOf (he : V.parity 0 = ⊤)
   vacuum := cosetVacuum A
   vacuum_mem := by
     change V.vacuum ∈ V.grading ((0 : ℤ) : ℂ)
-    simpa only [Int.cast_zero] using V.vacuum_mem
+    simpa only [Int.cast_zero] using! V.vacuum_mem
   grading_mode := by
     intro p q x hx y hy n
     change mode (V.Y x) n y ∈ V.grading (((p + q - n - 1 : ℤ) : ℂ))

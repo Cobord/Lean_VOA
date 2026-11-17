@@ -103,8 +103,9 @@ theorem prod_rTFld_nonneg (n : ℕ) (A B : Fld (FockT r)) :
     rw [bracketDist_apply, bracketDist_apply, LinearMap.rTensor_sub, LinearMap.rTensor_mul,
       LinearMap.rTensor_mul]
     rfl
-  rw [hb, cCoeff_apply, cCoeff_apply,
-    mulBySubPow_map (fun f => f.rTensor Tm) (fun f g => LinearMap.rTensor_sub f g)]
+  rw [hb]
+  exact congrFun (congrFun (mulBySubPow_map (fun f => f.rTensor Tm)
+    (fun f g => LinearMap.rTensor_sub f g) (bracketDist A.1 B.1) n) (-1)) t
 
 /-! ## The twisted Heisenberg generators on `S[θ] ⊗ T` -/
 
@@ -283,8 +284,9 @@ theorem Fw_neg (α : L.carrier) (l : List (ℕ × Fin (rank L))) (e : ℤ) :
 /-- The bilinear form of `F_e` on `FockN ⊗ ℂ{L}`. -/
 noncomputable def FLB (e : ℤ) :
     FockN (rank L) →ₗ[ℂ] (L.carrier →₀ ℂ) →ₗ[ℂ] Fld (MT L hEven hU) :=
-  Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
-    Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven hU α (monoWordN m) e))
+  (Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
+    Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven hU α (monoWordN m) e))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- **The rescaled twisted vertex operator** `F_e : V_L →ₗ Fld (S[θ] ⊗ T)`. -/
 noncomputable def FL (e : ℤ) : LatModuleGen L →ₗ[ℂ] Fld (MT L hEven hU) :=
@@ -296,8 +298,11 @@ theorem FL_monomial (e : ℤ) (m : (ℕ × Fin (rank L)) →₀ ℕ) (a : ℂ) (
       = (a * c) • Fw L hEven hU α (monoWordN m) e := by
   rw [FL, TensorProduct.lift.tmul]
   have h1 : FLB L hEven hU e (monomial m a)
-      = a • Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven hU α (monoWordN m) e) :=
-    Finsupp.linearCombination_single ℂ a m
+      = a • Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven hU α (monoWordN m) e) := by
+    show Finsupp.linearCombination ℂ (fun m : (ℕ × Fin (rank L)) →₀ ℕ =>
+      Finsupp.linearCombination ℂ (fun α : L.carrier => Fw L hEven hU α (monoWordN m) e))
+        (Finsupp.single m a) = _
+    exact Finsupp.linearCombination_single ℂ a m
   rw [h1, LinearMap.smul_apply, Finsupp.linearCombination_single, smul_smul]
 
 omit hPos in

@@ -36,7 +36,7 @@ theorem nonnegative_modes_zero_of_translation_zero (A : WeakModule W M)
     have hne : (-(((n + 1 : ℤ)) : ℂ)) ≠ 0 := by
       have : ((n + 1 : ℤ) : ℂ) ≠ 0 := by exact_mod_cast (show n + 1 ≠ 0 by omega)
       exact neg_ne_zero.mpr this
-    simpa using (smul_eq_zero.mp hc.symm).resolve_left hne
+    simpa using! (smul_eq_zero.mp hc.symm).resolve_left hne
 
 theorem translation_zero_iff_nonnegative_modes_zero (A : WeakModule W M) (x : M) :
     translation A x = 0 ↔ ∀ (a : V) (n : ℤ), 0 ≤ n → mode (A.YM a) n x = 0 :=
@@ -80,7 +80,7 @@ theorem vacuumLiftHom_injective (hW : W.IsSimple) (A : WeakModule W M)
   rcases hW.2 _ hi with h | h
   · exact LinearMap.ker_eq_bot.mp h
   · have hv : W.vacuum ∈ LinearMap.ker f.toLinearMap := h ▸ Submodule.mem_top
-    exact (hx0 (by simpa [f] using hv)).elim
+    exact (hx0 (by simpa [f] using! hv)).elim
 
 /-- Sending the lifted vacuum to the vacuum makes the constructed map a section. -/
 theorem vacuumLiftHom_section (A : WeakModule W M)

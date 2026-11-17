@@ -30,9 +30,9 @@ theorem currentGrading_word (g : CurrentGrading ρ) (l : List (Fin n × ℕ))
     (d : ℕ) {v : V} (hv : v ∈ g.piece d) :
     wordOp ρ l v ∈ g.piece (SectorGraded.wordDeg l + d) := by
   induction l with
-  | nil => simpa [SectorGraded.wordDeg] using hv
+  | nil => simpa [SectorGraded.wordDeg] using! hv
   | cons x l ih =>
-      simpa only [SectorGraded.wordDeg, List.map_cons, List.sum_cons, Nat.add_assoc]
+      simpa only [SectorGraded.wordDeg, wordOp, List.map_cons, List.sum_cons, Nat.add_assoc]
         using g.op_piece x.1 x.2 (SectorGraded.wordDeg l + d) _ ih
 
 def colourClosure (P : Fin n → Prop) (S : Submodule ℂ V) : Submodule ℂ V :=
@@ -110,12 +110,12 @@ theorem currentGrading_cyclic (g : CurrentGrading ρ) {w : V}
     change g.proj N (wordOp ρ l w) ∈ cycDeg ρ w N
     rw [g.proj_piece N _ _ (currentGrading_word g l 0 hw)]
     split_ifs with hd
-    · exact Submodule.subset_span ⟨l, by simpa using hd, rfl⟩
+    · exact Submodule.subset_span ⟨l, by simpa using! hd, rfl⟩
     · exact Submodule.zero_mem _
   · apply Submodule.span_le.mpr
     rintro z ⟨l, hl, rfl⟩
     refine ⟨wordOp ρ l w, UnivG.wordOp_mem_cycSubG ρ w l, ?_⟩
-    rw [g.proj_piece N _ _ (currentGrading_word g l 0 hw), if_pos (by simpa using hl)]
+    rw [g.proj_piece N _ _ (currentGrading_word g l 0 hw), if_pos (by simpa using! hl)]
 
 /-- The degree-tagged lift supplies genuine projections for every current module. -/
 def taggedCurrentGrading : CurrentGrading (D1TensorG.Gr.gRep ρ) where
@@ -124,7 +124,7 @@ def taggedCurrentGrading : CurrentGrading (D1TensorG.Gr.gRep ρ) where
   proj_mem d v := ⟨v d, rfl⟩
   proj_piece d e v hv := by
     obtain ⟨u, rfl⟩ := hv
-    simpa only [Finsupp.lsingle_apply, eq_comm] using
+    simpa only [Finsupp.lsingle_apply, eq_comm] using!
       D1TensorG.Gr.keepDegree_single d e u
   op_piece a r d v hv := by
     obtain ⟨u, rfl⟩ := hv

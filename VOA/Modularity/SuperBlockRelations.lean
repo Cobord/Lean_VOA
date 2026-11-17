@@ -166,7 +166,9 @@ theorem superCuspRelSpan_le_superBlockRelSpanAtCusp
         exact V.superBlockRelSpanAtCusp.zero_mem
       · subst hk
         have ha0 : a ∈ W.grading 0 := by
-          simpa [V, SuperNearVOA.gradingZ_apply] using ha.1
+          have h := ha.1
+          simp [V, SuperNearVOA.gradingZ_apply] at h
+          exact h
         rw [W.vacuum_grade, Submodule.mem_span_singleton] at ha0
         obtain ⟨c, rfl⟩ := ha0
         have hvac : V.smul W.vacuum (-2) v = 0 := by

@@ -326,11 +326,12 @@ theorem psi_single (e : MonU) (c : ℤ) :
     zero_add, mul_one, Int.cast_id]
 
 /-- `z`-free elements: every monomial has zero `z`-exponents. -/
-def ZFree (f : L7) : Prop := ∀ m ∈ f.support, m 3 = 0 ∧ m 4 = 0 ∧ m 5 = 0 ∧ m 6 = 0
+def ZFree (f : L7) : Prop := ∀ m ∈ f.coeff.support, m 3 = 0 ∧ m 4 = 0 ∧ m 5 = 0 ∧ m 6 = 0
 
 theorem zfree_add {f g : L7} (hf : ZFree f) (hg : ZFree g) : ZFree (f + g) := by
   classical
   intro m hm
+  rw [AddMonoidAlgebra.coeff_add] at hm
   rcases Finset.mem_union.mp (Finsupp.support_add hm) with h | h
   · exact hf m h
   · exact hg m h
@@ -338,7 +339,8 @@ theorem zfree_add {f g : L7} (hf : ZFree f) (hg : ZFree g) : ZFree (f + g) := by
 theorem zfree_mul {f g : L7} (hf : ZFree f) (hg : ZFree g) : ZFree (f * g) := by
   classical
   intro m hm
-  obtain ⟨a, ha, b, hb, rfl⟩ := Finset.mem_add.mp (AddMonoidAlgebra.support_mul f g hm)
+  obtain ⟨a, ha, b, hb, rfl⟩ :=
+    Finset.mem_add.mp (AddMonoidAlgebra.support_coeff_mul_subset f g hm)
   obtain ⟨a3, a4, a5, a6⟩ := hf a ha
   obtain ⟨b3, b4, b5, b6⟩ := hg b hb
   simp [a3, a4, a5, a6, b3, b4, b5, b6]
@@ -347,6 +349,7 @@ theorem zfree_single (m : Mon) (c : ℤ) (h : m 3 = 0 ∧ m 4 = 0 ∧ m 5 = 0 �
     ZFree (AddMonoidAlgebra.single m c) := by
   classical
   intro m' hm'
+  rw [AddMonoidAlgebra.coeff_single] at hm'
   rw [Finset.mem_singleton.mp (Finsupp.support_single_subset hm')]
   exact h
 

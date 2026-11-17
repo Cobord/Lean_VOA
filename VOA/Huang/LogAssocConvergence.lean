@@ -57,7 +57,7 @@ theorem summable_log_product_integerCoset (hC2 : C2Cofinite W)
         (S-(ν+K)+n) (ν+K-n) * z₁^(-(S-(ν+K)+n)-1) * z₂^(-(ν+K-n)-1) := by
     have hh' : Summable fun n : ℕ =>
         f (Y₁.1 (a+n) k x (Y₂.1 (b-n) l y z))*z₁^((-a-1)-n)*z₂^((-b-1)+n) := by
-      simpa only [pow_zero,mul_one] using hh.of_norm
+      simpa only [pow_zero,mul_one] using! hh.of_norm
     refine hh'.congr fun n => ?_
     simp only [prodCoeff,a,b]
     have he₁ : (-(S-(ν+(K : ℂ)))-1)-(n : ℂ)=-(S-(ν+K)+n)-1 := by ring

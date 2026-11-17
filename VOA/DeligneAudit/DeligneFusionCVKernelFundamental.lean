@@ -41,7 +41,7 @@ theorem f2_kills_QFrom (R : CurrentModule bracketTable V) {w : V} {L b p : ℕ}
     apply Q_commute_on (fromMode (R.op 3) p) (R.op 4 b) (thetaKernel R L)
     · intro k v hv
       by_cases hk : p ≤ k
-      · simpa only [fromMode, if_pos hk] using thetaKernel_f1 R L k hv
+      · simpa only [fromMode, if_pos hk] using! thetaKernel_f1 R L k hv
       · simp only [fromMode, if_neg hk, LinearMap.zero_apply]
         exact (thetaKernel R L).zero_mem
     · intro k v hv
@@ -72,7 +72,7 @@ theorem first_cutoff_two (h : CV3Rel R w (1, 0) ν ϱ j) :
   apply cvrel_cutoff (CVRoots.sl2_first R).hFF h.first
     (ν.1 + ϱ.1) 2 _ (by omega)
   have ht : T (ν.1 + ϱ.1) (parts ϱ.1 ν.1 (1 + j)) = j + 1 := by
-    simpa only [Nat.add_comm 1 j, Nat.add_comm ν.1 ϱ.1] using
+    simpa only [Nat.add_comm 1 j, Nat.add_comm ν.1 ϱ.1] using!
       parts_tail ϱ.1 ν.1 (j + 1)
   rw [ht]
   omega
@@ -91,7 +91,7 @@ theorem theta_linear_of_pos (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 1 ≤ j) :
   change R.op 5 q u = 0
   have htheta : ∀ s, q + 1 ≤ s → R.op 5 s w = 0 := by
     intro s hs
-    exact source_theta_trunc h s (by simpa only [q, A, B] using hs)
+    exact source_theta_trunc h s (by simpa only [q, A, B] using! hs)
   have hy : R.op 4 (B + j) w = 0 := source_second_trunc h _ (by dsimp [B]; omega)
   have hquad : (2 : ℕ) • X u + QFrom (R.op 3) (A + 1) 2 (2 * A + j) w = 0 := by
     have hq := first_cutoff_two h
@@ -187,15 +187,15 @@ theorem first_kernel_second_cv (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 1 ≤ j) :
   have hidx : ν.1 + ϱ.1 + 1 + j - 1 = ν.1 + ϱ.1 + j := by omega
   apply cvrel_parts123 ϱ.2 (ν.2 + 1) (j - 1) (CVRoots.sl2_second R)
   · intro s
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_raising h hj' 1 (by decide) s
   · intro p hp
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_cartan_pos h 7 (by decide) p hp
   · rw [Module.End.pow_apply]
     rw [show 3 * ϱ.2 + 2 * (ν.2 + 1) + (j - 1) + 1 =
       2 * ν.2 + 3 * ϱ.2 + j + 2 by omega]
-    simpa only [Nat.zero_add, hidx] using
+    simpa only [Nat.zero_add, hidx] using!
       CVKernelGeneralHW.first_lowering_second h
   · intro s hs
     exact second_trunc_kernel h hj s (by omega)
@@ -215,20 +215,20 @@ theorem first_kernel_highest_cv (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 1 ≤ j) :
     exact theta_trunc_kernel_of_pos h hj s (by omega)
   apply cvrel_parts123 (ϱ.1 + ϱ.2) (ν.1 + ν.2 + j) 0 (CVRoots.sl2_highest R)
   · intro s
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_raising h hj' 2 (by decide) s
   · intro p hp
     simp only [LinearMap.add_apply]
     have h6 := CVKernelGeneralHW.first_cartan_pos h 6 (by decide) p hp
     have h7 := CVKernelGeneralHW.first_cartan_pos h 7 (by decide) p hp
-    simpa only [hidx, h6, h7, add_zero] using congrArg₂ HAdd.hAdd h6 h7
+    simpa only [hidx, h6, h7, add_zero] using! congrArg₂ HAdd.hAdd h6 h7
   · rw [Module.End.pow_apply]
     rw [show 3 * (ϱ.1 + ϱ.2) + 2 * (ν.1 + ν.2 + j) + 0 + 1 =
       1 + 0 + 2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j by omega]
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_lowering_highest h hj'
   · intro s hs
-    exact htr s (by simpa only [Nat.add_zero] using hs)
+    exact htr s (by simpa only [Nat.add_zero] using! hs)
   · intro s hs
     exact Q_high (CVRoots.sl2_highest R).hFF htr 2 s (by omega)
 
@@ -241,28 +241,28 @@ theorem first_kernel_rel_fundamental (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 1 ≤
   have hones : 1 + j - 2 = j - 1 := by omega
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro e he s
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_raising h hj' e he s
   · intro hh hhh s hs
-    simpa only [hidx] using
+    simpa only [hidx] using!
       CVKernelGeneralHW.first_cartan_pos h hh hhh s hs
-  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using
+  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using!
       CVKernelGeneralHW.first_cartan_first h hj'
   · change R.op 7 0 _ = ((0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + (j - 1) : ℕ) : ℂ) • _
     rw [show 0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + (j - 1) =
       2 * ν.2 + 3 * ϱ.2 + j + 1 by omega]
-    simpa only [Nat.zero_add, hidx] using
+    simpa only [Nat.zero_add, hidx] using!
       CVKernelGeneralHW.first_cartan_second h
-  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using
+  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using!
       CVKernelGeneralHW.first_lowering_first h hj'
   · change (R.op 4 0)^[0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + (j - 1) + 1] _ = 0
     rw [show 0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + (j - 1) + 1 =
       2 * ν.2 + 3 * ϱ.2 + j + 2 by omega]
-    simpa only [Nat.zero_add, hidx] using
+    simpa only [Nat.zero_add, hidx] using!
       CVKernelGeneralHW.first_lowering_second h
-  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using
+  · simpa only [Prod.fst_add, Nat.add_zero, Nat.zero_add, hidx, hones] using!
       CVKernelGeneralHW.first_same_root h hj'
-  · simpa only [Prod.snd_add, Nat.zero_add] using first_kernel_second_cv h hj
+  · simpa only [Prod.snd_add, Nat.zero_add] using! first_kernel_second_cv h hj
   · change CVRel (R.op 5)
       (parts (ϱ.1 + ϱ.2) (ν.1 + (ν.2 + 1) + (j - 1)) (0 + 0)) _
     rw [show ν.1 + (ν.2 + 1) + (j - 1) = ν.1 + ν.2 + j by omega, Nat.zero_add]

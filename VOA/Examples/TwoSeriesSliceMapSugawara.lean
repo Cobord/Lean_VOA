@@ -27,6 +27,8 @@ The creation Sugawara modes `L_n` (`n ≤ -1`) of `V^k(sl₂)` normalise the Whi
 Everything is proved; no new axiom.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.TwoSeries.SliceMap
 
 open VOA.AffineVOA MvPolynomial VOA.AffineVOA.SugawaraCov
@@ -146,12 +148,12 @@ theorem rwordOp_rword (l l' : List RLetter) : rwordOp k l (rword k l') = rword k
   | cons q l ih => rw [rwordOp_cons, ih, List.cons_append, rword_cons]
 
 theorem rwordOp_vac (l : List RLetter) : rwordOp k l (vacuumA k) = rword k l := by
-  simpa using rwordOp_rword k l []
+  simpa using! rwordOp_rword k l []
 
 theorem rwordOp_KC (l : List RLetter) {p : ℕ} {q : ℤ} {z : WakModule k} (hz : z ∈ KC k p q) :
     rwordOp k l z ∈ KC k (Kl l + p) (chl l + q) := by
   induction l with
-  | nil => simpa using hz
+  | nil => simpa using! hz
   | cons r l ih =>
       rw [rwordOp_cons]
       have h := J_letter_KC k r ih
@@ -263,7 +265,7 @@ theorem Lm_KC (j : ℕ) {p : ℕ} {q : ℤ} {y : WakModule k} (hy : y ∈ KC k p
       rw [← sub_add_cancel (Lm k hk (-(j : ℤ) - 2) (rword k l))
         (rwordOp k l (Lm k hk (-(j : ℤ) - 2) (vacuumA k))), ← hq]
       exact Submodule.add_mem _ (KC_mono k (p := Kl l) (by omega) _ h)
-        (KC_mono k (p := Kl l + 2) (by omega) _ (by simpa using h2))
+        (KC_mono k (p := Kl l + 2) (by omega) _ (by simpa using! h2))
   | zero => rw [map_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
   | smul r x _ hx => rw [map_smul]; exact Submodule.smul_mem _ _ hx
@@ -276,7 +278,7 @@ def cL : ℂ := -2 * c0 k
 theorem cL_ne_zero (hk : k + 2 ≠ 0) : cL k ≠ 0 := by
   rw [cL, c0, dualCoxeter]
   have : (2 * (k + 2) : ℂ) ≠ 0 := mul_ne_zero two_ne_zero hk
-  simpa using this
+  simpa using! this
 
 theorem W0_word_sub_mem_Dg0 (l : List RLetter) (hl : Kl l ≤ 2) :
     W0 k hk (rword k l) - classicalW l ∈ Dg 0 :=
@@ -306,19 +308,19 @@ theorem Lt_neg_two_one : Lt k hk (-2) 1 - cL k • X 0 ∈ Dg 0 := by
   exact Submodule.smul_mem _ _ (Submodule.add_mem _ (Submodule.add_mem _ h1 h2)
     (Submodule.smul_mem _ _ h3))
 
-theorem eq_C_of_mem_Dg0 {P : EPoly} (hP : P ∈ Dg 0) : P = MvPolynomial.C (coeff 0 P) :=
+theorem eq_C_of_mem_Dg0 {P : EPoly} (hP : P ∈ Dg 0) : P = MvPolynomial.C (P.coeff 0) :=
   totalDegree_eq_zero_iff_eq_C.mp (Nat.le_zero.mp (mem_Dg.mp hP))
 
 /-- `Lt (-j-2) 1 = cL · X_j` up to a constant. -/
 theorem Lt_one (j : ℕ) : Lt k hk (-(j : ℤ) - 2) 1 - cL k • X j ∈ Dg 0 := by
   induction j with
-  | zero => simpa using Lt_neg_two_one k hk
+  | zero => simpa using! Lt_neg_two_one k hk
   | succ j ih =>
       have h := Lt_comm k hk (m := -1) (n := -(j : ℤ) - 2) le_rfl (by omega) 1
       rw [Lt_one_neg_one, map_zero, zero_add] at h
       set D := Lt k hk (-(j : ℤ) - 2) 1 - cL k • X j with hD
       have hD0 := eq_C_of_mem_Dg0 ih
-      have hLt : Lt k hk (-(j : ℤ) - 2) 1 = cL k • X j + MvPolynomial.C (coeff 0 D) := by
+      have hLt : Lt k hk (-(j : ℤ) - 2) 1 = cL k • X j + MvPolynomial.C (D.coeff 0) := by
         rw [← hD0, hD]; abel
       rw [hLt, map_add, map_smul, Lt_neg_one_X, Lt_const_neg_one, add_zero, smul_smul] at h
       have hc : ((-1 : ℤ) : ℂ) - ((-(j : ℤ) - 2 : ℤ) : ℂ) = (j : ℂ) + 1 := by push_cast; ring
@@ -425,7 +427,7 @@ theorem Lt_tri (j : ℕ) {d : ℕ} {P : EPoly} (hP : P ∈ Dg d) :
   have hdeg : (monomial ν (1 : ℂ)).totalDegree ≤ d := by
     rw [totalDegree_monomial _ one_ne_zero]
     exact (le_totalDegree hν).trans (mem_Dg.mp hP)
-  have hm : monomial ν (coeff ν P) = coeff ν P • monomial ν (1 : ℂ) := by
+  have hm : monomial ν (P.coeff ν) = P.coeff ν • monomial ν (1 : ℂ) := by
     rw [smul_monomial, smul_eq_mul, mul_one]
   rw [hm, map_smul, mul_smul_comm, smul_comm, ← smul_sub]
   exact Submodule.smul_mem _ _ (Dg_mono hdeg (Lt_monomial k hk j ν))

@@ -44,7 +44,7 @@ variable (F : FusionChoice W)
   rw [moduleIntertwiner_vacuum_neg_one] at he
   have hi := congrArg (fun f : tensorObj F vacuumObject X ⟶ tensorObj F vacuumObject X =>
     f.val ((F vacuumObject X).intertwiner.val (-1) W.vacuum x)) (leftUnitor F X).hom_inv_id
-  simpa only [Ordinary.comp_apply, he, Ordinary.id_apply] using hi
+  exact (congrArg (fun z => (leftUnitor F X).inv.val z) he).symm.trans hi
 
 @[simp] theorem rightUnitor_inv_apply (X : Ordinary W) (x : X.carrier) :
     (rightUnitor F X).inv.val x = (F X vacuumObject).intertwiner.val (-1) x W.vacuum := by
@@ -52,7 +52,7 @@ variable (F : FusionChoice W)
   rw [skew_moduleIntertwiner_vacuum_neg_one] at he
   have hi := congrArg (fun f : tensorObj F X vacuumObject ⟶ tensorObj F X vacuumObject =>
     f.val ((F X vacuumObject).intertwiner.val (-1) x W.vacuum)) (rightUnitor F X).hom_inv_id
-  simpa only [Ordinary.comp_apply, he, Ordinary.id_apply] using hi
+  exact (congrArg (fun z => (rightUnitor F X).inv.val z) he).symm.trans hi
 
 /-- The vacuum coefficient alone parametrizes the entire right-unit tensor carrier. -/
 theorem right_vacuum_coefficient_surjective (X : Ordinary W) :
@@ -83,6 +83,16 @@ def VacuumCreationCompatibility (a : AssociatorFamily F) : Prop :=
       (tripleMode F X vacuumObject Y (-1) q x W.vacuum y) =
         (F X Y).intertwiner.val q x y
 
+/-- The right unitor tensored with the identity, on the vacuum creation slice. -/
+private theorem tensorHom_rightUnitor_tripleMode_vacuum (X Y : Ordinary W) (q : ℂ)
+    (x : X.carrier) (y : Y.carrier) :
+    (tensorHom F (rightUnitor F X).hom (𝟙 Y)).val
+      (tripleMode F X vacuumObject Y (-1) q x W.vacuum y) = (F X Y).intertwiner.val q x y := by
+  have h1 := (rightUnitor_intertwiner F X (-1) x W.vacuum).trans
+    (skew_moduleIntertwiner_vacuum_neg_one X x)
+  refine (tensorHom_intertwiner F (rightUnitor F X).hom (𝟙 Y) q _ y).trans ?_
+  exact congrArg (fun z => (F X Y).intertwiner.val q z y) h1
+
 /-- Vacuum normalization on the creation slice implies the full triangle. -/
 theorem triangleOnModes_of_vacuumCreation (a : AssociatorFamily F)
     (hv : VacuumCreationCompatibility F a) : TriangleOnModes F a := by
@@ -93,8 +103,7 @@ theorem triangleOnModes_of_vacuumCreation (a : AssociatorFamily F)
     apply vacuum_triple_linear_ext F X Y
     intro q x y
     rw [hv]
-    simp only [tripleMode, tensorHom_intertwiner, Ordinary.id_apply,
-      rightUnitor_intertwiner, skew_moduleIntertwiner_vacuum_neg_one]
+    exact (tensorHom_rightUnitor_tripleMode_vacuum F X Y q x y).symm
   intro X Y p q x v y
   rw [he]
 
@@ -103,9 +112,7 @@ theorem triangleOnModes_iff_vacuumCreation (a : AssociatorFamily F) :
     TriangleOnModes F a ↔ VacuumCreationCompatibility F a := by
   refine ⟨?_, triangleOnModes_of_vacuumCreation F a⟩
   intro ht X Y q x y
-  have hh := ht X Y (-1) q x W.vacuum y
-  simpa only [tripleMode, tensorHom_intertwiner, Ordinary.id_apply,
-    rightUnitor_intertwiner, skew_moduleIntertwiner_vacuum_neg_one] using hh
+  exact (ht X Y (-1) q x W.vacuum y).trans (tensorHom_rightUnitor_tripleMode_vacuum F X Y q x y)
 
 /-- The canonical comparison in a vacuum middle slot, built only from the
 proved unitors. Equality with a global analytic associator remains to be shown. -/

@@ -14,6 +14,8 @@ Adding lambda to h_0 and lambda gamma_n to f_n gives the actual affine
 current algebra at every highest weight, with the same noncritical level.
 This constructs a representation, not its singular states or a Kac formula.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open AffineVOA
 

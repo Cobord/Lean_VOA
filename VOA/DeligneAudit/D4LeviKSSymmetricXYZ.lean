@@ -52,7 +52,7 @@ theorem colourPowerShift_shapedModes {σ : Type*}
               radicalWord ρ w
                 (List.map (fun t => (shape t, (Finsupp.single i r + a) t)) ts)
               else 0).sum := by
-        simpa only [shapedModes] using ih hts
+        simpa only [shapedModes] using! ih hts
       simp only [shapedModes, List.map_cons, colourPowerShift,
         List.sum_cons]
       by_cases hj : shape t = j
@@ -62,7 +62,7 @@ theorem colourPowerShift_shapedModes {σ : Type*}
           simp only [List.cons.injEq]
           constructor
           · simp
-          · simpa only [shapedModes] using htail_t.symm
+          · simpa only [shapedModes] using! htail_t.symm
         · rw [ih', map_list_sum]
           simp only [List.map_map, Function.comp_def]
           congr 1
@@ -167,7 +167,7 @@ theorem xyzEvaluation_psum_intertwine {σ : Type*} [Fintype σ]
         exact smul_comm t (2 : ℂ) _
       · simp only [map_smul]
         rw [hbase, heval]
-        simpa [selectiveCartan] using congrArg (t • ·) hc.2.2
+        simpa [selectiveCartan] using! congrArg (t • ·) hc.2.2
   | add P Q hP hQ =>
       simp only [map_add, hP, hQ, smul_add]
 

@@ -108,7 +108,7 @@ theorem finrank_quot_commSpan_le_card_Φ [Finite (Φ W)]
   letI := instAlgebraA W
   obtain ⟨f, hf⟩ := exists_injective_finrank_quot_commSpan_to_Φ W hfd hss hreal Pr
   have := Nat.card_le_card_of_injective f hf
-  simpa using this
+  simpa using! this
 
 /-- **Zhu's Theorem 5.3.3 at the cusp, in full.**  The dimension of the space of genus-one
 conformal blocks *at `q = 0`* is at most the number of irreducible `𝒱`-modules.

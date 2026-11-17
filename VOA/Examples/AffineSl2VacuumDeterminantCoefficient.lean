@@ -24,7 +24,7 @@ local instance coefficientVacDecidable (n : ℕ) (c : ℤ) : DecidableEq (Affine
 
 /-- A fixed finite index equivalence, justified by the actual adapted basis. -/
 def vacuumAdaptedIndexEquiv (n : ℕ) (c : ℤ) : Wak.Charged.JointIndex n c≃VacuumAdaptedIndex n c :=
-  Fintype.equivOfCardEq (by simpa only [Fintype.card_sum] using joint_vacuum_dimension n c)
+  Fintype.equivOfCardEq (by simpa only [Fintype.card_sum] using! joint_vacuum_dimension n c)
 
 /-- The original PBW basis reindexed by the two adapted blocks. -/
 def vacuumReindexedBasis (k h : ℂ) (n : ℕ) (c : ℤ) :

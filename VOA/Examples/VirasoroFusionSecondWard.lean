@@ -105,14 +105,13 @@ theorem fusionKernelSequence_second_below (A N : ℕ) (t : ℂ) (him : t.im≠0)
       (fusionKacWeight (A:ℂ) 0 t) t N ht hN (fusionKernelSequence A N t him (by omega))
     have he := congrArg (fun f : wardSequenceSpace (vermaBSACharge t)
       (fusionKacWeight (A:ℂ) ((N:ℂ)-1) t) => f.val r) hh
-    dsimp only at he
     simp only [Submodule.coe_add,Pi.add_apply] at he
     change vermaMode _ _ 2 _-(_ : ℂ) • _-(3:ℂ) • (vermaMode _ _ 1 _-(_ : ℂ) • _)=_ at he
     rw [fusionKernelSequence_source_below A N t him (by omega) (r+2) (by omega),
       fusionKernelSequence_source_below A N t him (by omega) (r+1) (by omega),
       fusionKernelSequence_source_below A N t him (by omega) r (by omega),
       fusionKernelSequence_error_below A N t him (by omega) r (by omega)] at he
-    simpa only [map_zero,smul_zero,sub_zero,add_zero] using he.symm
+    simpa only [map_zero,smul_zero,sub_zero,add_zero] using! he.symm
 
 /-- The ACTUAL terminal state is killed by L2, with no primary-seed or
 terminal nonvanishing assumption. Together with L1 this gives singularity. -/
@@ -123,12 +122,11 @@ theorem fusionTerminalState_L2 (A N : ℕ) (t : ℂ) (him : t.im≠0)
   have ht : t≠0 := by intro hz; apply him; simp [hz]
   have hR : 2≤A*(N-1) := by
     have hh := Nat.mul_le_mul hA (show 2≤N-1 by omega)
-    simpa using hh
+    simpa using! hh
   have hh := wardSourceAt_second_defect (fusionKacWeight (A:ℂ) ((N:ℂ)-1) t)
     (fusionKacWeight (A:ℂ) 0 t) t N ht hN (fusionKernelSequence A N t him (by omega))
   have he := congrArg (fun f : wardSequenceSpace (vermaBSACharge t)
     (fusionKacWeight (A:ℂ) ((N:ℂ)-1) t) => f.val (A*(N-1)-2)) hh
-  dsimp only at he
   simp only [Submodule.coe_add,Pi.add_apply] at he
   rw [wardSourceAt_diagonal _ _ _ _ _ _ _ _
     (fusionKernelSequence_second_below A N t him hN),wardSourceDiagonal_shift_two,
@@ -139,7 +137,7 @@ theorem fusionTerminalState_L2 (A N : ℕ) (t : ℂ) (him : t.im≠0)
     fusionKernelSequence_source_below A N t him (by omega) (A*(N-1)-2+1) (by omega),
     fusionKernelSequence_error_below A N t him (by omega) (A*(N-1)-2) (by omega)] at he
   simpa only [fusionTerminalState,show A*(N-1)-2+2=A*(N-1) by omega,
-    smul_zero,map_zero,sub_zero,add_zero] using he
+    smul_zero,map_zero,sub_zero,add_zero] using! he
 /-- Every positive Virasoro mode kills the constructed terminal state.
 The state is allowed to be zero; nonvanishing is not part of this theorem. -/
 theorem fusionTerminalState_positive (A N : ℕ) (t : ℂ) (him : t.im≠0)

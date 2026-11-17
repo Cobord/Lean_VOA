@@ -21,7 +21,7 @@ theorem iExp_sound {r : ℕ} (a : Fin r) (c : ℂ)
   | nil =>
     rw [iExp, expWordR]
     split_ifs with hs
-    · have hns : s ≤ 22 := by simpa only [List.sum_nil, Nat.cast_zero, add_zero] using hn
+    · have hns : s ≤ 22 := by simpa only [List.sum_nil, Nat.cast_zero, add_zero] using! hn
       exact iSchurMemo_sound a c hc _ (by omega)
     · simp [iEval_nil, evRc_nil]
   | cons i w ih =>

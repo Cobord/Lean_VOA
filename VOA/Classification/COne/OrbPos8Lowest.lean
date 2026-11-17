@@ -25,16 +25,21 @@ private theorem signed_root_pair (β : ℤ) (hβ : β = 1 ∨ β = -1) :
         latticeCocycle (latP 1) (-β) β • (V2m 1 le_rfl).vacuum := by
   rw [V2m_smul_neg_charge (m := 1) (hm := le_rfl) β 1]
   rcases hβ with rfl | rfl
-  all_goals
-    norm_num only
-    rw [EEVec_vacuum, if_pos (by norm_num), Int.toNat_zero, vSchur_zero]
+  · norm_num only
+    rw [EEVec_vacuum (latP 1) ((-1 : ℤ) : (latP 1).carrier), if_pos (by norm_num), Int.toNat_zero,
+      vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier)]
+    rfl
+  · norm_num only
+    rw [EEVec_vacuum (latP 1) ((1 : ℤ) : (latP 1).carrier), if_pos (by norm_num), Int.toNat_zero,
+      vSchur_zero (latP 1) ((1 : ℤ) : (latP 1).carrier)]
     rfl
 
 private theorem signed_root_pair_high (β : ℤ) (hβ : β = 1 ∨ β = -1)
     (i : ℕ) (hi : 2 ≤ i) :
     (V2m 1 le_rfl).smul (latChargeGen (latP 1) (-β)) i
       (latChargeGen (latP 1) β) = 0 := by
-  rw [V2m_smul_neg_charge (m := 1) (hm := le_rfl) β i, EEVec_vacuum]
+  rw [V2m_smul_neg_charge (m := 1) (hm := le_rfl) β i,
+    EEVec_vacuum (latP 1) ((-β : ℤ) : (latP 1).carrier)]
   rcases hβ with rfl | rfl
   all_goals
     rw [if_neg (by omega)]
@@ -75,7 +80,7 @@ theorem vacuumCharge_step (P : TwistedModule (shiftAut n a) n M) (hn : 0 < n)
 theorem vacuumCharge_translate (P : TwistedModule (shiftAut n a) n M) (hn : 0 < n)
     {b : ℤ} (hb : HasVacuumCharge P hn b) (k : ℤ) : HasVacuumCharge P hn (b + 2 * k) := by
   induction k using Int.induction_on with
-  | zero => simpa using hb
+  | zero => simpa using! hb
   | succ k ih =>
     rw [show b + 2 * ((k : ℤ) + 1) = (b + 2 * k) + 2 * 1 by ring]
     exact vacuumCharge_step P hn ih 1 (Or.inl rfl)
@@ -182,7 +187,7 @@ theorem shifted_lowest_energy {n : ℕ} {a : ℤ}
     · refine ⟨0, Or.inl rfl, h0, fun α hα => ?_⟩
       obtain ⟨ε, hε, hreal, he⟩ := hbelow hα
       rcases hε with rfl | rfl
-      · simpa only [Complex.ratCast_re] using he
+      · simpa only [Complex.ratCast_re] using! he
       · exact (h1 hreal).elim
   · obtain ⟨ε, hε, he⟩ := hsome
     rcases hε with rfl | rfl
@@ -191,7 +196,7 @@ theorem shifted_lowest_energy {n : ℕ} {a : ℤ}
       obtain ⟨ε, hε, hreal, hle⟩ := hbelow hα
       rcases hε with rfl | rfl
       · exact (h0 hreal).elim
-      · simpa only [Complex.ratCast_re] using hle
+      · simpa only [Complex.ratCast_re] using! hle
 
 /-- Each constructed module realizes exactly its advertised minimum. -/
 theorem constructed_lowest_energy {n : ℕ} (hn : 0 < n) {a ε : ℤ}
@@ -230,14 +235,17 @@ theorem inner_twisted_lowest_matches_constructed
   obtain ⟨u, Q, hQord, _, hQweight⟩ := v2_twisted_torus_reduction hn ho P hi
   have hu : charU 1 le_rfl u ≠ 1 := by
     intro h
-    have hn1 : n = 1 := by simpa [h] using hQord.symm
+    have hn1 : n = 1 := by simpa [h] using! hQord.symm
     exact hg (orderOf_eq_one_iff.mp (ho.trans hn1))
   obtain ⟨a, ha, han, he⟩ := torus_eq_shiftAut u hn
     (by rw [← hQord]; exact pow_orderOf_eq_one _) hu
   obtain ⟨ε, hε, hP, hmodel⟩ :=
     shifted_lowest_matches_constructed (castTwisted he Q) hn ha.le han.le
-  refine ⟨a, ε, ha, han, he ▸ hQord, hε, ?_, hmodel⟩
-  simpa only [HasLowestEnergy, castTwisted_weight, hQweight] using hP
+  refine ⟨a, ε, ha, han, by rw [← he]; exact hQord, hε, ?_, hmodel⟩
+  have hw : ∀ α : ℂ, (castTwisted he Q).weight α = P.weight α := fun α =>
+    (castTwisted_weight he Q α).trans (hQweight α)
+  obtain ⟨hP1, hP2⟩ := hP
+  exact ⟨fun h => hP1 ((hw _).trans h), fun α hα => hP2 α (fun h => hα ((hw α).symm.trans h))⟩
 
 /-- The zero angle is the identity automorphism. -/
 theorem shiftAut_zero (n : ℕ) : shiftAut n 0 = 1 := by
@@ -263,7 +271,7 @@ theorem finite_order_twisted_lowest_matches_constructed
     obtain ⟨ε, hε, hP, hmodel⟩ := shifted_lowest_matches_constructed
       (castTwisted he P) hn (by omega) (by omega)
     refine ⟨0, ε, le_rfl, by omega, he ▸ ho, hε, ?_, hmodel⟩
-    simpa only [HasLowestEnergy, castTwisted_weight] using hP
+    simpa only [HasLowestEnergy, castTwisted_weight] using! hP
   · obtain ⟨a, ε, ha, han, hord, hε, hP, hmodel⟩ :=
       inner_twisted_lowest_matches_constructed hn ho hg P hi
     exact ⟨a, ε, ha.le, han, hord, hε, hP, hmodel⟩

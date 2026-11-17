@@ -83,13 +83,13 @@ theorem singleAdjoint_middle_square : Q.op 3 0 (Q.op 3 0 v) = 0 := by
     have he2 := coreMiddle_commutator Q 0 0 0 (Q.op 3 0 v)
     simp [coreMiddleBracket, h.parabolic 0 (by decide) (by decide) 0,
       h.parabolic 1 (by decide) (by decide) 0] at he0 he1
-    simpa [A3Sector.simpleE, coreMiddleBracket, he0, he1] using he2
+    simpa [A3Sector.simpleE, coreMiddleBracket, he0, he1] using! he2
   · have hw := h.weight 0
     norm_num [A3Sector.simpleH, A3Sector.weightABC] at hw
     have he1 := coreMiddle_commutator Q 12 0 0 v
     have he2 := coreMiddle_commutator Q 12 0 0 (Q.op 3 0 v)
     simp [coreMiddleBracket, hw] at he1
-    simpa [A3Sector.simpleH, coreMiddleBracket, he1] using he2
+    simpa [A3Sector.simpleH, coreMiddleBracket, he1] using! he2
 
 /-- The raised vector has dominant middle weight with zero outer labels. -/
 theorem singleAdjoint_raised_weight (j : Fin 3) :

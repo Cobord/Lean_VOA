@@ -49,13 +49,13 @@ theorem a3_simple_conversion_kill (a b c : ℕ)
     rw [ρ.comm]
     simp [simple_ff_table]
   have hN : (Fm 0 ^ ((weightABC a b c) i + 1)) w = 0 := by
-    simpa [Fm, Module.End.pow_apply] using h.lowering i
+    simpa [Fm, Module.End.pow_apply] using! h.lowering i
   have hk := VOA.DeligneAudit.Garland.garland hEF hHF hFF
     (h.raising (simpleE i) (simpleE_raising i) 1)
     (fun m => h.cartan_pos i (m + 1) (by omega))
     r hr hN s hrs
   simpa [VOA.DeligneAudit.LeviConversion.fCurrent,
-    VOA.DeligneAudit.Garland.Fs, Fm] using hk
+    VOA.DeligneAudit.Garland.Fs, Fm] using! hk
 
 end VOA.DeligneAudit.A3Sector
 

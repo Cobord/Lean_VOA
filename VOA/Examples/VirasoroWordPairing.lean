@@ -98,7 +98,7 @@ theorem virWord_pairing_obstruction {W : VertexOperatorAlgebra V}
   let x := ∑ j, r j • virWord (normalizedL D β) (w j) (W.vacuum,0)
   have hx : x = (0,x.2) := by
     apply Prod.ext
-    · simpa only [x, Prod.fst_sum, Prod.smul_fst, virWord_fst] using hr
+    · simpa only [x, Prod.fst_sum, Prod.smul_fst, virWord_fst] using! hr
     · rfl
   change B.form W.vacuum ((∑ i, r i • virWord (normalizedL D β)
     ((w i).reverse.map Neg.neg)) x).2 = 0

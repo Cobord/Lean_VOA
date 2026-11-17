@@ -86,7 +86,7 @@ theorem dualPairing_oppB_contra (a : V) (q : ℤ) (g : RestrictedDual N) (p : E)
     = dualPairing N (mode (N.YM a) q p) g) ?_ ?_ ?_ a
   · intro k a ha
     rw [oppB_homog _ ha, mode_eq_oppB_twist N ha]
-    simp only [LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply, map_smul, map_sum,
+    simp only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, map_smul, map_sum,
       smul_eq_mul]
     change _ = dpx N g _
     simp only [map_smul, map_sum, smul_eq_mul]
@@ -243,10 +243,10 @@ noncomputable def innermost (n : ℂ) (α β : ℂ) :
     A.weight α →ₗ[ℂ] P₂.isMod.weight β →ₗ[ℂ] Module.Dual ℂ (Module.Dual ℂ P₃.carrier) :=
   LinearMap.mk₂ ℂ (fun w y => (GtL A T Pr hrat hP₃ hP₂ (w : M) (y : P₂.carrier)).comp
       (iota P₃.isMod (α + β - n - 1)))
-    (fun w w' y => by ext f; simp)
-    (fun c w y => by ext f; simp)
-    (fun w y y' => by ext f; simp)
-    (fun c w y => by ext f; simp)
+    (fun w w' y => by ext f; simp <;> rfl)
+    (fun c w y => by ext f; simp <;> rfl)
+    (fun w y y' => by ext f; simp <;> rfl)
+    (fun c w y => by ext f; simp <;> rfl)
 
 /-- Summing over the weights of `P₂`. -/
 noncomputable def innerFlip (n α : ℂ) :
@@ -401,11 +401,15 @@ theorem Cmodes_extendsTop : ExtendsTop A P₂ P₃ (Cmodes A T Pr hrat hP₃ hP�
       linarith
     rw [hbot, pow_one] at h1
     exact (Submodule.mem_bot ℂ).1 h1
-  rw [Gt, expOp_fix (XQ_locNil P₃) zT hXg]
+  unfold Gt
+  rw [expOp_fix (XQ_locNil P₃) zT hXg]
   have hy : (y : P₂.carrier) = pBotIncl P₂ y := rfl
-  rw [hy, PhiT_bot, phiT_coe, lamT_apply, Hs, LinearMap.comp_apply, Submodule.subtype_apply]
+  rw [hy, PhiT_bot A T Pr hrat hP₃ hP₂ x y, phiT_coe A T Pr hrat hP₃ x y,
+    lamT_apply A T Pr hrat hP₃ x y g]
+  change ((Psi A T Pr hrat hP₃ y g : (oppBase A).Dsub (-1)) : Module.Dual ℂ M) x = _
   have hgu : g = pBotIncl (Q₃ P₃) ⟨g, hg⟩ := rfl
-  rw [hgu, Psi_bot, phiTop_coe, lamTop_apply, ← hgu, dualPairing_iota,
+  rw [hgu, Psi_bot A T Pr hrat hP₃ y ⟨g, hg⟩, phiTop_coe A T y ⟨g, hg⟩,
+    lamTop_apply A T y ⟨g, hg⟩ x, ← hgu, dualPairing_iota,
     weightProjection_of_mem P₃.isMod (T.val x y).2]
 
 end Extract

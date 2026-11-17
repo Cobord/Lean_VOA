@@ -48,7 +48,7 @@ theorem TavI_inv_low {F : P3} {n : ℕ} (hF : IcoInv F)
   · simp only [Function.comp_apply, pow_zero, mul_one]
     rw [← T2_apply, TavI_of_inv icoInv_one, TavI_one]
     exact vacuum_mem_twoSeedSpan
-  · simpa [Function.comp_def, TavI_of_inv, pow_zero, Xico] using Xico_mem_twoSeedSpan
+  · simpa [Function.comp_def, TavI_of_inv, pow_zero, Xico] using! Xico_mem_twoSeedSpan
 
 /-- Below weight 100 the invariant primaries have only the vacuum and spin-six seeds. -/
 theorem primary_low (N : ℤ) (hN : N < 100) :
@@ -93,6 +93,6 @@ theorem grading_lt_100 (N : ℤ) (hN : N < 100) : Wi.grading N ≤ twoSeedSpan :
   by_cases hneg : N < 0
   · rw [Wi.positivity _ hneg]
     exact bot_le
-  · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using hnat N.toNat (by omega)
+  · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using! hnat N.toNat (by omega)
 
 end VOA.Classification.COne.OrbIcoS

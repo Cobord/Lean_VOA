@@ -79,7 +79,7 @@ theorem spectralLevel_independent (A : WeakModule W M) (index : ℂ → ℤ) :
   intro α
   apply iSup_le
   intro hα
-  exact le_iSup_of_le α (le_iSup_of_le (by simpa [hα] using hkj) le_rfl)
+  exact le_iSup_of_le α (le_iSup_of_le (by simpa [hα] using! hkj) le_rfl)
 
 /-- Spectral decomposition and a nonnegative, shift-compatible index give admissibility. -/
 noncomputable def admissibleOfSpectralIndex (A : WeakModule W M) (index : ℂ → ℤ)
@@ -137,7 +137,7 @@ theorem weak_spectral_decomposition (A : WeakModule W M)
     (⨆ α : ℂ, (L0 A).maxGenEigenspace α) = ⊤ := by
   have h := PlusSplitting.eq_iSup_inf_maxGenEigenspace_of_locally_finite
     (L0 A) hloc ⊤ (fun _ _ => Submodule.mem_top)
-  simpa only [top_inf_eq] using h.symm
+  simpa only [top_inf_eq] using! h.symm
 
 /-- A bounded-below generalized-weight decomposition supplies the exact original weak action. -/
 theorem exists_admissible_of_spectral_bound (A : WeakModule W M)

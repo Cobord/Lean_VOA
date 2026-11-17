@@ -172,7 +172,7 @@ theorem dualCompMap_apply (N : OrdVModule W M) (wt : ℤ) (u : 𝒱) (n : ℤ) (
           ((j.factorial : ℂ)⁻¹) •
             g (internalProjTo N.isInternal γ
               (mode (N.YM ((W.L 1 ^ j) u)) (2 * wt - n - 2 - (j : ℤ)) x)) := by
-  simp only [dualCompMap, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+  simp only [dualCompMap, LinearMap.smul_apply, LinearMap.sum_apply,
     LinearMap.lcomp_apply]
   rfl
 
@@ -299,7 +299,7 @@ theorem dualModeEndo_add_u (N : OrdVModule W M) (wt : ℤ) (u₁ u₂ : 𝒱) (n
       = dualModeEndo N wt u₁ n + dualModeEndo N wt u₂ n := by
   refine DirectSum.linearMap_ext ℂ (fun γ => ?_)
   refine LinearMap.ext (fun g => ?_)
-  simp only [LinearMap.comp_apply, LinearMap.add_comp, LinearMap.add_apply]
+  try simp only [LinearMap.comp_apply, LinearMap.add_comp, LinearMap.add_apply]
   have h1 := dualModeEndo_lof N wt (u₁ + u₂) n γ g
   have h2 := dualModeEndo_lof N wt u₁ n γ g
   have h3 := dualModeEndo_lof N wt u₂ n γ g
@@ -312,7 +312,7 @@ theorem dualModeEndo_smul_u (N : OrdVModule W M) (wt : ℤ) (c : ℂ) (u : 𝒱)
     dualModeEndo N wt (c • u) n = c • dualModeEndo N wt u n := by
   refine DirectSum.linearMap_ext ℂ (fun γ => ?_)
   refine LinearMap.ext (fun g => ?_)
-  simp only [LinearMap.comp_apply, LinearMap.smul_comp, LinearMap.smul_apply]
+  try simp only [LinearMap.comp_apply, LinearMap.smul_comp, LinearMap.smul_apply]
   have h1 := dualModeEndo_lof N wt (c • u) n γ g
   have h2 := dualModeEndo_lof N wt u n γ g
   rw [dualCompMap_smul_u N wt c u n γ, LinearMap.smul_apply, map_smul, map_smul] at h1
@@ -367,7 +367,7 @@ theorem dualModeEndo_vacuum_zero (N : OrdVModule W M) {n : ℤ} (hn : n ≠ -1) 
     dualModeEndo N 0 W.vacuum n = 0 := by
   refine DirectSum.linearMap_ext ℂ (fun γ => ?_)
   refine LinearMap.ext (fun g => ?_)
-  simp only [LinearMap.comp_apply, LinearMap.zero_comp, LinearMap.zero_apply]
+  try simp only [LinearMap.comp_apply, LinearMap.zero_comp, LinearMap.zero_apply]
   have h := dualModeEndo_lof N 0 W.vacuum n γ g
   rw [dualCompMap_vacuum_zero N hn γ g, map_zero, map_zero] at h
   exact h
@@ -379,7 +379,7 @@ theorem dualModeEndo_vacuum_id (N : OrdVModule W M) :
     dualModeEndo N 0 W.vacuum (-1) = LinearMap.id := by
   refine DirectSum.linearMap_ext ℂ (fun γ => ?_)
   refine LinearMap.ext (fun g => ?_)
-  simp only [LinearMap.comp_apply, LinearMap.id_apply]
+  try simp only [LinearMap.comp_apply, LinearMap.id_apply]
   have h := dualModeEndo_lof N 0 W.vacuum (-1) γ g
   have hidx : dualOutIdx 0 (-1) γ = γ := by simp [dualOutIdx]
   rw [hidx] at h

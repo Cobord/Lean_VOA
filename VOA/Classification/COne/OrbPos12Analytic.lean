@@ -34,8 +34,7 @@ theorem actionProduct_val (n : ℂ) (v : (ambient G).carrier)
       (actionIntertwiner G hSR X a).val n v (a.val z) := by
   change (tensorHom (fusionChoice_pbw hSR) (𝟙 (ambient G)) a ≫ a).val
     (((fusionChoice_pbw hSR) (ambient G) _).intertwiner.val n v z) = _
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
-  rfl
+  exact congrArg a.val (tensorHom_intertwiner (fusionChoice_pbw hSR) (𝟙 (ambient G)) a n v z)
 
 /-- Action associativity gives equality of the convergent product and iterate
 evaluations on the real four-point segment, with no Jacobi assumption. -/
@@ -51,7 +50,7 @@ theorem action_iterate_eq_product (E : CanonicalExtensionAlgebra G hSR)
       (evalAssoc (fusionChoice_pbw hSR) (ordinaryFourPointInput_pbw _ hSR)
         (ambient G) (ambient G) X).hom ≫
         tensorHom (fusionChoice_pbw hSR) (𝟙 (ambient G)) a ≫ a := by
-    simpa only [E.mul_eq] using ha.mul_act
+    simpa only [E.mul_eq] using! ha.mul_act
   rw [actionIterate, hassoc]
   exact evalAssoc_fourPoint (fusionChoice_pbw hSR) (ordinaryFourPointInput_pbw _ hSR)
     (ambient G) (ambient G) X X _
@@ -78,7 +77,8 @@ theorem actionProduct_coefficient_phase (g : G)
         (d.β + d.γ - w - 1) d.y d.z)) ≠ 0 := by
     intro h
     apply hw
-    rw [prodCoef, actionProduct_val, h, map_zero]
+    exact (congrArg d.functional ((actionProduct_val G hSR X a _ _ _).trans h)).trans
+      (map_zero d.functional)
   have hp := action_coefficient_phase G hSR X a g hm _ c d.x hx _ hn
   rw [monodromy_phase] at hp
   convert hp using 2

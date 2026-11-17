@@ -78,8 +78,9 @@ theorem boundarySLabel_ne_boundaryCurrentLabel (a b c d : ℕ)
     (s : Fin d) (i : BoundaryCurrentLabel a b c) :
     boundarySLabel a b c d s ≠ boundaryCurrentLabel a b c d i := by
   intro h
+  have h' := congrArg Sigma.fst h
   rcases i with ((i | i) | i) <;>
-    simp [boundarySLabel, boundaryCurrentLabel] at h
+    simp [boundarySLabel, boundaryCurrentLabel] at h'
 
 /-- The monomial containing one copy of every labelled `S` variable. -/
 def sRootFactor (a b c d : ℕ) :

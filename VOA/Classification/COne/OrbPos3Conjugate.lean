@@ -22,7 +22,7 @@ theorem inverse_mem_twistedEigenspace (φ : Aut W) (j : ℕ) {v : V}
   rw [Aut.twistedEigenspace, Module.End.mem_eigenspace_iff] at hv ⊢
   change (φ * g * φ⁻¹) v = _ at hv
   have h := congrArg φ.toLinearEquiv.symm hv
-  simpa only [Aut.mul_apply, Aut.inv_apply, LinearEquiv.symm_apply_apply, map_smul] using h
+  simpa only [Aut.mul_apply, Aut.inv_apply, LinearEquiv.symm_apply_apply, map_smul] using! h
 
 /-- Conjugation transport with all fractional fields and the original grading. -/
 noncomputable def conjugateTwisted (P : TwistedModule g n M) (φ : Aut W) :
@@ -40,7 +40,7 @@ noncomputable def conjugateTwisted (P : TwistedModule g n M) (φ : Aut W) :
     intro j v hv w x ℓ k m hk
     have h := P.jacobi j (φ⁻¹ v) (inverse_mem_twistedEigenspace φ j hv)
       (φ⁻¹ w) x ℓ k m hk
-    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe, (φ⁻¹).map_smul'] using h
+    simpa only [LinearMap.comp_apply, LinearEquiv.coe_coe, (φ⁻¹).map_smul'] using! h
   weight := P.weight
   isInternal := P.isInternal
   L0_weight := by
@@ -60,7 +60,7 @@ theorem conjugateTwisted_irreducible (P : TwistedModule g n M) (φ : Aut W)
   intro v k x hx
   have h := hS (φ v) k x hx
   change P.YM (φ.toLinearEquiv.symm (φ.toLinearEquiv v)) k x ∈ S at h
-  simpa only [LinearEquiv.symm_apply_apply] using h
+  simpa only [LinearEquiv.symm_apply_apply] using! h
 
 /-- Every finite-order V₂ sector can be transported to an actual torus sector,
 with exactly the same weight spaces on the same vector space. -/

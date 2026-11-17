@@ -82,7 +82,8 @@ theorem lead_list (a b : ℕ → Polynomial R) (ha : ∀ m, (a m).natDegree ≤ 
       · exact Polynomial.natDegree_mul_le.trans (by have := hb x; omega)
     · rw [Polynomial.coeff_add, show l.length + 1 + M = 1 + (l.length + M) by ring,
         Polynomial.coeff_mul_add_eq_of_natDegree_le (ha x) h3, h4, Derivation.leibniz, smul_eq_mul,
-        smul_eq_mul, pderiv_X, map_add, map_mul, map_mul, aeval_X]
+        smul_eq_mul, pderiv_X, map_add (aeval (R := ℂ) (sb a)), map_mul (aeval (R := ℂ) (sb a)),
+        map_mul (aeval (R := ℂ) (sb a)), aeval_X]
       by_cases hx : x = M
       · subst hx
         rw [show 1 + (l.length + x) = (x + 1) + l.length by ring,
@@ -113,10 +114,10 @@ theorem lead_span (a b : ℕ → Polynomial R) (ha : ∀ m, (a m).natDegree ≤ 
   | zero => simp
   | add P Q _ _ hP hQ =>
     refine ⟨?_, ?_⟩
-    · rw [map_add, TrivSqZeroExt.snd_add]
+    · rw [map_add (theta a b), TrivSqZeroExt.snd_add]
       exact (Polynomial.natDegree_add_le _ _).trans (max_le hP.1 hQ.1)
-    · rw [map_add, TrivSqZeroExt.snd_add, Polynomial.coeff_add, hP.2, hQ.2, map_add, map_add,
-        mul_add]
+    · rw [map_add (theta a b), TrivSqZeroExt.snd_add, Polynomial.coeff_add, hP.2, hQ.2,
+        map_add (pderiv M), map_add (aeval (R := ℂ) (sb a)), mul_add]
   | smul c P _ hP =>
     refine ⟨?_, ?_⟩
     · rw [map_smul, TrivSqZeroExt.snd_smul]
@@ -141,7 +142,7 @@ theorem sqExp_injective : Function.Injective sqExp := by
   · subst h0
     simp only [Finsupp.single_eq_same] at hm
     omega
-  · simpa [Finsupp.single_apply, Ne.symm h0] using hm
+  · simpa [Finsupp.single_apply, Ne.symm h0] using! hm
 
 /-- `T₀ ↦ T₀²`, `T_m ↦ T_m`. -/
 def sqMap : MvPolynomial ℕ ℂ →ₐ[ℂ] MvPolynomial ℕ ℂ :=
@@ -173,12 +174,14 @@ theorem not_mem_vars_of_pderiv_eq_zero {F : MvPolynomial ℕ ℂ} {M : ℕ}
   have hβM' : β M ≠ 0 := Finsupp.mem_support_iff.mp hβM
   have hle : Finsupp.single M 1 ≤ β := by
     rw [Finsupp.single_le_iff]; omega
-  have hc := congrArg (coeff (β - Finsupp.single M 1)) h
-  rw [as_sum F, map_sum, coeff_sum, coeff_zero] at hc
+  have hc : (pderiv M F).coeff (β - Finsupp.single M 1) =
+      (0 : MvPolynomial ℕ ℂ).coeff (β - Finsupp.single M 1) := by
+    rw [h]
+  rw [as_sum F, map_sum, coeff_sum, MvPolynomial.coeff_zero, Finsupp.zero_apply] at hc
   simp only [pderiv_monomial, coeff_monomial] at hc
   rw [Finset.sum_eq_single β] at hc
   · rw [if_pos rfl] at hc
-    have hne : coeff β F ≠ 0 := mem_support_iff.mp hβ
+    have hne : F.coeff β ≠ 0 := mem_support_iff.mp hβ
     have : (β M : ℂ) ≠ 0 := by exact_mod_cast hβM'
     exact mul_ne_zero hne this hc
   · intro γ _ hγ

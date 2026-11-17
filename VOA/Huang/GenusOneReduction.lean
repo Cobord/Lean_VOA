@@ -35,7 +35,7 @@ theorem sqL_negOne (A : OrdVModule W M₁) : sqL A (-1) = cylT A := by
   rw [finsum_eq_sum_of_support_subset _ hs, Finset.sum_pair (by norm_num)]
   have hc : cbz (1 : ℤ) 1 = 1 := by
     rw [cbz_apply_nonneg _ (by norm_num)]
-    simpa using gBinom_natCast 1 1
+    simpa using! gBinom_natCast 1 1
   rw [cbz_zero, hc, one_smul, one_smul]
   rfl
 

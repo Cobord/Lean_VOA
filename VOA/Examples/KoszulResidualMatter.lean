@@ -293,8 +293,9 @@ theorem sum_uProj (s : Finset LexLetter) (x : USpace) {D : ℕ}
   · rfl
   · rw [Finset.mem_range] at hμ
     have h0 := hD (sdeg s μ) (by omega)
-    have := congrArg (fun y => coeff μ (PhiU y)) h0
-    simp only [PhiU_uProj, coeff_sProj, if_pos rfl, map_zero, coeff_zero] at this
+    have := congrArg (fun y => (PhiU y).coeff μ) h0
+    simp only [PhiU_uProj, coeff_sProj, if_pos rfl, map_zero,
+      AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at this
     exact this.symm
 
 /-! ### Sums of operators -/

@@ -97,7 +97,7 @@ theorem vacWordMode_sound (s : ℂ) (hs : s ≠ 0) (k : ℕ) (hk : 0 < k)
       sectorVirasoro (familyBackground s) (vacFamilyMomentum s) (-(k : ℤ))
         (evalWord (fockRawVar s) w) := by
   induction w with
-  | nil => simpa [vacWordMode, evalWord, vacuumN] using vacCreation_sound s hs k hk
+  | nil => simpa [vacWordMode, evalWord, vacuumN] using! vacCreation_sound s hs k hk
   | cons i w ih =>
     rw [vacWordMode, fockRawEval_append, fockRawEval_prepend, ih]
     change _ = sectorVirasoro _ _ _ (fockRawVar s i * evalWord (fockRawVar s) w)

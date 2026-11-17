@@ -111,13 +111,19 @@ theorem mul_apply' (A B : SL(2, ℤ)) (i j : Fin 2) :
     (A * B) i j = A i 0 * B 0 j + A i 1 * B 1 j := by
   rw [Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- Entries of an inverse in `SL(2, ℤ)`. -/
+theorem inv_apply' (A : SL(2, ℤ)) (i j : Fin 2) :
+    A⁻¹ i j = (!![A 1 1, -A 0 1; -A 1 0, A 0 0] : Matrix (Fin 2) (Fin 2) ℤ) i j := by
+  rw [show A⁻¹ i j = ((A⁻¹ : SL(2, ℤ)).1) i j from rfl, Matrix.SpecialLinearGroup.coe_inv,
+    Matrix.adjugate_fin_two]
+
 /-- The lower unipotent `!![1, 0; y, 1]`, written as a conjugate of a power of `T`. -/
 def lower (y : ℤ) : SL(2, ℤ) := ModularGroup.S * ModularGroup.T ^ (-y) * ModularGroup.S⁻¹
 
 theorem lower_apply (y : ℤ) (i j : Fin 2) :
     (lower y) i j = (!![1, 0; y, 1] : Matrix (Fin 2) (Fin 2) ℤ) i j := by
-  fin_cases i <;> fin_cases j <;>
-    simp [lower, mul_apply', Matrix.SpecialLinearGroup.SL2_inv_expl, S_apply, T_zpow_apply]
+  simp only [lower, mul_apply', inv_apply', S_apply, T_zpow_apply]
+  fin_cases i <;> fin_cases j <;> simp
 
 theorem det_eq (A : SL(2, ℤ)) : A 0 0 * A 1 1 - A 0 1 * A 1 0 = 1 := by
   have h := A.2
@@ -157,9 +163,8 @@ theorem inv_mul_mem_Gamma {δ₁ δ₂ : SL(2, ℤ)} (h00 : δ₁ 0 0 = δ₂ 0 
   rw [e1, e2] at d1
   rw [e3, e4] at d2
   rw [Gamma_mem]
-  simp only [mul_apply', Matrix.SpecialLinearGroup.SL2_inv_expl]
-  simp only [Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.empty_val',
-    Matrix.cons_val_fin_one]
+  simp only [mul_apply', inv_apply', Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.empty_val', Matrix.cons_val_fin_one, Matrix.head_cons]
   push_cast
   rw [e1, e2, e3, e4, h00]
   rw [h00] at d1

@@ -43,7 +43,7 @@ theorem doubledGradeCartan_comm (a : Fin 28) (r : ℕ) (v : V) :
           if z = a then 2 * (currentAlphaGrade a : ℂ) else 0 := by
     change 2 * fD4 0 a z + 2 * fD4 1 a z + fD4 2 a z + fD4 3 a z = _
     simpa only [fD4, fC, Int.cast_add, Int.cast_mul, Int.cast_ofNat, Int.cast_ite,
-      Int.cast_zero] using
+      Int.cast_zero] using!
       congrArg (fun n : ℤ => (n : ℂ)) (doubledGradeCartan_coefficients a z)
   calc
     _ = (2 : ℂ) • (ρ.op (0 : Fin 28) 0 (ρ.op a r v) - ρ.op a r (ρ.op (0 : Fin 28) 0 v)) +
@@ -56,7 +56,8 @@ theorem doubledGradeCartan_comm (a : Fin 28) (r : ℕ) (v : V) :
     _ = ∑ z : Fin 28,
         (2 * D4sector.f (0 : Fin 28) a z + 2 * D4sector.f (1 : Fin 28) a z +
           D4sector.f (2 : Fin 28) a z + D4sector.f (3 : Fin 28) a z) • ρ.op z r v := by
-      rw [ρ.comm, ρ.comm, ρ.comm, ρ.comm]
+      rw [ρ.comm (0 : Fin 28) a 0 r v, ρ.comm (1 : Fin 28) a 0 r v, ρ.comm (2 : Fin 28) a 0 r v,
+        ρ.comm (3 : Fin 28) a 0 r v]
       simp only [zero_add, Finset.smul_sum, smul_smul, ← Finset.sum_add_distrib,
         ← add_smul]
       rfl
@@ -69,7 +70,7 @@ theorem doubledGradeCartan_comm_levi (a : Fin 28) (ha : IsLevi a) (r : ℕ) (v :
     obtain ⟨i, rfl⟩ := ha
     fin_cases i <;> rfl
   have hc := doubledGradeCartan_comm ρ a r v
-  simpa only [hz, Int.cast_zero, mul_zero, zero_smul, sub_eq_zero] using hc
+  simpa only [hz, Int.cast_zero, mul_zero, zero_smul, sub_eq_zero] using! hc
 
 variable (w : V)
 
@@ -117,8 +118,8 @@ theorem keyOrbit_le_gradeEigenspace (m : ℕ)
   erw [wordOp_append ρ l (r.map fun p => (radicalColour p.1, p.2)) w]
   change doubledGradeCartan ρ (wordOp ρ l (radicalWord ρ w r)) = _
   rw [doubledGradeCartan_leviWord ρ l hl,
-    doubledGradeCartan_key ρ w m h k (hk ▸ radicalWord_mem_key ρ w r), wordOp_smul]
-  rfl
+    doubledGradeCartan_key ρ w m h k (hk ▸ radicalWord_mem_key ρ w r)]
+  exact wordOp_smul ρ l _ _
 
 /-- The radical letter-count layer has the intrinsic coweight eigenvalue. -/
 theorem alphaLayer_le_gradeEigenspace (m : ℕ)
@@ -130,7 +131,7 @@ theorem alphaLayer_le_gradeEigenspace (m : ℕ)
   intro _
   apply iSup_le
   intro hk
-  simpa only [hk] using keyOrbit_le_gradeEigenspace ρ w m h k
+  simpa only [hk] using! keyOrbit_le_gradeEigenspace ρ w m h k
 
 end VOA.DeligneAudit.D4LevelReduction
 

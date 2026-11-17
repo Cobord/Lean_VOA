@@ -78,7 +78,7 @@ theorem simpleVacuumProjection_mode (c : ℂ) (m : ℤ) (v : Verma c 0) :
       (virasoroSimple c).L m (simpleVacuumProjection c v) := by
   change (maxIdealVir c).mkQ (vacuumProjection c (vermaMode c 0 m v))=_
   rw [vacuumProjection_mode]
-  simpa only [virasoroVOA_L_eq_Lop] using VirQuotForm.mkQ_L c m (vacuumProjection c v)
+  simpa only [virasoroVOA_L_eq_Lop] using! VirQuotForm.mkQ_L c m (vacuumProjection c v)
 
 /-- The equivalence is one of actual mode representations, not only of
 vector spaces. Thus the simple highest-weight-zero representation is the

@@ -18,7 +18,7 @@ theorem m2Model_bound : FiniteDimensional ℂ M2Model ∧ Module.finrank ℂ M2M
     (fun i : Fin normalEnumeration.length =>
       (m2ModelIdeal.restrictScalars ℂ).mkQ (polyWord ((normalEnumeration.get i).map varIndex)))
     m2_normalEnumeration_span
-  simpa only [normalEnumeration_length] using h
+  simpa only [normalEnumeration_length] using! h
 
 theorem m2Model_finite : FiniteDimensional ℂ M2Model := m2Model_bound.1
 

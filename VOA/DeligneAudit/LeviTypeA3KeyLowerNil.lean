@@ -19,9 +19,9 @@ theorem a3_lowering_nilpotent_word (a b c : ℕ)
   | nil =>
       fin_cases i
       · simpa [radicalWord, leviF, simpleF, weightABC,
-          Module.End.pow_apply] using h.lowering 1
+          Module.End.pow_apply] using! h.lowering 1
       · simpa [radicalWord, leviF, simpleF, weightABC,
-          Module.End.pow_apply] using h.lowering 2
+          Module.End.pow_apply] using! h.lowering 2
   | cons x l ih =>
       rcases x with ⟨j, s⟩
       have hp := pow_kill_of_ad (ρ.op (leviF i) 0) (radicalOp ρ j s)
@@ -42,7 +42,7 @@ theorem a3_key_lowering_nilpotent (a b c : ℕ)
   induction hv using Submodule.span_induction with
   | mem z hz =>
       obtain ⟨l, _, _, _, _, hlen, rfl⟩ := hz
-      simpa only [hlen] using a3_lowering_nilpotent_word ρ w a b c h i l
+      simpa only [hlen] using! a3_lowering_nilpotent_word ρ w a b c h i l
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy]
   | smul d x _ hx => simp [map_smul, hx]

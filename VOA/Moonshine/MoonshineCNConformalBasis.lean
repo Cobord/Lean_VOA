@@ -42,7 +42,9 @@ theorem lorentzianIsotropicBasis_pairing :
     lorentzianLattice.form ![0, 1] ![0, 1] = 0 ∧
     lorentzianLattice.form ![1, 0] ![0, 1] = 1 ∧
     lorentzianLattice.form ![0, 1] ![1, 0] = 1 := by
-  norm_num [lorentzian_form_apply]
+  refine ⟨(lorentzian_form_apply _ _).trans ?_, (lorentzian_form_apply _ _).trans ?_,
+    (lorentzian_form_apply _ _).trans ?_, (lorentzian_form_apply _ _).trans ?_⟩ <;>
+    norm_num
 
 /-- The explicit complex-frame creation variable in the two polynomial directions. -/
 theorem lorentzianCreationVariable_coordinates (α : lorentzianLattice.carrier) :
@@ -64,15 +66,18 @@ theorem lorentzianNearVOA_conformal_dualBasis :
       (lorentzianCreation ![1, 0] (lorentzianCreation ![0, 1] lorentzianVacuum) +
        lorentzianCreation ![0, 1] (lorentzianCreation ![1, 0] lorentzianVacuum)) := by
   change mkEα lorentzianLattice 0 (ωN (rank lorentzianLattice) 1) = _
-  simp only [lorentzianCreation, lorentzianVacuum, latVacuumGen, latStateGen,
+  have hcr (α : lorentzianLattice.carrier) :
+      lorentzianCreation α = LinearMap.rTensor (lorentzianLattice.carrier →₀ ℂ)
+        (frameOscillator lorentzianComplexFrame α (-1)) := rfl
+  simp only [hcr ![1, 0], hcr ![0, 1], lorentzianVacuum, latVacuumGen, latStateGen,
     mkEα_apply, LinearMap.rTensor_tmul, ← TensorProduct.add_tmul, ← TensorProduct.smul_tmul']
   congr 1
   have hcreation (α : lorentzianLattice.carrier) :
       frameOscillator lorentzianComplexFrame α (-1) =
         LinearMap.mulLeft ℂ (creationVariable lorentzianComplexFrame α 0) := by
     exact frameOscillator_neg_eq_mulLeft_creationVariable lorentzianComplexFrame α 0
-  simp only [hcreation, LinearMap.mulLeft_apply, vacuumN, mul_one,
-    lorentzianCreationVariable_coordinates]
+  simp only [hcreation ![1, 0], hcreation ![0, 1], LinearMap.mulLeft_apply, vacuumN, mul_one,
+    lorentzianCreationVariable_coordinates ![1, 0], lorentzianCreationVariable_coordinates ![0, 1]]
   rw [ωN, ← Equiv.sum_comp (finCongr lorentzian_rank).symm
     (fun a => ωNa (rank lorentzianLattice) 1 a), Fin.sum_univ_two]
   simp only [ωNa, oscN_neg_one_sq_vacuumN, mul_one,

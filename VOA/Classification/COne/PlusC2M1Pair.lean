@@ -91,7 +91,7 @@ theorem iw_spec : ∀ l : List (Bool × ℕ), iwOK l = true →
     refine ⟨IsIterProd.step _ (gen_mem m hm g) (k : ℤ) (by exact_mod_cast hk) _ h1, ?_⟩
     refine hasPoly_normR m hm ?_
     have := M1P_smul_poly m hm (hasPoly_gen m hm g) h2 (iwWt rest) hw (-(k : ℤ))
-    simpa using this
+    simpa using! this
 
 theorem iw_mem (l : List (Bool × ℕ)) (h : iwOK l = true) : iwVal m hm l ∈ TM m hm :=
   Submodule.subset_span (iw_spec m hm l h).1

@@ -51,6 +51,9 @@ open VertexOperatorAlgebra PreVertexAlgebra
 open scoped BigOperators
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
@@ -273,10 +276,10 @@ theorem cbz_signed_skew_convol_range (m k : ℤ) {l : ℤ} {N : ℕ} (hl : l < (
   refine (ZhuRes.finsumZ_eq_range_sum (N := N)
     (fun p : ℤ => negOnePow p * (cbz m p * cbz (m + k - p) (l - p))) ?_ ?_).symm
   · intro p hp
-    dsimp only
+    try dsimp only
     rw [cbz_apply_neg m hp, zero_mul, mul_zero]
   · intro p hp
-    dsimp only
+    try dsimp only
     rw [cbz_apply_neg (m + k - p) (show (l - p) < 0 from by omega), mul_zero, mul_zero]
 
 /-! ## `VHatGenSkew` and `VHatAntisymm` -/

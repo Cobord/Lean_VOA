@@ -50,7 +50,7 @@ theorem grass_finite_of_e_zero (d T : ℕ) (he : ∀ i, eClass d T (i + 1) = 0) 
         change 0 = Ideal.Quotient.mk _ p * eClass d T (i + 1)
         rw [he, mul_zero]
   haveI : FiniteDimensional ℂ (GrassRing d T) := Module.Finite.of_surjective f hf
-  exact ⟨inferInstance, by simpa using LinearMap.finrank_le_finrank_of_surjective hf⟩
+  exact ⟨inferInstance, by simpa using! LinearMap.finrank_le_finrank_of_surjective hf⟩
 
 /-- The Grassmannian ring is finite-dimensional, with the expected binomial upper bound.
 This theorem makes no independence or exact-dimension claim. -/
@@ -59,11 +59,11 @@ theorem grass_finite_rank_le (d T : ℕ) :
       Module.finrank ℂ (GrassRing d T) ≤ (d + T).choose d := by
   induction d generalizing T with
   | zero =>
-      simpa using grass_finite_of_e_zero 0 T (fun i => eClass_eq_zero 0 T (i + 1) (by omega))
+      simpa using! grass_finite_of_e_zero 0 T (fun i => eClass_eq_zero 0 T (i + 1) (by omega))
   | succ d ihd =>
       induction T with
       | zero =>
-          simpa using grass_finite_of_e_zero (d + 1) 0
+          simpa using! grass_finite_of_e_zero (d + 1) 0
             (fun i => eClass_width_zero (d + 1) (i + 1) (by omega))
       | succ T ihT =>
           obtain ⟨fdE, bdE⟩ := ihd (T + 1)
@@ -97,7 +97,7 @@ theorem grass_finite_rank_le (d T : ℕ) :
 /-- The all-`M` finiteness and binomial upper bound in the original coordinates. -/
 theorem H_finite_rank_le (d M : ℕ) (hdM : d ≤ M) :
     FiniteDimensional ℂ (H d M) ∧ Module.finrank ℂ (H d M) ≤ M.choose d := by
-  simpa only [H, Nat.add_sub_of_le hdM] using grass_finite_rank_le d (M - d)
+  simpa only [H, Nat.add_sub_of_le hdM] using! grass_finite_rank_le d (M - d)
 
 end
 

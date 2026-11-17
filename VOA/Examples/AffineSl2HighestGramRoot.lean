@@ -26,7 +26,7 @@ local instance (n : ℕ) (c : ℤ) : DecidableEq (JointIndex n c) := Classical.d
 
 /-- Exact finite monomial expansion in the actual joint space. -/
 theorem jointFock_expansion (n : ℕ) (c : ℤ) (P : WakFock) (hP : P∈jointFockSpace n c) :
-    P=∑ d : JointIndex n c,coeff d.val P • monomial d.val (1 : ℂ) := by
+    P=∑ d : JointIndex n c,P.coeff d.val • monomial d.val (1 : ℂ) := by
   classical
   ext e
   rw [coeff_sum]
@@ -37,7 +37,7 @@ theorem jointFock_expansion (n : ℕ) (c : ℤ) (P : WakFock) (hP : P∈jointFoc
     · intro d hd hde
       rw [if_neg (by intro heq; apply hde; exact Subtype.ext heq)]
     · simp
-  · have hz : coeff e P=0 := by
+  · have hz : P.coeff e=0 := by
       by_contra hn
       exact he (hP (mem_support_iff.mpr hn))
     rw [hz]
@@ -62,7 +62,7 @@ def fockRowMatrix (k lam : ℂ) (n : ℕ) (c : ℤ) :
 /-- Actual creation-word coordinates in the same joint monomial space. -/
 def creationMatrix (k lam : ℂ) (n : ℕ) (c : ℤ) :
     Matrix (JointIndex n c) (JointIndex n c) ℂ := fun i j =>
-  coeff i.val (currentWord (J k lam) (occupationWord j.val) (1 : WakFock))
+  (currentWord (J k lam) (occupationWord j.val) (1 : WakFock)).coeff i.val
 
 /-- The ordinary two-variable highest-word Gram polynomial matrix; its
 indices include horizontal lowering and all three negative current colours. -/
@@ -95,7 +95,7 @@ the finite positive-word matrix at its screening parameters. -/
 theorem screening_fockRowMatrix_kernel (r q M : ℕ) (hr : 0<r) (hq : 0<q)
     (k : ℂ) (hMk : (M : ℂ)*(k+2)=1) :
     fockRowMatrix k ((q : ℂ)*(k+2)-(r : ℂ)-1) (r*q) (r : ℤ) *ᵥ
-      (fun d : JointIndex (r*q) (r : ℤ) => coeff d.val (Screening.state r q M))=0 := by
+      (fun d : JointIndex (r*q) (r : ℤ) => (Screening.state r q M).coeff d.val)=0 := by
   funext i
   have hz := congrArg constantCoeff (adjoint_occupation_kills_screening r q M hr hq k hMk i)
   rw [← highestRow_apply,jointFock_expansion (r*q) (r : ℤ) _
@@ -110,10 +110,10 @@ theorem screening_fockRowMatrix_kernel (r q M : ℕ) (hr : 0<r) (hq : 0<q)
 /-- Nonvanishing of the actual screening polynomial makes its finite joint
 coefficient vector nonzero. No chosen coefficient normalization is assumed. -/
 theorem screening_joint_coefficients_ne_zero (r q M : ℕ) (hr : 0<r) (hq : 0<q) :
-    (fun d : JointIndex (r*q) (r : ℤ) => coeff d.val (Screening.state r q M))≠0 := by
+    (fun d : JointIndex (r*q) (r : ℤ) => (Screening.state r q M).coeff d.val)≠0 := by
   intro hz
   have he := jointFock_expansion (r*q) (r : ℤ) _ (screening_mem_jointFockSpace r q M hq)
-  have hc (d : JointIndex (r*q) (r : ℤ)) : coeff d.val (Screening.state r q M)=0 := congrFun hz d
+  have hc (d : JointIndex (r*q) (r : ℤ)) : (Screening.state r q M).coeff d.val=0 := congrFun hz d
   simp only [hc,zero_smul,Finset.sum_const_zero] at he
   exact Screening.state_ne_zero r q M hr hq he
 

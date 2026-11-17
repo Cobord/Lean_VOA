@@ -60,16 +60,12 @@ by
   let B := spanOutsideBlock hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ c β γ k
   refine LinearMap.mk₂ ℂ (fun g z => χ (B g z)) ?_ ?_ ?_ ?_
   · intro g h z
-    dsimp only
     rw [map_add,LinearMap.add_apply,map_add]
   · intro s g z
-    dsimp only
     rw [map_smul,LinearMap.smul_apply,map_smul]
   · intro g z z'
-    dsimp only
     rw [map_add,map_add]
   · intro s g z
-    dsimp only
     rw [map_smul,map_smul]
 
 /-- The mapped actual block is literal linear postcomposition. -/

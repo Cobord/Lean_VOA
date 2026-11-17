@@ -108,7 +108,7 @@ theorem pairTargetRelation_of_shape
     hPair _).2
   refine ⟨⟨rename e W, hmem⟩, rfl, ?_⟩
   rw [xyzEvaluation_rename_bijection ρ w (pairSourceShape a b c) e W]
-  simpa only [hshape] using hprefix
+  simpa only [hshape] using! hprefix
 
 /-- Once the nested box inclusion is known in a target subspace, its
     quotient image has rank bounded by the number of box polynomials. -/
@@ -131,7 +131,7 @@ theorem pairTarget_image_finrank_le_of_span
     have hmap : q Pbox ∈
         (Submodule.span ℂ (B : Set (pairTargetSymmetric a b c))).map q :=
       ⟨Pbox, hbox, rfl⟩
-    simpa only [Submodule.map_span, E, Finset.coe_image] using hmap
+    simpa only [Submodule.map_span, E, Finset.coe_image] using! hmap
   haveI : FiniteDimensional ℂ
       (Submodule.span ℂ (E : Set (V ⧸ keyPrefix ρ w m i))) :=
     FiniteDimensional.span_of_finite _ (Finset.finite_toSet E)

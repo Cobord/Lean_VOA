@@ -6,6 +6,9 @@ import VOA.Moonshine.MoonshineCNSectorFormConvention
 noncomputable section
 namespace VOA.Moonshine.ConwayNorton
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] monsterPhysicalAddCommGroup
 
 theorem monsterLieBilinearForm_momentum_orthogonal (α β : lorentzianLattice.carrier)

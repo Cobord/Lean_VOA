@@ -9,6 +9,8 @@ import VOA.Examples.Sl2CosetConcreteTranslation
 
 /-! # Conformal modes of the tensor of two ordinary VOAs -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2CosetConcrete
 
 open Sl2SemiInfinite

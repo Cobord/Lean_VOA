@@ -101,7 +101,7 @@ theorem eq_zero_of_Fb_pow {lam : ℕ} {v : BSpace} (hv : Hb v = (lam : ℂ) • 
 theorem Fb_pow_mem_bWeight (j : ℕ) {E : ℤ} {b : BSpace} (hb : b ∈ bWeight E) :
     (Fb ^ j) b ∈ bWeight (E - j) := by
   induction j with
-  | zero => simpa using hb
+  | zero => simpa using! hb
   | succ j ih =>
       rw [pow_succ', Module.End.mul_apply]
       have h := Md_mem_bWeight colF 1 ih
@@ -182,7 +182,7 @@ theorem bottom_proportional : ∀ (r : ℕ) (b₁ b₂ : BSpace), BottomVec r b�
       have hv : ∀ b, BottomVec 0 b → ∃ c : ℂ, b = c • BSVA.vacuum := by
         intro b hb
         have hb' : b ∈ BVOA.grading 0 := by
-          have h0 : b ∈ bWeight 0 := by simpa using hb.1
+          have h0 : b ∈ bWeight 0 := by simpa using! hb.1
           have : b ∈ BVOA.toPreVertexAlgebra.gradingC ((0 : ℤ) : ℂ) := h0
           rwa [PreVertexAlgebra.gradingC_intCast] at this
         rw [BVOA.vacuum_grade, Submodule.mem_span_singleton] at hb'

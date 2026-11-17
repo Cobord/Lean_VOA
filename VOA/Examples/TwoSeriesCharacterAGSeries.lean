@@ -195,7 +195,11 @@ theorem coeff_mul_resc_congr (Y F G : PowerSeries R) (m : ℕ)
   rw [coeff_mul, coeff_mul]
   refine Finset.sum_congr rfl fun p hp => ?_
   have hp2 : p.2 ≤ m := by
-    have := Finset.mem_antidiagonal.mp hp; omega
+    have hsum : p.1 + p.2 = m := by
+      first
+      | exact Finset.mem_antidiagonal.mp hp
+      | exact Finset.HasAntidiagonal.mem_antidiagonal.mp hp
+    omega
   rw [coeff_resc, coeff_resc, h p.2 hp2]
 
 /-- **Andrews' functional equation** `A_{a+1} - A_a = x^a q^a (1 - xq) A_{j}(xq)`,

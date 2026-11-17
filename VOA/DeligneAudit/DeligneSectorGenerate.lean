@@ -473,7 +473,7 @@ theorem sget_slotZr (row : List SV) (v : SV) (y : ℕ) (hy : y < row.length) :
         have : y - k = (y - (k + 1)) + 1 := by omega
         rw [this, List.getD_cons_succ]
   have := key row 0 (by omega) (Nat.zero_le _)
-  simpa using this
+  simpa using! this
 
 omit [NeZero n] in
 theorem vecC_slotZr {x : ℕ} {row : List SV} (hrow : row = (List.range n).map (br x)) (v : SV) :

@@ -53,7 +53,7 @@ theorem neg (hf : JetApproxAlong l d f p) : JetApproxAlong l d (fun t => -f t) (
 
 theorem sub (hf : JetApproxAlong l d f p) (hg : JetApproxAlong l d g q) :
     JetApproxAlong l d (fun t => f t-g t) (p-q) := by
-  simpa only [sub_eq_add_neg] using JetApproxAlong.add hf hg.neg
+  simpa only [sub_eq_add_neg] using! JetApproxAlong.add hf hg.neg
 
 theorem scale (c : ℂ) (hf : JetApproxAlong l d f p) :
     JetApproxAlong l d (fun t => c*f t) (Polynomial.C c*p) := by
@@ -122,7 +122,7 @@ theorem JetApproxAlong.pivot_factor {l : Filter ℂ} {d v : ℕ} {den : ℂ → 
   have ha0 : a.eval 0=D.coeff v := by
     rw [ha]
     exact a.coeff_zero_eq_eval_zero.symm.trans
-      (by simpa only [zero_add] using (Polynomial.coeff_X_pow_mul a v 0).symm)
+      (by simpa only [zero_add] using! (Polynomial.coeff_X_pow_mul a v 0).symm)
   obtain ⟨r,hr,hden⟩ := hden
   let u : ℂ → ℂ := fun t => a.eval (t-1)+(t-1)^(d-v)*r t
   have hu : ContinuousAt u 1 := by dsimp [u]; fun_prop
@@ -149,7 +149,7 @@ theorem JetApproxAlong.cancel_pivot {l : Filter ℂ} {d v : ℕ} {den f : ℂ �
     (hu.eventually_ne hu0).filter_mono (hl.trans nhdsWithin_le_nhds)
   have htn0 : ∀ᶠ t in 𝓝[≠] (1 : ℂ), t≠1 := by
     filter_upwards [self_mem_nhdsWithin] with t ht
-    simpa only [Set.mem_compl_iff,Set.mem_singleton_iff] using ht
+    simpa only [Set.mem_compl_iff,Set.mem_singleton_iff] using! ht
   have htn : ∀ᶠ t in l, t≠1 := htn0.filter_mono hl
   filter_upwards [hden,herr,hun,htn] with t hd he hu ht
   have he' : u t*(f t-J.eval (t-1))=(t-1)^(d-v)*r t := by
@@ -159,7 +159,7 @@ theorem JetApproxAlong.cancel_pivot {l : Filter ℂ} {d v : ℕ} {den f : ℂ �
     rw [he,Polynomial.eval_zero,zero_add]
     rw [← mul_assoc,← pow_add,show v+(d-v)=d by omega]
   have hdiv : f t-J.eval (t-1)=((t-1)^(d-v)*r t)/u t :=
-    (eq_div_iff hu).mpr (by simpa only [mul_comm] using he')
+    (eq_div_iff hu).mpr (by simpa only [mul_comm] using! he')
   calc
     f t=J.eval (t-1)+(f t-J.eval (t-1)) := by ring
     _=J.eval (t-1)+(t-1)^(d-v)*(r t/u t) := by rw [hdiv]; ring

@@ -228,9 +228,9 @@ theorem singVec_mem : singVec ∈ gradingZA (-3 / 2) 2 := by
   have h11 : ∀ a b : Fin 8, J (-3 / 2) a (-1) (J (-3 / 2) b (-1) (vacuumA (-3 / 2))) ∈
       gradingZA (-3 / 2) 2 := fun a b => by
     have := J_mem_gradingZA _ hk a (-1) (J_mem_gradingZA _ hk b (-1) (vacuumA_mem (-3 / 2)))
-    simpa using this
+    simpa using! this
   have h2 : J (-3 / 2) 2 (-2) (vacuumA (-3 / 2)) ∈ gradingZA (-3 / 2) 2 := by
-    simpa using J_mem_gradingZA _ hk 2 (-2) (vacuumA_mem (-3 / 2))
+    simpa using! J_mem_gradingZA _ hk 2 (-2) (vacuumA_mem (-3 / 2))
   unfold singVec
   refine Submodule.add_mem _ (Submodule.add_mem _ (Submodule.sub_mem _
     (Submodule.smul_mem _ _ (h11 _ _)) (Submodule.smul_mem _ _ (h11 _ _)))

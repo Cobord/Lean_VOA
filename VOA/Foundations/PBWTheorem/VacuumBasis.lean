@@ -40,6 +40,8 @@ universe u
 
 namespace VacuumBasis
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝔤 : Type u} [LieRing 𝔤] [LieAlgebra ℂ 𝔤]
   (κ : LinearMap.BilinForm ℂ 𝔤) (hκ : κ.IsInvariant)
   {ι : Type*} [LinearOrder ι] (b : Module.Basis ι ℂ 𝔤)
@@ -72,6 +74,7 @@ theorem yMode_linearIndependent : LinearIndependent ℂ (yMode κ hκ b) := by
       exact_mod_cast this
   refine LinearIndependent.of_comp (loopPart κ hκ) ?_
   convert h.comp _ hinj using 1
+  rfl
 
 /-- The complement: the span of the negative loop modes. -/
 noncomputable def negComp : Submodule ℂ (AffineLie 𝔤 κ hκ) :=

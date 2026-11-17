@@ -17,7 +17,7 @@ theorem radicalWord_comm_spectator
     radicalWord ρ (ρ.op (radicalColour j) r w) l =
       ρ.op (radicalColour j) r (radicalWord ρ w l) := by
   have hp : (l ++ [(j, r)]).Perm ((j, r) :: l) := by
-    simpa using (List.perm_append_comm (l₁ := l) (l₂ := [(j, r)]))
+    simpa using! (List.perm_append_comm (l₁ := l) (l₂ := [(j, r)]))
   calc
     _ = radicalWord ρ w (l ++ [(j, r)]) := by
       simp [radicalWord_eq_prod, List.map_append, List.prod_append,

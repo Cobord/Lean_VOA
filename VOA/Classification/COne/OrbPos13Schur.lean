@@ -66,7 +66,7 @@ theorem simpleAction_endomorphism_scalar :
     have hx : t.val x ∈ K := by
       apply Module.End.mem_eigenspace_iff.mpr
       exact congrArg (fun k : Q.obj ⟶ Q.obj => k.val x) ht.apply_eq_smul
-    simpa only [hz, Submodule.mem_bot] using hx
+    simpa only [hz, Submodule.mem_bot] using! hx
   have htop := (simpleAction_coefficient_irreducible G hSR E Q K hK).resolve_left hne
   refine ⟨c, Ordinary.hom_ext _ _ (fun x => ?_)⟩
   have hx : x ∈ K := by rw [htop]; trivial
@@ -88,7 +88,7 @@ theorem simpleAction_finiteOrder_scalar :
   refine ⟨c, n, hn, ?_, hc⟩
   have hc' : f = c • (1 : CategoryTheory.End Q.obj) := hc
   have he : c ^ n • (𝟙 Q.obj) = (1 : ℂ) • 𝟙 Q.obj := by
-    simpa only [hc', smul_pow, one_pow, one_smul] using hpow
+    simpa only [hc', smul_pow, one_pow, one_smul] using! hpow
   exact (smul_left_injective ℂ Q.nonzero) he
 
 end VOA.Classification.COne.OrbPos13

@@ -34,11 +34,13 @@ noncomputable def field (A : WeakModule W M) (B : WeakModule W N) :
     apply LinearMap.ext
     intro x
     simp [map_add]
+    rfl
   map_smul' s u := by
     funext p
     apply LinearMap.ext
     intro x
     simp [map_smul]
+    rfl
 
 @[simp] theorem mode_field (A : WeakModule W M) (B : WeakModule W N) (u : V) (p : ℤ)
     (x : M × N) : mode (field A B u) p x =
@@ -56,8 +58,9 @@ theorem field_vacuum (A : WeakModule W M) (B : WeakModule W N) : field A B W.vac
   refine FormalDist.ext fun p => ?_
   apply LinearMap.ext
   intro x
-  simp only [field,LinearMap.coe_mk,AddHom.coe_mk,A.vacuum_YM,B.vacuum_YM,
-    FormalDist.one_apply]
+  change (A.YM W.vacuum p).prodMap (B.YM W.vacuum p) x = _
+  rw [A.vacuum_YM, B.vacuum_YM]
+  simp only [FormalDist.one_apply]
   split_ifs <;> rfl
 
 theorem field_jacobi (A : WeakModule W M) (B : WeakModule W N) (u v : V)
@@ -80,10 +83,10 @@ theorem field_jacobi (A : WeakModule W M) (B : WeakModule W N) (u v : V)
   apply Prod.ext
   · change (LinearMap.fst ℂ M N) _ = (LinearMap.fst ℂ M N) _
     rw [map_finsum (LinearMap.fst ℂ M N) hL,map_finsum (LinearMap.fst ℂ M N) hR]
-    simpa only [map_smul,map_sub,mode_field,LinearMap.fst_apply] using A.jacobi u v x.1 ell m n
+    simpa only [map_smul,map_sub,mode_field,LinearMap.fst_apply] using! A.jacobi u v x.1 ell m n
   · change (LinearMap.snd ℂ M N) _ = (LinearMap.snd ℂ M N) _
     rw [map_finsum (LinearMap.snd ℂ M N) hL,map_finsum (LinearMap.snd ℂ M N) hR]
-    simpa only [map_smul,map_sub,mode_field,LinearMap.snd_apply] using B.jacobi u v x.2 ell m n
+    simpa only [map_smul,map_sub,mode_field,LinearMap.snd_apply] using! B.jacobi u v x.2 ell m n
 
 /-- The actual coordinatewise product weak module. -/
 noncomputable def prod (A : WeakModule W M) (B : WeakModule W N) : WeakModule W (M × N) where
@@ -125,7 +128,7 @@ private theorem comparable_separation (A : WeakModule W M) (B : WeakModule W N)
   change y.2 = x.2 at he
   have hxy : x-y ∈ Q := Q.sub_mem hx (hPQ hy)
   have hs0 : x.2-y.2 = 0 := by change x.2-y.2=0; rw [he,sub_self]
-  have hi : (x.1-y.1,0) ∈ Q := by simpa only [Prod.sub_def,hs0] using hxy
+  have hi : (x.1-y.1,0) ∈ Q := by simpa only [Prod.sub_def,hs0] using! hxy
   have hp : x.1-y.1 ∈ modeComap (inlHom A B) P := by rw [h₁]; exact hi
   have hp' : (x.1-y.1,0) ∈ P := hp
   have hsum : (x.1-y.1,0)+y = x := by apply Prod.ext <;> simp [he]

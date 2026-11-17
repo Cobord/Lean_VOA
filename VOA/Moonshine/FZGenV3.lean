@@ -95,14 +95,14 @@ theorem exists_good_pair (x : Fin 24 → ℤ) (hodd : ∀ i, Odd (x i)) (h48 : 4
   have H12 := H j1 j2 h12
   have hm1 := hmax j1 (Finset.mem_univ _)
   have hm2 := hmax j2 (Finset.mem_univ _)
-  simp only at hm1 hm2
+  try simp only at hm1 hm2
   -- all other coordinates are `±1` unless `|x i0| = 5`
   have hones : r ≠ 2 → ∀ k, k ≠ i0 → |x k| = 1 := by
     intro hr2 k hk
     obtain ⟨s, hs, hs0⟩ := odd_abs_split (hodd k)
     have Hk := H i0 k (Ne.symm hk)
     have hmk := hmax k (Finset.mem_univ _)
-    simp only at hmk
+    try simp only at hmk
     omega
   rcases (show r = 2 ∨ r ≠ 2 by omega) with hr2 | hr2
   · omega

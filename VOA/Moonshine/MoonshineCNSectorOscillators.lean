@@ -15,7 +15,10 @@ theorem lorentzianIsotropicVector_pairing (a b : Fin 2) :
     lorentzianLattice.form (lorentzianIsotropicVector a) (lorentzianIsotropicVector b) =
       if a = b.rev then 1 else 0 := by
   fin_cases a <;> fin_cases b <;>
-    norm_num [lorentzianIsotropicVector, lorentzian_form_apply, Fin.rev, Fin.last]
+    first
+    | (norm_num [lorentzianIsotropicVector, lorentzian_form_apply, Fin.rev, Fin.last]; done)
+    | (refine (lorentzian_form_apply _ _).trans ?_
+       norm_num [lorentzianIsotropicVector, Fin.rev, Fin.last])
 
 theorem hypLorentzianPolynomial_variable (j : ℕ) (a : Fin 2) :
     hypLorentzianPolynomialEquiv (X (j, a)) =

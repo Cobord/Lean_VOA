@@ -26,7 +26,7 @@ theorem gtPsiZero_of_not_mem (q : R) {N : ℕ} (lam : Fin (N + 1) → ℤ) (μ :
     (hμ : μ ∉ gtRows lam) : gtPsiZero q lam μ = 0 := by
   classical
   have hh : ¬ ∀ i, lam i.succ ≤ μ i ∧ μ i ≤ lam i.castSucc := by
-    simpa only [mem_gtRows] using hμ
+    simpa only [mem_gtRows] using! hμ
   obtain ⟨i, hi⟩ := not_forall.mp hh
   unfold gtPsiZero
   apply Finset.prod_eq_zero (Finset.mem_univ i)

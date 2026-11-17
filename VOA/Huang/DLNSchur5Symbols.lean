@@ -58,7 +58,7 @@ theorem torusDefect_eq_one_of_neg_one_square [IsCyclic (ZMod n)ˣ]
     torusDefect X Y u v = 1 := by
   have he : torusDefect X Y w (-w) = torusDefect X Y w w := by
     have h := torusDefect_mul_squares h2 h3 π hs X Y hX hY hn hc 1 a w w
-    simpa [ha] using h
+    simpa [ha] using! h
   have hz : torusDefect X Y w w = 1 :=
     he.symm.trans (torusDefect_neg_self h2 h3 π hs X Y hX hY hn w)
   rcases torusDefect_eq_one_or_generator h2 h3 π hs X Y hX hY hn hc w hw u v with h | h

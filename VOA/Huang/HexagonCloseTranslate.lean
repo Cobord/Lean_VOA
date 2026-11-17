@@ -72,18 +72,18 @@ theorem tsum_sc_cauchy (x : ℂ) (I : ℕ → ℂ) {N : ℕ} (hI : ∀ k, N ≤ 
     rw [hS.tsum_prod]
     refine tsum_congr fun a => ?_
     rw [← tsum_mul_left]
-  have h2 : HasSum (fun k => ∑ q ∈ Finset.antidiagonal k, g q) (∑' q, g q) := by
-    have h := (Finset.sigmaAntidiagonalEquivProd.hasSum_iff (f := g)).mpr hS.hasSum
+  have h2 : HasSum (fun k => ∑ q ∈ Finset.HasAntidiagonal.antidiagonal k, g q) (∑' q, g q) := by
+    have h := (Finset.HasAntidiagonal.sigmaAntidiagonalEquivProd.hasSum_iff (f := g)).mpr hS.hasSum
     refine h.sigma fun k => ?_
-    have := hasSum_fintype (fun c : Finset.antidiagonal k => g c.1)
+    have := hasSum_fintype (fun c : Finset.HasAntidiagonal.antidiagonal k => g c.1)
     rwa [Finset.sum_coe_sort] at this
   rw [← h1, ← h2.tsum_eq]
   refine tsum_congr fun k => ?_
-  have h3 : ∑ q ∈ Finset.antidiagonal k, g q =
-      I k * ∑ q ∈ Finset.antidiagonal k, (fun a j => sc a * x ^ a * sc j) q.1 q.2 := by
+  have h3 : ∑ q ∈ Finset.HasAntidiagonal.antidiagonal k, g q =
+      I k * ∑ q ∈ Finset.HasAntidiagonal.antidiagonal k, (fun a j => sc a * x ^ a * sc j) q.1 q.2 := by
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun q hq => ?_
-    rw [Finset.mem_antidiagonal] at hq
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hq
     simp only [hg, hq]
     ring
   rw [h3, Finset.Nat.sum_antidiagonal_eq_sum_range_succ (fun a j => sc a * x ^ a * sc j) k,
@@ -155,7 +155,7 @@ theorem prodL_skewP (p : Phase) {s : ℝ} (_hs : s = 1 ∨ s = -1)
       linarith
     have hlog : Real.log (1 + t) = μ := by rw [ht]; simp
     have h := productEvaluation_skewP F hV p (κ := kap s) hκ K (d.withCoord t ht0 ht1)
-    rw [← prodL_log] at h
+    rw [← prodL_log F (skewP p (tensorObj F Y Z) X T K) (d.withCoord t ht0 ht1)] at h
     change prodL F (skewP p (tensorObj F Y Z) X T K) d (Real.log (1 + t)) =
       Complex.exp ((d.δ - d.α - d.β - d.γ) * ((Real.log (1 + t) : ℂ) - kap s)) *
         ∑' j : ℕ, sc j * iterL F K (d.lowerK j) (kap s - Real.log (1 + t)) at h
@@ -227,7 +227,7 @@ theorem iterL_braid (p : Phase) {s : ℝ} (_hs : s = 1 ∨ s = -1)
           linarith
     have h := iterateEvaluation_braid F hV p (κ := kap s) hκ M (e.withCoord r hr0 (by linarith))
       hr2
-    rw [← iterL_log] at h
+    rw [← iterL_log F (restrictInputs (braidingP p F X Y).hom (𝟙 Z) M) (e.withCoord r hr0 _)] at h
     have hl1 : Complex.log (1 + Complex.exp (μ : ℂ)) = (Real.log (1 + r) : ℂ) := by
       rw [← Complex.ofReal_exp, show (1 + ((Real.exp μ : ℝ) : ℂ)) = ((1 + r : ℝ) : ℂ) by
         rw [hrdef]; push_cast; ring, Complex.ofReal_log (by positivity)]
@@ -279,7 +279,7 @@ theorem innerBraidTranslation_of_phase (p : Phase) {s : ℝ} (hs : s = 1 ∨ s =
   -- the left side
   have hLzre : 0 < Lz.re := by
     rw [hLz, Complex.ofReal_re]; exact Real.log_pos (by linarith)
-  rw [prodL_skewP F hV p hs hκ _ d.swapM hLzre]
+  rw [prodL_skewP F hV p hs hκ (restrictInputs (braidingP p F X Z).hom (𝟙 Y) K') d.swapM hLzre]
   have hC4 : ∀ k : ℕ, iterL F (restrictInputs (braidingP p F X Z).hom (𝟙 Y) K')
       (d.swapM.lowerK k) (kap s - Lz) =
         Complex.exp ((d.δ - k - d.α - d.γ - d.β) * (Lu - Lz)) * I k := by

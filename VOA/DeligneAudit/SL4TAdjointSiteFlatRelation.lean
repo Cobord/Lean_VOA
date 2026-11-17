@@ -123,7 +123,7 @@ theorem flatShiftQuotCurrent_raising_comm (s : ℕ) (x : V ⧸ higherRadicalCoun
     have hc : (radicalCountQuotCurrent ρ w d).op 6 s ((radicalCountQuotCurrent ρ w d).op 0 0 x) -
         (radicalCountQuotCurrent ρ w d).op 0 0 ((radicalCountQuotCurrent ρ w d).op 6 s x) =
           (2 : ℂ) • (radicalCountQuotCurrent ρ w d).op 0 (s + 0) x := by
-      simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using
+      simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using!
         (radicalCountQuotCurrent ρ w d).comm 6 0 s 0 x
     exact sub_eq_iff_eq_add'.mp hc
   simp only [flatShiftQuotCurrent, LinearMap.sub_apply, LinearMap.smul_apply]
@@ -145,7 +145,7 @@ theorem flatShiftQuotCurrent_lastLowering_comm (n : ℕ)
     have hc : (radicalCountQuotCurrent ρ w d).op 6 s ((radicalCountQuotCurrent ρ w d).op 4 n x) -
         (radicalCountQuotCurrent ρ w d).op 4 n ((radicalCountQuotCurrent ρ w d).op 6 s x) =
           (radicalCountQuotCurrent ρ w d).op 4 (s + n) x := by
-      simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using
+      simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using!
         (radicalCountQuotCurrent ρ w d).comm 6 4 s n x
     exact sub_eq_iff_eq_add'.mp hc
   have hz : (radicalCountQuotCurrent ρ w d).op 4 (s + n) x = 0 :=
@@ -393,9 +393,9 @@ theorem adjointSite_flatRelation_of_top (B n : ℕ) (hW : LocalWeylRel ρ w (wei
   apply adjointSite_lowering_mul_eq_zero ρ w B hW ![0, d₂, 0] e₁ e₂ hv n ht
   rw [adjointSiteFlatSymbol, hf, flatSymbol_secondLevi_val, map_smul]
   apply smul_eq_zero_of_right
-  rw [Submodule.mkQ_apply, secondLeviQuotientLowering, Submodule.mapQ_apply,
-    Submodule.Quotient.mk_eq_zero]
-  exact flatNewtonLowering_mem_higherSecondLevi ρ w B n hW d₂ e₂ _ hd₂ htop e₁ he₁
+  rw [Submodule.mkQ_apply, secondLeviQuotientLowering]
+  exact (Submodule.Quotient.mk_eq_zero _).mpr
+    (flatNewtonLowering_mem_higherSecondLevi ρ w B n hW d₂ e₂ _ hd₂ htop e₁ he₁)
 
 /-! ### Top blocks with at most one compound letter -/
 
@@ -416,7 +416,7 @@ theorem adjointSite_flatTop_of_le_one (B n : ℕ) (hW : LocalWeylRel ρ w (weigh
     have hc' : newtonEnd (flatShiftCurrent ρ) (d₂ + 1 - 0) ((ρ.op 9 0 ^ (B - d₂))
         ((ρ.op 7 0 ^ d₂) w)) = (ρ.op 9 0 ^ (B - d₂)) (newtonEnd (flatShiftCurrent ρ)
           (d₂ + 1 - 0) ((ρ.op 7 0 ^ d₂) w)) := by
-      simpa only [Module.End.mul_apply] using
+      simpa only [Module.End.mul_apply] using!
         (LinearMap.congr_fun hcomm.eq ((ρ.op 7 0 ^ d₂) w)).symm
     rw [hc', newtonEnd_flatShift_compoundPow_eq_zero ρ w
       (fun s hs => flatShiftCurrent_source_zero ρ w 1 B 1 hW s hs) d₂ (d₂ + 1 - 0) (by omega),

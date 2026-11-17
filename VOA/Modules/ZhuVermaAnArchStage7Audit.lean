@@ -88,7 +88,9 @@ universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
-/-- **The clean main theorem** — verbatim re-export of `zhuBijection_of_bridgeData`.  This is the
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**The clean main theorem** — verbatim re-export of `zhuBijection_of_bridgeData`.  This is the
 single cleanest route to the main Zhu theorem; its carried leaf set is the minimal honest one (see the
 file docstring).  No `sorry`, no axiom, no `pbw`, NO `hderiv`. -/
 theorem clean_route_zhuBijection {W : VertexOperatorAlgebra 𝒱}

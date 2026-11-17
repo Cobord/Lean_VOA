@@ -96,9 +96,15 @@ theorem energyGrade_eq_eigenspace (n : ℕ) (a j : ℤ) (α : ℂ) :
 
 theorem energyGrade_finiteDimensional {n : ℕ} (hn : 0 < n) (a j : ℤ) (α : ℂ) :
     FiniteDimensional ℂ (energyGrade n a j α) := by
-  rw [energyGrade, ← iSup_subtype'']
+  have hE : energyGrade n a j α =
+      ⨆ p : energyFiber n a j α, bigradα (latP 1) (p : ℤ × ℤ) :=
+    (iSup_subtype'' (energyFiber n a j α) (fun p : ℤ × ℤ => bigradα (latP 1) p)).symm
+  rw [hE]
   have : Finite (energyFiber n a j α) := energyFiber_finite hn a j α
-  infer_instance
+  have hF : ∀ p : energyFiber n a j α,
+      FiniteDimensional ℂ (bigradα (latP 1) (p : ℤ × ℤ)) :=
+    fun p => bigradα_finiteDimensional (latP 1) (p : ℤ × ℤ)
+  exact Submodule.finiteDimensional_iSup _
 
 theorem energyOperator_finiteDimensional_eigenspace {n : ℕ} (hn : 0 < n)
     (a j : ℤ) (α : ℂ) :

@@ -44,19 +44,23 @@ noncomputable def cfT (m : (ℕ × Fin r) →₀ ℕ) : FockT r ⊗[ℂ] Tm →�
   (TensorProduct.lid ℂ Tm).toLinearMap ∘ₗ (MvPolynomial.lcoeff ℂ m).rTensor Tm
 
 theorem cfT_tmul (m : (ℕ × Fin r) →₀ ℕ) (p : FockT r) (t : Tm) :
-    cfT m (p ⊗ₜ[ℂ] t) = coeff m p • t := by
+    cfT m (p ⊗ₜ[ℂ] t) = p.coeff m • t := by
   rw [cfT, LinearMap.comp_apply, LinearMap.rTensor_tmul]
   rfl
 
 theorem eq_zero_of_cfT {z : FockT r ⊗[ℂ] Tm} (h : ∀ m, cfT m z = 0) : z = 0 := by
-  have hf : TensorProduct.finsuppScalarLeft ℂ Tm ((ℕ × Fin r) →₀ ℕ) z = 0 := by
+  have hf : TensorProduct.finsuppScalarLeft ℂ Tm ((ℕ × Fin r) →₀ ℕ)
+      ((AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap.rTensor Tm z) = 0 := by
     ext m
-    rw [TensorProduct.finsuppScalarLeft_apply, Finsupp.coe_zero, Pi.zero_apply, ← h m]
+    rw [TensorProduct.finsuppScalarLeft_apply, Finsupp.coe_zero, Pi.zero_apply, ← h m,
+      ← LinearMap.rTensor_comp_apply]
     rfl
-  exact (LinearEquiv.map_eq_zero_iff _).mp hf
+  exact (LinearEquiv.map_eq_zero_iff
+    (LinearEquiv.rTensor Tm (AddMonoidAlgebra.coeffLinearEquiv ℂ))).mp
+    ((LinearEquiv.map_eq_zero_iff _).mp hf)
 
 theorem coeff_pderiv (m : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin r) (p : FockT r) :
-    coeff m (pderiv x p) = ((m x : ℂ) + 1) * coeff (m + Finsupp.single x 1) p := by
+    (pderiv x p).coeff m = ((m x : ℂ) + 1) * p.coeff (m + Finsupp.single x 1) := by
   classical
   induction p using MvPolynomial.induction_on' with
   | monomial s a =>
@@ -79,7 +83,7 @@ theorem coeff_pderiv (m : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin r) (p : Foc
             · rw [Finsupp.single_eq_of_ne' (Ne.symm hy)] at this ⊢; omega
           rw [hsx, Nat.cast_zero, mul_zero]
         · rfl
-  | add p q hp hq => rw [map_add, coeff_add, hp, hq, coeff_add, mul_add]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, hp, hq, MvPolynomial.coeff_add, mul_add]
 
 theorem cfT_pderiv (m : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin r) (z : FockT r ⊗[ℂ] Tm) :
     cfT m ((pderiv x).toLinearMap.rTensor Tm z)
@@ -89,7 +93,7 @@ theorem cfT_pderiv (m : (ℕ × Fin r) →₀ ℕ) (x : ℕ × Fin r) (z : FockT
   | add z₁ z₂ h₁ h₂ => rw [map_add, map_add, h₁, h₂, map_add, smul_add]
   | tmul p t =>
       rw [LinearMap.rTensor_tmul, cfT_tmul, cfT_tmul, smul_smul]
-      change coeff m (pderiv x p) • t = _
+      change (pderiv x p).coeff m • t = _
       rw [coeff_pderiv]
 
 /-! ## The uniqueness lemma -/

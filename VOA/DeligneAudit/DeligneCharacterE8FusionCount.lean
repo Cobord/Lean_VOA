@@ -36,7 +36,7 @@ theorem e8_fusionModuleBoundZ_of_totalBound (hF : FusionTotalBoundG E8sector)
     FusionModuleBoundG E8sector e8FusionFZ :=
   fusionModuleBoundG_of_kernel (ravFam_zero E8sector) (ravFam_step E8sector) (ravKw_deg E8sector)
     hF E8K.e8_ravinderKernelRel' (fun n => realizationG_hilbSeriesG _ _ _ (hD n))
-    (fun m => by simpa using e8FusionFZ_count m)
+    (fun m => by simpa using! e8FusionFZ_count m)
 
 open VOA.DeligneAudit.DeligneCarrier.E8 (E8sector) in
 /-- **U5 for `E₈`** (original clamped statement) from `hF` and `hD` alone — no count input. -/
@@ -54,7 +54,7 @@ theorem e8FusionCount_of_totalBound (hF : FusionTotalBoundG E8sector)
     E8K.E8FusionCount := by
   intro m
   rw [e8_hilbSeries_eq_Z (e8_fusionModuleBoundZ_of_totalBound hF hD)]
-  simpa using e8FusionFZ_count m
+  simpa using! e8FusionFZ_count m
 
 end VOA.DeligneAudit.UnivG
 

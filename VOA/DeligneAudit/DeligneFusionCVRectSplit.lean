@@ -129,7 +129,8 @@ theorem splitVars_reverseLeft (M N : ℕ) :
   simp only [hcoe,
     splitVars_X_left_zero, splitVars_X_left_succ, Fin.val_zero, Fin.val_succ,
     Nat.add_sub_cancel, Nat.sub_zero]
-  congr 1
+  -- `congr 1` times out on Lean 4.35 (`whnf`, reported at the declaration)
+  refine congrArg₂ (· + ·) rfl ?_
   apply Finset.sum_congr rfl
   intro i _
   congr 2

@@ -149,9 +149,9 @@ theorem forward_compatibleMap :
       · simp [Dsl,Out,InL,InR]
       · intro xx zz hxx hzz
         rw [dsl_add_left htr,hxx,hzz,add_zero]
-    · simpa only [map_zero] using (regularForms N₁.toWeakModule N₂.toWeakModule).zero_mem
+    · simpa only [map_zero] using! (regularForms N₁.toWeakModule N₂.toWeakModule).zero_mem
     · intro r s hr hs
-      simpa only [map_add] using
+      simpa only [map_add] using!
         (regularForms N₁.toWeakModule N₂.toWeakModule).add_mem hr hs
   exact (hregular r d u hu).2 ell x y
 

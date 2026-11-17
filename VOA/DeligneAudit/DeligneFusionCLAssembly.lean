@@ -171,7 +171,7 @@ theorem IHat_congr {a b c b' c' : List ℕ} (hk : keyT a b' c' = keyT a b c)
     (IH : IHat ρ w N a b c) : IHat ρ w N a b' c' := by
   intro a'' b'' c'' hk' hh
   refine IH a'' b'' c'' (hk'.trans hk) ?_
-  simpa [idx', hl.1, hl.2.1, hl.2.2.1, hl.2.2.2] using hh
+  simpa [idx', hl.1, hl.2.1, hl.2.2.1, hl.2.2.2] using! hh
 
 variable (hR : MabRel ρ w N 0)
 include hR

@@ -57,7 +57,7 @@ theorem evalZhuSparseQ_scaleQ (q : ℚ) (P : SparseRational.Poly ℕ) :
 
 theorem evalZhuSparseQ_sumQ (Ps : List (SparseRational.Poly ℕ)) :
     evalZhuSparseQ (sumQ Ps) = (Ps.map evalZhuSparseQ).sum := by
-  simpa only [evalZhuSparseQ] using evalSparse_sumQ sparseATwo Ps
+  exact evalSparse_sumQ sparseATwo Ps
 
 /-- The sparse evaluator agrees with the existing certified current evaluator.  The latter uses
 an implementation-private name for the coordinate family, so this lemma is deliberately stated
@@ -296,7 +296,6 @@ private theorem eval_shiftWordRec_one_plus_vac (mode : ℕ) : ∀ word : List �
       have hmul := congrArg
         (fun x : FockN Ltwo.rank => vVar Ltwo (alphaP 2) i * x)
         (eval_shiftWordRec_one_plus_vac mode is)
-      dsimp only at hmul
       rw [mul_add] at hmul
       linear_combination hmul
 
@@ -358,7 +357,6 @@ private theorem eval_virActSparseQ_aux (mode : ℕ) (hmode : 1 ≤ mode) :
       rw [eval_virActWord mode hmode word] at hword
       rw [add_mul, smul_mul_assoc]
       have hq := congrArg (fun x : FockN Ltwo.rank => (q : ℂ) • x) hword
-      dsimp only at hq
       rw [smul_add] at hq
       linear_combination hq + eval_virActSparseQ_aux mode hmode P
 
@@ -507,7 +505,7 @@ theorem virWordTwo_mem_grading_sum (hp : 1 ≤ 2) : ∀ parts : List ℕ,
     (⟨virWordTwo hp parts, virWordTwo_mem_carrier hp parts⟩ :
         (tripletW 2 hp).carrier) ∈
       (tripletWVOA 2 hp).grading (parts.sum : ℤ)
-  | [] => by simpa using (tripletWVOA 2 hp).vacuum_mem
+  | [] => (tripletWVOA 2 hp).vacuum_mem
   | n :: parts => by
       have ih := virWordTwo_mem_grading_sum hp parts
       have h := (tripletWVOA 2 hp).smul_mem_grading
@@ -541,7 +539,10 @@ theorem _root_.VOA.LatGen.WpTwoZhuSparseCompute.ZhuStateDesc.intrinsic_mem_gradi
         Htrip_mem_grading 2 hp
       have h := (tripletWVOA 2 hp).smul_mem_grading
         (tripletWVOA 2 hp).conformal_mem hH (-2)
-      simpa [ZhuStateDesc.intrinsic, VertexOperatorAlgebra.L_def] using h
+      simp only [ZhuStateDesc.intrinsic, VertexOperatorAlgebra.L_def, ZhuStateDesc.weight]
+      rw [PreVertexAlgebra.smul_def] at h
+      norm_num at h ⊢
+      exact h
 
 /-- Projecting the neutral charge coordinate of an ambient triplet weight-`k` state lands in the
 ordinary bosonic weight-`k` space. -/

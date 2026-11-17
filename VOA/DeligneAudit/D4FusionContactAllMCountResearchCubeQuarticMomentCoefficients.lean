@@ -63,7 +63,7 @@ theorem coeff_jet_truncated_mul_eq_sum {R : Type*} [CommSemiring R]
       dsimp [n]
       omega
     have heq : F n = G k := by
-      simpa only [hindex] using hFG n hbound
+      simpa only [hindex] using! hFG n hbound
     have hne : F n ≠ 0 := by rw [heq]; exact hk
     refine ⟨n,hn,hne,?_⟩
     apply Fin.ext
@@ -86,7 +86,7 @@ theorem coeff_jet_actualCurrent_mul_eq_sum (m M j : ℕ) (hm : m ≤ M + 1)
     PowerSeries.coeff (M-j) (jetDerivative j (actualCurrent m c) * Q) =
       ∑ k : Fin m, k.val.descFactorial j •
         (actualMode m k.val c * PowerSeries.coeff (M-k.val) Q) := by
-  simpa only [actualCurrent_coeff] using
+  simpa only [actualCurrent_coeff] using!
     coeff_jet_truncated_mul_eq_sum (actualCurrent m c) Q m M j
       (fun k hk => actualCurrent_coeff_high m k c hk) hm
 

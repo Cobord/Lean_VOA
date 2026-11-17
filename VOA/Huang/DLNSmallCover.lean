@@ -88,7 +88,7 @@ theorem inflationTrivial_of_cover {A C : Type} [Group A] [Group C] (ρ : C →* 
     rw [hpk, hρk]
   rcases hA P πP hπPs hπPc (φ x) hφx p hp hπφx hπp with h | h | h
   · have := congrArg (fun q : P => (q : E × C).1) h
-    simpa [φ] using this
+    simpa [φ] using! this
   · exfalso; apply hk1
     rw [← hpk, h, map_one]
   · exfalso; apply hk1

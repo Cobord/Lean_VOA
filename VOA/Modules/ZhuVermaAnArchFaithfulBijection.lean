@@ -170,7 +170,9 @@ namespace InducedAssignment
 
 variable {W : VertexOperatorAlgebra 𝒱}
 
-/-- **The faithful inverse `Irr A(𝒱) → Φ(𝒱)`, `[U] ↦ [A.realize U]`.**  Given that the assignment
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful inverse `Irr A(𝒱) → Φ(𝒱)`, `[U] ↦ [A.realize U]`.**  Given that the assignment
 produces irreducible realizations (`hirr`), `A.realize U.1` is irreducible, so it lands in
 `IrrLWModule`.  Well-defined on iso-classes by `A.isoInvariant`. -/
 noncomputable def invFunIrr (A : InducedAssignment W) (hirr : A.RealizeIrreducible) :
@@ -182,22 +184,31 @@ noncomputable def invFunIrr (A : InducedAssignment W) (hirr : A.RealizeIrreducib
       rintro U V ⟨e⟩
       exact Quotient.sound (A.isoInvariant U.1 V.1 ⟨e⟩))
 
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`). -/
 @[simp] theorem invFunIrr_mk (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
     (U : IrrAMod W) :
     A.invFunIrr hirr (Quotient.mk (IrrAMod.setoid W) U)
       = Quotient.mk (IrrLWModule.setoid W) (⟨A.realize U.1, hirr U.1⟩ : IrrLWModule W) := rfl
 
-/-- **`forwardMapIrr ∘ invFunIrr = id`** (right inverse), `hall`-free.  For `[U] : Irr A(𝒱)`,
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMapIrr ∘ invFunIrr = id`** (right inverse), `hall`-free.  For `[U] : Irr A(𝒱)`,
 `forwardMapIrr (invFunIrr [U]) = [(A.realize U.1).toAMod]`, and the realization's bottom is
 `A(𝒱)`-isomorphic to `U.1` by `A.realizes U.1`.  Uses **only** `A` and `hirr`. -/
 theorem forwardMapIrr_invFunIrr (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
     (x : IrrAModIsoClass W) : forwardMapIrr W (A.invFunIrr hirr x) = x := by
   refine Quotient.inductionOn x (fun U => ?_)
-  rw [invFunIrr_mk, forwardMapIrr_mk]
+  -- `invFunIrr_mk` and `forwardMapIrr_mk` are both `rfl`; restate the goal in reduced form
+  -- (a `rw` through the `IrrAMod` def synonym fails at reducible transparency).
+  show Quotient.mk (IrrAMod.setoid W)
+      (IrrLWModule.toIrrAMod (⟨A.realize U.1, hirr U.1⟩ : IrrLWModule W))
+    = Quotient.mk (IrrAMod.setoid W) U
   -- `[(A.realize U.1).toAMod]` = `[U.1]` in `IrrAModIsoClass`, via `A.realizes U.1`.
   exact Quotient.sound ⟨A.realizes U.1⟩
 
-/-- **`invFunIrr ∘ forwardMapIrr = id`** (left inverse), from the **already-true scoped rigidity**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`invFunIrr ∘ forwardMapIrr = id`** (left inverse), from the **already-true scoped rigidity**
 `RealizesSelfOnIrr` — **no** `hall`.  For an irreducible `P`, `A.realize P.1.toAMod ≅ P.1` (the
 irreducibility hypothesis of `RealizesSelfOnIrr` is supplied by `P.2`, the subtype's irreducibility
 component, **not** by `hall`). -/
@@ -213,19 +224,25 @@ theorem invFunIrr_forwardMapIrr (A : InducedAssignment W) (hirr : A.RealizeIrred
 
 /-! ## The faithful bijection -/
 
-/-- **`forwardMapIrr` is surjective**, `hall`-free (right inverse `invFunIrr`). -/
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMapIrr` is surjective**, `hall`-free (right inverse `invFunIrr`). -/
 theorem forwardMapIrr_surjective (A : InducedAssignment W) (hirr : A.RealizeIrreducible) :
     Function.Surjective (forwardMapIrr W) :=
   Function.RightInverse.surjective (A.forwardMapIrr_invFunIrr hirr)
 
-/-- **`forwardMapIrr` is injective**, `hall`-free (left inverse `invFunIrr`, from the scoped
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMapIrr` is injective**, `hall`-free (left inverse `invFunIrr`, from the scoped
 rigidity `RealizesSelfOnIrr`). -/
 theorem forwardMapIrr_injective (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
     (hself : A.RealizesSelfOnIrr) :
     Function.Injective (forwardMapIrr W) :=
   Function.LeftInverse.injective (A.invFunIrr_forwardMapIrr hirr hself)
 
-/-- **`forwardMapIrr` is bijective**, from `A`, `hirr`, and the **scoped, already-true**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMapIrr` is bijective**, from `A`, `hirr`, and the **scoped, already-true**
 rigidity `RealizesSelfOnIrr` — **no** `hall`.  This is the faithful Theorem 5.3.4 bijection
 `Φ(𝒱) ↔ Irr A(𝒱)`. -/
 theorem forwardMapIrr_bijective_of_self (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
@@ -233,7 +250,9 @@ theorem forwardMapIrr_bijective_of_self (A : InducedAssignment W) (hirr : A.Real
     Function.Bijective (forwardMapIrr W) :=
   ⟨A.forwardMapIrr_injective hirr hself, A.forwardMapIrr_surjective hirr⟩
 
-/-- **The faithful Zhu bijection as an `Equiv`**, `hall`-free: `Φ(𝒱) ≃ Irr A(𝒱)` with forward
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful Zhu bijection as an `Equiv`**, `hall`-free: `Φ(𝒱) ≃ Irr A(𝒱)` with forward
 `forwardMapIrr` (`[M] ↦ [M_h]`) and inverse `invFunIrr` (`[U] ↦ [L(U)]`). -/
 noncomputable def zhuEquivIrr (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
     (hself : A.RealizesSelfOnIrr) :
@@ -243,11 +262,14 @@ noncomputable def zhuEquivIrr (A : InducedAssignment W) (hirr : A.RealizeIrreduc
   left_inv := A.invFunIrr_forwardMapIrr hirr hself
   right_inv := A.forwardMapIrr_invFunIrr hirr
 
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`). -/
 @[simp] theorem zhuEquivIrr_apply (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
     (hself : A.RealizesSelfOnIrr) (x : IrrLWModuleIsoClass W) :
     A.zhuEquivIrr hirr hself x = forwardMapIrr W x := rfl
 
-/-- **The faithful bijection from the universal property**, `hall`-free.  The scoped rigidity is
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful bijection from the universal property**, `hall`-free.  The scoped rigidity is
 supplied by `realizesSelfOnIrr_of_universal A hirr hgen` — the already-true, `hall`-free reduction.
 The single deep injectivity crux is `hgen : GeneratedFromBottom W`. -/
 theorem forwardMapIrr_bijective (A : InducedAssignment W) (hirr : A.RealizeIrreducible)
@@ -281,12 +303,16 @@ namespace FaithfulScorecard
 
 variable {W : VertexOperatorAlgebra 𝒱}
 
-/-- **The universal property `GeneratedFromBottom W`, derived from the hypothesis bundle** (`hall`-free). -/
+/-- **VACUOUS — do not cite.** The signature involves `FaithfulScorecard W`, a type the library proves EMPTY (`VOA.not_nonempty_faithfulScorecard`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The universal property `GeneratedFromBottom W`, derived from the hypothesis bundle** (`hall`-free). -/
 theorem generatedFromBottom (S : FaithfulScorecard W) :
     InducedAssignment.GeneratedFromBottom W :=
   InducedAssignment.generatedFromBottom_final S.F S.hiso S.G
 
-/-- **The faithful Theorem 5.3.4 bijection `Φ(𝒱) ↔ Irr A(𝒱)`, `hall`-free.**
+/-- **VACUOUS — do not cite.** The signature involves `FaithfulScorecard W`, a type the library proves EMPTY (`VOA.not_nonempty_faithfulScorecard`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful Theorem 5.3.4 bijection `Φ(𝒱) ↔ Irr A(𝒱)`, `hall`-free.**
 
 The forward map `forwardMapIrr W : Φ(𝒱) → Irr A(𝒱)`, `[M] ↦ [M_h]`, restricted to the *irreducible*
 iso-classes, is a **bijection**.  No `hall : AllLWIrreducible W` is assumed or used anywhere in the
@@ -301,14 +327,18 @@ theorem bijectiveIrr (S : FaithfulScorecard W) :
     Function.Bijective (forwardMapIrr W) :=
   S.A.forwardMapIrr_bijective S.hirr S.generatedFromBottom
 
-/-- **The faithful Zhu bijection as an `Equiv`**, `hall`-free: `Φ(𝒱) ≃ Irr A(𝒱)`. -/
+/-- **VACUOUS — do not cite.** The signature involves `FaithfulScorecard W`, a type the library proves EMPTY (`VOA.not_nonempty_faithfulScorecard`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful Zhu bijection as an `Equiv`**, `hall`-free: `Φ(𝒱) ≃ Irr A(𝒱)`. -/
 noncomputable def equivIrr (S : FaithfulScorecard W) :
     IrrLWModuleIsoClass W ≃ IrrAModIsoClass W :=
   S.A.zhuEquivIrr S.hirr (S.A.realizesSelfOnIrr_of_universal S.hirr S.generatedFromBottom)
 
 end FaithfulScorecard
 
-/-- **The faithful headline, hypothesis-bundle-shaped (`hall`-free).**  Exactly the signature of
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The faithful headline, hypothesis-bundle-shaped (`hall`-free).**  Exactly the signature of
 `zhuBijection_final` with `hall` removed: from an `InducedAssignment` `A`, the `L(U)`-property
 `hirr`, the `L(U)`-family `F`, its functoriality `hiso`, and the per-`P` residue family `G`, the
 faithful forward map `forwardMapIrr W : Φ(𝒱) → Irr A(𝒱)` is a **bijection**.

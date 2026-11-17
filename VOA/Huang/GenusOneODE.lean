@@ -51,7 +51,6 @@ theorem eisenstein_system_analytic (S : M₁ →ₗ[ℂ] FormalQSeries) {b : ℂ
       ∑ l : U, eisensteinEval (B k l) z * qEvalC (S l.val) b z := by
   classical
   have heq := congrArg (fun x : ↥(QSeriesAt b) => (x : FormalQSeries)) (hsys k)
-  dsimp only at heq
   rw [qD_coe, Submodule.coe_sum] at heq
   change qDeriv (S k.val) = ∑ l : U, psSMul (B k l : PowerSeries ℂ) (S l.val) at heq
   rw [← qEvalC_qDeriv _ _ (hsub k.val) hz, heq]

@@ -5,6 +5,9 @@ import Mathlib.LinearAlgebra.Quotient.Bilinear
 
 namespace VOA.NearVOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {H : Type u} [AddCommGroup H] [Module ℂ H] (V : NearVOA H)
 

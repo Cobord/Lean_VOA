@@ -136,8 +136,8 @@ theorem coreCoefficientAction_mem (hcyclic : cycSubG Q (π 1) = ⊤)
       rw [coreCoefficientAction_word a b c Q π A, A.unit]
       exact Submodule.subset_span ⟨l, σ, hσ, rfl⟩
   | zero => simp only [map_zero, Submodule.zero_mem]
-  | add v w hv hw ihv ihw => simpa only [map_add] using Submodule.add_mem _ ihv ihw
-  | smul z v hv ih => simpa only [map_smul] using Submodule.smul_mem _ z ih
+  | add v w hv hw ihv ihw => simpa only [map_add] using! Submodule.add_mem _ ihv ihw
+  | smul z v hv ih => simpa only [map_smul] using! Submodule.smul_mem _ z ih
 
 /-- The ideal-generated term agrees with the ideal times the whole module. -/
 theorem coreIdealSpan_eq_coefficientSpan (hcyclic : cycSubG Q (π 1) = ⊤)

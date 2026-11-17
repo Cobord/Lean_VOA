@@ -15,7 +15,7 @@ theorem coeff_X_pow_jet_actualCurrent_mul_eq_filtered_sum (m M j : ℕ) (c : Fin
       ∑ k ∈ (Finset.univ : Finset (Fin m)).filter (fun k => k.val ≤ M),
         k.val.descFactorial j •
           (actualMode m k.val c * PowerSeries.coeff (M - k.val) Q) := by
-  simpa only [actualCurrent_coeff] using
+  simpa only [actualCurrent_coeff] using!
     coeff_X_pow_jet_truncated_mul_eq_filtered_sum (actualCurrent m c) Q m M j
       (fun k hk => actualCurrent_coeff_high m k c hk)
 
@@ -43,7 +43,7 @@ theorem coeff_variablePower_actualCurrent_unfiltered_of_mode_bound
         (PowerSeries.X ^ j * (jetDerivative j (actualCurrent m c) * Q)) =
       ∑ k : Fin m, k.val.descFactorial j •
         (actualMode m k.val c * PowerSeries.coeff (variablePowerBudget m n - k.val) Q) := by
-  simpa only [actualCurrent_coeff] using
+  simpa only [actualCurrent_coeff] using!
     coeff_X_pow_jet_truncated_mul_eq_sum_of_mode_bound (actualCurrent m c) Q m
       (variablePowerBudget m n) j (fun k hk => actualCurrent_coeff_high m k c hk) hm
 

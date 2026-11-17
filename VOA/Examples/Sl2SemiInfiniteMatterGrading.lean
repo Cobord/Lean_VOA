@@ -42,9 +42,10 @@ theorem matterGhostGrading_le_eigenspace (n : ℤ) :
     intro x _
     rw [Module.End.mem_eigenspace_iff]
     simp
-  simpa only [zero_add] using
-    DSMor.tenSub_le_eigen (0 : End ℂ A) sl2GhostNumber 0 (n : ℂ)
+  have h := DSMor.tenSub_le_eigen (0 : End ℂ A) sl2GhostNumber 0 (n : ℂ)
       ⊤ (sl2GhostGrading n) hzero (sl2GhostGrading_le_eigenspace n)
+  rw [zero_add] at h
+  exact h
 
 /-- Every state is a finite sum of states of definite total ghost number. -/
 theorem matterGhostGrading_iSup_eq_top : (⨆ n : ℤ, matterGhostGrading A n) = ⊤ := by
@@ -121,6 +122,8 @@ theorem residue_mem_matterGhostGrading (V : SuperVertexAlgebra A)
     {n : ℤ} {u x : A ⊗[ℂ] Sl2GhostSpace}
     (hu : u ∈ matterGhostGrading A 1) (hx : x ∈ matterGhostGrading A n) :
     mode (tenY V sl2GhostSVA u) 0 x ∈ matterGhostGrading A (n + 1) := by
-  simpa only [add_comm] using tenY_mem_matterGhostGrading V hu hx (-1)
+  have h := tenY_mem_matterGhostGrading V hu hx (-1)
+  rw [add_comm] at h
+  exact h
 
 end VOA.Sl2SemiInfinite

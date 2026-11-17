@@ -28,7 +28,7 @@ theorem a3_three_mode_mem_key (xs ys zs : List ℕ) :
   rw [hkey] at hw
   simpa [l, radicalWord, radicalOp, aWord, List.map_append,
     List.map_map, Function.comp_def, List.prod_append,
-    mul_smul, mul_assoc] using hw
+    mul_smul, mul_assoc] using! hw
 
 theorem a3_rotated_mode_mem_key (xs ys zs : List ℕ) :
     (aWord (fun i => ρ.op (F 1) i) xs *
@@ -48,7 +48,7 @@ theorem a3_rotated_mode_mem_key (xs ys zs : List ℕ) :
   rw [hkey] at hw
   simpa [l, radicalWord, radicalOp, aWord, List.map_append,
     List.map_map, Function.comp_def, List.prod_append,
-    mul_smul, mul_assoc] using hw
+    mul_smul, mul_assoc] using! hw
 
 theorem a3PairModeLowerSpan_le_key (j : Fin 2) (zs : List ℕ)
     (xlen ylen degree σ : ℕ) :
@@ -61,10 +61,10 @@ theorem a3PairModeLowerSpan_le_key (j : Fin 2) (zs : List ℕ)
   fin_cases j
   · have hw := a3_three_mode_mem_key ρ w xs ys zs
     simpa [a3ConvA, a3ConvB, a3ConvSpectator,
-      hx, hy, hd, mul_assoc, Nat.add_assoc] using hw
+      hx, hy, hd, mul_assoc, Nat.add_assoc] using! hw
   · have hw := a3_rotated_mode_mem_key ρ w xs ys zs
     simpa [a3ConvA, a3ConvB, a3ConvSpectator,
-      hx, hy, hd, mul_assoc, Nat.add_assoc, Nat.add_comm] using hw
+      hx, hy, hd, mul_assoc, Nat.add_assoc, Nat.add_comm] using! hw
 
 end VOA.DeligneAudit.A3Sector
 

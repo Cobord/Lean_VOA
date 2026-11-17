@@ -12,6 +12,8 @@ All identities hold for the actual polynomial operators at every complex
 level. Ghost charge detects the vanishing commutator after Jacobi and the
 proved cubic shift identities establish commutation with all ghosts.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

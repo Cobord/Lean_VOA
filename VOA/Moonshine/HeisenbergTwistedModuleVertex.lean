@@ -149,10 +149,11 @@ noncomputable def YTmon (m : (ℕ × Fin r) →₀ ℕ) : ℤ → End ℂ (FockT
 /-- **The candidate `σ`-twisted vertex operator** `Y^T : FockN r → (ℤ → End (FockT r))`
 (`YT r u k = u₍k/2₎`), the linear extension of `YTmon` off the monomial basis. -/
 noncomputable def YT : FockN r →ₗ[ℂ] (ℤ → End ℂ (FockT r)) :=
-  Finsupp.linearCombination ℂ (YTmon r)
+  (Finsupp.linearCombination ℂ (YTmon r)).comp (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
-theorem YT_monomial (m : (ℕ × Fin r) →₀ ℕ) (c : ℂ) : YT r (monomial m c) = c • YTmon r m :=
-  Finsupp.linearCombination_single ℂ c m
+theorem YT_monomial (m : (ℕ × Fin r) →₀ ℕ) (c : ℂ) : YT r (monomial m c) = c • YTmon r m := by
+  show Finsupp.linearCombination ℂ (YTmon r) (Finsupp.single m c) = c • YTmon r m
+  exact Finsupp.linearCombination_single ℂ c m
 
 /-- **`Y^T(𝟙, z) = id`**: `YT 𝟙 k = δ_{k,−2}`. -/
 theorem YT_vacuum (k : ℤ) : YT r (vacuumN r) k = if k = -2 then 1 else 0 := by
@@ -213,7 +214,7 @@ theorem sigmaN_monomial_length (m : (ℕ × Fin r) →₀ ℕ) :
 
 /-- The coefficients of `σ u`. -/
 theorem coeff_sigmaN (m : (ℕ × Fin r) →₀ ℕ) (u : FockN r) :
-    coeff m (LatGen.sigmaN r u) = ((-1 : ℂ) ^ (monoWordN m).length) * coeff m u := by
+    (LatGen.sigmaN r u).coeff m = ((-1 : ℂ) ^ (monoWordN m).length) * u.coeff m := by
   induction u using MvPolynomial.induction_on' with
   | monomial m' c =>
       rw [show (monomial m' c : FockN r) = c • monomial m' 1 by
@@ -222,14 +223,14 @@ theorem coeff_sigmaN (m : (ℕ × Fin r) →₀ ℕ) (u : FockN r) :
       by_cases h : m' = m
       · subst h; simp only [if_true, smul_eq_mul, mul_one]; ring
       · simp [h]
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq, mul_add]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
 
 /-- A `σ`-eigenvector of eigenvalue `(−1)ʲ` only contains monomials of word length `≡ j`. -/
 theorem length_parity_of_mem {j : ℕ} {u : FockN r}
-    (hu : u ∈ (sigma1 r).twistedEigenspace 2 j) {m : (ℕ × Fin r) →₀ ℕ} (hm : coeff m u ≠ 0) :
+    (hu : u ∈ (sigma1 r).twistedEigenspace 2 j) {m : (ℕ × Fin r) →₀ ℕ} (hm : u.coeff m ≠ 0) :
     ((monoWordN m).length : ℤ) % 2 = (j : ℤ) % 2 := by
   rw [mem_twistedEigenspace_two_iff] at hu
-  have h := congrArg (coeff m) hu
+  have h := congrArg (fun p : FockN r => p.coeff m) hu
   rw [coeff_sigmaN, coeff_smul, smul_eq_mul] at h
   have h' : (-1 : ℂ) ^ (monoWordN m).length = (-1 : ℂ) ^ j := mul_right_cancel₀ hm h
   rcases Nat.even_or_odd (monoWordN m).length with he | ho <;>
@@ -241,8 +242,9 @@ theorem length_parity_of_mem {j : ℕ} {u : FockN r}
 
 /-- `YT u` as the finite sum over the monomials of `u`. -/
 theorem YT_eq_sum (u : FockN r) :
-    YT r u = ∑ m ∈ u.support, coeff m u • YTmon r m := by
-  rw [show YT r u = Finsupp.linearCombination ℂ (YTmon r) u from rfl,
+    YT r u = ∑ m ∈ u.support, u.coeff m • YTmon r m := by
+  rw [show YT r u = Finsupp.linearCombination ℂ (YTmon r)
+      (AddMonoidAlgebra.coeffLinearEquiv ℂ u) from rfl,
     Finsupp.linearCombination_apply]
   rfl
 

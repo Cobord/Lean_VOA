@@ -112,8 +112,9 @@ def εn (n : ℕ) (hn : 1 ≤ n) : Rn n →ₐ[ℂ] ℂ :=
       exact this.symm
     exact hle ha)
 
-theorem εn_tn (n : ℕ) (hn : 1 ≤ n) (j : ℕ) : εn n hn (tn n j) = 0 := by
-  simp [εn, tn]
+theorem εn_tn (n : ℕ) (hn : 1 ≤ n) (j : ℕ) : εn n hn (tn n j) = 0 :=
+  (Ideal.Quotient.liftₐ_apply (jetIdealT n) (aeval fun _ : ℕ => (0 : ℂ)) _
+    (Ideal.Quotient.mk (jetIdealT n) (X j))).trans (by simp)
 
 /-! ### The `T`-free part of detection, at every level -/
 

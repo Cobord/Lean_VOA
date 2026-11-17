@@ -38,7 +38,7 @@ theorem current_adjacent_swap (a b : CurrentLetter) (s : List CurrentLetter) :
   have hc := R.comm (radIndex a.1) (radIndex b.1) a.2 b.2
     (currentRadicalWord R s w)
   simpa only [currentRadicalWord, List.map_cons, wordOp, contact_table,
-    ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true] using hc
+    ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true] using! hc
 
 /-- A swap under an arbitrary radical prefix is one contact letter shorter. -/
 theorem current_swap_mem (p s : List CurrentLetter) (a b : CurrentLetter) :
@@ -80,7 +80,7 @@ theorem currentRadicalWord_perm_sub {l l' : List CurrentLetter} (h : l.Perm l') 
         exact currentPiece_mono R w (by simp only [List.length_cons]; omega)
           (current_radical_mem R w a.1 a.2 ih)
   | swap a b s =>
-      simpa only [List.nil_append] using current_swap_mem R w [] s b a
+      simpa only [List.nil_append] using! current_swap_mem R w [] s b a
   | @trans l l' l'' h h' ih ih' =>
       have ht : currentRadicalWord R l' w - currentRadicalWord R l'' w ∈
           currentPiece R w (l.length - 1) := by
@@ -97,7 +97,7 @@ relation for its original order. -/
 theorem currentRadicalWord_mem_of_perm_zero {l l' : List CurrentLetter}
     (h : l.Perm l') (hz : currentRadicalWord R l' w = 0) :
     currentRadicalWord R l w ∈ currentPiece R w (l.length - 1) := by
-  simpa only [hz, sub_zero] using currentRadicalWord_perm_sub R w h
+  simpa only [hz, sub_zero] using! currentRadicalWord_perm_sub R w h
 
 end
 end VOA.DeligneAudit.D4FusionContact

@@ -152,11 +152,12 @@ theorem mixOp_nonneg (c : V) (p : ℕ) (q : ℤ) :
 
 /-- `Mix` paired with a Laurent test function in `y`. -/
 noncomputable def mixRes (c : V) (p : ℤ) (ψ : ℂ[T;T⁻¹]) : Module.End ℂ M :=
-  Finsupp.linearCombination ℂ (fun q => Bs.mixOp z c p q) ψ
+  (Finsupp.linearCombination ℂ (fun q => Bs.mixOp z c p q) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) ψ
 
 theorem mixRes_CT (c : V) (p : ℤ) (d : ℂ) (q : ℤ) :
     Bs.mixRes z c p (LC d * T q) = d • Bs.mixOp z c p q := by
-  rw [mixRes, ← single_eq_C_mul_T, Finsupp.linearCombination_single]
+  rw [← single_eq_C_mul_T]; exact Finsupp.linearCombination_single ℂ _ _
 
 theorem mixRes_add (c : V) (p : ℤ) (ψ ψ' : ℂ[T;T⁻¹]) :
     Bs.mixRes z c p (ψ + ψ') = Bs.mixRes z c p ψ + Bs.mixRes z c p ψ' := map_add _ _ _
@@ -195,22 +196,22 @@ theorem mixRes_nonneg (c : V) (p : ℕ) (Ψ : ℂ[T;T⁻¹]) :
 
 /-- The mixed residue paired with test functions in both variables. -/
 noncomputable def mres (c : V) (F ψ : ℂ[T;T⁻¹]) : Module.End ℂ M :=
-  Finsupp.linearCombination ℂ (fun p => Bs.mixRes z c p ψ) F
+  (Finsupp.linearCombination ℂ (fun p => Bs.mixRes z c p ψ) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) F
 
 theorem mres_add (c : V) (F F' ψ : ℂ[T;T⁻¹]) :
     Bs.mres z c (F + F') ψ = Bs.mres z c F ψ + Bs.mres z c F' ψ := map_add _ _ _
+
+theorem mres_CT (c : V) (d : ℂ) (p : ℤ) (ψ : ℂ[T;T⁻¹]) :
+    Bs.mres z c (LC d * T p) ψ = d • Bs.mixRes z c p ψ := by
+  rw [← single_eq_C_mul_T]; exact Finsupp.linearCombination_single ℂ _ _
 
 theorem mres_add_right (c : V) (F ψ ψ' : ℂ[T;T⁻¹]) :
     Bs.mres z c F (ψ + ψ') = Bs.mres z c F ψ + Bs.mres z c F ψ' := by
   induction F using LaurentPolynomial.induction_on' with
   | add f g hf hg => rw [mres_add, mres_add, mres_add, hf, hg]; abel
   | C_mul_T p d =>
-    rw [mres, mres, mres, ← single_eq_C_mul_T, Finsupp.linearCombination_single,
-      Finsupp.linearCombination_single, Finsupp.linearCombination_single, mixRes_add, smul_add]
-
-theorem mres_CT (c : V) (d : ℂ) (p : ℤ) (ψ : ℂ[T;T⁻¹]) :
-    Bs.mres z c (LC d * T p) ψ = d • Bs.mixRes z c p ψ := by
-  rw [mres, ← single_eq_C_mul_T, Finsupp.linearCombination_single]
+    rw [mres_CT, mres_CT, mres_CT, mixRes_add, smul_add]
 
 /-- **The mixed residue becomes an ordinary residue** once the `(y − z)`-factor of the second
 test function absorbs the pole of the first at `x = 0`. -/

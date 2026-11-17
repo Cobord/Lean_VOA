@@ -67,9 +67,9 @@ theorem halfGradeLE_le_iSup_superSqWeightSpace_nat
       obtain ⟨y, hymem, hyeq⟩ :=
         superLsq_sub_halfWeight_surj W (m : Int) m
           (W.toSuperNearVOA.superLsq 0 x - ((m : Complex) / 2) • x)
-          (by simpa only using hw) (by omega)
+          (by simpa only using! hw) (by omega)
       have hymem' : y ∈ halfGradeLE W ((m : Int) - 1) := by
-        simpa only using hymem
+        simpa only using! hymem
       have heig : x - y ∈
           W.toSuperNearVOA.superSqWeightSpace ((m : Complex) / 2) := by
         rw [W.toSuperNearVOA.mem_superSqWeightSpace_iff, map_sub, smul_sub]

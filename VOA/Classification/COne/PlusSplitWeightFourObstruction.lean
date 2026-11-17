@@ -42,7 +42,7 @@ theorem zeroMode_vacuum_lift_eq_zero (A : WeakModule W M)
     mode (A.YM a) (w - 1) x = 0 := by
   apply generalized_vacuum_lift_unique A π h hb hh (x := mode (A.YM a) (w - 1) x)
     (y := 0)
-  · simpa using mode_mem_maxGenEigenspace A ha (w - 1) hx
+  · simpa using! mode_mem_maxGenEigenspace A ha (w - 1) hx
   · exact Submodule.zero_mem _
   · change π.toLinearMap (A.act a (w - 1) x) = π.toLinearMap 0
     rw [π.map_act, he, map_zero]

@@ -59,11 +59,12 @@ theorem CK_CK (x : Sp) : CK (CK x) = x := by
   | mem y hy =>
     obtain ⟨⟨p, n⟩, rfl⟩ := hy
     dsimp only
-    rw [CK, lift_GC, map_smul, lift_GC, smul_smul]
-    simp only [Units.val_zpow_eq_zpow_val, Units.val_neg, Units.val_one]
-    rcases Int.even_or_odd n with h | h
-    · rw [h.neg_one_zpow]; simp
-    · rw [h.neg_one_zpow]; simp
+    rw [CK, lift_GC _ p n, map_smul, lift_GC _ p n, smul_smul]
+    have hs : ∀ m : ℤ, (((-1 : ℂˣ) ^ m : ℂˣ) : ℂ) * (((-1 : ℂˣ) ^ m : ℂˣ) : ℂ) = 1 := by
+      intro m
+      rw [← Units.val_mul, ← mul_zpow]
+      simp
+    exact (congrArg (fun c : ℂ => c • latStateGen (latP 1) p n) (hs n)).trans (one_smul ℂ _)
   | zero => simp
   | add y z _ _ hy hz => rw [map_add, map_add, hy, hz]
   | smul c y _ hy => rw [map_smul, map_smul, hy]

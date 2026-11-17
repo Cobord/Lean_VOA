@@ -269,7 +269,9 @@ theorem braidingP_naturality {X X' Y Y' : Ordinary W} (f : X ⟶ X') (g : Y ⟶ 
       (braidingP p F X Y).hom ≫ tensorHom F g f := by
   apply tensor_hom_ext F
   intro n x y
-  simp only [Ordinary.comp_apply, tensorHom_intertwiner, braidingP_intertwiner]
+  change (braidingP p F X' Y').hom.val ((tensorHom F f g).val _) =
+    (tensorHom F g f).val ((braidingP p F X Y).hom.val _)
+  simp only [tensorHom_intertwiner, braidingP_intertwiner]
   have h1 := skewP_postcompose p (X := Y) (Y := X) (Z := tensorObj F Y X)
     (T := tensorObj F Y' X') (F Y X).intertwiner (tensorHom F g f)
   erw [postcompose_tensorHom, skewP_restrictInputs] at h1
@@ -281,7 +283,8 @@ theorem braidingP_hom_inv_hom (X Y : Ordinary W) :
     (braidingP p F X Y).hom ≫ (braidingP p.inv F Y X).hom = 𝟙 _ := by
   apply tensor_hom_ext F
   intro n x y
-  simp only [Ordinary.comp_apply, braidingP_intertwiner, Ordinary.id_apply]
+  change (braidingP p.inv F Y X).hom.val ((braidingP p F X Y).hom.val _) = _
+  simp only [braidingP_intertwiner, Ordinary.id_apply]
   have h := skewP_postcompose p (X := Y) (Y := X) (Z := tensorObj F Y X)
     (T := tensorObj F X Y) (F Y X).intertwiner (braidingP p.inv F Y X).hom
   erw [postcompose_braidingP, skewP_skewP_inv] at h
@@ -298,15 +301,16 @@ theorem braidingP_inv (X Y : Ordinary W) :
 theorem braidingP_monodromy (X Y : Ordinary W) (n : ℂ) (x : X.carrier) (y : Y.carrier) :
     ((braidingP p F X Y).hom ≫ (braidingP p F Y X).hom).val ((F X Y).intertwiner.val n x y) =
       (p.c n * p.c n) • (F X Y).intertwiner.val n x y := by
-  simp only [Ordinary.comp_apply, braidingP_intertwiner]
+  change (braidingP p F Y X).hom.val ((braidingP p F X Y).hom.val _) = _
+  simp only [braidingP_intertwiner]
   have h := skewP_postcompose p (X := Y) (Y := X) (Z := tensorObj F Y X)
     (T := tensorObj F X Y) (F Y X).intertwiner (braidingP p F Y X).hom
   erw [postcompose_braidingP] at h
   have h' := congrArg (fun J : IntertwiningOperator X.isMod Y.isMod (tensorObj F X Y).isMod =>
     J.val n x y) h
   simp only [postcompose_apply] at h'
-  rw [← h', skewP_skewP_val]
-  rfl
+  rw [← h']
+  exact skewP_skewP_val p X Y (tensorObj F X Y) (F X Y).intertwiner n x y
 
 /-- The braiding with FHL's phase `Ω₀`. -/
 abbrev braiding (X Y : Ordinary W) : tensorObj F X Y ≅ tensorObj F Y X :=
@@ -317,7 +321,9 @@ theorem braiding_leftUnitor (X : Ordinary W) :
     (braiding F X vacuumObject).hom ≫ (leftUnitor F X).hom = (rightUnitor F X).hom := by
   apply tensor_hom_ext F
   intro n x v
-  simp only [Ordinary.comp_apply, braidingP_intertwiner, rightUnitor_intertwiner]
+  change (leftUnitor F X).hom.val ((braiding F X vacuumObject).hom.val _) =
+    (rightUnitor F X).hom.val _
+  simp only [braidingP_intertwiner]
   have h := skewP_postcompose Phase.upper (X := vacuumObject) (Y := X)
     (Z := tensorObj F vacuumObject X) (T := X) (F vacuumObject X).intertwiner
     (leftUnitor F X).hom
@@ -329,7 +335,7 @@ theorem braiding_leftUnitor (X : Ordinary W) :
     exact leftUnitor_intertwiner F X m v' x'
   erw [hl] at h
   exact (congrArg (fun J : IntertwiningOperator X.isMod (adjointModule W) X.isMod =>
-    J.val n x v) h).symm
+    J.val n x v) h).symm.trans (rightUnitor_intertwiner F X n x v).symm
 
 end BraidRibbon
 end VOA.Huang.TensorCat

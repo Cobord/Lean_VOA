@@ -320,7 +320,7 @@ noncomputable def toSuper (N : OrdVModule W M) : SuperOrdVModule W.toSuper M whe
       have hu' : u ∈ W.grading k := by
         simpa [VertexOperatorAlgebra.toSuper, PreVertexAlgebra.toSuper,
           PreVertexAlgebra.gradingC_intCast] using hu
-      simpa using (VOA.mode_mem_weight N hu' hx n)
+      exact VOA.mode_mem_weight N hu' hx n
     · have hu0 : u = 0 := by
         have hbot : W.toPreVertexAlgebra.gradingC h = ⊥ :=
           W.toPreVertexAlgebra.gradingC_of_not_int hh

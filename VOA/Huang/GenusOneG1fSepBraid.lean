@@ -288,7 +288,6 @@ theorem vacuum_hom_unique (hV : Nice W) (F : FusionChoice W) (D : VOA.ModularDat
       rw [← Category.id_comp g0i, ← hii j₀, Category.assoc, h, comp_zero]
     obtain ⟨μ, hμ⟩ := out_hom_smul hV F D a b hψ0 (pj j ≫ gi)
     have h1 := congrArg (fun k => ij j ≫ k) hμ
-    simp only at h1
     rw [← Category.assoc, hii, Category.id_comp, Linear.comp_smul, ← Category.assoc,
       hik j j₀ hj, zero_comp, smul_zero] at h1
     exact hgi0 h1

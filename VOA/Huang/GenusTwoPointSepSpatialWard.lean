@@ -125,7 +125,7 @@ theorem sum_spatial_law (b c : ℂ) (f d l : ℤ → ℂ)
   have hs : Summable (fun j : ℤ => g (j - 1)) :=
     ((Equiv.subRight (1 : ℤ)).summable_iff).mpr hf
   have hdiff : Summable (fun j => (b + j + 1) * f j - (b + j) * f (j - 1)) := by
-    simpa only [he] using hf.sub hs
+    simpa only [he] using! hf.sub hs
   have hl' : l = fun j => c * (d j + ((b + j + 1) * f j - (b + j) * f (j - 1))) := by
     funext j
     rw [hl]
@@ -153,7 +153,7 @@ theorem huangModifiedModeTrace_sum_Lm1_left
   apply sum_spatial_law b (Complex.exp logTwoPiI) _ _ _ hf hd
   intro j
   have h := huangModifiedModeTrace_Lm1_left Y₁ Y₂ w₁ w₂ (b + j) n₂ t₁ t₂ e
-  simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using h
+  simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using! h
 
 /-- Right-coordinate analogue; its summation hypotheses are independent. -/
 theorem huangModifiedModeTrace_sum_Lm1_right
@@ -173,6 +173,6 @@ theorem huangModifiedModeTrace_sum_Lm1_right
   apply sum_spatial_law b (Complex.exp logTwoPiI) _ _ _ hf hd
   intro j
   have h := huangModifiedModeTrace_Lm1_right Y₁ Y₂ w₁ w₂ n₁ (b + j) t₁ t₂ e
-  simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using h
+  simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using! h
 
 end VOA.Huang.GenusTwoPoint.Separate

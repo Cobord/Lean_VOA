@@ -85,8 +85,14 @@ theorem liftLiftableSpinTopState (R : Matrix SpinIdx SpinIdx ℂ)
     (v : Fin (rank leech) → ℂ) (s : SpinRep) :
     liftTwNormalizedPlusEquiv ι hι (liftWScalar ι hι) (spinTopState v s) =
       spinTopState (oscMatrix leech leech ι *ᵥ v) (R *ᵥ s) := by
-  rw [spinTopState_apply, liftWNormalized_hP, ← liftWSpinCharge_spec,
-    ← spinIso_smul, hR, spinTopState_apply]
+  first
+  | rw [spinTopState_apply, liftWNormalized_hP, ← liftWSpinCharge_spec,
+      ← spinIso_smul, hR, spinTopState_apply]
+  | exact (liftWNormalized_hP ι hι (liftWScalar ι hι) v (spinIso s)).trans
+      (congrArg (VOA.Moonshine.SigmaTop.hP (oscMatrix leech leech ι *ᵥ v))
+        ((congrArg (fun x : TLeechT => (liftWScalar ι hι : ℂ) • x)
+          (liftWSpinCharge_spec ι hι s)).symm.trans
+          ((spinIso_smul _ _).symm.trans (congrArg (fun x : SpinRep => spinIso x) (hR s)))))
 
 /-- On complex spin matrices the action is `N ↦ R N Qᵀ`. -/
 theorem liftLiftableSpinTopVec (R : Matrix SpinIdx SpinIdx ℂ)
@@ -101,8 +107,12 @@ theorem liftLiftableSpinTopVec (R : Matrix SpinIdx SpinIdx ℂ)
         (fun s => (R * N) s j) := by
       apply Finset.sum_congr rfl
       intro j _
-      rw [liftLiftableSpinTopState ι hι R hR, liftLiftableOscillator]
-      rfl
+      first
+      | (rw [liftLiftableSpinTopState ι hι R hR, liftLiftableOscillator]
+         rfl)
+      | exact (liftLiftableSpinTopState ι hι R hR _ _).trans
+          (congrArg₂ (fun (v : Fin (rank leech) → ℂ) (w : SpinIdx → ℂ) => spinTopState v w)
+            (liftLiftableOscillator ι j) (by rfl))
     _ = _ := sum_spinTopState_recombine _ _
 
 /-- Rational normalized charge coordinates give an explicit rational `W`-block formula. -/
@@ -144,20 +154,29 @@ theorem liftLiftableChargeDot (s t : SpinRep) :
       liftTwNormalizedPlusEquiv ι hι (liftWScalar ι hι) (spinTopState v w) =
         spinTopState (oscMatrix leech leech ι *ᵥ v)
           ((liftWScalar ι hι : ℂ) • liftWSpinCharge ι hι w) := by
-    rw [spinTopState_apply, liftWNormalized_hP, spinTopState_apply,
-      spinIso_smul, liftWSpinCharge_spec]
+    first
+    | rw [spinTopState_apply, liftWNormalized_hP, spinTopState_apply,
+        spinIso_smul, liftWSpinCharge_spec]
+    | exact (liftWNormalized_hP ι hι (liftWScalar ι hι) v (spinIso w)).trans
+        (congrArg (VOA.Moonshine.SigmaTop.hP (oscMatrix leech leech ι *ᵥ v))
+          ((congrArg (fun x : TLeechT => (liftWScalar ι hι : ℂ) • x)
+            (liftWSpinCharge_spec ι hι w)).symm.trans (spinIso_smul _ _).symm))
   have h := (liftTwExists_formScalar ι hι).choose_spec
     (spinTopState (conwayVec 0) s) (spinTopState (conwayVec 0) t)
   change TPForm (liftTwNormalizedPlusEquiv ι hι (liftWScalar ι hι) _)
     (liftTwNormalizedPlusEquiv ι hι (liftWScalar ι hι) _) = _ at h
-  rw [hstate, hstate, TPForm_spinTopState, TPForm_spinTopState] at h
+  first
+  | rw [hstate, hstate, TPForm_spinTopState, TPForm_spinTopState] at h
+  | (rw [hstate, hstate] at h; erw [TPForm_spinTopState, TPForm_spinTopState] at h)
   have hQ := liftLiftableOrthogonalDot (oscMatrix leech leech ι)
     (oscMatrix_transpose_mul leech leech leech_posDef leech_posDef ι hι)
     (conwayVec 0) (conwayVec 0)
   change (∑ a, (oscMatrix leech leech ι *ᵥ conwayVec 0) a *
     (oscMatrix leech leech ι *ᵥ conwayVec 0) a) =
       ∑ a, conwayVec 0 a * conwayVec 0 a at hQ
-  rw [hQ, sum_conwayVec_mul, if_pos rfl] at h
+  first
+  | rw [hQ, sum_conwayVec_mul, if_pos rfl] at h
+  | erw [hQ, sum_conwayVec_mul, if_pos rfl] at h
   exact mul_left_cancel₀ spinFormScale_ne_zero
     (mul_right_cancel₀ (by norm_num : -(1 / 2 : ℂ) * 8 ≠ 0) h)
 
@@ -172,9 +191,11 @@ theorem liftLiftableChargeSign (R : Matrix SpinIdx SpinIdx ℚ) (horth : Rᵀ * 
   classical
   have horthC : (R.map (Rat.castHom ℂ))ᵀ * R.map (Rat.castHom ℂ) = 1 := by
     have h := congrArg (fun M => M.map (Rat.castHom ℂ)) horth
-    dsimp only at h
+    try dsimp only at h
     rw [Matrix.map_mul (f := Rat.castHom ℂ)] at h
-    simpa using h
+    first
+    | simpa using h
+    | (rw [Matrix.transpose_map] at h; simpa using h)
   let e : SpinRep := Pi.single spinIdxBase 1
   have he : e ⬝ᵥ e = 1 := by simp [e]
   have hn (s : SpinRep) : (liftWScalar ι hι : ℂ) • liftWSpinCharge ι hι s =
@@ -199,7 +220,10 @@ theorem liftLiftableChargeSign (R : Matrix SpinIdx SpinIdx ℚ) (horth : Rᵀ * 
     ext i j
     simp only [Matrix.map_apply, Matrix.smul_apply, Rat.coe_castHom, smul_eq_mul,
       Rat.cast_mul]
-  rw [hmap, Matrix.smul_mulVec]
+  first
+  | rw [hmap, Matrix.smul_mulVec]
+  | (rw [hmap]; exact (Matrix.smul_mulVec _ _ _).symm)
+  | (erw [hmap, Matrix.smul_mulVec])
 
 /-- A rational orthogonal representative of the projective charge intertwiner suffices. -/
 theorem liftLiftableOfProjectiveCharge (hsurj : Function.Surjective ι)
@@ -227,11 +251,18 @@ theorem liftLiftableSpinCommuteScalar (F : Module.End ℂ (SpinIdx → ℂ))
       intro s
       rw [spinAlgHom_eA]
       exact hF α s
-    | zero => intro s; simp
-    | add a b _ _ ha hb => intro s; simp only [map_add, LinearMap.add_apply, ha, hb]
+    | zero =>
+      intro s; simp
+      try exact F.map_zero
+    | add a b _ _ ha hb =>
+      intro s; simp only [map_add, LinearMap.add_apply, ha, hb]
+      try exact (congrArg F (LinearMap.add_apply _ _ _)).trans
+            ((map_add F _ _).trans (congrArg₂ (· + ·) (ha s) (hb s)))
     | smul c a _ ha =>
       intro s
       simp only [map_smul, LinearMap.smul_apply, ha]
+      try exact (congrArg F (LinearMap.smul_apply _ _ _)).trans
+            ((map_smul F _ _).trans (congrArg (c • ·) (ha s)))
   have hc : F ∈ Set.center (Module.End ℂ (SpinIdx → ℂ)) := by
     rw [Semigroup.mem_center_iff]
     intro A
@@ -242,7 +273,7 @@ theorem liftLiftableSpinCommuteScalar (F : Module.End ℂ (SpinIdx → ℂ))
     rw [← ha]
     exact (hall a s).symm
   obtain ⟨z, hz, h⟩ := Module.End.mem_center_iff.mp hc
-  exact ⟨z, fun s => by simpa using LinearMap.congr_fun h s⟩
+  exact ⟨z, fun s => by first | simpa using LinearMap.congr_fun h s | exact LinearMap.congr_fun h s⟩
 
 /-- The chosen charge operator intertwines the phased extraspecial spin matrices. -/
 theorem liftLiftableChargeIntertwine (α : leech.carrier) (s : SpinRep) :
@@ -250,8 +281,11 @@ theorem liftLiftableChargeIntertwine (α : leech.carrier) (s : SpinRep) :
       latCob leech leech ι α •
         (spinOp (coordOfRed (red leech (ι α))) *ᵥ liftWSpinCharge ι hι s) := by
   apply spinIso.injective
-  rw [liftWSpinCharge_spec, spinIso_spinOp, liftTwChargeEquiv_eT]
-  erw [spinIso_smul, spinIso_spinOp, liftWSpinCharge_spec]
+  first
+  | (rw [liftWSpinCharge_spec, spinIso_spinOp, liftTwChargeEquiv_eT]
+     erw [spinIso_smul, spinIso_spinOp, liftWSpinCharge_spec])
+  | erw [liftWSpinCharge_spec, spinIso_spinOp, liftTwChargeEquiv_eT, spinIso_smul,
+      spinIso_spinOp, liftWSpinCharge_spec]
 
 /-- Any invertible intertwiner for the same charge action is proportional to the chosen one. -/
 theorem liftLiftableProjectiveOfIntertwiner (E : SpinRep ≃ₗ[ℂ] SpinRep)
@@ -279,16 +313,23 @@ theorem liftLiftableOfRationalIntertwiner (hsurj : Function.Surjective ι)
     inferInstanceAs (FiniteDimensional ℂ (SpinIdx → ℂ))
   have horthC : (R.map (Rat.castHom ℂ))ᵀ * R.map (Rat.castHom ℂ) = 1 := by
     have h := congrArg (fun M => M.map (Rat.castHom ℂ)) horth
-    dsimp only at h
+    try dsimp only at h
     rw [Matrix.map_mul (f := Rat.castHom ℂ)] at h
-    simpa using h
+    first
+    | simpa using h
+    | (rw [Matrix.transpose_map] at h; simpa using h)
   let A : Module.End ℂ SpinRep := Matrix.mulVecLin (R.map (Rat.castHom ℂ))
   have hA : Function.Injective A := by
     intro s t h
     have h' := congrArg (fun w => (R.map (Rat.castHom ℂ))ᵀ *ᵥ w) h
     change (R.map (Rat.castHom ℂ))ᵀ *ᵥ (R.map (Rat.castHom ℂ) *ᵥ s) =
       (R.map (Rat.castHom ℂ))ᵀ *ᵥ (R.map (Rat.castHom ℂ) *ᵥ t) at h'
-    simpa only [Matrix.mulVec_mulVec, horthC, Matrix.one_mulVec] using h'
+    first
+    | simpa only [Matrix.mulVec_mulVec, horthC, Matrix.one_mulVec] using h'
+    | (have e : ∀ w : SpinIdx → ℂ,
+          (R.map (Rat.castHom ℂ))ᵀ *ᵥ (R.map (Rat.castHom ℂ) *ᵥ w) = w := fun w => by
+         rw [Matrix.mulVec_mulVec, horthC, Matrix.one_mulVec]
+       exact (e s).symm.trans (h'.trans (e t)))
   let E := LinearEquiv.ofInjectiveEndo A hA
   apply liftLiftableOfProjectiveCharge ι hι hsurj R horth
   exact liftLiftableProjectiveOfIntertwiner ι hι E hinter

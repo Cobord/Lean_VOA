@@ -13,6 +13,8 @@ show that F_1 of the screening state is gamma-independent. Evaluation at
 zero gamma variables therefore preserves it. This removes gamma tails
 without presupposing their finite reindexing or lowering annihilation.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Screening
 open MvPolynomial
 open scoped BigOperators
@@ -29,8 +31,10 @@ theorem gammaErase_X (v : Fin 3 × ℕ) :
 /-- A nonzero coefficient of a gamma-independent polynomial has zero
 occupation at every gamma variable. Characteristic zero is used here. -/
 theorem gammaFree_occupation (P : WakFock) (hP : P∈gammaFree)
-    (d : Fin 3 × ℕ →₀ ℕ) (hd : coeff d P≠0) (j : ℕ) : d (1,j)=0 := by
-  have hz : coeff d (X (1,j)*pderiv (1,j) P)=0 := by rw [hP j,mul_zero,coeff_zero]
+    (d : Fin 3 × ℕ →₀ ℕ) (hd : P.coeff d≠0) (j : ℕ) : d (1,j)=0 := by
+  have hz : (X (1,j)*pderiv (1,j) P).coeff d=0 := by
+    rw [hP j,mul_zero]
+    simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   rw [coeff_X_mul_pderiv] at hz
   exact Nat.cast_eq_zero.mp ((mul_eq_zero.mp hz).resolve_right hd)
 
@@ -84,7 +88,6 @@ theorem state_lowering_gammaFree (r q M : ℕ) (hq : 0<q) (k lam : ℂ)
   intro j
   have hc := congrArg (fun T : Module.End ℂ WakFock => T (state r q M))
     (Charged.ef k lam (j : ℤ) 1)
-  dsimp only at hc
   rw [if_neg (by omega),add_zero,Ring.lie_def,
     LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
     state_raising r q M (j : ℤ) (by omega),map_zero,sub_zero] at hc
@@ -92,7 +95,7 @@ theorem state_lowering_gammaFree (r q M : ℕ) (hq : 0<q) (k lam : ℂ)
   have hi : ((j+1 : ℕ) : ℤ)=(j : ℤ)+1 := by push_cast; rfl
   rw [hi] at hh
   rw [hh,Ecur,Bet_of_nonneg (by omega),cD_of_nonneg (by omega),dV_apply] at hc
-  simpa using hc
+  simpa using! hc
 
 /-- Gamma evaluation preserves the actual lowering result of the screening
 state under the proved reciprocal-level condition. -/

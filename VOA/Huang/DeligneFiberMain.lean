@@ -99,6 +99,13 @@ abbrev hS (Y : D) : Type := Shrink.{0} (𝟙_ D ⟶ Y)
 /-- The identification `Shrink (𝟙 ⟶ Y) ≃ₗ (𝟙 ⟶ Y)`. -/
 abbrev hL (Y : D) : hS Y ≃ₗ[ℂ] (𝟙_ D ⟶ Y) := Shrink.linearEquiv ℂ (𝟙_ D ⟶ Y)
 
+/-- The scalar action on `hS Y` read off from `Shrink.instModule`.  In Lean 4.35 Mathlib's
+`Shrink.instMulAction` (via `equivShrink`) is no longer instance-defeq to the `Module` route (via the
+`def` `Shrink.addEquiv`), which breaks `Module ℂ (hS Z →ₗ[ℂ] hS W)`; this instance makes every
+search land on the `Module` route. -/
+instance (priority := high) hS_mulAction (Y : D) : MulAction ℂ (hS Y) :=
+  (inferInstance : Module ℂ (hS Y)).toDistribMulAction.toMulAction
+
 /-- The base functor `Y ↦ Hom(𝟙, Y)` (the unit algebra of `Ind(D)`), with values in `Type`. -/
 def homG : D ⥤ ModuleCat.{0} ℂ where
   obj Y := ModuleCat.of ℂ (hS Y)
@@ -125,55 +132,54 @@ instance : (homG (D := D)).LaxMonoidal where
   μ Y Z := ModuleCat.ofHom (TensorProduct.lift (homMulS Y Z))
   μ_natural_left f Z := by
     apply ModuleCat.MonoidalCategory.tensor_ext
-    intro a b
+    intro (a : hS _) (b : hS Z)
     change homMulS _ Z ((hL _).symm ((hL _) a ≫ f)) b = (hL _).symm ((hL _) (homMulS _ Z a b) ≫ (f ▷ Z))
     simp only [homMulS_apply, LinearEquiv.apply_symm_apply, homMul_natural_left]
   μ_natural_right Y f := by
     apply ModuleCat.MonoidalCategory.tensor_ext
-    intro a b
+    intro (a : hS Y) (b : hS _)
     change homMulS Y _ a ((hL _).symm ((hL _) b ≫ f)) = (hL _).symm ((hL _) (homMulS Y _ a b) ≫ (Y ◁ f))
     simp only [homMulS_apply, LinearEquiv.apply_symm_apply, homMul_natural_right]
   associativity X Y Z := by
     apply ModuleCat.MonoidalCategory.tensor_ext₃'
-    intro a b c
+    intro (a : hS X) (b : hS Y) (c : hS Z)
     change (hL _).symm ((hL _) (homMulS (X ⊗ Y) Z (homMulS X Y a b) c) ≫ (α_ X Y Z).hom) =
       homMulS X (Y ⊗ Z) a (homMulS Y Z b c)
     simp only [homMulS_apply, LinearEquiv.apply_symm_apply, homMul_assoc]
   left_unitality Y := by
     apply ModuleCat.MonoidalCategory.tensor_ext
-    intro c a
+    intro (c : ℂ) (a : hS Y)
     change c • a = (hL _).symm ((hL _) (homMulS (𝟙_ D) Y ((hL _).symm (c • 𝟙 _)) a) ≫ (λ_ Y).hom)
     rw [homMulS_apply, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply, ← homMul_unit_left, map_smul,
       LinearEquiv.symm_apply_apply]
-    rfl
   right_unitality Y := by
     apply ModuleCat.MonoidalCategory.tensor_ext
-    intro a c
+    intro (a : hS Y) (c : ℂ)
     change c • a = (hL _).symm ((hL _) (homMulS Y (𝟙_ D) a ((hL _).symm (c • 𝟙 _))) ≫ (ρ_ Y).hom)
     rw [homMulS_apply, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply, ← homMul_unit_right, map_smul,
       LinearEquiv.symm_apply_apply]
-    rfl
 
 theorem homG_ε_apply (c : ℂ) : (ε (homG (D := D))).hom c = (hL (𝟙_ D)).symm (c • 𝟙 (𝟙_ D)) := rfl
 
 instance : (homG (D := D)).LaxBraided where
   braided Y Z := by
     apply ModuleCat.MonoidalCategory.tensor_ext
-    intro a b
+    intro (a : hS Y) (b : hS Z)
     change (hL _).symm ((hL _) (homMulS Y Z a b) ≫ (β_ Y Z).hom) = homMulS Z Y b a
     simp only [homMulS_apply, LinearEquiv.apply_symm_apply, homMul_braid]
 
 instance : (homG (D := D)).Additive where
   map_add {Y Y' f g} := by
-    apply ModuleCat.hom_ext; apply LinearMap.ext; intro h
+    apply ModuleCat.hom_ext; apply LinearMap.ext; intro (h : hS Y)
     simp only [ModuleCat.hom_add, LinearMap.add_apply, homG_map_apply, Preadditive.comp_add, map_add]
     rfl
 
 instance : (homG (D := D)).Linear ℂ where
   map_smul {Y Y'} f c := by
-    apply ModuleCat.hom_ext; apply LinearMap.ext; intro h
+    apply ModuleCat.hom_ext; apply LinearMap.ext; intro (h : hS Y)
     simp only [ModuleCat.hom_smul, LinearMap.smul_apply, homG_map_apply, Linear.comp_smul, map_smul]
-    rfl
+    change (hL Y').symm (c • ((hL Y) h ≫ f)) = c • (hL Y').symm ((hL Y) h ≫ f)
+    exact map_smul _ _ _
 
 end HomG
 

@@ -32,7 +32,10 @@ theorem mkQ_ne_zero_of_canB_self_ne_zero {x : VirUniv c}
   intro hzero
   have hideal : x ∈ maxIdealVir c := (Submodule.Quotient.mk_eq_zero _).mp hzero
   have hrad : x ∈ InvariantForm.leftRadical (VirGram4.canB c) := by
-    rw [VirGram4.canB, LiRadical.leftRadical_canonical_eq_maxGradedIdeal]
+    have hcan := LiRadical.leftRadical_canonical_eq_maxGradedIdeal (W := virasoroVOA c)
+      (vacVec_ne_zero c) (virasoroVOA_qp c)
+    have hcan' : InvariantForm.leftRadical (VirGram4.canB c) = maxIdealVir c := hcan
+    rw [hcan']
     exact hideal
   have hfun := InvariantForm.mem_leftRadical.mp hrad
   exact hx (DFunLike.congr_fun hfun x)

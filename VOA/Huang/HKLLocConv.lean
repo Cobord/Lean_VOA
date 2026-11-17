@@ -67,13 +67,12 @@ theorem hasSum_prodA {ζ : ℂ} (hζ : 1 < ‖ζ‖) :
   have hre : 0 < (Complex.log ζ).re := by rw [Complex.log_re]; exact Real.log_pos hζ
   have hs := (summable_prodL F hV (prodOp F μ) d hre).hasSum
   have h := hasSum_int_of_complex (g := fun n : ℤ => d.δ - d.α - n)
-    (fun a b hab => by simpa using hab) (fun w hw => ?_) hs
+    (fun a b hab => by simpa using! hab) (fun w hw => ?_) hs
   · refine h.congr_fun fun n => ?_
-    simp only
     rw [show d.δ - d.α - (d.δ - d.α - (n : ℂ)) = n by ring, exp_int_mul_log n hζ0]
   · have hc : prodCoef F (prodOp F μ) d w ≠ 0 := fun h0 => hw (by rw [h0, zero_mul])
     obtain ⟨n, hn⟩ := prodL_exp_int htw hd w hc
-    exact ⟨n, by simp only; rw [← hn]; ring⟩
+    exact ⟨n, by rw [← hn]; ring⟩
 
 /-- The reversed-product expansion at `ζ = 0`. -/
 theorem hasSum_prodC {ζ : ℂ} (hζ0 : ζ ≠ 0) (hζ : ‖ζ‖ < 1) :
@@ -87,9 +86,8 @@ theorem hasSum_prodC {ζ : ℂ} (hζ0 : ζ ≠ 0) (hζ : ‖ζ‖ < 1) :
   have hED : ED d (ζ - 1) = ζ ^ m := by
     rw [ED, hm, show (1 : ℂ) + (ζ - 1) = ζ by ring, exp_int_mul_log m hζ0]
   have h := hasSum_int_of_complex (g := fun n : ℤ => n + d.α + d.γ)
-    (fun a b hab => by simpa using hab) (fun w hw => ?_) hs
+    (fun a b hab => by simpa using! hab) (fun w hw => ?_) hs
   · refine h.congr_fun fun n => ?_
-    simp only
     have e : d.swapM.δ - d.swapM.α - ((n : ℂ) + d.α + d.γ) = ((m - n : ℤ) : ℂ) := by
       change d.δ - d.β - ((n : ℂ) + d.α + d.γ) = _
       push_cast; rw [← hm]; ring
@@ -101,7 +99,6 @@ theorem hasSum_prodC {ζ : ℂ} (hζ0 : ζ ≠ 0) (hζ : ‖ζ‖ < 1) :
     obtain ⟨k, hk⟩ := prodL_exp_int htw hd.swapM w hc
     refine ⟨m - k, ?_⟩
     change d.δ - d.β - w = _ at hk
-    simp only
     push_cast
     rw [← hm, ← hk]; ring
 

@@ -89,7 +89,7 @@ theorem iterate_coefficients_zero_of_values_zero {ι : Type v} [Fintype ι]
     have hc (j : ι) : LogGood (c j) := by
       have hh := logGood_const (VOA.Huang.AssocCoeffReduction.iterSeries_mem_subexpPS hV i₁ i₂ i₃ i₄
         (A j).property (B j).property d.hw₁ d.hw₂ d.hw₃ d.hf)
-      simpa only [coeff_iterSeries] using hh
+      simpa only [coeff_iterSeries] using! hh
     have he : ∀ μ k, ∑ j, exCoeff (lam j) (c j) μ k = 0 := by
       apply log_coeff_zero_of_real_interval lam c hc (a := -1) (by norm_num)
       intro t _ ht0
@@ -100,9 +100,9 @@ theorem iterate_coefficients_zero_of_values_zero {ι : Type v} [Fintype ι]
         rw [Complex.ofReal_exp, Complex.log_exp]
         · simp only [Complex.ofReal_im]; linarith [Real.pi_pos]
         · simp only [Complex.ofReal_im]; exact Real.pi_pos.le
-      simpa only [iterateValue_eq_logFun, hlog] using hh
+      simpa only [iterateValue_eq_logFun, hlog] using! hh
     have hh := he (-p - 1) 0
-    simpa only [lam, c, exCoeff_iterate_eq _ _ d p q hpq] using hh
+    simpa only [lam, c, exCoeff_iterate_eq _ _ d p q hpq] using! hh
   · exact Finset.sum_eq_zero fun j _ => iterCoeff_eq_zero_of_ne
       (A j).property (B j).property d.hw₁ d.hw₂ d.hw₃ d.hf hpq
 
@@ -135,7 +135,7 @@ theorem formal_iterates_zero_of_values_zero {ι : Type v} [Fintype ι]
       ⟨α₁, α₂, α₃, h₄, x, y, z, f, hx, hy, hz, hf, 1 / 2, by norm_num, by norm_num⟩
     have hh := iterate_coefficients_zero_of_values_zero hV i₁ i₂ i₃ i₄ R A B d
       (fun s hs hs' => hv { d with x := s, xpos := hs, xlt := hs' }) p q
-    simpa only [G, map_sum, iterCoeff, d] using hh
+    simpa only [G, map_sum, iterCoeff, d] using! hh
   have hxy (α : ℂ) (z : P₃.carrier) (hz : z ∈ P₃.isMod.weight α) :
       ∀ x y, G x y z = 0 :=
     eq_zero_of_homog (fun x y => G x y z) (fun x x' y => h1 x x' y z)

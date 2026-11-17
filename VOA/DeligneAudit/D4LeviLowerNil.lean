@@ -33,7 +33,7 @@ theorem simple_lower_nil_word
       (lowerBaseExponent m i + 2 * l.length)) (radicalWord ρ w l) = 0 := by
   induction l with
   | nil =>
-      simpa [radicalWord] using source_simple_lower_nil ρ w m h i
+      simpa [radicalWord] using! source_simple_lower_nil ρ w m h i
   | cons p l ih =>
       rcases p with ⟨j, s⟩
       have hp := pow_kill_of_ad
@@ -57,8 +57,8 @@ theorem key_simple_lower_nil
   | mem z hz =>
       obtain ⟨l, hkey, rfl⟩ := hz
       have hlen : l.length = keyDepth k := by
-        simpa [← hkey] using (wordKey_depth l).symm
-      simpa only [hlen] using simple_lower_nil_word ρ w m h i l
+        simpa [← hkey] using! (wordKey_depth l).symm
+      simpa only [hlen] using! simple_lower_nil_word ρ w m h i l
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy]
   | smul c x _ hx => simp [map_smul, hx]

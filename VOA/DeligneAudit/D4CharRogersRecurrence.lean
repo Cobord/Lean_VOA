@@ -11,7 +11,7 @@ open VOA.DeligneGaussian DeligneCharacter
 noncomputable section
 
 theorem rsMon_add (v : D4K.V) (a b : D4K.Kq) :
-    D4K.mon v (a + b) = D4K.mon v a + D4K.mon v b := Finsupp.single_add v a b
+    D4K.mon v (a + b) = D4K.mon v a + D4K.mon v b := AddMonoidAlgebra.single_add v a b
 
 theorem rsMon_smul (a b : D4K.Kq) (v : D4K.V) :
     a • D4K.mon v b = D4K.mon v (a * b) := by
@@ -58,7 +58,6 @@ theorem rsH_recurrence (n : ℕ) :
     rw [← Finset.sum_range_succ', Finset.sum_range_succ]
     have hz : g (n + 2) = 0 := by
       simp [g, qbinom_eq_zero_of_lt D4K.qq (by omega : n + 1 < n + 2), D4K.mon]
-      rfl
     rw [hz, add_zero, rsH, Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro j _
@@ -81,7 +80,6 @@ theorem rsH_recurrence (n : ℕ) :
     rw [show n + 2 = (n + 1) + 1 by omega, Finset.sum_range_succ]
     have hz : c (n + 1) = 0 := by
       simp [c, qbinom_eq_zero_of_lt D4K.qq (by omega : n < n + 1), D4K.mon]
-      rfl
     rw [hz, add_zero, rsH, Finset.smul_sum]
     apply Finset.sum_congr rfl
     intro j _
@@ -99,7 +97,7 @@ theorem rsH_recurrence_all (n : ℕ) :
     rsH 1 * rsH n = rsH (n + 1) + (1 - D4K.qq ^ n) • rsH (n - 1) := by
   cases n with
   | zero => simp
-  | succ n => simpa only [Nat.add_sub_cancel] using rsH_recurrence n
+  | succ n => simpa only [Nat.add_sub_cancel] using! rsH_recurrence n
 
 end
 

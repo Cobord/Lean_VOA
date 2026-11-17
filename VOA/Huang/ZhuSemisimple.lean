@@ -194,10 +194,10 @@ theorem zeroMode_botIncl {a : 𝒱} {w : ℤ} (ha : a ∈ W.grading w) (u : A W)
     rw [djAdmissible_lev, djLev_zero, djAdmissible_act, djCarrierWeak_act] at this
     exact this
   have hrho := djCarrierWeak_bottom_equiv_rho Pr U ha (e.symm u) hmem
-  rw [LinearEquiv.apply_symm_apply] at hrho
   have h2 : (⟨djModeZero W U (w - 1) a ((e.symm u : DJCarrier.deg W U 0) : DJCarrier W U), hmem⟩
       : DJCarrier.deg W U 0) = e.symm (U.ρ (mkAnFull W 0 a) u) := by
-    rw [← hrho, LinearEquiv.symm_apply_apply]
+    apply e.injective
+    exact (hrho.trans (congrArg _ (e.apply_symm_apply u))).trans (e.apply_symm_apply _).symm
   rw [djAdmissible_act, djCarrierWeak_act]
   have h3 := congrArg Subtype.val h2
   simp only at h3

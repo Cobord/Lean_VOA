@@ -117,7 +117,7 @@ theorem hasSum_geometricDenominator {d : ℕ} (hd : 0 < d) {q : ℂ} (hq : ‖q�
   have hqd : ‖q ^ d‖ < 1 := by
     rw [norm_pow]
     exact pow_lt_one₀ (norm_nonneg q) hq hd.ne'
-  simpa [f, Function.comp_def, coeff_geometricDenominator hd, pow_mul] using
+  simpa [f, Function.comp_def, coeff_geometricDenominator hd, pow_mul] using!
     (hasSum_geometric_of_norm_lt_one hqd)
 
 section WeightConjugation
@@ -203,7 +203,7 @@ theorem wardTraceSeries_eq (Y₁ : IntertwiningOperator P₁.isMod Q.isMod N.isM
       (mode (N.isMod.YM a) i * ((Y₁.val n₁ w₁).comp (Y₂.val n₂ w₂)) -
         ((Y₁.val n₁ w₁).comp (Y₂.val n₂ w₂)) * mode (N.isMod.YM a) i) := by
   ext n
-  simpa [wardTraceSeries] using
+  simpa [wardTraceSeries] using!
     (trace_product_commutator Y₁ Y₂ a w₁ w₂ i n₁ n₂ J hJ
       (N.h - W.centralCharge / 24 + n)).symm
 

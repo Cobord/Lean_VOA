@@ -135,7 +135,7 @@ theorem oMod_eq_zero_of_mem_O {M' : Type u} [AddCommGroup M'] [Module ℂ M'] (N
   have h0 := O_le_ker_rhoLW N hcw ha
   rw [LinearMap.mem_ker] at h0
   have := congrArg (fun f => ((f ⟨x, hx⟩ : N.weight h) : M')) h0
-  simp only at this
+  try simp only at this
   rw [rhoLW_apply_coe] at this
   exact this
 

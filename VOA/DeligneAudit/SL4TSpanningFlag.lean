@@ -31,12 +31,12 @@ def thomFlagIdeal (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R) (K : Ideal T) : I
   zero_mem' := ⟨0, by simp, by simp⟩
   add_mem' := by
     rintro y z ⟨x, hx, hy⟩ ⟨w, hw, hz⟩
-    refine ⟨x + w, by simpa using K.add_mem hx hw, ?_⟩
+    refine ⟨x + w, by simpa using! K.add_mem hx hw, ?_⟩
     convert I.add_mem hy hz using 1
     ring
   smul_mem' := by
     rintro c y ⟨x, hx, hy⟩
-    refine ⟨c * x, by simpa using K.mul_mem_left (ρ c) hx, ?_⟩
+    refine ⟨c * x, by simpa using! K.mul_mem_left (ρ c) hx, ?_⟩
     convert I.mul_mem_left c hy using 1
     simp only [smul_eq_mul]
     ring
@@ -44,7 +44,7 @@ def thomFlagIdeal (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R) (K : Ideal T) : I
 theorem thomFlagIdeal_lower (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R) (K : Ideal T) :
     I ≤ thomFlagIdeal ρ t I K := by
   intro y hy
-  exact ⟨0, by simp, by simpa using hy⟩
+  exact ⟨0, by simp, by simpa using! hy⟩
 
 theorem thomFlagIdeal_mul (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R)
     (K : Ideal T) {x : R} (hx : ρ x ∈ K) : t * x ∈ thomFlagIdeal ρ t I K :=
@@ -59,7 +59,7 @@ theorem thomFlagIdeal_bot (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R)
     (hker : ∀ x, ρ x = 0 → t * x ∈ I) : thomFlagIdeal ρ t I ⊥ = I := by
   apply le_antisymm _ (thomFlagIdeal_lower ρ t I ⊥)
   rintro y ⟨x, hx, hy⟩
-  simpa using I.add_mem hy (hker x hx)
+  simpa using! I.add_mem hy (hker x hx)
 
 theorem thomFlagIdeal_top (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R) :
     thomFlagIdeal ρ t I ⊤ = I ⊔ Ideal.span {t} := by
@@ -70,7 +70,7 @@ theorem thomFlagIdeal_top (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R) :
   · rintro y hy
     obtain ⟨z, hz, w, hw, rfl⟩ := Submodule.mem_sup.mp hy
     obtain ⟨x, rfl⟩ := Ideal.mem_span_singleton.mp hw
-    exact ⟨x, trivial, by simpa using hz⟩
+    exact ⟨x, trivial, by simpa using! hz⟩
 
 theorem thomFlagIdeal_step (ρ : R →ₐ[ℂ] T) (t : R) (I : Ideal R)
     {K L : Ideal T} {x : R}

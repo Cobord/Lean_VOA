@@ -28,7 +28,7 @@ theorem wheelExpression_endpoint : twoEvalMap wheelExpression twoSeed = endpoint
   rw [rowEval_append, rowEval_scale] at hz
   have he : rowEval varIndex integerWheel.words = (32 : ℤ) • endpointWheel := by
     apply eq_of_sub_eq_zero
-    simpa only [endpointWheel, sub_eq_add_neg, neg_smul] using hz
+    simpa only [endpointWheel, sub_eq_add_neg, neg_smul] using! hz
   simp only [wheelExpression, twoEvalMap, LinearMap.smul_apply,
     integerExpr_semantics, he]
   rw [← Int.cast_smul_eq_zsmul ℂ (32 : ℤ), smul_smul]
@@ -49,7 +49,7 @@ theorem currentWheel_mem_model : currentWheel b ∈ Polynomial.AllM.modelIdeal m
 /-- The endpoint wheel is not asserted to vanish by itself. -/
 theorem currentWheel_split : currentWheel b =
     MvPolynomial.rename b.embed endpointWheel + evalMap b wheelExpression (middleSeed b) := by
-  simpa only [currentWheel, wheelExpression_endpoint] using corrected_split b wheelExpression
+  simpa only [currentWheel, wheelExpression_endpoint] using! corrected_split b wheelExpression
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
     (R : CurrentModule contactF V) (w : V)

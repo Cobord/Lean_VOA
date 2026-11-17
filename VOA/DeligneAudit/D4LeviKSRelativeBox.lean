@@ -44,13 +44,13 @@ theorem ksRelative_box_span (q n D : ℕ) (hn : n ≤ q)
         | mem B hB =>
             apply Submodule.mem_sup_left
             apply Submodule.subset_span
-            exact ⟨d, by omega, B, hB, U, by simpa [show D - d = e by omega] using hU,
+            exact ⟨d, by omega, B, hB, U, by simpa [show D - d = e by omega] using! hU,
               rfl⟩
         | zero => simp [L, S]
         | add B C hB hC ihB ihC =>
-            simpa only [map_add] using S.add_mem ihB ihC
+            simpa only [map_add] using! S.add_mem ihB ihC
         | smul t B hB ihB =>
-            simpa only [map_smul] using S.smul_mem t ihB
+            simpa only [map_smul] using! S.smul_mem t ihB
       have hmax : ∀ G ∈ ksBlockGradedMaximalSpan q n d, L G ∈ S := by
         intro G hG
         induction hG using Submodule.span_induction with
@@ -88,9 +88,9 @@ theorem ksRelative_box_span (q n D : ℕ) (hn : n ≤ q)
             exact S.sub_mem hmain hlower
         | zero => simp [L, S]
         | add B C hB hC ihB ihC =>
-            simpa only [map_add] using S.add_mem ihB ihC
+            simpa only [map_add] using! S.add_mem ihB ihC
         | smul t B hB ihB =>
-            simpa only [map_smul] using S.smul_mem t ihB
+            simpa only [map_smul] using! S.smul_mem t ihB
       obtain ⟨B, hB, C, hC, heq⟩ := Submodule.mem_sup.mp
         (ksBlockSymmetric_span_graded_maximal q n d hn P hP hd)
       change L P ∈ S

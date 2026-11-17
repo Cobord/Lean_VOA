@@ -16,7 +16,7 @@ variable (A : OrdVModule W M)
 
 @[simp] theorem sqAct_zero_left (k : ℕ) (j : ℤ) : sqAct A (0 : V) k j = 0 := by
   have h := sqAct_smul_left A (0 : ℂ) (0 : V) k j
-  simpa using h
+  simpa using! h
 
 /-- The square mode on one ordinary-weight summand, valued in endomorphisms. -/
 noncomputable def sqModeFamily (j : ℤ) (k : ℤ) :

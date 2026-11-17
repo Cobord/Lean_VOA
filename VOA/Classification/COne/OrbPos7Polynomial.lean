@@ -12,8 +12,17 @@ open scoped TensorProduct
 
 noncomputable def ordinaryLinear (j β : ℤ) : Osc →ₗ[ℂ] Fld Space where
   toFun p := ordinaryField j (latStateGen (latP 1) p β)
-  map_add' p q := by apply Subtype.ext; simp [ordinaryField, latStateGen_add_boson]
-  map_smul' c p := by apply Subtype.ext; simp [ordinaryField, latStateGen_smul_boson]
+  map_add' p q := by
+    apply Subtype.ext
+    change (latticeModule 1 le_rfl j).YM (latStateGen (latP 1) (p + q) β) =
+      (latticeModule 1 le_rfl j).YM (latStateGen (latP 1) p β) +
+        (latticeModule 1 le_rfl j).YM (latStateGen (latP 1) q β)
+    exact (congrArg _ (latStateGen_add_boson (latP 1) p q β)).trans (map_add _ _ _)
+  map_smul' c p := by
+    apply Subtype.ext
+    change (latticeModule 1 le_rfl j).YM (latStateGen (latP 1) (c • p) β) =
+      c • (latticeModule 1 le_rfl j).YM (latStateGen (latP 1) p β)
+    exact (congrArg _ (latStateGen_smul_boson (latP 1) c p β)).trans (map_smul _ _ _)
 
 noncomputable def shiftLinear (k : ℤ) : Fld Space →ₗ[ℂ] Fld Space where
   toFun := fzmul k
@@ -22,7 +31,8 @@ noncomputable def shiftLinear (k : ℤ) : Fld Space →ₗ[ℂ] Fld Space where
 
 /-- Evaluate `p_d w^d` as `z^(-d) Y_j(p_d e^β,z)`. -/
 noncomputable def polynomialField (j β : ℤ) : Polynomial Osc →ₗ[ℂ] Fld Space :=
-  (Finsupp.lsum ℂ fun d : ℕ => (shiftLinear (-(d : ℤ))).comp (ordinaryLinear j β)).comp
+  ((Finsupp.lsum ℂ fun d : ℕ => (shiftLinear (-(d : ℤ))).comp (ordinaryLinear j β)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv (S := Osc) (M := ℕ) ℂ).toLinearMap).comp
     ((Polynomial.toFinsuppIsoLinear Osc).restrictScalars ℂ).toLinearMap
 
 @[simp] theorem polynomialField_monomial (j β : ℤ) (d : ℕ) (p : Osc) :
@@ -34,7 +44,7 @@ noncomputable def polynomialField (j β : ℤ) : Polynomial Osc →ₗ[ℂ] Fld 
 
 @[simp] theorem polynomialField_C (j β : ℤ) (p : Osc) :
     polynomialField j β (Polynomial.C p) = ordinaryField j (latStateGen (latP 1) p β) := by
-  simpa using polynomialField_monomial j β 0 p
+  simpa using! polynomialField_monomial j β 0 p
 
 theorem polynomialField_X_mul (j β : ℤ) (k : ℕ) (P : Polynomial Osc) :
     polynomialField j β (Polynomial.X ^ k * P) =

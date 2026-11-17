@@ -80,11 +80,11 @@ theorem pf_eta : ProdFactors fun k => (1 : PowerSeries L) - X ^ (k + 1) := by
   have h := pf_sub 1 (fun k => k + 1) (fun k => Nat.lt_succ_self k)
   simpa using h
 theorem pf_Thf : ProdFactors Thf :=
-  (pf_sub _ (fun k => 2 * k + 2) (fun k => by dsimp only; omega)).mul (pf_sub _ (fun k => 2 * k + 2) (fun k => by dsimp only; omega))
+  (pf_sub _ (fun k => 2 * k + 2) (fun k => by omega)).mul (pf_sub _ (fun k => 2 * k + 2) (fun k => by omega))
 theorem pf_Ef : ProdFactors Ef :=
-  (pf_sub _ (fun k => 2 * k + 1) (fun k => by dsimp only; omega)).mul (pf_sub _ (fun k => 2 * k + 1) (fun k => by dsimp only; omega))
+  (pf_sub _ (fun k => 2 * k + 1) (fun k => by omega)).mul (pf_sub _ (fun k => 2 * k + 1) (fun k => by omega))
 theorem pf_sqf : ProdFactors sqf :=
-  (pf_sub _ (fun k => k + 1) (fun k => by dsimp only; omega)).mul (pf_sub _ (fun k => k + 1) (fun k => by dsimp only; omega))
+  (pf_sub _ (fun k => k + 1) (fun k => by omega)).mul (pf_sub _ (fun k => k + 1) (fun k => by omega))
 
 theorem val_ua : ((ua : Lˣ) : L) = mono 1 := rfl
 theorem val_ua_inv : ((ua⁻¹ : Lˣ) : L) = mono (-1) := rfl
@@ -147,12 +147,14 @@ theorem Psi_ne_zero : Psi ≠ 0 := by
     rcases mul_eq_zero.mp h with h | h
     · exact h
     · exact absurd h hu.ne_zero
-  have h2 := congrArg (fun F => (PowerSeries.constantCoeff F) (0 : ℤ)) h1
+  have h2 := congrArg (fun F => (PowerSeries.constantCoeff F).coeff (0 : ℤ)) h1
   simp only [map_sub, map_one, PowerSeries.constantCoeff_C] at h2
   rw [mono] at h2
-  change (1 : L) 0 - (AddMonoidAlgebra.single (1 : ℤ) (1 : ℚ)) 0 = (0 : L) 0 at h2
-  rw [show (1 : L) = AddMonoidAlgebra.single 0 1 from rfl, Finsupp.single_apply, Finsupp.single_apply,
-    if_pos rfl, if_neg (by norm_num)] at h2
+  change ((1 : L) - AddMonoidAlgebra.single (1 : ℤ) (1 : ℚ)).coeff 0 = (0 : L).coeff 0 at h2
+  rw [show (1 : L) = AddMonoidAlgebra.single 0 1 from rfl, AddMonoidAlgebra.coeff_sub,
+    AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_zero,
+    Finsupp.sub_apply, Finsupp.single_apply, Finsupp.single_apply, if_pos rfl, if_neg (by norm_num),
+    Finsupp.zero_apply] at h2
   have h3 : (1 : ℚ) - 0 = 0 := h2
   norm_num at h3
 
@@ -206,11 +208,11 @@ def Pm : PowerSeries L := infProd fun k => (1 + X ^ (k + 1)) ^ 2 * (1 - X ^ (k +
 def Eodd : PowerSeries L := infProd fun k => (1 - X ^ (2 * k + 1)) ^ 2
 
 theorem pf_odd : ProdFactors fun k => (1 : PowerSeries L) - X ^ (2 * k + 1) := by
-  have h := pf_sub 1 (fun k => 2 * k + 1) (fun k => by dsimp only; omega)
+  have h := pf_sub 1 (fun k => 2 * k + 1) (fun k => by omega)
   simpa using h
 
 theorem pf_even : ProdFactors fun k => (1 : PowerSeries L) - X ^ (2 * k + 2) := by
-  have h := pf_sub 1 (fun k => 2 * k + 2) (fun k => by dsimp only; omega)
+  have h := pf_sub 1 (fun k => 2 * k + 2) (fun k => by omega)
   simpa using h
 
 /-- **Euler**: `(-q;q)_∞ (q;q²)_∞ = 1`. -/

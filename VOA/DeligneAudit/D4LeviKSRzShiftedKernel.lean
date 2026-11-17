@@ -17,7 +17,7 @@ private theorem yOp_comm_height
     (ρ : CurrentModule D4sector.f V) (r t : ℕ) :
     yOp ρ r * yOp ρ t = yOp ρ t * yOp ρ r := by
   ext v
-  simpa [yOp] using radical_ops_comm ρ 4 4 r t v
+  simpa [yOp] using! radical_ops_comm ρ 4 4 r t v
 
 theorem rz_zero_pair_words_height
     (ρ : CurrentModule D4sector.f V) (w : V)
@@ -38,7 +38,7 @@ theorem rz_zero_pair_words_height
         (((xs.map (xOp ρ)).prod * (zs.map (zOp ρ)).prod) • w) ∈
       heightHigherOrbit ρ w m
         (pairFinalKey a b c (xs.sum + zs.sum + s)) := by
-    simpa [rzKey, pairFinalKey, hx, hz] using hr
+    simpa [rzKey, pairFinalKey, hx, hz] using! hr
   rw [rz_zero_topSum (yOp ρ) (zOp ρ)
     (yOp_comm_height ρ) b k s] at hr'
   have hprod : aWord (yOp ρ) (List.replicate b 0) = (yOp ρ 0) ^ b := by
@@ -51,7 +51,7 @@ theorem rz_zero_pair_words_height
         (((xs.map (xOp ρ)).prod * (zs.map (zOp ρ)).prod) • w)) ∈
       heightHigherOrbit ρ w m
         (pairFinalKey a b c (xs.sum + zs.sum + s)) := by
-    simpa only [mul_smul, Nat.cast_smul_eq_nsmul] using hr'
+    simpa only [mul_smul, Nat.cast_smul_eq_nsmul] using! hr'
   exact (Submodule.smul_mem_iff _ hc).mp hsmul
 
 theorem rzSourceGenerator_height
@@ -76,11 +76,11 @@ theorem rzSourceGenerator_height
       heightHigherOrbit ρ w m
         (pairFinalKey a b (k + l) (xs.sum + zs.sum + s)) := by
     rw [rzRawSourceGenerator_word_bridge]
-    simpa only [xs, zs, List.map_map, Function.comp_def] using
+    simpa only [xs, zs, List.map_map, Function.comp_def] using!
       rz_zero_pair_words_height ρ w m a b (k + l) k s xs zs
         h hk hks hx hz
   rw [rzSourceGenerator_evaluation]
-  simpa only [xs, zs] using
+  simpa only [xs, zs] using!
     (heightHigherOrbit ρ w m
       (pairFinalKey a b (k + l) (xs.sum + zs.sum + s))).nsmul_mem
       hraw _

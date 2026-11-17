@@ -207,7 +207,6 @@ theorem exists_slotRelabeling_typeAssignment_eq {A : Type w}
   refine ⟨sigma, ?_⟩
   funext q
   rcases q with ⟨j, q⟩
-  rw [typeAssignment_relabelSlots]
   change I.typeAssignment currentType ⟨j, (sigma j).symm q⟩ =
     J.typeAssignment currentType ⟨j, q⟩
   have hmap := alignmentAtColor_map I J currentType htable j ((sigma j).symm q)
@@ -248,7 +247,8 @@ theorem typeAssignment_eq_iff_rootEquiv_preserves_type {A : Type w}
   constructor
   · intro h r
     have hr := congrFun h (I.rootToSlot r)
-    simpa using hr.symm
+    rw [typeAssignment_rootToSlot] at hr
+    exact hr.symm
   · intro h
     funext q
     have hq := h (I.rootToSlot.symm q)

@@ -67,6 +67,8 @@ namespace VOA
 open VertexOperatorAlgebra
 open scoped BigOperators
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]

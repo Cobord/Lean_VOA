@@ -39,7 +39,7 @@ theorem eq_iSup_inf_maxGenEigenspace_of_locally_finite
       have he := Module.End.iSup_maxGenEigenspace_eq_top (f.restrict hT)
       have he' := congrArg (Submodule.map T.subtype) he
       simpa only [Submodule.map_iSup, ← Submodule.inf_genEigenspace,
-        Submodule.map_top, Submodule.range_subtype] using he'.symm
+        Submodule.map_top, Submodule.range_subtype] using! he'.symm
     have hle : T ≤ ⨆ μ : ℂ, P ⊓ f.maxGenEigenspace μ := by
       rw [hdecomp]
       exact iSup_mono fun μ => inf_le_inf inf_le_right le_rfl

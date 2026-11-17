@@ -48,7 +48,7 @@ theorem a3_conversion_other (j : Fin 2) (t : Fin 3)
 theorem a3_conversion_radical_comm (i j : Fin 3) (r s : ℕ) :
     ρ.op (F i) r * ρ.op (F j) s =
       ρ.op (F j) s * ρ.op (F i) r := by
-  simpa [radicalOp] using radicalOp_comm ρ i r j s
+  simpa [radicalOp] using! radicalOp_comm ρ i r j s
 
 /-- A word in the remaining radical colour commutes with the conversion current. -/
 theorem a3_conversion_spectator_comm (j : Fin 2) (zs : List ℕ) (r : ℕ) :

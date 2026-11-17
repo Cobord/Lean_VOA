@@ -26,7 +26,7 @@ theorem m2_normalEnumeration_span :
   · exact List.forall_iff_forall_mem.mp packets_reducing
   · intro l hl
     apply (show highWordIdeal 2 ≤ m2ModelIdeal from le_sup_right)
-    exact Ideal.subset_span ⟨l.map varIndex, by simpa only [List.length_map] using hl, rfl⟩
+    exact Ideal.subset_span ⟨l.map varIndex, by simpa only [List.length_map] using! hl, rfl⟩
 
 end
 end VOA.DeligneAudit.D4FusionContact.M2Certificate

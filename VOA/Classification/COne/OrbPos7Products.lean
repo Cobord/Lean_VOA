@@ -91,6 +91,7 @@ theorem PF_charges (β γ : ℤ) :
         simp only [neg_neg]
         have hc := charge_product_all_right_offsets hn a j β γ e f ℓ s he x
         convert hc using 1
+        · rfl
         apply finsum_congr
         intro d
         change _ = cbinom ((e : ℂ)/n) d •

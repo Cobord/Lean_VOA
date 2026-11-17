@@ -41,11 +41,11 @@ theorem conv_Phi (hV : StronglyRational W)
     (i₁ : P₁.IsIrreducibleLW) (i₂ : P₂.IsIrreducibleLW) (iN : N.IsIrreducibleLW)
     {z₁ z₂ : ℂ} (hz₂ : z₂ ≠ 0) (hz : ‖z₂‖ < ‖z₁‖) (x : P₁.carrier) (y : P₂.carrier) :
     Conv (z₂ / z₁) (Phi Y₁ Y₂ x y) := by
-  refine FusionTop.induction_weight P₁.isMod x (by simpa using conv_zero _)
-    (fun a b ha hb => by simpa only [map_add, LinearMap.add_apply] using ha.add hb) ?_
+  refine FusionTop.induction_weight P₁.isMod x (by simpa using! conv_zero _)
+    (fun a b ha hb => by simpa only [map_add, LinearMap.add_apply] using! ha.add hb) ?_
   intro α₁ x hx
-  refine FusionTop.induction_weight P₂.isMod y (by simpa using conv_zero _)
-    (fun a b ha hb => by simpa only [map_add] using ha.add hb) ?_
+  refine FusionTop.induction_weight P₂.isMod y (by simpa using! conv_zero _)
+    (fun a b ha hb => by simpa only [map_add] using! ha.add hb) ?_
   intro α₂ y hy
   rw [Phi_homog Y₁ Y₂ hx hy]
   intro n

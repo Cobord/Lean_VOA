@@ -218,7 +218,7 @@ theorem gword_mem (j : ℕ) : ∀ (l : Fin j → ℕ) (v : Space n m) (d : ℕ),
   induction j with
   | zero =>
     intro l v d hv
-    simpa [gword] using hv
+    simpa [gword] using! hv
   | succ j ih =>
     intro l v d hv
     change (act f hJ hskew z).op c₀ 1 (l 0) (gword f hJ hskew z c₀ j (Fin.tail l) v) ∈ _

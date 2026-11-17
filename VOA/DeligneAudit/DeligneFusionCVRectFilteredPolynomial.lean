@@ -35,7 +35,7 @@ abbrev PolyAlg := Algebra.adjoin ℂ (Set.range (polyOp R w letter))
 
 def polyAlg : MvPolynomial ι ℂ →ₐ[ℂ] Module.End ℂ (Gr R w) :=
   letI : CommRing (PolyAlg R w letter) := Algebra.adjoinCommRingOfComm ℂ (by
-    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
+    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ _
     exact polyOp_commute R w letter i j)
   (PolyAlg R w letter).val.comp
     (MvPolynomial.aeval fun i => ⟨polyOp R w letter i, Algebra.subset_adjoin ⟨i, rfl⟩⟩)

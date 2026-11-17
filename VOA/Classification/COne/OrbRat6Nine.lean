@@ -66,12 +66,13 @@ def aW : (orbifold (Subgroup.zpowers kleinCubic)).carrier :=
 
 theorem vv_grading (k : ℕ) (hk : k ≤ 6) : vv k ∈ V1.grading 9 := by
   have h := bigradα_le_gradingLatGen (latP 1) _ _ (vv_bigrad k)
-  convert h using 2
-  rw [halfNorm_latP1]
-  simp only [ci]
-  have hk' : (k : ℤ) ≤ 6 := by exact_mod_cast hk
-  push_cast
-  ring
+  have e : (k : ℤ) * (6 - k) + LatGen.halfNorm (latP 1) ((3 : ℤ) - (k : ℤ)) = 9 := by
+    rw [halfNorm_latP1 ((3 : ℤ) - (k : ℤ))]
+    simp only [ci]
+    push_cast
+    ring
+  rw [← e]
+  exact h
 
 theorem aT_grading : aT ∈ V1.grading 9 := by
   simp only [aT, R7, zero_smul, zero_add, add_zero, one_smul]

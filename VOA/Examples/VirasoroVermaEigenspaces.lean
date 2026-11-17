@@ -31,7 +31,7 @@ theorem verma_L0_coordinate (c h : ℂ) (v : Verma c h)
       (h+(energyHW w.val:ℂ)) * (vermaSortedBasis c h).repr (negWord c h u.val) w
     rw [vermaMode_zero_negWord,map_smul,Finsupp.smul_apply,smul_eq_mul]
     have hucoord : (vermaSortedBasis c h).repr (negWord c h u.val)=Finsupp.single u 1 := by
-      simpa only [vermaSortedBasis_apply] using (vermaSortedBasis c h).repr_self u
+      simpa only [vermaSortedBasis_apply] using! (vermaSortedBasis c h).repr_self u
     rw [hucoord]
     by_cases hu : u=w
     · subst u; simp
@@ -74,7 +74,7 @@ theorem verma_mem_level_iff_eigen (c h : ℂ) (n : ℕ) (v : Verma c h) :
     intro w hw
     by_cases he : energyHW w.val=n
     · apply Submodule.smul_mem
-      simpa only [vermaSortedBasis_apply] using negWord_mem_sortedSpan_of_sorted c h w.property he
+      simpa only [vermaSortedBasis_apply] using! negWord_mem_sortedSpan_of_sorted c h w.property he
     · have hz := verma_eigen_coordinate_zero c h v n hv w (by exact_mod_cast he)
       simp only [hz,zero_smul]
       exact Submodule.zero_mem _

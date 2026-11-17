@@ -445,7 +445,7 @@ theorem act_wMode_expand (A : WeakModule W M) (u : 𝒱) (m : ℤ) (t : M) (n : 
     rw [wTerm, map_smul, ← WeakModule.act_def, act_Lm1_pow_expand, Finset.smul_sum]
     rw [Finset.sum_subset (Finset.range_subset_range.2 (by omega : i + 1 ≤ K)) (fun r _ hr => ?_)]
     · refine Finset.sum_congr rfl fun r _ => ?_
-      rw [hg]; dsimp only
+      rw [hg]; try dsimp only
       rw [← Int.cast_smul_eq_zsmul ℂ, smul_smul]
     · rw [Finset.mem_range] at hr
       rw [mcoeff, Nat.choose_eq_zero_of_lt (by omega), Nat.cast_zero, zero_mul, zero_smul,
@@ -455,14 +455,14 @@ theorem act_wMode_expand (A : WeakModule W M) (u : 𝒱) (m : ℤ) (t : M) (n : 
   refine Finset.sum_congr rfl fun r _ => ?_
   rw [sum_range_shift (g r) K r]
   · refine Finset.sum_congr rfl fun a _ => ?_
-    rw [hg]; dsimp only
+    rw [hg]; try dsimp only
     rw [scalar_reindex, Nat.add_sub_cancel]
   · intro i hi
-    rw [hg]; dsimp only
+    rw [hg]; try dsimp only
     rw [mcoeff, Nat.choose_eq_zero_of_lt hi, Nat.cast_zero, zero_mul, Int.cast_zero, mul_zero,
       zero_smul]
   · intro i hi
-    rw [hg]; dsimp only
+    rw [hg]; try dsimp only
     rw [hK i hi, WeakModule.act_zero_right, map_zero, smul_zero]
 
 theorem finsum_int_eq_sum_range {X : Type*} [AddCommMonoid X] (f : ℤ → X) (K : ℕ)

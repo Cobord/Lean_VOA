@@ -74,14 +74,14 @@ theorem cyclic_A2 (c : Fin 8) : (Pi.single c 1 : Fin 8 → ℂ) ∈ slotWords br
   have h514 := wordA_mem [5, 1, 4] (by decide); rw [w514] at h514
   have h5 := wordA_mem [] (by decide)
   fin_cases c
-  · simpa using Submodule.neg_mem _ h53
-  · simpa using Submodule.neg_mem _ h54
+  · simpa using! Submodule.neg_mem _ h53
+  · simpa using! Submodule.neg_mem _ h54
   · have := Submodule.smul_mem _ (-(1 / 2 : ℂ)) h55
     convert this using 1
     funext y; fin_cases y <;> simp [Pi.single_apply] <;> norm_num
-  · simpa using Submodule.neg_mem _ h4
-  · simpa using h3
-  · simpa using h5
+  · simpa using! Submodule.neg_mem _ h4
+  · simpa using! h3
+  · simpa using! h5
   · have := Submodule.smul_mem _ (1 / 3 : ℂ) (Submodule.sub_mem _ h154 (Submodule.smul_mem _ 2 h514))
     convert this using 1
     funext y; fin_cases y <;> simp [Pi.single_apply] <;> norm_num
@@ -148,8 +148,9 @@ def A2sector : DeligneSectorData where
   thetaH := fun _ => 1
   cartan_table := by
     intro h hh y
-    rw [A2.cartan_table h hh]
-    split_ifs <;> simp_all
+    refine (A2.cartan_table h hh y).trans ?_
+    split_ifs with h1 h2 h2 <;>
+      first | rfl | exact absurd h1 h2 | exact absurd h2 h1 | simp
   hθ := (6 : Fin 8)
   hθ_cartan := by decide
   hθ_ne := one_ne_zero
@@ -174,13 +175,13 @@ theorem localWeylRel_of_G {V : Type*} [AddCommGroup V] [Module ℂ V]
   cartan_pos hh h6 r hr := h.cartan_pos hh h6 r hr
   cartan_zero hh h6 := by
     have := h.cartan_zero hh h6
-    simpa [A2sector] using this
+    simpa [A2sector] using! this
   lowering_f1 := by
     have := h.lowering (3 : Fin 8) (Or.inl rfl)
-    simpa [A2sector] using this
+    simpa [A2sector] using! this
   lowering_f2 := by
     have := h.lowering (4 : Fin 8) (Or.inr rfl)
-    simpa [A2sector] using this
+    simpa [A2sector] using! this
   fusion x hx1 hx2 := h.fusion x ⟨hx1, hx2⟩
 
 theorem fusionModuleBoundG_of (F : ℕ → PowerSeries ℚ) (hU5 : FusionModuleBound F) :

@@ -21,14 +21,14 @@ private theorem radicalWord_mem_cyc (l : List (Fin 2 × ℕ)) :
       VOA.DeligneAudit.UnivG.cycSubG ρ w := by
   induction l with
   | nil =>
-      simpa [radicalWord] using
+      simpa [radicalWord] using!
         (VOA.DeligneAudit.UnivG.wordOp_mem_cycSubG ρ w [])
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       fin_cases i
-      · simpa [radicalWord, a2RadicalOp] using
+      · simpa [radicalWord, a2RadicalOp] using!
           VOA.DeligneAudit.UnivG.cycSubG_inv ρ w 3 s ih
-      · simpa [radicalWord, a2RadicalOp] using
+      · simpa [radicalWord, a2RadicalOp] using!
           VOA.DeligneAudit.UnivG.cycSubG_inv ρ w 5 s ih
 
 private theorem keyLayer_le_cyc (k : A2RadicalKey) :
@@ -45,7 +45,7 @@ private theorem radical_list_mem_key : ∀ (l : List (Fin 8 × ℕ)),
   | nil =>
       intro _
       exact ⟨a2WordKey [], by
-        simpa [wordOp, radicalWord] using
+        simpa [wordOp, radicalWord] using!
           (radicalWord_mem_own_key ρ w ([] : List (Fin 2 × ℕ)))⟩
   | cons x l ih =>
       intro hl
@@ -54,10 +54,10 @@ private theorem radical_list_mem_key : ∀ (l : List (Fin 8 × ℕ)),
       obtain ⟨k, hk⟩ := ih hl.2
       rcases hl.1 with rfl | rfl
       · exact ⟨a2KeyInsert 0 r k, by
-          simpa [wordOp, a2RadicalOp] using
+          simpa [wordOp, a2RadicalOp] using!
             a2RadicalOp_maps_key ρ w 0 r k hk⟩
       · exact ⟨a2KeyInsert 1 r k, by
-          simpa [wordOp, a2RadicalOp] using
+          simpa [wordOp, a2RadicalOp] using!
             a2RadicalOp_maps_key ρ w 1 r k hk⟩
 
 private theorem radical_list_mem_all (l : List (Fin 8 × ℕ))
@@ -87,11 +87,11 @@ theorem a2_cycSubG_eq_leviClosure_allKeys (p q : ℕ)
     a2LeviClosure_contains ρ _ (radical_list_mem_all ρ w r hr)
   clear hr
   induction l with
-  | nil => simpa [wordOp] using hr'
+  | nil => simpa [wordOp] using! hr'
   | cons x l ih =>
       rcases x with ⟨a, s⟩
       simp only [List.forall_cons] at hl
-      simpa [wordOp] using
+      simpa [wordOp] using!
         (a2LeviClosure_inv ρ _ a s hl.1 (ih hl.2))
 
 /-- The explicit finite key box contains every key that contributes to the

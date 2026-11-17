@@ -121,7 +121,7 @@ theorem singleAdjoint_raised_middle_lowering (s : ℕ) (hs : b + 1 ≤ s) :
   rw [coreMiddle_commutator, singleAdjoint_middle_lowering Q v b h s hs, map_zero,
     zero_add]
   have hc := h.cartan 1 s (by omega)
-  simpa [coreMiddleBracket, A3Sector.simpleH] using congrArg Neg.neg hc
+  simpa [coreMiddleBracket, A3Sector.simpleH] using! congrArg Neg.neg hc
 
 /-- Every current on the raised vector truncates at one less than its middle label. -/
 theorem singleAdjoint_raised_truncation (e : Fin 15) (s : ℕ) (hs : b + 1 ≤ s) :
@@ -162,7 +162,7 @@ theorem singleAdjoint_raised_rank :
     (b + 2 - 1) (20 * 6 ^ (b + 2 - 2))).mp hb V Q (Q.op 3 0 v)
       (singleAdjoint_raised_localWeyl Q v b h)
       (fun e => singleAdjoint_raised_truncation Q v b h e _ (by omega))
-  simpa using he.2
+  simpa using! he.2
 
 end
 

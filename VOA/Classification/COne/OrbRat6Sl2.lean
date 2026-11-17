@@ -51,8 +51,9 @@ theorem smul_e_f :
 theorem smul_h_charge (k : ℤ) :
     V1.smul (hSt (latP 1) (a1 1)) 0 (latChargeGen (latP 1) k) =
       ((2 * k : ℤ) : ℂ) • latChargeGen (latP 1) k := by
-  rw [show latChargeGen (latP 1) k = latStateGen (latP 1) (vacuumN _) k from rfl,
-    smul_hSt_zero_latStateGen, latP_form]
+  rw [show latChargeGen (latP 1) k = latStateGen (latP 1) (vacuumN _) k from rfl]
+  refine (smul_hSt_zero_latStateGen (latP 1) _ _ (a1 1) _ k).trans ?_
+  rw [latP_form 1 (a1 1) k]
   congr 2
 
 theorem comm_EF (x : Sp) : Ep (Fm x) - Fm (Ep x) = eps1 • Hm x := by
@@ -60,7 +61,7 @@ theorem comm_EF (x : Sp) : Ep (Fm x) - Fm (Ep x) = eps1 • Hm x := by
   rfl
 
 theorem comm_HF (x : Sp) : Hm (Fm x) - Fm (Hm x) = (-2 : ℂ) • Fm x := by
-  rw [mode_comm, smul_h_charge, map_smul]
+  rw [mode_comm, smul_h_charge (-a1 1 : (latP 1).carrier), map_smul]
   change ((2 * (-1 : ℤ) : ℤ) : ℂ) • Fm x = _
   norm_num [a1]
 
@@ -78,8 +79,10 @@ theorem Phi_hSt : Phi (hSt (latP 1) (a1 1)) = hSt (glueLat 1 1) (glueIota 1 1 (a
 theorem Hm_latStateGen (p : FockN (rank (latP 1))) (n : ℤ) :
     Hm (latStateGen (latP 1) p n) = ((2 * n + 1 : ℤ) : ℂ) • latStateGen (latP 1) p n := by
   apply Psi_inj
-  rw [Psi_mode, Phi_hSt, shiftEmb_latStateGen, smul_hSt_zero_latStateGen, map_smul,
-    shiftEmb_latStateGen]
+  rw [Psi_mode, Phi_hSt,
+    shiftEmb_latStateGen (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) p n,
+    smul_hSt_zero_latStateGen, map_smul,
+    shiftEmb_latStateGen (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) p n]
   congr 2
   rw [map_add, glueIota_isometry, glueIota_delta, latP_form]
   simp [a1]
@@ -150,7 +153,7 @@ theorem mem_of_monomials' {w : ℕ} {S : Submodule ℂ (FockN (rank (latP 1)))}
   rw [p.as_sum]
   refine Submodule.sum_mem _ fun d hd => ?_
   have hw : Finsupp.weight weightFnN d = w := hp (MvPolynomial.mem_support_iff.mp hd)
-  rw [show monomial d (coeff d p) = coeff d p • (monomial d (1 : ℂ) : FockN (rank (latP 1))) by
+  rw [show monomial d (p.coeff d) = p.coeff d • (monomial d (1 : ℂ) : FockN (rank (latP 1))) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   exact Submodule.smul_mem _ _ (hS d hw)
 
@@ -224,7 +227,7 @@ theorem weight_le {h : ℂ} {S : Submodule ℂ Sp}
   change shiftWeightSpace (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) h ≤ S
   refine iSup_le fun p => iSup_le fun hp => ?_
   obtain ⟨hp0, hpw⟩ := hp
-  rw [shiftWeight_rankOne 1 le_rfl 1] at hpw
+  rw [shiftWeight_rankOne 1 le_rfl 1 p.1.toNat p.2] at hpw
   apply hS p.1 p.2 hp0
   rw [← hpw]
   congr 2
@@ -251,6 +254,7 @@ theorem mem_weight {w n : ℤ} (hw : 0 ≤ w) {x : Sp} (hx : x ∈ Sd n w) :
     (p := (w, n)) hw hx
   rw [shiftWeight_rankOne 1 le_rfl 1] at h
   have : ((w.toNat : ℕ) : ℝ) = (w : ℝ) := by exact_mod_cast Int.toNat_of_nonneg hw
+  change x ∈ shiftWeightSpace (latP 1) (glueLat 1 1) (glueIota 1 1) (glueDelta 1 1) _
   convert h using 3
   dsimp only
   rw [this]
@@ -266,7 +270,7 @@ variable {M : Type*} [AddCommGroup M] [Module ℂ M] {E F H : Module.End ℂ M} 
 theorem H_Fpow (hHF : ∀ x, H (F x) - F (H x) = (-2 : ℂ) • F x) {v : M} {l : ℂ}
     (hv : H v = l • v) (k : ℕ) : H ((F ^ k) v) = (l - 2 * k) • (F ^ k) v := by
   induction k with
-  | zero => simpa using hv
+  | zero => simpa using! hv
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := hHF ((F ^ k) v)

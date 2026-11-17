@@ -142,7 +142,8 @@ theorem X_lattice_value : (OrbOctaR.X : LatModuleGen (latP 1)) =
 theorem X_ambient_primary :
     (OrbOctaR.X : LatModuleGen (latP 1)) ∈ prim (V2m 1 le_rfl) 16 := by
   rw [Tav_coe ⟨isA4Inv_I4, s3_I4⟩]
-  convert T2_prim I4_hom using 1
+  convert T2_prim I4_hom using 2
+  all_goals first | rfl | norm_num
 
 noncomputable def primaryV8 : LatModuleGen (latP 4) :=
   (2 : ℂ) • latChargeGen (latP 4) (2 : ℤ) + ls 4 primaryNeutral +
@@ -164,7 +165,8 @@ theorem primary_bottom_mode :
     (V2m 1 le_rfl).smul (latChargeGen (latP 1) (4 : ℤ)) 15 (ls 1 primaryNeutral) =
       (465696 / 5 : ℂ) • latChargeGen (latP 1) (4 : ℤ) := by
   have h := V2m_charge_smul_evRc 1 le_rfl (4 : ℤ) (0 : ℤ) 15 (liftR primaryNeutral)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul] at h
+  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle 1 ((4 : ℤ) : (latP 1).carrier)
+    ((0 : ℤ) : (latP 1).carrier), one_smul] at h
   norm_num only [latP_form, mul_zero, sub_zero, add_zero] at h
   rw [show ls 1 primaryNeutral =
     latStateGen (latP 1) (evR (a0 1) primaryNeutral) (0 : ℤ) from rfl, h]
@@ -193,7 +195,7 @@ theorem primary_ground_coupling :
   have he : ambientProbe 1 (latChargeGen (latP 1) (4 : ℤ)) = 1 := by
     change ambientProbe 1 (sector 4 1) = 1
     rw [ambientProbe_sector, if_pos rfl]
-    simpa [fw] using (fockForm_monomial
+    simpa [fw] using! (fockForm_monomial
       (r := VOA.IntegralLattice.rank (latP 1)) 0 0 1 1)
   rw [he]
   norm_num

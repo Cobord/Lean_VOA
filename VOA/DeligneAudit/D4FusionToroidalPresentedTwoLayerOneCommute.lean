@@ -28,7 +28,7 @@ theorem two_one_other_on_theta (c : Fin 28) (hc : c ≠ D4sector.c₀)
     (s t : ℕ) :
     (ρPTE 2).op c 1 s
       ((ρPTE 2).op D4sector.c₀ 1 t (pTE 2)) = 0 := by
-  rw [two_one_comm]
+  refine (two_one_comm c D4sector.c₀ s t (pTE 2)).trans ?_
   rw [two_generator_one_other_all c hc s]
   simp
 

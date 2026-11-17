@@ -99,7 +99,7 @@ theorem d4LeviHilb_tsum (n : ℕ) : (∑' N : ℕ, d4LeviHilb n N) = 29 ^ n := b
   rw [← hsum]
   apply tsum_eq_sum
   intro N hN
-  exact hzero N (by simpa using hN)
+  exact hzero N (by simpa using! hN)
 
 end
 

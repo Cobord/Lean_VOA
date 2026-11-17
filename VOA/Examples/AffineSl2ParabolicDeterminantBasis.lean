@@ -66,7 +66,7 @@ theorem parabolicAdaptedGram_eval (k h : ℂ) (d N : ℕ) (c : ℤ)
       contravariant k h (parabolicAdaptedFamilyBasis k h d N c i)
         (parabolicAdaptedFamilyBasis k h d N c j) := by
   have he := congrFun (congrFun (parabolicAdaptedGram_eval_eq k h d N c) i) j
-  simpa [LinearMap.BilinForm.toMatrix_apply,jointContravariant,LinearMap.compl₁₂_apply] using he
+  simpa [LinearMap.BilinForm.toMatrix_apply,jointContravariant,LinearMap.compl₁₂_apply] using! he
 
 /-- The nonzero scaling is fixed before either variable parameter is specialized. -/
 def parabolicDeterminantScale (d N : ℕ) (c : ℤ) : ℂ :=

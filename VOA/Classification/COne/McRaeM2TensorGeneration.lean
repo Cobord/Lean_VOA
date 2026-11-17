@@ -113,18 +113,14 @@ theorem tensor_homogeneousZeroMode_span_eq_top :
       refine LogFin.induction_on N₂ (C := fun y => η.1 n 0 x y ∈ P) y ?_ ?_ ?_
       · intro b y hy
         exact Submodule.subset_span ⟨n,a,b,x,y,hx,hy,rfl⟩
-      · dsimp only
-        rw [map_zero]
+      · rw [map_zero]
         exact P.zero_mem
       · intro y z hy hz
-        dsimp only at hy hz ⊢
         rw [map_add]
         exact P.add_mem hy hz
-    · dsimp only
-      rw [map_zero,LinearMap.zero_apply]
+    · rw [map_zero,LinearMap.zero_apply]
       exact P.zero_mem
     · intro x z hx hz
-      dsimp only at hx hz ⊢
       rw [map_add,LinearMap.add_apply]
       exact P.add_mem hx hz
   have hle : Submodule.span ℂ (tensorZeroModeValues hC2 N₁ N₂ h₁ h₂) ≤ P := by

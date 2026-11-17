@@ -12,12 +12,12 @@ noncomputable section
 variable {m : ℕ} (b : BoundaryPair m)
 
 def middleIndices : Finset (ℕ × ℕ) :=
-  ((Finset.antidiagonal (b.lower.val+b.top.val)).erase (b.lower.val,b.top.val)).erase
+  ((Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)).erase (b.lower.val,b.top.val)).erase
     (b.top.val,b.lower.val)
 
 theorem middleSeed_eq_sum : middleSeed b = (1/2:ℂ) •
     ∑ x ∈ middleIndices b, modeX m 0 x.1 * modeX m 0 x.2 := by
-  let S := Finset.antidiagonal (b.lower.val+b.top.val)
+  let S := Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)
   let f := fun x : ℕ × ℕ => modeX m 0 x.1 * modeX m 0 x.2
   have h0 : (b.lower.val,b.top.val) ∈ S := by simp [S]
   have h1 : (b.top.val,b.lower.val) ∈ S.erase (b.lower.val,b.top.val) := by
@@ -51,7 +51,7 @@ theorem middleSeed_mem : middleSeed b ∈ middleSpan b := by
   apply Submodule.sum_mem
   intro x hx
   have hmem := hx
-  simp only [middleIndices,Finset.mem_erase,Finset.mem_antidiagonal] at hmem
+  simp only [middleIndices,Finset.mem_erase,Finset.HasAntidiagonal.mem_antidiagonal] at hmem
   have hn0 : ¬ (x.1 = b.lower.val ∧ x.2 = b.top.val) := by
     intro he
     exact hmem.2.1 (Prod.ext he.1 he.2)

@@ -31,7 +31,7 @@ private theorem cartan_xyz_shift
     (hls : ∀ p ∈ ls, p.1 = 1 ∨ p.1 = 4 ∨ p.1 = 5) :
     H (radicalWord ρ w ls) = c • colourPowerShift ρ w j r ls := by
   induction ls with
-  | nil => simpa [radicalWord, colourPowerShift, wordOp] using hzero
+  | nil => simpa [radicalWord, colourPowerShift, wordOp] using! hzero
   | cons p ls ih =>
       rcases p with ⟨i, s⟩
       have hi := hls (i, s) (by simp)
@@ -55,9 +55,9 @@ private theorem x_comm_xyz (r : ℕ) (i : Fin 6) (s : ℕ) (v : V)
         if i = 1 then (2 : ℂ) • ρ.op (radicalColour i) (r + s) v else 0 := by
   rcases selective_cartan_pairings ρ r s v with ⟨h1, h4, h5, _⟩
   rcases hi with rfl | rfl | rfl
-  · simpa [xOp, radicalColour] using h1
-  · simpa [yOp, radicalColour] using h4
-  · simpa [zOp, radicalColour] using h5
+  · simpa [xOp, radicalColour] using! h1
+  · simpa [yOp, radicalColour] using! h4
+  · simpa [zOp, radicalColour] using! h5
 
 private theorem y_comm_xyz (r : ℕ) (i : Fin 6) (s : ℕ) (v : V)
     (hi : i = 1 ∨ i = 4 ∨ i = 5) :
@@ -67,9 +67,9 @@ private theorem y_comm_xyz (r : ℕ) (i : Fin 6) (s : ℕ) (v : V)
   rcases selective_cartan_pairings ρ r s v with
     ⟨_, _, _, h1, h4, h5, _⟩
   rcases hi with rfl | rfl | rfl
-  · simpa [xOp, radicalColour] using h1
-  · simpa [yOp, radicalColour] using h4
-  · simpa [zOp, radicalColour] using h5
+  · simpa [xOp, radicalColour] using! h1
+  · simpa [yOp, radicalColour] using! h4
+  · simpa [zOp, radicalColour] using! h5
 
 private theorem z_comm_xyz (r : ℕ) (i : Fin 6) (s : ℕ) (v : V)
     (hi : i = 1 ∨ i = 4 ∨ i = 5) :
@@ -79,9 +79,9 @@ private theorem z_comm_xyz (r : ℕ) (i : Fin 6) (s : ℕ) (v : V)
   rcases selective_cartan_pairings ρ r s v with
     ⟨_, _, _, _, _, _, h1, h4, h5⟩
   rcases hi with rfl | rfl | rfl
-  · simpa [xOp, radicalColour] using h1
-  · simpa [yOp, radicalColour] using h4
-  · simpa [zOp, radicalColour] using h5
+  · simpa [xOp, radicalColour] using! h1
+  · simpa [yOp, radicalColour] using! h4
+  · simpa [zOp, radicalColour] using! h5
 
 /-- Positive selective Cartan currents act as X, Y, and Z power-sum mode
     shifts on XYZ words, with pairing constants 2, 2, and 1. -/
@@ -101,8 +101,8 @@ theorem selective_cartan_xyz_power_shift
       (x_comm_xyz ρ r) ls hls
   · exact cartan_xyz_shift ρ w (yShiftCartan ρ r) 4 2 r hy
       (y_comm_xyz ρ r) ls hls
-  · simpa using cartan_xyz_shift ρ w (zShiftCartan ρ r) 5 1 r hz
-      (fun i s v hi => by simpa using z_comm_xyz ρ r i s v hi) ls hls
+  · simpa using! cartan_xyz_shift ρ w (zShiftCartan ρ r) 5 1 r hz
+      (fun i s v hi => by simpa using! z_comm_xyz ρ r i s v hi) ls hls
 
 /-- A positive power-sum shift of any XYZ word already in a higher-key orbit
     stays in that orbit. This removes the Cartan pairing constants. -/
@@ -119,19 +119,19 @@ theorem colourPowerShift_mem_higher
     ⟨hx, hy, hz⟩
   rcases hj with rfl | rfl | rfl
   · have hh : xShiftCartan ρ r (radicalWord ρ w ls) ∈ N := by
-      simpa [selectiveCartan] using
+      simpa [selectiveCartan] using!
         selectiveCartan_higher ρ w m (0 : Fin 3) r k hmem
     rw [hx] at hh
     have hh' := N.smul_mem (2 : ℂ)⁻¹ hh
-    simpa [smul_smul] using hh'
+    simpa [smul_smul] using! hh'
   · have hh : yShiftCartan ρ r (radicalWord ρ w ls) ∈ N := by
-      simpa [selectiveCartan] using
+      simpa [selectiveCartan] using!
         selectiveCartan_higher ρ w m (1 : Fin 3) r k hmem
     rw [hy] at hh
     have hh' := N.smul_mem (2 : ℂ)⁻¹ hh
-    simpa [smul_smul] using hh'
+    simpa [smul_smul] using! hh'
   · have hh : zShiftCartan ρ r (radicalWord ρ w ls) ∈ N := by
-      simpa [selectiveCartan] using
+      simpa [selectiveCartan] using!
         selectiveCartan_higher ρ w m (2 : Fin 3) r k hmem
     rwa [hz] at hh
 

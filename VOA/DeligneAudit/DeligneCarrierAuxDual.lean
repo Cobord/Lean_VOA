@@ -37,8 +37,9 @@ def layerCoeffs (p N d : ℕ) :
 
 theorem coefficientFunctional_layerCoeffs (p N d : ℕ) (l : Module.Dual ℂ ((casimirLayer D) p N d)) :
     coefficientFunctional ((layerCoeffs D) p N d l) = l ∘ₗ (auxToLayer D) p N d := by
-  apply Finsupp.lhom_ext
-  intro e c
+  apply MvPolynomial.linearMap_ext
+  intro e
+  refine LinearMap.ext fun c => ?_
   change coefficientFunctional ((layerCoeffs D) p N d l) (monomial e c) =
     l ((auxToLayer D) p N d (monomial e c))
   rw [coefficientFunctional_monomial,
@@ -66,8 +67,9 @@ theorem layerCoeffs_injective (p N d : ℕ) : Function.Injective ((layerCoeffs D
   simp only [LinearMap.comp_apply] at this
   rw [← this]
   have h0 : coefficientFunctional (0 : (JetVar (AuxVar D) p →₀ ℕ) → ℂ) = 0 := by
-    apply Finsupp.lhom_ext
-    intro e c
+    apply MvPolynomial.linearMap_ext
+    intro e
+    refine LinearMap.ext fun c => ?_
     change coefficientFunctional 0 (monomial e c) = 0
     rw [coefficientFunctional_monomial]
     simp

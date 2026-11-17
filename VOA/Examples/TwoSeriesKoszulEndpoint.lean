@@ -126,7 +126,7 @@ theorem blkE_eq_bot {b : (ℤ × ℤ) × ℤ} (hb : b.2 < 0 ∨ b.1.2 + b.2 < 0)
     have h1 := hj.1
     simp only [bIdx] at h1
     subst h1
-    simpa using hb
+    simpa using! hb
   rw [blkE, this, Submodule.comap_bot, Submodule.ker_subtype]
 
 include hA hB hw in

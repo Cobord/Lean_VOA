@@ -31,8 +31,8 @@ theorem compl_inter_card_add_inter_card {n : ℕ} (V Y : Finset (Fin n)) :
 /-- **The omitted zero.** -/
 theorem singlyMarkedFlag_omittedZero_finrank_ge (n : ℕ) (V Y : Finset (Fin n))
     (hV : V.Nonempty) (hUY : Vᶜ ⊆ Y) :
-    (V ∩ Y).card * (n - 1).factorial ≤ Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-      quotientRoot (singlyMarkedFlagIdeal n V (n - 1)) i}).restrictScalars ℂ) := by
+    (V ∩ Y).card * (n - 1).factorial ≤ Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+      quotientRoot (singlyMarkedFlagIdeal n V (n - 1)) i)}).restrictScalars ℂ) := by
   classical
   induction n with
   | zero =>
@@ -57,8 +57,8 @@ theorem singlyMarkedFlag_omittedZero_finrank_ge (n : ℕ) (V Y : Finset (Fin n))
         · exact absurd ((show u = v from Fin.ext (by omega)) ▸ hv) hu
         · omega
       have hk0 : 2 * 0 ≤ B + 1 := by omega
-      change (V ∩ Y).card * (B + 1).factorial ≤ Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-        quotientRoot (singlyMarkedFlagIdeal (B + 2) V (B + 1 - 0)) i}).restrictScalars ℂ)
+      change (V ∩ Y).card * (B + 1).factorial ≤ Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+        quotientRoot (singlyMarkedFlagIdeal (B + 2) V (B + 1 - 0)) i)}).restrictScalars ℂ)
       set r := quotientRoot (singlyMarkedFlagIdeal (B + 2) V (B + 1 - 0)) with hr
       have hcut : r u ^ (B + 1) = 0 := singlyMarkedFlag_unmarked_cutoff _ _ _ u hu
       have hY' : u ∉ Yᶜ := fun h => (Finset.mem_compl.mp h) huY
@@ -102,8 +102,8 @@ theorem singlyMarkedFlag_omittedZero_finrank_ge (n : ℕ) (V Y : Finset (Fin n))
 
 /-- **The doubly marked zero pair.** -/
 theorem doublyMarkedFlag_zeroPair_finrank_ge (m : ℕ) (V Y : Finset (Fin (m + 2))) :
-    (Vᶜ ∩ Y).card * (V ∩ Y).card * m.factorial ≤ Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-      quotientRoot (doublyMarkedFlagIdeal (m + 2) V m) i}).restrictScalars ℂ) := by
+    (Vᶜ ∩ Y).card * (V ∩ Y).card * m.factorial ≤ Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+      quotientRoot (doublyMarkedFlagIdeal (m + 2) V m) i)}).restrictScalars ℂ) := by
   classical
   induction m with
   | zero =>

@@ -47,7 +47,8 @@ theorem pair00 : V2v.smul (wv 4 0) (-5) (wv 4 0) = 0 := by
   rw [wv_zero]
   change V2v.smul (latChargeGen (latP 1) (4 : ℤ)) (-5)
     (latStateGen (latP 1) (HeisenbergN.vacuumN _) (4 : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_neg (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) ((4 : ℤ) : (latP 1).carrier),
+    latP_form 1 4 4, if_neg (by norm_num)]
   simp [latStateGen]
 
 end VOA.Classification.COne.OrbOctaZD

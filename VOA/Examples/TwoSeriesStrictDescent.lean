@@ -230,7 +230,9 @@ theorem σU_J (a : Fin 3) (μ : ℕ) {z : WakModule L.kA} (hz : z ∈ UPL L r) :
       rw [D.σU_lower hJ, D.σU_lower (word_mem_lowerP _ _ w hlt), map_zero]
     · have h := J_word_mem_symModM R t L.kA L.aNoncritical a μ w
       rw [heq] at h
-      rw [D.σU_of_symModM h, D.σU_of_symModM (heq ▸ word_mem_symModM R t _ _ w)]
+      have h2 := D.σU_of_symModM (heq ▸ word_mem_symModM R t _ _ w)
+      rw [D.σU_of_symModM h]
+      exact congrArg (mder R (a, μ)) (h2 _).symm
   | zero =>
     simp only [map_zero]
     rw [show (⟨0, _⟩ : UPL L r) = 0 from rfl, map_zero, map_zero]
@@ -383,7 +385,7 @@ theorem graphM_apply_eq (hdet : ModelDetects L R t) (r : ℕ) {x : ASpace L}
   have h1 := Submodule.mem_graph_toLinearPMap (graphM_single hdet r) ⟨x, hx⟩
   have h2 := sub_mem h1 hxQ
   have h3 := graphM_single hdet r _ h2 (by simp)
-  simpa [sub_eq_zero] using h3
+  simpa [sub_eq_zero] using! h3
 
 /-- **Well-definedness of the model word symbols from detection**, in every degree `r`. -/
 def modelSymbolDescends (hdet : ModelDetects L R t) (r : ℕ) : ModelSymbolDescends L R t r where

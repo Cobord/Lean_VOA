@@ -8,15 +8,21 @@ namespace VOA.Moonshine.ConwayNorton
 open AutMonster LatGen Nondeg MvPolynomial IntegralLattice HeisenbergN
 open scoped TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] vnatStringWeightAddCommGroup vnatStringSliceAddCommGroup
 attribute [local instance] monsterPhysicalAddCommGroup
 
 theorem moonshineMatterReversal_zeroBasis (a : Fin 2) :
     moonshineMatterReversal (moonshineMatterSectorMap ![0, 0] (vnatZeroBasisVector a)) =
       -moonshineMatterSectorMap ![0, 0] (vnatZeroBasisVector a) := by
-  change moonshineMatterReversal
-    (moonshineMatterSectorMap ![0, 0] (VnatVOA.vacuum ⊗ₜ X (0, a))) = _
-  rw [moonshineMatterSectorMap_tmul, moonshineMatterReversal_tmul]
+  first
+    | change moonshineMatterReversal
+        (moonshineMatterSectorMap ![0, 0] (VnatVOA.vacuum ⊗ₜ X (0, a))) = _
+      rw [moonshineMatterSectorMap_tmul, moonshineMatterReversal_tmul]
+    | refine (moonshineMatterReversal_tmul VnatVOA.vacuum
+        (hypLorentzianPolynomialEquiv (X (0, a))) ![0, 0]).trans ?_
   have hσ : sigmaN (rank lorentzianLattice) (hypLorentzianPolynomialEquiv (X (0, a))) =
       -hypLorentzianPolynomialEquiv (X (0, a)) := by
     fin_cases a <;> simp [hypLorentzianPolynomial_X_zero, hypLorentzianPolynomial_X_one,

@@ -94,13 +94,14 @@ theorem Yemα_zero_apply (t : ℤ) (y : LatModule) :
   | zero => rw [map_zero]; split_ifs <;> rfl
   | add y1 y2 h1 h2 => rw [map_add, h1, h2]; split_ifs <;> simp
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero]; rw [map_zero]; split_ifs <;> rfl
       | add g1 g2 h1 h2 =>
           erw [TensorProduct.tmul_add]; rw [map_add, h1, h2]; split_ifs <;> simp
       | single k a =>
-          rw [(Finsupp.smul_single_one k a).symm,
-            show (Finsupp.single k 1 : LatGrp) = eVec k from rfl]
+          rw [show (AddMonoidAlgebra.single k a : LatGrp) = a • AddMonoidAlgebra.single k (1 : ℂ) by
+              rw [AddMonoidAlgebra.smul_single', mul_one],
+            show (AddMonoidAlgebra.single k 1 : LatGrp) = eVec k from rfl]
           erw [TensorProduct.tmul_smul, map_smul, Yemα_tmul]
           rw [show (t - 2 * 0 * k : ℤ) = t from by ring,
             show ((0 : ℤ) : ℂ) = (0 : ℂ) from by norm_num, EEC0i,
@@ -477,13 +478,14 @@ theorem Ltrans_eq_Trec : Ltrans = Trec := by
   | zero => rw [map_zero, map_zero]
   | add y1 y2 h1 h2 => rw [map_add, map_add, h1, h2]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero]; rw [map_zero, map_zero]
       | add g1 g2 h1 h2 =>
           erw [TensorProduct.tmul_add]; rw [map_add, map_add, h1, h2]
       | single c a =>
-          rw [(Finsupp.smul_single_one c a).symm,
-            show (Finsupp.single c 1 : LatGrp) = eVec c from rfl]
+          rw [show (AddMonoidAlgebra.single c a : LatGrp) = a • AddMonoidAlgebra.single c (1 : ℂ) by
+              rw [AddMonoidAlgebra.smul_single', mul_one],
+            show (AddMonoidAlgebra.single c 1 : LatGrp) = eVec c from rfl]
           erw [TensorProduct.tmul_smul, map_smul, map_smul]
           rw [sugField_tmul, Trec_tmul, if_neg (by norm_num : ¬ (-1 : ℤ) = -2),
             add_zero, show (-(-1 : ℤ) - 2) = -1 from by ring, alphaField_apply,
@@ -792,13 +794,14 @@ theorem Yfull_virasoro (m n : ℤ) :
   | zero => simp
   | add y1 y2 hy1 hy2 => rw [map_add, map_add, hy1, hy2]
   | tmul q g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero]; rw [map_zero, map_zero]
       | add g1 g2 h1 h2 =>
           erw [TensorProduct.tmul_add]; rw [map_add, map_add, h1, h2]
       | single c b =>
-          rw [(Finsupp.smul_single_one c b).symm,
-            show (Finsupp.single c 1 : LatGrp) = eVec c from rfl]
+          rw [show (AddMonoidAlgebra.single c b : LatGrp) = b • AddMonoidAlgebra.single c (1 : ℂ) by
+              rw [AddMonoidAlgebra.smul_single', mul_one],
+            show (AddMonoidAlgebra.single c 1 : LatGrp) = eVec c from rfl]
           erw [TensorProduct.tmul_smul]
           rw [map_smul, map_smul, LL_comm_tmul]
 
@@ -1123,14 +1126,14 @@ theorem mkE_mem_HSpanLat (w : ℕ) (n : ℤ) {p : B} (hp : p ∈ gradingWN 1 w) 
   classical
   rw [mkE_apply, ← MvPolynomial.support_sum_monomial_coeff p, TensorProduct.sum_tmul]
   refine Submodule.sum_mem _ (fun a ha => ?_)
-  rw [show (MvPolynomial.monomial a (MvPolynomial.coeff a p))
-        = (MvPolynomial.coeff a p) • MvPolynomial.monomial a (1 : ℂ) from by
+  rw [show (MvPolynomial.monomial a (p.coeff a))
+        = (p.coeff a) • MvPolynomial.monomial a (1 : ℂ) from by
       rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one],
-    ← TensorProduct.smul_tmul' (MvPolynomial.coeff a p) (MvPolynomial.monomial a (1 : ℂ)) (eVec n)]
+    ← TensorProduct.smul_tmul' (p.coeff a) (MvPolynomial.monomial a (1 : ℂ)) (eVec n)]
   refine Submodule.smul_mem _ _ ?_
   have hwa : Finsupp.weight HeisenbergN.weightFnN a = w := by
     rw [HeisenbergN.mem_gradingWN] at hp
-    exact hp (by rw [MvPolynomial.coeff]; exact Finsupp.mem_support_iff.mp ha)
+    exact hp (MvPolynomial.mem_support_iff.mp ha)
   exact monomial_tmul_mem_HSpanLat a w n hwa
 
 /-- **Homogeneous spanning**: `gradingLat q ≤ HSpanLat q` (each conformal-weight space is spanned by

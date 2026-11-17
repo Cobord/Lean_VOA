@@ -145,7 +145,7 @@ theorem monomial_mem_iSup_indexedPiece (m N : ℕ) (d : Fin 3 × ℕ →₀ ℕ)
   have hm := wordProduct_mem_piece (K := K) m l
   rw [wordProduct_toMultiset] at hm
   apply (le_iSup (indexedPiece (K := K) m N) t)
-  simpa only [indexedPiece, t, hD] using hm
+  simpa only [indexedPiece, t, hD] using! hm
 
 /-- The actual auxiliary conformal piece is spanned by finitely many canonical sectors. -/
 theorem auxiliaryPiece_le_iSup_indexedPiece (m N : ℕ) :
@@ -195,7 +195,7 @@ theorem iSup_indexedPiece_le_auxiliaryPiece (m N : ℕ) :
   have hN : N - (t.val.1.val + t.val.2.1.val + t.val.2.2.val) +
       t.val.1.val + t.val.2.1.val + t.val.2.2.val = N := by have h := t.property; omega
   unfold indexedPiece
-  simpa only [hN] using piece_le_auxiliaryPiece (K := K) m t.val.1 t.val.2.1 t.val.2.2
+  simpa only [hN] using! piece_le_auxiliaryPiece (K := K) m t.val.1 t.val.2.1 t.val.2.2
     (N - (t.val.1.val + t.val.2.1.val + t.val.2.2.val))
 
 /-- Exact sector decomposition inside the actual auxiliary arc quotient. -/

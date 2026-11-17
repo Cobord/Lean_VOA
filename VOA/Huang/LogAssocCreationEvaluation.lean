@@ -55,7 +55,7 @@ theorem completedLogIterate_creation_eq_tsum
     rw [evaluatePoint,fromBlocks_homogeneous N₁ N₂ _ hx hv]
     have he := pointEvaluationBlock_fixed_cutoff N₁ N₂ N₅ Y₄ (Complex.log r)
       a 0 γ ⟨x,hx⟩ ⟨v,hv⟩ 1 (hlog (a+0-γ-1))
-    simpa only [add_zero,sub_zero,Finset.sum_range_one,pow_zero,one_smul] using he
+    simpa only [add_zero,sub_zero,Finset.sum_range_one,pow_zero,one_smul] using! he
   have hinj : Function.Injective (fun j : ℕ => a+(j : ℂ)) := by
     intro i j hij
     exact_mod_cast add_left_cancel hij

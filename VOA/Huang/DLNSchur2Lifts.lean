@@ -90,8 +90,8 @@ theorem commutator_SL_eq_top (h2 : Nat.Coprime 2 n) (h3 : Nat.Coprime 3 n) :
   rw [← root_generators n, Subgroup.closure_le]
   intro x hx
   rcases hx with rfl | rfl
-  · simpa only [MonoidHom.id_apply] using hpa ▸ ha
-  · simpa only [MonoidHom.id_apply] using hpb ▸ hb
+  · simpa only [MonoidHom.id_apply] using! hpa ▸ ha
+  · simpa only [MonoidHom.id_apply] using! hpb ▸ hb
 
 /-- Arithmetic hypotheses for every prime at least five, at every exponent. -/
 theorem primePower_coprime_two_three {p k : ℕ} (hp : p.Prime) (hp5 : 5 ≤ p) :

@@ -95,7 +95,7 @@ theorem exists_eigen_in_submodule (A : WeakModule W M) (P : Submodule (modeAlg A
   have hpowP : ∀ j : ℕ, (f ^ j) y ∈ P := by
     intro j
     induction j with
-    | zero => simpa using hyP
+    | zero => simpa using! hyP
     | succ j ih =>
       rw [pow_succ', Module.End.mul_apply]
       exact hfP _ ih
@@ -112,7 +112,7 @@ theorem exists_eigen_in_submodule (A : WeakModule W M) (P : Submodule (modeAlg A
   have hfx : f ((f ^ jj) y) = 0 := by
     rw [← Module.End.mul_apply, ← pow_succ']; exact hjf
   have : L0 A ((f ^ jj) y) - h • (f ^ jj) y = 0 := by
-    simpa [hfdef] using hfx
+    simpa [hfdef] using! hfx
   exact sub_eq_zero.mp this
 
 /-- **Reduction of a resonant pair (kernel above) to top vectors of cyclic modules.** -/

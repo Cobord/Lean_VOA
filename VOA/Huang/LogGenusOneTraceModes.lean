@@ -20,7 +20,8 @@ variable (N₀ : LogVModule W U) (N : LogVModule W M)
 def zeroModePiece (a b : ℂ) (k : ℕ) (x : N₀.weight a) : Module.End ℂ (N.weight b) :=
   ((Y.1 (a-1) k x.val).comp (N.weight b).subtype).codRestrict (N.weight b) (fun y => by
     have h := Y.2.mem_weight x.property y.property (a-1) k
-    convert h using 1 <;> ring)
+    rw [show a + b - (a - 1) - 1 = b by ring] at h
+    exact h)
 
 @[simp] theorem zeroModePiece_coe (a b : ℂ) (k : ℕ) (x : N₀.weight a) (y : N.weight b) :
     (zeroModePiece N₀ N Y a b k x y : M)=Y.1 (a-1) k x.val y.val := rfl

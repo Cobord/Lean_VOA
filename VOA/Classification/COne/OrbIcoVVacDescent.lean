@@ -27,7 +27,7 @@ theorem vacTranslationSeed_positive (s : ℂ) (hs : s ≠ 0) :
         vermaMode c h 2 (vermaBSASource c h t 1 1)=0 := by
     subst h
     simpa only [vermaBSASource,Fin.sum_univ_one,Fin.val_zero,Nat.cast_zero,
-      Nat.cast_one,zero_sub,vermaBSAState_zero] using
+      Nat.cast_one,zero_sub,vermaBSAState_zero] using!
       (show vermaMode c 0 1 (vermaMode c 0 (-1) (highestVector c 0))=0 ∧
         vermaMode c 0 2 (vermaMode c 0 (-1) (highestVector c 0))=0 from
         ⟨(translation_highest c).pos_annihilate 1 (by norm_num),
@@ -37,7 +37,7 @@ theorem vacTranslationSeed_positive (s : ℂ) (hs : s ≠ 0) :
 theorem vac_fock_source_one_zero (s : ℂ) (hs : s ≠ 0) :
     vacFamilyMap s (vacTranslationSeed s)=0 := by
   simpa only [vacTranslationSeed,vermaBSASource,Fin.sum_univ_one,Fin.val_zero,
-    Nat.cast_zero,Nat.cast_one,zero_sub,vermaBSAState_zero] using
+    Nat.cast_zero,Nat.cast_one,zero_sub,vermaBSAState_zero] using!
     vacuum_fock_translation_zero (familyBackground s)
 
 abbrev vacSingularMap (s : ℂ) (hs : s ≠ 0) :=

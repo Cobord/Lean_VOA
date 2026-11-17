@@ -5,6 +5,8 @@ import VOA.Core.InvariantFormDiagonal
 /-! Primary-field measurements along Virasoro descendants. -/
 set_option Elab.async false
 set_option maxSynthPendingDepth 3
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Classification.COne.OrbOctaRC
 open VOA VertexOperatorAlgebra OrbSpan OrbC2c
 

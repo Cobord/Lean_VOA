@@ -91,7 +91,7 @@ theorem uniformProbe_odd_level (c h : ℂ) (N : ℕ) (hN : N%2=1)
   simp only [vermaLevelState, map_sum, map_smul, uniformProbe_word]
   apply Finset.sum_eq_zero
   intro w hw
-  rw [wordProbe_odd w.val (by simpa [w.property.2] using hN), smul_zero]
+  rw [wordProbe_odd w.val (by simpa [w.property.2] using! hN), smul_zero]
 
 theorem uniformProbe_s13_zero (c h t : ℂ) :
     uniformProbe c h (vermaBSASource c h t 13 13)=0 :=

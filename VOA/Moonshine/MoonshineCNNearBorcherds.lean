@@ -289,7 +289,7 @@ theorem borcherds (V : NearVOA 𝒱) (u v : 𝒱) (x : 𝒱) (ℓ m n : ℤ) :
         (fun ℓ' n' => borcherdsProductSum V ((1 : ℂ)) u v x ℓ' (-(k : ℤ) - 1) n'
           - borcherdsIterateSum V u v x ℓ' (-(k : ℤ) - 1) n')
         (fun ℓ' n' => by
-          dsimp only
+          try dsimp only
           have hbl := borcherdsProductSum_rec V ((1 : ℂ)) u v x ℓ' (-(k : ℤ) - 1) n'
           have hbr := borcherdsIterateSum_rec V u v x ℓ' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) from by ring] at hbl hbr
@@ -298,7 +298,7 @@ theorem borcherds (V : NearVOA 𝒱) (u v : 𝒱) (x : 𝒱) (ℓ m n : ℤ) :
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
         (fun n' => by
-          dsimp only
+          try dsimp only
           rw [borcherds_boundary V u v x (-(k : ℤ) - 1) n', sub_self])
         ℓ n
       exact sub_eq_zero.mp key

@@ -25,7 +25,9 @@ theorem regularAction_modes
   change (MonObj.mul : tensorObj (fusionChoice_pbw hSR) (ambient G) (ambient G) ⟶
     ambient G).val (((fusionChoice_pbw hSR) (ambient G) (ambient G)).intertwiner.val
       (k : ℂ) v x) = _
-  rw [E.mul_eq, ambientMultiplication_intertwiner, moduleModes_apply_intCast]
+  rw [E.mul_eq]
+  refine (ambientMultiplication_intertwiner G (fusionChoice_pbw hSR) (k : ℂ) v x).trans ?_
+  refine (moduleModes_apply_intCast (adjointModule (V2m 1 le_rfl)) k v x).trans ?_
   rfl
 
 /-- The remaining Jacobi identity is proved for the nonzero regular simple

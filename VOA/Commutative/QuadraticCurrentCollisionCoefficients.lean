@@ -104,7 +104,7 @@ theorem mapDomain_collision_active {m : ℕ} (i j : Fin m) (hji : j ≠ i)
         simp [hji, collisionIndex]
         omega
       · have hne : collisionIndex i j hji k ≠ ⟨j, hji⟩ := by
-          simpa [collisionIndex, hi] using hj
+          simpa [collisionIndex, hi] using! hj
         simp [hi, hj]
 
 /-- Collision exponents retain every passive mode unchanged. -/
@@ -197,8 +197,7 @@ theorem coloredExponent_insertPair {N m : ℕ} (ij : IncreasingPair (Fin m))
 theorem coeff_collision_tensorPolynomial {N m : ℕ}
     (F : (JetVar σ N →₀ ℕ) → K) (t : Fin m → σ)
     (i j : Fin m) (hji : j ≠ i) (q : ℕ) (b : Passive i j → Fin (N + 1)) :
-    MvPolynomial.coeff (diagonalExponent i j hji q b)
-        (collisionMap i j hji (tensorPolynomial F t)) =
+    (collisionMap i j hji (tensorPolynomial F t)).coeff (diagonalExponent i j hji q b) =
       ∑ ab ∈ coefficientPairs N q,
         F (coloredExponent t ((tupleEquiv i j hji).symm (ab, b))) := by
   classical
@@ -240,14 +239,14 @@ quadratic jet convolution. -/
 theorem coeff_currentReadback {N m : ℕ} (F : (JetVar σ N →₀ ℕ) → K)
     (Q : σ × σ → K) (ij : IncreasingPair (Fin m)) (t : Fin m → σ)
     (q : ℕ) (b : Passive ij.1.1 ij.1.2 → Fin (N + 1)) :
-    MvPolynomial.coeff (diagonalExponent ij.1.1 ij.1.2 (ne_of_gt ij.2) q b)
-        (currentReadback Q ij t (tensorPolynomial F)) =
+    (currentReadback Q ij t (tensorPolynomial F)).coeff
+        (diagonalExponent ij.1.1 ij.1.2 (ne_of_gt ij.2) q b) =
       ∑ xy, ∑ ab ∈ coefficientPairs N q,
         Q xy * F (insertExponent N (spectatorExponent ij.1.1 ij.1.2 t b) xy ab) := by
   classical
-  change MvPolynomial.coeff (diagonalExponent ij.1.1 ij.1.2 (ne_of_gt ij.2) q b)
-    (∑ xy, (MvPolynomial.C (Q xy) : MvPolynomial {k : Fin m // k ≠ ij.1.1} K) *
-      collisionMap ij.1.1 ij.1.2 (ne_of_gt ij.2) (tensorPolynomial F (insertPair ij t xy))) = _
+  change (∑ xy, (MvPolynomial.C (Q xy) : MvPolynomial {k : Fin m // k ≠ ij.1.1} K) *
+      collisionMap ij.1.1 ij.1.2 (ne_of_gt ij.2) (tensorPolynomial F (insertPair ij t xy))).coeff
+    (diagonalExponent ij.1.1 ij.1.2 (ne_of_gt ij.2) q b) = _
   rw [MvPolynomial.coeff_sum]
   simp_rw [MvPolynomial.coeff_C_mul, coeff_collision_tensorPolynomial,
     Finset.mul_sum, coloredExponent_insertPair]
@@ -258,14 +257,13 @@ theorem exists_diagonalExponent_of_readback_coeff_ne_zero {N m : ℕ}
     (F : (JetVar σ N →₀ ℕ) → K) (Q : σ × σ → K)
     (ij : IncreasingPair (Fin m)) (t : Fin m → σ)
     (e : {k : Fin m // k ≠ ij.1.1} →₀ ℕ)
-    (he : MvPolynomial.coeff e (currentReadback Q ij t (tensorPolynomial F)) ≠ 0) :
+    (he : (currentReadback Q ij t (tensorPolynomial F)).coeff e ≠ 0) :
     ∃ (q : ℕ) (b : Passive ij.1.1 ij.1.2 → Fin (N + 1)),
       e = diagonalExponent ij.1.1 ij.1.2 (ne_of_gt ij.2) q b := by
   classical
-  change MvPolynomial.coeff e
-    (∑ xy, (MvPolynomial.C (Q xy) : MvPolynomial {k : Fin m // k ≠ ij.1.1} K) *
+  change (∑ xy, (MvPolynomial.C (Q xy) : MvPolynomial {k : Fin m // k ≠ ij.1.1} K) *
       collisionMap ij.1.1 ij.1.2 (ne_of_gt ij.2)
-        (tensorPolynomial F (insertPair ij t xy))) ≠ 0 at he
+        (tensorPolynomial F (insertPair ij t xy))).coeff e ≠ 0 at he
   rw [MvPolynomial.coeff_sum] at he
   obtain ⟨xy, _, hxy⟩ := Finset.exists_ne_zero_of_sum_ne_zero he
   rw [MvPolynomial.coeff_C_mul] at hxy
@@ -289,11 +287,11 @@ theorem currentReadback_eq_zero_iff {N m : ℕ} (F : (JetVar σ N →₀ ℕ) �
   constructor
   · intro h q b
     rw [← coeff_currentReadback, h]
-    exact MvPolynomial.coeff_zero _
+    simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   · intro h
     apply MvPolynomial.ext
     intro e
-    rw [MvPolynomial.coeff_zero]
+    simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
     by_contra he
     obtain ⟨q, b, rfl⟩ := exists_diagonalExponent_of_readback_coeff_ne_zero F Q ij t e he
     exact he ((coeff_currentReadback F Q ij t q b).trans (h q b))

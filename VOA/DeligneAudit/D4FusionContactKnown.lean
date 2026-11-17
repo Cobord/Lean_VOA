@@ -49,11 +49,11 @@ variable {R : CurrentModule D4sector.f V} {w : V} {m : ℕ}
 theorem localWeyl_known_initial (h : LocalWeylRelG D4sector R w m) (c : Fin 28)
     (hc : centerNilKnown c = true) : Known R w c := by
   have hs : D4sector.raising c ∨ D4sector.lowering c := by
-    simpa only [centerNilKnown, Bool.or_eq_true, decide_eq_true_eq] using hc
+    simpa only [centerNilKnown, Bool.or_eq_true, decide_eq_true_eq] using! hc
   rcases hs with hr | hl
-  · exact ⟨1, by simpa only [pow_one] using h.raising c hr 0⟩
+  · exact ⟨1, by simpa only [pow_one] using! h.raising c hr 0⟩
   · exact ⟨m * D4sector.lowExp c + 1,
-      by simpa only [Module.End.pow_apply] using h.lowering c hl⟩
+      by simpa only [Module.End.pow_apply] using! h.lowering c hl⟩
 
 /-- Actual center local nilpotence, without importing any character
 or dimension theorem. The eight-step certificate is kernel checked. -/

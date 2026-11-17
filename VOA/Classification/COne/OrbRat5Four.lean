@@ -43,15 +43,18 @@ theorem coe_E' : ((E' : VPf) : LatModuleGen (latP 4)) = Ec := rfl
 
 theorem coord_one_Jc : coordEα (latP 4) ((1 : ℤ) : (latP 4).carrier) Jc = 0 := by
   change coordEα (latP 4) _ (_ ⊗ₜ[ℂ] eGen (latP 4) 0) = 0
-  rw [coordEα_apply, if_neg (fun h => by have : (1 : ℤ) = 0 := h; omega)]
+  exact (coordEα_apply (latP 4) _ _ _).trans
+    (ite_cond_eq_false _ _ (eq_false (fun h => by have : (1 : ℤ) = 0 := h; omega)))
 
 theorem coord_one_Ec : coordEα (latP 4) ((1 : ℤ) : (latP 4).carrier) Ec = 1 := by
   rw [Ec, map_add]
   change coordEα (latP 4) _ (_ ⊗ₜ[ℂ] eGen (latP 4) _) +
     coordEα (latP 4) _ (_ ⊗ₜ[ℂ] eGen (latP 4) _) = 1
-  rw [coordEα_apply, coordEα_apply, if_pos rfl,
-    if_neg (fun h => by have : (1 : ℤ) = -1 := h; omega), add_zero]
-  rfl
+  refine (congrArg₂ (· + ·)
+    ((coordEα_apply (latP 4) _ _ _).trans (ite_cond_eq_true _ _ (eq_true rfl)))
+    ((coordEα_apply (latP 4) _ _ _).trans
+      (ite_cond_eq_false _ _ (eq_false (fun h => by have : (1 : ℤ) = -1 := h; omega))))).trans ?_
+  exact add_zero _
 
 theorem Ec_ne_zero : Ec ≠ 0 := by
   intro h
@@ -91,7 +94,7 @@ theorem indep_JE {a b : ℂ} (h : a • Jc + b • Ec = 0) : a = 0 ∧ b = 0 := 
 theorem indep_JE' {a b : ℂ} (h : a • J' + b • E' = 0) : a = 0 ∧ b = 0 := by
   apply indep_JE
   have := congrArg (fun v : VPf => (v : LatModuleGen (latP 4))) h
-  simpa [coe_J', coe_E'] using this
+  simpa [coe_J', coe_E'] using! this
 
 /-! ## §2 Fixed vectors -/
 

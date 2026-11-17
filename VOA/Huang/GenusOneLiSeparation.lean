@@ -24,7 +24,7 @@ noncomputable def fzSpaceOfBimoduleMap (B : InsertionTopBimodule A P) (i j : ι)
     refine ⟨?_, ?_, ?_⟩
     · intro w hw
       change T ((fzO A.toWeakModule).mkQ w) = 0
-      have hz : (fzO A.toWeakModule).mkQ w = 0 := by simpa using hw
+      have hz : (fzO A.toWeakModule).mkQ w = 0 := by simpa using! hw
       rw [hz, map_zero]
     · intro p a ha w y
       change (T ((fzO A.toWeakModule).mkQ (fzLeft A.toWeakModule p a w)) y : (P j).carrier) = _
@@ -50,7 +50,7 @@ theorem topDataSeparate_of_bimodule [Finite ι] (B : InsertionTopBimodule A P) :
     apply BimoduleTrace.eq_zero_of_end_bimodule_maps (fun i => bot (P i)) B.actions
     intro i j T hL hR
     exact hw i j (fzSpaceOfBimoduleMap B i j T hL hR)
-  simpa using hz
+  simpa using! hz
 
 /-- For a full finite family, separation and the original bimodule interface
 are equivalent. Neither side is discharged merely by this equivalence. -/

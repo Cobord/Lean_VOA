@@ -184,8 +184,8 @@ theorem coe_matL_zpow (N : ℕ) (y : ℤ) :
   simp only [Matrix.SpecialLinearGroup.coe_mul, ModularGroup.coe_T_zpow]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, ModularGroup.S,
-      Matrix.SpecialLinearGroup.SL2_inv_expl, Matrix.vecMul, dotProduct]
+    simp [Matrix.mul_apply, Fin.sum_univ_two, ModularGroup.coe_S,
+      Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two, Matrix.vecMul, dotProduct]
 
 theorem matT_zpow_mul_apply (n : ℤ) (γ : SL(2, ℤ)) :
     (matT ^ n * γ) 0 0 = γ 0 0 + n * γ 1 0 ∧ (matT ^ n * γ) 0 1 = γ 0 1 + n * γ 1 1 ∧
@@ -226,7 +226,7 @@ theorem gamma0_decomp (hp : p.Prime) (hpN : ¬ (p : ℤ) ∣ N) {γ : SL(2, ℤ)
     by_cases hd : (p : ℤ) ∣ γ 0 0
     · rw [hε, if_pos hd, one_mul]
       intro h2
-      have hc : (p : ℤ) ∣ γ 1 0 := by simpa using dvd_sub h2 hd
+      have hc : (p : ℤ) ∣ γ 1 0 := by simpa using! dvd_sub h2 hd
       have := det_SL' γ
       have h1 : (p : ℤ) ∣ γ 0 0 * γ 1 1 - γ 0 1 * γ 1 0 :=
         dvd_sub (dvd_mul_of_dvd_left hd _) (dvd_mul_of_dvd_right hc _)
@@ -350,11 +350,11 @@ theorem heckeT_chiLaw [Fact p.Prime] (hp2 : p ≠ 2) (h24 : 24 ∣ N) (hpN : Nat
     have hΓ : γ₂ ∈ CongruenceSubgroup.Gamma0 N := by
       rw [CongruenceSubgroup.Gamma0_mem]
       exact (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).2 (by
-        have := dvd_sub_of_modEq hMN h10; simpa using this)
+        have := dvd_sub_of_modEq hMN h10; simpa using! this)
     have e00 := dvd_sub_of_modEq hMp h00
     have e11 := dvd_sub_of_modEq hMp h11
-    have e01 : ((p ^ 2 : ℕ) : ℤ) ∣ γ₂ 0 1 := by simpa using dvd_sub_of_modEq hMp h01
-    have e10 : ((p ^ 2 : ℕ) : ℤ) ∣ γ₂ 1 0 := by simpa using dvd_sub_of_modEq hMp h10
+    have e01 : ((p ^ 2 : ℕ) : ℤ) ∣ γ₂ 0 1 := by simpa using! dvd_sub_of_modEq hMp h01
+    have e10 : ((p ^ 2 : ℕ) : ℤ) ∣ γ₂ 1 0 := by simpa using! dvd_sub_of_modEq hMp h10
     have eℓ : ((p ^ 2 : ℕ) : ℤ) ∣ (ℓ : ℤ) * ℓ' - 1 := dvd_sub_of_modEq hMp hℓℓ
     push_cast at e00 e11 e01 e10 eℓ
     exact ⟨hΓ, chiLaw_heckeT χ hp hpN hf hΓ (sigmaG hp ℓ') (deltaG hp ℓ' γ₂)

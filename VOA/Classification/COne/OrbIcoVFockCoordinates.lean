@@ -20,8 +20,8 @@ instance fockOccupations_fintype (N : ℕ) : Fintype (FockOccupations N) :=
   Fintype.ofEquiv (VermaMultisetPartitions N) (fockMultisetPartitionEquiv N).symm
 
 def fockCoordinates (N : ℕ) : gradingWN 1 N →ₗ[ℂ] (FockOccupations N → ℂ) where
-  toFun v d := coeff d.val v.val
-  map_add' v w := by ext d; exact coeff_add _ _ _
+  toFun v d := v.val.coeff d.val
+  map_add' v w := by ext d; exact MvPolynomial.coeff_add _ _ _
   map_smul' z v := by ext d; exact coeff_smul _ _ _
 
 theorem fockCoordinates_injective (N : ℕ) : Function.Injective (fockCoordinates N) := by
@@ -31,10 +31,10 @@ theorem fockCoordinates_injective (N : ℕ) : Function.Injective (fockCoordinate
   intro d
   by_cases hd : Finsupp.weight weightFnN d = N
   · exact congrArg (fun f => f ⟨d,hd⟩) he
-  · have hv : coeff d v.val = 0 := by
+  · have hv : v.val.coeff d = 0 := by
       by_contra hn
       exact hd (v.property hn)
-    have hw : coeff d w.val = 0 := by
+    have hw : w.val.coeff d = 0 := by
       by_contra hn
       exact hd (w.property hn)
     rw [hv,hw]

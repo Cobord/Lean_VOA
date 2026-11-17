@@ -154,7 +154,7 @@ noncomputable def Amul : A W →ₗ[ℂ] A W →ₗ[ℂ] A W :=
 
 @[simp] theorem Amul_mk (u v : 𝒱) :
     Amul hZ (mk W u) (mk W v) = mk W (zhuMul W u v) := by
-  rw [Amul, descendBilinZ_apply]; rfl
+  exact descendBilinZ_apply W (zhuMulₗ W) _ _ u v
 
 /-- Associativity of the descended product on `A W`. -/
 theorem Amul_assoc (p q r : A W) :

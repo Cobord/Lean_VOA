@@ -12,6 +12,10 @@ universe u
 variable {V M : Type u} [AddCommGroup V] [Module ℂ V]
   [AddCommGroup M] [Module ℂ M] {W : VertexOperatorAlgebra V}
 
+private lemma natSubOne_injective : Function.Injective (fun j : ℕ => (j : ℤ) - 1) := by
+  intro x y h
+  simpa using h
+
 /-- The right Zhu product on a common truncation window. -/
 theorem fzRight_eq_sum_Ico (A : OrdVModule W M) {k : ℕ} (hk : 1 ≤ k)
     (a : V) (w : M) {P : ℕ} (hkP : k ≤ P) :
@@ -20,7 +24,7 @@ theorem fzRight_eq_sum_Ico (A : OrdVModule W M) {k : ℕ} (hk : 1 ≤ k)
         cbz ((k : ℤ) - 1) (i + 1) • A.toWeakModule.act a i w := by
   classical
   have hs : Finset.Ico (-1 : ℤ) (P : ℤ) =
-      (Finset.range (P + 1)).map ⟨fun j : ℕ => (j : ℤ) - 1, fun x y h => by simpa using h⟩ := by
+      (Finset.range (P + 1)).map ⟨fun j : ℕ => (j : ℤ) - 1, natSubOne_injective⟩ := by
     ext i
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
     constructor
@@ -138,7 +142,6 @@ theorem leading_conformal (hsupp : ∀ w, S w ∈ QSeriesAt b)
     by_contra hn
     exact hm (by rw [hK m (by omega), map_zero, qConv_zero_right])
   have hv := congrArg (fun f : FormalQSeries => f b) (hS.omega w)
-  dsimp only at hv
   rw [Pi.add_apply, finsum_apply hfin] at hv
   simp only [qConv_leading hsupp, qDeriv] at hv
   have htail : (Function.support fun m : ℕ =>

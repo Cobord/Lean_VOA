@@ -62,14 +62,14 @@ theorem productModeGrowth_vacuum (hv : W.vacuum ≠ 0)
   intro a ha
   obtain ⟨C, hC⟩ := (GenusOne.traceSubexponential_of_irreducible hC2 iP Y
     ⟨N.realized, N.isLow⟩ w) a ha
-  have hC0 : 0 ≤ C := by simpa using le_trans (norm_nonneg _) (hC 0)
+  have hC0 : 0 ≤ C := by simpa using! le_trans (norm_nonneg _) (hC 0)
   refine ⟨C, hC0, fun n k => ?_⟩
   rw [productLevelCoeff_vacuum hv Y hw]
   split_ifs with hk
   · rw [show N.h + (n : ℂ) - W.centralCharge / 24 = N.h - W.centralCharge / 24 + n by ring]
     exact le_trans (hC n) (le_mul_of_one_le_right
       (mul_nonneg hC0 (pow_nonneg (by linarith) _)) (one_le_pow₀ ha.le))
-  · simpa only [norm_zero] using
+  · simpa only [norm_zero] using!
       mul_nonneg (mul_nonneg hC0 (pow_nonneg (by linarith) _)) (pow_nonneg (by linarith) _)
 
 /-- Both product obligations, without any unproved growth hypothesis, when the
@@ -123,14 +123,14 @@ theorem iterateModeBound_vacuum (hv : W.vacuum ≠ 0)
         W.vacuum w 0 (P.h + ℓ)) C a 1 := by
   obtain ⟨C, hC⟩ := (GenusOne.traceSubexponential_of_irreducible hC2 iP Y
     ⟨N.realized, N.isLow⟩ w) a ha
-  have hC0 : 0 ≤ C := by simpa using le_trans (norm_nonneg _) (hC 0)
+  have hC0 : 0 ≤ C := by simpa using! le_trans (norm_nonneg _) (hC 0)
   refine ⟨C, hC0, fun n k => ?_⟩
   rw [iterateLevelCoeff_vacuum hv Y hw]
   simp only [one_pow, mul_one]
   split_ifs
   · rw [show N.h + (n : ℂ) - W.centralCharge / 24 = N.h - W.centralCharge / 24 + n by ring]
     exact hC n
-  · simpa only [norm_zero] using mul_nonneg hC0 (pow_nonneg (by linarith) _)
+  · simpa only [norm_zero] using! mul_nonneg hC0 (pow_nonneg (by linarith) _)
 
 /-- The iterate obligation is discharged in the same unit sector. The explicit
 region here is a sufficient one; finite intermediate support permits more. -/
@@ -146,6 +146,6 @@ theorem iterateSewingSummable_vacuum (hv : W.vacuum ≠ 0)
   obtain ⟨C, hC, hbound⟩ := iterateModeBound_vacuum hv hC2 iP Y hw ha
   apply iterateSewingSummable_of_modeBound _ _ _ _ _ _ hC (by linarith) zero_le_one
     hbound hz₀ hz₂ τ hqa
-  simpa only [one_mul, norm_div, div_lt_one (norm_pos_iff.mpr hz₂)] using hz
+  simpa only [one_mul, norm_div, div_lt_one (norm_pos_iff.mpr hz₂)] using! hz
 
 end VOA.Huang.GenusTwoPoint

@@ -63,7 +63,7 @@ theorem highestKacPolynomial_inverse_root (r q : ℕ) (hr : 0<r) (hq : 0<q) (m :
     rw [sub_add_cancel,mul_inv_cancel₀ hm]
   have hz := highestDeterminant_screening_root r q (m+1) hr hq
     ((((m+1 : ℕ) : ℂ)⁻¹)-2) hk
-  simpa only [sub_add_cancel] using hz
+  simpa only [sub_add_cancel] using! hz
 
 /-- The actual determinant vanishes identically on every positive-label
 screening Kac line, by infinitely many proved ordinary roots. -/

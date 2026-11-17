@@ -16,14 +16,14 @@ namespace VOA.Moonshine.ConwayNorton
 open MvPolynomial HeisenbergN
 
 theorem hypPolynomial_eq_constant_of_pderiv_zero (p : hypFock)
-    (hp : ∀ v : ℕ × Fin 2, pderiv v p = 0) : p = MvPolynomial.C (coeff 0 p) := by
+    (hp : ∀ v : ℕ × Fin 2, pderiv v p = 0) : p = MvPolynomial.C (p.coeff 0) := by
   classical
-  have hcoeff (d : (ℕ × Fin 2) →₀ ℕ) (hd : d ≠ 0) : coeff d p = 0 := by
+  have hcoeff (d : (ℕ × Fin 2) →₀ ℕ) (hd : d ≠ 0) : p.coeff d = 0 := by
     by_contra hc
     apply hd
     ext v
     have he := coeff_X_mul_pderiv_self v d p
-    rw [hp v, mul_zero, coeff_zero] at he
+    rw [hp v, mul_zero, show (0 : hypFock).coeff d = 0 by simp] at he
     have hz : (d v : ℂ) = 0 := (mul_eq_zero.mp he.symm).resolve_right hc
     exact_mod_cast hz
   ext d
@@ -53,7 +53,7 @@ theorem hypCommutant_mul_one (D : Module.End ℂ hypFock) (charges : Fin 2 → �
 
 theorem hypCommutant_constant (D : Module.End ℂ hypFock) (charges : Fin 2 → ℂ)
     (hD : ∀ a n, n ≠ 0 → D * hypOscillator a (charges a) n =
-      hypOscillator a (charges a) n * D) : D 1 = MvPolynomial.C (coeff 0 (D 1)) := by
+      hypOscillator a (charges a) n * D) : D 1 = MvPolynomial.C ((D 1).coeff 0) := by
   apply hypPolynomial_eq_constant_of_pderiv_zero
   intro v
   have he := LinearMap.congr_fun (hD v.2.rev (v.1 + 1 : ℤ) (by omega)) 1
@@ -66,7 +66,7 @@ theorem hypCommutant_constant (D : Module.End ℂ hypFock) (charges : Fin 2 → 
 theorem hypCommutant_scalar (D : Module.End ℂ hypFock) (charges : Fin 2 → ℂ)
     (hD : ∀ a n, n ≠ 0 → D * hypOscillator a (charges a) n =
       hypOscillator a (charges a) n * D) :
-    D = coeff 0 (D 1) • LinearMap.id := by
+    D = (D 1).coeff 0 • LinearMap.id := by
   apply LinearMap.ext
   intro p
   rw [hypCommutant_mul_one D charges hD, hypCommutant_constant D charges hD]
@@ -76,6 +76,6 @@ theorem hypCommutant_scalar (D : Module.End ℂ hypFock) (charges : Fin 2 → �
 theorem hypCommutant_eq_zero_of_vacuum (D : Module.End ℂ hypFock) (charges : Fin 2 → ℂ)
     (hD : ∀ a n, n ≠ 0 → D * hypOscillator a (charges a) n =
       hypOscillator a (charges a) n * D) (h1 : D 1 = 0) : D = 0 := by
-  rw [hypCommutant_scalar D charges hD, h1, coeff_zero, zero_smul]
+  rw [hypCommutant_scalar D charges hD, h1, show (0 : hypFock).coeff 0 = 0 by simp, zero_smul]
 
 end VOA.Moonshine.ConwayNorton

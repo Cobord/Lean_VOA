@@ -62,7 +62,7 @@ theorem trace_compensating_commutator (Y : IntertwiningOperator A N N)
       = ∑ᶠ p : ℤ, cbz i p * trace Y (mode (A.YM a) p w) e := by
   rw [compensating_commutator Y ha hw i]
   have h := map_finsum (gradedTraceAt N e) (compensating_support_finite Y a w i)
-  simpa only [gradedTraceAt_apply, map_smul, smul_eq_mul, trace] using h
+  simpa only [gradedTraceAt_apply, map_smul, smul_eq_mul, trace] using! h
 
 theorem weightShift_partner (Y : IntertwiningOperator A N N) {α : ℂ} {w : M₁}
     (hw : w ∈ A.weight α) (k i : ℤ) :

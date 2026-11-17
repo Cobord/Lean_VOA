@@ -11,7 +11,7 @@ noncomputable section
 theorem highest_coeff_mem_polarIdeal (m r s : ℕ) (hr : r = 2 ∨ r = 3)
     (hs : m < r + s) :
     PowerSeries.coeff s (AllM.current m 0 ^ r) ∈ quadraticCubicPolarIdeal m := by
-  simpa only [currentMap_orbit,Function.iterate_zero_apply] using
+  simpa only [currentMap_orbit,Function.iterate_zero_apply] using!
     quadraticCubicPolar_coeff_mem m r 0 0 0 s hr hs
 
 /-- The mode-zero lowering is an explicit whole orbit polar, not a closure assumption. -/
@@ -23,15 +23,15 @@ theorem actual_zero_lower_highest_coeff_mem_polarIdeal
   · have h := quadraticCubicPolar_coeff_mem m r 1 0 0 s hr hs
     rw [currentMap_orbit,coeff_current_iterate,coeff_current_iterate,
       coeff_current_iterate] at h
-    simpa only [Function.iterate_zero_apply,Function.iterate_one] using h
+    simpa only [Function.iterate_zero_apply,Function.iterate_one] using! h
   · have h := quadraticCubicPolar_coeff_mem m r 0 1 0 s hr hs
     rw [currentMap_orbit,coeff_current_iterate,coeff_current_iterate,
       coeff_current_iterate] at h
-    simpa only [Function.iterate_zero_apply,Function.iterate_one] using h
+    simpa only [Function.iterate_zero_apply,Function.iterate_one] using! h
   · have h := quadraticCubicPolar_coeff_mem m r 0 0 1 s hr hs
     rw [currentMap_orbit,coeff_current_iterate,coeff_current_iterate,
       coeff_current_iterate] at h
-    simpa only [Function.iterate_zero_apply,Function.iterate_one] using h
+    simpa only [Function.iterate_zero_apply,Function.iterate_one] using! h
 
 /-- Exact truncation of the linear lower tail in the quadratic recurrence. -/
 theorem highest_linear_coeff_eq_zero (m t : ℕ) (ht : m ≤ t) :

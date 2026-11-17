@@ -45,7 +45,7 @@ theorem family_fock_image_dimension_one (m : ℕ) :
       Module.finrank ℂ (vermaRadicalLevel c h (13+m)) ≤ Fintype.card (VermaPartitions m) := by
     subst c
     subst h
-    convert FFLower.radical_bound 6 m using 1 <;> norm_num
+    convert FFLower.radical_bound 6 m using 1 <;> norm_num [FFLower.pp]
   apply hrad
   · norm_num [familyBackground]
   · norm_num [familyBackground, familyMomentum]

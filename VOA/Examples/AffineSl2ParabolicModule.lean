@@ -5,6 +5,8 @@ import VOA.Examples.AffineSl2Verma
 This is the affine Verma left-ideal quotient with the additional relation
 F₀^(d+1)v=0 at horizontal highest weight d. No basis or character is assumed.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 noncomputable section
 open UniversalEnvelopingAlgebra

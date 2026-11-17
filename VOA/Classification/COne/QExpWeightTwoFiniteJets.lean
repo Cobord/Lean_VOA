@@ -50,7 +50,7 @@ def FullLevelWeightTwoJetSeparation (N B : ℕ) : Prop :=
 
 /-- Explicit entries of the product coefficient matrix. -/
 def weightTwoProductCoeff (N : ℕ) (ζ : ℂ) (a b a' b' : Fin N) (n : ℕ) : ℂ :=
-  ∑ p ∈ Finset.antidiagonal n,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
     weightOneIntegralCoeff N ζ a b p.1 * weightOneIntegralCoeff N ζ a' b' p.2
 
 theorem weightOneModularForm_mul_coeff {N : ℕ} (hN : 0 < N) {ζ : ℂ}
@@ -103,13 +103,16 @@ theorem weightTwoProductIdentity_of_finiteJet {N B : ℕ} (hN : 0 < N) {ζ : ℂ
         (fun i => (E (a i) (b i)).mul (E (a' i) (b' i)))
     have hc := congrArg (fun p : PowerSeries ℂ => p.coeff n) hs
     simpa only [map_sum, PowerSeries.coeff_smul, smul_eq_mul, E,
-      weightOneModularForm_mul_coeff] using hc.symm
+      weightOneModularForm_mul_coeff] using! hc.symm
   intro τ
   have h := congrArg (fun G : ModularForm
     (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2 => G τ) heq
-  change F τ = (ModularForm.coeHom H) τ at h
-  simpa [H, E, map_sum, ModularForm.coeHom, ModularForm.coe_smul, ModularForm.coe_mul,
-    Finset.sum_apply, smul_eq_mul, weightOneModularForm] using h
+  change F τ = (FunLike.coeAddMonoidHom
+    (ModularForm (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2) ℍ ℂ
+    (∑ i, c i • (E (a i) (b i)).mul (E (a' i) (b' i)))) τ at h
+  rw [map_sum] at h
+  simpa [E, FunLike.coeAddMonoidHom_apply, FunLike.coe_smul, ModularForm.coe_smul,
+    ModularForm.coe_mul, Finset.sum_apply, smul_eq_mul, weightOneModularForm] using! h
 
 theorem fullLevelWeightOneQSeriesSpan24_of_finiteJets
     (hslash : FullLevelWeightOneSlash24) (hjet : FullLevelWeightTwoFiniteJetInput24) :

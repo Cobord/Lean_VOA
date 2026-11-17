@@ -137,9 +137,12 @@ theorem primitiveQuotientMap_surjective (S T : PowerSeries (Polynomial A))
     (hS : seriesDerivation innerDerivative S = PowerSeries.X ^ ks.length)
     (hT : seriesDerivation innerDerivative T = 0) :
     Function.Surjective (primitiveQuotientMap S T ks inactive K hK hmax hS hT) := by
-  apply VOA.DeligneAudit.CVRectSeparation.primitive_quotient_surjective
-    (I := primitive) (D := innerDerivative.toLinearMap)
-  intro p
+  -- all arguments explicit: on Lean 4.35 `apply` with only `I`, `D` named times out in `whnf`
+  refine VOA.DeligneAudit.CVRectSeparation.primitive_quotient_surjective
+    ((coefficientIdeal S T (mixedOrder ks inactive K)).restrictScalars ℂ) constants
+    ((coefficientIdeal S T (mixedOrder ks inactive (K - 1))).restrictScalars ℂ)
+    primitive innerDerivative.toLinearMap
+    (primitive_preserves S T ks inactive K hK hmax hS hT) fun p => ?_
   change p - primitive (Polynomial.derivative p) ∈ constants
   rw [primitive_derivative]
   have hp : p - (p - Polynomial.C (p.coeff 0)) = Polynomial.C (p.coeff 0) := by abel

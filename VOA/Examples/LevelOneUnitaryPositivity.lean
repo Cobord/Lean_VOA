@@ -199,7 +199,7 @@ theorem np_joint : ∀ (E : ℕ) (μ : ℤ) (y : WakModule 1), y ∈ jointSpace 
   rcases Nat.eq_zero_or_pos E with hE0 | hEpos
   · subst hE0
     intro μ y hy
-    exact np_zero_energy (by simpa using hy)
+    exact np_zero_energy (by simpa using! hy)
   have hbound := charge_sq_le hR hρI hρρ
   have hnn : ∀ d : ℕ, ∀ μ : ℤ, 0 ≤ μ → 2 * (E : ℤ) < μ + d →
       ∀ y, y ∈ jointSpace 1 hk E μ → NP R y := by
@@ -240,7 +240,7 @@ theorem np_joint : ∀ (E : ℕ) (μ : ℤ) (y : WakModule 1), y ∈ jointSpace 
       rw [sesqForm_apply, sesqForm_apply, hρρ, ConcreteHodge.universalForm_isSymmetric 1 hk]
     obtain ⟨h1, h2, h3⟩ := hnp
     rw [hsame] at h1 h2 h3
-    exact ⟨h1, h2, fun h => by simpa [hρρ] using hρI _ (h3 h)⟩
+    exact ⟨h1, h2, fun h => by simpa [hρρ] using! hρI _ (h3 h)⟩
 
 /-- **Positivity on every weight space** of `V^1(sl₂)`, modulo the maximal ideal: distinct
 charges are orthogonal. -/

@@ -207,7 +207,7 @@ theorem summable_iterateTerm (hV : StronglyRational W)
   apply summable_iterValue hV i₁ i₂ i₃ i₄ A.property B.property
     d.hw₁ d.hw₂ d.hw₃ d.hf (z₀ := (d.x : ℂ)) (z₂ := 1)
   · exact_mod_cast d.xpos.ne'
-  · simpa [Complex.norm_real, Real.norm_eq_abs, abs_of_pos d.xpos] using d.xlt
+  · simpa [Complex.norm_real, Real.norm_eq_abs, abs_of_pos d.xpos] using! d.xlt
 
 noncomputable def iterateBilinear (hV : StronglyRational W)
     (i₁ : P₁.IsIrreducibleLW) (i₂ : P₂.IsIrreducibleLW)

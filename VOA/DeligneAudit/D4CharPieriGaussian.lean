@@ -32,7 +32,7 @@ theorem qbinom_balance {R : Type*} [CommRing R] (q : R) (n k : ℕ) :
   have h := congrArg (Polynomial.eval₂RingHom (Int.castRingHom R) q)
     (qbinom_X_balance n k)
   simpa only [map_mul, map_sub, map_one, map_pow, A2.map_qbinom,
-    Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using h
+    Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using! h
 
 /-- An actual Gaussian edge of the transfer chain. -/
 def gaussianPieriEdge {R : Type*} [CommRing R] (q : R) (n k : ℕ) : PieriEdge R where

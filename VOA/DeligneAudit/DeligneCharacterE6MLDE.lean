@@ -253,7 +253,7 @@ theorem e6Target_isAKSolution (hR : RamanujanIdentities) :
 
 /-- **The E₆ MLDE solution in closed form**: `mldeCoeff 12 N = [q^{N+2}] H·P⁻²²/3991680`. -/
 theorem e6Target_eq_mldeCoeff (N : ℕ) : e6Target N = mldeCoeff 12 N := by
-  simpa using DeligneMLDE.eq_mldeCoeff_of_isAKSolution (e6Target_isAKSolution ramanujanIdentities) N
+  simpa using! DeligneMLDE.eq_mldeCoeff_of_isAKSolution (e6Target_isAKSolution ramanujanIdentities) N
 
 end
 

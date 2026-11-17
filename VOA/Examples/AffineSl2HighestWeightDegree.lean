@@ -25,7 +25,7 @@ def highestFockPolynomial (P : FockPolynomial) : Polynomial ℂ :=
 
 /-- Each scalar coefficient is the actual constant oscillator coefficient. -/
 theorem highestFockPolynomial_coeff (P : FockPolynomial) (j : ℕ) :
-    (highestFockPolynomial P).coeff j=constantCoeff (P j) := rfl
+    (highestFockPolynomial P).coeff j=constantCoeff (P.coeff j) := rfl
 
 /-- Scalar evaluation commutes with highest-coefficient extraction. -/
 theorem highestFockPolynomial_eval (P : FockPolynomial) (h : ℂ) :
@@ -104,7 +104,7 @@ theorem weightGramPolynomial_degree (k : ℂ) (hk : k+2≠0) (n : ℕ) (c : ℤ)
   rw [wordPolynomial_weight_eq k hk]
   have hb := highestFockPolynomial_degree (polynomialWord_degree k
     (adjointWord (occupationWord i.val)++occupationWord j.val) ?_ 1)
-  · simpa only [loweringCount_append,rowWeightBound,columnWeightBound] using hb
+  · simpa only [loweringCount_append,rowWeightBound,columnWeightBound] using! hb
   · intro an han
     rcases List.mem_append.mp han with hi | hj
     · exact adjointOccupation_no_cartan_zero i.val an hi

@@ -125,7 +125,7 @@ theorem higherSecondLeviCountClosure_compoundPower_le (e₁ e₂ m : ℕ) :
     higherSecondLeviCountClosure Q β e₁ e₂ ≤
       (higherSecondLeviCountClosure Q β e₁ (e₂ + m)).comap (Q.op 5 0 ^ m) := by
   induction m with
-  | zero => intro x hx; simpa using hx
+  | zero => intro x hx; simpa using! hx
   | succ m ih =>
     intro x hx
     rw [Submodule.mem_comap, pow_succ', Module.End.mul_apply]

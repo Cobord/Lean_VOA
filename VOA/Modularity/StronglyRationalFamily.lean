@@ -53,7 +53,7 @@ theorem canonicalIrrFamily_irredundant_complete :
   constructor
   · intro i j hij
     have : (canonicalIrrModule i).toΦ = (canonicalIrrModule j).toΦ := Quotient.sound hij
-    simpa using this
+    simpa using! this
   · intro V
     refine ⟨V.toΦ, ?_⟩
     exact Quotient.exact (canonicalIrrModule_toΦ (W := W) V.toΦ).symm
@@ -98,7 +98,7 @@ theorem canonicalIrrFamily_bottomSeparated {j k : Φ W} (hjk : j ≠ k)
   have hforget := congrArg (forgetClass W) hclasses
   apply hjk
   change (canonicalIrrModule j).toΦ = (canonicalIrrModule k).toΦ at hforget
-  simpa using hforget
+  simpa using! hforget
 
 /-- The family-index cardinality input is tautological for the canonical `Φ W` family. -/
 theorem canonicalIrrFamily_card [Fintype (Φ W)] :

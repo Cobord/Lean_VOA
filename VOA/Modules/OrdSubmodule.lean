@@ -187,8 +187,10 @@ noncomputable def submodule : OrdVModule W P.carrier where
   L0_weight := by
     intro a x hx
     apply Subtype.ext
-    simpa only [WeakModule.submoduleYM_mode_coe, Submodule.coe_smul] using
-      N.L0_weight a (x : M) hx
+    first
+      | simpa only [WeakModule.submoduleYM_mode_coe, Submodule.coe_smul] using
+          N.L0_weight a (x : M) hx
+      | exact N.L0_weight a (x : M) hx
   finrank := submoduleWeight_finiteDimensional N P
   boundedBelow := submoduleWeight_boundedBelow N P
 

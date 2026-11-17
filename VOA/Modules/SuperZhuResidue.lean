@@ -393,7 +393,9 @@ theorem left_ideal_of_gen (hV : V.IntegralWeights) (v : 𝒱)
   have hle : V.superO hV ≤ (V.superO hV).comap ((V.superZhuMulₗ hV).flip v) := by
     rw [superO_eq_span, Submodule.span_le]
     intro g hg
-    simpa [Submodule.mem_comap] using hgen g hg
+    have hg' := hgen g hg
+    rw [superO_eq_span] at hg'
+    simpa [Submodule.mem_comap] using hg'
   have h := hle hu
   simpa [Submodule.mem_comap] using h
 
@@ -405,7 +407,9 @@ theorem right_ideal_of_gen (hV : V.IntegralWeights) (u : 𝒱)
   have hle : V.superO hV ≤ (V.superO hV).comap (V.superZhuMulₗ hV u) := by
     rw [superO_eq_span, Submodule.span_le]
     intro g hg
-    simpa [Submodule.mem_comap] using hgen g hg
+    have hg' := hgen g hg
+    rw [superO_eq_span] at hg'
+    simpa [Submodule.mem_comap] using hg'
   have h := hle hv
   simpa [Submodule.mem_comap] using h
 

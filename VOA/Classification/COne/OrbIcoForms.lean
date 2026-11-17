@@ -83,12 +83,12 @@ def J15 : P3 := ∏ i, lin (b2 i)
 theorem J6_hom : J6.IsHomogeneous 6 := by
   have h := IsHomogeneous.prod (Finset.univ : Finset (Fin 6)) (fun i => lin (a5 i))
     (fun _ => 1) (fun i _ => lin_hom (a5 i))
-  simpa [J6] using h
+  simpa [J6] using! h
 
 theorem J15_hom : J15.IsHomogeneous 15 := by
   have h := IsHomogeneous.prod (Finset.univ : Finset (Fin 15)) (fun i => lin (b2 i)) (fun _ => 1)
     (fun i _ => lin_hom (b2 i))
-  simpa [J15] using h
+  simpa [J15] using! h
 
 theorem prod_lin_smul {n : ℕ} (c : Fin n → ℂ) (v : Fin n → Fin 3 → ℂ) :
     ∏ i, lin (c i • v i) = MvPolynomial.C (∏ i, c i) * ∏ i, lin (v i) := by

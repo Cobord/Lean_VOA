@@ -49,7 +49,7 @@ theorem coefficients_unique_across_pivot (D F G : ℂ[X]) (P v : ℕ)
     rw [coeff_mul,Finset.sum_eq_single (v,k)] at hz
     · exact sub_eq_zero.mp ((mul_eq_zero.mp hz).resolve_left hpivot)
     · intro ij hij hne
-      have hs : ij.1+ij.2=k+v := Finset.mem_antidiagonal.mp hij
+      have hs : ij.1+ij.2=k+v := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
       by_cases hlt : ij.1 < v
       · rw [hbefore _ hlt,zero_mul]
       · have hgt : v < ij.1 := by
@@ -59,7 +59,7 @@ theorem coefficients_unique_across_pivot (D F G : ℂ[X]) (P v : ℕ)
           exact hne (Prod.ext hi hj)
         rw [coeff_sub,ih ij.2 (by omega) (by omega),sub_self,mul_zero]
     · intro hnot
-      exact False.elim (hnot (Finset.mem_antidiagonal.mpr (by omega)))
+      exact False.elim (hnot (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by omega)))
 
 /-- Finite jet uniqueness follows directly from its proved polynomial semantics. -/
 theorem jet_coefficients_unique (P v : ℕ) (d f g : Jet)
@@ -69,7 +69,6 @@ theorem jet_coefficients_unique (P v : ℕ) (d f g : Jet)
   apply coefficients_unique_across_pivot (zp d) (zp f) (zp g) P v hbefore hpivot
   intro i hi
   have h := congrArg (fun a => (zp a).coeff i) he
-  dsimp only at h
   rwa [coeff_jetMul P d f hi,coeff_jetMul P d g hi] at h
 
 end VOA.Classification.COne.OrbIcoW

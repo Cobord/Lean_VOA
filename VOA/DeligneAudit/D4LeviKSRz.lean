@@ -36,7 +36,7 @@ theorem fTwo_y_comm (r s : ℕ) :
   have hcoef (c : Fin 28) :
       fD4 (lowerColour 2) (radicalColour 4) c =
         if c = radicalColour 5 then (1 : ℂ) else 0 := by
-    simpa [lowerAction] using lower_coefficient 2 4 c
+    simpa [lowerAction] using! lower_coefficient 2 4 c
   change (∑ c : Fin 28,
     fD4 (lowerColour 2) (radicalColour 4) c • ρ.op c (r + s) v) =
       ρ.op (radicalColour 5) (r + s) v
@@ -63,9 +63,9 @@ theorem fTwo_garland_zero
     (PowerSeries.coeff s (fCurrent (fTwo ρ) ^ k)) w = 0 := by
   have hh := VOA.DeligneAudit.A3Sector.a3_simple_conversion_kill
     (leviCurrent ρ) w 0 m 0 (source_localWeyl ρ w m h)
-    1 k s hk (by simpa [VOA.DeligneAudit.A3Sector.weightABC] using hks)
+    1 k s hk (by simpa [VOA.DeligneAudit.A3Sector.weightABC] using! hks)
   simpa [fTwo, leviCurrent, leviColour, leviSign,
-    VOA.DeligneAudit.A3Sector.simpleF] using hh
+    VOA.DeligneAudit.A3Sector.simpleF] using! hh
 
 /-- Exact f₂ Wick identity, before absorption of the lower contraction terms. -/
 theorem rz_wick_identity
@@ -79,11 +79,11 @@ theorem rz_wick_identity
     (fTwo_y_comm ρ) (fTwo_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [yCurrent, zCurrent] using radical_ops_comm ρ 4 5 i j v)
+      simpa [yCurrent, zCurrent] using! radical_ops_comm ρ 4 5 i j v)
     k s xs 1 w (by intro i; simp)
     (fTwo_garland_zero ρ w m h k s hk hks)
   simpa only [one_mul, Module.End.one_apply, Module.End.mul_apply,
-    LinearMap.neg_apply] using h
+    LinearMap.neg_apply] using! h
 
 /-- The same exact conversion with any spectator commuting with f₂. -/
 theorem rz_wick_identity_spectator
@@ -98,9 +98,9 @@ theorem rz_wick_identity_spectator
     (fTwo_y_comm ρ) (fTwo_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [yCurrent, zCurrent] using radical_ops_comm ρ 4 5 i j v)
+      simpa [yCurrent, zCurrent] using! radical_ops_comm ρ 4 5 i j v)
     k s xs R w hR (fTwo_garland_zero ρ w m h k s hk hks)
-  simpa only [Module.End.mul_apply, LinearMap.neg_apply] using hh
+  simpa only [Module.End.mul_apply, LinearMap.neg_apply] using! hh
 
 end VOA.DeligneAudit.D4Levi
 

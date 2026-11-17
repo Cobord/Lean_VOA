@@ -37,12 +37,12 @@ theorem actual_lower_highest_coeff_recurrence (m r s ell : ℕ) (d : Fin 3) :
         PowerSeries.coeff (s + ell - a) (AllM.current m 0 ^ r) := by
   have h0 : seriesDerivation (g0Deriv m (cubeDirection d) 0) (actualCurrent m 0) =
       actualCurrent m (singleBitColor d) := by
-    simpa only [tailSeries_zero] using actual_lower_highest_current_tail m d 0
+    simpa only [tailSeries_zero] using! actual_lower_highest_current_tail m d 0
   have h := coefficient_power_mode_recurrence
     (g0Deriv m (cubeDirection d) ell) (g0Deriv m (cubeDirection d) 0)
     (actualCurrent m 0) (actualCurrent m (singleBitColor d)) r s ell
     (actual_lower_highest_current_tail m d ell) h0
-  simpa only [modeRecurrence_highest_current,actualCurrent_coeff] using h
+  simpa only [modeRecurrence_highest_current,actualCurrent_coeff] using! h
 
 end
 #print axioms actual_lower_highest_current_tail

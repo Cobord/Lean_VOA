@@ -115,12 +115,12 @@ theorem exists_normalized_root_homs
       (h * X₀ (Multiplicative.ofAdd t) * h⁻¹) := by
     intro s t
     apply upper_lifts_commute π hs hc (t := (u : ZMod n) ^ 2 * t) (hX₀ _)
-    simpa only [map_mul, map_inv, hh, hX₀] using torus_upper_conj u t
+    simpa only [map_mul, map_inv, hh, hX₀] using! torus_upper_conj u t
   have hYl : ∀ s t, Commute (Y₀ (Multiplicative.ofAdd s))
       (h⁻¹ * Y₀ (Multiplicative.ofAdd t) * (h⁻¹)⁻¹) := by
     intro s t
     apply lower_lifts_commute π hs hc (t := (u : ZMod n) ^ 2 * t) (hY₀ _)
-    simpa only [map_mul, map_inv, hh, hY₀, torus_inv, inv_inv] using
+    simpa only [map_mul, map_inv, hh, hY₀, torus_inv, inv_inv] using!
       torus_lower_conj u⁻¹ t
   let X := correctedRootHom X₀ h d hXu
   let Y := correctedRootHom Y₀ h⁻¹ d hYl

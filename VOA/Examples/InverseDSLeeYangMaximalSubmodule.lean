@@ -199,7 +199,7 @@ theorem sectorCurrent_mem_k85TargetLevel (p : ℂ) (m d : ℤ) {x : LeeYangFock}
   · subst m
     rw [sectorCurrent, if_pos rfl, LinearMap.add_apply, LinearMap.smul_apply,
       Module.End.one_apply, sub_zero]
-    exact Submodule.add_mem _ (by simpa using alphaMode_mem_k85TargetLevel 0 d hx)
+    exact Submodule.add_mem _ (by simpa using! alphaMode_mem_k85TargetLevel 0 d hx)
       (Submodule.smul_mem _ _ hx)
   · rw [sectorCurrent, if_neg hm, zero_smul, add_zero]
     exact alphaMode_mem_k85TargetLevel m d hx
@@ -212,8 +212,8 @@ theorem sectorSugawara_mem_k85TargetLevel (p : ℂ) (m d : ℤ) {x : LeeYangFock
     simp only [sectorSugawara, LinearMap.add_apply, LinearMap.smul_apply, if_true,
       Module.End.one_apply, sub_zero]
     exact Submodule.add_mem _
-      (Submodule.add_mem _ (by simpa using LvirN_mem_k85TargetLevel 0 d hx)
-        (Submodule.smul_mem _ _ (by simpa using alphaMode_mem_k85TargetLevel 0 d hx)))
+      (Submodule.add_mem _ (by simpa using! LvirN_mem_k85TargetLevel 0 d hx)
+        (Submodule.smul_mem _ _ (by simpa using! alphaMode_mem_k85TargetLevel 0 d hx)))
       (Submodule.smul_mem _ _ hx)
   · simp only [sectorSugawara, LinearMap.add_apply, LinearMap.smul_apply, if_neg hm,
       zero_smul, add_zero]
@@ -244,7 +244,7 @@ theorem k85TargetNegOnePower_mem_level (n : ℕ) :
   | zero => exact k85TargetTop_mem_level_zero
   | succ n ih =>
       rw [k85TargetNegOnePower]
-      simpa only [Nat.cast_add, Nat.cast_one, sub_neg_eq_add] using
+      simpa only [Nat.cast_add, Nat.cast_one, sub_neg_eq_add] using!
         k85TargetL_mem_level (-1) (n : ℤ) ih
 
 /-- Every cleared PBW numerator is homogeneous of oscillator energy `n+4`. -/

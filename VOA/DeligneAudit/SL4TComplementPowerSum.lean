@@ -23,7 +23,6 @@ theorem powerSumSeries_eq_derivative_complement (f g : R[X]) (d : ℕ)
   have hd := newtonCoefficientSeries_derivative (powerSumOfCoeff d f.coeff)
   rw [hs, PowerSeries.derivative_coe] at hd
   have he := congrArg (fun u : PowerSeries R => u * (g : PowerSeries R)) hd
-  dsimp only at he
   rw [neg_mul, mul_assoc, ← Polynomial.coe_mul, ← Polynomial.coe_mul,
     hfg, Polynomial.coe_one, mul_one] at he
   rw [he, neg_neg]
@@ -35,7 +34,7 @@ theorem powerSumOfCoeff_eq_derivative_complement (f g : R[X]) (d n : ℕ)
   have h := congrArg (PowerSeries.coeff n)
     (powerSumSeries_eq_derivative_complement f g d hf hfg)
   simpa only [positivePowerSumSeries, PowerSeries.coeff_mk, map_neg,
-    Polynomial.coeff_coe] using h
+    Polynomial.coeff_coe] using! h
 
 /-- The reversed derivative has one less coefficient degree than the original polynomial. -/
 theorem coefficientEuler_degree (f : R[X]) (d : ℕ) (hd : f.natDegree ≤ d) (hpos : 0 < d) :
@@ -44,13 +43,13 @@ theorem coefficientEuler_degree (f : R[X]) (d : ℕ) (hd : f.natDegree ≤ d) (h
   intro n hn
   have hnpos : 0 < n := by omega
   have hx : (X * f.derivative).coeff n = f.derivative.coeff (n - 1) := by
-    simpa only [Nat.sub_add_cancel hnpos] using coeff_X_mul f.derivative (n - 1)
+    simpa only [Nat.sub_add_cancel hnpos] using! coeff_X_mul f.derivative (n - 1)
   rw [coeff_sub, coeff_C_mul, hx, coeff_derivative,
     Nat.sub_add_cancel (by omega)]
   by_cases he : n = d
   · subst n
     have hc : ((d - 1 : ℕ) : R) + 1 = (d : R) := by
-      simpa only [Nat.cast_add, Nat.cast_one] using
+      simpa only [Nat.cast_add, Nat.cast_one] using!
         congrArg (fun n : ℕ => (n : R)) (Nat.sub_add_cancel hpos)
     rw [hc]
     ring
@@ -68,7 +67,7 @@ theorem coefficientEuler_top (f : R[X]) (d : ℕ) (hpos : 0 < d) :
     rw [coeff_sub, coeff_C_mul, hx, coeff_derivative,
       show d - 2 + 1 = d - 1 by omega]
     have hc : (d : R) = ((d - 2 : ℕ) : R) + 2 := by
-      simpa only [Nat.cast_add, Nat.cast_ofNat] using
+      simpa only [Nat.cast_add, Nat.cast_ofNat] using!
         congrArg (fun n : ℕ => (n : R)) (show d = d - 2 + 2 by omega)
     rw [hc]
     ring
@@ -86,9 +85,9 @@ theorem powerSumOfCoeff_last_mode (f g : R[X]) (d e : ℕ)
       rw [eq_C_of_natDegree_le_zero hd, hf, C_1]
     rw [hf']
     have hp := powerSumOfCoeff_eq_derivative_complement 1 g 0 (e - 2) (by simp)
-      (by simpa only [hf'] using hfg)
+      (by simpa only [hf'] using! hfg)
     have hn : e - 2 + 1 = e - 1 := by omega
-    simpa [hn, coeff_one] using hp
+    simpa [hn, coeff_one] using! hp
   · have hpos : 0 < d := by omega
     let u := Polynomial.C (d : R) * f - X * f.derivative
     have ht : (u * g).coeff (d - 1 + e) = f.coeff (d - 1) * g.coeff e := by

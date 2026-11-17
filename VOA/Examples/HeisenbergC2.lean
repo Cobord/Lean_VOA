@@ -368,7 +368,7 @@ theorem pderiv0_pow_eq_iterate (n : ℕ) (p : Fock) :
 `constantCoeff (∂₀ⁿ p) = n! · coeff (single 0 n) p`. By `ℂ`-linearity from the monomial case. -/
 theorem constantCoeff_pderiv0_iterate (n : ℕ) (p : Fock) :
     MvPolynomial.constantCoeff ((pderiv (0 : ℕ))^[n] p)
-      = (n.factorial : ℂ) * MvPolynomial.coeff (Finsupp.single 0 n) p := by
+      = (n.factorial : ℂ) * p.coeff (Finsupp.single 0 n) := by
   classical
   -- Package both sides as linear maps `Fock →ₗ[ℂ] ℂ` and check on monomials.
   set LHS : Fock →ₗ[ℂ] ℂ :=
@@ -434,7 +434,7 @@ Read off via `∂₀ⁿ` then constant term: `n!·coeff(single 0 n) p = constant
 `∂₀ⁿ p ∈ O₂` (`pderiv0_iterate_mem_O₂`) and `O₂` has no constant term (`O₂_le_ker_constantCoeff`). -/
 theorem coeff_single0_eq_zero_of_mem_O₂ (k : ℂ) (hk : k ≠ 0) (n : ℕ) {p : Fock}
     (hp : p ∈ O₂ (heisenbergVOA k hk)) :
-    MvPolynomial.coeff (Finsupp.single 0 n) p = 0 := by
+    p.coeff (Finsupp.single 0 n) = 0 := by
   have hcc : MvPolynomial.constantCoeff ((pderiv (0 : ℕ))^[n] p) = 0 := by
     have h := O₂_le_ker_constantCoeff k hk (pderiv0_iterate_mem_O₂ k hk n hp)
     rwa [LinearMap.mem_ker, MvPolynomial.lcoeff_apply, ← MvPolynomial.constantCoeff_eq] at h
@@ -471,9 +471,9 @@ theorem heisenberg_A2_tower_linearIndependent (k : ℂ) (hk : k ≠ 0) :
     rwa [mk₂, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hmkq
   -- each coefficient: coeff (single 0 m) q = ℓ m, and it must be 0 (kills O₂)
   ext m
-  have hcm : MvPolynomial.coeff (Finsupp.single 0 m) q = ℓ m := by
+  have hcm : q.coeff (Finsupp.single 0 m) = ℓ m := by
     rw [hq, Finsupp.sum]
-    rw [show MvPolynomial.coeff (Finsupp.single 0 m) (∑ n ∈ ℓ.support, ℓ n • (X 0 : Fock) ^ n)
+    rw [show (∑ n ∈ ℓ.support, ℓ n • (X 0 : Fock) ^ n).coeff (Finsupp.single 0 m)
           = (MvPolynomial.lcoeff (R := ℂ) (σ := ℕ) (Finsupp.single 0 m))
               (∑ n ∈ ℓ.support, ℓ n • (X 0 : Fock) ^ n) from by rw [MvPolynomial.lcoeff_apply],
       map_sum]

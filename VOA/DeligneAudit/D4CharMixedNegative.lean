@@ -60,12 +60,12 @@ theorem gtQ_two_eOne (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
   by_cases hdc : d < c
   · have hd₁ : Antitone (![(c : ℤ), ((d + 1 : ℕ) : ℤ)] : Fin 2 → ℤ) :=
       (gtTwo_antitone _ _).mpr (by omega)
-    simpa only [hd₁, ↓reduceIte] using hs
+    simpa only [hd₁, ↓reduceIte] using! hs
   · have hd₁ : ¬Antitone (![(c : ℤ), ((d + 1 : ℕ) : ℤ)] : Fin 2 → ℤ) := by
       rw [gtTwo_antitone]
       omega
     rw [gtQ_two_zero_of_lt q h u c (d + 1) (by omega), mul_zero, add_zero]
-    simpa only [hd₁, ↓reduceIte, add_zero] using hs
+    simpa only [hd₁, ↓reduceIte, add_zero] using! hs
 
 /-- Normalized top Pieri in two variables. -/
 theorem gtQ_two_eTwo (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)

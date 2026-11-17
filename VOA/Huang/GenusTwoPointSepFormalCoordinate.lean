@@ -58,7 +58,7 @@ theorem huangU_mode_spatialSquare (P : LWModule W) (t : ℂ)
     huangU P t (mode (P.isMod.YM a) m x) =
       spatialSquareMode P t a m (huangU P t x) := by
   have ht (y : P.carrier) : huangU P t y = moduleWeightExp P.isMod t (huangU P 0 y) := by
-    simpa using huangU_add P t 0 y
+    simpa using! huangU_add P t 0 y
   rw [ht, huangU_mode_of_squareConjugation P (normalizedSquareConjugation_holds P),
     map_smul, spatialSquareMode, ht, ← moduleWeightExp_add, neg_add_cancel,
     moduleWeightExp_zero]

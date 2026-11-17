@@ -193,7 +193,9 @@ end InducedAssignment
 
 /-! ## The headline — the final Zhu bijection on exactly the genuinely-remaining hypotheses -/
 
-/-- **`zhuBijection_final` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4,
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_final` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4,
 with the freeness side plugged as a TERM.**
 
 Given **exactly** the genuinely-remaining hypotheses after this round —
@@ -227,7 +229,9 @@ theorem zhuBijection_final {W : VertexOperatorAlgebra 𝒱}
   zhuBijection_of_univLift A hall hirr F hiso
     (InducedAssignment.univLiftFamily_of_genFromBottomFinal F G)
 
-/-- **`zhuBijection_final_of_genFromBottom` — the same headline routed through the derived
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_final_of_genFromBottom` — the same headline routed through the derived
 `GeneratedFromBottom`.**  Identical content to `zhuBijection_final`, but factored explicitly through
 `generatedFromBottom_final` (the universal property *derived* from the per-`P` residue family `G`,
 freeness plugged as a term) and the `zhuBijection_of_universal` backbone, so

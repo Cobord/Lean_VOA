@@ -100,9 +100,15 @@ subspace. -/
 theorem weightMonomialN_linearIndependent (r w : ℕ) :
     LinearIndependent ℂ (weightMonomialN r w) := by
   refine LinearIndependent.of_comp (gradingWN r w).subtype ?_
-  simpa only [Function.comp_apply, weightMonomialN_val, MvPolynomial.coe_basisMonomials] using
-    (MvPolynomial.basisMonomials (ℕ × Fin r) ℂ).linearIndependent.comp
+  have h := (MvPolynomial.basisMonomials (ℕ × Fin r) ℂ).linearIndependent.comp
       (fun d : weightDegSetN r w => d.1) Subtype.val_injective
+  have hf : (⇑(gradingWN r w).subtype ∘ weightMonomialN r w) =
+      (⇑(MvPolynomial.basisMonomials (ℕ × Fin r) ℂ) ∘ fun d : weightDegSetN r w => d.1) := by
+    funext d
+    simp only [Function.comp_apply, Submodule.subtype_apply, weightMonomialN_val,
+      MvPolynomial.coe_basisMonomials]
+  rw [hf]
+  exact h
 
 /-- The weighted monomials span the whole graded Fock subspace. -/
 theorem weightMonomialN_span (r w : ℕ) :

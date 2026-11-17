@@ -19,7 +19,7 @@ theorem simple_raise_comm (i : Fin 3) (j : Fin 6)
       match raiseAction i j with
       | none => 0
       | some (k, n) => (n : ℂ) • ρ.op (radicalColour k) (r + s) v := by
-  rw [ρ.comm]
+  refine (ρ.comm _ _ _ _ _).trans ?_
   change (∑ c : Fin 28,
       fD4 (leviColour (VOA.DeligneAudit.A3Sector.simpleE i))
         (radicalColour j) c • ρ.op c (r + s) v) = _

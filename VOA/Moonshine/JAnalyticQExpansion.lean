@@ -148,7 +148,7 @@ theorem hasSum_qFun (z : ℍ) :
 
 theorem qExpansion_qFun : qExpansion 1 qFun = X := by
   ext m
-  letI : FunLike (ℍ → ℂ) ℍ ℂ := { coe := id, coe_injective' := Function.injective_id }
+  letI : FunLike (ℍ → ℂ) ℍ ℂ := ⟨id, Function.injective_id⟩
   exact (qExpansion_coeff_unique (F := ℍ → ℂ) (h := 1) qFun one_pos analyticAt_qFun hasSum_qFun
     m).symm
 

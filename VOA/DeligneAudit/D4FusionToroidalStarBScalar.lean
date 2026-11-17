@@ -105,7 +105,7 @@ theorem mon_mem (a b N : ℕ) (h : a + b < N) : mon z a b ∈ lowSpan z N :=
 theorem hvec_mem_of_lt (s N : ℕ) (h : s < N) : hvec z s ∈ lowSpan z N := by
   rw [hvec_eq_sum]
   refine Submodule.sum_mem _ fun p hp => ?_
-  rw [mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   exact mon_mem z p.1 p.2 N (by omega)
 
 /-- Multiplication by the first coordinate. -/

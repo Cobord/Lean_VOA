@@ -195,6 +195,7 @@ theorem wt2Mon_linearIndependent : LinearIndependent ℂ (wt2Mon r) := by
   have h := (MvPolynomial.basisMonomials (ℕ × Fin r) ℂ).linearIndependent.comp _
     (wt2Exp_injective r)
   convert h using 1
+  try (funext i; simp [wt2Mon, MvPolynomial.coe_basisMonomials])
 
 theorem gradingWN_two_eq_span : gradingWN r 2 = Submodule.span ℂ (Set.range (wt2Mon r)) := by
   apply le_antisymm

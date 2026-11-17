@@ -71,7 +71,7 @@ theorem frameVirasoroOne_pow_eq_zero (hEven : L.Even) (α : L.carrier)
         rw [pow_succ', Module.End.mul_apply]
         constructor
         · exact frameVirasoroMode_preserves_momentum F α 1 ih.1
-        · simpa only [Nat.cast_succ, sub_add_eq_sub_sub] using
+        · simpa only [Nat.cast_succ, sub_add_eq_sub_sub, SetLike.mem_coe] using
             frameVirasoroMode_mem_weight F hEven ih.2 1
   have hz := hmem k
   rw [latticeMomentum_weight_below_halfNorm L α _ (by omega), Submodule.mem_bot] at hz

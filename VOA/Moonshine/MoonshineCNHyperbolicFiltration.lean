@@ -24,17 +24,16 @@ def hypBHomogeneous (d w : ℕ) : Submodule ℂ hypFock :=
 
 /-- Strict lexicographic lower filtration: count first, then level. -/
 def hypBFiltered (d w : ℕ) : Submodule ℂ hypFock :=
-  Finsupp.supported ℂ ℂ {e : (ℕ × Fin 2) →₀ ℕ |
+  restrictSupport ℂ {e : (ℕ × Fin 2) →₀ ℕ |
     Finsupp.weight hypBCountWeight e < d ∨
       (Finsupp.weight hypBCountWeight e = d ∧ Finsupp.weight hypBLevelWeight e < w)}
 
 theorem hypBFiltered_mem (d w : ℕ) (p : hypFock) :
-    p ∈ hypBFiltered d w ↔ ∀ e, coeff e p ≠ 0 →
+    p ∈ hypBFiltered d w ↔ ∀ e, p.coeff e ≠ 0 →
       Finsupp.weight hypBCountWeight e < d ∨
         (Finsupp.weight hypBCountWeight e = d ∧ Finsupp.weight hypBLevelWeight e < w) := by
-  change (∀ e ∈ p.support, Finsupp.weight hypBCountWeight e < d ∨
-    (Finsupp.weight hypBCountWeight e = d ∧ Finsupp.weight hypBLevelWeight e < w)) ↔ _
-  simp only [mem_support_iff]
+  rw [hypBFiltered, mem_restrictSupport_iff]
+  simp only [Set.subset_def, Finset.mem_coe, mem_support_iff, Set.mem_setOf_eq]
 
 theorem hypBFiltered_of_count_lt {d D w : ℕ} {p : hypFock}
     (hp : p.IsWeightedHomogeneous hypBCountWeight d) (hd : d < D) :

@@ -307,7 +307,7 @@ theorem analyticAt_serreIterC (wt : ℤ) (i : ℕ) {f : ℂ → ℂ} {z : ℂ}
     (hf : AnalyticAt ℂ f z) (hz : z ∈ imGT 0) :
     AnalyticAt ℂ (serreIterC wt i f) z := by
   induction i with
-  | zero => simpa using hf
+  | zero => simpa using! hf
   | succ i ih =>
       rw [serreIterC_succ]
       exact analyticAt_serreDerivC _ ih hz
@@ -362,7 +362,7 @@ theorem UniformSerreExpansionRow.fullCoeff_weight
     (hr : UniformSerreExpansionRow W a wt i r) {j : ℕ} (hj : j ≤ i) :
     E46Weight (2 * ((i - j : ℕ) : ℤ)) (fullSerreRowCoeff i r j) := by
   rcases eq_or_lt_of_le hj with rfl | hji
-  · simpa using E46Weight.one
+  · simpa using! E46Weight.one
   · rw [fullSerreRowCoeff_of_lt r hji]
     exact hr.2.1 j hji
 
@@ -762,7 +762,7 @@ theorem IsSqPrimary.uniformSerreExpansionRow_one
         rw [ha.2 (2 * (m + 2) - 2 : ℤ) (by omega), hF.zerov z]
         ring)
     rw [htail, add_zero] at homega
-    simpa [Function.iterate_succ_apply', serreIterC] using homega
+    simpa [Function.iterate_succ_apply', serreIterC] using! homega
 
 /-- The Ramanujan/Serre successor step for the unitriangular tower expansion. -/
 theorem IsSqPrimary.uniformSerreExpansionRow_succ
@@ -783,7 +783,7 @@ theorem IsSqPrimary.uniformSerreExpansionRow_succ
   have hevent : F (V k) =ᶠ[nhds z]
       D k + ∑ j ∈ Finset.range k, e46C (R k j) * D j := by
     filter_upwards [(isOpen_imGT 0).mem_nhds hz] with w hw
-    simpa only [V, D, Pi.add_apply, Finset.sum_apply, Pi.mul_apply] using
+    simpa only [V, D, Pi.add_apply, Finset.sum_apply, Pi.mul_apply] using!
       (hR k (le_refl k)).2.2 F hF w hw
   have hsumDiff : DifferentiableAt ℂ
       (∑ j ∈ Finset.range k, e46C (R k j) * D j) z := by
@@ -817,7 +817,7 @@ theorem IsSqPrimary.uniformSerreExpansionRow_succ
       + ∑ᶠ m : ℕ, zhuGC (m + 2) z *
         F (Lsq W (2 * (m + 2) - 2 : ℤ) (V k)) z := by
     have h := hF.omega_serre (ha.negTwo_iterate_mem_sqWeightSpace W k) hz
-    simpa only [V, Function.iterate_succ_apply'] using h
+    simpa only [V, Function.iterate_succ_apply'] using! h
   have htower (m : ℕ) : Lsq W (2 * (m + 2) - 2 : ℤ) (V k) =
       towerScalar (wt : ℂ) W.centralCharge (m + 1) k • V (k - m - 1) := by
     rw [show (2 * ((m : ℤ) + 2) - 2 : ℤ) = 2 * ((m + 1 : ℕ) : ℤ) by
@@ -1008,12 +1008,12 @@ theorem IsAnalyticBlock.monicMLDEOn_of_Lsq_relation
   let H : ℕ → ℕ → ℂ := fun i j => e46C (h i j) z
   have hsExp : F ((⇑(Lsq W (-2)))^[s] a) z =
       D s + ∑ j ∈ Finset.range s, H s j * D j := by
-    simpa [D, H] using hexp.2.2 F hF s (le_refl s) z hz
+    simpa [D, H] using! hexp.2.2 F hF s (le_refl s) z hz
   have hiExp : ∀ i ∈ Finset.range s,
       F ((⇑(Lsq W (-2)))^[i] a) z =
         D i + ∑ j ∈ Finset.range s, H i j * D j := by
     intro i hi
-    simpa [D, H] using hexp.2.2 F hF i (Nat.le_of_lt (Finset.mem_range.mp hi)) z hz
+    simpa [D, H] using! hexp.2.2 F hF i (Nat.le_of_lt (Finset.mem_range.mp hi)) z hz
   have hdouble :
       (∑ i ∈ Finset.range s, C i * ∑ j ∈ Finset.range s, H i j * D j) =
         ∑ j ∈ Finset.range s, (∑ i ∈ Finset.range s, C i * H i j) * D j := by

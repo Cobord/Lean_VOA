@@ -14,6 +14,8 @@ into the actual triple tensor model proves independence of all occupation
 creation words at every pair of parameters. Spanning and the ordinary
 contravariant form are separate constructions, not assumed here.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open UniversalEnvelopingAlgebra
@@ -65,7 +67,7 @@ theorem mode_highest (k h : ℂ) (a : Fin 3) (n : ℤ) (hn : ¬IsLower a n) :
     rw [mode,highestVector,rho_mk,mul_one,← Submodule.Quotient.mk_smul,
       Algebra.smul_def,mul_one,Submodule.Quotient.eq]
     exact Submodule.subset_span (Or.inl ⟨a,n,hn,rfl⟩)
-  simpa only [ite_smul,zero_smul] using hh
+  simpa only [ite_smul,zero_smul] using! hh
 
 /-- The derivation kills the highest vector by its defining relation. -/
 theorem degree_highest (k h : ℂ) :
@@ -203,7 +205,7 @@ theorem occupationWords_independent (k h : ℂ) :
   have hv : IsHighest R Wak.Charged.highestTensorVacuum k h := ⟨hC,hD,hM⟩
   have hi : LinearIndependent ℂ (fun d : Occupation => universalMap R _ hv
       (currentWord (mode k h) (occupationWord d) (highestVector k h))) := by
-    simpa only [universalMap_word,modeElement] using hI
+    simpa only [universalMap_word,modeElement] using! hI
   exact LinearIndependent.of_comp (universalMap R _ hv) hi
 
 end

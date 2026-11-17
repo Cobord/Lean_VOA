@@ -28,7 +28,7 @@ def oppositeBraidedHomEquiv (F : SphericalFusion C) (M : Modular F) (X Y : C) :
       Preadditive.comp_sum]
     apply Finset.sum_congr rfl
     intro a _
-    simpa only [Category.assoc, Iso.hom_inv_id_assoc] using
+    simpa only [Category.assoc, Iso.hom_inv_id_assoc] using!
       braided_comm_of_unit_factor
         (F.compositionDual (F.simpleHomBasis X F.unitLabel) a ≫ F.unitIso.hom)
         (F.unitIso.inv ≫ q a) U⟩
@@ -36,7 +36,7 @@ def oppositeBraidedHomEquiv (F : SphericalFusion C) (M : Modular F) (X Y : C) :
     apply Center.ext
     have h := (opposite_braided_comm_iff F M f.f).mp f.comm
     simpa only [SphericalFusion.simpleProjector, Preadditive.sum_comp,
-      Category.assoc] using h
+      Category.assoc] using! h
   right_inv q := by
     classical
     funext a
@@ -52,7 +52,7 @@ def oppositeBraidedHomEquiv (F : SphericalFusion C) (M : Modular F) (X Y : C) :
   map_add' f g := by
     funext a
     change _ ≫ (f.f + g.f) = _ ≫ f.f + _ ≫ g.f
-    rw [Preadditive.comp_add]
+    exact Preadditive.comp_add _ _ _ _ _ _
   map_smul' z f := by
     funext a
     change F.simpleHomBasis X F.unitLabel a ≫ (z • f.f) =

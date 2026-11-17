@@ -76,10 +76,10 @@ theorem centralizer_klein_le (y : Aut V1)
         u * u = u⁻¹ * u := congrArg (fun t => t * u) he.symm
         _ = 1 := inv_mul_cancel u
       have ht := congrArg (fun v : ℂˣ => (v : ℂ)) this
-      simpa only [Units.val_mul, Units.val_one, pow_two] using ht
+      simpa only [Units.val_mul, Units.val_one, pow_two] using! ht
     rcases eq_one_or_neg_one_of_sq hs with h | h
     · exact Or.inl (Units.ext h)
-    · exact Or.inr (Units.ext (by simpa using h))
+    · exact Or.inr (Units.ext (by simpa using! h))
   rcases normalizer_of_fix (by norm_num : (-1 : ℂˣ) ≠ 1) hfix with ⟨u, rfl⟩ | ⟨u, rfl⟩
   · rcases hc u (hy _ theta_mem_klein) with rfl | rfl
     · rw [map_one]; exact klein.one_mem
@@ -87,7 +87,7 @@ theorem centralizer_klein_le (y : Aut V1)
   · have ht := hy _ theta_mem_klein
     have hu : charU 1 le_rfl u * thetaM 1 le_rfl = thetaM 1 le_rfl * charU 1 le_rfl u := by
       apply mul_left_cancel (a := thetaM 1 le_rfl)
-      simpa only [mul_assoc] using ht
+      simpa only [mul_assoc] using! ht
     rcases hc u hu with rfl | rfl
     · rw [map_one, mul_one]; exact theta_mem_klein
     · exact klein.mul_mem theta_mem_klein z_mem_klein
@@ -106,7 +106,7 @@ theorem normalizer_klein_le_octa : Subgroup.normalizer klein ≤ octa := by
     have hh := congrArg octHom (hs d)
     simp only [map_mul, map_inv] at hh
     change (kleinEquiv (kleinEquiv.symm (f (kleinEquiv d))) : Aut V1) = _ at hh
-    simpa only [MulEquiv.apply_symm_apply] using hh
+    simpa only [MulEquiv.apply_symm_apply] using! hh
   have hr : (octHom s)⁻¹ * y ∈ klein := by
     apply centralizer_klein_le
     intro x hx
@@ -119,7 +119,7 @@ theorem normalizer_klein_le_octa : Subgroup.normalizer klein ≤ octa := by
       _ = (octHom s)⁻¹ * (octHom s * x * (octHom s)⁻¹) * y := by rw [hh]
       _ = x * ((octHom s)⁻¹ * y) := by group
   have ho := octa.mul_mem (show octHom s ∈ octa from ⟨s, rfl⟩) (klein_le_octa hr)
-  simpa only [← mul_assoc, mul_inv_cancel, one_mul] using ho
+  simpa only [← mul_assoc, mul_inv_cancel, one_mul] using! ho
 
 theorem octa_le_normalizer_klein : octa ≤ Subgroup.normalizer klein := by
   apply Subgroup.le_normalizer_iff.mpr

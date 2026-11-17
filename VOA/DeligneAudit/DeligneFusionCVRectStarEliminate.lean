@@ -96,10 +96,12 @@ def zeroLeftMap (left right center : List ℕ) :
       left right center).toLinearMap
 
 theorem zeroLeftMap_surjective (left right center : List ℕ) :
-    Function.Surjective (zeroLeftMap left right center) :=
-  (zeroLeftLengthEquiv left right center).surjective.comp
-    (zeroLeftModelMap_surjective left.length (left.length + right.length + center.length)
-      right.length left right center)
+    Function.Surjective (zeroLeftMap left right center) := by
+  have h1 := (zeroLeftLengthEquiv left right center).surjective
+  have h2 := zeroLeftModelMap_surjective left.length (left.length + right.length + center.length)
+    right.length left right center
+  rw [zeroLeftMap, LinearMap.coe_comp, LinearEquiv.coe_coe, AlgHom.coe_toLinearMap]
+  exact h1.comp h2
 
 theorem left_zero_bound (left right center : List ℕ)
     [FiniteDimensional ℂ (Family left right center)] :

@@ -4,6 +4,11 @@ import VOA.Moonshine.MoonshineLRCommutant
 # Column and triality block restrictions on the rational Griess commutant
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -122,10 +127,10 @@ theorem commutB_pair_scalar (T : SpaceB →ₗ[ℚ] SpaceB)
     rw [hs, map_smul, ha, smul_comm]
   have h20 : T (v 2 + v 0) = a • (v 2 + v 0) := by
     have h := hτ (v 1 + v 2)
-    simpa only [map_add, hv, h12, map_smul] using h
+    simpa only [map_add, hv, h12, map_smul, Fin.reduceAdd] using h
   have h01 : T (v 0 + v 1) = a • (v 0 + v 1) := by
     have h := hτ (v 2 + v 0)
-    simpa only [map_add, hv, h20, map_smul] using h
+    simpa only [map_add, hv, h20, map_smul, Fin.reduceAdd] using h
   have h0 : T (v 0) = a • v 0 := by
     have he : v 0 = (1 / 2 : ℚ) • ((v 0 + v 1) + (v 2 + v 0) - (v 1 + v 2)) := by
       module

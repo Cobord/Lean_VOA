@@ -74,12 +74,12 @@ theorem resPart_zero_mul {N : ℕ} (hN : 0 < N) (f g : PowerSeries R) :
   by_cases hn : n % N = 0 % N
   · rw [if_pos hn]
     refine Finset.sum_congr rfl fun x hx => ?_
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     rw [Finset.sum_eq_single (x.2 % N)]
     · have h2 : x.2 % N = x.2 % N % N := (Nat.mod_mod _ _).symm
       have h1 : x.1 % N = (N - x.2 % N) % N % N := by
         rw [Nat.mod_mod]
-        have hsum : (x.1 + x.2) % N = 0 := by rw [hx]; simpa using hn
+        have hsum : (x.1 + x.2) % N = 0 := by rw [hx]; simpa using! hn
         exact mod_eq_sub_mod_of_add hN hsum
       rw [if_pos h1, if_pos h2]
     · intro b hb hne
@@ -93,7 +93,7 @@ theorem resPart_zero_mul {N : ℕ} (hN : 0 < N) (f g : PowerSeries R) :
   · rw [if_neg hn]
     symm
     refine Finset.sum_eq_zero fun x hx => Finset.sum_eq_zero fun s hs => ?_
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     rw [Finset.mem_range] at hs
     by_cases h1 : x.1 % N = (N - s) % N % N
     · by_cases h2 : x.2 % N = s % N

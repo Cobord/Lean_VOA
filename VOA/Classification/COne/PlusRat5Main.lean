@@ -45,13 +45,13 @@ theorem exists_eigen_in (P : Submodule (modeAlg A) M) {y : M} (hyP : y ∈ P) {h
   have hfP : ∀ i : ℕ, (f ^ i) y ∈ P := by
     intro i
     induction i with
-    | zero => simpa using hyP
+    | zero => simpa using! hyP
     | succ i ih =>
       rw [pow_succ', Module.End.mul_apply]
       have hL : L0 A ((f ^ i) y) ∈ P :=
         P.smul_mem (⟨L0 A, Algebra.subset_adjoin ⟨(V2mPlus m hm).conformalVector, 1, rfl⟩⟩ : modeAlg A) ih
       change L0 A ((f ^ i) y) - h • (1 : Module.End ℂ M) ((f ^ i) y) ∈ P
-      exact P.sub_mem hL (P.smul_mem (algebraMap ℂ (modeAlg A) h) (by simpa using ih))
+      exact P.sub_mem hL (P.smul_mem (algebraMap ℂ (modeAlg A) h) (by simpa using! ih))
   refine ⟨(f ^ j) y, hfP j, hj0, ?_⟩
   have h1 : f ((f ^ j) y) = 0 := by rw [← Module.End.mul_apply, ← pow_succ']; exact hj
   change L0 A ((f ^ j) y) - h • (1 : Module.End ℂ M) ((f ^ j) y) = 0 at h1
@@ -227,7 +227,7 @@ theorem split_uniform {M : Type} [AddCommGroup M] [Module ℂ M]
   have hux : u - x ∈ P := by
     have : u - x = c⁻¹ • (evalW A F x - c • x) := by
       rw [hu, smul_sub, smul_smul, inv_mul_cancel₀ hV0, one_smul]
-    rw [this]; exact P.smul_mem (algebraMap ℂ (modeAlg A) c⁻¹) (by simpa using hFx)
+    rw [this]; exact P.smul_mem (algebraMap ℂ (modeAlg A) c⁻¹) (by simpa using! hFx)
   have huP : u ∉ P := fun h0 => hxP (by
     have := P.sub_mem h0 hux
     rwa [sub_sub_cancel] at this)

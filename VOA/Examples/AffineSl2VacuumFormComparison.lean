@@ -24,7 +24,7 @@ theorem vacuumForm_current_adj (k : ℂ) (hk : k+2≠0) (a : Fin 3) (n : ℤ)
     (u v : WakModule k) :
     (universalForm k hk).form (J k a n u) v =
       -(universalForm k hk).form u (J k a (-n) v) := by
-  simpa only [smul_currentState_eq_J] using
+  simpa only [smul_currentState_eq_J] using!
     LQ43.weightOne_adj (universalForm_invariant k hk)
       (currentState_mem_grading k hk a)
       (LQ43.L1_grading_one k hk _ (currentState_mem_grading k hk a)) n u v

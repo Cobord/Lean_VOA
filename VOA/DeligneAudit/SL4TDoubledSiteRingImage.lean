@@ -39,7 +39,7 @@ theorem mixedQuotientRingImage_bound_of_chain
   have hHq (s : ℕ) (hs : 1 ≤ s) (x : MixedRing q ⧸ I) :
       H s (ψ x) = ψ (p s * x) := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ I x
-    simpa only [p, ← map_mul, heval] using hH s hs x
+    simpa only [p, ← map_mul, heval] using! hH s hs x
   have hFq (x : MixedRing q ⧸ I) :
       (F 0 ^ ((mixedWeight q).toNat + 1)) (ψ x) = 0 := by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ I x
@@ -100,8 +100,8 @@ def middleFlagTailIdeal (q : MixedParams) (N : ℕ) : Ideal (MixedRing q) :=
 /-- The quotient spanning filtration with the shortened cutoff and ordered catalog levels. -/
 def DoubledSiteSpanningFiltration (B : ℕ) (q : MixedParams) : Prop :=
   SpanningChain
-    (Ideal.span {(mixedCharacteristic q).map
-      (Ideal.Quotient.mk (middleFlagTailIdeal q (B - 1)))} ⊔
+    (Ideal.span {((mixedCharacteristic q).map
+      (Ideal.Quotient.mk (middleFlagTailIdeal q (B - 1))))} ⊔
         Ideal.span {(X : (MixedRing q ⧸ middleFlagTailIdeal q (B - 1))[X]) ^ (B - 1)})
     ⊥ ⊤ ((mixedCatalogFiber q (doubledSiteCellCatalog (B - 2))).map mixedCellLevel)
 

@@ -134,7 +134,8 @@ theorem piSimple_isEmpty_linearEquiv (hd : ∀ i, NeZero (d i)) {i j : Fin n} (h
     have := congrFun hc ⟨0, Nat.pos_of_ne_zero (hd i).out⟩
     rw [Pi.single_eq_same] at this
     exact one_ne_zero this.symm
-  exact h0 (hinj (by rw [hx, hx]))
+  exact h0 (hinj ((hx (0 : piSimple K d i)).trans
+    (hx (show piSimple K d i from Pi.single ⟨0, Nat.pos_of_ne_zero (hd i).out⟩ 1)).symm))
 
 end
 

@@ -13,6 +13,8 @@ E_(n-1), and H_n to -H_n plus k at n=0. The highest weight becomes k-lambda.
 The principal grading is unchanged. This is an actual representation and
 highest projection, not an assumed symmetry of a determinant formula.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial AffineVOA
@@ -83,14 +85,14 @@ Borel and its Cartan eigenvalue is k-lambda. -/
 theorem diagramJ_one_highest (k lam : ℂ) (a : Fin 3) (m : ℤ)
     (hm : ¬IsLower a m) :
     diagramJ k lam a m (1 : WakFock)=if m=0 ∧ a=2 then (k-lam) • (1 : WakFock) else 0 := by
-  have hm0 : 0≤m := by simp only [IsLower,not_or] at hm; omega
+  have hm0 : 0 ≤ m := by simp only [IsLower,not_or] at hm; omega
   rcases fin3_cases a with rfl|rfl|rfl
   · rw [diagramJ_E]
     have h := J_one_positive k lam 1 (m+1) (by omega)
     rw [J_F] at h
     rw [h,if_neg (by simp [Fin.ext_iff])]
-  · have hp : 0<m := by by_contra hz; apply hm; right; exact ⟨by omega,rfl⟩
-    rw [diagramJ_F,Ecur_one (show 0≤m-1 by omega),if_neg (by simp [Fin.ext_iff])]
+  · have hp : 0 < m := by by_contra hz; apply hm; right; exact ⟨by omega,rfl⟩
+    rw [diagramJ_F,Ecur_one (show 0 ≤ m-1 by omega),if_neg (by simp [Fin.ext_iff])]
   · rw [diagramJ_H]
     by_cases hz : m=0
     · subst m
@@ -133,7 +135,6 @@ theorem diagramWord_principal (k lam : ℂ) (w : List (Fin 3×ℤ)) :
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ WakFock => T (currentWord (diagramJ k lam) w 1))
         (principalD_diagramJ k lam an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply] at hc
       simp only [currentWord,Module.End.mul_apply,wordPrincipal,Int.cast_add,add_smul]

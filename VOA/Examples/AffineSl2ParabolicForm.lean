@@ -41,7 +41,7 @@ theorem parabolicSection_pairing (k : ℂ) (d : ℕ) (u v : Verma k d) :
   have h := parabolicProjection_kernel_radical k d
     (parabolicSection k d (parabolicProjection k d u)-u) (by simp)
   have hh := LinearMap.congr_fun h v
-  simpa using sub_eq_zero.mp (by simpa using hh)
+  simpa using! sub_eq_zero.mp (by simpa using! hh)
 
 /-- On representatives the descended form is exactly the original pairing. -/
 @[simp] theorem parabolicForm_projection (k : ℂ) (d : ℕ) (u v : Verma k d) :
@@ -55,7 +55,7 @@ theorem parabolicForm_symm (k : ℂ) (d : ℕ) (u v : Parabolic k d) :
     parabolicForm k d u v=parabolicForm k d v u := by
   obtain ⟨u,rfl⟩ := parabolicProjection_surjective k d u
   obtain ⟨v,rfl⟩ := parabolicProjection_surjective k d v
-  simpa using contravariant_symm k d u v
+  simpa using! contravariant_symm k d u v
 
 theorem parabolicProjection_rho (k : ℂ) (d : ℕ) (x : AffSl2) (v : Verma k d) :
     parabolicProjection k d (rho k d x v) =
@@ -131,7 +131,7 @@ theorem parabolic_joint_radical_iff (k : ℂ) (d n : ℕ) (c : ℤ)
             (Wak.Charged.occupationCharge e) := by
         exact ⟨_,Submodule.subset_span ⟨⟨e,rfl,rfl⟩,rfl⟩,rfl⟩
       by_cases hh : Wak.Charged.occupationEnergy e=n ∧ Wak.Charged.occupationCharge e=c
-      · exact h _ (by simpa [hh.1,hh.2] using he)
+      · exact h _ (by simpa [hh.1,hh.2] using! he)
       · exact parabolic_joint_orthogonal k d n _ c _ u _ hu he
           (by rcases not_and_or.mp hh with hn|hc
               · exact Or.inl (Ne.symm hn)

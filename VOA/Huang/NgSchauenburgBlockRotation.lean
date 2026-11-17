@@ -74,6 +74,18 @@ theorem Pivotal.cup_naturality (P : Pivotal C) {X Y : C} (f : X ⟶ Y) :
 
 variable [Preadditive C] [Linear ℂ C] [MonoidalPreadditive C] [MonoidalLinear ℂ C]
 
+private theorem leftDuality_apply' (X V W : C) (f : Vᘁ ⊗ X ⟶ W) :
+    leftDuality X V W f = (λ_ X).inv ≫ η_ V Vᘁ ▷ X ≫ (α_ V Vᘁ X).hom ≫ V ◁ f := rfl
+
+private theorem leftDuality_symm_apply' (X V W : C) (g : X ⟶ V ⊗ W) :
+    (leftDuality X V W).symm g = Vᘁ ◁ g ≫ (α_ Vᘁ V W).inv ≫ ε_ V Vᘁ ▷ W ≫ (λ_ W).hom := rfl
+
+private theorem rightDuality_apply'' (X V W : C) (g : X ⊗ V ⟶ W) :
+    rightDuality X V W g = (ρ_ X).inv ≫ X ◁ η_ V Vᘁ ≫ (α_ X V Vᘁ).inv ≫ g ▷ Vᘁ := rfl
+
+private theorem homCongr_apply' {X X' Y Y' : C} (e : X ≅ X') (f : Y ≅ Y') (g : X ⟶ Y) :
+    homCongr e f g = e.inv ≫ g ≫ f.hom := rfl
+
 /-- The first bend of a rotation, with the unit removed. -/
 def bend {X Y : C} (f : 𝟙_ C ⟶ X ⊗ Y) : Xᘁ ⟶ Y :=
   (ρ_ Xᘁ).inv ≫ (leftDuality (𝟙_ C) X Y).symm f
@@ -83,7 +95,8 @@ theorem rotation_eq_cup (P : Pivotal C) {X Y : C} (f : 𝟙_ C ⟶ X ⊗ Y) :
     rotation P X Y f = P.cup X ≫ bend f ▷ X := by
   calc
     _ = η_ Xᘁ (Xᘁ)ᘁ ≫ bend f ▷ (Xᘁ)ᘁ ≫ Y ◁ (P.j X).inv := by
-      dsimp [rotation, homCongr, rightDuality, tensorRightHomEquiv, bend]
+      simp only [rotation, LinearEquiv.trans_apply, homCongr_apply', rightDuality_apply'', bend,
+        whiskerLeftIso_hom, Iso.symm_hom, Iso.trans_inv, Iso.symm_inv, Iso.refl_hom, Iso.refl_inv]
       monoidal
     _ = _ := by
       rw [← whisker_exchange]
@@ -93,7 +106,7 @@ theorem rotation_eq_cup (P : Pivotal C) {X Y : C} (f : 𝟙_ C ⟶ X ⊗ Y) :
 theorem bend_tensor (P : Pivotal C) {X Y Z : C} (f : 𝟙_ C ⟶ (X ⊗ Y) ⊗ Z) :
     (P.dualTensor X Y).hom ≫ bend f =
       (leftDuality Xᘁ Y Z).symm (bend (f ≫ (α_ X Y Z).hom)) := by
-  dsimp [bend, leftDuality, tensorLeftHomEquiv]
+  dsimp [bend, leftDuality_symm_apply']
   simp only [Category.assoc, whiskerLeft_comp]
   rw [rightUnitor_inv_naturality_assoc, ← whisker_exchange_assoc,
     associator_inv_naturality_left_assoc, ← comp_whiskerRight_assoc,
@@ -114,7 +127,7 @@ theorem rotation_tensor (P : Pivotal C) {X Y Z : C}
         ((P.dualTensor X Y).hom ≫ bend f) ▷ (X ⊗ Y) := by simp
     _ = _ := by
       rw [P.cup_tensor, bend_tensor]
-      dsimp [bend, leftDuality, tensorLeftHomEquiv]
+      dsimp [bend, leftDuality_symm_apply']
       monoidal
 
 /-- Naturality in the remaining tensor block. -/
@@ -122,7 +135,7 @@ theorem rotation_naturality_right (P : Pivotal C) {X Y Z : C}
     (f : 𝟙_ C ⟶ X ⊗ Y) (g : Y ⟶ Z) :
     rotation P X Z (f ≫ X ◁ g) = rotation P X Y f ≫ g ▷ X := by
   simp only [rotation_eq_cup]
-  dsimp [bend, leftDuality, tensorLeftHomEquiv]
+  dsimp [bend, leftDuality_symm_apply']
   simp only [whiskerLeft_comp, Category.assoc]
   rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc,
     leftUnitor_naturality]
@@ -133,7 +146,7 @@ theorem rotation_naturality_left (P : Pivotal C) {X Y Z : C}
     (f : 𝟙_ C ⟶ X ⊗ Z) (g : X ⟶ Y) :
     rotation P Y Z (f ≫ g ▷ Z) = rotation P X Z f ≫ Z ◁ g := by
   have hb : bend (f ≫ g ▷ Z) = gᘁ ≫ bend f := by
-    dsimp [bend, leftDuality, tensorLeftHomEquiv]
+    dsimp [bend, leftDuality_symm_apply']
     simp only [whiskerLeft_comp, Category.assoc]
     rw [rightUnitor_inv_naturality_assoc, ← whisker_exchange_assoc,
       associator_inv_naturality_left_assoc, ← comp_whiskerRight_assoc,
@@ -148,7 +161,6 @@ theorem rotation_rotation (P : Pivotal C) {X Y : C} (f : 𝟙_ C ⟶ X ⊗ Y) :
     rotation P Y X (rotation P X Y f) = f := by
   have h := congrArg (fun g => g ≫ (λ_ (X ⊗ Y)).hom)
     (rotation_tensor P (f ≫ (ρ_ (X ⊗ Y)).inv))
-  dsimp only at h
   rw [rotation_unit] at h
   have h₁ : (f ≫ (ρ_ (X ⊗ Y)).inv) ≫ (α_ X Y (𝟙_ C)).hom =
       f ≫ X ◁ (ρ_ Y).inv := by monoidal
@@ -164,6 +176,7 @@ theorem fsRotation_two_pow (P : Pivotal C) (V : C) :
   ext f
   change fsRotation P V 2 (fsRotation P V 2 f) = f
   change (𝟙 _ ≫ rotation P V V (𝟙 _ ≫ rotation P V V f ≫ 𝟙 _) ≫ 𝟙 _) = f
-  simpa only [Category.id_comp, Category.comp_id] using rotation_rotation P f
+  simp only [Category.id_comp, Category.comp_id]
+  exact rotation_rotation P f
 
 end VOA.Huang.NgSchauenburg

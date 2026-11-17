@@ -90,12 +90,12 @@ theorem adjointKey_eq_bot_of_overfull (m a d : ℕ) (ha : m < a)
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0)) :
     keyLayer ρ w (adjointLetterKey a d) = ⊥ := by
   apply eq_bot_iff.mpr
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hx := congrArg RadicalKey.x hl
   have hx' : l.countP (fun p => p.1 = 1) = a := hx
   have hz := radicalWord_zero_of_count ρ w m h 1 l
-    (by simpa [rootWeight, hx'] using ha)
+    (by simpa [rootWeight, hx'] using! ha)
   rw [hz]
   exact Submodule.zero_mem _
 

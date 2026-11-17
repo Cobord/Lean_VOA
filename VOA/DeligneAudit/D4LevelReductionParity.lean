@@ -60,7 +60,7 @@ private theorem mem_of_negative_sum_relation (N : Submodule ℂ V) (v s : V)
   have hne : (-((n + 1 : ℕ) : ℂ)) ≠ 0 :=
     neg_ne_zero.mpr (by exact_mod_cast Nat.succ_ne_zero n)
   have hi := N.smul_mem (-((n + 1 : ℕ) : ℂ))⁻¹ hscaled
-  simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using hi
+  simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using! hi
 
 /-- Derivative summands preserve the level and either decrease the measure or repeat the word. -/
 theorem outerThree_replacement_cases (m r : ℕ) (rest q : List (Fin 6 × ℕ))
@@ -78,7 +78,7 @@ theorem outerThree_replacement_cases (m r : ℕ) (rest q : List (Fin 6 × ℕ))
     by_cases hs : s = 0
     · subst s
       right
-      simpa using three_xzero_replacement_word ρ w r pre post
+      simpa using! three_xzero_replacement_word ρ w r pre post
     · left
       have hk := three_x_replacement_key r s pre post
       refine ⟨congrArg (keyAlphaGrade m) hk, congrArg (keyLeviLevel m) hk, ?_⟩
@@ -127,13 +127,13 @@ theorem outerThree_word_mem_next (m : ℕ)
   have hmap : ρ.op (22 : Fin 28) 0
       (((threeWords r rest).map (radicalWord ρ w)).sum) = L.sum := by
     simpa only [L, List.map_map, Function.comp_def, radicalWord,
-      List.map_cons, wordOp, radicalColour] using
+      List.map_cons, wordOp, radicalColour] using!
       (map_list_sum (ρ.op (22 : Fin 28) 0)
         ((threeWords r rest).map (radicalWord ρ w)))
   have hrel : -v - L.sum ∈ N := by
     simpa only [fThreeDerivative, fThreeLetter, if_true, zero_add, add_zero,
       LinearMap.neg_apply, fThreeDerivative_eq_sum ρ w r rest,
-      map_neg, show radicalColour 1 = 22 from rfl, hmap, sub_eq_add_neg] using hderiv
+      map_neg, show radicalColour 1 = 22 from rfl, hmap, sub_eq_add_neg] using! hderiv
   exact mem_of_negative_sum_relation N v L.sum hrel n hn
 
 /-- Derivative summands preserve the level and either decrease the measure or repeat the word. -/
@@ -152,7 +152,7 @@ theorem outerFour_replacement_cases (m r : ℕ) (rest q : List (Fin 6 × ℕ))
     by_cases hs : s = 0
     · subst s
       right
-      simpa using four_xzero_replacement_word ρ w r pre post
+      simpa using! four_xzero_replacement_word ρ w r pre post
     · left
       have hk := four_x_replacement_key r s pre post
       refine ⟨congrArg (keyAlphaGrade m) hk, congrArg (keyLeviLevel m) hk, ?_⟩
@@ -201,13 +201,13 @@ theorem outerFour_word_mem_next (m : ℕ)
   have hmap : ρ.op (22 : Fin 28) 0
       (((fourWords r rest).map (radicalWord ρ w)).sum) = L.sum := by
     simpa only [L, List.map_map, Function.comp_def, radicalWord,
-      List.map_cons, wordOp, radicalColour] using
+      List.map_cons, wordOp, radicalColour] using!
       (map_list_sum (ρ.op (22 : Fin 28) 0)
         ((fourWords r rest).map (radicalWord ρ w)))
   have hrel : -v - L.sum ∈ N := by
     simpa only [fFourDerivative, fFourLetter, if_true, zero_add, add_zero,
       LinearMap.neg_apply, fFourDerivative_eq_sum ρ w r rest,
-      map_neg, show radicalColour 1 = 22 from rfl, hmap, sub_eq_add_neg] using hderiv
+      map_neg, show radicalColour 1 = 22 from rfl, hmap, sub_eq_add_neg] using! hderiv
   exact mem_of_negative_sum_relation N v L.sum hrel n hn
 
 /-- Every radical word at an odd level belongs to the next Levi filtration term. -/
@@ -297,7 +297,7 @@ theorem levelFiltration_eq_next_of_odd (m : ℕ)
     intro hp
     by_cases heq : keyLeviLevel m k = p
     · apply keyOrbit_le_levelFiltration_of_layer
-      rw [keyLayer, Submodule.span_le]
+      apply Submodule.span_le.mpr
       rintro v ⟨l, hl, rfl⟩
       exact radicalWord_mem_next_of_odd ρ w m h κ p hodd l
         (by rwa [hl]) (by rwa [hl])

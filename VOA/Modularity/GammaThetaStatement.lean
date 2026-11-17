@@ -500,9 +500,9 @@ theorem characterModularOn_of_modularLawOn {S : SuperCharacterSystem W ι}
     (hS : ModularLawOn S Γ J ρ) : CharacterModularOn Γ S.character ρ := by
   intro A hA i τ
   have hv : W.vacuum ∈ S.sqWt (((0 : ℤ) : ℂ) / 2) := by
-    simpa using S.vacuum_mem_sqWt
+    simpa using! S.vacuum_mem_sqWt
   have := hS A hA 0 W.vacuum hv i τ
-  simpa [SuperCharacterSystem.character] using this
+  simpa [SuperCharacterSystem.character] using! this
 
 /-- **The bridge to `SlashSub.SuperRealisesLawOn`, and the repair of its defect.**  That
 predicate quantifies over `W.grading` — the ordinary `L₀` grading — whereas Zhu's law lives in
@@ -753,7 +753,7 @@ noncomputable def ofModularData (D : ModularData W ι) :
   sqWt_halfInt := fun _ hk => sqWeightSpace_eq_bot_of_half W hk
   vacuum_mem_sqWt := by
     have := vacuum_mem_sqWeightSpace_zero W
-    simpa using this
+    simpa using! this
   chi := traceFun D.Mfam D.h
   chi_zero := fun i τ => traceFun_zero D.Mfam D.h i τ
 
@@ -787,7 +787,7 @@ theorem modularLawOn_thetaGroup_of_zhuModularityAnalytic (D : ModularData W ι)
       sqWeightSpace_eq_bot_of_not_natCast W hex
     have hv0 : v = 0 := by
       have : v ∈ (⊥ : Submodule ℂ 𝒱) := hbot ▸ hv
-      simpa using this
+      simpa using! this
     subst hv0
     change traceFun D.Mfam D.h i 0 (A • τ)
       = J.sq A τ ^ m * ∑ j, D.rep A i j * traceFun D.Mfam D.h j 0 τ
@@ -813,7 +813,7 @@ theorem characterModularOn_top_of_zhuModularityAnalytic (D : ModularData W ι)
   have hlaw := hD A 0 W.vacuum hvac i τ
   change traceFun D.Mfam D.h i W.vacuum (A • τ)
     = ∑ j, D.rep A i j * traceFun D.Mfam D.h j W.vacuum τ
-  simpa using hlaw
+  simpa using! hlaw
 
 theorem gammaThetaCharacterModularityHolds_of_zhuModularityAnalytic (D : ModularData W ι)
     (hD : ZhuModularityAnalytic D) :
@@ -866,7 +866,7 @@ theorem characterModularOn_thetaGroup_of_C2Cofinite [Finite (Φ W)]
   have hvac : W.vacuum ∈ sqWeightSpace W ((0 : ℕ) : ℂ) := vacuum_mem_sqWeightSpace_zero W
   have hlaw := hD A 0 W.vacuum hvac i τ
   rw [hM, hh] at hlaw
-  simpa using hlaw
+  simpa using! hlaw
 
 end C2
 

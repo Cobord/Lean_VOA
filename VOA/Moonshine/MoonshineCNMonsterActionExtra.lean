@@ -33,6 +33,11 @@ permutation matrix for the coordinates `(a, δ)` of `μ̄`, and `σ_μ = c_μ ·
   ⭐ `extraLiftable_apply`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.MonsterAction
@@ -81,10 +86,16 @@ theorem extraPlusIsometry_spinTopState (μ : leech.carrier) (v : Fin (rank leech
     (w : SpinIdx → ℂ) :
     extraPlusIsometry μ (spinTopState v w)
       = spinTopState v ((extraPlusFormScalar μ • spinOp (coordOfRed (red leech μ))).mulVec w) := by
-  rw [spinTopState_apply, spinTopState_apply, liftWExtraIsometry_hP, ← spinIso_spinOp,
-    ← spinIso_smul, Matrix.smul_mulVec]
-  -- the two scalar actions on `SpinRep = SpinIdx → ℂ` agree definitionally
-  rfl
+  first
+  | (rw [spinTopState_apply, spinTopState_apply, liftWExtraIsometry_hP, ← spinIso_spinOp,
+      ← spinIso_smul, Matrix.smul_mulVec]
+     -- the two scalar actions on `SpinRep = SpinIdx → ℂ` agree definitionally
+     rfl)
+  | (rw [spinTopState_apply, spinTopState_apply, liftWExtraIsometry_hP, Matrix.smul_mulVec]
+     refine congrArg (hP v) ?_
+     have h := spinIso_spinOp μ w
+     have hs := spinIso_smul (extraPlusFormScalar μ) ((spinOp (coordOfRed (red leech μ))).mulVec w)
+     exact (congrArg (extraPlusFormScalar μ • ·) h.symm).trans (hs.symm.trans rfl))
 
 /-- `c_μ · spinOp(μ̄) = σ_μ Q_μ` with `Q_μ = qmatR ℚ 0 a δ` rational. -/
 theorem extraScalar_smul_spinOp (μ : leech.carrier) (σ : ℚ)

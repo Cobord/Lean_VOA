@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace BorcherdsPreData
 
 variable {g : Type*} [LieRing g] [LieAlgebra ℂ g] (P : BorcherdsPreData g)
@@ -54,7 +57,7 @@ instance (γ : ℤ × ℤ) : FiniteDimensional ℂ (P.simpleSpanWeight γ) := by
       (P.weightSpace γ) fun x => x.2)
     fun x y h => by
       have h' := congrArg Subtype.val h
-      simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply,
+      try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply,
         Submodule.subtype_apply] at h'
       exact Subtype.ext (Subtype.ext h')
 

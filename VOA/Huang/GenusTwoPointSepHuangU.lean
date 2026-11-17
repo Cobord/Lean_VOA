@@ -66,7 +66,7 @@ theorem moduleCoordinateChange_scale (P : LWModule W) (a : ℕ → ℂ) (t : ℂ
   apply expFun_intertwine (moduleWeightExp P.isMod t)
     (moduleCoordGen_isLocNilp P _).neg (moduleCoordGen_isLocNilp P a).neg
   intro y
-  simpa only [LinearMap.neg_apply, map_neg] using congrArg Neg.neg (moduleCoordGen_scale P a t y)
+  simpa only [LinearMap.neg_apply, map_neg] using! congrArg Neg.neg (moduleCoordGen_scale P a t y)
 
 /-- The chosen logarithm really exponentiates to 2*pi*i. -/
 theorem exp_logTwoPiI : Complex.exp logTwoPiI = 2 * (Real.pi : ℂ) * Complex.I := by

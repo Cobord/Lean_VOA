@@ -42,13 +42,13 @@ theorem delta_support : CoSupport S (S.wt S.c₀) (Pi.single S.c₀ 1) := by
 theorem iterate_support (i : Fin S.n) (k : ℕ) :
     CoSupport S (S.wt S.c₀ - k • S.wt i) ((coOp S.f i)^[k] (Pi.single S.c₀ 1)) := by
   induction k with
-  | zero => simpa using delta_support S
+  | zero => simpa using! delta_support S
   | succ k ih =>
       rw [Function.iterate_succ_apply']
       have hh := coOp_support S ih i
       have he : S.wt S.c₀ - k • S.wt i - S.wt i =
           S.wt S.c₀ - (k + 1) • S.wt i := by rw [add_smul, one_smul]; abel
-      simpa only [he] using hh
+      simpa only [he] using! hh
 
 /-- The existing sector weight exclusion proves actual simple-root
 nilpotence on the coadjoint highest vector. -/
@@ -56,7 +56,7 @@ theorem coOp_lowering_nil (i : Fin S.n) (hi : S.lowering i) :
     (coOp S.f i)^[S.lowExp i + 1] (Pi.single S.c₀ 1) = 0 := by
   funext c
   apply iterate_support S i (S.lowExp i + 1) c
-  simpa only [Fin.sum_univ_one, one_smul, one_mul] using
+  simpa only [Fin.sum_univ_one, one_smul, one_mul] using!
     S.lowering_noweight i hi 1 (fun _ => c)
 
 theorem zeroOp_iterate (i : Fin S.n) (k : ℕ) (v : Co S.n) :

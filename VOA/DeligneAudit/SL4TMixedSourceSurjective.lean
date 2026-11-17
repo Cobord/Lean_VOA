@@ -30,12 +30,12 @@ theorem secondLeviElementaryAlphabet_powerSum (e₁ e₂ : ℕ) (j : Fin 2) (s :
       (aeval fun i => (X (.inl i) : MvPolynomial (SecondLeviModeSlot e₁ e₂) B))
       e₁ (s + 1) (by omega)
     simpa only [esymm, psum, map_sum, map_prod, map_pow, aeval_X, rename_X,
-      secondLeviModePowerSum, if_pos rfl, ite_true] using he
+      secondLeviModePowerSum, if_pos rfl, ite_true] using! he
   · have he := powerSumOfCoeff_psum_map (Fin e₂)
       (aeval fun i => (X (.inr i) : MvPolynomial (SecondLeviModeSlot e₁ e₂) B))
       e₂ (s + 1) (by omega)
     simpa only [esymm, psum, map_sum, map_prod, map_pow, aeval_X, rename_X,
-      secondLeviModePowerSum, show (1 : Fin 2) ≠ 0 by decide, if_false, ite_false] using he
+      secondLeviModePowerSum, show (1 : Fin 2) ≠ 0 by decide, if_false, ite_false] using! he
 
 set_option synthInstance.maxHeartbeats 100000 in
 -- Symmetric sources over nested quotient algebras need a larger synthesis budget.
@@ -49,8 +49,8 @@ theorem radicalGrassmannianAlphabet_generates (a b c : ℕ) (d : Fin 3 → ℕ)
   | add x y hx hy => exact S.add_mem hx hy
   | tmul x y =>
     induction y using TensorProduct.induction_on with
-    | zero => simpa using S.zero_mem
-    | add y z hy hz => simpa only [TensorProduct.tmul_add] using S.add_mem hy hz
+    | zero => simpa using! S.zero_mem
+    | add y z hy hz => simpa only [TensorProduct.tmul_add] using! S.add_mem hy hz
     | tmul y z =>
       obtain ⟨P, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ _ x
       obtain ⟨Q, rfl⟩ := Ideal.Quotient.mkₐ_surjective ℂ _ y
@@ -59,7 +59,7 @@ theorem radicalGrassmannianAlphabet_generates (a b c : ℕ) (d : Fin 3 → ℕ)
       simpa only [radicalGrassmannianAlphabet, AlgHom.comp_apply,
         Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.includeRight_apply,
         Algebra.TensorProduct.one_def, Algebra.TensorProduct.tmul_mul_tmul,
-        one_mul, mul_one] using he
+        one_mul, mul_one] using! he
 
 set_option synthInstance.maxHeartbeats 100000 in
 -- Symmetric sources over nested quotient algebras need a larger synthesis budget.

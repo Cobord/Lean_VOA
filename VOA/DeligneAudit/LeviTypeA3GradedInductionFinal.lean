@@ -49,7 +49,7 @@ theorem a3_sorted_word_effective (a b c : ℕ)
         exact ih us.sum (by omega) us vs ts rfl
       have hh := a3_boxed_first_word_effective ρ w a b c h f
         xs.length xs.sum hf hwf houter ys zs
-      simpa only [mul_assoc, Module.End.mul_apply] using hh
+      simpa only [mul_assoc, Module.End.mul_apply] using! hh
     exact hle hbox
 
 theorem a3_word_effectiveKS : a3WordEffectiveKS := by

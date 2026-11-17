@@ -229,7 +229,7 @@ theorem wordA_vecC (l : List (Fin N)) (v : List (ℕ × ℤ)) (hv : ∀ p ∈ v,
     simp only [wordA, List.map_cons, wordS]
     rw [ih, slotA_vecC]
     cases l with
-    | nil => simpa [wordS] using hv
+    | nil => simpa [wordS] using! hv
     | cons y l' => exact slotS_inRange _ _
 
 theorem single_eq_vecC (c : Fin N) : (Pi.single c 1 : Fin N → ℂ) = vecC N [((c : ℕ), 1)] := by

@@ -53,9 +53,7 @@ theorem L1_pow_mem_weight (N : C2Rigid.GWModule W M) {α : ℂ} {x : M}
   | succ k ih =>
     rw [pow_succ',Module.End.mul_apply,L1]
     have h := C2Rigid.mode_mem_weight N W.conformalVector_mem_grading_two ih 2
-    convert h using 2
-    push_cast
-    ring
+    convert h using 2 <;> first | rfl | (push_cast; ring)
 
 /-- Lower-bounded generalized modules have locally nilpotent L(1). -/
 theorem L1_locallyNilpotent (N : C2Rigid.GWModule W M) : LocNil (L1 N) := by

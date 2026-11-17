@@ -32,7 +32,7 @@ theorem commonRootCellChain_zero :
     exact relationIdeal_power (leftP 0 0 0) (rightP 0 0 0) 0
   · simp only [map_one, pow_zero, mul_one, Ideal.map_bot, bot_sup_eq]
     have h := commonRootIdeal_left (rightP 0 0 0) (leftPbar 0 0 0)
-    simpa [grassmannianCommonRootIdeal, rightP_eq_sum, rightE_zero_index] using h
+    simpa [grassmannianCommonRootIdeal, rightP_eq_sum, rightE_zero_index] using! h
 
 /-- Every site count and every pair of valid alphabet sizes has a simultaneous flag. -/
 theorem commonRootCellChain (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
@@ -44,13 +44,13 @@ theorem commonRootCellChain (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
       have hb0 : b = 0 := by omega
       subst a
       subst b
-      simpa only [commonRootCellDegrees, and_self, if_true] using commonRootCellChain_zero
+      simpa only [commonRootCellDegrees, and_self, if_true] using! commonRootCellChain_zero
   | succ M ih =>
       have hnn : TwoRelationChain (S_relationIdeal (M + 1) a b)
           (grassmannianCommonRootIdeal (M + 1) a b) ⊥ (thomI1 (M + 1) a b)
           (if a ≤ M ∧ b ≤ M then commonRootCellDegrees M a b else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             commonRootFlag_emptySite (M + 1) a b (by omega) (by omega) (ih a b h.1 h.2)
         · have heq : thomI1 (M + 1) a b = ⊥ := by
             by_cases haM : a = M + 1
@@ -67,7 +67,7 @@ theorem commonRootCellChain (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if a ≤ M ∧ 0 < b ∧ b ≤ M + 1 then
             (commonRootCellDegrees M a (b - 1)).map (fun n => (n.1 + 1, n.2 + 1)) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             commonRootFlag_adjointSite (M + 1) a b (by omega) hb h.2.1 (ih a (b - 1) h.1 (by omega))
         · have heq : thomI1 (M + 1) a b = thomI2 (M + 1) a b := by
             by_cases hb0 : b = 0
@@ -84,7 +84,7 @@ theorem commonRootCellChain (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if 0 < a ∧ a ≤ M + 1 ∧ 0 < b ∧ b ≤ M + 1 then
             (commonRootCellDegrees M (a - 1) (b - 1)).map (fun n => (n.1 + 1, n.2)) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             commonRootFlag_intersectionSite (M + 1) a b ha hb h.1 h.2.2.1
               (ih (a - 1) (b - 1) (by omega) (by omega))
         · have heq : thomI3 (M + 1) a b = thomI2 (M + 1) a b := by
@@ -101,7 +101,7 @@ theorem commonRootCellChain (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
           (if 0 < a ∧ a ≤ M + 1 ∧ b ≤ M then
             (commonRootCellDegrees M (a - 1) b).map (fun n => (n.1 + 1, n.2)) else []) := by
         split_ifs with h
-        · simpa only [Nat.add_sub_cancel] using
+        · simpa only [Nat.add_sub_cancel] using!
             commonRootFlag_complementSite (M + 1) a b ha h.1 (by omega)
               (ih (a - 1) b (by omega) h.2.2)
         · have heq : thomI3 (M + 1) a b = ⊤ := by
@@ -166,14 +166,14 @@ theorem commonRootCellDegrees_catalog (M a b : ℕ) :
           · rw [List.map_map, ← ih, List.map_map]
             apply List.map_congr_left
             intro c hc
-            simpa using commonRootCellDegree_lift
+            simpa using! commonRootCellDegree_lift
               (cellCatalog_valid M (a - 1) (b - 1) c hc) true true
           · rfl
       · split_ifs
         · rw [List.map_map, ← ih, List.map_map]
           apply List.map_congr_left
           intro c hc
-          simpa using commonRootCellDegree_lift
+          simpa using! commonRootCellDegree_lift
             (cellCatalog_valid M (a - 1) b c hc) true false
         · rfl
 
@@ -192,13 +192,13 @@ theorem coreCellFlag_commonRoot_exists (a b c : ℕ) :
         (I i).map Polynomial.C ⊔ S_relationIdeal (a + b + c) (a + b) a := by
     intro i hi
     have he := hunion i hi
-    rw [List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map] at he
-    rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map]
+    rw [List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map] at he
+    rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map]
     exact he
   refine ⟨⟨σ, I, hfirst, hlast, hstep, hu⟩, ?_⟩
   intro i hi
   have he := hcommon i hi
-  rw [List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map] at he
+  rw [List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map] at he
   exact he
 
 end

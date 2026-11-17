@@ -139,22 +139,29 @@ namespace InducedAssignment
 
 variable {W}
 
-/-- A realization extracted from the assignment: `[realize U]` realizes `U`. -/
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+A realization extracted from the assignment: `[realize U]` realizes `U`. -/
 def toRealization (A : InducedAssignment W) (U : AMod W) : InducedRealization W U where
   N := A.realize U
   bottomEquiv := A.realizes U
 
-/-- **The inverse map `invFun : AModIsoClass W → LWModuleIsoClass W`** of Theorem 5.3.4, well-defined
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The inverse map `invFun : AModIsoClass W → LWModuleIsoClass W`** of Theorem 5.3.4, well-defined
 on iso-classes by `isoInvariant`. -/
 noncomputable def invFun (A : InducedAssignment W) : AModIsoClass W → LWModuleIsoClass W :=
   Quotient.lift (fun U => Quotient.mk (LWModule.setoid W) (A.realize U))
     (fun U U' h => Quotient.sound (A.isoInvariant U U' h))
 
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`). -/
 @[simp] theorem invFun_mk (A : InducedAssignment W) (U : AMod W) :
     A.invFun (Quotient.mk (AMod.setoid W) U)
       = Quotient.mk (LWModule.setoid W) (A.realize U) := rfl
 
-/-- **`forwardMap ∘ invFun = id`** (Theorem 5.3.4, the round-trip of the bijection
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap ∘ invFun = id`** (Theorem 5.3.4, the round-trip of the bijection
 `Φ(𝒱) ↔ Irr A(𝒱)`): for every `A(𝒱)`-module iso-class `x`, `forwardMap (invFun x) = x`. -/
 theorem forwardMap_invFun (A : InducedAssignment W) (x : AModIsoClass W) :
     forwardMap W (A.invFun x) = x := by
@@ -162,7 +169,9 @@ theorem forwardMap_invFun (A : InducedAssignment W) (x : AModIsoClass W) :
   rw [invFun_mk]
   exact (A.toRealization U).forwardMap_eq W U
 
-/-- **`forwardMap ∘ invFun = id`**, as an equality of functions. -/
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`forwardMap ∘ invFun = id`**, as an equality of functions. -/
 theorem forwardMap_comp_invFun (A : InducedAssignment W) :
     forwardMap W ∘ A.invFun = id :=
   funext fun x => A.forwardMap_invFun x

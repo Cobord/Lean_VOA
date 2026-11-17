@@ -26,6 +26,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open UniversalEnvelopingAlgebra Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {L : Type*} [LieRing L] [LieAlgebra ℂ L]
 
 /-! ### The PBW basis of `U(L)` -/
@@ -162,7 +165,9 @@ theorem envGradedComp_lie (x y : L) :
           rw [envGradedComp_of_mem wt (hbr hx hy), envGradedComp_of_mem wt hx,
             envGradedComp_of_mem wt hy, LieHom.map_lie, Ring.lie_def, Ring.lie_def,
             AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.single_mul_single, add_comm δ γ]
-          exact Finsupp.single_sub (γ + δ) (ι ℂ x * ι ℂ y) (ι ℂ y * ι ℂ x)
+          first
+          | exact Finsupp.single_sub (γ + δ) (ι ℂ x * ι ℂ y) (ι ℂ y * ι ℂ x)
+          | exact map_sub (AddMonoidAlgebra.lsingle (R := ℂ) (γ + δ)) (ι ℂ x * ι ℂ y) (ι ℂ y * ι ℂ x)
       | zero => simp
       | add y₁ y₂ _ _ h₁ h₂ => rw [lie_add, map_add, h₁, h₂, map_add, lie_add]
   | zero => simp

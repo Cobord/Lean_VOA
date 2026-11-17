@@ -57,11 +57,17 @@ theorem IsField.finsetSum {ι : Type*} (s : Finset ι) (f : ι → FormalDist (E
     exact (hf a (Finset.mem_insert_self a s)).add
       (ih (fun i hi => hf i (Finset.mem_insert_of_mem hi)))
 
+/-- `Y k u` as the explicit finite sum of its scaled monomial fields. -/
+theorem Y_eq_support_sum (k : ℂ) (u : Fock) :
+    Y k u = ∑ a ∈ u.support, (u.coeff a) • Ymon k a := by
+  conv_lhs => rw [MvPolynomial.as_sum u]
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun a _ => Y_monomial k a _
+
 /-- **`Y k u` is a field for every `u`** (the linear-combination of the monomial fields). -/
 theorem Y_isField (k : ℂ) (u : Fock) : IsField (Y k u) := by
   classical
-  rw [show Y k u = Finsupp.linearCombination ℂ (Ymon k) u from rfl,
-      Finsupp.linearCombination_apply, Finsupp.sum]
+  rw [Y_eq_support_sum]
   exact IsField.finsetSum _ _ (fun a _ => IsField.smul _ (Ymon_isField k a))
 
 /-! ## VA5 — regularity: `u₍ₙ₎ v = 0` for `n` large
@@ -352,27 +358,24 @@ homogeneous `u`). -/
 theorem Y_gradedField_of_mem (k : ℂ) {w : ℕ} {u : Fock} (hu : u ∈ gradingW w) :
     GradedField (Y k u) (w : ℤ) := by
   classical
-  -- `Y k u = ∑ a ∈ u.support, (u a) • Ymon k a`, each `Ymon k a` graded of weight `w`
+  -- `Y k u = ∑ a ∈ u.support, (u.coeff a) • Ymon k a`, each `Ymon k a` graded of weight `w`
   intro j w' p hp
-  rw [show Y k u = Finsupp.linearCombination ℂ (Ymon k) u from rfl,
-      Finsupp.linearCombination_apply, Finsupp.sum]
-  show (∑ a ∈ u.support, (u a) • Ymon k a) j p ∈ gradingZ ((w : ℤ) + w' + j)
-  have hsum : (∑ a ∈ u.support, (u a) • Ymon k a) j p
-      = ∑ a ∈ u.support, ((u a) • Ymon k a) j p := by
-    rw [show ((∑ a ∈ u.support, (u a) • Ymon k a) j : End ℂ Fock)
-          = ∑ a ∈ u.support, ((u a) • Ymon k a) j from
-        (Finset.sum_apply (s := u.support) (g := fun a => (u a) • Ymon k a) j),
+  rw [Y_eq_support_sum]
+  show (∑ a ∈ u.support, (u.coeff a) • Ymon k a) j p ∈ gradingZ ((w : ℤ) + w' + j)
+  have hsum : (∑ a ∈ u.support, (u.coeff a) • Ymon k a) j p
+      = ∑ a ∈ u.support, ((u.coeff a) • Ymon k a) j p := by
+    rw [show ((∑ a ∈ u.support, (u.coeff a) • Ymon k a) j : End ℂ Fock)
+          = ∑ a ∈ u.support, ((u.coeff a) • Ymon k a) j from
+        (Finset.sum_apply (s := u.support) (g := fun a => (u.coeff a) • Ymon k a) j),
       LinearMap.sum_apply]
   rw [hsum]
   apply Submodule.sum_mem
   intro a ha
-  show ((u a) • Ymon k a) j p ∈ gradingZ ((w : ℤ) + w' + j)
-  have heval : ((u a) • Ymon k a) j p = (u a) • (Ymon k a j p) := rfl
+  show ((u.coeff a) • Ymon k a) j p ∈ gradingZ ((w : ℤ) + w' + j)
+  have heval : ((u.coeff a) • Ymon k a) j p = (u.coeff a) • (Ymon k a j p) := rfl
   rw [heval]
-  -- the coefficient of `u` at `a` is the monomial coefficient; `u` is homogeneous so weight a = w
-  have hcoeff : u.coeff a ≠ 0 := by
-    rw [MvPolynomial.coeff] -- `u a = u.coeff a`
-    exact Finsupp.mem_support_iff.mp ha
+  -- the coefficient of `u` at `a` is nonzero; `u` is homogeneous so weight a = w
+  have hcoeff : u.coeff a ≠ 0 := MvPolynomial.mem_support_iff.mp ha
   have hwa : Finsupp.weight weightFn a = w := by
     rw [mem_gradingW] at hu; exact hu hcoeff
   have hYmon : (Ymon k a) j p ∈ gradingZ (((Finsupp.weight weightFn a : ℕ) : ℤ) + w' + j) :=

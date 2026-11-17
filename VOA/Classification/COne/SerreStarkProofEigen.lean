@@ -40,7 +40,7 @@ theorem jacobi_eq_neg_one_of_class {m q m₁ v : ℕ} (hq : q.Prime) (hq2 : q �
     jacobiSym (m : ℤ) p = -1 := by
   have hp4 : p % 4 = 1 := by
     have := Int.ModEq.of_dvd (by norm_num : (4 : ℤ) ∣ 8) hp8
-    have h : ((p : ℤ) % 4) = 1 := by simpa [Int.ModEq] using this
+    have h : ((p : ℤ) % 4) = 1 := by simpa [Int.ModEq] using! this
     omega
   have hqodd : Odd q := hq.odd_of_ne_two hq2
   rw [hm]
@@ -59,7 +59,7 @@ theorem jacobi_eq_neg_one_of_class {m q m₁ v : ℕ} (hq : q.Prime) (hq2 : q �
 
 theorem chi8_of_mod {p : ℕ} (hp : (p : ℤ) ≡ 1 [ZMOD 8]) : jacobiSym 2 p = 1 := by
   have h8 : p % 8 = 1 := by
-    have h : ((p : ℤ) % 8) = 1 := by simpa [Int.ModEq] using hp
+    have h : ((p : ℤ) % 8) = 1 := by simpa [Int.ModEq] using! hp
     omega
   have hodd : Odd p := Nat.odd_iff.2 (by omega)
   rw [jacobiSym.at_two hodd, ZMod.χ₈_nat_eq_if_mod_eight]
@@ -67,7 +67,7 @@ theorem chi8_of_mod {p : ℕ} (hp : (p : ℤ) ≡ 1 [ZMOD 8]) : jacobiSym 2 p = 
 
 theorem chi8_of_mod3 {p : ℕ} (hp : (p : ℤ) ≡ 3 [ZMOD 8]) : jacobiSym 2 p = -1 := by
   have h8 : p % 8 = 3 := by
-    have h : ((p : ℤ) % 8) = 3 := by simpa [Int.ModEq] using hp
+    have h : ((p : ℤ) % 8) = 3 := by simpa [Int.ModEq] using! hp
     omega
   have hodd : Odd p := Nat.odd_iff.2 (by omega)
   rw [jacobiSym.at_two hodd, ZMod.χ₈_nat_eq_if_mod_eight]

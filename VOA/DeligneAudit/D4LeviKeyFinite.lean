@@ -42,9 +42,10 @@ theorem finite_words (n d : ℕ) :
   let l' : List (Fin 6 × Fin (d + 1)) :=
     l.attach.map fun p => (p.val.1, ⟨p.val.2, hbound p.val p.property⟩)
   refine ⟨l', ?_, ?_⟩
-  · simpa [T, l'] using hl.1
+  · simpa [T, l'] using! hl.1
   · simp only [f, l', List.map_map]
     convert List.attach_map_subtype_val l using 1
+    rfl
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (ρ : VOA.DeligneAudit.SectorWeyl.CurrentModule
@@ -61,8 +62,8 @@ theorem keyLayer_finite (k : RadicalKey) :
     apply (hS.image (radicalWord ρ w)).subset
     rintro v ⟨l, hk, rfl⟩
     refine ⟨l, ?_, rfl⟩
-    exact ⟨by simpa [S, ← hk] using (wordKey_depth l).symm,
-      by simpa [S, wordKey] using congrArg RadicalKey.degree hk⟩
+    exact ⟨by simpa [S, ← hk] using! (wordKey_depth l).symm,
+      by simpa [S, wordKey] using! congrArg RadicalKey.degree hk⟩
   change FiniteDimensional ℂ (Submodule.span ℂ
     {v | ∃ l : List (Fin 6 × ℕ), wordKey l = k ∧ v = radicalWord ρ w l})
   exact FiniteDimensional.span_of_finite ℂ hgen

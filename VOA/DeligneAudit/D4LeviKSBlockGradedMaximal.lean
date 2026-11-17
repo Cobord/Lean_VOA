@@ -13,7 +13,7 @@ theorem ksHsymm_homogeneous (n s : ℕ) :
   rw [rz_hsymm_eq_sum_vectors]
   apply IsHomogeneous.sum
   intro e he
-  simpa only [e.property] using
+  simpa only [e.property] using!
     IsHomogeneous.prod Finset.univ (fun i => X i ^ e.1 i) e.1
       (fun i _ => isHomogeneous_X_pow i (e.1 i))
 
@@ -76,9 +76,9 @@ theorem ksBlockMaximal_component_mem (q n d : ℕ)
         homogeneousComponent_isHomogeneous _ _, rfl⟩
   | zero => simp
   | add P Q hP hQ ihP ihQ =>
-      simpa only [map_add] using Submodule.add_mem _ ihP ihQ
+      simpa only [map_add] using! Submodule.add_mem _ ihP ihQ
   | smul t P hP ihP =>
-      simpa only [map_smul] using Submodule.smul_mem _ t ihP
+      simpa only [map_smul] using! Submodule.smul_mem _ t ihP
 
 theorem ksBlockBoxPolys_homogeneous (q n d : ℕ) (hn : n ≤ q)
     (P : MvPolynomial (Fin n) ℂ) (hP : P ∈ ksBlockBoxPolys q n d) :
@@ -108,9 +108,9 @@ theorem ksBlockSymmetric_span_graded_maximal (q n d : ℕ) (hn : n ≤ q)
         exact Submodule.subset_span hB
     | zero => simp
     | add B C hB hC ihB ihC =>
-        simpa only [map_add] using Submodule.add_mem _ ihB ihC
+        simpa only [map_add] using! Submodule.add_mem _ ihB ihC
     | smul t B hB ihB =>
-        simpa only [map_smul] using Submodule.smul_mem _ t ihB
+        simpa only [map_smul] using! Submodule.smul_mem _ t ihB
   · exact ksBlockMaximal_component_mem q n d C hC
 
 end VOA.DeligneAudit.D4Levi

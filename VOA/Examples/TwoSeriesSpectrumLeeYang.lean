@@ -80,7 +80,7 @@ theorem grRho_comm_zero (r : ℕ) (a b : Fin 3) (m : ℕ) (y : GrA L r) :
   apply Subtype.ext
   have h := aMode_comm_zero L a b m x
   rw [Fin.sum_univ_three] at h
-  simpa using h
+  simpa using! h
 
 /-- **The commutation facts with `e₀` hold on `gr_r L_k`**, at every level. -/
 theorem grZeroModeRel (r : ℕ) : ZeroModeRel (grRho L r) where

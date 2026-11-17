@@ -6,6 +6,8 @@ A singular vector at relative degree N induces a genuine map from the
 corresponding highest module after shifting the affine derivation. This
 works in every actual representation, including the parabolic modules.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 noncomputable section
 open AffineLie UniversalEnvelopingAlgebra
@@ -64,9 +66,9 @@ theorem highestEnergyShift_isHighest (R : AffSl2 →ₗ⁅ℂ⁆ End ℂ E) (k h
     · have hnz : n=0 := by omega
       subst n
       fin_cases a
-      · simpa using he
+      · simpa using! he
       · exact False.elim (hnot (by simp [HighestNormalOrdering.IsLower]))
-      · simpa using hh
+      · simpa using! hh
 
 /-- The actual map from a parabolic term determined by a singular state
 in any affine representation. Its image, kernel and exactness are separate
@@ -79,7 +81,7 @@ def shiftedParabolicMap (R : AffSl2 →ₗ⁅ℂ⁆ End ℂ E) (k : ℂ) (d : �
     (hf : (R (modeElement 1 0) ^ (d+1)) v=0) : Parabolic k d →ₗ[ℂ] E :=
   parabolicUniversalMap (highestEnergyShiftData R k hC N).rho v
     (highestEnergyShift_isHighest R k d hC N v hN hp he hh)
-    (by simpa only [highestEnergyShiftData_mode] using hf)
+    (by simpa only [highestEnergyShiftData_mode] using! hf)
 
 @[simp] theorem shiftedParabolicMap_highest
     (R : AffSl2 →ₗ⁅ℂ⁆ End ℂ E) (k : ℂ) (d : ℕ)

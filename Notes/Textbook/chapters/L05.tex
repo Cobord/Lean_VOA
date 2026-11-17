@@ -519,7 +519,7 @@ noncomputable def Ymon (k : ℂ) (a : ℕ →₀ ℕ) : FormalDist (End ℂ Fock
   Yword k (monoWord a)
 
 noncomputable def Y (k : ℂ) : Fock →ₗ[ℂ] FormalDist (End ℂ Fock) :=
-  Finsupp.linearCombination ℂ (Ymon k)
+  (MvPolynomial.basisMonomials ℕ ℂ).constr ℂ (Ymon k)
 \end{leancode}
 
 \begin{dictionary}
@@ -879,7 +879,7 @@ theorem heisenberg_vacuum_notMem_O₂ (k : ℂ) (hk : k ≠ 0) :
 
 theorem coeff_single0_eq_zero_of_mem_O₂ (k : ℂ) (hk : k ≠ 0) (n : ℕ) {p : Fock}
     (hp : p ∈ O₂ (heisenbergVOA k hk)) :
-    MvPolynomial.coeff (Finsupp.single 0 n) p = 0
+    p.coeff (Finsupp.single 0 n) = 0
 
 theorem heisenberg_A2_tower_linearIndependent (k : ℂ) (hk : k ≠ 0) :
     LinearIndependent ℂ (fun n : ℕ => mk₂ (heisenbergVOA k hk) ((X 0 : Fock) ^ n))
@@ -1611,8 +1611,9 @@ noncomputable def EplusC (c : ℂ) : FormalDist (End ℂ B) :=
 
 noncomputable def EEC (c : ℂ) : FormalDist (End ℂ B) := nprod (EminusC_isField c) (EplusC_isField c)
 
-noncomputable def Yemα (m t : ℤ) : LatModule →ₗ[ℂ] LatModule :=
-  TensorProduct.lift (Finsupp.lsum ℂ (YemαFam m t)).flip
+noncomputable def Yemα (m : ℤ) : FormalDist (Module.End ℂ LatModule) := fun t =>
+  TensorProduct.lift ((Finsupp.lsum ℂ (YemαFam m t)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap).flip
 
 theorem Yemα_tmul (m t n : ℤ) (p : B) :
     Yemα m t (p ⊗ₜ[ℂ] eVec n) = (EEC (m : ℂ) (t - 2 * m * n) p) ⊗ₜ[ℂ] eVec (n + m)
@@ -2312,8 +2313,10 @@ theorem bcEnd_comp (T S : Module.End ℂ Fock) :
 theorem bcR_isField {a : FormalDist (Module.End ℂ Fock)} (ha : IsField a) :
 
 noncomputable def coeffZ₀ (l : ℕ) : FockW₂ →ₗ[ℂ] FockW :=
-  Finsupp.mapRange.linearMap
-    ((PowerSeries.coeff l : CoeffW₂ →ₗ[Polynomial ℂ] Polynomial ℂ).restrictScalars ℂ)
+  (AddMonoidAlgebra.coeffLinearEquiv ℂ).symm.toLinearMap ∘ₗ
+    Finsupp.mapRange.linearMap
+      ((PowerSeries.coeff l : CoeffW₂ →ₗ[Polynomial ℂ] Polynomial ℂ).restrictScalars ℂ) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 def LiConjugation (k lam : ℂ) : Prop :=
   ∀ (u : Fock) (j : ℤ),

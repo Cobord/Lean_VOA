@@ -120,6 +120,7 @@ theorem e46WeightSpace_iSup_eq_top : ⨆ k, e46WeightSpace k = ⊤ := by
   | algebraMap c =>
       refine Submodule.mem_iSup_of_mem 0 ?_
       have h := E46Weight.smul c E46Weight.one
+      rw [mem_e46WeightSpace]
       convert h using 1
       ext; simp
   | add f g hf hg ihf ihg =>

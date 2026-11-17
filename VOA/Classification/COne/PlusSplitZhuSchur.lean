@@ -66,7 +66,8 @@ theorem evenSchur_coe (d : ℕ) :
       latStateGen (latP m) (vSchur (latP m) (1 : ℤ) d) 0 +
       latStateGen (latP m) (vSchur (latP m) (-1 : ℤ) d) 0 := by
   change (2 : ℂ) • ((PP m hm _ : VP m hm) : LatModuleGen (latP m)) = _
-  rw [PP_coe, thetaLat_latStateGen, sigmaN_vSchur, neg_zero, smul_smul]
+  rw [PP_coe, thetaLat_latStateGen,
+    sigmaN_vSchur (L := latP m) ((1 : ℤ) : (latP m).carrier) d, neg_zero, smul_smul]
   norm_num
   rfl
 
@@ -76,7 +77,8 @@ theorem charge_same (i : ℕ) (a : ℤ) (ha : a = 1 ∨ a = -1) :
   unfold V2m
   change (latticeVOAGen (latP m) _ _).smul (latChargeGen (latP m) a)
     ((i : ℤ) - 1) (latStateGen (latP m) (vacuumN _) a) = 0
-  rw [latVOA_smul_latChargeGen_state, latP_form, EEVec_vacuum]
+  refine (latVOA_smul_latChargeGen_state (latP m) _ _ _ _ _ _).trans ?_
+  rw [latP_form, EEVec_vacuum (latP m) (a : (latP m).carrier)]
   have hm1 : (1 : ℤ) ≤ m := by exact_mod_cast hm
   rw [if_neg (by rcases ha with rfl | rfl <;> nlinarith)]
   simp [latStateGen]
@@ -87,14 +89,15 @@ theorem charge_opposite (i : ℕ) (hi : i ≤ 2 * m) (a : ℤ)
       (latChargeGen (latP m) (-a)) =
       latStateGen (latP m) (vSchur (latP m) a (2 * m - i)) 0 := by
   unfold V2m
-  rw [show latChargeGen (latP m) (-a) = latStateGen (latP m) (vacuumN _) (-a) from rfl,
-    latVOA_smul_latChargeGen_state, latP_form, EEVec_vacuum]
+  rw [show latChargeGen (latP m) (-a) = latStateGen (latP m) (vacuumN _) (-a) from rfl]
+  refine (latVOA_smul_latChargeGen_state (latP m) _ _ _ _ _ _).trans ?_
+  rw [latP_form, EEVec_vacuum (latP m) (a : (latP m).carrier)]
   have ht : -((i : ℤ) - 1) - 1 - 2 * (m : ℤ) * a * -a = ((2 * m - i : ℕ) : ℤ) := by
     rw [Nat.cast_sub hi]
     push_cast
     rcases ha with rfl | rfl <;> ring
   rw [ht, if_pos (Int.natCast_nonneg _), Int.toNat_natCast,
-    PlusCharacterTable.rankOne_cocycle, one_smul]
+    PlusCharacterTable.rankOne_cocycle m a (-a), one_smul]
   congr 1
   exact add_neg_cancel a
 
@@ -130,7 +133,8 @@ theorem E_zhuMul_E_coe :
       LatModuleGen (latP m)) =
       latStateGen (latP m)
         (MvPolynomial.aeval (vVar (latP m) (1 : ℤ)) (squarePolynomial m)) 0 := by
-  rw [E_zhuMul_E, squareState, squarePolynomial_aeval]
+  rw [E_zhuMul_E, squareState,
+    squarePolynomial_aeval m (latP m) ((1 : ℤ) : (latP m).carrier)]
   simp only [Submodule.coe_sum, Submodule.coe_smul, evenSchur_coe,
     latStateGen, TensorProduct.sum_tmul, TensorProduct.smul_tmul,
     TensorProduct.add_tmul, TensorProduct.tmul_smul, smul_add]

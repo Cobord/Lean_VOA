@@ -62,11 +62,11 @@ theorem canonicalCenter_dimension_square (F : SphericalFusion C)
     have hp : (ρ ModularGroup.S) ^ 4 = 1 := by rw [← map_pow, hs, map_one]
     have h := congrArg (fun g : (Z.Label → ℂ) ≃ₗ[ℂ] (Z.Label → ℂ) =>
       g (fun _ => 1)) hp
-    simpa [pow_succ, LinearEquiv.mul_apply] using h
+    simpa [pow_succ, LinearEquiv.mul_apply] using! h
   have h := congrFun he Z.unitLabel
   rw [canonicalCenter_S_square F Z M ρ hr,
     canonicalCenter_S_square F Z M ρ hr] at h
-  simpa only [mul_one, pow_two] using h
+  simpa only [mul_one, pow_two] using! h
 
 /-- The dimension equality follows from an existing canonical representation.
 Existence of such a representation is not assumed to have been constructed. -/

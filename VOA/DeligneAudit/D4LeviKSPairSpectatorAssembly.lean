@@ -36,7 +36,7 @@ theorem pairKernelPrefix_of_sat_of_evalBridge
     PairKernelPrefix ρ w m i a b c := by
   intro P hP
   let T := (pairSplitAlgebra a b c P).support
-  let Q (d : Fin b →₀ ℕ) := coeff d (pairSplitAlgebra a b c P)
+  let Q (d : Fin b →₀ ℕ) := (pairSplitAlgebra a b c P).coeff d
   let rs (d : Fin b →₀ ℕ) :=
     (List.range b).map (pairYExponent b d)
   let B := pairRadicalOp ρ (uZeroWord b) w
@@ -62,14 +62,14 @@ theorem pairKernelPrefix_of_sat_of_evalBridge
     have hh := congrArg (fun F : Module.End ℂ V => F B)
       (pairXZCoeff_adjoint_sum_operator_zero ρ a b c P hP)
     simpa only [T, Q, rs, A, LinearMap.sum_apply,
-      LinearMap.zero_apply] using hh
+      LinearMap.zero_apply] using! hh
   have hfact :
       (Nat.factorial b : ℂ) •
         (∑ d ∈ T,
           A d (pairRadicalOp ρ (yModeWord (rs d)) w)) ∈
             keyPrefix ρ w m i := by
     simpa only [Finset.sum_sub_distrib, ← Finset.smul_sum,
-      hzero, sub_zero] using hsum
+      hzero, sub_zero] using! hsum
   have heval :
       xyzEvaluation ρ w (pairSourceShape a b c) P =
         ∑ d ∈ T,

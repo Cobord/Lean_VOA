@@ -157,7 +157,7 @@ theorem relationLineFlagFrom_layers [FiniteDimensional ℂ R]
     RelationLineFlagFrom p Rel r (U n)
       (cost + (Module.finrank ℂ (U 0) - Module.finrank ℂ (U n)) * lineLevelCost r L) := by
   induction n with
-  | zero => simpa using h
+  | zero => simpa using! h
   | succ n ih =>
       have hchain : ∀ e ≤ n, U e ≤ U 0 := by
         intro e he
@@ -277,7 +277,7 @@ theorem relationLineFlagFrom_gradedStrata [FiniteDimensional ℂ R]
         rw [hVD, hV0 j (by omega)] at hlayers
         rw [Finset.sum_range_succ]
         exact hlayers
-  simpa only [hGm] using hstrata m le_rfl
+  simpa only [hGm] using! hstrata m le_rfl
 
 /-- In a mixed coefficient quotient a relation line flag from zero is a power-sum-stable
 relation flag with the same cost. -/

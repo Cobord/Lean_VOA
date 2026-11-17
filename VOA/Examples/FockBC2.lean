@@ -35,7 +35,8 @@ variable (R : Type) [CommRing R] [Algebra ℂ R]
 
 /-- `MvPolynomial ℕ R ≅ Fock ⊗[ℂ] R` for any coefficient algebra `R`. -/
 noncomputable def fockREquiv : Fock ⊗[ℂ] R ≃ₐ[ℂ] MvPolynomial ℕ R :=
-  MvPolynomial.scalarRTensorAlgEquiv
+  (Algebra.TensorProduct.comm ℂ Fock R).trans
+    ((MvPolynomial.scalarRTensorAlgEquiv (R := ℂ) (N := R) (σ := ℕ)).restrictScalars ℂ)
 
 /-- **Base change of an operator** over an arbitrary coefficient algebra. -/
 noncomputable def bcR (T : Module.End ℂ Fock) : Module.End ℂ (MvPolynomial ℕ R) :=
@@ -146,11 +147,13 @@ identity does not need it. -/
 `FockW₂ = (ℕ →₀ ℕ) →₀ CoeffW₂` and `FockW = (ℕ →₀ ℕ) →₀ Polynomial ℂ`, so this is
 `PowerSeries.coeff l` applied to each `MvPolynomial` coefficient. -/
 noncomputable def coeffZ₀ (l : ℕ) : FockW₂ →ₗ[ℂ] FockW :=
-  Finsupp.mapRange.linearMap
-    ((PowerSeries.coeff l : CoeffW₂ →ₗ[Polynomial ℂ] Polynomial ℂ).restrictScalars ℂ)
+  (AddMonoidAlgebra.coeffLinearEquiv ℂ).symm.toLinearMap ∘ₗ
+    Finsupp.mapRange.linearMap
+      ((PowerSeries.coeff l : CoeffW₂ →ₗ[Polynomial ℂ] Polynomial ℂ).restrictScalars ℂ) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 @[simp] theorem coeffZ₀_apply (l : ℕ) (v : FockW₂) (a : ℕ →₀ ℕ) :
-    (coeffZ₀ l v) a = PowerSeries.coeff l (v a) := rfl
+    (coeffZ₀ l v).coeff a = PowerSeries.coeff l (v.coeff a) := rfl
 
 /-- **Li's conjugation identity**, correctly stated.
 

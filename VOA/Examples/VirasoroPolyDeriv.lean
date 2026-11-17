@@ -116,7 +116,7 @@ theorem lift_polyComb (c : ℂ) {A : PV} (hA : Sorted A) : lift c (polyComb c A)
     simp only [lift, LinearMap.comp_apply, LinearEquiv.coe_coe, Finsupp.lmapDomain_apply,
       Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_apply, evalC_apply]
     rw [show u = (⟨u, hu⟩ : {w : List ℕ // SortedWord w}).1 from rfl,
-      Finsupp.mapDomain_apply Subtype.val_injective, h]
+      Finsupp.mapDomain_apply_of_injective Subtype.val_injective, h]
     rfl
   · have hA0 : A u = 0 := Finsupp.notMem_support_iff.mp fun h => hu (hA u h)
     simp only [lift, LinearMap.comp_apply, LinearEquiv.coe_coe, Finsupp.lmapDomain_apply,

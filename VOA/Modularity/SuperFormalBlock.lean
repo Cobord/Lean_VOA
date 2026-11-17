@@ -67,7 +67,7 @@ theorem IsSuperFormalBlock.vanish {W : SuperVertexOperatorAlgebra 𝒱}
   have hker := LinearMap.mem_ker.mp (hS.relation hbase hsupp hmem)
   rw [blockLift_ιG] at hker
   have hcoe := congrArg (fun z : ↥(QSeriesAt hbase) => (z : FormalQSeries)) hker
-  simpa only [blockRestrict_coe, ZeroMemClass.coe_zero] using hcoe
+  simpa only [blockRestrict_coe, ZeroMemClass.coe_zero] using! hcoe
 
 /-- The locally finite omega tail with its zero term removed by the kernel relation. -/
 theorem superNegTwo_tail_eq_range_of_vanish
@@ -125,7 +125,6 @@ theorem IsSuperFormalBlock.negTwo {W : SuperVertexOperatorAlgebra 𝒱}
   have hker := LinearMap.mem_ker.mp (hS.relation hbase hsupp hmem)
   rw [map_add, blockLift_ιG, map_sum] at hker
   have hcoe := congrArg (fun z : ↥(QSeriesAt hbase) => (z : FormalQSeries)) hker
-  dsimp only at hcoe
   rw [Submodule.coe_add, blockRestrict_coe, AddSubmonoid.coe_finsetSum,
     ZeroMemClass.coe_zero] at hcoe
   have hterm : ∀ m ∈ Finset.range K,

@@ -27,7 +27,7 @@ noncomputable section
 off-diagonal points of the symmetric square. -/
 def increasingPairEquivSym2OffDiag (I : Type*) [LinearOrder I] :
     IncreasingPair I ≃ {z : Sym2 I // ¬z.IsDiag} where
-  toFun ij := ⟨s(ij.1.1, ij.1.2), by simpa using ij.2.ne⟩
+  toFun ij := ⟨s(ij.1.1, ij.1.2), by simpa using! ij.2.ne⟩
   invFun z :=
     ⟨(Sym2.sortEquiv z.1).1,
       lt_of_le_of_ne (Sym2.sortEquiv z.1).2 (by
@@ -51,7 +51,7 @@ def increasingPairEquivSym2OffDiag (I : Type*) [LinearOrder I] :
 theorem card_increasingPair_fin (d : ℕ) :
     Fintype.card (IncreasingPair (Fin d)) = d.choose 2 := by
   rw [Fintype.card_congr (increasingPairEquivSym2OffDiag (Fin d))]
-  simpa using (Sym2.card_subtype_not_diag (α := Fin d))
+  simpa using! (Sym2.card_subtype_not_diag (α := Fin d))
 
 /-- The collision contribution is twice the number of same-`S` pairs plus the number of
 current--`S` pairs. -/

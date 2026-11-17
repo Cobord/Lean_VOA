@@ -93,7 +93,7 @@ theorem cellCutoff_lift {M a b : ℕ} {c : SiteCell} (h : CellValid M a b c)
     (l r : Bool) :
     cellCutoff (cellLift M l r c) = cellCutoff c + if l || r then 1 else 0 := by
   have hn : M ∉ c.1 ∪ c.2 := by
-    simpa only [Finset.mem_union, not_or] using cell_not_mem_last h
+    simpa only [Finset.mem_union, not_or] using! cell_not_mem_last h
   cases l <;> cases r <;>
     simp [cellCutoff, cellLift, Finset.insert_union, Finset.union_insert,
       Finset.card_insert_of_notMem hn]

@@ -92,7 +92,7 @@ theorem ideal_kills_w {V : Type} [AddCommGroup V] [Module ℂ V]
   have h6 : a.val < 6 := by omega
   obtain ⟨k, rfl⟩ : ∃ k, r = m + k := ⟨r - m, by omega⟩
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · simpa using hW.fusion a h3 h6
+  · simpa using! hW.fusion a h3 h6
   obtain ⟨c, hc, hce⟩ := bracket_h1_f a h3 h6
   have hcomm := ρ.comm 6 a k m w
   rw [hW.fusion a h3 h6, map_zero, hW.cartan_pos 6 (by decide) k hk, map_zero, sub_zero] at hcomm

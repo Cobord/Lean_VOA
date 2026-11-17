@@ -504,7 +504,8 @@ theorem gnLink2_word_mem_rawSpan_sup_lower (W : VertexOperatorAlgebra 𝒱) {g :
         · have hbact := gnLink2_O₂_word_mem W hb.1 hb.2
             (hOK.2 p (List.mem_cons_self ..)) hOK.tail
           exact Submodule.mem_sup_right (by
-            simpa only [gnWordGrade_cons, gnLink2LowerFil, if_neg htotalSum] using hbact)
+            rw [gnWordGrade_cons, gnLink2LowerFil, if_neg htotalSum]
+            exact hbact)
 
 theorem gnLink2_lowerFil_mono (W : VertexOperatorAlgebra 𝒱) {G G' : ℕ} (h : G ≤ G') :
     gnLink2LowerFil W G ≤ gnLink2LowerFil W G' := by
@@ -579,7 +580,8 @@ theorem gnLink2_rawSpan_le_bounded_zero (W : VertexOperatorAlgebra 𝒱) {g : �
           gnSpanBounded W gen wt G 0 :=
       gnSpanBounded_mono_grade W gen wt (by omega) herrLower
     have hadd := Submodule.add_mem (gnSpanBounded W gen wt G 0) herrHere hsorted
-    convert hadd using 1 <;> abel
+    rw [sub_add_cancel] at hadd
+    exact hadd
 
 /-- The genuinely lower filtration is absorbed by the strictly lower bounded-reach hypothesis. -/
 theorem gnLink2_lowerFil_le_bounded_zero (W : VertexOperatorAlgebra 𝒱) {g : ℕ}

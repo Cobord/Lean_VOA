@@ -53,7 +53,7 @@ theorem solvableExceptionalOrbifoldC2Fact_iff_movingPairs :
 
 /-- The same explicit relation criterion for the stronger solvable-group target. -/
 theorem finiteSolvableV2OrbifoldC2_of_movingPairs
-    (h : ∀ (G : Subgroup (Aut (V2m 1 le_rfl))) [Fintype G] [IsSolvable G],
+    (h : ∀ (G : Subgroup (Aut (V2m 1 le_rfl))) [Fintype G] [Group.IsSolvable G],
       MovingPairSpanFinite G) : OrbPos.FiniteSolvableV2OrbifoldC2 := by
   intro G _ _
   letI := Fintype.ofFinite G

@@ -46,7 +46,6 @@ theorem affineKacProduct_horizontal_power_factor (t : ℂ) (d n : ℕ) (c : ℤ)
       Fintype.card (JointIndex n (c+(d+1 : ℕ))) := by
     unfold affineKacMultiplicity
     congr 2 <;> simp [oscillatorEnergy,oscillatorCharge] <;> omega
-  dsimp only at he
   rw [hr,hm] at he
   exact he.symm
 

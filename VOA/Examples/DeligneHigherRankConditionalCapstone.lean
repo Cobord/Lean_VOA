@@ -56,7 +56,11 @@ inductive HigherRankDeligneCase
   | E6
   | E7
   | E8
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype HigherRankDeligneCase where
+  elems := {.A2, .G2, .D4, .F4, .E6, .E7, .E8}
+  complete x := by cases x <;> simp
 
 @[simp] theorem card_higherRankDeligneCase :
     Fintype.card HigherRankDeligneCase = 7 := rfl

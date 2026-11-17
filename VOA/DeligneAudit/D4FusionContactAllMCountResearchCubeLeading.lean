@@ -11,7 +11,7 @@ def chainTerm (r a b c : ℕ) : P8 K :=
     MvPolynomial.X 1^(a-b) * MvPolynomial.X 3^(b-c) * MvPolynomial.X 7^c
 
 def colorLow (L : ℕ) : Submodule K (P8 K) :=
-  Finsupp.supported K K {d | energy d < L}
+  AddMonoidAlgebra.supported K K {d | energy d < L}
 
 theorem embed_chain_projection (r a b c : ℕ)
     (ha : a ≤ r) (hb : b ≤ a) (hc : c ≤ b) :
@@ -21,7 +21,7 @@ theorem embed_chain_projection (r a b c : ℕ)
 
 theorem orbit_sub_chainTerm_energy (r a b c : ℕ)
     (ha : a ≤ r) (hb : b ≤ a) (hc : c ≤ b) (d : Fin 8 →₀ ℕ)
-    (hd : MvPolynomial.coeff d (orbit K r a b c - chainTerm K r a b c) ≠ 0) :
+    (hd : (orbit K r a b c - chainTerm K r a b c).coeff d ≠ 0) :
     energy d < a + 3*b + 5*c := by
   apply orbit_remainder_energy K r a b c d
   simpa only [remainder,embed_chain_projection K r a b c ha hb hc] using hd

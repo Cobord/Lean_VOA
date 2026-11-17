@@ -43,7 +43,7 @@ theorem rsEvOne_mon (v : D4K.V) (c : D4K.Kq) : rsEvOne (D4K.mon v c) = c := by
   simp [rsEvOne, D4K.mon, AddMonoidAlgebra.lift_single]
 
 theorem rsEvOne_eq_ev1 : rsEvOne.toLinearMap = D4K.ev1 := by
-  apply Finsupp.lhom_ext
+  apply D4K.lhom_ext_mon
   intro v c
   change rsEvOne (D4K.mon v c) = D4K.ev1 (D4K.mon v c)
   rw [rsEvOne_mon, D4K.ev1_mon]

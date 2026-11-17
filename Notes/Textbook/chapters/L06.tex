@@ -2403,7 +2403,7 @@ def screeningMomentum (r s : ℕ) (β : ℚ) : ℚ :=
 File \leanpath{VOA/Examples/VirasoroScreeningMoment.lean}.
 \begin{leancode}
 noncomputable def screeningMoment (r s t : ℕ) (P : MvPolynomial (Fin r) ℚ) : ℚ :=
-  (vandermondeLaurent r^(2*t) * auxiliaryLaurent r P)
+  (vandermondeLaurent r^(2*t) * auxiliaryLaurent r P).coeff
     (fun _ : Fin r => (((r-1)*t+s:ℕ):ℤ))
 \end{leancode}
 File \leanpath{VOA/Examples/VirasoroScreeningFock.lean}.

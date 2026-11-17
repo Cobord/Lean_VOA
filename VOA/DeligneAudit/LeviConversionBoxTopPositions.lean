@@ -71,7 +71,7 @@ theorem appended_nonzero_lowers_original (xs : List ℕ) (k : ℕ)
     (fun i : Fin (xs ++ List.replicate k 0).length =>
       (xs ++ List.replicate k 0).get i) T hT hnot
   simpa only [← List.sum_ofFn, List.ofFn_get, List.sum_append,
-    List.sum_replicate, mul_zero, add_zero] using h
+    List.sum_replicate, mul_zero, smul_zero, add_zero] using h
 
 end VOA.DeligneAudit.LeviConversion
 

@@ -47,7 +47,10 @@ theorem evaluationIntertwinerOfForm_pair (N : LogVModule W R) (B : W.InvariantFo
     (formMap B ((formEquiv B hrad).symm ((dualUnitEvaluationIntertwiner N).1 n 0 x t))) = _
   rw [← formEquiv_apply B hrad,LinearEquiv.apply_symm_apply]
   change dualPairing (unitLog W).toGW v ((Ar.transform N (unitLog W) N (rightUnitIntertwiner N)).1 n 0 x t) = _
-  rw [Ar.transform_logZero,Ar.pair_modes_zero N (unitLog W) N (rightUnitIntertwiner N) n hx]
+  exact (congrArg (dualPairing (unitLog W).toGW v)
+    (LinearMap.congr_fun (LinearMap.congr_fun
+      (Ar.transform_logZero N (unitLog W) N (rightUnitIntertwiner N) n) x) t)).trans
+    (Ar.pair_modes_zero N (unitLog W) N (rightUnitIntertwiner N) n hx t v)
 
 /-- On a nonzero genuine module the actual evaluation operator is nonzero. -/
 theorem evaluationIntertwinerOfForm_ne_zero (N : LogVModule W R) [Nontrivial R]
@@ -71,10 +74,12 @@ theorem evaluationIntertwinerOfForm_ne_zero (N : LogVModule W R) [Nontrivial R]
   change omegaEquiv N.toWeakModule (unitLog W).toWeakModule N.toWeakModule 0
     ((omegaEquiv N.toWeakModule (unitLog W).toWeakModule N.toWeakModule 0).symm
       (logModuleIntertwiner N.toWeakModule)) = _ at hz
-  rw [LinearEquiv.apply_symm_apply] at hz
+  have hz' := (LinearEquiv.apply_symm_apply
+    (omegaEquiv N.toWeakModule (unitLog W).toWeakModule N.toWeakModule 0)
+    (logModuleIntertwiner N.toWeakModule)).symm.trans hz
   have hz0 : (omegaEquiv N.toWeakModule (unitLog W).toWeakModule N.toWeakModule 0) 0 = 0 :=
     LinearEquiv.map_zero _
-  exact logModuleIntertwiner_ne_zero N.toWeakModule (hz.trans hz0)
+  exact logModuleIntertwiner_ne_zero N.toWeakModule (hz'.trans hz0)
 
 /-- The genuinely chosen invariant form supplied by VOA self-duality. -/
 def unitForm (hs : W.SelfDual) : W.InvariantForm := hs.choose

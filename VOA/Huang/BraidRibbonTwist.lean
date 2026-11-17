@@ -195,10 +195,10 @@ theorem twist_balance (X Y : Ordinary W) :
   refine tensor_hom_ext_homog F _ _ fun n α β x y hx hy => ?_
   have hmem := FusionTop.mem_weight (F X Y).intertwiner.property hx hy n
   rw [twistIso_hom_of_mem (tensorObj F X Y) hmem]
-  rw [← Category.assoc, Ordinary.comp_apply, Ordinary.comp_apply, tensorHom_intertwiner,
-    twistIso_hom_of_mem X hx, twistIso_hom_of_mem Y hy]
+  change _ = ((braidingP Phase.upper F X Y).hom ≫ (braidingP Phase.upper F Y X).hom).val
+    ((tensorHom F (twistIso X).hom (twistIso Y).hom).val ((F X Y).intertwiner.val n x y))
+  rw [tensorHom_intertwiner, twistIso_hom_of_mem X hx, twistIso_hom_of_mem Y hy]
   have hm := braidingP_monodromy Phase.upper F X Y n (tw α • x) (tw β • y)
-  rw [Ordinary.comp_apply] at hm
   rw [hm]
   simp only [map_smul, LinearMap.smul_apply, smul_smul]
   congr 1

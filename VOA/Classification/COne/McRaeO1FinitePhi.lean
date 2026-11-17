@@ -64,7 +64,7 @@ theorem exists_mem_linearEquiv_of_map
       refine sSup_le fun I hI => ?_
       intro a ha
       have := congrArg (fun g => g ⟨a, ha⟩) (hcon I hI)
-      simpa using this
+      simpa using! this
     rw [htop, top_le_iff, LinearMap.ker_eq_top] at hle
     exact hf hle
   obtain ⟨I, hI, hne⟩ := hex
@@ -116,7 +116,7 @@ theorem finite_Φ_of_finiteDimensional
       apply hu
       have h1 : g (J.mkQ 1) = 0 := by rw [h0]; rfl
       rw [Submodule.mkQ_apply, Submodule.liftQ_apply] at h1
-      simpa [f] using h1
+      simpa [f] using! h1
     exact exists_mem_linearEquiv_of_map s htop hsimp U (hUs c) g hg
   choose I hIs hIe using hex
   refine Finite.of_injective (fun c => (⟨I c, hIs c⟩ : s)) ?_

@@ -137,7 +137,7 @@ theorem exists_class_family {ι : Type*} [Finite ι] (b : ℂ) (H : ι → Power
   obtain ⟨d, E, hER, hE0, hEo, hEH, hHE⟩ := exists_echelon H hR
   have hEs : ∀ l, E l ∈ SubexpPS := fun l => (evH_mem_span 0 H hH (hEH l)).1
   have hord : ∀ l, (E l).order = ((E l).order.toNat : ℕ∞) := fun l =>
-    (ENat.coe_toNat (by simpa [PowerSeries.order_eq_top] using hE0 l)).symm
+    (ENat.coe_toNat (by simpa [PowerSeries.order_eq_top] using! hE0 l)).symm
   have hXU : ∀ l, PowerSeries.X ^ (E l).order.toNat * (E l).divXPowOrder = E l := fun l =>
     PowerSeries.X_pow_order_mul_divXPowOrder
   have hev : ∀ l, evH (b + ((E l).order.toNat : ℕ)) (E l).divXPowOrder = evH b (E l) := by
@@ -201,7 +201,7 @@ theorem mem_subexpPS_of_hasSum {lam : ℂ} {a : ℕ → ℕ} {f : UpperHalfPlane
   have hr0 : 0 < r := lt_trans zero_lt_one hr
   set y : ℝ := Real.log r / (2 * Real.pi) with hy
   have hy0 : 0 < y := div_pos (Real.log_pos hr) (by positivity)
-  let τ : UpperHalfPlane := ⟨Complex.I * y, by simpa using hy0⟩
+  let τ : UpperHalfPlane := ⟨Complex.I * y, by simpa using! hy0⟩
   have ht : Real.exp (-(2 * Real.pi * y)) = r⁻¹ := by
     rw [hy, show -(2 * Real.pi * (Real.log r / (2 * Real.pi))) = -Real.log r from by
       field_simp, Real.exp_neg, Real.exp_log hr0]
@@ -267,7 +267,6 @@ theorem rat_of_core (hcore : AMCore) {n : ℕ} (lam : Fin n → ℂ) (G : Fin n 
     have h1 := Finset.single_le_sum (f := fun j => |fl j|) (fun j _ => abs_nonneg _)
       (Finset.mem_univ i)
     have h2 := neg_abs_le (fl i)
-    simp only at h1
     linarith
   set k : Fin n → ℕ := fun i => (fl i + M).toNat with hkdef
   have hk : ∀ i, ((k i : ℕ) : ℤ) = fl i + M := fun i => Int.toNat_of_nonneg (hM i)
@@ -414,7 +413,7 @@ theorem andersonMooreInput_of_core (h : AMCore) : AndersonMooreInput := by
   · intro i hG0
     apply ha i
     have := congrArg (PowerSeries.coeff 0) hG0
-    simpa [G] using this
+    simpa [G] using! this
   · intro i z hz
     let τ : UpperHalfPlane := ⟨z, hz⟩
     have h1 := hSlaw i τ

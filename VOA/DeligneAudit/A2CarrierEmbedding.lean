@@ -201,8 +201,8 @@ theorem exists_quadraticRelation_eq (f : MvPolynomial σ K) (hf : f.IsHomogeneou
       exact this
     obtain ⟨a, b, rfl⟩ := exists_pair_of_degree_eq_two e hdeg
     have hmon : MvPolynomial.monomial (Finsupp.single a 1 + Finsupp.single b 1)
-        (MvPolynomial.coeff (Finsupp.single a 1 + Finsupp.single b 1) f) =
-        MvPolynomial.coeff (Finsupp.single a 1 + Finsupp.single b 1) f •
+        (f.coeff (Finsupp.single a 1 + Finsupp.single b 1)) =
+        f.coeff (Finsupp.single a 1 + Finsupp.single b 1) •
           (MvPolynomial.X a * MvPolynomial.X b) := by
       rw [MvPolynomial.X, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul,
         MvPolynomial.smul_monomial, smul_eq_mul, mul_one]

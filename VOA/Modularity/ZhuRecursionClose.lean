@@ -171,7 +171,7 @@ theorem oMod_smul_neg_one_eq_finsum_pairOp (ha : a ∈ W.grading ka) (hv : v ∈
       rfl
   · rw [Set.disjoint_left]
     rintro p ⟨a, rfl⟩ ⟨b, hb⟩
-    simp only at hb
+    try simp only at hb
     omega
   · refine Set.eq_univ_of_forall (fun p => ?_)
     by_cases hp : 0 ≤ p

@@ -41,6 +41,8 @@ set_option linter.style.longLine false
 
 open Complex Finset Module Filter Topology
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 namespace VOA.Classification.COne
@@ -60,8 +62,7 @@ theorem L_mem_grading' {k : ℤ} {y : 𝒲} (hy : y ∈ W.grading k) (n : ℤ) :
     W.L n y ∈ W.grading (k - n) := by
   have := W.smul_mem_grading W.conformal_mem hy (n + 1)
   rw [W.L_def]
-  convert this using 2
-  ring
+  convert this using 2 <;> first | rfl | ring
 
 /-- `L₁ L₋₁ = L₋₁ L₁ + 2 L₀`. -/
 theorem L_one_neg_one_apply (z : 𝒲) :
@@ -81,7 +82,7 @@ theorem Lneg1_eq_zero {k : ℕ} (hk : 1 ≤ k) {y : 𝒲} (hy : y ∈ W.grading 
   have hz_mem : ∀ m : ℕ, z m ∈ W.grading ((k : ℤ) - m) := by
     intro m
     induction m with
-    | zero => simpa [hz] using hy
+    | zero => simpa [hz] using! hy
     | succ m ih =>
       rw [hz_succ]
       convert L_mem_grading' ih 1 using 2
@@ -119,7 +120,7 @@ theorem Lneg1_eq_zero {k : ℕ} (hk : 1 ≤ k) {y : 𝒲} (hy : y ∈ W.grading 
   have hdown : ∀ i : ℕ, i ≤ k + 1 → z (k + 1 - i) = 0 := by
     intro i
     induction i with
-    | zero => intro _; simpa using hk1
+    | zero => intro _; simpa using! hk1
     | succ i ih =>
       intro hi
       have hprev := ih (by omega)
@@ -138,7 +139,7 @@ theorem Lneg1_eq_zero {k : ℕ} (hk : 1 ≤ k) {y : 𝒲} (hy : y ∈ W.grading 
       have := (smul_eq_zero.mp h.symm).resolve_left hc
       rw [show k + 1 - (i + 1) = k - i by omega]
       exact this
-  simpa [hz] using hdown (k + 1) le_rfl
+  simpa [hz] using! hdown (k + 1) le_rfl
 
 /-- The commutant is closed under `x ↦ x₍ₚ₎𝟙`. -/
 theorem smul_vacuum_mem_commutant {h x : 𝒲} (hx : x ∈ commutant W h) (p : ℤ) :
@@ -153,7 +154,7 @@ theorem smul_vacuum_mem_commutant {h x : 𝒲} (hx : x ∈ commutant W h) (p : �
     · rw [zero_add, hx i hnn, W.smul_zero_left, smul_zero])] at hJ
   simp only [zero_add, sub_zero, add_zero, cbz_zero, negOnePow, mul_one] at hJ
   rw [W.smul_vacuum_nonneg h hn, W.smul_zero_right] at hJ
-  simpa using hJ
+  simpa using! hJ
 
 
 /-- The translates `Tʲx` of a commutant vector stay in the commutant
@@ -168,7 +169,7 @@ theorem Tpow_mem_commutant {h x : 𝒲} (hx : x ∈ commutant W h) (j : ℕ) :
 theorem Tpow_mem_grading {k : ℤ} {x : 𝒲} (hx : x ∈ W.grading k) (j : ℕ) :
     (W.toPreVertexAlgebra.T ^ j) x ∈ W.grading (k + j) := by
   induction j with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ j ih =>
     rw [pow_succ', Module.End.mul_apply, show W.toPreVertexAlgebra.T ((W.toPreVertexAlgebra.T ^ j) x)
       = W.L (-1) ((W.toPreVertexAlgebra.T ^ j) x) from by rw [W.T_eq_Lneg1]]
@@ -178,7 +179,7 @@ theorem Tpow_mem_grading {k : ℤ} {x : 𝒲} (hx : x ∈ W.grading k) (j : ℕ)
 theorem Tpow_ne_zero {k : ℕ} (hk : 1 ≤ k) {x : 𝒲} (hx : x ∈ W.grading k) (hx0 : x ≠ 0)
     (j : ℕ) : (W.toPreVertexAlgebra.T ^ j) x ≠ 0 := by
   induction j with
-  | zero => simpa using hx0
+  | zero => simpa using! hx0
   | succ j ih =>
     intro h0
     rw [pow_succ', Module.End.mul_apply, show W.toPreVertexAlgebra.T ((W.toPreVertexAlgebra.T ^ j) x)
@@ -206,7 +207,7 @@ theorem evalOp_monomial_mem {h : 𝒲} (hh : IsHeisVector W h) (s : ℕ →₀ �
   induction s using Finsupp.induction_linear generalizing k x with
   | zero =>
     rw [← MvPolynomial.C_apply, (heisRep hh).evalOp_C, one_smul]
-    simpa [fdeg] using hx
+    simpa [fdeg] using! hx
   | add f g hf hg =>
     rw [show (MvPolynomial.monomial (f + g) (1 : ℂ)) =
         MvPolynomial.monomial f 1 * MvPolynomial.monomial g 1 by
@@ -218,7 +219,7 @@ theorem evalOp_monomial_mem {h : 𝒲} (hh : IsHeisVector W h) (s : ℕ →₀ �
   | single i n =>
     rw [← MvPolynomial.X_pow_eq_monomial, map_pow, fdeg_single, (heisRep hh).evalOp_X]
     induction n generalizing k x with
-    | zero => simpa using hx
+    | zero => simpa using! hx
     | succ n ih =>
       rw [pow_succ', Module.End.mul_apply]
       have h2 := heis_mode_mem hh (ih hx) (-((i : ℤ) + 1))
@@ -262,7 +263,7 @@ theorem vacVec_linearIndependent : LinearIndependent ℂ (vacVec hh hxC) := by
   apply LinearIndependent.of_comp (heisRep hh).vac.subtype
   have hp : iSupIndep (fun j : ℕ => W.grading ((2 : ℤ) + j)) :=
     iSupIndep.comp (t := W.grading) W.isInternal.submodule_iSupIndep
-      (f := fun j : ℕ => (2 : ℤ) + j) (fun a b hab => by simpa using hab)
+      (f := fun j : ℕ => (2 : ℤ) + j) (fun a b hab => by simpa using! hab)
   exact hp.linearIndependent _ (fun j => Tpow_mem_grading hx2 j)
     (fun j => Tpow_ne_zero (k := 2) (by norm_num) (by exact_mod_cast hx2) hx0 j)
 
@@ -274,7 +275,8 @@ theorem fockVec_mem {K : ℕ} (p : (Fin K → ℕ) × ℕ) :
   have := evalOp_monomial_mem hh (toFs p.1) (Tpow_mem_grading hx2 p.2)
   rw [fdeg_toFs] at this
   convert this using 2
-  unfold fdegP; push_cast; ring
+  · unfold fdegP; push_cast; ring
+  · rfl
 
 theorem fockVec_linearIndependent (K : ℕ) :
     LinearIndependent ℂ (fun p : (Fin K → ℕ) × ℕ =>
@@ -409,14 +411,14 @@ theorem tendsto_partial_prod {Y : ℝ} (hY : 0 < Y) :
 theorem norm_tprod_eta_le_one {Y : ℝ} (hY : 0 < Y) :
     ‖∏' n, (1 - ModularForm.eta_q n ((Y : ℂ) * I))‖ ≤ 1 := by
   refine le_of_tendsto' (tendsto_partial_prod hY) fun K => ?_
-  refine Finset.prod_le_one (fun i _ => ?_) (fun i _ => ?_)
+  refine Finset.prod_le_one₀ (fun i _ => ?_) (fun i _ => ?_)
   · exact sub_nonneg.mpr (pow_le_one₀ (Real.exp_pos _).le
       (Real.exp_le_one_iff.mpr (by have := Real.pi_pos; nlinarith)))
   · exact sub_le_self _ (by positivity)
 
 theorem norm_tprod_eta_pos {Y : ℝ} (hY : 0 < Y) :
     0 < ‖∏' n, (1 - ModularForm.eta_q n ((Y : ℂ) * I))‖ :=
-  norm_pos_iff.mpr (ModularForm.eta_tprod_ne_zero (by simpa using hY))
+  norm_pos_iff.mpr (ModularForm.eta_tprod_ne_zero (by simpa using! hY))
 
 theorem norm_eta_imag {Y : ℝ} :
     ‖ModularForm.eta ((Y : ℂ) * I)‖ =
@@ -596,7 +598,7 @@ theorem heisCommutantTrivial_of_modData (hMD : IModData.{u}) : HeisCommutantTriv
       _ = _ := by rw [hA]; ring
   -- upper bound from the `S`-transformation
   have hup : D.chR D.vac y ≤ C * Real.exp (2 * Real.pi * (1 / y) / 24) := by
-    have hT := hD.S_transform D.vac (((1 / y : ℝ) : ℂ) * I) (by simpa using hy1)
+    have hT := hD.S_transform D.vac (((1 / y : ℝ) : ℂ) * I) (by simpa using! hy1)
     rw [neg_one_div_imag hy] at hT
     have hre : D.chR D.vac y = ∑ b, D.S00 * D.d b * D.chR b (1 / y) := by
       unfold ModularData.chR

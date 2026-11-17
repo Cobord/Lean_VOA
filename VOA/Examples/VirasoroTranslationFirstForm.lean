@@ -50,7 +50,7 @@ theorem translationPairPolynomial_highest (c : ℂ) :
   apply Polynomial.funext
   intro h
   rw [translationPairPolynomial_eval]
-  simpa using vermaContravariant_translation_norm c h
+  simpa using! vermaContravariant_translation_norm c h
 
 /-- A translated highest vector is orthogonal to every translated word
 of positive relative energy, at every highest weight, so its polynomial

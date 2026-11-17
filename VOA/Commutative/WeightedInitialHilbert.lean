@@ -99,7 +99,8 @@ theorem initialRelation_finrank_add_previous (w : σ → ℕ)
   rw [topProjection_ker] at h
   have heq := (Submodule.comapSubtypeEquivOfLe
     (relationBelow_mono w I V (Nat.le_succ d))).finrank_eq
-  simpa only [initialRelation, heq] using h
+  simp only [initialRelation, heq] at h ⊢
+  exact h
 
 /-- Telescoping the dimensions of the explicitly projected initial relations. -/
 theorem sum_initialRelation_finrank (w : σ → ℕ)

@@ -28,7 +28,7 @@ theorem vacuumToWak_mem_freeLiAtLeast (p : ℕ) {x : WakModule k}
       obtain ⟨mu,hmu,rfl⟩ := hx
       rw [orderedCreationState_eq_wordStateA,vacuumToWak_wordStateA]
       apply freeLiAtLeast_mono (d := p) (e := wordFreeLiDegree (orderedPBWColorWord mu))
-      · simpa only [orderedCreationDepth_eq_pairsLevel,wordFreeLiDegree,pairsLevel] using hmu
+      · simpa only [orderedCreationDepth_eq_pairsLevel,wordFreeLiDegree,pairsLevel] using! hmu
       · exact wakimotoWordState_mem_freeLiAtLeast k _
   | zero => rw [map_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy

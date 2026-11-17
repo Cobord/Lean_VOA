@@ -64,7 +64,7 @@ theorem Lop_one_negWordVir_single_zero : Lop c 1 (negWordVir c [0]) = 0 := by
     zero_smul, add_zero, show ((1 : ℤ) : ℂ) - ((-2 : ℤ) : ℂ) = 3 by norm_num,
     show (1 : ℤ) + (-2) = -1 by norm_num, hvm1, smul_zero,
     add_zero] at h
-  simpa only [negWordVir_cons, negWordVir_nil] using h
+  simpa only [negWordVir_cons, negWordVir_nil] using! h
 
 /-- `L₁L₋(i+3)𝟙 = (i+4)L₋(i+2)𝟙`. -/
 theorem Lop_one_negWordVir_single_succ (i : ℕ) :
@@ -120,7 +120,7 @@ theorem Lop_one_negWordVir_pair_zero_zero :
   rw [VirGoodFil.Lop_neg_one_negWordVir_nil, map_zero, zero_add] at ht
   norm_num at ht
   rw [ht] at h
-  simpa only [negWordVir_cons, negWordVir_nil] using h
+  simpa only [negWordVir_cons, negWordVir_nil] using! h
 
 /-! ## Telescoping the coefficient recurrence -/
 

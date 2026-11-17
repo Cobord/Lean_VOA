@@ -190,7 +190,7 @@ theorem coeff_rel {F m : P3} {c : ℂ} (hF : IcoInv F) (h : psi F = c • psi m)
     rw [hβ, hβ, h, map_smul]
   rw [hF rotR rotR_mem, h] at h1
   have := congrArg (eval r) h1
-  simpa only [MvPolynomial.smul_eval, eval_psi] using this
+  simpa only [MvPolynomial.smul_eval, eval_psi] using! this
 
 /-- No `ico`-invariant binary forms in degrees `4, 8, 16, 28`. -/
 theorem psi_small_zero (n : ℕ) (F : P3) (hn : n = 2 ∨ n = 4 ∨ n = 8 ∨ n = 14) (hF : IcoInv F)
@@ -249,7 +249,7 @@ theorem psi_small_zero (n : ℕ) (F : P3) (hn : n = 2 ∨ n = 4 ∨ n = 8 ∨ n 
         rw [hβR, hβR, hβR, ← hab, map_add, map_smul, map_smul]
       rw [hF rotR rotR_mem, ← hab] at h1
       have := congrArg (eval r) h1
-      simpa only [map_add, MvPolynomial.smul_eval, eval_psi] using this
+      simpa only [map_add, MvPolynomial.smul_eval, eval_psi] using! this
     have e1 := hrel ![1, 0]
     have e2 := hrel ![0, 1]
     rw [pt_one_zero, eval_R_10, eval_R_10] at e1

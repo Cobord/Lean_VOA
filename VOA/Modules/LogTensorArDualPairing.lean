@@ -64,18 +64,14 @@ theorem pair_contra_L0ss (x : M) (t : C2Rigid.RestrictedDual N.toGW) :
       by_cases hab : b=a
       · rw [hab]
       · rw [pair_weights_zero N hx ht hab,smul_zero,smul_zero]
-    · dsimp only
-      rw [map_zero,map_zero,map_zero]
+    · rw [map_zero,map_zero,map_zero]
     · intro t s ht hs
-      dsimp only at ht hs ⊢
       rw [map_add,map_add,map_add,ht,hs]
-  · dsimp only
-    change C2Rigid.dualPairingFlip N.toGW ((contraLog N).L0ss t) 0 = _
+  · change C2Rigid.dualPairingFlip N.toGW ((contraLog N).L0ss t) 0 = _
     rw [map_zero,map_zero]
     change (0:ℂ) = C2Rigid.dualPairingFlip N.toGW t 0
     exact (map_zero _).symm
   · intro x y hx hy
-    dsimp only at hx hy ⊢
     rw [C2Rigid.dualPairing_add_left,map_add,C2Rigid.dualPairing_add_left,hx,hy]
 
 /-- Genuine Jordan nilpotent parts transpose without discarding logarithmic terms. -/
@@ -132,18 +128,14 @@ theorem pair_contra_L0exp (s : ℂ) (x : M) (t : C2Rigid.RestrictedDual N.toGW) 
       by_cases hab : b=a
       · rw [hab]
       · rw [pair_weights_zero N (nilExp_mem_weight N s hx) ht hab,smul_zero,smul_zero]
-    · dsimp only
-      rw [map_zero,map_zero,map_zero]
+    · rw [map_zero,map_zero,map_zero]
     · intro t r ht hr
-      dsimp only at ht hr ⊢
       rw [map_add,map_add,map_add,ht,hr]
-  · dsimp only
-    change C2Rigid.dualPairingFlip N.toGW (L0exp (contraLog N) s t) 0 = _
+  · change C2Rigid.dualPairingFlip N.toGW (L0exp (contraLog N) s t) 0 = _
     rw [map_zero,map_zero]
     change (0:ℂ) = C2Rigid.dualPairingFlip N.toGW t 0
     exact (map_zero _).symm
   · intro x y hx hy
-    dsimp only at hx hy ⊢
     rw [C2Rigid.dualPairing_add_left,map_add,C2Rigid.dualPairing_add_left,hx,hy]
 
 /-- The actual conformal twist is self-transpose on the genuine contragredient. -/

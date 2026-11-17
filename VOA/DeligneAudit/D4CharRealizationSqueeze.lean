@@ -46,7 +46,7 @@ theorem d4_degree_eq_of_upper_and_total (n : ℕ) (c : ℕ → ℕ)
     have hsumM : (∑ e ∈ Finset.range M, d4LeviHilb n e) = 29 ^ n := by
       rw [← hsum]
       exact (Finset.sum_subset (Finset.range_mono (le_max_left B C))
-        (fun e _ he => hzero e (by simpa using he))).symm
+        (fun e _ he => hzero e (by simpa using! he))).symm
     have hsumc : 29 ^ n ≤ ∑ e ∈ Finset.range M, c e :=
       hC.trans (Finset.sum_le_sum_of_subset (Finset.range_mono (le_max_right B C)))
     by_contra hlt

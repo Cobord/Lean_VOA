@@ -88,7 +88,7 @@ theorem rz_symmetric_mem_orbitMonomialSpan
     exact rzOrbitSum_mem_monomialSpan σ P
   have hm' := (rzOrbitMonomialSpan σ).smul_mem
     (Nat.card (Equiv.Perm σ) : ℂ)⁻¹ hm
-  simpa [smul_smul, inv_mul_cancel₀ hc] using hm'
+  simpa [smul_smul, inv_mul_cancel₀ hc] using! hm'
 
 end VOA.DeligneAudit.D4Levi
 

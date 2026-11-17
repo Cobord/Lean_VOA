@@ -31,8 +31,8 @@ theorem middleRaising_word_sum (m : ℕ)
   induction l with
   | nil =>
       have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-        simpa [ravFam] using h
-      simpa [radicalWord, wordOp, centralRaisingWords] using
+        simpa [ravFam] using! h
+      simpa [radicalWord, wordOp, centralRaisingWords] using!
         (rs_raising hs (show D4sector.raising (leviColour (A3Sector.simpleE 1)) by
           change 4 ≤ (leviColour (A3Sector.simpleE 1)).val ∧
             (leviColour (A3Sector.simpleE 1)).val < 16
@@ -119,7 +119,7 @@ theorem centralRaisingWords_positions {σ : Type*}
           have hit : t ≠ i := by
             intro heq
             exact ht (heq ▸ (List.mem_filter.mp hi).1)
-          simpa only [ht1, Function.comp_apply] using
+          simpa only [ht1, Function.comp_apply] using!
             (centralRaisingPositionWord_cons_other shape t i ts hit d r).symm
       · simp only [shapedModes, List.map_cons, centralRaisingWords,
           ht1, if_false, List.filter_cons,
@@ -218,7 +218,7 @@ theorem centralRaisingPositionalEvaluation_eq_sum
       congr 1
       apply List.map_congr_left
       intro t ht
-      simpa only [modeWordEvaluation_monomial] using
+      simpa only [modeWordEvaluation_monomial] using!
         centralRaisingPositionEvaluation_eq_shift ρ w shape t r
           (modeMonomial σ d)
   | add P Q ihP ihQ =>
@@ -280,7 +280,7 @@ theorem middleRaising_polynomial_iterated {σ : Type*} [Fintype σ] [DecidableEq
       intro i
       by_cases hi : i = t
       · subst i; simp
-      · simpa [Function.update_of_ne hi] using hc i
+      · simpa [Function.update_of_ne hi] using! hc i
 
 end
 

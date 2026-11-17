@@ -69,7 +69,7 @@ theorem signBit_commute_of_commute {g h : SuperAut W} (hgh : Commute g h)
   · simp [signBit]
   · simp [signBit]
   · simp [signBit]
-  · simpa [signBit] using hgh
+  · simpa [signBit] using! hgh
 
 theorem signBit_mul_of_mul_self {g : SuperAut W} (hg : g * g = 1)
     (a b : Bool) : signBit g a * signBit g b = signBit g (Bool.xor a b) := by
@@ -88,9 +88,9 @@ noncomputable def superSignParamSubgroup (W : SuperVertexOperatorAlgebra VType)
     rintro _ _ ⟨⟨a, b⟩, rfl⟩ ⟨⟨c, d⟩, rfl⟩
     refine ⟨(Bool.xor a c, Bool.xor b d), ?_⟩
     have hk2 : W.conformalSign hhalf * W.conformalSign hhalf = 1 := by
-      simpa [pow_two] using W.conformalSign_sq hhalf
+      simpa [pow_two] using! W.conformalSign_sq hhalf
     have hs2 : W.parityAut * W.parityAut = 1 := by
-      simpa [pow_two] using W.parityAut_sq
+      simpa [pow_two] using! W.parityAut_sq
     symm
     change signBit (W.conformalSign hhalf) a * signBit W.parityAut b *
         (signBit (W.conformalSign hhalf) c * signBit W.parityAut d) = _
@@ -102,9 +102,9 @@ noncomputable def superSignParamSubgroup (W : SuperVertexOperatorAlgebra VType)
     rintro _ ⟨⟨a, b⟩, rfl⟩
     refine ⟨(a, b), ?_⟩
     have hkInv : (W.conformalSign hhalf)⁻¹ = W.conformalSign hhalf :=
-      inv_eq_of_mul_eq_one_right (by simpa [pow_two] using W.conformalSign_sq hhalf)
+      inv_eq_of_mul_eq_one_right (by simpa [pow_two] using! W.conformalSign_sq hhalf)
     have hsInv : W.parityAut⁻¹ = W.parityAut :=
-      inv_eq_of_mul_eq_one_right (by simpa [pow_two] using W.parityAut_sq)
+      inv_eq_of_mul_eq_one_right (by simpa [pow_two] using! W.parityAut_sq)
     have hcomm : W.parityAut * W.conformalSign hhalf =
         W.conformalSign hhalf * W.parityAut :=
       (W.conformalSign_commute_parityAut hhalf).eq.symm
@@ -194,9 +194,9 @@ theorem superSignParam_sq (W : SuperVertexOperatorAlgebra VType)
     (hhalf : IsHalfIntegerGraded W) (z : Bool × Bool) :
     superSignParam W hhalf z ^ 2 = 1 := by
   have hk2 : W.conformalSign hhalf * W.conformalSign hhalf = 1 := by
-    simpa [pow_two] using W.conformalSign_sq hhalf
+    simpa [pow_two] using! W.conformalSign_sq hhalf
   have hs2 : W.parityAut * W.parityAut = 1 := by
-    simpa [pow_two] using W.parityAut_sq
+    simpa [pow_two] using! W.parityAut_sq
   rcases z with ⟨a, b⟩
   rw [pow_two, superSignParam]
   rw [(signBit_commute_of_commute
@@ -230,7 +230,7 @@ theorem superSignSubgroup_card_le_four (W : SuperVertexOperatorAlgebra VType)
     (hhalf : IsHalfIntegerGraded W) :
     Fintype.card (W.superSignSubgroup hhalf) ≤ 4 := by
   classical
-  simpa using Fintype.card_le_of_surjective (superSignParamToSubgroup W hhalf)
+  simpa using! Fintype.card_le_of_surjective (superSignParamToSubgroup W hhalf)
     (superSignParamToSubgroup_surjective W hhalf)
 
 /-! ## Enumeration of commuting outer boundary pairs -/
@@ -280,7 +280,7 @@ theorem signBoundaryPair_card_le_sixteen
     (W : SuperVertexOperatorAlgebra VType) (hhalf : IsHalfIntegerGraded W) :
     Fintype.card (SignBoundaryPair W hhalf) ≤ 16 := by
   classical
-  simpa using Fintype.card_le_of_surjective (superSignBoundaryPairParam W hhalf)
+  simpa using! Fintype.card_le_of_surjective (superSignBoundaryPairParam W hhalf)
     (superSignBoundaryPairParam_surjective W hhalf)
 
 /-- The image finset of all sixteen Boolean labels.  Duplicate values are collapsed rather than

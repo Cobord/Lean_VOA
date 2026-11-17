@@ -110,7 +110,7 @@ theorem fFour_xzero_higher
         higherOrbit ρ w m k := by
   have hd := fFour_derivative_higher ρ w m h k r ((1, 0) :: l) hl
   simpa only [fFourDerivative, fFourLetter, radicalWord,
-    List.map_cons, wordOp, zero_add, if_true] using hd
+    List.map_cons, wordOp, zero_add, if_true] using! hd
 
 end VOA.DeligneAudit.D4Levi
 

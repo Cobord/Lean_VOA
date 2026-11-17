@@ -33,7 +33,7 @@ theorem fo_eMinus : fo (latChargeGen (latP 1) (-1 : ℤ)) = 0 := by
   rw [fo_eq]
   change V2v.smul (latChargeGen (latP 1) (-1 : ℤ)) 0
     (latStateGen (latP 1) (vacuumN _) (-1 : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_neg (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) (-1 : ℤ), latP_form, if_neg (by norm_num)]
   simp [latStateGen]
 
 theorem fo_h : fo (hSt (latP 1) (a1 1)) = (2 : ℂ) • latChargeGen (latP 1) (-1 : ℤ) := by
@@ -43,7 +43,7 @@ theorem fo_h : fo (hSt (latP 1) (a1 1)) = (2 : ℂ) • latChargeGen (latP 1) (-
   have hh : ho (latChargeGen (latP 1) (-1 : ℤ)) = (-2 : ℂ) • latChargeGen (latP 1) (-1 : ℤ) := by
     rw [VertexOperatorAlgebra.zeroMode_apply, show (1 : ℤ) - 1 = 0 by norm_num]
     have := smul_h_charge (-1)
-    simpa using this
+    simpa using! this
   rw [fo_eMinus, map_zero, zero_sub, he, map_smul, hh, smul_smul] at h
   apply smul_right_injective _ eps1_ne_zero
   change eps1 • fo (hSt (latP 1) (a1 1)) = eps1 • ((2 : ℂ) • latChargeGen (latP 1) (-1 : ℤ))
@@ -52,7 +52,7 @@ theorem fo_h : fo (hSt (latP 1) (a1 1)) = (2 : ℂ) • latChargeGen (latP 1) (-
 
 theorem cocycle_neg_one_one : latticeCocycle (latP 1) (-a1 1) (a1 1) = eps1 := by
   have hc := latticeCocycle_comm (latP 1) (latP_even 1) (a1 1) (-a1 1)
-  have hp : (latP 1).form (a1 1) (-a1 1) = -2 := by rw [latP_form]; rfl
+  have hp : (latP 1).form (a1 1) (-a1 1) = -2 := (latP_form 1 _ _).trans rfl
   rw [hp] at hc
   norm_num at hc
   have hs := latticeCocycle_sq (latP 1) (a1 1) (-a1 1)
@@ -162,7 +162,7 @@ theorem substL_id : substL LinearMap.id = AlgHom.id ℂ P3 :=
 theorem lin_hom (v : Fin 3 → ℂ) : (lin v).IsHomogeneous 1 := by
   simp only [lin, LinearMap.coe_mk, AddHom.coe_mk]
   exact IsHomogeneous.sum _ _ _ fun k _ => by
-    rw [smul_eq_C_mul]; simpa using (isHomogeneous_X ℂ k).C_mul (v k)
+    rw [smul_eq_C_mul]; simpa using! (isHomogeneous_X ℂ k).C_mul (v k)
 
 theorem substL_hom (A : (Fin 3 → ℂ) →ₗ[ℂ] (Fin 3 → ℂ)) {F : P3} {n : ℕ}
     (hF : F.IsHomogeneous n) : (substL A F).IsHomogeneous n := by
@@ -365,7 +365,7 @@ theorem phiE_vdm {σ : Perm (Fin 4)} (hσ : σ ∈ alternatingGroup (Fin 4)) :
     simp [Matrix.vandermonde_apply, phiE_ell hσ]
   have h2 := AlgHom.map_det (phiE (octHom σ) : P3 →ₐ[ℂ] P3) (Matrix.vandermonde ell)
   rw [h1, Matrix.det_permute, Equiv.Perm.mem_alternatingGroup.mp hσ] at h2
-  simpa [vdm] using h2
+  simpa [vdm] using! h2
 
 theorem vdm_eq : vdm = (64 : ℂ) • I6 := by
   obtain ⟨h0, h1, h2, h3⟩ := ell_explicit
@@ -513,7 +513,9 @@ theorem t2Residual : T2Residual phi := by
       fun F => phiE_halfY F⟩
   · exact ⟨⟨octHom OrbC2b.cycleThree⁻¹, (mem_tetra_iff _).mpr ⟨_, cycInv_even, rfl⟩⟩,
       fun F => phiE_cycInv F⟩
-  · rw [phi_apply, phiE_apply]; exact substL_hom _ hF
+  · rw [phi_apply]
+    show MvPolynomial.IsHomogeneous (substL (autL g.1) F) n
+    exact substL_hom _ hF
 
 /-- **B2: `TetraPrimaryReduction` holds** (Dong--Jiang Lemma 4.2 for `V₂^{A₄}`, primary part). -/
 theorem tetraPrimaryReduction_holds : TetraPrimaryReduction :=

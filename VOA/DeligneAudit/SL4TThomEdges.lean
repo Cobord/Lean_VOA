@@ -9,7 +9,7 @@ noncomputable section
 theorem hClass_height_zero (T j : ℕ) (hj : 0 < j) : hClass 0 T j = 0 := by
   have h := grass_convolution 0 T j hj
   rw [Finset.sum_eq_single 0] at h
-  · simpa only [pow_zero, eClass, elementary_zero, map_one, one_mul, Nat.sub_zero] using h
+  · simpa only [pow_zero, eClass, elementary_zero, map_one, one_mul, Nat.sub_zero] using! h
   · intro i _ hi
     rw [eClass_eq_zero 0 T i (by omega), mul_zero, zero_mul]
   · intro hn

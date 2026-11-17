@@ -46,7 +46,7 @@ theorem a2_J_component_explicit (m : ℕ) (n : ℕ × ℕ)
     intro i
     exact xx_hom i.1.1 i.1.2
   have hspan : P ∈ Ideal.span (Set.range (a2JGenerator (m := m))) := by
-    simpa [J, a2J_range] using hP
+    simpa [J, a2J_range] using! hP
   have h := ideal_component_mem_matching_span om
     (a2JGenerator (m := m)) (a2JWeight (m := m)) hgen hspan n
   apply (Submodule.span_mono ?_) h

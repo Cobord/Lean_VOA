@@ -30,7 +30,7 @@ theorem single_mem_lowerForms (t : Label) (z : ℂ)
     (ht : ∀ an∈t.2.2,IsLower an.1 an.2) : Finsupp.single t z∈lowerForms := by
   have h : Finsupp.single t (1 : ℂ)∈lowerForms :=
     Submodule.subset_span ⟨t,ht,rfl⟩
-  simpa using lowerForms.smul_mem z h
+  simpa using! lowerForms.smul_mem z h
 
 /-- Prefixing a creation letter preserves the genuine-creation span. -/
 theorem prepend_mem_lowerForms (i : Fin 3×ℤ) (hi : IsLower i.1 i.2)
@@ -65,7 +65,7 @@ theorem modeNormal_mem_lowerForms (a : Fin 3) (m : ℤ) (w : List (Fin 3×ℤ))
   | nil =>
       rw [modeNormal]
       split_ifs with hm hh
-      · exact single_mem_lowerForms _ _ (by simpa using hm)
+      · exact single_mem_lowerForms _ _ (by simpa using! hm)
       · exact single_mem_lowerForms _ _ (by simp)
       · exact lowerForms.zero_mem
   | cons i w ih =>
@@ -73,7 +73,7 @@ theorem modeNormal_mem_lowerForms (a : Fin 3) (m : ℤ) (w : List (Fin 3×ℤ))
       have ht : ∀ an∈w,IsLower an.1 an.2 := fun an han => hw an (by simp [han])
       rw [modeNormal]
       split_ifs with hm hz
-      · exact single_mem_lowerForms _ _ (by simpa using And.intro hm (by simpa using hw))
+      · exact single_mem_lowerForms _ _ (by simpa using! And.intro hm (by simpa using! hw))
       · apply lowerForms.add_mem
         · apply lowerForms.add_mem
           · exact prepend_mem_lowerForms i hi _ (ih _ _ ht)

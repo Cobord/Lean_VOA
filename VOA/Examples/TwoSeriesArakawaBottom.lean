@@ -182,7 +182,7 @@ theorem Wslice_sum (y : WakModule k) :
     rw [LinearMap.comp_apply, Wslice, chargeLift_rword]
     simp
   have := LinearMap.congr_fun h y
-  simpa using this
+  simpa using! this
 
 /-- A charge eigenvector has a single graded slice component. -/
 theorem Wslice_eq_single_of_h0 (y : WakModule k) (q : ℤ)

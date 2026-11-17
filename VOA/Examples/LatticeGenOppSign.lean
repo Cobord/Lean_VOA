@@ -75,7 +75,7 @@ theorem aExpVecZ_comp_EminusVec_gen (hPos : L.PosDef) (α β : L.carrier) (N : �
       set op : ℤ → End ℂ (FockN (rank L)) :=
         fun j => (EminusVecField L α (b - j)).comp (aExpVecZ L β (N - j)) with hop
       have hopvanish : ∀ j : ℤ, N.toNat < j → op j = 0 := fun j hj => by
-        rw [hop]; dsimp only
+        rw [hop]; try dsimp only
         rw [aExpVecZ_neg L β (show N - j < 0 by omega), LinearMap.comp_zero]
       have hLHS : (aExpVecZ L β N).comp (EminusVecField L α b)
           = (N : ℂ)⁻¹ • ∑ r ∈ Finset.range N.toNat,
@@ -136,7 +136,7 @@ theorem aExpVecZ_comp_EminusVec_gen (hPos : L.PosDef) (α β : L.carrier) (N : �
           rw [← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun r _ => ?_
           rw [smul_sub, smul_comm (kappa PC i) PC]
-          rw [hop]; dsimp only
+          rw [hop]; try dsimp only
           rw [show b - (i : ℤ) - ((r : ℤ) + 1) = b - ((i : ℤ) + r + 1) from by ring,
             show N - 1 - (r : ℤ) - (i : ℤ) = N - ((i : ℤ) + r + 1) from by ring]]
         rw [← Finset.smul_sum, ← comp_sum', hMain i hi, ← Finset.smul_sum, ← Finset.smul_sum]

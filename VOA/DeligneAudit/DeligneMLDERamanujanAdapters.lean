@@ -54,11 +54,11 @@ theorem eightSqP : PowerSeries.C 120 * (P3 * P3) = P7 - P3 := by
   have h : PowerSeries.mk EightSq.e4 * PowerSeries.mk EightSq.e4 = PowerSeries.mk EightSq.e8 := by
     refine PowerSeries.ext fun n => ?_
     rw [coeff_mul, coeff_mk]
-    simpa only [coeff_mk] using EightSq.eight_sq n
+    simpa only [coeff_mk] using! EightSq.eight_sq n
   rw [hE4, hE8] at h
   have h480 : (480 : PowerSeries ℚ) ≠ 0 := by
     rw [show (480 : PowerSeries ℚ) = PowerSeries.C 480 from (map_ofNat _ 480).symm]
-    exact fun h0 => by simpa using congrArg (coeff 0) h0
+    exact fun h0 => by simpa using! congrArg (coeff 0) h0
   rw [show (PowerSeries.C (120 : ℚ) : PowerSeries ℚ) = 120 from map_ofNat _ 120]
   apply mul_left_cancel₀ h480
   linear_combination h

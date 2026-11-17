@@ -71,7 +71,7 @@ theorem mem_sN {N : ℕ} {q : LexLetter} : q ∈ sN N ↔ (ofLex q).2 < N := by
   simp only [sN, Finset.mem_map, Finset.mem_product, Finset.mem_univ, true_and,
     Finset.mem_range, Equiv.toEmbedding_apply]
   constructor
-  · rintro ⟨x, hx, rfl⟩; simpa using hx
+  · rintro ⟨x, hx, rfl⟩; simpa using! hx
   · intro h; exact ⟨ofLex q, h, rfl⟩
 
 theorem toLex_mem_sN {N : ℕ} (a : Fin 3) (j : ℕ) : toLex (a, j) ∈ sN N ↔ j < N := by
@@ -135,7 +135,7 @@ theorem bcount_cons (N : ℕ) (p : ℕ × Fin 2) (l : SFWord) :
   · simp [bcount, h]
   · rw [if_neg h]
     simp only [bcount, List.filter_cons]
-    rw [if_neg (by simpa using h)]
+    rw [if_neg (by simpa using! h)]
     simp
 
 theorem Nb_Cr_eigen (N : ℕ) (a : Fin 3) (p : ℕ × Fin 2) {y : Sl2GhostSpace} {c : ℕ}
@@ -193,7 +193,7 @@ theorem nb_cons (p : ℕ × Fin 2) (l : SFWord) : nb (p :: l) = nb l + if p.2 = 
   · simp [nb, h]
   · rw [if_neg h]
     simp only [nb, List.filter_cons]
-    rw [if_neg (by simpa using h)]
+    rw [if_neg (by simpa using! h)]
     simp
 
 theorem b2_modeIdxF (p : ℕ × Fin 2) : b2 (modeIdxF p) = if p.2 = 0 then 2 else 0 := by

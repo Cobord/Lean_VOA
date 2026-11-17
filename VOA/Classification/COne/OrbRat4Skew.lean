@@ -225,7 +225,7 @@ theorem assemble (N : ℤ) (B : ℕ) (Z : St) {r : ℤ}
     (V2m 4 four_ge_one).smul Uc N (evalSt Z) = ((outerQ N B a t : ℚ) : ℂ) • hV := by
   rw [ell_expand]
   have h0 := iter_value (-2) N B Z hZ hB₁ (by omega) (a 0) t
-    (fun i hi => by simpa using hA 0 (by norm_num) i hi)
+    (fun i hi => by simpa using! hA 0 (by norm_num) i hi)
     (fun i hi => by rw [show (-2 : ℤ) + N - i = N - 2 - i by ring]; exact hT i hi)
   rw [h0]
   have hj : ∀ j : ℕ, j ∈ Finset.range 6 → ((kQ N j : ℚ) : ℂ) •

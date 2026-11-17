@@ -119,7 +119,7 @@ theorem up_zeroXs_inert_perm_higher (m : ℕ)
     · exact Or.inr (Or.inr hz)
   have hm := up_zeroXs_inert_higher ρ w m h n r t ht'
   rw [← wordKey_perm hp] at hm
-  simpa only [radicalWord_perm ρ w hp] using hm
+  simpa only [radicalWord_perm ρ w hp] using! hm
 
 /-- The f₄ companion absorbs U in any ordering with zero-mode X spectators. -/
 theorem u_zeroXs_inert_perm_higher (m : ℕ)
@@ -141,7 +141,7 @@ theorem u_zeroXs_inert_perm_higher (m : ℕ)
     · exact Or.inr (Or.inr hz)
   have hm := u_zeroXs_inert_higher ρ w m h n r t ht'
   rw [← wordKey_perm hp] at hm
-  simpa only [radicalWord_perm ρ w hp] using hm
+  simpa only [radicalWord_perm ρ w hp] using! hm
 
 private theorem all_modes_zero_of_sum_zero (l : List (Fin 6 × ℕ))
     (hsum : (l.map Prod.snd).sum = 0) :
@@ -163,14 +163,14 @@ theorem keyLayer_le_higher_one_sided_up (m : ℕ)
     (k : RadicalKey) (he : k.e = 0) (hu : k.u = 0)
     (hup : 0 < k.up) (hmode : k.x = 0 ∨ k.degree = 0) :
     keyLayer ρ w k ≤ higherOrbit ρ w m k := by
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hk, rfl⟩
   have hcountE : l.countP (fun p => p.1 = 0) = 0 := by
-    simpa [← hk, wordKey] using he
+    simpa [← hk, wordKey] using! he
   have hcountU : l.countP (fun p => p.1 = 2) = 0 := by
-    simpa [← hk, wordKey] using hu
+    simpa [← hk, wordKey] using! hu
   have hcountUp : 0 < l.countP (fun p => p.1 = 3) := by
-    simpa [← hk, wordKey] using hup
+    simpa [← hk, wordKey] using! hup
   obtain ⟨⟨j, r⟩, hmem, hj⟩ := List.countP_pos_iff.mp hcountUp
   dsimp at hj
   have hj' : j = 3 := of_decide_eq_true hj
@@ -178,11 +178,11 @@ theorem keyLayer_le_higher_one_sided_up (m : ℕ)
   have hzero : ∀ p ∈ l, p.1 = 1 → p.2 = 0 := by
     rcases hmode with hx | hd
     · have hcountX : l.countP (fun p => p.1 = 1) = 0 := by
-        simpa [← hk, wordKey] using hx
+        simpa [← hk, wordKey] using! hx
       intro p hp hpx
-      exact False.elim ((List.countP_eq_zero.mp hcountX p hp) (by simpa using hpx))
+      exact False.elim ((List.countP_eq_zero.mp hcountX p hp) (by simpa using! hpx))
     · have hsum : (l.map Prod.snd).sum = 0 := by
-        simpa [← hk, wordKey] using hd
+        simpa [← hk, wordKey] using! hd
       have hz := all_modes_zero_of_sum_zero l hsum
       exact fun p hp _ => hz p hp
   have hall : ∀ p ∈ l, p.1 = 1 ∨ p.1 = 3 ∨ p.1 = 4 ∨ p.1 = 5 := by
@@ -200,14 +200,14 @@ theorem keyLayer_le_higher_one_sided_u (m : ℕ)
     (k : RadicalKey) (he : k.e = 0) (hup : k.up = 0)
     (hu : 0 < k.u) (hmode : k.x = 0 ∨ k.degree = 0) :
     keyLayer ρ w k ≤ higherOrbit ρ w m k := by
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hk, rfl⟩
   have hcountE : l.countP (fun p => p.1 = 0) = 0 := by
-    simpa [← hk, wordKey] using he
+    simpa [← hk, wordKey] using! he
   have hcountUp : l.countP (fun p => p.1 = 3) = 0 := by
-    simpa [← hk, wordKey] using hup
+    simpa [← hk, wordKey] using! hup
   have hcountU : 0 < l.countP (fun p => p.1 = 2) := by
-    simpa [← hk, wordKey] using hu
+    simpa [← hk, wordKey] using! hu
   obtain ⟨⟨j, r⟩, hmem, hj⟩ := List.countP_pos_iff.mp hcountU
   dsimp at hj
   have hj' : j = 2 := of_decide_eq_true hj
@@ -215,11 +215,11 @@ theorem keyLayer_le_higher_one_sided_u (m : ℕ)
   have hzero : ∀ p ∈ l, p.1 = 1 → p.2 = 0 := by
     rcases hmode with hx | hd
     · have hcountX : l.countP (fun p => p.1 = 1) = 0 := by
-        simpa [← hk, wordKey] using hx
+        simpa [← hk, wordKey] using! hx
       intro p hp hpx
-      exact False.elim ((List.countP_eq_zero.mp hcountX p hp) (by simpa using hpx))
+      exact False.elim ((List.countP_eq_zero.mp hcountX p hp) (by simpa using! hpx))
     · have hsum : (l.map Prod.snd).sum = 0 := by
-        simpa [← hk, wordKey] using hd
+        simpa [← hk, wordKey] using! hd
       have hz := all_modes_zero_of_sum_zero l hsum
       exact fun p hp _ => hz p hp
   have hall : ∀ p ∈ l, p.1 = 1 ∨ p.1 = 2 ∨ p.1 = 4 ∨ p.1 = 5 := by

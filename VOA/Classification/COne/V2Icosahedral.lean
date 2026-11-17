@@ -229,8 +229,8 @@ theorem alternatingGroup_le_icoSub : alternatingGroup (Fin 5) ≤ icoSub := by
         have := K.index_mul_card
         rw [h, nat_card_A5] at this
         omega
-      rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal K (Subgroup.normal_of_index_eq_two hi)
-        with hb | ht
+      haveI := Subgroup.normal_of_index_eq_two hi
+      rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal K with hb | ht
       · rw [hb, Subgroup.card_bot] at h
         omega
       · exact ht
@@ -266,7 +266,7 @@ theorem s5_ne_neg_three : s5 ≠ -3 := by
 nontrivially (it moves `v_{01} = (−1,−1,1)` to `v_{31} = (−φ⁻¹, 0, −φ)`). -/
 theorem icoHom_injective : Function.Injective icoHom := by
   rw [← MonoidHom.ker_eq_bot_iff]
-  rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal _ icoHom.normal_ker with h | h
+  rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal icoHom.ker with h | h
   · exact h
   · exfalso
     have hm : (⟨sigR, sigR_alt⟩ : alternatingGroup (Fin 5)) ∈ icoHom.ker := h ▸ Subgroup.mem_top _

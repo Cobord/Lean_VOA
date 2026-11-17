@@ -50,7 +50,7 @@ theorem gtMixed_two_head (q : R) (h : PochhammerUnits q)
       gtQ_two_state_total q h a b c
     rw [ht]
     split_ifs <;> simp
-  · simpa only [gtCauchyHeadStates, mul_comm] using
+  · simpa only [gtCauchyHeadStates, mul_comm] using!
       gtQ_two_state_boundary q h a b c
 
 /-- Rank-one X and B at the same separator, needed for the first mixed-Cauchy step. -/
@@ -68,7 +68,7 @@ theorem gtMixed_one_head (q : R) (h : PochhammerUnits q)
     ring
   have hs := gtMixed_separator q a z (gtInvPoch q h a) (-gtInvPoch q h (a - 1)) f hb
   rw [ht] at hs
-  simpa only [neg_mul, ← sub_eq_add_neg, mul_ite, mul_zero] using hs
+  simpa only [neg_mul, ← sub_eq_add_neg, mul_ite, mul_zero] using! hs
 
 /-- The three positive-side bits, in the exact signed edge convention of e-Pieri. -/
 theorem gtMixed_two_bits (q : R) (h : PochhammerUnits q)

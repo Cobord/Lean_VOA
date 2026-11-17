@@ -67,13 +67,14 @@ theorem hypMonomialNorm_add_single (d : (ℕ × Fin 2) →₀ ℕ) (v : ℕ × F
 
 /-- The explicit isotropic monomial pairing. -/
 def hypForm : LinearMap.BilinForm ℂ hypFock :=
-  Finsupp.lsum ℂ fun d =>
-    LinearMap.smulRight LinearMap.id (hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d))
+  (basisMonomials (ℕ × Fin 2) ℂ).constr ℂ fun d =>
+    hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d)
 
 theorem hypForm_monomial (d : (ℕ × Fin 2) →₀ ℕ) (a : ℂ) (q : hypFock) :
-    hypForm (monomial d a) q = a * (hypMonomialNorm d * coeff (hypSwapExponent d) q) := by
-  rw [hypForm]
-  erw [Finsupp.lsum_single]
+    hypForm (monomial d a) q = a * (hypMonomialNorm d * q.coeff (hypSwapExponent d)) := by
+  have hm : monomial d a = a • (basisMonomials (ℕ × Fin 2) ℂ) d := by
+    rw [coe_basisMonomials, smul_monomial, smul_eq_mul, mul_one]
+  rw [hypForm, hm, map_smul, Module.Basis.constr_basis]
   simp
 
 theorem hypForm_monomial_monomial (d e : (ℕ × Fin 2) →₀ ℕ) (a b : ℂ) :
@@ -101,13 +102,13 @@ theorem hypForm_symm (p q : hypFock) : hypForm p q = hypForm q p := by
     | add p q hp hq => rw [map_add, map_add, LinearMap.add_apply, hp, hq]
   | add p q hp hq => rw [map_add, LinearMap.add_apply, map_add, hp, hq]
 
-theorem hypForm_one (q : hypFock) : hypForm 1 q = coeff 0 q := by
+theorem hypForm_one (q : hypFock) : hypForm 1 q = q.coeff 0 := by
   rw [show (1 : hypFock) = monomial 0 1 from rfl, hypForm_monomial]
   simp
 
 theorem hypForm_nondegenerate (p : hypFock) (hp : p ≠ 0) : ∃ q, hypForm p q ≠ 0 := by
   classical
-  obtain ⟨d, hd⟩ : ∃ d, coeff d p ≠ 0 := by
+  obtain ⟨d, hd⟩ : ∃ d, p.coeff d ≠ 0 := by
     by_contra h
     push Not at h
     apply hp
@@ -138,7 +139,7 @@ theorem hypForm_orthogonal (N Q : ℤ) (hNQ : N ≠ Q) (p q : hypFock)
       apply Finset.sum_eq_zero
       intro d hd
       have hdN := hp (mem_support_iff.mp hd)
-      have hq0 : coeff (hypSwapExponent d) q = 0 := by
+      have hq0 : q.coeff (hypSwapExponent d) = 0 := by
         by_contra hc
         have hdQ := hq hc
         rw [hypSwapExponent_weight, hdN] at hdQ
@@ -159,7 +160,7 @@ theorem hypForm_weight_nondegenerate (N : ℤ) (p : hypFock) (hp : p ∈ hypLeve
     rw [gradingZN_of_nonneg hN] at hp
     apply MvPolynomial.ext
     intro d
-    by_cases hd : coeff d p = 0
+    by_cases hd : p.coeff d = 0
     · simpa using hd
     · have hw := hp hd
       have hq : monomial (hypSwapExponent d) (1 : ℂ) ∈ hypLevel N := by
@@ -181,7 +182,7 @@ theorem hypForm_creation_adjoint (v : ℕ × Fin 2) (p q : hypFock) :
   | monomial d a =>
     rw [X, monomial_mul, one_mul, add_comm (Finsupp.single v 1) d,
       hypForm_monomial, hypForm_monomial, hypMonomialNorm_add_single,
-      hypSwapExponent_add, hypSwapExponent_single, coeff_pderiv]
+      hypSwapExponent_add, hypSwapExponent_single, HeisenbergN.coeff_pderiv]
     simp only [hypSwapExponent_apply, Fin.rev_rev, Prod.eta]
     ring
   | add p r hp hr =>

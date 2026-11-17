@@ -33,6 +33,10 @@ theorem vSqZ_eq_sum_Ico (A : OrdVModule W M) {k : ℕ} {j : ℤ} (hM : -2 ≤ j)
     exact hi (by rw [show mode (A.YM a) i v = A.toWeakModule.act a i v from rfl,
       hP i hc, smul_zero])
 
+private lemma natSubTwo_injective : Function.Injective (fun j : ℕ => (j : ℤ) - 2) := by
+  intro x y h
+  simpa using h
+
 /-- Zhu's `a ∘ v = fzRes A.toWeakModule k 0 a v` on the same window. -/
 theorem pres_zero_eq_sum_Ico (A : OrdVModule W M) {k : ℕ} (a : V) (v : M) {P : ℕ}
     (hkP : k ≤ P) :
@@ -40,7 +44,7 @@ theorem pres_zero_eq_sum_Ico (A : OrdVModule W M) {k : ℕ} (a : V) (v : M) {P :
       = ∑ i ∈ Finset.Ico (-2 : ℤ) (P : ℤ), cbz (k : ℤ) (i + 2) • A.toWeakModule.act a i v := by
   classical
   have hmapset : Finset.Ico (-2 : ℤ) (P : ℤ)
-      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, fun x y h => by simpa using h⟩ := by
+      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, natSubTwo_injective⟩ := by
     ext i
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
     constructor

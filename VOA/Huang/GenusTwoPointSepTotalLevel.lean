@@ -25,16 +25,16 @@ support into joint finite support. No uniform cutoff over all levels is used. -/
 theorem totalLevelFinite_of_rows (f : ℕ → ℕ → ℤ → ℂ)
     (hf : ∀ n k, (Function.support (f n k)).Finite) : TotalLevelFinite f := by
   intro d
-  refine ((Finset.antidiagonal d).finite_toSet.biUnion fun p _ =>
+  refine ((Finset.HasAntidiagonal.antidiagonal d).finite_toSet.biUnion fun p _ =>
     (hf p.1 p.2).image (fun j => (p, j))).subset ?_
   intro p hp
   have hd : p.1.1 + p.1.2 = d := by
     by_contra hd
     exact hp (if_neg hd)
   have hj : p.2 ∈ Function.support (f p.1.1 p.1.2) := by
-    simpa only [Function.mem_support, if_pos hd] using hp
+    simpa only [Function.mem_support, if_pos hd] using! hp
   exact Set.mem_iUnion.mpr ⟨p.1, Set.mem_iUnion.mpr
-    ⟨Finset.mem_antidiagonal.mpr hd, ⟨p.2, hj, rfl⟩⟩⟩
+    ⟨Finset.HasAntidiagonal.mem_antidiagonal.mpr hd, ⟨p.2, hj, rfl⟩⟩⟩
 
 theorem TotalLevelFinite.row {f : ℕ → ℕ → ℤ → ℂ} (hf : TotalLevelFinite f)
     (n k : ℕ) : (Function.support (f n k)).Finite := by
@@ -42,7 +42,7 @@ theorem TotalLevelFinite.row {f : ℕ → ℕ → ℤ → ℂ} (hf : TotalLevelF
     fun _ _ h => (Prod.mk.inj h).2
   refine ((hf (n + k)).preimage hi.injOn).subset ?_
   intro j hj
-  simpa only [Set.mem_preimage, Function.mem_support, if_pos rfl] using hj
+  simpa only [Set.mem_preimage, Function.mem_support, if_pos rfl] using! hj
 
 /-- Formal collection retaining both independent levels. The total-level
 filtration justifies collection; it does not identify the two formal variables. -/
@@ -81,11 +81,11 @@ theorem modeBiseries_spatial_law (b : ℕ → ℕ → ℂ) (c : ℂ)
 /-- The formal sum after giving both sewing levels positive degree. The mode
 sum is certified finite whenever `TotalLevelFinite` is supplied. -/
 def totalLevelSeries (f : ℕ → ℕ → ℤ → ℂ) : PowerSeries ℂ :=
-  PowerSeries.mk fun d => ∑ p ∈ Finset.antidiagonal d, ∑' j, f p.1 p.2 j
+  PowerSeries.mk fun d => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal d, ∑' j, f p.1 p.2 j
 
 @[simp] theorem coeff_totalLevelSeries (f : ℕ → ℕ → ℤ → ℂ) (d : ℕ) :
     PowerSeries.coeff d (totalLevelSeries f) =
-      ∑ p ∈ Finset.antidiagonal d, ∑' j, f p.1 p.2 j := by
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal d, ∑' j, f p.1 p.2 j := by
   simp [totalLevelSeries]
 
 /-- The shifted-mode boundary cancels in every formal coefficient. -/
@@ -178,7 +178,7 @@ theorem huangModifiedTrace_biseries_Lm1_left
   · intro n k j
     have h := huangModifiedModeTrace_Lm1_left Y₁ Y₂ w₁ w₂
       (b n k + j) (m n k) t₁ t₂ (e n k)
-    simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using h
+    simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using! h
 
 theorem huangModifiedTrace_biseries_Lm1_right
     (Y₁ : IntertwiningOperator P₁.isMod Q.isMod N.isMod)
@@ -204,7 +204,7 @@ theorem huangModifiedTrace_biseries_Lm1_right
   · intro n k j
     have h := huangModifiedModeTrace_Lm1_right Y₁ Y₂ w₁ w₂
       (m n k) (b n k + j) t₁ t₂ (e n k)
-    simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using h
+    simpa only [Int.cast_sub, Int.cast_one, add_sub_assoc] using! h
 
 /-- Differentiation of each total-level coefficient of the actual trace.
 Every sum being differentiated is finite, including the level pair. -/

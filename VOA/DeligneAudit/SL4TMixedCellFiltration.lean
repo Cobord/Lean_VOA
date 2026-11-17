@@ -26,7 +26,7 @@ theorem mixedRing_zero_algebraMap_surjective (q : MixedParams) (hq : MixedValid 
     have hl : mixedLengths q i = 0 := by
       fin_cases i <;> simp [mixedLengths, hd1, hd2, hd3, he1, he2]
     have ht := mixedElementary_tail q hq i (j + 1) (by omega)
-    simpa only [mixedE, mixedAlphabet, elementary_succ, MvPolynomial.rename_X] using ht
+    simpa only [mixedE, mixedAlphabet, elementary_succ, MvPolynomial.rename_X] using! ht
   induction p using MvPolynomial.induction_on with
   | C c => exact ⟨c, rfl⟩
   | add p q hp hq =>
@@ -48,7 +48,7 @@ theorem mixedCellFlag_zero (q : MixedParams) (hq : MixedValid q)
   · simp only [Submodule.restrictScalars_top, Submodule.restrictScalars_bot,
       bot_sup_eq, hspan]
   · simp only [map_one, pow_zero, mul_one, Ideal.map_bot, bot_sup_eq]
-    simpa only [hA, hB, add_zero, Int.toNat_zero, pow_zero] using
+    simpa only [hA, hB, add_zero, Int.toNat_zero, pow_zero] using!
       mixedTruncationIdeal_power q
 
 /-- The recursively ordered cells give an ideal spanning flag with their prescribed levels. -/
@@ -59,7 +59,7 @@ theorem mixedCellFlag_recursive (n : ℕ) (q : MixedParams) (hq : MixedValid q)
   | zero =>
       have hA : q.A = 0 := by have := hq.1; have := hq.2.1; omega
       have hB : q.B = 0 := by have := hq.1; have := hq.2.1; omega
-      simpa [mixedCellLevels, mixedCellData, hq, mixedCellLevel] using
+      simpa [mixedCellLevels, mixedCellData, hq, mixedCellLevel] using!
         mixedCellFlag_zero q hq hA hB
   | succ n ih =>
       by_cases hB : 1 ≤ q.B

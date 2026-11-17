@@ -95,7 +95,7 @@ theorem lat_weight_next_mem_span (r : Fin (m - 1)) (hs : r.val + 3 ≤ m) {v : L
     · have : m * n ^ 2 + n * s ≥ 3 := by nlinarith
       omega
   subst hn
-  have hw1 : w = 1 := by simpa using hkey
+  have hw1 : w = 1 := by simpa using! hkey
   subst hw1
   intro y hy
   obtain ⟨q, hq, rfl⟩ := Submodule.mem_map.mp hy
@@ -121,7 +121,7 @@ theorem L1_omega_zero_gen (hm2 : 2 ≤ m) : (V2mPlus m hm).L 1 (V2mPlus m hm).co
     have := (V2mPlus m hm).toPreVertexAlgebra.smul_mem_grading (V2mPlus m hm).conformal_mem
       (V2mPlus m hm).conformal_mem 2
     rw [VertexOperatorAlgebra.L_def]
-    simpa using this
+    simpa using! this
   rw [grading_one_eq_bot m hm hm2, Submodule.mem_bot] at hg
   exact hg
 
@@ -149,7 +149,7 @@ theorem lat_weight_next_eq (hm2 : 2 ≤ m) (r : Fin (m - 1)) (hs : r.val + 3 ≤
     have he0 : e ≠ 0 := latVacuumGen_ne_zero' m hm
     have : ((((2 * 2 - 0 - 2 : ℤ) : ℂ)) * hC m r) • e = 0 := hc.symm
     rcases smul_eq_zero.mp this with h | h
-    · exact hC_ne_zero m hm2 r (by simpa using h)
+    · exact hC_ne_zero m hm2 r (by simpa using! h)
     · exact he0 h
   obtain ⟨cv, hcv⟩ := Submodule.mem_span_singleton.mp (lat_weight_next_mem_span m hm r hs hv)
   obtain ⟨cT, hcT⟩ := Submodule.mem_span_singleton.mp (lat_weight_next_mem_span m hm r hs hT)

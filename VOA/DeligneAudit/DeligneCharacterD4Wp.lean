@@ -62,21 +62,21 @@ theorem lat_mul_fiber {ι κ : Type*} [DecidableEq ι] [DecidableEq κ]
   rw [coeff_mul, coeff_lat]
   simp only [coeff_lat, Finset.sum_mul_sum]
   simp_rw [← Finset.sum_product' (f := fun i j => w i * w' j)]
-  rw [← Finset.sum_sigma (Finset.antidiagonal n) (fun p => fib box E p.1 ×ˢ fib box' E' p.2)
+  rw [← Finset.sum_sigma (Finset.HasAntidiagonal.antidiagonal n) (fun p => fib box E p.1 ×ˢ fib box' E' p.2)
     (fun x => w x.2.1 * w' x.2.2)]
   refine Finset.sum_nbij' (fun x => x.2) (fun p => ⟨(E p.1, E' p.2), p⟩) ?_ ?_ ?_ ?_ ?_
   · intro x hx
-    simp only [Finset.mem_sigma, Finset.mem_antidiagonal, Finset.mem_product] at hx
+    simp only [Finset.mem_sigma, Finset.HasAntidiagonal.mem_antidiagonal, Finset.mem_product] at hx
     rw [mem_fib hb2]
     rw [mem_fib hbox] at hx; rw [mem_fib hbox'] at hx
-    dsimp only
+    try dsimp only
     omega
   · intro p hp
     rw [mem_fib hb2] at hp
-    simp only [Finset.mem_sigma, Finset.mem_antidiagonal, Finset.mem_product]
+    simp only [Finset.mem_sigma, Finset.HasAntidiagonal.mem_antidiagonal, Finset.mem_product]
     exact ⟨hp, (mem_fib hbox).mpr rfl, (mem_fib hbox').mpr rfl⟩
   · intro x hx
-    simp only [Finset.mem_sigma, Finset.mem_antidiagonal, Finset.mem_product] at hx
+    simp only [Finset.mem_sigma, Finset.HasAntidiagonal.mem_antidiagonal, Finset.mem_product] at hx
     rw [mem_fib hbox] at hx; rw [mem_fib hbox'] at hx
     obtain ⟨⟨a, b⟩, ⟨i, k⟩⟩ := x
     simp only at hx ⊢
@@ -297,7 +297,7 @@ variable {G : Type*} [AddCommGroup G]
 
 /-- The grading derivation `z^g ↦ w(g) z^g`. -/
 def wd (w : G →+ ℤ) (f : AddMonoidAlgebra ℚ G) : AddMonoidAlgebra ℚ G :=
-  f.sum fun g c => AddMonoidAlgebra.single g ((w g : ℚ) * c)
+  f.coeff.sum fun g c => AddMonoidAlgebra.single g ((w g : ℚ) * c)
 
 theorem wd_single (w : G →+ ℤ) (g : G) (c : ℚ) :
     wd w (AddMonoidAlgebra.single g c) = AddMonoidAlgebra.single g ((w g : ℚ) * c) :=

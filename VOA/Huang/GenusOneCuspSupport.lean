@@ -19,18 +19,18 @@ theorem support_shift {S : FormalQSeries} {b : ℂ} (hS : S ∈ QSeriesAt b)
     by_cases hkn : k < n
     · exact hz k hkn
     · exact False.elim (he (k - n) (by rw [Nat.cast_sub (by omega)]; ring))
-  · exact hS e (by simpa only [not_exists] using hb)
+  · exact hS e (by simpa only [not_exists] using! hb)
 
 /-- Matching the leading term and the support gives a genuine one-step
 increase of support for the difference. -/
 theorem support_sub_succ {S T : FormalQSeries} {b : ℂ}
     (hS : S ∈ QSeriesAt b) (hT : T ∈ QSeriesAt b) (he : S b = T b) :
     S - T ∈ QSeriesAt (b + 1) := by
-  simpa only [Nat.cast_one] using support_shift ((QSeriesAt b).sub_mem hS hT) 1
+  simpa only [Nat.cast_one] using! support_shift ((QSeriesAt b).sub_mem hS hT) 1
     (fun k hk => by
       have : k = 0 := by omega
       subst k
-      simpa using sub_eq_zero.mpr he)
+      simpa using! sub_eq_zero.mpr he)
 
 end VOA.Huang.GenusOne.Cusp
 
@@ -83,7 +83,7 @@ theorem leading_subtraction_at_weight [Fintype ι] (P : ι → LWModule W)
     intro i _
     by_cases hi : (P i).h = b + W.centralCharge / 24
     · have ht := trace_mem_QSeriesAt (Y i) ⟨(P i).realized, (P i).isLow⟩ w
-      simpa only [hi, add_sub_cancel_right] using ht
+      simpa only [hi, add_sub_cancel_right] using! ht
     · rw [hY i hi]
       have hz := congrArg (fun t : M →ₗ[ℂ] FormalQSeries => t w)
         (traceLinear (A := A) (N := (P i).isMod)).map_zero
@@ -91,7 +91,7 @@ theorem leading_subtraction_at_weight [Fintype ι] (P : ι → LWModule W)
       rw [hz]
       exact (QSeriesAt b).zero_mem
   exact ⟨Y, hY, htrace, fun w => Cusp.support_sub_succ (hsupp w) (htrace w)
-    (by simpa only [Finset.sum_apply] using he w)⟩
+    (by simpa only [Finset.sum_apply] using! he w)⟩
 
 /-- If no allowed top weight occurs on the support progression, the entire
 formal block vanishes. This does not use a choice of increasing complex exponents. -/

@@ -95,7 +95,7 @@ theorem v2InnerTwistedSpectrum_of_torusOrdinaryUntwist
   obtain ⟨u, Q, horder, hQ, hw⟩ := v2_twisted_torus_reduction hn ho P hi
   have hu : charU 1 le_rfl u ≠ 1 := by
     intro he
-    have hn1 : n = 1 := by simpa only [he, orderOf_one] using horder.symm
+    have hn1 : n = 1 := by simpa only [he, orderOf_one] using! horder.symm
     exact hg (orderOf_eq_one_iff.mp (ho.trans hn1))
   obtain ⟨a, ha, han, A, hA, hL⟩ := h u n hn horder hu M Q hQ
   obtain ⟨ε, hε, hs⟩ := twisted_spectrum_of_ordinary_untwist Q A hA a hL

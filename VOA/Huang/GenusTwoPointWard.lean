@@ -135,7 +135,7 @@ theorem trace_product_geom_of_lt (Y₁ : IntertwiningOperator A₁ Q N)
   have h := gradedTrace_geomSolve _ (fun e => -wardTrace Y₁ Y₂ a w₁ w₂ i n₁ n₂ J e) _
     (fun e => by simpa only [sub_eq_add_neg] using
       trace_product_step Y₁ Y₂ ha h₁ h₂ i n₁ n₂ hn J hJ e) e L hL
-  simpa only [Finset.sum_neg_distrib] using h
+  simpa only [Finset.sum_neg_distrib] using! h
 
 /-- Negative shifts are inverted by the upward telescope. -/
 theorem trace_product_geom_of_gt (Y₁ : IntertwiningOperator A₁ Q N)
@@ -158,7 +158,7 @@ theorem trace_product_geom_of_gt (Y₁ : IntertwiningOperator A₁ Q N)
   have h := gradedTrace_geomSolve_up _ (fun e => -wardTrace Y₁ Y₂ a w₁ w₂ i n₁ n₂ J e) _
     (fun e => by simpa only [sub_eq_add_neg] using
       trace_product_step Y₁ Y₂ ha h₁ h₂ i n₁ n₂ hn J hJ e) e L hL
-  simpa only [Finset.sum_neg_distrib, neg_neg] using h
+  simpa only [Finset.sum_neg_distrib, neg_neg] using! h
 
 /-- Actual energy insertion; it is not yet expressed by insertion descendants. -/
 noncomputable def traceEnergy (N : OrdVModule W M) : Module.End ℂ M :=

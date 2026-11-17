@@ -145,7 +145,7 @@ theorem simpleCanonicalBilin85_nondegenerate :
     apply LinearMap.ext
     intro y
     have h := hq (I85.mkQ y)
-    simpa only [simpleCanonicalBilin85_mkQ] using h
+    exact h
   · intro q hq
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective I85 q
     rw [Submodule.Quotient.mk_eq_zero]
@@ -153,7 +153,7 @@ theorem simpleCanonicalBilin85_nondegenerate :
     rw [SingVec.mem_rightRadical]
     intro x
     have h := hq (I85.mkQ x)
-    simpa only [simpleCanonicalBilin85_mkQ] using h
+    exact h
 
 /-! ## The compact current calculation
 

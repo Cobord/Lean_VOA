@@ -32,6 +32,11 @@ theorem threeColourWord_hasShape (l : List (Fin 6 × ℕ))
       Finset.sum_map_toList]
     rw [Fintype.sum_sum_type, Fintype.sum_sum_type]
   fin_cases i <;> simp [threeColourModeShape, wordKey, Fintype.card_fin]
+  -- Lean 4.35: `simp` leaves `countP … = (Finset.univ : Finset (Fin (wordKey l).x)).card`
+  -- (the instance still mentions `wordKey`, so `Finset.card_fin` does not fire under `simp`)
+  all_goals try first
+    | exact (Finset.card_fin _).symm
+    | exact (Fintype.card_fin _).symm
   all_goals try simp only [← Nat.card_eq_fintype_card, Nat.card_fin]
   all_goals try rfl
   all_goals

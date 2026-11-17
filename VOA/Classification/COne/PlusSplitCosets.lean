@@ -57,9 +57,9 @@ noncomputable def spectralSubmodule (A : WeakModule W M) (s : Set ℂ)
           exact Submodule.mem_iSup_of_mem _ (Submodule.mem_iSup_of_mem
             (hs α hα (w - p - 1)) (mode_mem_maxGenEigenspace A ha p hy))
         exact hle hx
-      · simpa [WeakModule.act] using (spectralPart A s).zero_mem
+      · simpa [WeakModule.act] using! (spectralPart A s).zero_mem
       · intro a b ha hb
-        simpa [WeakModule.act, map_add] using (spectralPart A s).add_mem ha hb }
+        simpa [WeakModule.act, map_add] using! (spectralPart A s).add_mem ha hb }
 
 noncomputable def cosetBlock (A : WeakModule W M) (α : ℂ) : Submodule (modeAlg A) M :=
   spectralSubmodule A {β | SameCoset α β} (by

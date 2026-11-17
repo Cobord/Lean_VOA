@@ -55,8 +55,8 @@ theorem HasIntegralCoeffLattice.mul {f g : PowerSeries ℂ}
 This does not say that the coefficients themselves are algebraic numbers. -/
 def spanIntegralSeries : Subalgebra ℂ (PowerSeries ℂ) where
   carrier := {f | HasIntegralCoeffLattice f}
-  zero_mem' := by simpa using hasIntegralCoeffLattice_C 0
-  one_mem' := by simpa using hasIntegralCoeffLattice_C 1
+  zero_mem' := by simpa using! hasIntegralCoeffLattice_C 0
+  one_mem' := by simpa using! hasIntegralCoeffLattice_C 1
   add_mem' := HasIntegralCoeffLattice.add
   mul_mem' := HasIntegralCoeffLattice.mul
   algebraMap_mem' c := hasIntegralCoeffLattice_C c

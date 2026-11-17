@@ -315,7 +315,7 @@ theorem differentiableOn_spinQAnalytic (p : SpinPair) (k : Nat) :
     intro w hw
     show 0 < (w / 2).im
     simpa using div_pos hw (by norm_num : (0 : Real) < 2)
-  simpa [Function.comp_apply] using (houter (z / 2) hzhalf).comp z hinner hmaps
+  exact (houter (z / 2) hzhalf).comp z hinner hmaps
 
 /-! ## Agreement with fractional `q`-evaluation and the `T^2` law -/
 

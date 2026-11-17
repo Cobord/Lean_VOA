@@ -43,7 +43,7 @@ theorem exists_fullCoset_collision_bounds_on_bases (hC2 : C2Cofinite W)
     (fun l => logCoefficient_isGradedJacobi Y₂.2 l) h₂ h₃ ν₀ 0
   let ν := ν₀+K₀
   have hUB : ∀ l,UnifBase N₂.toGW N₃.toGW (fun n => Y₂.1 n l) h₂ h₃ ν := by
-    simpa only [Nat.cast_zero,sub_zero] using hUB₀
+    simpa only [Nat.cast_zero,sub_zero] using! hUB₀
   obtain ⟨B₁,hC₁⟩ := exists_C1Graded hC2 N₁ hfg₁ hl₁
   obtain ⟨B₂,hC₂⟩ := exists_C1Graded hC2 N₂ hfg₂ hl₂
   obtain ⟨B₃,hC₃⟩ := exists_C1Graded hC2 N₃ hfg₃ hl₃
@@ -79,7 +79,7 @@ theorem exists_fullCoset_collision_bounds_on_bases (hC2 : C2Cofinite W)
     intro t ht
     have hh := summable_log_product hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
       Y₁ Y₂ f x y z (c-ν-2*n₄) (ν+s) k l ht
-    simpa only [QT,coeff_prodQ] using hh
+    simpa only [QT,coeff_prodQ] using! hh
   have hk (k : ℕ) : LogDegLE K (logProductIntegerCosetFun Y₁.1 Y₂.1 f x y z a b k 0) := by
     have hh := logDegLE_denormalize (hG k 0) (hK n₁ n₂ n₃ n₄ k 0 f x y z hx hy hz)
     exact (LogDegLE.logOneAdd_mul hh k).congr fun t _ => (he k 0 t).symm

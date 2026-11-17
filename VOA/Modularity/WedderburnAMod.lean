@@ -137,7 +137,7 @@ theorem isSimpleAMod_wedderburnAMod (hd : ∀ i, NeZero (d i))
         exact hS (Submodule.eq_bot_iff _ |>.mpr hc)
       have hxd : (ULift.down x : Fin (d j) → ℂ) ≠ 0 := by
         intro hc
-        exact hx0 (ULift.ext x 0 hc)
+        exact hx0 (ULift.ext hc)
       rw [eq_top_iff]
       intro y _
       obtain ⟨A, hA⟩ := exists_matrix_mulVec_eq hxd (ULift.down y)
@@ -146,7 +146,7 @@ theorem isSimpleAMod_wedderburnAMod (hd : ∀ i, NeZero (d i))
       have hval : ((e (e.symm (Pi.single j A))) j) = A := by
         rw [AlgEquiv.apply_symm_apply, Pi.single_eq_same]
       rw [hval, hA] at hmem
-      simpa using hmem
+      exact hmem
 
 /-- **Distinct Wedderburn factors give non-isomorphic simple `AMod`s.**  The central
 idempotent `Pi.single i 1` acts as the identity on the `i`-th and as zero on the `j`-th. -/
@@ -180,7 +180,7 @@ theorem wedderburnAMod_isEmpty_amodEquiv (hd : ∀ i, NeZero (d i))
     have := congrArg (fun z => (ULift.down z) ⟨0, Nat.pos_of_ne_zero (hd i).out⟩) hc
     simp only [Pi.single_eq_same] at this
     exact one_ne_zero this.symm
-  exact hne (φ.toLinearEquiv.injective (by rw [hall, hall]))
+  exact hne (φ.toLinearEquiv.injective ((hall _).trans (hall _).symm))
 
 /-- **L1, Artin–Wedderburn form**: a finite-dimensional semisimple `A(𝒱)` carries
 `dim A(𝒱)/[A(𝒱),A(𝒱)]` pairwise non-isomorphic simple bundled `A(𝒱)`-modules. -/

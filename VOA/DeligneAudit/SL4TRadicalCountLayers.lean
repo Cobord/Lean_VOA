@@ -128,7 +128,7 @@ theorem radicalCountQuot_cartan_zero (a b c : ℕ)
           (higherRadicalCountClosure ρ w d).mkQ v := by
   have he := congrArg (higherRadicalCountClosure ρ w d).mkQ
     (radicalCountLayer_cartan_zero ρ w a b c h d i hv)
-  fin_cases i <;> simpa only [map_smul] using he
+  fin_cases i <;> simpa only [map_smul] using! he
 
 /-- Positive Cartan action survives on the multiplicity space after merging degrees. -/
 theorem radicalCountMultiplicity_cartan_positive (a b c : ℕ)

@@ -42,7 +42,7 @@ theorem fusionKacWeight_injective_positive (t : ℂ) (ht : t.im ≠ 0)
     have hrr' : r = r' := by exact_mod_cast hrr
     subst r'
     have hss : (s:ℂ) = (s':ℂ) := by
-      simpa only [sub_self, zero_mul, zero_sub, neg_eq_zero, sub_eq_zero] using hm
+      simpa only [sub_self, zero_mul, zero_sub, neg_eq_zero, sub_eq_zero] using! hm
     exact ⟨rfl, by exact_mod_cast hss⟩
   · have hi := congrArg Complex.im hp
     simp only [Complex.sub_im, Complex.add_im, Complex.mul_im, Complex.add_re,
@@ -102,7 +102,7 @@ theorem kacWeightProduct_dvd_of_singular (c t : ℂ) (n : ℕ) (ht : t.im ≠ 0)
       fusionKacWeight (i.1.val+1) (i.2.val+1) t) := by
     intro i j hij
     have hh := fusionKacWeight_injective_positive t ht
-      (i.1.val+1) (i.2.val+1) (j.1.val+1) (j.2.val+1) (by omega) (by omega) (by simpa only [Nat.cast_add, Nat.cast_one] using hij)
+      (i.1.val+1) (i.2.val+1) (j.1.val+1) (j.2.val+1) (by omega) (by omega) (by simpa only [Nat.cast_add, Nat.cast_one] using! hij)
     apply Prod.ext <;> apply Fin.ext <;> omega
   apply Finset.prod_dvd_of_coprime
   · intro i _ j _ hij
@@ -134,6 +134,6 @@ theorem vermaWeightDeterminant_eq_kac_of_singular (c t : ℂ) (n : ℕ) (ht : t.
   have he := Polynomial.eq_leadingCoeff_mul_of_monic_of_dvd_of_natDegree_le
     (kacWeightProduct_monic t n) (kacWeightProduct_dvd_of_singular c t n ht hs)
     (by rw [vermaWeightDeterminant_natDegree, kacWeightProduct_natDegree])
-  simpa only [vermaWeightDeterminant_leadingCoeff] using he
+  simpa only [vermaWeightDeterminant_leadingCoeff] using! he
 
 end VOA.InverseDS.VirasoroVerma

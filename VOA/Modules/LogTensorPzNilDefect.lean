@@ -25,10 +25,10 @@ variable {M₁ M₂ M₃ : Type u} [AddCommGroup M₁] [Module ℂ M₁]
 noncomputable def bilinearDefect (E₁ : End ℂ M₁) (E₂ : End ℂ M₂) (E₃ : End ℂ M₃) :
     End ℂ (M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] M₃) where
   toFun F := LinearMap.mk₂ ℂ (fun x y => E₃ (F x y) - F (E₁ x) y - F x (E₂ y))
-    (fun x x' y => by dsimp only; simp only [map_add,LinearMap.add_apply]; module)
-    (fun s x y => by dsimp only; simp only [map_smul,LinearMap.smul_apply]; module)
-    (fun x y y' => by dsimp only; simp only [map_add]; module)
-    (fun s x y => by dsimp only; simp only [map_smul]; module)
+    (fun x x' y => by simp only [map_add,LinearMap.add_apply]; module)
+    (fun s x y => by simp only [map_smul,LinearMap.smul_apply]; module)
+    (fun x y y' => by simp only [map_add]; module)
+    (fun s x y => by simp only [map_smul]; module)
   map_add' F G := by
     ext x y
     simp only [LinearMap.mk₂_apply,LinearMap.add_apply,map_add]
@@ -60,7 +60,7 @@ theorem nilDefect_pow_weight {n : ℂ} {F : M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] M�
   induction k with
   | zero =>
     intro a b x y hx hy
-    simpa using hF hx hy
+    simpa using! hF hx hy
   | succ k ih =>
     intro a b x y hx hy
     rw [pow_succ',Module.End.mul_apply]
@@ -139,6 +139,6 @@ theorem nilDefect_pow_eq_zero {n : ℂ} {F : M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] M
     (fun z hz => nilpotent_weight_bound N₃ hz) k 0
     (Module.finrank ℂ (N₁.weight a)) (Module.finrank ℂ (N₂.weight b)) x y hx hy
     (nilpotent_weight_bound N₁ hx) (nilpotent_weight_bound N₂ hy) (by omega)
-  simpa using h
+  simpa using! h
 
 end VOA.LogTensor.Pz

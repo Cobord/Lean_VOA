@@ -52,6 +52,6 @@ theorem vectorPartial10_sound {V : Type*} [AddCommGroup V] [Module ℂ V]
     vectorChunk10_sound W k a]
   have hh := equalRawCheck_sound W k a vectorPartial10_check
   rw [symMap_append, evalSym_append] at hh
-  simpa only [add_comm] using hh
+  simpa only [add_comm] using! hh
 
 end VOA.Classification.COne.OrbIcoZ

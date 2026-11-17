@@ -51,11 +51,13 @@ theorem fo_evRc (γ : ℤ) (P : RawPoly ℕ) :
       latStateGen (latP 1) (evRc (a0 1) cm (expPolyR (-1 + 2 * γ) P)) (γ - 1 : ℤ) := by
   rw [fo_eq]
   have h := V2m_charge_smul_evRc 1 le_rfl (-a1 1) γ 0 P
-  rw [PlusCharacterTable.rankOne_cocycle, one_smul] at h
+  rw [PlusCharacterTable.rankOne_cocycle 1 (-a1 1) γ, one_smul] at h
   change (V2m 1 le_rfl).smul _ 0 _ = _
   rw [h]
   have e1 : (-0 - 1 - (latP 1).form (-a1 1) γ) = -1 + 2 * γ := by
-    rw [latP_form]; change (-0 - 1 - 2 * ((1 : ℕ) : ℤ) * (-1) * γ : ℤ) = _; push_cast; ring
+    refine (congrArg (fun t : ℤ => -0 - 1 - t) (latP_form 1 (-a1 1) γ)).trans ?_
+    change (-0 - 1 - 2 * ((1 : ℕ) : ℤ) * (-1) * γ : ℤ) = _
+    push_cast; ring
   rw [e1]
   congr 1
   change (-(1 : ℤ) + γ : ℤ) = γ - 1
@@ -143,7 +145,10 @@ theorem c9_mu0 (j : ℤ) : c9 * mu0 j = j := by
   rw [sum_rankOne (1 * 3 ^ 2), glueIota_delta] at h
   have hz : chargeCoord (latP (1 * 3 ^ 2)) ((0 : ℤ) : (latP (1 * 3 ^ 2)).carrier)
       (a0 (1 * 3 ^ 2)) = 0 := chargeCoord_zero _ _
-  rw [mu0, mu, hz, zero_add]
+  show c9 * (chargeCoord (latP (1 * 3 ^ 2)) ((0 : ℤ) : (latP (1 * 3 ^ 2)).carrier)
+      (a0 (1 * 3 ^ 2)) + lamShift (latP (1 * 3 ^ 2)) (glueLat (1 * 3 ^ 2) j)
+      (glueIota (1 * 3 ^ 2) j) (glueDelta (1 * 3 ^ 2) j) (a0 (1 * 3 ^ 2))) = _
+  rw [hz, zero_add]
   rw [h]
   push_cast
   ring
@@ -208,7 +213,7 @@ theorem fockS_evalRaw (R : RawPoly ℕ) :
 theorem sm_latStateGen0 (p : FockN (rank (latP (1 * 3 ^ 2)))) :
     sm (latStateGen (latP (1 * 3 ^ 2)) p (0 : ℤ)) = latStateGen (latP 1) (fockS p) (0 : ℤ) := by
   change latMorph _ _ _ _ = _
-  rw [latMorph_latStateGen]
+  rw [latMorph_latStateGen (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3) p (0 : ℤ)]
   have h0 : latCob (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3)
       ((0 : ℤ) : (latP (1 * 3 ^ 2)).carrier) = 1 := latCob_zero _ _ _
   have h1 : scaleIota 1 3 ((0 : ℤ) : (latP (1 * 3 ^ 2)).carrier) = ((0 : ℤ) : (latP 1).carrier) :=
@@ -228,7 +233,7 @@ abbrev hcur : Sp9 := ls (1 * 3 ^ 2) hR
 
 theorem hcur_grading : hcur ∈ V18.grading 1 := by
   have := h_mem_grading (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3)
-  simpa using this
+  simpa using! this
 
 theorem Y_hcur : YfullGen (latP (1 * 3 ^ 2)) (latP_even _) (latP_posDef _ (one_le_mn2 1 le_rfl 3))
     hcur = alphaLatGen (latP (1 * 3 ^ 2)) a9 := by
@@ -254,7 +259,8 @@ theorem creation9 (i : ℕ) (q : FockN (rank (latP (1 * 3 ^ 2)))) :
   rw [PreVertexAlgebra.smul_def, mode_apply]
   change YfullGen (latP (1 * 3 ^ 2)) (latP_even _) (latP_posDef _ (one_le_mn2 1 le_rfl 3))
     hcur _ _ = _
-  rw [Y_hcur, alphaLatGen_latStateGen, if_neg (by omega), add_zero,
+  rw [Y_hcur, alphaLatGen_latStateGen (latP (1 * 3 ^ 2)) a9 (-(-((i : ℤ) + 1)) - 1) q (0 : ℤ),
+    if_neg (by omega), add_zero,
     oscN_apply_neg _ _ _ (by omega)]
   congr 3
   simp
@@ -280,7 +286,8 @@ theorem heis_iter {j : ℤ} (hj9 : |j| ≤ 9) {v : Sp9} {d : ℤ} (hv : v ∈ V1
       mode_lowering_vanish (Nj j) hlow hv htop (by omega)
     have hh0 : mode ((Nj j).YM hcur) 0 top9 = mu0 j • top9 := by
       have := lat_h_mode (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3) j 0 1 ((0 : ℤ) : (latP _).carrier)
-      rw [if_pos rfl, oscN_zero, LinearMap.zero_apply, zero_add, latStateGen_csmul] at this
+      rw [if_pos rfl, oscN_zero, LinearMap.zero_apply, zero_add,
+        latStateGen_csmul (latP (1 * 3 ^ 2)) _ _ (0 : ℤ)] at this
       exact this
     rw [hv0, map_zero, zero_sub, hh0, map_smul, cbz_zero,
       show negOnePow 0 = 1 by simp [negOnePow],
@@ -335,7 +342,8 @@ theorem word_top {j : ℤ} (hj9 : |j| ≤ 9) : ∀ w : List ℕ,
     obtain ⟨hg, hm⟩ := word_top hj9 w
     have hst : latStateGen (latP (1 * 3 ^ 2)) (evalWord x9 (0 :: w)) (0 : ℤ) =
         cm • latStateGen (latP (1 * 3 ^ 2)) (evalWord x9 w) (0 : ℤ) := by
-      rw [evalWord_x9_cons, x9, ← MvPolynomial.smul_eq_C_mul, latStateGen_csmul]
+      rw [evalWord_x9_cons, x9, ← MvPolynomial.smul_eq_C_mul,
+        latStateGen_csmul (latP (1 * 3 ^ 2)) _ _ (0 : ℤ)]
     rw [hst, wtW_cons]
     simp only [Nat.cast_zero, zero_add]
     refine ⟨Submodule.smul_mem _ _ hg, ?_⟩
@@ -347,12 +355,12 @@ theorem word_top {j : ℤ} (hj9 : |j| ≤ 9) : ∀ w : List ℕ,
         muS⁻¹ • V18.smul hcur (-((i : ℤ) + 1))
           (latStateGen (latP (1 * 3 ^ 2)) (evalWord x9 w) (0 : ℤ)) := by
       rw [creation9, evalWord_x9_cons, x9, mul_assoc, ← MvPolynomial.smul_eq_C_mul,
-        latStateGen_csmul]
+        latStateGen_csmul (latP (1 * 3 ^ 2)) _ _ (0 : ℤ)]
     rw [hst, wtW_cons]
     refine ⟨Submodule.smul_mem _ _ ?_, ?_⟩
     · have := V18.grading_mode hcur hcur_grading _ hg (-((i : ℤ) + 1))
       convert this using 2
-      push_cast; ring
+      all_goals first | rfl | (push_cast; ring)
     · rw [mode_smul9, show ((i + 1 : ℕ) : ℤ) + wtW w - 1 = i + wtW w by push_cast; ring,
         heis_iter hj9 hg i, hm, smul_smul, smul_smul]
       congr 1
@@ -371,7 +379,8 @@ theorem heis_sum {j : ℤ} (hj9 : |j| ≤ 9) : ∀ R : RawPoly ℕ, (∀ t ∈ R
     rw [ht, show (9 : ℤ) - 1 = 8 by norm_num] at hm
     have hsplit : evalRaw x9 (t :: R) = (t.1 : ℂ) • evalWord x9 t.2 + evalRaw x9 R := by
       simp only [evalRaw, List.map_cons, List.sum_cons, algebraMap_rat_mul]
-    rw [hsplit, latStateGen_add_boson, latStateGen_csmul, mode_add9, mode_smul9, hm, hrest,
+    rw [hsplit, latStateGen_add_boson (latP (1 * 3 ^ 2)) _ _ (0 : ℤ),
+      latStateGen_csmul (latP (1 * 3 ^ 2)) _ _ (0 : ℤ), mode_add9, mode_smul9, hm, hrest,
       List.map_cons, List.sum_cons, smul_smul, ← add_smul]
 
 theorem R3_weights : ∀ t ∈ R3lit, wtW t.2 = 9 := by decide

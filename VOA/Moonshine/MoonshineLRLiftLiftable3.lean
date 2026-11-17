@@ -15,6 +15,11 @@ that explicit hypothesis; neither family is asserted liftable unconditionally.
 The generator `ξ` is not treated.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -251,7 +256,7 @@ theorem liftGenIntertwines_add {α β : leech.carrier}
     liftGenIntertwines ι R (α + β) := by
   unfold liftGenIntertwines at hα hβ ⊢
   apply smul_right_injective (Matrix SpinIdx SpinIdx ℂ) (latticeCocycle_ne_zero leech α β)
-  dsimp only
+  try dsimp only
   calc
     latticeCocycle leech α β • (R * spinOp (coordOfRed (red leech (α + β)))) =
         R * (spinOp (coordOfRed (red leech α)) *
@@ -309,7 +314,7 @@ theorem liftGenOfBasisIntertwiner (ι : leech.carrier →ₗ[ℤ] leech.carrier)
       simp only [Matrix.map_apply, Matrix.smul_apply, Rat.coe_castHom, smul_eq_mul,
         Rat.cast_mul]
     have hC := congrArg (fun M => M.map (Rat.castHom ℂ)) (hB j)
-    dsimp only at hC
+    try dsimp only at hC
     rw [Matrix.map_mul (f := Rat.castHom ℂ), hmap,
       Matrix.map_mul (f := Rat.castHom ℂ), liftMonoQmat_map, liftMonoQmat_map] at hC
     unfold liftGenIntertwines
@@ -318,8 +323,17 @@ theorem liftGenOfBasisIntertwiner (ι : leech.carrier →ₗ[ℤ] leech.carrier)
       Matrix.smul_mul, smul_smul]
   intro α s
   have h := liftGenIntertwines_of_basis ι hι (R.map (Rat.castHom ℂ)) hb α
-  simpa only [liftGenIntertwines, Matrix.mulVec_mulVec, Matrix.smul_mulVec] using
-    congrArg (fun M => M *ᵥ s) h
+  first
+  | simpa only [liftGenIntertwines, Matrix.mulVec_mulVec, Matrix.smul_mulVec] using
+      congrArg (fun M => M *ᵥ s) h
+  | (have key : ∀ w : SpinIdx → ℂ,
+        R.map (Rat.castHom ℂ) *ᵥ (spinOp (coordOfRed (red leech α)) *ᵥ w) =
+          latCob leech leech ι α •
+            (spinOp (coordOfRed (red leech (ι α))) *ᵥ (R.map (Rat.castHom ℂ) *ᵥ w)) := by
+       intro w
+       simpa only [liftGenIntertwines, Matrix.mulVec_mulVec, Matrix.smul_mulVec] using
+         congrArg (fun M => M *ᵥ w) h
+     exact key s)
 
 /-- A signed permutation matrix on the rational spin module. -/
 def liftGenSignedMatrix (σ : Equiv.Perm SpinIdx) (ε : SpinIdx → ZMod 2) :

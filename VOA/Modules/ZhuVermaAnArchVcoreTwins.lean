@@ -54,6 +54,9 @@ namespace VOA
 open VertexOperatorAlgebra
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
@@ -117,7 +120,7 @@ theorem crossCircComm_eq_MGTowerFam (W : VertexOperatorAlgebra 𝒱) (n : ℕ) {
     (fun r => crossSliceWeight K n (r : ℕ)), ?_, ?_⟩
   · -- homogeneity of each left factor `a₍s₎c`.
     intro r
-    simp only []
+    (try simp only [])
     rcases lt_or_ge ((K : ℤ) + (M : ℤ) - ((r : ℕ) : ℤ) - 1) 0 with hneg | hpos
     · -- negative grade: `a₍s₎c = 0 ∈ 𝒱_g` for any `g`.
       have : W.smul a ((r : ℕ) : ℤ) c = 0 := by
@@ -548,7 +551,7 @@ theorem ardComm_eq_MGTowerFam (W : VertexOperatorAlgebra 𝒱) (n : ℕ) {K M : 
     (fun r => (r : ℕ) + n + 2),
     (fun r => ardSliceWeight K n (r : ℕ)), ?_, ?_⟩
   · intro r
-    simp only []
+    (try simp only [])
     rcases lt_or_ge ((K : ℤ) + (M : ℤ) - ((r : ℕ) : ℤ) - 1) 0 with hneg | hpos
     · have : W.smul a ((r : ℕ) : ℤ) c = 0 := by
         have hmem := crossCircComm_base_mem_grading W ha hc ((r : ℕ) : ℤ)

@@ -36,7 +36,10 @@ theorem fusionKacWeight_hasDerivAt (r s t : ℂ) (ht : t ≠ 0) :
   have he := (((((hasDerivAt_id t).const_mul r).sub_const s).pow 2).sub
     (((hasDerivAt_id t).sub_const 1).pow 2)).div
       ((hasDerivAt_id t).const_mul 4) (mul_ne_zero (by norm_num) ht)
-  convert he using 1 <;> dsimp [fusionKacWeight] <;> field_simp <;> ring
+  convert he using 1
+  all_goals first
+    | (funext x; rfl)
+    | (dsimp [fusionKacWeight]; field_simp; ring)
 
 /-- Every finite subproduct of the scalar Kac factors is differentiable
 away from parameter zero, even where one of its factors vanishes. -/
@@ -70,7 +73,7 @@ theorem kacVacuumScalar_simple_of_label (n : ℕ) (t : ℂ) (ht : t ≠ 0)
     have hh := Finset.mul_prod_erase ((kacLabels (n+1)).erase (0,0))
       (fun i => (-fusionKacWeight (i.1.val+1) (i.2.val+1) z) ^
         Fintype.card (VermaPartitions (n+1-(i.1.val+1)*(i.2.val+1)))) ha
-    simpa only [hlevel,Nat.sub_self,vermaPartitions_card_zero,pow_one] using hh.symm
+    simpa only [hlevel,Nat.sub_self,vermaPartitions_card_zero,pow_one] using! hh.symm
   have hg : g t ≠ 0 := by
     apply Finset.prod_ne_zero_iff.mpr
     intro i hi
@@ -86,7 +89,7 @@ theorem kacVacuumScalar_simple_of_label (n : ℕ) (t : ℂ) (ht : t ≠ 0)
   · rw [hf]
     change _root_.deriv (-fusionKacWeight (a.1.val+1) (a.2.val+1) * g) t ≠ 0
     rw [hh.deriv]
-    simpa only [Pi.neg_apply,hz,neg_zero,zero_mul,add_zero,g] using mul_ne_zero (neg_ne_zero.mpr hd) hg
+    simpa only [Pi.neg_apply,hz,neg_zero,zero_mul,add_zero,g] using! mul_ne_zero (neg_ne_zero.mpr hd) hg
 
 /-- The arithmetic minimal-model weight agrees exactly with the rational
 fusion weight at t=p/q. This fixes the label orientation for later roots. -/
@@ -160,7 +163,7 @@ theorem kacVacuumScalar_minimal_simple (p q n : ℕ) (hq : 2 ≤ q)
     have hz' : VirMinimalArithmetic.minimalKacWeight p q (i.1.val+1) (i.2.val+1) = 0 := by
       rw [← Rat.cast_inj (α := ℂ)]
       simpa only [Rat.cast_zero, ← fusionKacWeight_minimal p q _ _ (by omega) (by omega),
-        Nat.cast_add,Nat.cast_one] using hz
+        Nat.cast_add,Nat.cast_one] using! hz
     have hil := (Finset.mem_filter.mp (Finset.mem_erase.mp hi).2).2
     have hil' := hil.trans_eq hn
     rcases VirMinimalArithmetic.minimalKacWeight_zero_first_labels hp hq

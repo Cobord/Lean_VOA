@@ -61,8 +61,8 @@ theorem uup_pair_yz_higher
       (keyLayer_le_orbit ρ w _
         (radicalWord_mem_key ρ w ((1, 0) :: (4, r + u) :: l)))
   have hsum : -radicalWord ρ w ((3, r) :: (2, u) :: l) ∈ N := by
-    simpa only [sub_add_cancel] using N.add_mem hderiv hxy_mem
-  simpa [N] using N.neg_mem hsum
+    simpa only [sub_add_cancel] using! N.add_mem hderiv hxy_mem
+  simpa [N] using! N.neg_mem hsum
 
 end VOA.DeligneAudit.D4Levi
 

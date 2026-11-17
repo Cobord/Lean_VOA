@@ -257,7 +257,8 @@ private theorem p3ConductorCollisionFactor_ne_zero (a b c d : ℕ)
   · apply p3CollisionFactor_ne_zero
     intro h
     rcases is with ⟨(i | i) | i, j⟩ <;>
-      simp [boundaryCurrentLabel, boundarySLabel] at h
+      simp [boundaryCurrentLabel, boundarySLabel] at h <;>
+      exact absurd (congrArg Sigma.fst h) (by simp)
 
 private theorem p3CommonFactor_ne_zero (a b c d : ℕ) :
     p3CommonFactor (K := K) a b c d ≠ 0 := by

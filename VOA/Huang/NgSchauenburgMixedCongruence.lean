@@ -59,7 +59,7 @@ theorem projectiveCongruence_of_mixed_invariance (F : SphericalFusion C) (M : Mo
       generalizedIndicatorAll F (mixedCenter (F.simple p.1) (F.simple p.2))
         (F.simple a) 1 0) = _ at hh
     simpa only [mixedRepresentation_apply, Matrix.mulVec_single_one, Matrix.col_apply,
-      mul_comm] using hh
+      mul_comm] using! hh
   intro γ hγ
   have he : matrixDouble ((categoricalSUnit F M)⁻¹ * μ γ * categoricalSUnit F M) =
       matrixDouble (μ (ModularGroup.S⁻¹ * γ * ModularGroup.S)) := by
@@ -70,7 +70,7 @@ theorem projectiveCongruence_of_mixed_invariance (F : SphericalFusion C) (M : Mo
     exact congrArg (fun U : (Matrix (F.Label × F.Label) (F.Label × F.Label) ℂ)ˣ =>
       (U : Matrix (F.Label × F.Label) (F.Label × F.Label) ℂ)) hu
   obtain ⟨c, hc, ha⟩ := scalar_of_mixed_indicator_invariance F M (μ γ) (hrows γ hγ)
-    (by simpa only [he] using (hrows (ModularGroup.S⁻¹ * γ * ModularGroup.S)
+    (by simpa only [he] using! (hrows (ModularGroup.S⁻¹ * γ * ModularGroup.S)
           (inPrincipalCongruence_conjugate ModularGroup.S hγ)))
   refine ⟨Units.mk0 c hc, fun z => ?_⟩
   calc

@@ -23,7 +23,7 @@ theorem columnsEnd_apply (n : ℕ) (cols : ℕ → SV) (v : Fin n → ℂ) :
 
 theorem columnsEnd_single (n : ℕ) (cols : ℕ → SV) (i : Fin n) :
     columnsEnd n cols (Pi.single i 1) = vec n (cols i) := by
-  simpa only [Pi.basisFun_apply] using
+  simpa only [Pi.basisFun_apply] using!
     (Pi.basisFun ℂ (Fin n)).constr_basis ℂ (fun j => vec n (cols j)) i
 
 /-- Every repeated sparse coordinate is included with its full integer
@@ -32,7 +32,7 @@ theorem columnsEnd_vec (n : ℕ) (cols : ℕ → SV) (v : SV)
     (hv : rangeCheck n v = true) :
     columnsEnd n cols (vec n v) = vec n (applyColumns cols v) := by
   have hrange : ∀ p ∈ v, p.1 < n := by
-    simpa only [rangeCheck, List.all_eq_true, decide_eq_true_eq] using hv
+    simpa only [rangeCheck, List.all_eq_true, decide_eq_true_eq] using! hv
   rw [columnsEnd_apply, applyColumns, vec_flatMap]
   simp only [vec_scale]
   exact DeligneSector.Sparse.sum_sget_smul v hrange (fun j => vec n (cols j))

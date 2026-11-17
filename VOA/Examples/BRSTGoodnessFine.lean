@@ -256,7 +256,7 @@ theorem ghostModeF_zero_mem (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
       (fun i x hx => ghField_mem_fockDegF e _ hx)
       (fun i y hy => by rw [add_zero]; exact hy))
     (fun i y hy => by rw [add_zero]; exact hy) k x hx
-  simpa only [add_zero] using this
+  simpa only [add_zero] using! this
 
 theorem ghostModeF_one_mem (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
     (hx : x ∈ ghostDegF k) : gMode 1 e m x ∈ ghostDegF (k + ghShiftF e (-m - 1)) := by
@@ -267,7 +267,7 @@ theorem ghostModeF_one_mem (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
       (fun i x hx => by rw [add_zero]; exact bcKoszul_mem_fockDegF 1 hx)
       (fun i y hy => ghField_mem_fockDegF e _ hy))
     (fun i y hy => by rw [add_zero]; exact hy) k x hx
-  simpa only [add_zero, zero_add] using this
+  simpa only [add_zero, zero_add] using! this
 
 theorem ghostModeF_two_mem (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
     (hx : x ∈ ghostDegF k) : gMode 2 e m x ∈ ghostDegF (k + ghShiftF e (-m - 1)) := by
@@ -275,7 +275,7 @@ theorem ghostModeF_two_mem (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
   have := tensorDeg_map_shift pairDegF fockDegF _ _ 0 (ghShiftF e (-m - 1))
     (fun i x hx => by rw [add_zero]; exact pairKoszul_memF 1 hx)
     (fun i y hy => ghField_mem_fockDegF e _ hy) k x hx
-  simpa only [zero_add] using this
+  simpa only [zero_add] using! this
 
 theorem ghostModeF_mem (a : Fin 3) (e : Fin 2) (m : ℤ) {k : KF} {x : Sl2GhostSpace}
     (hx : x ∈ ghostDegF k) : gMode a e m x ∈ ghostDegF (k + ghShiftF e (-m - 1)) := by
@@ -291,7 +291,7 @@ theorem ghostYCoeff_shifts (a : Fin 3) (e : Fin 2) (j : ℤ) :
   have h := ghostModeF_mem a e (-j - 1) hx
   have e1 : -(-j - 1) - 1 = j := by ring
   rw [e1] at h
-  simpa only [gMode, mode_apply, e1] using h
+  simpa only [gMode, mode_apply, e1] using! h
 
 /-! ### The ghost current and the cubic charge -/
 

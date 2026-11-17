@@ -112,7 +112,7 @@ theorem finrank_modelDegree_two_le (b : ℕ) :
       ↑((L.map normalImage).toFinset) := by
     rintro _ ⟨w, ⟨hw, hd⟩, rfl⟩
     simp only [Finset.mem_coe, List.mem_toFinset, List.mem_map]
-    exact ⟨w, List.mem_filter.mpr ⟨hw, by simpa using hd⟩, rfl⟩
+    exact ⟨w, List.mem_filter.mpr ⟨hw, by simpa using! hd⟩, rfl⟩
   calc Module.finrank ℂ (modelDegree 2 b)
       ≤ Module.finrank ℂ (Submodule.span ℂ (↑((L.map normalImage).toFinset) :
           Set (AllM.Model 2))) :=

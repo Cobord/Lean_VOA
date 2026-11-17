@@ -60,7 +60,7 @@ local notation "V1" => latticeVOAGen (latP 1) (latP_even 1) (latP_posDef 1 le_rf
 
 /-- A Fock state of weight `0` is a constant. -/
 theorem fock_weight_zero {r : ℕ} {p : FockN r} (hp : p ∈ gradingWN r 0) :
-    p = (coeff 0 p) • vacuumN r := by
+    p = (p.coeff 0) • vacuumN r := by
   ext d
   rw [vacuumN, coeff_smul, coeff_one, smul_eq_mul]
   by_cases hd : d = 0
@@ -75,8 +75,8 @@ theorem fock_weight_zero {r : ℕ} {p : FockN r} (hp : p ∈ gradingWN r 0) :
 
 theorem halfNorm_latP1 (v : (latP 1).carrier) :
     VOA.LatGen.halfNorm (latP 1) v = ci 1 v * ci 1 v := by
-  rw [VOA.LatGen.halfNorm, latP_form]
-  change 2 * ((1 : ℕ) : ℤ) * ci 1 v * ci 1 v / 2 = ci 1 v * ci 1 v
+  rw [VOA.LatGen.halfNorm,
+    show (latP 1).form v v = 2 * ((1 : ℕ) : ℤ) * ci 1 v * ci 1 v from latP_form 1 _ _]
   rw [show 2 * ((1 : ℕ) : ℤ) * ci 1 v * ci 1 v = 2 * (ci 1 v * ci 1 v) by push_cast; ring]
   omega
 
@@ -133,10 +133,10 @@ theorem V2_grading_one {x : LatModuleGen (latP 1)} (hx : x ∈ (V1).grading 1) :
       rcases h1 with h | h
       · have : α = a1 1 := h
         subst this
-        exact mem_v3Sub.mpr ⟨coeff 0 q, 0, 0, by simp [vec3]⟩
+        exact mem_v3Sub.mpr ⟨q.coeff 0, 0, 0, by simp [vec3]⟩
       · have : α = -a1 1 := h
         subst this
-        exact mem_v3Sub.mpr ⟨0, 0, coeff 0 q, by simp [vec3]⟩
+        exact mem_v3Sub.mpr ⟨0, 0, q.coeff 0, by simp [vec3]⟩
     · have hgt : 1 < VOA.LatGen.halfNorm (latP 1) α := by
         rw [hn]
         push Not at h1
@@ -168,7 +168,8 @@ theorem smul_h_vec3 (y₁ y₂ y₃ : ℂ) :
     rw [smul_hSt_zero_latStateGen]; simp
   have h3 : (V1).smul (hSt (latP 1) (a1 1)) 0 (latChargeGen (latP 1) (-a1 1))
       = (-2 : ℂ) • latChargeGen (latP 1) (-a1 1) := by
-    rw [latChargeGen, smul_hSt_zero_latStateGen, latP_form]
+    rw [latChargeGen, smul_hSt_zero_latStateGen,
+      show (latP 1).form (a1 1) (-a1 1) = 2 * ((1 : ℕ) : ℤ) * 1 * (-1) from latP_form 1 _ _]
     congr 1
     change (((2 * ((1 : ℕ) : ℤ) * 1 * (-1) : ℤ)) : ℂ) = -2
     push_cast; ring
@@ -279,7 +280,6 @@ theorem xyz_inj {a b c a' b' c' : ℂ} (h : xyz a b c = xyz a' b' c') : a = a' �
   have h3 := vec3_coord_three h
   have h3' : a - I * b = a' - I * b' := by
     have := congrArg (eps1 * ·) h3
-    simp only at this
     linear_combination this - (a - I * b - (a' - I * b')) * eps1_sq
   refine ⟨by linear_combination (h1 + h3') / 2, ?_, h2⟩
   have hb : I * (2 * (b - b')) = 0 := by linear_combination h1 - h3'

@@ -60,11 +60,13 @@ theorem wv6_sc6 : wv 6 6 =
 theorem w60_w66 : V2v.smul (wv 6 0) 35 (wv 6 6) =
     (-33604986844 / 21 : ℂ) • wv 6 0 := by
   rw [wv6_sc6, PreVertexAlgebra.smul_smul_right, wv_zero]
-  rw [smul_chargeGen_state, PlusCharacterTable.rankOne_cocycle, one_smul, latP_form]
+  rw [smul_chargeGen_state, PlusCharacterTable.rankOne_cocycle 1
+      ((((6 : ℕ) : ℤ)) : (latP 1).carrier) ((0 : ℤ) : (latP 1).carrier), one_smul,
+    latP_form 1 ((6 : ℕ) : ℤ) 0]
   rw [show -(35 : ℤ) - 1 - 2 * ((1 : ℕ) : ℤ) * ((6 : ℕ) : ℤ) * 0 =
     -((36 : ℕ) : ℤ) by norm_num, show ((6 : ℕ) : ℤ) = (6 : ℤ) by norm_num,
     EEVec_top sc6 36 sc6_degrees, sc6_top]
-  rw [latStateGen_csmul, smul_smul]
+  rw [latStateGen_csmul (latP 1) _ _ ((6 + 0 : ℤ) : (latP 1).carrier), smul_smul]
   norm_num
   rfl
 

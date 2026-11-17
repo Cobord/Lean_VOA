@@ -223,7 +223,7 @@ theorem differentiableAt_fC {s : ℝ} (hs : s = 1 ∨ s = -1) (Gc : ProductSpace
   have hr0 := ne_zero_of_sim hs him
   have h10 := one_add_ne_zero_of_sim hs him
   have h0 : r ∈ Complex.slitPlane := mem_slitPlane_of_sim hs him
-  have h1 : 1 + r ∈ Complex.slitPlane := mem_slitPlane_of_sim hs (by simpa using him)
+  have h1 : 1 + r ∈ Complex.slitPlane := mem_slitPlane_of_sim hs (by simpa using! him)
   have hζ : 1 + Complex.exp (ellM s r) = 1 / (1 + r) := one_add_exp_ellM hs hr0 h10
   have hsl : 1 + Complex.exp (ellM s r) ∈ Complex.slitPlane := by
     rw [hζ]
@@ -455,7 +455,7 @@ theorem one_lt_norm_one_add_of_sim {s : ℝ} (hs : s = 1 ∨ s = -1) {r : ℂ}
   have h2 : s * r.im ≤ |(1 + r).im| := by
     simp only [Complex.add_im, Complex.one_im, zero_add]
     rcases hs with rfl | rfl
-    · simpa using le_abs_self r.im
+    · simpa using! le_abs_self r.im
     · have := neg_abs_le r.im
       simp only [neg_mul, one_mul]
       linarith

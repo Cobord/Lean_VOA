@@ -35,7 +35,7 @@ theorem finiteActionAverage_mem_ideal (ρ : G →* (A ≃ₐ[ℂ] A))
         change finiteActionAverageToFixed ρ (b * a.val) ∈ J
         rw [finiteActionAverageToFixed_mul]
         exact J.mul_mem_left _ ha
-    | zero => intro b; simpa only [mul_zero, map_zero] using J.zero_mem
+    | zero => intro b; simpa only [mul_zero, map_zero] using! J.zero_mem
     | add x y hx hy ihx ihy =>
         intro b
         rw [mul_add, map_add]
@@ -45,7 +45,7 @@ theorem finiteActionAverage_mem_ideal (ρ : G →* (A ≃ₐ[ℂ] A))
         change finiteActionAverageToFixed ρ (b * (a * x)) ∈ J
         rw [← mul_assoc]
         exact ih (b * a)
-  simpa only [one_mul] using hmul 1
+  simpa only [one_mul] using! hmul 1
 
 /-- Extension to the whole coefficient algebra and contraction preserve invariant ideals. -/
 theorem finiteActionIdeal_comap_map (ρ : G →* (A ≃ₐ[ℂ] A))

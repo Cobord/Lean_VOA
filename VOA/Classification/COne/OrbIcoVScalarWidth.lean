@@ -76,7 +76,7 @@ theorem polyWidthStage_monomial_rows (H K t : ℂ) (r n q : ℕ) (hq : q<7) :
         (OrbIcoW.scalarRows H K t n r))[q]?) = some
           (((OrbIcoW.scalarSource H K n (r+1)
             (OrbIcoW.scalarRows H K t n r))[q]?).getD 0) by
-              rw [List.getElem?_eq_getElem (by simpa using hq)]
+              rw [List.getElem?_eq_getElem (by simpa using! hq)]
               rfl]
       simp only [Option.map_some,Option.getD_some]
       rw [scalarSource_entry H K n (r+1) q _ hq]

@@ -135,7 +135,7 @@ theorem sum_rename_of_isSymmetric {m : ℕ} {g : MvPolynomial (Fin m) ℂ} (hg :
     Nat.cast_smul_eq_nsmul]
 
 theorem sum_coeff_smul_OS {m : ℕ} (g : MvPolynomial (Fin m) ℂ) :
-    ∑ γ ∈ g.support, coeff γ g • OS m γ = ∑ τ : Equiv.Perm (Fin m), rename τ g := by
+    ∑ γ ∈ g.support, g.coeff γ • OS m γ = ∑ τ : Equiv.Perm (Fin m), rename τ g := by
   conv_rhs => rw [g.as_sum]
   simp_rw [OS, Finset.smul_sum, map_sum]
   rw [Finset.sum_comm]
@@ -145,7 +145,7 @@ theorem sum_coeff_smul_OS {m : ℕ} (g : MvPolynomial (Fin m) ℂ) :
 /-- A symmetric lift through `rho`. -/
 def liftS (m : ℕ) (g : MvPolynomial (Fin m) ℂ) : MvPolynomial (Fin (m + 1)) ℂ :=
   ((m.factorial : ℂ)⁻¹) • ∑ γ ∈ g.support,
-    (coeff γ g / ((1 + zc γ : ℕ) : ℂ)) • OS (m + 1) (Finsupp.cons 0 γ)
+    (g.coeff γ / ((1 + zc γ : ℕ) : ℂ)) • OS (m + 1) (Finsupp.cons 0 γ)
 
 theorem liftS_mem_symmetric (m : ℕ) (g : MvPolynomial (Fin m) ℂ) :
     liftS m g ∈ symmetricSubalgebra (Fin (m + 1)) ℂ := by
@@ -156,8 +156,8 @@ theorem liftS_mem_symmetric (m : ℕ) (g : MvPolynomial (Fin m) ℂ) :
 theorem rho_liftS {m : ℕ} {g : MvPolynomial (Fin m) ℂ} (hg : g.IsSymmetric) :
     rho m (liftS m g) = g := by
   rw [liftS, map_smul, map_sum]
-  have h : ∀ γ ∈ g.support, rho m ((coeff γ g / ((1 + zc γ : ℕ) : ℂ)) •
-      OS (m + 1) (Finsupp.cons 0 γ)) = coeff γ g • OS m γ := by
+  have h : ∀ γ ∈ g.support, rho m ((g.coeff γ / ((1 + zc γ : ℕ) : ℂ)) •
+      OS (m + 1) (Finsupp.cons 0 γ)) = g.coeff γ • OS m γ := by
     intro γ _
     rw [map_smul, rho_OS_cons, smul_smul, div_mul_cancel₀]
     exact_mod_cast (show 1 + zc γ ≠ 0 by omega)
@@ -207,7 +207,7 @@ theorem rho_monomial (m : ℕ) (δ : Fin (m + 1) →₀ ℕ) (c : ℂ) :
   · rw [zero_pow h, zero_mul, smul_zero]
 
 theorem coeff_tail_rho {m : ℕ} (g : MvPolynomial (Fin (m + 1)) ℂ) (β : Fin (m + 1) →₀ ℕ)
-    (hβ : β 0 = 0) : coeff (Finsupp.tail β) (rho m g) = coeff β g := by
+    (hβ : β 0 = 0) : (rho m g).coeff (Finsupp.tail β) = g.coeff β := by
   induction g using MvPolynomial.induction_on' with
   | monomial δ c =>
     rw [rho_monomial]
@@ -219,10 +219,10 @@ theorem coeff_tail_rho {m : ℕ} (g : MvPolynomial (Fin (m + 1)) ℂ) (β : Fin 
         intro h3
         apply h2
         rw [← Finsupp.cons_tail δ, ← Finsupp.cons_tail β, h1, hβ, h3]
-    · rw [if_neg h1, coeff_zero, coeff_monomial, if_neg]
+    · rw [if_neg h1, MvPolynomial.coeff_zero, Finsupp.zero_apply, coeff_monomial, if_neg]
       rintro rfl
       exact h1 hβ
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq]
 
 /-- `e = y_0 ⋯ y_{k-1}`. -/
 def eProd (k : ℕ) : MvPolynomial (Fin k) ℂ := ∏ i, X i
@@ -246,7 +246,7 @@ theorem eProd_ne_zero (k : ℕ) : eProd k ≠ 0 := by
 
 theorem coeff_eq_of_isSymmetric {k : ℕ} {g : MvPolynomial (Fin k) ℂ} (hg : g.IsSymmetric)
     (σ : Equiv.Perm (Fin k)) (β : Fin k →₀ ℕ) :
-    coeff (Finsupp.mapDomain σ β) g = coeff β g := by
+    g.coeff (Finsupp.mapDomain σ β) = g.coeff β := by
   conv_lhs => rw [← hg σ]
   exact coeff_rename_mapDomain σ σ.injective g β
 
@@ -258,9 +258,10 @@ theorem exists_eq_eProd_mul {m : ℕ} {g : MvPolynomial (Fin (m + 1)) ℂ} (hg :
     intro β hβ i hi
     rw [mem_support_iff] at hβ
     apply hβ
-    rw [← coeff_eq_of_isSymmetric hg (Equiv.swap 0 i) β, ← coeff_tail_rho, h0, coeff_zero]
+    rw [← coeff_eq_of_isSymmetric hg (Equiv.swap 0 i) β, ← coeff_tail_rho, h0, MvPolynomial.coeff_zero,
+      Finsupp.zero_apply]
     rw [Finsupp.mapDomain_equiv_apply, Equiv.symm_swap, Equiv.swap_apply_left, hi]
-  set g' := ∑ β ∈ g.support, monomial (β - onesF (m + 1)) (coeff β g) with hg'
+  set g' := ∑ β ∈ g.support, monomial (β - onesF (m + 1)) (g.coeff β) with hg'
   have heq : g = eProd (m + 1) * g' := by
     conv_lhs => rw [g.as_sum]
     rw [hg', Finset.mul_sum]
@@ -333,7 +334,7 @@ theorem EE_isSymmetric (m j : ℕ) : (EE m j).IsSymmetric := by
   intro σ
   rw [EE, ← AlgHom.coe_toRingHom, ← PowerSeries.coeff_map, map_prod]
   simp_rw [map_facS, AlgHom.coe_toRingHom, rename_X]
-  congr 1
+  refine congrArg (PowerSeries.coeff (R := MvPolynomial (Fin m) ℂ) j) ?_
   exact Fintype.prod_equiv σ _ _ fun _ => rfl
 
 theorem EE_eq_zero (m j : ℕ) (hj : m < j) : EE m j = 0 := by
@@ -384,7 +385,7 @@ theorem EE_self (m : ℕ) : EE m m = (-1) ^ m * eProd m := by
 
 /-- `Σ_{a + b = k} EE_a h_b = 0` for `k ≥ 1`. -/
 theorem sum_EE_hh (m k : ℕ) (hk : 1 ≤ k) :
-    ∑ p ∈ Finset.antidiagonal k, EE m p.1 * hh m p.2 = 0 := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, EE m p.1 * hh m p.2 = 0 := by
   have h : (∏ i : Fin m, facS (X i : MvPolynomial (Fin m) ℂ)) *
       ∏ i : Fin m, geomS (X i : MvPolynomial (Fin m) ℂ) = 1 := by
     rw [← Finset.prod_mul_distrib]

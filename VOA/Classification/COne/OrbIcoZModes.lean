@@ -15,7 +15,7 @@ abbrev selfMode (k : ℤ) : A OrbIco.Wi :=
 theorem selfMode_high (k : ℤ) (hk : 71 < k) : selfMode k = 0 := by
   have hg : OrbIco.Wi.smul OrbIco.Xico k OrbIco.Xico ∈ OrbIco.Wi.grading (71 - k) := by
     convert OrbIco.Wi.grading_mode _ OrbIco.Xico_grading _ OrbIco.Xico_grading k using 2
-    ring
+    all_goals first | rfl | ring
   rw [OrbIco.Wi.positivity _ (by omega)] at hg
   rw [selfMode, (Submodule.mem_bot ℂ).mp hg, map_zero]
 
@@ -25,7 +25,7 @@ theorem selfMode_circle (m : ℕ) :
   have h := (mk_eq_zero_iff OrbIco.Wi).mpr
     (Hres_mem_O OrbIco.Wi OrbIco.Xico_grading OrbIco.Xico m 0)
   simpa only [Hres, Gres, add_zero, map_sum,
-    map_smul, Nat.cast_add, Nat.cast_ofNat] using h
+    map_smul, Nat.cast_add, Nat.cast_ofNat] using! h
 
 /-- Skew symmetry reduced to a finite sum in the intrinsic Zhu algebra. -/
 theorem selfMode_skew (k : ℤ) (hk : k ≤ 70) :
@@ -48,6 +48,6 @@ theorem selfMode_skew (k : ℤ) (hk : k ≤ 70) :
   rw [hs, Onm_zero_zero_eq_O] at h
   have hh := (mk_eq_zero_iff OrbIco.Wi).mpr h
   rw [map_sub, map_smul, map_sum] at hh
-  simpa only [map_smul, sub_eq_zero] using hh
+  simpa only [map_smul, sub_eq_zero] using! hh
 
 end VOA.Classification.COne.OrbIcoZ

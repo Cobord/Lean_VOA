@@ -96,7 +96,8 @@ theorem irredundant_complete_of_equiv {ι : Type*} (e : ι ≃ Φ W)
     refine ⟨e.symm (Quotient.mk (IrrModule.setoid W) V), ?_⟩
     have : (Mfam (e.symm (Quotient.mk (IrrModule.setoid W) V))).toΦ
         = Quotient.mk (IrrModule.setoid W) V := by
-      rw [hMfam, Equiv.apply_symm_apply]
+      rw [hMfam]
+      exact e.apply_symm_apply _
     exact Quotient.exact this.symm
 
 end VOA

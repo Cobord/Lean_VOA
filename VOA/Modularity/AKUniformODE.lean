@@ -174,7 +174,7 @@ theorem exists_monic_relation_mem_of_fin_gen {R : Type*} [CommRing R] [IsNoether
       (fun i : ℕ => (if h : i < n₀ + 1 then cc ⟨i, h⟩ else 0) • x i) (n₀ + 1)]
     exact Finset.sum_congr rfl (fun i _ => by rw [dif_pos i.2])
   rw [hsum, ← hyz]
-  simpa using hz
+  simpa using! hz
 
 /-! ## AK Lemma 5.3, in `V_A` -/
 
@@ -389,7 +389,7 @@ theorem formalODE_order_of_monic_of_unitriangular {S : 𝒱 →ₗ[ℂ] FormalQS
   rw [Finset.sum_congr rfl (fun j (_ : j ∈ Finset.range s) => by
     rw [hπsmul, hπd])] at hcoe
   have hfun := congrFun hcoe e
-  simpa [psSMul] using hfun
+  simpa [psSMul] using! hfun
 
 /-! ## The ODE with a module-independent **order** -/
 
@@ -451,7 +451,7 @@ theorem uniform_order_character_formalODE_of_etingofFinite (W : VertexOperatorAl
   have hsupp : ∀ v : 𝒱, torusOnePointHom N v ∈ QSeriesAt (hw - W.centralCharge / 24) :=
     fun v => torusOnePoint_mem_QSeriesAt W N hcw v
   have h := hall _ (torusOnePointHom N) hsupp (torusOnePointHom_isFormalBlock N)
-  simpa only [torusOnePointHom_apply, torusOnePoint_vacuum] using h
+  simpa only [torusOnePointHom_apply, torusOnePoint_vacuum] using! h
 
 end Character
 

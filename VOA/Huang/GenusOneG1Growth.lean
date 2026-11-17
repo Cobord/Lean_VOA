@@ -78,7 +78,7 @@ theorem geo2_algebraMap (c : ℂ) : Geo2 (algebraMap ℂ R2 c) := fun a ha =>
     · rw [norm_zero]; positivity⟩
 
 theorem sum_antidiagonal_pow_le {ρ : ℝ} (h0 : 0 ≤ ρ) (h1 : ρ < 1) (n : ℕ) :
-    ∑ p ∈ Finset.antidiagonal n, ρ ^ p.1 ≤ (1 - ρ)⁻¹ := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ρ ^ p.1 ≤ (1 - ρ)⁻¹ := by
   rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   calc ∑ i ∈ Finset.range (n + 1), ρ ^ i ≤ ∑' i : ℕ, ρ ^ i :=
         (summable_geometric_of_lt_one h0 h1).sum_le_tsum _ (fun i _ => pow_nonneg h0 i)
@@ -98,10 +98,10 @@ theorem Geo2.mul {f g : R2} (hf : Geo2 f) (hg : Geo2 g) : Geo2 (f * g) := by
   obtain ⟨E, hE0, hE⟩ := exists_sq_le_pow hb
   refine ⟨C * D * E, fun n k => ?_⟩
   rw [c2_mul]
-  have hterm : ∀ p ∈ Finset.antidiagonal n, ∀ r ∈ Finset.antidiagonal k,
+  have hterm : ∀ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∀ r ∈ Finset.HasAntidiagonal.antidiagonal k,
       ‖c2 f p.1 r.1 * c2 g p.2 r.2‖ ≤ C * D * b ^ (n + k) := by
     intro p hp r hr
-    rw [Finset.mem_antidiagonal] at hp hr
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp hr
     rw [norm_mul]
     calc ‖c2 f p.1 r.1‖ * ‖c2 g p.2 r.2‖
         ≤ (C * b ^ (p.1 + r.1)) * (D * b ^ (p.2 + r.2)) :=
@@ -110,11 +110,11 @@ theorem Geo2.mul {f g : R2} (hf : Geo2 f) (hg : Geo2 g) : Geo2 (f * g) := by
           rw [← hp, ← hr, show p.1 + p.2 + (r.1 + r.2) = (p.1 + r.1) + (p.2 + r.2) by ring,
             pow_add]
           ring
-  calc ‖∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k, c2 f p.1 r.1 * c2 g p.2 r.2‖
-      ≤ ∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k,
+  calc ‖∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k, c2 f p.1 r.1 * c2 g p.2 r.2‖
+      ≤ ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k,
           ‖c2 f p.1 r.1 * c2 g p.2 r.2‖ := by
         refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun p _ => norm_sum_le _ _)
-    _ ≤ ∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k, C * D * b ^ (n + k) :=
+    _ ≤ ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k, C * D * b ^ (n + k) :=
         Finset.sum_le_sum fun p hp => Finset.sum_le_sum fun r hr => hterm p hp r hr
     _ = ((n : ℝ) + 1) * ((k : ℝ) + 1) * (C * D * b ^ (n + k)) := by
         simp only [Finset.sum_const, Finset.Nat.card_antidiagonal, nsmul_eq_mul]
@@ -219,16 +219,16 @@ theorem euler_step {lam : ℂ} {f : ι → R2} {Cm : ι → ι → R2}
   have hX0 : 0 ≤ X := le_trans hM0 hMX
   set G := (1 - ρ)⁻¹ with hG
   have hG0 : 0 ≤ G := inv_nonneg.mpr (by linarith)
-  have heq : (lam + n) * c2 (f i) n k = ∑ l, ∑ p ∈ Finset.antidiagonal n,
-      ∑ r ∈ Finset.antidiagonal k, c2 (Cm i l) p.1 r.1 * c2 (f l) p.2 r.2 := by
+  have heq : (lam + n) * c2 (f i) n k = ∑ l, ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
+      ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k, c2 (Cm i l) p.1 r.1 * c2 (f l) p.2 r.2 := by
     have h := congrArg (fun g => c2 g n k) (hsys i)
     simp only [thetaR2, c2_mk2, c2_sum, c2_mul] at h
     exact h
-  have hterm : ∀ l, ∀ p ∈ Finset.antidiagonal n, ∀ r ∈ Finset.antidiagonal k,
+  have hterm : ∀ l, ∀ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∀ r ∈ Finset.HasAntidiagonal.antidiagonal k,
       ‖c2 (Cm i l) p.1 r.1 * c2 (f l) p.2 r.2‖ ≤
         (D * X * a ^ (n + k)) * (ρ ^ p.1 * ρ ^ r.1) := by
     intro l p hp r hr
-    rw [Finset.mem_antidiagonal] at hp hr
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp hr
     have hf : ‖c2 (f l) p.2 r.2‖ ≤ X * a ^ (p.2 + r.2) := by
       by_cases h2 : p.2 = n
       · rw [h2]; exact hX l r.2
@@ -244,18 +244,18 @@ theorem euler_step {lam : ℂ} {f : ι → R2} {Cm : ι → ι → R2}
   have hbound : ‖(lam + n) * c2 (f i) n k‖ ≤
       (Fintype.card ι * D * (G * G)) * (X * a ^ (n + k)) := by
     rw [heq]
-    calc ‖∑ l, ∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k,
+    calc ‖∑ l, ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k,
           c2 (Cm i l) p.1 r.1 * c2 (f l) p.2 r.2‖
-        ≤ ∑ l, ∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k,
+        ≤ ∑ l, ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k,
           ‖c2 (Cm i l) p.1 r.1 * c2 (f l) p.2 r.2‖ := by
           refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun l _ => ?_)
           exact (norm_sum_le _ _).trans (Finset.sum_le_sum fun p _ => norm_sum_le _ _)
-      _ ≤ ∑ l : ι, ∑ p ∈ Finset.antidiagonal n, ∑ r ∈ Finset.antidiagonal k,
+      _ ≤ ∑ l : ι, ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal k,
           (D * X * a ^ (n + k)) * (ρ ^ p.1 * ρ ^ r.1) :=
           Finset.sum_le_sum fun l _ => Finset.sum_le_sum fun p hp =>
             Finset.sum_le_sum fun r hr => hterm l p hp r hr
-      _ = ∑ l : ι, (D * X * a ^ (n + k)) * ((∑ p ∈ Finset.antidiagonal n, ρ ^ p.1) *
-          (∑ r ∈ Finset.antidiagonal k, ρ ^ r.1)) := by
+      _ = ∑ l : ι, (D * X * a ^ (n + k)) * ((∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ρ ^ p.1) *
+          (∑ r ∈ Finset.HasAntidiagonal.antidiagonal k, ρ ^ r.1)) := by
           refine Finset.sum_congr rfl fun l _ => ?_
           rw [Finset.sum_mul_sum, Finset.mul_sum]
           refine Finset.sum_congr rfl fun p _ => ?_
@@ -359,7 +359,7 @@ theorem geo2_of_euler_system {lam : ℂ} {f : ι → R2} {Cm : ι → ι → R2}
       have hiter : ∀ j : ℕ, ∀ i k, ‖c2 (f i) n k‖ ≤ (M + B' / 2 ^ j) * a ^ (n + k) := by
         intro j
         induction j with
-        | zero => simpa using hcrude
+        | zero => simpa using! hcrude
         | succ j ihj =>
           intro i k
           have hstep := euler_step hsys ha hρ0 hρ1 hD0 hCm hM0

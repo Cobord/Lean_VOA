@@ -85,7 +85,7 @@ theorem InS.mul {r r' : ℕ} {w w' : ℤ} {F G : PowerSeries (MPoly R)}
   refine Submodule.sum_mem _ fun p hp => ?_
   have h := mul_mem_modelDeg R t (hF p.1) (hG p.2)
   have hsum : ((p.1 : ℤ) + w) + ((p.2 : ℤ) + w') = (a : ℤ) + (w + w') := by
-    have := Finset.mem_antidiagonal.mp hp
+    have := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     rw [← this]; push_cast; ring
   rwa [hsum] at h
 
@@ -110,7 +110,7 @@ theorem InS.congr {r : ℕ} {w w' : ℤ} {F G : PowerSeries (MPoly R)} (hF : InS
   subst hFG hw; exact hF
 
 theorem InS.deriv {r : ℕ} {w : ℤ} {F : PowerSeries (MPoly R)} (hF : InS R t r w F) :
-    InS R t r (w + 1) (PowerSeries.derivative (MPoly R) F) := fun a => by
+    InS R t r (w + 1) (PowerSeries.derivative (R := MPoly R) F) := fun a => by
   rw [PowerSeries.coeff_derivative]
   have h := hF (a + 1)
   have he : ((a + 1 : ℕ) : ℤ) + w = (a : ℤ) + (w + 1) := by push_cast; ring
@@ -192,8 +192,8 @@ theorem jt_inS : InS R t 1 2 (gS R 3 - tS R t) :=
 /-! ### The Wronskian identities -/
 
 theorem map_derivative {A B : Type*} [CommRing A] [CommRing B] (f : A →+* B) (F : PowerSeries A) :
-    PowerSeries.map f (PowerSeries.derivative A F) =
-      PowerSeries.derivative B (PowerSeries.map f F) := by
+    PowerSeries.map f (PowerSeries.derivative (R := A) F) =
+      PowerSeries.derivative (R := B) (PowerSeries.map f F) := by
   ext n
   simp [PowerSeries.coeff_derivative, PowerSeries.coeff_map, map_mul, map_add, map_natCast]
 
@@ -210,7 +210,7 @@ theorem jj_jet : jSer * jSer = dS ySer * dS ySer - dS xSer * dS zSer := by
   simp only [jSer, xSer, ySer, zSer, Derivation.leibniz, smul_eq_mul]; ring
 
 /-- `d/ds` of a mapped generator series. -/
-def dG (g : Fin 4) : PowerSeries (MPoly R) := PowerSeries.derivative (MPoly R) (gS R g)
+def dG (g : Fin 4) : PowerSeries (MPoly R) := PowerSeries.derivative (R := MPoly R) (gS R g)
 
 theorem map_dS (g : Fin 4) :
     PowerSeries.map (ι R).toRingHom (dS (genSer g)) = dG R g := by
@@ -320,7 +320,7 @@ def pblk {K : ℕ} (c : Fin K → Fin 2) (g : Fin K → Fin 4) (a : Fin K → �
 /-- **Products of block coefficients lie in the model.** -/
 theorem pblk_mem : ∀ {K : ℕ} (c : Fin K → Fin 2) (g : Fin K → Fin 4) (a : Fin K → ℕ),
     pblk R t c g a ∈ modelDeg R t (∑ i, ((c i : ℕ) + 1)) (∑ i, ((a i : ℤ) + bwt (c i) (g i)))
-  | 0, c, g, a => by simpa [pblk] using one_mem_modelDeg R t
+  | 0, c, g, a => by simpa [pblk] using! one_mem_modelDeg R t
   | K + 1, c, g, a => by
     rw [pblk, Fin.prod_univ_succ, Fin.sum_univ_succ, Fin.sum_univ_succ]
     exact mul_mem_modelDeg R t (blk_inS R t (c 0) (g 0) (a 0))

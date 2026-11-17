@@ -82,8 +82,8 @@ theorem binDeg_bilin {d₁ d₂ : ℕ} (Φ : P2 → P2 → ℂ)
     (hmono : ∀ e f : Fin 2 →₀ ℕ, e 0 + e 1 = d₁ → f 0 + f 1 = d₂ →
       Φ (X 0 ^ e 0 * X 1 ^ e 1) (X 0 ^ f 0 * X 1 ^ f 1) = 0) :
     ∀ P ∈ binDeg d₁, ∀ Q ∈ binDeg d₂, Φ P Q = 0 := by
-  have h0l : ∀ Q, Φ 0 Q = 0 := fun Q => by simpa using hsmul1 0 0 Q
-  have h0r : ∀ P, Φ P 0 = 0 := fun P => by simpa using hsmul2 0 P 0
+  have h0l : ∀ Q, Φ 0 Q = 0 := fun Q => by simpa using! hsmul1 0 0 Q
+  have h0r : ∀ P, Φ P 0 = 0 := fun P => by simpa using! hsmul2 0 P 0
   intro P hP Q hQ
   induction hP using Submodule.span_induction with
   | mem x hx =>
@@ -274,7 +274,7 @@ theorem binDeg_hom {B : P2} {d : ℕ} (hB : B ∈ binDeg d) : B.IsHomogeneous d 
     exact he
   | zero => exact isHomogeneous_zero _ _ _
   | add x y _ _ hx hy => exact hx.add hy
-  | smul c x _ hx => rw [smul_eq_C_mul]; simpa using hx.C_mul c
+  | smul c x _ hx => rw [smul_eq_C_mul]; simpa using! hx.C_mul c
 
 theorem xy_mem_binDeg (a b : ℕ) : (X 0 ^ a * X 1 ^ b : P2) ∈ binDeg (a + b) := by
   rw [binMono_eq]
@@ -387,7 +387,7 @@ theorem Tb_inj {B : P2} {n : ℕ} (hB : B ∈ binDeg (2 * n)) (h : Tb B = 0) : B
     (mul_eq_zero.mp (hli k)).resolve_right (cnk_ne_zero n k)
   have hh := binDeg_hom hB
   ext e
-  rw [coeff_zero]
+  show B.coeff e = (0 : ℂ)
   by_cases he : e 0 + e 1 = 2 * n
   · have := hc ⟨e 1, by omega⟩
     rw [cf, lcoeff_apply] at this

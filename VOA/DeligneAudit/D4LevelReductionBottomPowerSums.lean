@@ -21,7 +21,7 @@ theorem bottomWord_rawCartan_shifts (m : ℕ)
         (letterWeight i 5 : ℂ) • colourPowerShift ρ w 5 r l := by
   induction l with
   | nil =>
-      simpa [radicalWord, wordOp, colourPowerShift] using source_cartan_pos ρ w m h i r hr
+      simpa [radicalWord, wordOp, colourPowerShift] using! source_cartan_pos ρ w m h i r hr
   | cons q l ih =>
       rcases q with ⟨j, s⟩
       have hj := hl (j, s) (by simp)
@@ -47,7 +47,7 @@ theorem bottomWord_cartanPowerSums (m : ℕ)
   have hh := bottomWord_rawCartan_shifts ρ w m h i r hr l hl
   fin_cases i <;>
     simpa [leviCurrent, leviSign, A3Sector.simpleH, letterWeight,
-      keyLabel, wordKey, sub_eq_add_neg] using hh
+      keyLabel, wordKey, sub_eq_add_neg] using! hh
 
 /-- The extra reductive Cartan acts by the negative adjoint-letter power sum. -/
 theorem bottomWord_extraCartanPowerSum (m : ℕ)
@@ -56,7 +56,7 @@ theorem bottomWord_extraCartanPowerSum (m : ℕ)
     ρ.op (0 : Fin 28) r (radicalWord ρ w l) = -colourPowerShift ρ w 1 r l := by
   induction l with
   | nil =>
-      simpa [radicalWord, wordOp, colourPowerShift] using source_extra_pos ρ w m h r hr
+      simpa [radicalWord, wordOp, colourPowerShift] using! source_extra_pos ρ w m h r hr
   | cons q l ih =>
       rcases q with ⟨j, s⟩
       have hj := hl (j, s) (by simp)

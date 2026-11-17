@@ -194,7 +194,7 @@ end Combinatorics
 theorem L1_pow_mem_grading {a : V} {w : ℤ} (ha : a ∈ W.grading w) (j : ℕ) :
     (W.L 1 ^ j) a ∈ W.grading (w - j) := by
   induction j with
-  | zero => simpa using ha
+  | zero => simpa using! ha
   | succ j ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := W.toPreVertexAlgebra.smul_mem_grading W.conformal_mem ih 2
@@ -373,7 +373,7 @@ theorem eq_zero_of_pr {x : M} (h : ∀ f, dualPairing O x f = 0) : x = 0 := by
     have he : internalProjTo O.isInternal α x = ⟨cmp O α x, cmp_mem O α x⟩ := Subtype.ext rfl
     rw [he, hg] at h1
     exact one_ne_zero h1
-  simpa using hx
+  simpa using! hx
 
 end Pairing
 
@@ -577,7 +577,8 @@ def perpIso : Submodule (modeAlg O.toWeakModule) M ≃o
   right_inv T := perpA_perpD O (OrderDual.ofDual T)
   map_rel_iff' := by
     intro S S'
-    simp only [Equiv.coe_fn_mk, OrderDual.toDual_le_toDual]
+    -- 4.35: the `Equiv.mk` target is ill-typed at implicit transparency; restate it.
+    change perpA O S' ≤ perpA O S ↔ S ≤ S'
     constructor
     · intro h
       have := perpD_antitone O h

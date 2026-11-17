@@ -21,7 +21,7 @@ theorem vacuumCoefficient_from_Ward (R : ℕ) (hR : R<100)
   rw [vacuumState,vacuumProbe_vacuumProjection,map_smul] at hp
   have hvp : vacuumProbe (finiteActualSequence false R a v (2*r)) =
       finiteBlockProbe false R a ⟨2*r,by omega⟩ v := by
-    simpa only [Bool.false_eq_true,if_false,mul_one] using
+    simpa only [Bool.false_eq_true,if_false,mul_one] using!
       finiteActualSequence_probe false R a v (2*r) hr
   rw [hvp] at hp
   have he : vacuumCoefficient r =
@@ -42,7 +42,7 @@ theorem sixthCoefficient_from_Ward (R : ℕ) (hR : R<64)
   rw [sixthState,sixthProbe_sixthProjection,map_smul] at hp
   have hvp : sixthProbe (finiteActualSequence true R a v (2*r)) =
       finiteBlockProbe true R a ⟨2*r,by omega⟩ v * neutralProbe Xico := by
-    simpa only [if_true] using finiteActualSequence_probe true R a v (2*r) hr
+    simpa only [if_true] using! finiteActualSequence_probe true R a v (2*r) hr
   rw [hvp] at hp
   have he : sixthCoefficient (18+r) =
       ((2:ℂ)^r * sixthProbe (productState (36+2*r) (by omega)).val)/neutralProbe Xico := by

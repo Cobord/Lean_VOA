@@ -106,7 +106,6 @@ theorem e8E_isUnimodular : e8E.IsUnimodular := by
     ← _root_.IntegralLattice.det_eq_gram_det e8E (Pi.basisFun ℤ (Fin 8))]
   have hg : e8E.gram (Pi.basisFun ℤ (Fin 8)) = CartanMatrix.E₈ := by
     ext i j
-    rw [_root_.IntegralLattice.gram_apply]
     have hb : ∀ k, (Pi.basisFun ℤ (Fin 8) k : Fin 8 → ℤ) = Pi.single k 1 := fun k => by
       rw [Pi.basisFun_apply]
     change Matrix.toBilin' CartanMatrix.E₈ (Pi.basisFun ℤ (Fin 8) i) (Pi.basisFun ℤ (Fin 8) j) = _

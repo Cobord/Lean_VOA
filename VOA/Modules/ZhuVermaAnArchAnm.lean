@@ -272,8 +272,8 @@ theorem anm_right_closure_of_gens (W : VertexOperatorAlgebra 𝒱) (n m : ℕ) (
     (hL : ∀ c : 𝒱, anmRight W n m u (anmLgen W n m c) ∈ Onm W n m) :
     ∀ x ∈ Onm W n m, anmRight W n m u x ∈ Onm W n m := by
   have hle : Onm W n m ≤ (Onm W n m).comap (anmRightR W n m u) := by
-    rw [Onm_eq_sup_span]
-    refine sup_le ?_ ?_
+    -- Lean 4.35 port: rewrite only the left side (a plain `rw` also unfolds the `comap` target).
+    refine (le_of_eq (Onm_eq_sup_span W n m)).trans (sup_le ?_ ?_)
     · rw [Submodule.span_le]
       rintro g ⟨c, d, rfl⟩
       simpa only [SetLike.mem_coe, Submodule.mem_comap, anmRightR_apply] using hcirc c d
@@ -317,8 +317,8 @@ theorem AnmRightModule_of_gens (W : VertexOperatorAlgebra 𝒱) (n : ℕ)
     AnmRightModule W n := by
   intro g hg v
   have hle : Onm W n 0 ≤ (Onm W n 0).comap (anmRightL W n 0 v) := by
-    rw [Onm_eq_sup_span]
-    refine sup_le ?_ ?_
+    -- Lean 4.35 port: rewrite only the left side (a plain `rw` also unfolds the `comap` target).
+    refine (le_of_eq (Onm_eq_sup_span W n 0)).trans (sup_le ?_ ?_)
     · rw [Submodule.span_le]
       rintro x ⟨c, d, rfl⟩
       simpa only [SetLike.mem_coe, Submodule.mem_comap, anmRightL_apply] using hcirc c d v

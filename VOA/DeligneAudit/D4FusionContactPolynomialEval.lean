@@ -36,7 +36,7 @@ abbrev PolyAlg := Algebra.adjoin ℂ (Set.range (polyOp R w letter))
 def polyAlg : MvPolynomial ι ℂ →ₐ[ℂ] Module.End ℂ (Gr R w) :=
   letI : IsMulCommutative (PolyAlg R w letter) := Algebra.isMulCommutative_adjoin ℂ (by
     rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
-    exact polyOp_commute R w letter i j)
+    exact fun _ => polyOp_commute R w letter i j)
   letI : CommRing (PolyAlg R w letter) :=
     { toRing := inferInstance
       mul_comm := mul_comm' }

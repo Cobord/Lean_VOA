@@ -18,7 +18,7 @@ theorem centralKey_word_colours (c d : ℕ) (l : List (Fin 6 × ℕ))
   simp only [centralLetterKey, keyDepth, zero_add, add_zero] at hl
   simp only [wordKey, centralLetterKey] at hz
   have hc : l.countP (fun q => q.1 = 5) = l.length := hz.trans hl
-  simpa using List.countP_eq_length.mp hc
+  simpa using! List.countP_eq_length.mp hc
 
 /-- A nonzero raising replacement in a central word creates a Y letter at the same level. -/
 theorem central_raise_replacement (m : ℕ) (i : Fin 3) (r : ℕ)
@@ -50,7 +50,7 @@ theorem central_raise_replacement (m : ℕ) (i : Fin 3) (r : ℕ)
       refine ⟨?_, ?_, ?_⟩
       · rw [hg, hg, ht.1]
       · rw [hp, hp, ht.2.1]
-      · simpa [wordKey] using ht.2.2
+      · simpa [wordKey] using! ht.2.2
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (ρ : CurrentModule D4sector.f V) (w : V)
@@ -73,12 +73,12 @@ theorem centralKey_simple_raise_mem_next (m c d : ℕ)
         rw [hl] at hg hp
         apply boundaryKey_le_next_of_Y ρ w m h _ (wordKey q) _ _ hy
           (keyLayer_le_orbit ρ w _ (radicalWord_mem_key ρ w q))
-        · simpa [keyAlphaGrade, keyDepth, centralLetterKey] using hg
-        · simpa [keyLeviLevel, centralLetterKey] using hp
+        · simpa [keyAlphaGrade, keyDepth, centralLetterKey] using! hg
+        · simpa [keyLeviLevel, centralLetterKey] using! hp
       exact hspan (simple_raise_word_span ρ w m h i r l)
   | zero => simp
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul t x _ hx => simpa using Submodule.smul_mem _ t hx
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul t x _ hx => simpa using! Submodule.smul_mem _ t hx
 
 /-- Central boundary vectors have only the middle fundamental Levi label. -/
 theorem centralKey_cartan_weight (b c d : ℕ)
@@ -89,7 +89,7 @@ theorem centralKey_cartan_weight (b c d : ℕ)
   have hw := cartan_weight_key ρ w (b + c) h i (centralLetterKey c d) hv
   fin_cases i <;>
     simpa [leviCurrent, leviSign, A3Sector.simpleH, A3Sector.weightABC,
-      keyLabel, centralLetterKey, Nat.cast_add, Int.cast_add, Int.cast_sub] using hw
+      keyLabel, centralLetterKey, Nat.cast_add, Int.cast_add, Int.cast_sub] using! hw
 
 /-- Killing the next level and positive Cartan modes gives the exterior-square relations. -/
 theorem centralKey_localWeyl_quotient (b c d : ℕ)
@@ -105,7 +105,7 @@ theorem centralKey_localWeyl_quotient (b c d : ℕ)
     apply (Submodule.Quotient.mk_eq_zero N).mpr
     apply N.smul_mem
     apply hnext
-    simpa only [Nat.cast_add, add_sub_cancel_right] using
+    simpa only [Nat.cast_add, add_sub_cancel_right] using!
       centralKey_simple_raise_mem_next ρ w (b + c) c d h i r hv
   have hh (i : Fin 3) : Q.op (A3Sector.simpleH i) 0 (N.mkQ v) =
       (A3Sector.weightABC 0 b 0 i : ℂ) • N.mkQ v := by
@@ -143,10 +143,10 @@ theorem centralKey_localWeyl_quotient (b c d : ℕ)
       rw [key_simple_lower_nil_levi ρ w (b + c) h i (centralLetterKey c d) hv, map_zero]
     have hh' : H (N.mkQ v) =
         (((A3Sector.weightABC 0 b 0 i : ℕ) : ℤ) : ℂ) • N.mkQ v := by
-      simpa using hh i
+      simpa using! hh i
     have hs := (CLFilt.hw_pow E F H hEF hHF (he i 0) hh' K hn).2
       (Int.natCast_nonneg _)
-    simpa only [Int.toNat_natCast] using hs
+    simpa only [Int.toNat_natCast] using! hs
 
 /-- Each cyclic quotient on the central boundary has the local exterior-square bound. -/
 theorem centralKey_quotient_rank_le (b c d : ℕ)
@@ -157,7 +157,7 @@ theorem centralKey_quotient_rank_le (b c d : ℕ)
     (hpos : ∀ i s, 0 < s → (leviCurrent ρ).op (A3Sector.simpleH i) s v ∈ N) :
     FiniteDimensional ℂ (cycSubG (quotRepG (leviCurrent ρ) N hN) (N.mkQ v)) ∧
       Module.finrank ℂ (cycSubG (quotRepG (leviCurrent ρ) N hN) (N.mkQ v)) ≤ 6 ^ b := by
-  simpa using A3Sector.a3_all_weight_rank (quotRepG (leviCurrent ρ) N hN)
+  simpa using! A3Sector.a3_all_weight_rank (quotRepG (leviCurrent ρ) N hN)
     (N.mkQ v) 0 b 0 (centralKey_localWeyl_quotient ρ w b c d h N hN hnext hv hpos)
 
 end VOA.DeligneAudit.D4LevelReduction

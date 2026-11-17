@@ -360,12 +360,12 @@ theorem alphaLat_comm_Yemα (m j t : ℤ) :
   | zero => rw [map_zero, map_zero]
   | add y1 y2 h1 h2 => rw [map_add, map_add, h1, h2]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, map_add, h1, h2]
       | single n a =>
-          rw [show (Finsupp.single n a : LatGrp) = a • eVec n from
-            (Finsupp.smul_single_one n a).symm]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, map_smul, alphaLat_comm_Yemα_tmul,
             LinearMap.smul_apply]
 

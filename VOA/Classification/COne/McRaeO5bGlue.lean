@@ -143,10 +143,10 @@ theorem sub_one_mk (x y : ℝ) :
   push_cast; ring
 
 theorem mk_ne_zero {x y : ℝ} (h : y ≠ 0) : (x : ℂ) + (y : ℂ) * Complex.I ≠ 0 := by
-  intro h0; apply h; have := congrArg Complex.im h0; simpa using this
+  intro h0; apply h; have := congrArg Complex.im h0; simpa using! this
 
 theorem mk_ne_one {x y : ℝ} (h : y ≠ 0) : (x : ℂ) + (y : ℂ) * Complex.I ≠ 1 := by
-  intro h0; apply h; have := congrArg Complex.im h0; simpa using this
+  intro h0; apply h; have := congrArg Complex.im h0; simpa using! this
 
 theorem mk_not_seg {x y : ℝ} (h : y ≠ 0) : (x : ℂ) + (y : ℂ) * Complex.I ∉ seg01 := by
   rintro ⟨h0, -, -⟩; rw [im_mk] at h0; exact h h0
@@ -591,7 +591,7 @@ theorem hasSum_of_nat_shift {u : ℤ → ℂ} {n₁ : ℤ} (hu : ∀ n, n < n₁
     HasSum (fun n : ℤ => u n * ζ ^ n) (ζ ^ n₁ * X) := by
   have h2 := h.mul_left (ζ ^ n₁)
   let g : ℕ → ℤ := fun k => k + n₁
-  have hg : Function.Injective g := fun i j hij => by simpa [g] using hij
+  have hg : Function.Injective g := fun i j hij => by simpa [g] using! hij
   have hf : ∀ n ∉ Set.range g, u n * ζ ^ n = 0 := by
     intro n hn
     have : n < n₁ := by
@@ -604,7 +604,7 @@ theorem hasSum_of_nat_shift {u : ℤ → ℂ} {n₁ : ℤ} (hu : ∀ n, n < n₁
 theorem summable_nat_shift {u : ℤ → ℂ} {n₁ : ℤ} {ζ : ℂ} (hζ0 : ζ ≠ 0)
     (h : Summable fun n : ℤ => u n * ζ ^ n) : Summable fun k : ℕ => u (k + n₁) * ζ ^ k := by
   have h1 := (h.comp_injective (i := fun k : ℕ => (k : ℤ) + n₁)
-    (fun i j hij => by simpa using hij)).mul_left (ζ ^ n₁)⁻¹
+    (fun i j hij => by simpa using! hij)).mul_left (ζ ^ n₁)⁻¹
   refine h1.congr fun k => ?_
   simp only [Function.comp_apply]
   rw [zpow_add₀ hζ0, zpow_natCast]; field_simp
@@ -666,7 +666,7 @@ theorem residue_of_channels {s t q : ℤ → ℂ} {n₀ n₁ m₁ : ℤ}
     rw [hΨre _ hw]
     have h1 := (summable_row hQF hc hw).hasSum.mul_left (ζ ^ n₀)
     let g : ℕ → ℤ := fun k => n₀ - k
-    have hg : Function.Injective g := fun i j hij => by simpa [g] using hij
+    have hg : Function.Injective g := fun i j hij => by simpa [g] using! hij
     have hf : ∀ n ∉ Set.range g, s n * ζ ^ n = 0 := by
       intro n hn
       have : n₀ < n := by

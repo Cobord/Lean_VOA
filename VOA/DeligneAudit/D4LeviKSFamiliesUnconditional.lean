@@ -40,7 +40,7 @@ theorem rx_family_prefix_unconditional
   have hW' : xyzEvaluation ρ w shape W =
       mixedTop (yOp ρ) (zOp ρ) c s (ys ++ List.replicate c 0)
         (rs.map (transportCurrent (xOp ρ))).prod w := by
-    simpa [yOp, xOp, radicalColour] using hW
+    simpa [yOp, xOp, radicalColour] using! hW
   refine ⟨shape, W, hshape, hW', ?_⟩
   intro P hP
   exact rx_family_prefix_of_evaluation ρ w m i h rs ys c s hK hks
@@ -75,7 +75,7 @@ theorem ry_family_prefix_unconditional
   have hW' : xyzEvaluation ρ w shape W =
       mixedTop (xOp ρ) (zOp ρ) c s (xs ++ List.replicate c 0)
         (rs.map (transportCurrent (yOp ρ))).prod w := by
-    simpa [yOp, xOp, radicalColour] using hW
+    simpa [yOp, xOp, radicalColour] using! hW
   refine ⟨shape, W, hshape, hW', ?_⟩
   intro P hP
   exact ry_family_prefix_of_evaluation ρ w m i h rs xs c s hK hks

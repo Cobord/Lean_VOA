@@ -50,7 +50,7 @@ theorem quotient_row_mul_zero (row : WordRow) (t : Word) (hrow : rowEval f row �
   have hz : (I.restrictScalars ℂ).mkQ (rowEval f row * polyWord (t.map f)) = 0 :=
     (Submodule.Quotient.mk_eq_zero _).mpr hm
   rw [rowEval_mul_factor] at hz
-  simpa only [map_list_sum, List.map_map, Function.comp_def, map_smul] using hz
+  simpa only [map_list_sum, List.map_map, Function.comp_def, map_smul] using! hz
 
 /-- The packet hypotheses concern actual relations in I and verified
 strict weights. The normal list is the complete avoidance enumeration. -/
@@ -81,7 +81,7 @@ theorem quotient_normal_words_span (hf : Function.Surjective f)
     · left
       have hc : canonical w ∈ normalWords leaders d := by
         apply mem_normalWords_of_sorted
-        · simpa only [canonical, List.length_insertionSort] using hlen
+        · simpa only [canonical, List.length_insertionSort] using! hlen
         · exact List.pairwise_insertionSort _ _
         · exact avoids_mono (List.perm_insertionSort (· ≤ ·) w).subperm ha
       have hex : ∃ v ∈ normalWords leaders d, b w = b v :=
@@ -114,7 +114,7 @@ theorem quotient_normal_words_span (hf : Function.Surjective f)
             have hb : b w = b (l ++ t) :=
               congrArg (I.restrictScalars ℂ).mkQ (mapped_polyWord_perm f ht)
             rw [Submodule.mem_bot]
-            simpa only [List.map_map, Function.comp_def, hb] using hz
+            simpa only [List.map_map, Function.comp_def, hb] using! hz
   have hreduction := weighted_rows_span_le (⊥ : Submodule ℂ _)
     b wordWeight normalVector hrows
   rw [bot_sup_eq] at hreduction
@@ -133,7 +133,7 @@ theorem quotient_normal_words_span (hf : Function.Surjective f)
     (fun l _ => ⟨l, List.Perm.refl l⟩) (fun l hl => by
       rw [hL]
       exact (Submodule.Quotient.mk_eq_zero _).mpr (hhigh l hl))
-  have hspan' : Submodule.span ℂ (Set.range b) = ⊤ := by simpa only [hL] using hspan
+  have hspan' : Submodule.span ℂ (Set.range b) = ⊤ := by simpa only [hL] using! hspan
   apply top_unique
   rw [← hspan']
   exact hreduction

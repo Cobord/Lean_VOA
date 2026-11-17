@@ -28,7 +28,7 @@ theorem hasLogExp_monomial_psEval_halfPlane {G : PowerSeries ℂ} (hG : G∈Sube
     intro l
     by_cases hl : l=k
     · subst l
-      simpa only [p,Polynomial.coeff_monomial,ite_true] using (mem_subexpPS.mp hG)
+      simpa only [p,Polynomial.coeff_monomial,ite_true] using! (mem_subexpPS.mp hG)
     · have he : (fun n => ‖(p n).coeff l‖)=(fun _ => (0 : ℝ)) := by
         funext n
         simp [p,Polynomial.coeff_monomial,hl,Ne.symm hl]
@@ -69,7 +69,7 @@ theorem productInfinityRow_eq_sum_log {K : ℕ} {Y₁ : LogModes M₁ M₅ M₄}
   unfold productInfinityRow
   apply tsum_eq_sum
   intro k hk
-  have hkl : K≤k := by simpa only [Finset.mem_range,not_lt] using hk
+  have hkl : K≤k := by simpa only [Finset.mem_range,not_lt] using! hk
   have hzero : productInfinitySeries Y₁ Y₂ f x y z a b c β r k=0 := by
     ext n
     simp [productInfinitySeries,hK _ k hkl]
@@ -87,7 +87,7 @@ theorem productInfinitySeries_mem (hC2 : C2Cofinite W)
     productInfinitySeries Y₁.1 Y₂.1 f x y z a b c β r k∈SubexpPS := by
   apply subexp_of_summable_unitDisc
   intro t ht
-  simpa only [productInfinitySeries,PowerSeries.coeff_mk] using
+  simpa only [productInfinitySeries,PowerSeries.coeff_mk] using!
     summable_log_product hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂
       f x y z (a+r-β-1) (b+c-r-1) k 0 ht
 

@@ -38,12 +38,12 @@ theorem tensorValuesOn_span_eq_top (S₁ : Set M₁) (S₂ : Set M₂)
         ?_ ?_ ?_ ?_ hy
       · intro y hy
         exact Submodule.subset_span ⟨n,x,y,hx,hy,rfl⟩
-      · dsimp only; rw [map_zero]; exact T.zero_mem
+      · rw [map_zero]; exact T.zero_mem
       · intro y z _ _ hy hz
         rw [map_add]; exact T.add_mem hy hz
       · intro c y _ hy
         rw [map_smul]; exact T.smul_mem c hy
-    · dsimp only; rw [map_zero,LinearMap.zero_apply]; exact T.zero_mem
+    · rw [map_zero,LinearMap.zero_apply]; exact T.zero_mem
     · intro x z _ _ hx hz
       rw [map_add,LinearMap.add_apply]; exact T.add_mem hx hz
     · intro c x _ hx

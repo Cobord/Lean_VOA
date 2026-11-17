@@ -33,7 +33,7 @@ open scoped BigOperators
 theorem gordonGood_tail {n x : ℕ} {t : List ℕ} (h : GordonGood n (x :: t)) : GordonGood n t := by
   intro i hi
   have := h (i + 1) (by simp; omega)
-  simpa [show i + 1 + n = (i + n) + 1 by ring, List.getD_cons_succ] using this
+  simpa [show i + 1 + n = (i + n) + 1 by ring, List.getD_cons_succ] using! this
 
 theorem count_add_count_le {v w : ℕ} (hvw : v ≠ w) :
     ∀ l : List ℕ, l.count v + l.count w ≤ l.length
@@ -106,7 +106,7 @@ theorem gordonGood_iff_freq (n : ℕ) {l : List ℕ} (hs : SortedWord l) :
 theorem sorted_map_succ {μ : List ℕ} (h : SortedWord μ) : SortedWord (μ.map Nat.succ) := by
   unfold SortedWord at *
   rw [List.pairwise_map]
-  exact h.imp fun hab => by simpa using hab
+  exact h.imp fun hab => by simpa using! hab
 
 theorem sorted_shift {μ : List ℕ} (h : SortedWord μ) (a : ℕ) :
     SortedWord (μ.map Nat.succ ++ List.replicate a 0) := by
@@ -187,7 +187,7 @@ theorem sorted_eq_shift {l : List ℕ} (hs : SortedWord l) :
       have h1 : (l.filter (· ≠ 0)).count 0 = 0 :=
         List.count_eq_zero.mpr (fun h => by simp [List.mem_filter] at h)
       rw [h1, List.count_replicate_self, zero_add]
-    · have h1 : (l.filter (· ≠ 0)).count x = l.count x := List.count_filter (by simpa using hx)
+    · have h1 : (l.filter (· ≠ 0)).count x = l.count x := List.count_filter (by simpa using! hx)
       have h2 : (List.replicate (l.count 0) 0).count x = 0 :=
         List.count_eq_zero.mpr (fun h => hx (List.eq_of_mem_replicate h))
       rw [h1, h2, add_zero]
@@ -258,7 +258,7 @@ theorem shiftList_injective (a : ℕ) : Function.Injective (shiftList a) := by
   unfold shiftList at h h1
   have hl : μ.length = ν.length := by
     have := congrArg List.length h
-    simpa using this
+    simpa using! this
   rw [List.take_left' (by simp), hl, List.take_left' (by simp)] at h1
   exact List.map_injective_iff.mpr Nat.succ_injective h1
 
@@ -290,7 +290,7 @@ theorem filter_count_eq_image (n a m N : ℕ) (ha : a ≤ n) (ham : a ≤ m) (hm
       rw [heq, shiftList] at h
       unfold SortedWord at h
       rw [List.pairwise_append, List.pairwise_map] at h
-      exact h.1.imp fun hab => by simpa using hab
+      exact h.1.imp fun hab => by simpa using! hab
     rw [heq, shiftList] at hg
     obtain ⟨hgμ, hcμ⟩ := (gordonGood_shift_iff n hμs a).mp hg
     have hlenμ : μ.length + a = m := by rw [← hlen, heq, length_shiftList]
@@ -360,7 +360,7 @@ theorem gordonCoeff_eq_gC (n N r : ℕ) : gordonCoeff n (N : ℤ) r = gC n 1 r N
       rw [heq] at h
       unfold SortedWord at h ⊢
       rw [List.pairwise_map] at h
-      exact h.imp fun hab => by simpa using hab
+      exact h.imp fun hab => by simpa using! hab
     refine ⟨u, mem_gordonWords.mpr ⟨hus, ?_, ?_, ?_⟩, heq.symm⟩
     · rw [← gordonGood_map_succ_iff n hus, ← heq]; exact hg
     · have := sum_shiftList 0 u

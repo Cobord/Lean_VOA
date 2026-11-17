@@ -10,7 +10,7 @@ noncomputable section
 
 /-- All two-part partitions of a fixed size, including trailing zero parts. -/
 def gtPartitionsTwo (n : ℕ) : Finset (ℕ × ℕ) :=
-  (Finset.antidiagonal n).filter fun p => p.2 ≤ p.1
+  (Finset.HasAntidiagonal.antidiagonal n).filter fun p => p.2 ≤ p.1
 
 @[simp] theorem mem_gtPartitionsTwo (n : ℕ) (p : ℕ × ℕ) :
     p ∈ gtPartitionsTwo n ↔ p.1 + p.2 = n ∧ p.2 ≤ p.1 := by

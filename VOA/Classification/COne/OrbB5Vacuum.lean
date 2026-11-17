@@ -98,8 +98,8 @@ theorem tetra_even_zeroBottom {M : Type} [AddCommGroup M] [Module ℂ M]
     exact ⟨(0 : ℂ) ^ n * c, by rw [actA_omegaL_pow, hc, smul_smul],
       by rw [actA_omegaL_pow, hc', smul_smul]⟩
   have h1 : mk Wt Wt.vacuum ∈ S :=
-    ⟨1, by simpa only [one_smul] using actA_one N hl,
-      by simpa only [one_smul] using actA_one adj adj_low⟩
+    ⟨1, by simpa only [one_smul] using! actA_one N hl,
+      by simpa only [one_smul] using! actA_one adj adj_low⟩
   have hle : evenSpan ≤ S := by
     apply sup_le
     · apply Submodule.span_le.mpr

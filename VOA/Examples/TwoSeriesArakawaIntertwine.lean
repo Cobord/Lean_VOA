@@ -25,6 +25,8 @@ modulo the Whittaker ideal (`sub_xi_mem_whit`).  The only place the central char
 Everything here is proved; no new axiom.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.TwoSeries.SliceMap
 
 open VOA.AffineVOA VOA.AffineVOA.SugawaraCov VOA.AffineVOA.Strong MvPolynomial

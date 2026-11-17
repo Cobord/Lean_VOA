@@ -82,7 +82,7 @@ theorem twisted_W_forced (hm2 : 2 ≤ m) (i : Fin 4)
       _ = (60 - 160 * (m : ℂ)) * (twistedRow m i 0 ^ 2 * twistedRow m i 2) +
           (72 * (m : ℂ)^2 - 80*m + 3) * (twistedRow m i 0 * twistedRow m i 2) -
           (15/4 * (m : ℂ) * (m - 1)) * twistedRow m i 2 := by
-            simpa only [mul_assoc] using h
+            simpa only [mul_assoc] using! h
       _ = _ := by ring
   exact mul_left_cancel₀ hd hc
 
@@ -101,7 +101,7 @@ theorem twistedOmegaECharacters_iff_twistedCharacters :
   have hj' : ∃ i : Fin 4, j = twistedLabel m i := by
     rcases j with j | j
     · exact (hj trivial).elim
-    · have hj4 : 4 ≤ j.val := by simpa [IsUntwisted] using hj
+    · have hj4 : 4 ≤ j.val := by simpa [IsUntwisted] using! hj
       refine ⟨⟨j.val - 4, by omega⟩, ?_⟩
       congr 1
       apply Fin.ext

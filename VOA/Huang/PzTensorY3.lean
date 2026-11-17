@@ -98,7 +98,7 @@ theorem eq_zero_of_supported {v : P.carrier}
     simp only [internalProjTo, LinearMap.comp_apply] at this
     exact congrArg Subtype.val this
   have := congrArg (DirectSum.decompose P.isMod.weight).symm hd
-  simpa using this
+  simpa using! this
 
 end Supp
 
@@ -422,7 +422,6 @@ noncomputable def block3 (n γ α₃ : ℂ) :
         ext g; simp only [Phi, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.add_apply,
           Submodule.coe_add]
         exact map_add _ _ _
-      dsimp only
       rw [this, map_add, Submodule.coe_add])
     (fun c ξ w => by
       have : Phi hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ (γ + α₃ - n - 1) γ α₃ (c • ξ).1 w
@@ -430,7 +429,6 @@ noncomputable def block3 (n γ α₃ : ℂ) :
         ext g; simp only [Phi, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.smul_apply,
           Submodule.coe_smul, smul_eq_mul]
         exact (map_smul _ _ _).trans (smul_eq_mul _ _)
-      dsimp only
       rw [this, map_smul, Submodule.coe_smul])
     (fun ξ w w' => by
       have : Phi hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ (γ + α₃ - n - 1) γ α₃ ξ.1 (w + w')
@@ -441,8 +439,8 @@ noncomputable def block3 (n γ α₃ : ℂ) :
         rw [show Bχ χ (extF (γ + α₃ - n - 1) g) (w + w').1 α₃ (γ + α₃ - n - 1) γ (w + w').2
             (extF_supported _ g) = Bχ χ (extF (γ + α₃ - n - 1) g) (w.1 + w'.1) α₃
             (γ + α₃ - n - 1) γ (add_mem w.2 w'.2) (extF_supported _ g) from rfl,
-          Bχ_add_w hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ w.2 w'.2 (extF_supported _ g), dualPairing_add_x]
-      dsimp only
+          Bχ_add_w hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ w.2 w'.2 (extF_supported _ g)]
+        exact dualPairing_add_x _ _ _ _
       rw [this, map_add, Submodule.coe_add])
     (fun c ξ w => by
       have : Phi hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ (γ + α₃ - n - 1) γ α₃ ξ.1 (c • w)
@@ -452,8 +450,8 @@ noncomputable def block3 (n γ α₃ : ℂ) :
         rw [show Bχ χ (extF (γ + α₃ - n - 1) g) (c • w).1 α₃ (γ + α₃ - n - 1) γ (c • w).2
             (extF_supported _ g) = Bχ χ (extF (γ + α₃ - n - 1) g) (c • w.1) α₃
             (γ + α₃ - n - 1) γ (Submodule.smul_mem _ c w.2) (extF_supported _ g) from rfl,
-          Bχ_smul_w hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ c w.2 (extF_supported _ g), dualPairing_smul_x]
-      dsimp only
+          Bχ_smul_w hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ χ c w.2 (extF_supported _ g)]
+        exact dualPairing_smul_x _ _ _ _
       rw [this, map_smul, Submodule.coe_smul])
 
 include hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ in
@@ -655,7 +653,9 @@ theorem Y3_L_homog (hP : TauProj χ) (hlog : LogFree (Y₁ := Y₁) (Y₂ := Y�
         = (hh - α₃ - γ) • (⟨coefFun Y₁ Y₂ f w₃ α₃ hh γ 0,
           coefFun_mem_coefSpan Y₁ Y₂ h₃ hf γ 0⟩ : coefSpan Y₁ Y₂) :=
       Subtype.ext hfun
-    rw [hel, map_smul, dualPairing_smul_x, Bχ]
+    rw [hel, map_smul]
+    refine (congrArg (· - _) (dualPairing_smul_x R.isMod _ _ _)).trans ?_
+    rw [Bχ]
     have hn : hh - α₃ - γ = -n := by rw [h]; ring
     rw [hn]
     ring

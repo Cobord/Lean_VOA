@@ -74,7 +74,7 @@ theorem blockReassociation_succ (V : C) (n k : ℕ) :
   have h' := congrArg (fun f => f ≫ eqToHom
     (show tensorPower V (n + 1 + k + 2) = tensorPower V (k + 1 + n + 2) by
       congr 1; omega)) h.symm
-  simpa only [Category.assoc, whiskerLeft_eqToHom, eqToHom_trans] using h'
+  simpa only [Category.assoc, whiskerLeft_eqToHom, eqToHom_trans] using! h'
 
 /-- Every positive power of the genuine rotation is the two-block operator. -/
 theorem inverseBlockOperator_power (F : SphericalFusion C) (A : Center C)
@@ -83,7 +83,7 @@ theorem inverseBlockOperator_power (F : SphericalFusion C) (A : Center C)
       (tensorPower V (n + 1)) (blockReassociation V n k).hom =
       (generalizedRotation F.toPivotal A V n).toLinearMap ^ (k + 1) := by
   induction k with
-  | zero => simpa only [tensorPower, pow_one] using inverseBlockOperator_single F A V n
+  | zero => simpa only [tensorPower, pow_one] using! inverseBlockOperator_single F A V n
   | succ k ih =>
     rw [blockReassociation_succ]
     change inverseBlockOperator F.toPivotal A (V ⊗ tensorPower V (k + 1)) _ _ = _

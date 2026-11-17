@@ -315,7 +315,8 @@ theorem canB_L2_L2_eq_shapForm :
       = RigidBridge.shapForm (virasoroVOA c) (vacVec_ne_zero c) 2
           ⟨omegaVir c, omegaVir_mem_gradingVir_two c⟩
           ⟨omegaVir c, omegaVir_mem_gradingVir_two c⟩ := by
-  rw [canB_L2_L2, shapForm_omegaVir_self]
+  rw [canB_L2_L2]
+  exact (shapForm_omegaVir_self c (vacVec_ne_zero c)).symm
 
 /-! ### Why the level-4 `shapForm` matrix may **not** be reused
 

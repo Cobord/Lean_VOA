@@ -92,7 +92,7 @@ theorem mixedAThom_noRoot_truncation (q : MixedParams) (hA : 1 ≤ q.A) (hB : q.
   let h := mixedEvaluation q (mixedH 0 (q.A - q.d1).toNat)
   let z := mixedEvaluation q (mixedE 2 q.d3.toNat)
   have hab : Polynomial.C (a * b) * X ^ (q.A - 1).toNat ∈ mixedTruncationIdeal q := by
-    simpa only [hB, add_zero] using mixedTopProduct_truncation q (by omega)
+    simpa only [hB, add_zero] using! mixedTopProduct_truncation q (by omega)
   fin_cases i
   · change Polynomial.C (a * h * b * z) * X ^ (q.A - 1).toNat ∈ _
     have ht := (mixedTruncationIdeal q).mul_mem_left (Polynomial.C (h * z)) hab

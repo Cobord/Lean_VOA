@@ -44,7 +44,7 @@ theorem omega_E_nested_relation (hm2 : 2 ≤ m) :
   rw [he]
   simp only [mul_smul_comm, ← smul_sub, smul_comm _ (2 : ℂ)]
   change (2 : ℂ) • _ = 0
-  simpa only [smul_zero] using congrArg (fun x : VOA.A (V2mPlus m hm) => (2 : ℂ) • x) hq
+  simpa only [smul_zero] using! congrArg (fun x : VOA.A (V2mPlus m hm) => (2 : ℂ) • x) hq
 
 /-- Explicit normal form for the highest omega multiple of E. -/
 theorem omega_cubed_E (hm2 : 2 ≤ m) :
@@ -73,14 +73,14 @@ theorem omega_mul_E_monomial_mem (hm2 : 2 ≤ m) (i : Fin 3) :
       Submodule.span ℂ (Set.range (monomial m hm)) :=
     Submodule.subset_span ⟨_, rfl⟩
   fin_cases i
-  · simpa [monomial] using hmem 1
-  · simpa [monomial, pow_succ, mul_assoc] using hmem 2
+  · simpa [monomial] using! hmem 1
+  · simpa [monomial, pow_succ, mul_assoc] using! hmem 2
   · change generator m hm 0 * (generator m hm 0 ^ 2 * generator m hm 2) ∈ _
     rw [← mul_assoc, ← pow_succ', omega_cubed_E m hm hm2]
     refine Submodule.add_mem _ (Submodule.sub_mem _
       (Submodule.smul_mem _ _ ?_) (Submodule.smul_mem _ _ ?_)) (Submodule.smul_mem _ _ ?_)
     · exact hmem 2
-    · simpa [monomial] using hmem 1
-    · simpa [monomial] using hmem 0
+    · simpa [monomial] using! hmem 1
+    · simpa [monomial] using! hmem 0
 
 end VOA.Classification.COne.PlusZhuNormalForms

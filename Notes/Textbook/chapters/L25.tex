@@ -1902,7 +1902,7 @@ theorem ramanujanIdentities : RamanujanIdentities := by
 theorem ramanujan : C 12 * (P1 * P1) = C 5 * P3 + P1 - C 6 * eulerOp P1 := by
 
 theorem eight_sq (n : ℕ) :
-    ∑ p ∈ Finset.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
 \end{leancode}
 \begin{dictionary}
 Namespace \lean{VOA.DeligneAudit.DeligneCharacter.D4MLDE} for the first block; \lean{P1}, \lean{P3} are
@@ -2476,7 +2476,9 @@ abbrev ctTheta : R →ₗ[Kq] R := ctFun thK
 
 def Ikernel : S := smap ctTheta kernelM
 
-def ev1 : R →ₗ[Kq] Kq := Finsupp.linearCombination Kq fun _ => (1 : Kq)
+def ev1 : R →ₗ[Kq] Kq :=
+  (Finsupp.linearCombination Kq fun _ : V => (1 : Kq)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 def d4SchurQ (N : ℕ) : ℚ :=
   ∑ m ∈ Finset.range (N + 1), ((2 : Kq)⁻¹ * ev1 (coeff (2 * m) Ikernel)).coeff (2 * ((N : ℤ) - m))

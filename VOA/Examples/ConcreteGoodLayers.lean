@@ -110,7 +110,7 @@ theorem J_neg_mem_ordinaryPiece (b : Fin 3) (n : ℕ) {p : ℕ} {x : WakModule k
       obtain ⟨w, rfl⟩ := hx
       have : J k b (-(n : ℤ) - 1) (wordStateA k w.1) = wordStateA k ((b, n) :: w.1) := rfl
       rw [this]
-      exact wordStateA_mem_ordinaryPiece (by simpa using w.2)
+      exact wordStateA_mem_ordinaryPiece (by simpa using! w.2)
   | zero => rw [map_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
@@ -167,7 +167,7 @@ theorem uZeroModesPreserveLayers : UZeroModesPreserveLayers := by
   · intro x y
     rw [uZero_apply, uZero_apply]
     have h := universalForm_current_adj uNoncritical a 0 x y
-    simpa only [neg_zero] using h
+    simpa only [neg_zero] using! h
 
 end Auxiliary
 
@@ -267,7 +267,7 @@ theorem aZeroModesPreserveLayers : AZeroModesPreserveLayers := by
     change (simpleForm ALevel aNoncritical).form _ _ = -(simpleForm ALevel aNoncritical).form _ _
     rw [simpleForm_mkQ, simpleForm_mkQ, aUnivZero_apply, aUnivZero_apply]
     have h := universalForm_current_adj aNoncritical a 0 x y
-    simpa only [neg_zero] using h
+    simpa only [neg_zero] using! h
 
 end Boundary
 

@@ -79,7 +79,7 @@ theorem zp_ptrim_aux : ∀ l : List ℚ, zp ((l.dropWhile (· = 0)).reverse) = z
       induction r with
       | nil => simp [zp]
       | cons y r ihr => simp only [List.cons_append, zp, ihr]
-    · rw [List.dropWhile_cons_of_neg (by simpa using hx)]
+    · rw [List.dropWhile_cons_of_neg (by simpa using! hx)]
 
 theorem zp_ptrim (a : PL) : zp (ptrim a) = zp a := by
   unfold ptrim
@@ -173,7 +173,7 @@ theorem aeval_zfac (n : ℕ) (k : ℚ) (z : A W) :
 
 theorem evW_mem_grading {h : ℤ} {x : 𝒱} (hx : x ∈ W.grading h) :
     ∀ w : List ℕ, evW W x w ∈ W.grading (h + (w.sum : ℤ))
-  | [] => by simpa [evW] using hx
+  | [] => by simpa [evW] using! hx
   | n :: w => by
     have := L_mem_grading_ W (evW_mem_grading hx w) (-(n : ℤ))
     simp only [evW, List.sum_cons]

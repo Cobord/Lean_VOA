@@ -610,4 +610,24 @@ noncomputable def sympFermSVA : SuperVertexAlgebra FockSF where
     rw [mode_apply]
     exact hB (-n - 1) (by omega)
 
+/-- **Spin–statistics fails for symplectic fermions.**  The nonzero state `χ⁺₋₁|0⟩`
+is odd of integer weight `1`, so the independent weight and parity gradings of
+`sympFermSVA` do not satisfy `SpinStatistics`. -/
+theorem sympFermSVA_not_spinStatistics : ¬ SpinStatistics sympFermSVA := by
+  intro hss
+  have hne : stWordSF [(0, 0)] ≠ 0 := by
+    rw [stWordSF_cons, stWordSF_nil, mul_one]
+    change ExteriorAlgebra.ι ℂ (Finsupp.single (0, 0) (1 : ℂ) : SFModes) ≠ 0
+    rw [ne_eq, ExteriorAlgebra.ι_eq_zero_iff]
+    exact Finsupp.single_ne_zero.mpr one_ne_zero
+  have hwt : stWordSF [(0, 0)] ∈ sympFermSVA.grading 1 := by
+    have h := stWordSF_mem_gradingSF [(0, 0)]
+    simp only [sfWeight_cons, sfWeight_nil, zero_add, add_zero, Nat.cast_one] at h
+    exact h
+  have hpar : stWordSF [(0, 0)] ∈ sympFermSVA.parity 1 := by
+    apply parityPieceSF_le_evenOdd 1
+    exact Submodule.subset_span ⟨[(0, 0)], rfl, rfl⟩
+  have h := hss 1 1 (stWordSF [(0, 0)]) hne hwt hpar
+  exact one_ne_zero (h.mp ⟨1, Int.cast_one⟩)
+
 end VOA.SympFerm

@@ -85,7 +85,7 @@ def evalAction : ToroidalAction f (Tensor (K := ℂ) (ι := Fin N) (W := V)) whe
     have h := congrArg (fun A : Module.End ℂ (Tensor (K := ℂ) (ι := Fin N)
         (W := V)) => A v) (evalOp_comm_end ρ z a b i j r s)
     simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply] using h
+      LinearMap.smul_apply] using! h
 
 /-- The pure-evaluation action of the explicit one-site Demazure module. -/
 def d1EvalAction (f : Fin n → Fin n → Fin n → ℂ) (hJ : JacobiCoord f)

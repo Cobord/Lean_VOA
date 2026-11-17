@@ -179,13 +179,13 @@ theorem C0_weight_induction (Φ : ℕ → Sl2GhostSpace → Prop) (h0 : ∀ W, �
   -- pieces
   have hy' : y ∈ gWt (W : ℂ) := grading_le_gWt _ hy
   rw [← show P0 y = y from hC]
-  refine Submodule.iSup_induction _ (motive := fun y => Φ W (P0 y)) hy' ?_ (by simpa using h0 W)
+  refine Submodule.iSup_induction _ (motive := fun y => Φ W (P0 y)) hy' ?_ (by simpa using! h0 W)
     (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [map_add]; exact hadd W _ _ hx hy)
   intro k z hz
-  refine Submodule.iSup_induction _ (motive := fun y => Φ W (P0 y)) hz ?_ (by simpa using h0 W)
+  refine Submodule.iSup_induction _ (motive := fun y => Φ W (P0 y)) hz ?_ (by simpa using! h0 W)
     (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [map_add]; exact hadd W _ _ hx hy)
   intro hk z hz
-  refine ghostDegF_induction (fun z => Φ W (P0 z)) (by simpa using h0 W)
+  refine ghostDegF_induction (fun z => Φ W (P0 z)) (by simpa using! h0 W)
     (fun x y hx hy => by beta_reduce at hx hy ⊢; rw [map_add]; exact hadd W _ _ hx hy)
     (fun c x hx => by beta_reduce at hx ⊢; rw [map_smul]; exact hsmul W c _ hx) ?_ hz
   intro i hi

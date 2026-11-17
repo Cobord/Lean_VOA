@@ -15,7 +15,7 @@ theorem pairTarget_symmetric_X_mem (a b c : ℕ)
     (rename Sum.inl) (pairTargetSymmetric a b c) ?_ P hP
   intro r
   have h := pairTargetPower_mem a b c 0 r
-  simpa [pairTargetPower, pairTargetXPsum, psum] using h
+  simpa [pairTargetPower, pairTargetXPsum, psum] using! h
 
 theorem pairTarget_symmetric_Y_mem (a b c : ℕ)
     (P : MvPolynomial (Fin b) ℂ)
@@ -29,7 +29,7 @@ theorem pairTarget_symmetric_Y_mem (a b c : ℕ)
     (pairTargetSymmetric a b c) ?_ P hP
   intro r
   have h := pairTargetPower_mem a b c 1 r
-  simpa [pairTargetPower, targetYPsum, psum] using h
+  simpa [pairTargetPower, targetYPsum, psum] using! h
 
 theorem pairTarget_symmetric_Z_mem (a b c : ℕ)
     (P : MvPolynomial (Fin c) ℂ)
@@ -43,7 +43,7 @@ theorem pairTarget_symmetric_Z_mem (a b c : ℕ)
     (pairTargetSymmetric a b c) ?_ P hP
   intro r
   have h := pairTargetPower_mem a b c 2 r
-  simpa [pairTargetPower, pairTargetZPsum, psum] using h
+  simpa [pairTargetPower, pairTargetZPsum, psum] using! h
 
 /-- A product of separately symmetric X, Y, and Z factors belongs to
     the target space used in the three-colour box induction. -/

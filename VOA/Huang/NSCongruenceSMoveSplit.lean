@@ -101,7 +101,7 @@ theorem SMoveOrbit_of_split (F : SphericalFusion C) (M : Modular F)
   have hzero : ∀ w, mixedRow F a (-1) (-0) w = mixedRow F a 0 (-1) (σ ModularGroup.S⁻¹ w) := by
     intro w
     rw [hB ρ hr a, hSS]
-    simpa using hC ρ hr a 1 0 w
+    simpa using! hC ρ hr a 1 0 w
   have hall : ∀ m l, IsCoprime m l →
       ∀ w, mixedRow F a l (-m) w = mixedRow F a m l (σ ModularGroup.S⁻¹ w) := by
     intro m l hml
@@ -112,14 +112,14 @@ theorem SMoveOrbit_of_split (F : SphericalFusion C) (M : Modular F)
       rcases hl with rfl | rfl
       · intro w
         have := hneg 0 (-1) hzero w
-        simpa using this
+        simpa using! this
       · intro w
-        simpa using hzero w
+        simpa using! hzero w
     · intro w
       have hml' : IsCoprime (-m) (-l) := by
         rw [IsCoprime.neg_neg_iff]; exact hml
       have := hneg (-m) (-l) (hpos (-m) (-l) (by omega) hml') w
-      simpa using this
+      simpa using! this
   have hcop : IsCoprime (rowAction 1 0 γ).1 (rowAction 1 0 γ).2 := by
     rw [rowAction_one_zero]
     refine ⟨γ 1 1, -γ 1 0, ?_⟩

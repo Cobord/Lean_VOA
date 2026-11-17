@@ -57,8 +57,8 @@ theorem a2_span_box_spectator (F : ℕ → Module.End ℂ V)
         rw [← Module.End.mul_apply, hc, Module.End.mul_apply]
         exact Submodule.subset_span ⟨f, hf, rfl⟩
     | zero => simp
-    | add x y _ _ hx hy => simpa only [map_add] using S.add_mem hx hy
-    | smul c x _ hx => simpa only [map_smul] using S.smul_mem c hx
+    | add x y _ _ hx hy => simpa only [map_add] using! S.add_mem hx hy
+    | smul c x _ hx => simpa only [map_smul] using! S.smul_mem c hx
   have h := hmap _ (span_box F hFF w m hk P)
   have hc := a2_evAlg_comm_spectator F hFF B hBF P
   rwa [← Module.End.mul_apply, hc, Module.End.mul_apply] at h
@@ -75,18 +75,18 @@ theorem a2_first_box_with_spectators (p q : ℕ)
     let F : ℕ → Module.End ℂ V := fun s => ρ.op 3 s
     let B : Module.End ℂ V := (ys.map fun s => ρ.op 5 s).prod
     Sl2Weyl.evAlg F (fun i j => by
-      simpa [F, a2RadicalOp] using
+      simpa [F, a2RadicalOp] using!
         a2RadicalOp_comm ρ (0 : Fin 2) (0 : Fin 2) i j) P (B w) ∈
       Submodule.span ℂ {v | ∃ f, BoxP p f ∧
         v = Sl2Weyl.evAlg F (fun i j => by
-          simpa [F, a2RadicalOp] using
+          simpa [F, a2RadicalOp] using!
             a2RadicalOp_comm ρ (0 : Fin 2) (0 : Fin 2) i j)
           (MvPolynomial.monomial f 1) (B w)} := by
   let F : ℕ → Module.End ℂ V := fun s => ρ.op 3 s
   let B : Module.End ℂ V := (ys.map fun s => ρ.op 5 s).prod
   have hFF : ∀ i j, F i * F j = F j * F i := by
     intro i j
-    simpa [F, a2RadicalOp] using
+    simpa [F, a2RadicalOp] using!
       a2RadicalOp_comm ρ (0 : Fin 2) (0 : Fin 2) i j
   have hBF : ∀ i, B * F i = F i * B := by
     intro i
@@ -95,7 +95,7 @@ theorem a2_first_box_with_spectators (p q : ℕ)
     | cons s ys ih =>
         simp only [B, List.map_cons, List.prod_cons] at *
         have hc : ρ.op 5 s * F i = F i * ρ.op 5 s := by
-          simpa [F, a2RadicalOp] using
+          simpa [F, a2RadicalOp] using!
             a2RadicalOp_comm ρ (1 : Fin 2) (0 : Fin 2) s i
         calc
           (ρ.op 5 s * (ys.map fun t => ρ.op 5 t).prod) * F i =
@@ -120,7 +120,7 @@ theorem a2_first_box_with_spectators (p q : ℕ)
     intro m
     exact h.cartan_pos 6 (by decide) _ (by omega)
   have hN : (F 0 ^ (p + 1)) w = 0 := by
-    simpa [F, Module.End.pow_apply] using h.lowering_first
+    simpa [F, Module.End.pow_apply] using! h.lowering_first
   have hk : ∀ r s, 1 ≤ r → p + 1 ≤ r + s →
       (PowerSeries.coeff s (VOA.DeligneAudit.Garland.Fs F ^ r)) w = 0 := by
     intro r s hr hrs

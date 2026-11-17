@@ -49,9 +49,9 @@ theorem doubledSiteRemovedTop_map (q : MixedParams) (hq : MixedValid q) (i j : F
   · subst j
     simpa only [middleFlagRemovedPolynomial, doubledSiteRemovedTop, doubledSiteSignedTop,
       doubledSiteSignedLinear, doubledSiteFlagPolynomials, if_true, coeff_map,
-      coeff_divX, zero_add] using h
+      coeff_divX, zero_add] using! h
   · simpa only [middleFlagRemovedPolynomial, doubledSiteRemovedTop, doubledSiteSignedTop,
-      doubledSiteSignedLinear, doubledSiteFlagPolynomials, he, if_neg hj, coeff_map] using h
+      doubledSiteSignedLinear, doubledSiteFlagPolynomials, he, if_neg hj, coeff_map] using! h
 
 /-- The composite quotient map removes the two distinguished roots. -/
 def doubledSitePairProjection (q : MixedParams) (hq : MixedValid q) (k : Fin 10)
@@ -117,7 +117,7 @@ theorem doubledSitePair_boundaries (q : MixedParams) (hq : MixedValid q)
       (doubledSiteFlagPolynomials q 1).coeff 0 *
       (doubledSiteFlagPolynomials q 2).coeff 0 *
       (doubledSiteFlagPolynomials q 3).coeff 0 = 0
-    simpa [Fin.prod_univ_succ, mul_assoc, hp.ne, hp.ne'] using h
+    simpa [Fin.prod_univ_succ, mul_assoc, hp.ne, hp.ne'] using! h
   · intro i
     rw [doubledSiteSignedLinear_tail q hq hA hB]
     exact Ideal.subset_span ⟨doubledSiteFlagIndex i, rfl⟩

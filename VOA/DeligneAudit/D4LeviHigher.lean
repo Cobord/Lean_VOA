@@ -41,7 +41,7 @@ theorem higherOrbit_levi_inv (k : RadicalKey) (a : Fin 15) (r : ℕ) :
   exact hmap (Submodule.mem_map_of_mem hv)
 
 /-- The sl4 current action on the quotient by all higher key orbits. -/
-def keyQuotCurrent (k : RadicalKey) :
+noncomputable def keyQuotCurrent (k : RadicalKey) :
     CurrentModule VOA.DeligneAudit.A3Sector.bracketTable
       (V ⧸ higherOrbit ρ w m k) :=
   VOA.DeligneAudit.UnivG.quotRepG (leviCurrent ρ)

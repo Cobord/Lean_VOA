@@ -15,9 +15,9 @@ theorem hasC_cmulR_exact (m : ℕ) (hm : 1 ≤ m)
     (cs : List (ℚ × ℕ)) :
     HasC m hm (scalarC (cα m) cs • y) (cmulR cs G) := by
   induction cs with
-  | nil => simpa [scalarC, cmulR] using hasC_zero m hm
+  | nil => simpa [scalarC, cmulR] using! hasC_zero m hm
   | cons qe cs ih =>
-    simpa [scalarC, cmulR, add_smul, mul_smul] using
+    simpa [scalarC, cmulR, add_smul, mul_smul] using!
       hasC_add m hm (hasC_smul m hm (hasC_cpow m hm hy qe.2) qe.1) ih
 
 def dC : List (ℚ × ℕ) := [(4,4), (-20,2), (9,0)]
@@ -85,6 +85,7 @@ theorem hasC_target :
     (hasC_cmulR_exact m hm hw dC) (hasC_cmulR_exact m hm hoo aC))
     (hasC_cmulR_exact m hm ho bC)) (hasC_cmulR_exact m hm h0 cC)) prefC
   convert h using 1
+  case e'_4 => rfl
   simp [mixedState, scalarC, prefC, sub_eq_add_neg]
 
 theorem mixedState_mem_O (hm2 : 2 ≤ m) : mixedState m hm ∈ O (V2mPlus m hm) := by
@@ -93,7 +94,7 @@ theorem mixedState_mem_O (hm2 : 2 ≤ m) : mixedState m hm ∈ O (V2mPlus m hm) 
   have ht := hasC_target m hm
   have heq : (cα m ^ 3 - 2 * cα m) • mixedState m hm = y := ht.trans he.symm
   have h := (O (V2mPlus m hm)).smul_mem ((cα m ^ 3 - 2 * cα m)⁻¹) (heq.symm ▸ hy)
-  simpa only [smul_smul, inv_mul_cancel₀ (cα_poly_ne_zero m hm hm2), one_smul] using h
+  simpa only [smul_smul, inv_mul_cancel₀ (cα_poly_ne_zero m hm hm2), one_smul] using! h
 
 end VOA.Classification.COne.PlusZhuMixed
 

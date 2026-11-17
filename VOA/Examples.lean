@@ -184,6 +184,7 @@ import VOA.Examples.AffineSl2CurrentCovStruct
 import VOA.Examples.AffineSl2Assembly
 import VOA.Examples.AffineSl2L0Cov
 import VOA.Examples.AffineSl2Virasoro
+import VOA.Examples.AffineSl2SugawaraRelation
 import VOA.Examples.LatticeExp
 import VOA.Examples.LatticeChargeM
 import VOA.Examples.LatticeA1
@@ -347,6 +348,7 @@ import VOA.Examples.VirasoroCDefJacobi
 import VOA.Examples.VirasoroCDefFinal
 import VOA.Examples.NonlinearVirasoroTransport
 import VOA.Examples.NonlinearVirasoroGenuine
+import VOA.Examples.NonlinearMRVirasoro
 import VOA.Examples.VirasoroTopSymbol
 import VOA.Examples.WakimotoFree
 import VOA.Examples.AffineSl2PBWWakimotoReduction

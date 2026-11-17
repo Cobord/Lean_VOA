@@ -32,10 +32,10 @@ theorem bilinear_constant_deriv (g : Fin 10) {p : MvPolynomial (Vars 2) ℂ}
         intro k _
         have hh := bilinearSpan.smul_mem
           (contactF (zeroIndex g) (radIndex i) (radIndex k)) (bilinear_product_mem k j)
-        simpa only [mul_comm] using hh
+        simpa only [mul_comm] using! hh
   | zero => rw [map_zero]; exact bilinearSpan.zero_mem
-  | add p q _ _ ihp ihq => simpa only [map_add] using bilinearSpan.add_mem ihp ihq
-  | smul a p _ ih => simpa only [Derivation.map_smul] using bilinearSpan.smul_mem a ih
+  | add p q _ _ ihp ihq => simpa only [map_add] using! bilinearSpan.add_mem ihp ihq
+  | smul a p _ ih => simpa only [Derivation.map_smul] using! bilinearSpan.smul_mem a ih
 
 theorem checked_levi_bilinear (l : List (Fin 3)) :
     twoEvalMap (leviOrbit l .base).toWheel twoSeed ∈ bilinearSpan := by

@@ -677,8 +677,8 @@ theorem uside_a_reindex (W : VertexOperatorAlgebra 𝒱) (K L : ℕ) (u v w : �
       (fun p : ℤ => cbz (K : ℤ) p * cbz ((K : ℤ) + (L : ℤ) - p) (b + 1 - (i : ℤ))
         * ((-1 : ℂ) ^ i * gBinom (p - 1) i))
       (fun x => W.smul u x (W.smul v b w)) (-1 - (i : ℤ))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg (K : ℤ) hp]; ring)
-      (fun p hp => by dsimp only; rw [cbz_lt (by positivity) (by omega)]; ring)]
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg (K : ℤ) hp]; ring)
+      (fun p hp => by (try dsimp only); rw [cbz_lt (by positivity) (by omega)]; ring)]
   -- reindex the summation variable q (= old a) to the mode m via q = m+1+i
   rw [← finsum_comp_equiv (Equiv.addRight (1 + (i : ℤ)))
       (f := fun q : ℤ => (cbz (K : ℤ) q * cbz ((K : ℤ) + (L : ℤ) - q) (b + 1 - (i : ℤ))
@@ -1065,8 +1065,8 @@ theorem rhs_c_reindex (W : VertexOperatorAlgebra 𝒱) (K L : ℕ) (u v w : 𝒱
   rw [rangeSmul_eq_finsumZ'
       (fun q : ℤ => cbz (K : ℤ) (p : ℤ) * cbz (L : ℤ) q)
       (fun x => W.smul u ((p : ℤ) - 1) (W.smul v x w)) (-1)
-      (fun q hq => by dsimp only; rw [cbz_apply_neg (L : ℤ) hq, mul_zero])
-      (fun q hq => by dsimp only
+      (fun q hq => by (try dsimp only); rw [cbz_apply_neg (L : ℤ) hq, mul_zero])
+      (fun q hq => by (try dsimp only)
                       rw [cbz_lt (show (0:ℤ) ≤ (L:ℤ) by positivity) (show (L:ℤ) < q by omega),
                         mul_zero])]
   rw [← finsum_comp_equiv (Equiv.addRight (1 : ℤ))
@@ -1109,8 +1109,8 @@ theorem RHS_eq (W : VertexOperatorAlgebra 𝒱) {K L : ℕ} {u v : 𝒱}
     rw [rangeSmul_eq_finsumZ'
         (fun q : ℤ => cbz (K : ℤ) q * cbz (L : ℤ) (b + 1))
         (fun x => W.smul u x (W.smul v b w)) (-1)
-        (fun q hq => by dsimp only; rw [cbz_apply_neg (K : ℤ) hq, zero_mul])
-        (fun q hq => by dsimp only; rw [cbz_lt (by positivity) (by omega), zero_mul])]
+        (fun q hq => by (try dsimp only); rw [cbz_apply_neg (K : ℤ) hq, zero_mul])
+        (fun q hq => by (try dsimp only); rw [cbz_lt (by positivity) (by omega), zero_mul])]
     rw [← finsum_comp_equiv (Equiv.addRight (1 : ℤ))
         (f := fun q : ℤ => (cbz (K : ℤ) q * cbz (L : ℤ) (b + 1))
           • W.smul u (q + (-1)) (W.smul v b w))]

@@ -120,7 +120,7 @@ theorem gnWord_migratePair_sub_mem (W : VertexOperatorAlgebra 𝒱)
     gnWord W (pre ++ a :: b :: rest) W.vacuum
         - gnWord W (a :: b :: pre ++ rest) W.vacuum ∈ gnGradeFil W G := by
   have hp : (pre ++ a :: b :: rest).Perm (a :: b :: pre ++ rest) := by
-    simpa only [List.append_assoc] using
+    simpa only [List.append_assoc, List.cons_append, List.nil_append] using
       (List.perm_append_comm_assoc pre ([a, b] : List (GNLetter 𝒱)) rest)
   have hbase := gnWord_perm_sub_mem_grade W hp hOK hwt
   exact gnGradeFil_mono W (by omega) hbase
@@ -183,7 +183,7 @@ theorem GNReachBounded_succ_of_repeatedHead {W : VertexOperatorAlgebra 𝒱} {g 
     rw [hEq]
     simp only [rest, List.append_assoc, List.cons_append]
   have hp : (pre ++ a :: b :: rest).Perm (a :: b :: pre ++ rest) := by
-    simpa only [List.append_assoc] using
+    simpa only [List.append_assoc, List.cons_append, List.nil_append] using
       (List.perm_append_comm_assoc pre ([a, b] : List (GNLetter 𝒱)) rest)
   have hOKsrc : GNWordOK W (pre ++ a :: b :: rest) := by simpa [hlform] using hOK
   have hgradesrc : gnWordGrade (pre ++ a :: b :: rest) ≤ gr := by simpa [hlform] using hgrade

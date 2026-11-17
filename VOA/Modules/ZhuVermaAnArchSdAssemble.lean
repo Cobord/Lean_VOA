@@ -86,7 +86,9 @@ noncomputable def sdLudata (G : BimodGenuineConstructionAUniform W) (bregen : Bo
 
 /-! ## `A` and `hirr` as TERMS -/
 
-/-- **The lifting datum `A` as a TERM** — the canonical assignment `U ↦ L(U)` on the genuine
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The lifting datum `A` as a TERM** — the canonical assignment `U ↦ L(U)` on the genuine
 bimodule-composition loop representation, sharing the maximal-`J` family `sdLudata G bregen` with the
 bijection's `G'` family.  The two abstract fields `realizes` (bottom survival) and `Dfun`
 (`M(·)`-functoriality, sourcing only `A`'s own `isoInvariant`) are carried. -/

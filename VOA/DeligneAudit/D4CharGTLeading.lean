@@ -28,7 +28,7 @@ theorem gtExponent_split (N : ℕ) (lam : Fin (N + 1) → ℤ) :
 /-- Only the top interlacing row contributes to the top Laurent coefficient. -/
 theorem gtPoly_top_branch_zero (q : R) (N : ℕ) (lam : Fin (N + 1) → ℤ)
     (μ : Fin N → ℤ) (hμ : μ ∈ gtRows lam) (hne : μ ≠ fun i => lam i.castSucc) :
-    gtPoly q N μ
+    (gtPoly q N μ).coeff
       (-Finsupp.single N ((∑ i, lam i) - ∑ i, μ i) + gtExponent lam) = 0 := by
   by_contra h
   have hs := (gtPoly_support_bounds q N μ _ h).2.1
@@ -38,7 +38,7 @@ theorem gtPoly_top_branch_zero (q : R) (N : ℕ) (lam : Fin (N + 1) → ℤ)
 
 /-- Lemma 3.2(a): leading coefficient one, without any hypothesis on q. -/
 theorem gtPoly_leading_coeff (q : R) (N : ℕ) (lam : Fin N → ℤ) (hlam : Antitone lam) :
-    gtPoly q N lam (gtExponent lam) = 1 := by
+    (gtPoly q N lam).coeff (gtExponent lam) = 1 := by
   classical
   induction N with
   | zero => simp [gtPoly, gtExponent, AddMonoidAlgebra.one_def]
@@ -65,7 +65,7 @@ theorem gtPoly_leading_coeff (q : R) (N : ℕ) (lam : Fin N → ℤ) (hlam : Ant
 
 /-- Leading coefficient one for the original Laurent polynomials over ℤ[q]. -/
 theorem gtP_leading_coeff (N : ℕ) (lam : Fin N → ℤ) (hlam : Antitone lam) :
-    gtP N lam (gtExponent lam) = 1 := by
+    (gtP N lam).coeff (gtExponent lam) = 1 := by
   rw [← gtPoly_X_eq_gtP]
   exact gtPoly_leading_coeff _ _ _ hlam
 

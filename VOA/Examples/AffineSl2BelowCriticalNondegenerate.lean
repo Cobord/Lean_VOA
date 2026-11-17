@@ -182,8 +182,10 @@ theorem universalForm_separating_of_lt {x : ℝ} (hx : x < -2) (E : ℤ) :
           mul_zero]
       · simp only [hf]
         rw [henergy mu hmuE, zero_mul]
+    have hinjT : Function.Injective (fun j : JointIndex (N : ℤ) (2 * c) => j.val) :=
+      Subtype.val_injective
     let T : Finset CurrentIndex := Finset.univ.map
-      ⟨fun j : JointIndex (N : ℤ) (2 * c) => j.val, Subtype.val_injective⟩
+      ⟨fun j : JointIndex (N : ℤ) (2 * c) => j.val, hinjT⟩
     have hT : ∑ j : JointIndex (N : ℤ) (2 * c), f j.val = ∑ mu ∈ T, f mu := by
       simp [T, Finset.sum_map]
     have hS : ∑ mu ∈ (b.repr v).support, f mu = ∑ mu ∈ T, f mu := by
@@ -203,7 +205,7 @@ theorem universalForm_separating_of_lt {x : ℝ} (hx : x < -2) (E : ℤ) :
     ring
   have hw0 := Matrix.eq_zero_of_mulVec_eq_zero hdet hw
   have := congrFun hw0 ⟨mu0, he, hc.trans (by ring)⟩
-  simpa [w] using this
+  simpa [w] using! this
 
 end
 

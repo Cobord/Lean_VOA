@@ -28,7 +28,7 @@ theorem inverseSeries_trunc_product_coeff (E : A[X]) (H : PowerSeries A)
     rw [Polynomial.coeff_mul, PowerSeries.coeff_mul]
     apply Finset.sum_congr rfl
     intro p hp
-    have hp' := Finset.mem_antidiagonal.mp hp
+    have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos (by omega)]
   rw [he, hEH, PowerSeries.coeff_one]
 
@@ -100,7 +100,7 @@ theorem inverseSeries_trunc_tail_coeff (E : A[X]) (H : PowerSeries A)
   · apply Finset.sum_subset (Finset.range_mono (by omega))
     intro a ha hnot
     have ha' := Finset.mem_range.mp ha
-    have hnot' : s - q ≤ a := by simpa using hnot
+    have hnot' : s - q ≤ a := by simpa using! hnot
     rw [PowerSeries.coeff_trunc, if_pos (by omega), sub_self]
 
 /-- The explicit complete-function expression for every sufficiently high power. -/
@@ -116,7 +116,7 @@ theorem alphabetPowerRemainder_coeff_of_large (xs : List A) (m l : ℕ)
     (by rw [mul_comm]; exact D4Levi.ksHSeries_mul_EPoly xs) (m - xs.length) (m - l)
     (by omega)
   simpa only [show m - l ≠ 0 by omega, if_false,
-    show m - l - (m - xs.length) = xs.length - l by omega] using he
+    show m - l - (m - xs.length) = xs.length - l by omega] using! he
 
 /-- The complete-function formula, including powers smaller than the alphabet.
 The conditional implements the convention that negative complete indices give zero. -/
@@ -156,7 +156,7 @@ theorem alphabetPowerRemainder_coeff (xs : List A) (m l : ℕ) (hl : l < xs.leng
           rw [if_pos (by have := Finset.mem_range.mp ha; omega)]
         · apply Finset.sum_subset (Finset.range_mono (by omega))
           intro a ha hnot
-          have hbound : m - l + 1 ≤ a := by simpa using hnot
+          have hbound : m - l + 1 ≤ a := by simpa using! hnot
           rw [if_neg (by omega)]
       rw [hs, hc]
       by_cases he : l = m
@@ -184,7 +184,7 @@ theorem finiteAlphabet_remainderMatrix_coeff (r N c : ℕ) (l : Fin r) :
       ∑ a ∈ Finset.range (r - l.val), if l.val + a ≤ N + c then
         (-1) ^ a * MvPolynomial.esymm (Fin r) ℂ a *
           MvPolynomial.hsymm (Fin r) ℂ (N + c - l.val - a) else 0 := by
-  rw [alphabetPowerRemainder_coeff _ _ _ (by simpa only [List.length_ofFn] using l.isLt)]
+  rw [alphabetPowerRemainder_coeff _ _ _ (by simpa only [List.length_ofFn] using! l.isLt)]
   simp only [List.length_ofFn, elementaryProduct_coeff, D4Levi.ksHSeries_coeff_hsymm]
 
 end

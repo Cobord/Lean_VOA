@@ -48,7 +48,7 @@ theorem ksWeightedMultinomial (m : ℕ) :
         ∏ j : Fin 4, ksClassWeight j ^ k j) = 29 ^ m := by
   have h := Finset.sum_pow_eq_sum_piAntidiag
     (Finset.univ : Finset (Fin 4)) ksClassWeight m
-  simpa only [ksClassWeight_sum] using h.symm
+  simpa only [ksClassWeight_sum] using! h.symm
 
 /-- The four-colour multinomial is the product of the three box cardinalities. -/
 theorem ksMultinomial_choose (a bp b c : ℕ) :

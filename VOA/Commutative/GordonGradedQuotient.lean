@@ -49,7 +49,7 @@ theorem quotient_weightedHomogeneous_of_factorization
   have hcomponentQ :
       MvPolynomial.weightedHomogeneousComponent w (Finsupp.weight w d) q ≠ 0 := by
     intro hzero
-    have hcoeff := congrArg (MvPolynomial.coeff d) hzero
+    have hcoeff := congrArg (fun p : MvPolynomial I K => p.coeff d) hzero
     simp [MvPolynomial.coeff_weightedHomogeneousComponent] at hcoeff
     exact hd hcoeff
   have hcomponentProduct :

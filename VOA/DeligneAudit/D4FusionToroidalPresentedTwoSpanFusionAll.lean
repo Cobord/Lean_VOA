@@ -10,7 +10,7 @@ open VOA.DeligneAudit.D4FusionContact
 noncomputable section
 
 private theorem fusion_cases : ∀ c : Fin 28, 16 ≤ c.val →
-    c = D4sector.c₀ ∨
+    c = (27 : Fin 28) ∨
       (∃ i : Fin 8, radIndex i.castSucc = c) ∨
       c = negativeIndex 0 ∨ c = negativeIndex 1 ∨ c = negativeIndex 3 := by
   decide +kernel

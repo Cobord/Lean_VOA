@@ -144,12 +144,12 @@ def iterOp : IterateSpace F A A A A :=
 theorem prodOp_val (n : ℂ) (x : A.carrier) (u : (tensorObj F A A).carrier) :
     (prodOp F μ).val n x u = μ.val ((F A A).intertwiner.val n x (μ.val u)) := by
   change (tensorHom F (𝟙 A) μ ≫ μ).val ((F A (tensorObj F A A)).intertwiner.val n x u) = _
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
+  exact congrArg μ.val (tensorHom_intertwiner F (𝟙 A) μ n x u)
 
 theorem iterOp_val (n : ℂ) (u : (tensorObj F A A).carrier) (z : A.carrier) :
     (iterOp F μ).val n u z = μ.val ((F A A).intertwiner.val n (μ.val u) z) := by
   change (tensorHom F μ (𝟙 A) ≫ μ).val ((F (tensorObj F A A) A).intertwiner.val n u z) = _
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
+  exact congrArg μ.val (tensorHom_intertwiner F μ (𝟙 A) n u z)
 
 /-! ## Integral intermediate weights -/
 
@@ -174,7 +174,8 @@ theorem prodCoef_int (d : FourPointTest A A A A) {w : ℂ}
   have hm := mu_mem_weight (F := F) d.hy d.hz (d.β + d.γ - w - 1) μ
   rw [show d.β + d.γ - (d.β + d.γ - w - 1) - 1 = w by ring,
     weight_eq_bot_of_not_int htw hk, Submodule.mem_bot] at hm
-  rw [prodCoef, prodOp_val, hm]
+  rw [prodCoef, prodOp_val F μ (d.α + w - d.δ - 1) d.x
+    ((F A A).intertwiner.val (d.β + d.γ - w - 1) d.y d.z), hm]
   erw [LinearMap.map_zero, LinearMap.map_zero, LinearMap.map_zero]
 
 /-- With trivial twist, a nonzero iterate coefficient of `iterOp` sits at an integral weight. -/
@@ -186,7 +187,8 @@ theorem iterCoef_int (d : FourPointTest A A A A) {w : ℂ}
   have hm := mu_mem_weight (F := F) d.hx d.hy (d.α + d.β - w - 1) μ
   rw [show d.α + d.β - (d.α + d.β - w - 1) - 1 = w by ring,
     weight_eq_bot_of_not_int htw hk, Submodule.mem_bot] at hm
-  rw [iterCoef, iterOp_val, hm]
+  rw [iterCoef, iterOp_val F μ (w + d.γ - d.δ - 1)
+    ((F A A).intertwiner.val (d.α + d.β - w - 1) d.x d.y) d.z, hm]
   erw [LinearMap.map_zero, LinearMap.zero_apply, LinearMap.map_zero, LinearMap.map_zero]
 
 theorem prodL_exp_int {d : FourPointTest A A A A} (hd : IntTest d) (w : ℂ)

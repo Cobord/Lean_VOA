@@ -52,7 +52,7 @@ theorem deltaVec_update (m : ℕ) (t : Fin m → Fin 8) (i : Fin m) (c c₀ : Fi
   apply propext
   constructor
   · intro h
-    refine ⟨by simpa using congrFun h i, fun j hj => ?_⟩
+    refine ⟨by simpa using! congrFun h i, fun j hj => ?_⟩
     have := congrFun h j
     rwa [Function.update_of_ne hj] at this
   · rintro ⟨rfl, h⟩
@@ -236,7 +236,7 @@ theorem applyWord_replicate (m k : ℕ) (x : Fin 8) :
 theorem iterate_suppW (m k : ℕ) (x : Fin 8) :
     SuppW (m • wt 5 - k • wt x) ((loopOp bracketTable m x 0)^[k] (deltaVec (K := ℂ) m 5)) := by
   induction k with
-  | zero => simpa using deltaVec_suppW m
+  | zero => simpa using! deltaVec_suppW m
   | succ k ih =>
       rw [Function.iterate_succ_apply']
       have h := loopOp_suppW ih x 0

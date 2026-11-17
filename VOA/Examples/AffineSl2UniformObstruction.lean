@@ -144,6 +144,6 @@ theorem graded_rigidity_of_relations {ι κ : Type*} [Fintype ι] [Fintype κ]
   intro D hD hnorm a ha b hb
   obtain ⟨δ, hδ, _⟩ := simple_existsUnique_pole_parameter k hk hk0 D hD hnorm
   have hz := pole_parameter_zero_of_relations k hk hk0 D hD hnorm δ hδ u c v d hc hd hp
-  simpa only [hz, mul_zero, zero_smul] using hδ ⟨a,ha⟩ ⟨b,hb⟩
+  simpa only [hz, mul_zero, zero_smul] using! hδ ⟨a,ha⟩ ⟨b,hb⟩
 
 end VOA.AffineSl2GeneralRigidity

@@ -101,7 +101,7 @@ theorem gtFourDiagonal_product (q : R) (h : PochhammerUnits q)
         (rescale (x 0) (gtEulerInv q h (u i : R)) *
           rescale (x 1) (gtEulerInv q h (u i : R)))) := by
   induction N with
-  | zero => simpa using gtFourDiagonal_zero q h x y u
+  | zero => simpa using! gtFourDiagonal_zero q h x y u
   | succ N ih =>
       rw [gtFourDiagonal_succ, ih, Finset.prod_range_succ]
       ring

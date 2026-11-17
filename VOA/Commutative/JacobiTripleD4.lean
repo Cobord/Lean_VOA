@@ -57,12 +57,12 @@ theorem negSign_laurent (j : ℤ) : (negSign j : L) = LaurentPolynomial.C (negSi
   simp [negSign]
 
 theorem sum_signed_T_apply (s : Finset ℤ) (b : ℤ) :
-    ((∑ j ∈ s, (negSign j : L) * T (j * 2) : L) : ℤ →₀ ℤ) b =
+    (∑ j ∈ s, (negSign j : L) * T (j * 2) : L).coeff b =
       ∑ j ∈ s, if j * 2 = b then (negSign j : ℤ) else 0 := by
-  erw [Finsupp.finsetSum_apply]
+  rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
   apply Finset.sum_congr rfl
   intro j _
-  rw [negSign_laurent, ← single_eq_C_mul_T, Finsupp.single_apply]
+  rw [negSign_laurent, ← single_eq_C_mul_T, AddMonoidAlgebra.coeff_single, Finsupp.single_apply]
 
 /-- `x` as a unit of `ℤ[x, x⁻¹]⟦q⟧`. -/
 def xUnit : (PowerSeries L)ˣ :=
@@ -91,19 +91,19 @@ theorem toSeries_T (n : ℤ) : toSeries (T n) = PowerSeries.C (T n) := by
 
 /-- `toSeries` preserves every coefficient `[q^d x^j]`. -/
 theorem coeff_toSeries_apply (F : (PowerSeries ℤ)[T;T⁻¹]) (d : ℕ) (j : ℤ) :
-    ((coeff d (toSeries F) : L) : ℤ →₀ ℤ) j = coeff d ((F : ℤ →₀ PowerSeries ℤ) j) := by
+    (coeff d (toSeries F) : L).coeff j = coeff d (F.coeff j) := by
   induction F using LaurentPolynomial.induction_on' with
   | add p q hp hq =>
-      rw [map_add, map_add]
-      erw [Finsupp.add_apply, Finsupp.add_apply]
-      rw [hp, hq, map_add]
+      rw [map_add, map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
+        AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq, map_add]
   | C_mul_T n a =>
       rw [toSeries_C_mul_T, coeff_mul_C, coeff_map, ← single_eq_C_mul_T, ← single_eq_C_mul_T,
+        AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_single,
         Finsupp.single_apply, Finsupp.single_apply]
       split_ifs <;> simp
 
 theorem coeff_tripleSum_unitT_apply (d : ℕ) (j : ℤ) :
-    ((coeff d (tripleSum (unitT 2)) : L) : ℤ →₀ ℤ) j =
+    (coeff d (tripleSum (unitT 2)) : L).coeff j =
       coeff d (VOA.DeligneAudit.DeligneCharacter.jtpCoeff j) := by
   have hsum : (coeff d (tripleSum (unitT 2)) : L) =
       ∑ k ∈ Finset.Icc (-(d : ℤ) - 1) (d + 1) with pentExp k = d, (negSign k : L) * T (k * 2) := by
@@ -180,6 +180,9 @@ theorem twoVariableJTP : VOA.DeligneAudit.DeligneCharacter.TwoVariableJTP := by
     rw [jtp_trunc_telescope] at h1
     exact h1.trans (((agreeTo_infProd (prodFactors_tripleFactor (unitT 2)) M).symm.mono
       (Nat.le_succ M)).mul_left _)
+  -- `TwoVariableJTP` is stated through the Laurent coefficient `(jtpTrunc M).coeff j`.
+  change PowerSeries.coeff d ((VOA.DeligneAudit.DeligneCharacter.jtpTrunc M).coeff j) =
+    PowerSeries.coeff d (VOA.DeligneAudit.DeligneCharacter.jtpCoeff j)
   rw [← coeff_toSeries_apply, hag.coeff_eq hd, coeff_tripleSum_unitT_apply]
 
 end

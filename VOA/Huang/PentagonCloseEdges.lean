@@ -100,7 +100,10 @@ theorem evalAssoc_edge01 (k : fiveObj F X Y Z T .inner ⟶ U) (d : FivePointTest
     simp only [fivePointTerm, fivePointVector, fivePointFactor, iterateWeightTerm,
       Ordinary.comp_apply, fiveEdge01, LinearMap.comp_apply, LinearMap.flip_apply, d4]
     rw [mul_assoc, hr, cpow_scale_split c d.s hc0.le hs]
-    congr 1 <;> first | (congr 2; ring) | (erw [tensorHom_intertwiner]; rfl)
+    refine congrArg₂ (· * ·) (congrArg d.functional
+      (((Ordinary.comp_apply _ k _).trans (congrArg (fun y => k.val y)
+        (tensorHom_intertwiner F (evalAssoc F H X Y Z).hom (𝟙 T) _ _ _))).trans rfl))
+      (congrArg (fun e : ℂ => (c : ℂ) ^ (w - d.α - d.β) * (d.s : ℂ) ^ e) (by ring))
   have hrr (w : ℂ) : fivePointTerm F .inner k d (w, v) =
       productWeightTerm F (postcompose (F X (tensorObj F Y Z)).intertwiner _
         (𝟙 (tensorObj F X (tensorObj F Y Z)))) d4 w *
@@ -170,7 +173,9 @@ theorem evalAssoc_edge23 (k : fiveObj F X Y Z T .right ⟶ U) (d : FivePointTest
     simp only [fivePointTerm, fivePointVector, fivePointFactor, iterateWeightTerm,
       Ordinary.comp_apply, fiveEdge23, LinearMap.comp_apply, d4]
     rw [mul_assoc]
-    congr 1; erw [tensorHom_intertwiner]; rfl
+    refine congrArg (· * _) (congrArg d.functional
+      (((Ordinary.comp_apply _ k _).trans (congrArg (fun y => k.val y)
+        (tensorHom_intertwiner F (𝟙 X) (evalAssoc F H Y Z T).hom _ _ _))).trans rfl))
   have hrr (w : ℂ) : fivePointTerm F .right k d (w, v) =
       productWeightTerm F (postcompose (F Y (tensorObj F Z T)).intertwiner _
         (𝟙 (tensorObj F Y (tensorObj F Z T)))) d4 w *

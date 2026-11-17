@@ -8,6 +8,9 @@ namespace VOA.Moonshine.ConwayNorton
 open IntegralLattice HeisenbergN LatGen Nondeg MvPolynomial AutMonster TensorFieldLift
 open scoped TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem hypLorentzianPolynomial_virasoro_nonnegative (x y n : ℤ) (hn : 0 ≤ n)
     (p : hypFock) :
     hypLorentzianPolynomialEquiv (hypSugawara x y n p) =
@@ -49,9 +52,11 @@ theorem hypLorentzianPolynomial_virasoro (x y n : ℤ) (p : hypFock) :
       hypForm (hypLorentzianPolynomialEquiv.symm
         (lorentzianSectorVirasoro ![x, y] n (hypLorentzianPolynomialEquiv p))) q =
       hypForm (hypSugawara x y n p) q := by
-    rw [← hypLorentzianPolynomial_form, AlgEquiv.apply_symm_apply,
-      lorentzianSectorVirasoro_adjoint,
-      ← hypLorentzianPolynomial_virasoro_nonnegative x y (-n) (by omega),
+    rw [← hypLorentzianPolynomial_form, AlgEquiv.apply_symm_apply]
+    first
+    | rw [lorentzianSectorVirasoro_adjoint]
+    | rw [lorentzianSectorVirasoro_adjoint ![x, y] n]
+    rw [← hypLorentzianPolynomial_virasoro_nonnegative x y (-n) (by omega),
       hypLorentzianPolynomial_form, hypForm_sugawara_adjoint]
   have he : hypLorentzianPolynomialEquiv.symm
       (lorentzianSectorVirasoro ![x, y] n (hypLorentzianPolynomialEquiv p)) =
@@ -75,12 +80,19 @@ theorem moonshineMatterSectorMap_virasoro (x y n : ℤ) (u : Vnat ⊗[ℂ] hypFo
   | zero => simp only [LinearMap.map_zero]
   | add u v hu hv => simp only [LinearMap.map_add, hu, hv]
   | tmul v p =>
-    simp only [vnatHypMode, tensorTranslation, LinearMap.add_apply,
-      LinearMap.rTensor_tmul, LinearMap.lTensor_tmul, LinearMap.map_add,
-      moonshineMatterSectorMap_tmul]
-    congr 1
-    rw [hypLorentzianPolynomial_virasoro]
-    exact congrArg (fun z => v ⊗ₜ[ℂ] z) (lorentzianSectorVirasoro_tmul ![x, y] n _).symm
+    first
+    | (simp only [vnatHypMode, tensorTranslation, LinearMap.add_apply,
+        LinearMap.rTensor_tmul, LinearMap.lTensor_tmul, LinearMap.map_add,
+        moonshineMatterSectorMap_tmul]
+       congr 1
+       rw [hypLorentzianPolynomial_virasoro]
+       exact congrArg (fun z => v ⊗ₜ[ℂ] z) (lorentzianSectorVirasoro_tmul ![x, y] n _).symm)
+    | (simp only [vnatHypMode, tensorTranslation, LinearMap.add_apply,
+        LinearMap.rTensor_tmul, LinearMap.lTensor_tmul, LinearMap.map_add,
+        moonshineMatterSectorMap_tmul ![x, y]]
+       congr 1
+       rw [hypLorentzianPolynomial_virasoro]
+       exact congrArg (fun z => v ⊗ₜ[ℂ] z) (lorentzianSectorVirasoro_tmul ![x, y] n _).symm)
 
 /-- The requested intertwining on the concrete matter equivalence. -/
 theorem moonshineMatterSectorEquiv_virasoro (x y n : ℤ) (u : Vnat ⊗[ℂ] hypFock) :

@@ -37,7 +37,7 @@ theorem a3_first_box_sorted (a b c : ℕ)
         (zs.map fun s => ρ.op (F 2) s).prod := by
     simp [l, List.map_append, List.map_map, Function.comp_def, radicalOp]
   simpa [a3FirstBoxSortedSpan, aWord, hB, Module.End.mul_apply,
-    VOA.DeligneAudit.CLAssembly.evAlg_mono, mul_assoc] using hbox
+    VOA.DeligneAudit.CLAssembly.evAlg_mono, mul_assoc] using! hbox
 
 /-- The first box is homogeneous for the complete three-colour key. -/
 theorem a3FirstBoxSortedSpan_le_key (a : ℕ) (xs ys zs : List ℕ) :
@@ -51,16 +51,16 @@ theorem a3FirstBoxSortedSpan_le_key (a : ℕ) (xs ys zs : List ℕ) :
   have hlen : fs.length = xs.length := by
     rw [a2_lst_length]
     have h := congrArg Prod.fst hweight
-    simpa using h
+    simpa using! h
   have hsum : fs.sum = xs.sum := by
     rw [a2_lst_sum]
     have h := congrArg Prod.snd hweight
-    simpa using h
+    simpa using! h
   have hword := a2_evAlg_monomial_word
     (fun s => ρ.op (F 0) s) (a3_first_comm ρ) f
   have hmem := a3_three_mode_mem_key ρ w fs ys zs
   rw [hword]
-  simpa only [hlen, hsum, mul_assoc, Module.End.mul_apply] using hmem
+  simpa only [hlen, hsum, mul_assoc, Module.End.mul_apply] using! hmem
 
 end VOA.DeligneAudit.A3Sector
 

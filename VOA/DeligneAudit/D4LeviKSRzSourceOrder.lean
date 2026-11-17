@@ -37,7 +37,7 @@ theorem rz_univ_fin_add_perm (k l : ℕ) :
         finSumFinEquiv).Nodup :=
       (Finset.nodup_toList _).map finSumFinEquiv.injective
     have hn' := (hperm.map finSumFinEquiv).nodup_iff.mp hmap
-    simpa [List.map_append, List.map_map, finSumFinEquiv] using hn'
+    simpa [List.map_append, List.map_map, finSumFinEquiv] using! hn'
   apply (List.perm_ext_iff_of_nodup (Finset.nodup_toList _) hn).2
   intro t
   constructor
@@ -67,7 +67,7 @@ theorem rz_source_univ_perm (a b k l : ℕ) :
         (Finset.univ.toList : List (Fin (k + l))).map
           (Sum.inr ∘ Sum.inr)) := by
     simpa [List.map_append, List.map_map, Function.comp_def,
-      List.append_assoc] using (h2.map Sum.inr).append_left
+      List.append_assoc] using! (h2.map Sum.inr).append_left
         ((Finset.univ.toList : List (Fin b ⊕ Fin a)).map Sum.inl)
   have h23 :
       (((Finset.univ.toList : List (Fin b ⊕ Fin a)).map Sum.inl) ++
@@ -81,7 +81,7 @@ theorem rz_source_univ_perm (a b k l : ℕ) :
         (Finset.univ.toList : List (Fin l)).map
           (Sum.inr ∘ Sum.inr ∘ Fin.natAdd k)) := by
     simpa only [List.map_append, List.map_map, Function.comp_def,
-      ← List.append_assoc] using (h3.map (Sum.inr ∘ Sum.inr)).append_left
+      ← List.append_assoc] using! (h3.map (Sum.inr ∘ Sum.inr)).append_left
         (((Finset.univ.toList : List (Fin b ⊕ Fin a)).map Sum.inl) ++
           (Finset.univ.toList : List (Fin b)).map (Sum.inr ∘ Sum.inl))
   exact h1.trans (h12.trans h23)

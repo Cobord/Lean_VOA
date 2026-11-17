@@ -168,10 +168,10 @@ theorem left_root_iterate_zero_all (hs4 : OrdinaryFourPointSummability F)
       ?_ ?_ ?_ ?_ ?_ x y
     · intro x x' y; simp only [map_add, LinearMap.add_apply]; erw [map_add]
     · intro x y y'; simp only [map_add]; erw [map_add]
-    · intro x x' y; simp
-    · intro x y y'; simp
+    · intro _ _ _; exact (add_zero (0 : ℂ)).symm
+    · intro _ _ _; exact (add_zero (0 : ℂ)).symm
     intro α β x y hx hy
-    simp only [LinearMap.zero_apply]
+    show Λ ((F X Y).intertwiner.val p x y) = 0
     have hm := FusionTop.mem_weight (F X Y).intertwiner.property hx hy p
     by_cases hw : α + β - p - 1 = d'.α
     · obtain rfl : p = α + β - d'.α - 1 := by linear_combination -hw
@@ -220,7 +220,7 @@ theorem fivePointLeftFaithfulness_of (H : OrdinaryFourPointInput F)
     funext d'
     rw [left_root_iterate_zero_all F H.summability hs5 (hspec _) (k₁ - k₂) hk d']
     symm
-    rw [iterateEvaluation]
+    show ∑' w : ℂ, iterateWeightTerm F _ d' w = _
     convert tsum_zero with w
     simp only [iterateWeightTerm]
     have hz (m : ℂ) (a : (tensorObj F (tensorObj F X Y) Z).carrier) (b : T.carrier) :

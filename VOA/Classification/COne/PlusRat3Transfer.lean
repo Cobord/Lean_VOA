@@ -133,7 +133,7 @@ theorem HP_mem_grading (t : ℕ) (ht : 1 ≤ t) (ht4 : t ≤ 4) :
 
 theorem LmV_mem_grading {y : VP m hm} {k : ℤ} (hy : y ∈ (V2mPlus m hm).grading k) :
     ∀ j : ℕ, LmV m hm j y ∈ (V2mPlus m hm).grading (k + j)
-  | 0 => by simpa [LmV] using hy
+  | 0 => by simpa [LmV] using! hy
   | j + 1 => by
     rw [LmV, Function.iterate_succ_apply', ← LmV, L_neg_one_eq_smul]
     have h := (V2mPlus m hm).toPreVertexAlgebra.smul_mem_grading (V2mPlus m hm).conformal_mem
@@ -334,7 +334,7 @@ theorem lat_weight_25_eq (hm2 : 2 ≤ 6) {v : LatModuleGen (latP 6)}
         have := (V2mPlus 6 hm6).toPreVertexAlgebra.smul_mem_grading (V2mPlus 6 hm6).conformal_mem
           (V2mPlus 6 hm6).conformal_mem 2
         rw [VertexOperatorAlgebra.L_def]
-        simpa using this
+        simpa using! this
       rw [grading_one_eq_bot 6 hm6 hm2, Submodule.mem_bot] at hg
       exact hg
     rw [hL1ω, map_zero, mode_zero, LinearMap.zero_apply, add_zero,

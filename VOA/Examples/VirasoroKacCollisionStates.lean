@@ -66,7 +66,7 @@ actual nonzero level k(d+k), with no character or determinant formula. -/
 theorem hasNonzeroSingular_charge_one_chain (d k : ℕ) :
     HasNonzeroSingular 1 ((d:ℂ)^2/4) (k*(d+k)) := by
   induction k generalizing d with
-  | zero => simpa using hasNonzeroSingular_zero 1 ((d:ℂ)^2/4)
+  | zero => simpa using! hasNonzeroSingular_zero 1 ((d:ℂ)^2/4)
   | succ k ih =>
     have hs := hasNonzeroSingular_bsa 1 (d+1) (by norm_num) (by omega)
     have hc : vermaBSACharge 1=1 := by norm_num [vermaBSACharge]
@@ -86,7 +86,7 @@ Thus the full label-sized state is genuinely nonzero even at this collision. -/
 theorem hasNonzeroSingular_charge_twentyFive_chain (d k : ℕ) :
     HasNonzeroSingular 25 (1-((d:ℂ)+2*(k:ℂ))^2/4) (k*(d+k)) := by
   induction k with
-  | zero => simpa using hasNonzeroSingular_zero 25 (1-(d:ℂ)^2/4)
+  | zero => simpa using! hasNonzeroSingular_zero 25 (1-(d:ℂ)^2/4)
   | succ k ih =>
     have hs := hasNonzeroSingular_bsa (-1) (d+2*k+1) (by norm_num) (by omega)
     have hc : vermaBSACharge (-1)=25 := by norm_num [vermaBSACharge]

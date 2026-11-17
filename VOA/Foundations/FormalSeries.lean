@@ -117,20 +117,20 @@ def LaurentPoly (𝒲 : Type*) [AddCommGroup 𝒲] [Module ℂ 𝒲] : Submodule
   add_mem' {f g} hf hg := by
     refine (hf.union hg).subset ?_
     intro n hn
-    rw [Function.mem_support] at hn
-    rw [Set.mem_union, Function.mem_support, Function.mem_support]
+    have hn : (f + g) n ≠ 0 := hn
+    show f n ≠ 0 ∨ g n ≠ 0
     by_contra hcon
     simp only [not_or, not_ne_iff] at hcon
     exact hn (by rw [show (f + g) n = f n + g n from rfl, hcon.1, hcon.2, add_zero])
   zero_mem' := by
     refine Set.finite_empty.subset ?_
     intro n hn
-    rw [Function.mem_support] at hn
-    exact absurd rfl hn
+    exact absurd rfl (show (0 : FormalDist 𝒲) n ≠ 0 from hn)
   smul_mem' c f hf := by
     refine hf.subset ?_
     intro n hn
-    rw [Function.mem_support] at hn ⊢
+    have hn : (c • f) n ≠ 0 := hn
+    show f n ≠ 0
     intro h
     exact hn (by rw [show (c • f) n = c • f n from rfl, h, smul_zero])
 

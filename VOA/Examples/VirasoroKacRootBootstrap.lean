@@ -68,7 +68,7 @@ theorem verma_singular_of_nonreal_kac_roots (t : ℂ) (ht : t.im ≠ 0) (N : ℕ
           intro he
           have he' : fusionKacWeight r s t =
               fusionKacWeight (i.1.val+1:ℕ) (i.2.val+1:ℕ) t := by
-            simpa only [Nat.cast_add,Nat.cast_one] using he
+            simpa only [Nat.cast_add,Nat.cast_one] using! he
           obtain ⟨hri,hsi⟩ := fusionKacWeight_injective_positive t ht r s
             (i.1.val+1) (i.2.val+1) hr (by omega) he'
           have hil := (Finset.mem_filter.mp hi).2

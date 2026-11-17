@@ -40,7 +40,9 @@ theorem bend_unit (P : Pivotal C) {V : C} (f : 𝟙_ C ⟶ V) :
   rw [P.unit_evaluation, rightUnitor_naturality_assoc] at h
   calc
     _ = (ρ_ Vᘁ).inv ≫ Vᘁ ◁ f ≫ ε_ V Vᘁ := by
-      dsimp [leftDuality, tensorLeftHomEquiv]
+      change (ρ_ Vᘁ).inv ≫
+        (Vᘁ ◁ (f ≫ (ρ_ V).inv) ≫ (α_ Vᘁ V (𝟙_ C)).inv ≫
+          ε_ V Vᘁ ▷ (𝟙_ C) ≫ (λ_ (𝟙_ C)).hom) = _
       monoidal
     _ = _ := by rw [← h]; simp
 
@@ -50,6 +52,9 @@ theorem unbend_unit (P : Pivotal C) {V : C} (g : Vᘁ ⟶ 𝟙_ C) :
       P.dualUnit.hom ≫ gᘁ := by
   rw [← coevaluation_comp_rightAdjointMate_assoc, P.unit_coevaluation]
   simp
+
+private theorem rightDuality_apply' (X V W : C) (g : X ⊗ V ⟶ W) :
+    rightDuality X V W g = (ρ_ X).inv ≫ X ◁ η_ V Vᘁ ≫ (α_ X V Vᘁ).inv ≫ g ▷ Vᘁ := rfl
 
 /-- The unreduced degree-one rotation agrees with the identity convention. -/
 theorem rotation_unit (P : Pivotal C) {V : C} (f : 𝟙_ C ⟶ V) :
@@ -62,7 +67,9 @@ theorem rotation_unit (P : Pivotal C) {V : C} (f : 𝟙_ C ⟶ V) :
     _ = η_ Vᘁ (Vᘁ)ᘁ ≫
         ((ρ_ Vᘁ).inv ≫ (leftDuality (𝟙_ C) V (𝟙_ C)).symm
           (f ≫ (ρ_ V).inv)) ▷ (Vᘁ)ᘁ ≫ (λ_ (Vᘁ)ᘁ).hom ≫ (P.j V).inv := by
-      dsimp [rotation, homCongr, rightDuality, tensorRightHomEquiv]
+      dsimp [rotation, homCongr, rightDuality_apply', LinearEquiv.trans_apply,
+        LinearEquiv.coe_mk]
+      simp only [whiskerLeftIso_hom, Iso.symm_hom]
       monoidal
     _ = P.dualUnit.hom ≫ (P.dualUnit.inv)ᘁ ≫ (fᘁ)ᘁ ≫ (P.j V).inv := by
       rw [hb, reassoc_of% hu, comp_rightAdjointMate]
@@ -78,7 +85,8 @@ def unreducedRotationOne (P : Pivotal C) (V : C) :
 theorem unreducedRotationOne_eq (P : Pivotal C) (V : C) :
     unreducedRotationOne P V = fsRotation P V 1 := by
   ext f
-  simpa [unreducedRotationOne, homCongr, fsRotation] using rotation_unit P f
+  rw [fsRotation_one, LinearEquiv.refl_apply]
+  simpa [unreducedRotationOne, homCongr] using rotation_unit P f
 
 /-- At the central unit the half-braiding is exactly the unitor change
 used by the ordinary rotation. -/

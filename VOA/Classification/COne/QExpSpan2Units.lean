@@ -42,7 +42,7 @@ theorem zeta_pow_mem_frameRing (M : ℕ) (ζ : ℂ) (n : ℕ) : ζ ^ n ∈ frame
 
 /-- `ℤ[1/M] ⊂ ℤ[1/M][ζ]`. -/
 theorem zInv_mem_frameRing {M : ℕ} (ζ : ℂ) {z : ℂ} (hz : z ∈ zInv M) : z ∈ frameRing M ζ := by
-  simpa using (frameRing M ζ).algebraMap_mem (⟨z, hz⟩ : zInv M)
+  simpa using! (frameRing M ζ).algebraMap_mem (⟨z, hz⟩ : zInv M)
 
 /-- `1/d ∈ ℤ[1/M]` for a divisor `d` of `M`. -/
 theorem inv_natCast_mem_zInv {M d : ℕ} (hM : M ≠ 0) (hd : d ∣ M) : ((d : ℂ))⁻¹ ∈ zInv M := by

@@ -17,6 +17,10 @@ on that space and do not yet identify its cyclic subspace with the closed carrie
 -/
 namespace VOA.Deform
 open Module (End)
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {V : Type u} [AddCommGroup V] [Module ℂ V]
 variable {W : VertexOperatorAlgebra V} (D : FirstOrderDeformation W)
@@ -164,11 +168,13 @@ theorem liftedDegree_comm (hD : D.IsGraded) {a : V} (ha : a ∈ W.grading 1) (n 
   have hA := lowering_operator_degree_comm (W := W) (mode (W.Y a) n) n (by
     intro k v hv
     have h := W.smul_mem_grading ha hv n
-    simpa only [show 1 + k - n - 1 = k - n by omega] using h)
+    simp only [show 1 + k - n - 1 = k - n by omega] at h ⊢
+    exact h)
   have hB := lowering_operator_degree_comm (W := W) (mode (D.Y1 a) n) n (by
     intro k v hv
     have h := hD 1 k a ha v hv n
-    simpa only [show 1 + k - n - 1 = k - n by omega] using h)
+    simp only [show 1 + k - n - 1 = k - n by omega] at h ⊢
+    exact h)
   have ha' (v : V) : -W.L 0 (W.smul a n v) - W.smul a n (-W.L 0 v) =
       (n : ℂ) • W.smul a n v := congrArg (fun F : End ℂ V => F v) hA
   have hb' (v : V) : -W.L 0 (D.smul₁ a n v) - D.smul₁ a n (-W.L 0 v) =

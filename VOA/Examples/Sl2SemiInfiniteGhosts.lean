@@ -285,32 +285,40 @@ theorem ghostEmbed_ghost (a : Fin 3) {n : ℤ} {x : SympFerm.FockSF}
     (hx : x ∈ Ghost.ghostGrading n) : ghostEmbed a x ∈ sl2GhostGrading n := by
   unfold ghostEmbed
   split_ifs
-  · simpa only [add_zero] using
+  · have h :=
       tmul_mem_tensorGhostGrading ghostPairGrading Ghost.ghostGrading
         (tmul_mem_tensorGhostGrading Ghost.ghostGrading Ghost.ghostGrading
           hx Ghost.vacSF_mem_ghostGrading) Ghost.vacSF_mem_ghostGrading
-  · simpa only [add_zero, zero_add] using
+    simp only [add_zero] at h
+    exact h
+  · have h :=
       tmul_mem_tensorGhostGrading ghostPairGrading Ghost.ghostGrading
         (tmul_mem_tensorGhostGrading Ghost.ghostGrading Ghost.ghostGrading
           Ghost.vacSF_mem_ghostGrading hx) Ghost.vacSF_mem_ghostGrading
-  · simpa only [zero_add] using
+    simp only [add_zero, zero_add] at h
+    exact h
+  · have h :=
       tmul_mem_tensorGhostGrading ghostPairGrading Ghost.ghostGrading
         (tmul_mem_tensorGhostGrading Ghost.ghostGrading Ghost.ghostGrading
           Ghost.vacSF_mem_ghostGrading Ghost.vacSF_mem_ghostGrading) hx
+    simp only [zero_add] at h
+    exact h
 
 /-- Antighosts have ghost number `-1`. -/
 theorem bGhost_ghost (a : Fin 3) : bGhost a ∈ sl2GhostGrading (-1) := by
   apply ghostEmbed_ghost
-  simpa only [Ghost.ghNum, List.map_cons, List.map_nil, List.sum_cons,
-    List.sum_nil, add_zero, Ghost.ghCharge] using
-    Ghost.stWordSF_mem_ghostGrading [((0, 0) : ℕ × Fin 2)]
+  have h := Ghost.stWordSF_mem_ghostGrading [((0, 0) : ℕ × Fin 2)]
+  simp only [Ghost.ghNum, List.map_cons, List.map_nil, List.sum_cons,
+    List.sum_nil, add_zero, Ghost.ghCharge, ↓reduceIte] at h
+  exact h
 
 /-- Ghosts have ghost number `+1`. -/
 theorem cGhost_ghost (a : Fin 3) : cGhost a ∈ sl2GhostGrading 1 := by
   apply ghostEmbed_ghost
-  simpa only [Ghost.ghNum, List.map_cons, List.map_nil, List.sum_cons,
-    List.sum_nil, add_zero, Ghost.ghCharge] using
-    Ghost.stWordSF_mem_ghostGrading [((0, 1) : ℕ × Fin 2)]
+  have h := Ghost.stWordSF_mem_ghostGrading [((0, 1) : ℕ × Fin 2)]
+  simp only [Ghost.ghNum, List.map_cons, List.map_nil, List.sum_cons,
+    List.sum_nil, add_zero, Ghost.ghCharge, Fin.one_eq_zero_iff, ↓reduceIte] at h
+  exact h
 
 /-- All three antighost states are odd. -/
 theorem bGhost_odd (a : Fin 3) : bGhost a ∈ sl2GhostSVA.parity 1 := by
@@ -336,28 +344,36 @@ theorem ghostEmbed_weight (a : Fin 3) {h : ℂ} {x : SympFerm.FockSF}
     (hx : x ∈ Ghost.bcGhostSVA.grading h) : ghostEmbed a x ∈ sl2GhostSVA.grading h := by
   unfold ghostEmbed
   split_ifs
-  · simpa only [add_zero] using
+  · have h :=
       tmul_mem_tenGrading_add ghostPairSVA Ghost.bcGhostSVA
         (tmul_mem_tenGrading_add Ghost.bcGhostSVA Ghost.bcGhostSVA
           hx Ghost.bcGhostSVA.vacuum_mem) Ghost.bcGhostSVA.vacuum_mem
-  · simpa only [add_zero, zero_add] using
+    simp only [add_zero] at h
+    exact h
+  · have h :=
       tmul_mem_tenGrading_add ghostPairSVA Ghost.bcGhostSVA
         (tmul_mem_tenGrading_add Ghost.bcGhostSVA Ghost.bcGhostSVA
           Ghost.bcGhostSVA.vacuum_mem hx) Ghost.bcGhostSVA.vacuum_mem
-  · simpa only [zero_add] using
+    simp only [add_zero, zero_add] at h
+    exact h
+  · have h :=
       tmul_mem_tenGrading_add ghostPairSVA Ghost.bcGhostSVA
         (tmul_mem_tenGrading_add Ghost.bcGhostSVA Ghost.bcGhostSVA
           Ghost.bcGhostSVA.vacuum_mem Ghost.bcGhostSVA.vacuum_mem) hx
+    simp only [zero_add] at h
+    exact h
 
 /-- All three antighost states have conformal weight one. -/
 theorem bGhost_weight (a : Fin 3) : bGhost a ∈ sl2GhostSVA.grading 1 := by
   apply ghostEmbed_weight
-  simpa only [Ghost.stWordSF_singleton] using Ghost.b_mem_gradingGh_one
+  rw [Ghost.stWordSF_singleton]
+  exact Ghost.b_mem_gradingGh_one
 
 /-- All three ghost states have conformal weight zero. -/
 theorem cGhost_weight (a : Fin 3) : cGhost a ∈ sl2GhostSVA.grading 0 := by
   apply ghostEmbed_weight
-  simpa only [Ghost.stWordSF_singleton] using Ghost.c_mem_gradingGh_zero
+  rw [Ghost.stWordSF_singleton]
+  exact Ghost.c_mem_gradingGh_zero
 
 section UnitField
 

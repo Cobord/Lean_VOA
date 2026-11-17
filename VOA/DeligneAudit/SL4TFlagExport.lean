@@ -27,12 +27,12 @@ theorem SpanningChain.export {A : Ideal R[X]} {I J : Ideal R} {ns : List ℕ}
       refine ⟨w, G, rfl, htop, ?_, ?_⟩
       · intro i hi
         cases i with
-        | zero => simpa only [G, w, h0] using hs
+        | zero => simpa only [G, w, h0] using! hs
         | succ i => exact hstep i (by simpa only [List.length_cons, Nat.succ_lt_succ_iff]
             using hi)
       · intro i hi
         cases i with
-        | zero => simpa only [G, w, List.getD_cons_zero] using hr
+        | zero => simpa only [G, w, List.getD_cons_zero] using! hr
         | succ i => exact hrel i (by simpa only [List.length_cons, Nat.succ_lt_succ_iff]
             using hi)
 

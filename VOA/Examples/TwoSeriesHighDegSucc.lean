@@ -49,11 +49,11 @@ theorem jg_isHomogeneous (n j : ℕ) : (jg n j).IsHomogeneous n := by
   have h := jg_isWH 1 0 n j
   have hw : (fun m : ℕ => 1 + 0 * m) = (1 : ℕ → ℕ) := by funext m; simp
   rw [hw] at h
-  simpa using h
+  simpa using! h
 
 /-- The degree-`m` component of `f * g` for `g` homogeneous of degree `m`. -/
 theorem hc_mul_of_isHomogeneous {f g : TPoly} {m : ℕ} (hg : g.IsHomogeneous m) :
-    homogeneousComponent m (f * g) = MvPolynomial.C (coeff 0 f) * g := by
+    homogeneousComponent m (f * g) = MvPolynomial.C (f.coeff 0) * g := by
   conv_lhs => rw [← sum_homogeneousComponent f]
   rw [Finset.sum_mul, map_sum, Finset.sum_eq_single 0]
   · rw [homogeneousComponent_zero, homogeneousComponent_of_mem
@@ -137,11 +137,11 @@ theorem jg_eval_one : ∀ (n q : ℕ), 1 ≤ n →
     have ih : ∀ p : ℕ, ∃ c : ℕ, 1 ≤ c ∧ aeval (fun _ : ℕ => (1 : ℂ)) (jg (n + 1) p) = c :=
       fun p => jg_eval_one (n + 1) p (by omega)
     choose c hc1 hc2 using ih
-    refine ⟨∑ p ∈ Finset.antidiagonal q, c p.1, ?_, ?_⟩
+    refine ⟨∑ p ∈ Finset.HasAntidiagonal.antidiagonal q, c p.1, ?_, ?_⟩
     · calc 1 ≤ c (0, q).1 := hc1 _
-        _ ≤ ∑ p ∈ Finset.antidiagonal q, c p.1 :=
+        _ ≤ ∑ p ∈ Finset.HasAntidiagonal.antidiagonal q, c p.1 :=
           Finset.single_le_sum (f := fun p : ℕ × ℕ => c p.1) (fun _ _ => Nat.zero_le _)
-            (Finset.mem_antidiagonal.mpr (by simp))
+            (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp))
     · rw [jg, pow_succ, PowerSeries.coeff_mul, map_sum, Nat.cast_sum]
       refine Finset.sum_congr rfl fun p _ => ?_
       rw [map_mul, ← jg, hc2, tSer, PowerSeries.coeff_mk, aeval_X, mul_one]
@@ -222,7 +222,7 @@ theorem jetPoincare_degSucc {n : ℕ} (hn : 1 ≤ n) (N E : ℕ) : JetPoincare n
       IsWeightedHomogeneous wT (pderiv M F) (E - (M + 1)) := fun M hM =>
     hFw.pderiv (by simp only [wT]; omega)
   have hderh : ∀ M, (pderiv M F).IsHomogeneous (n' + 1) := fun M => by
-    have := hFh.pderiv (i := M); simpa using this
+    have := hFh.pderiv (i := M); simpa using! this
   have hex : ∀ M, ∃ a : ℂ, N ≤ M → M ≤ Q → pderiv M F = a • jg (n' + 1) (Q - M) := by
     intro M
     by_cases hM : N ≤ M ∧ M ≤ Q
@@ -365,12 +365,12 @@ theorem jetPoincare_of_wt_lt {n N k E : ℕ} (hE : E < 2 * N + k) : JetPoincare 
     by_cases hm : N ≤ m
     · exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ (hder m hm))
     · simp [hw, hm]
-  have hHeq : H = ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (coeff s F) :=
+  have hHeq : H = ∑ s ∈ F.support, ((Finsupp.weight w s : ℕ) : TPoly) * monomial s (F.coeff s) :=
     euler_sum w F F.vars subset_rfl
   -- `F - H` has no high index
   have hlow : F - H = ∑ s ∈ F.support,
-      (if Finsupp.weight w s = 0 then monomial s (coeff s F) else 0) := by
-    have hF' : F = ∑ s ∈ F.support, monomial s (coeff s F) := as_sum F
+      (if Finsupp.weight w s = 0 then monomial s (F.coeff s) else 0) := by
+    have hF' : F = ∑ s ∈ F.support, monomial s (F.coeff s) := as_sum F
     rw [hHeq]
     nth_rewrite 1 [hF']
     rw [← Finset.sum_sub_distrib]

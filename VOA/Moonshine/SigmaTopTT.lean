@@ -28,6 +28,11 @@ Twisted-source analogue of `SigmaTop.lean` for the residual `TopSigmaTT s' s φ`
 umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -49,10 +54,12 @@ noncomputable def hvecL : (Fin (rank leech) → ℂ) →ₗ[ℂ] FockT 24 where
   map_smul' := hvec_smul
 
 theorem coeff_hvec (v : Fin (rank leech) → ℂ) (a : Fin (rank leech)) :
-    MvPolynomial.coeff (Finsupp.single (0, cc a) 1) (hvec v) = v a := by
+    (hvec v).coeff (Finsupp.single (0, cc a) 1) = v a := by
   rw [hvec, MvPolynomial.coeff_sum]
   rw [Finset.sum_eq_single a]
-  · rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_X, smul_eq_mul, mul_one]
+  · first
+      | rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_X, smul_eq_mul, mul_one]
+      | (rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_X, smul_eq_mul, if_pos rfl, mul_one])
   · intro b _ hb
     rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_X', if_neg, smul_zero]
     intro h
@@ -63,8 +70,8 @@ theorem coeff_hvec (v : Fin (rank leech) → ℂ) (a : Fin (rank leech)) :
 theorem hvecL_injective : Function.Injective hvecL := by
   intro v w h
   funext a
-  have := congrArg (MvPolynomial.coeff (Finsupp.single (0, cc a) 1)) h
-  change MvPolynomial.coeff _ (hvec v) = MvPolynomial.coeff _ (hvec w) at this
+  have := congrArg (fun p : FockT 24 => p.coeff (Finsupp.single (0, cc a) 1)) h
+  change (hvec v).coeff _ = (hvec w).coeff _ at this
   rwa [coeff_hvec, coeff_hvec] at this
 
 theorem gradingT_one_eq : gradingT 24 1 = LinearMap.range hvecL := by

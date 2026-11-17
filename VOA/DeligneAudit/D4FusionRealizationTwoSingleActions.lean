@@ -49,7 +49,7 @@ theorem flatCoordinates_symm_single (n : ℕ) (p : PairIndex n) :
   have h := flatCoordinates_at_pair n
     ((flatCoordinates n).symm (Pi.single (pairFlat n p) 1)) q
   rw [LinearEquiv.apply_symm_apply] at h
-  simpa only [Pi.single_apply, Equiv.apply_eq_iff_eq] using h.symm
+  simpa only [Pi.single_apply, Equiv.apply_eq_iff_eq] using! h.symm
 
 end
 end VOA.DeligneAudit.D4Two

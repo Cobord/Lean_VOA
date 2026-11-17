@@ -179,7 +179,7 @@ theorem threeMovingState_coordinate_differentiable (t : ℂ) (ht : t≠0) (r : �
   induction r using Nat.strong_induction_on generalizing ell with
   | h r ih =>
     cases r with
-    | zero => simpa only [threeMovingState] using differentiableAt_const (ell (highestVector 0 0))
+    | zero => simpa only [threeMovingState] using! differentiableAt_const (ell (highestVector 0 0))
     | succ r =>
       simp only [threeMovingState,map_smul,map_sum,smul_eq_mul]
       apply DifferentiableAt.mul

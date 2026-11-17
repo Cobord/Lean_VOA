@@ -24,7 +24,7 @@ theorem torus_zero_mem_weight (P : TwistedModule (charU 1 le_rfl u) n M) (hn : 0
   have hm := mode_mem_weight (cyclicRestriction P hn) hh hx 0
   simpa only [cyclicRestriction, restrictedOrdModule, restrictedWeakModule,
     mode_restrictedFields, mul_zero, Int.cast_one, Int.cast_zero, sub_zero,
-    add_sub_cancel_right] using hm
+    add_sub_cancel_right] using! hm
 
 /-- The Heisenberg vacuum space is stable under the actual conformal mode. -/
 theorem torus_L0_mem_vac (P : TwistedModule (charU 1 le_rfl u) n M) (hn : 0 < n)
@@ -81,7 +81,7 @@ theorem torus_vac_eigen_exists (P : TwistedModule (charU 1 le_rfl u) n M)
   have hpres : ∀ y ∈ S, P.YM (hb 1) 0 y ∈ S := by
     intro y hy
     refine ⟨?_, torus_zero_mem_weight P hn hy.2⟩
-    simpa using (torusHeisenberg P hn).a_zero_mem_vac hy.1
+    simpa using! (torusHeisenberg P hn).a_zero_mem_vac hy.1
   let T : Module.End ℂ S := (P.YM (hb 1) 0).restrict hpres
   obtain ⟨μ, hμ⟩ := T.exists_eigenvalue
   obtain ⟨x, hx⟩ := hμ.exists_hasEigenvector

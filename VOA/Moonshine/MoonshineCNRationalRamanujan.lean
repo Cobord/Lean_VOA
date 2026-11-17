@@ -47,9 +47,7 @@ open scoped ArithmeticFunction.Moebius ArithmeticFunction.zeta
 /-- `Σ_{e ∣ n} μ(e) = [n = 1]`. -/
 theorem sum_divisors_moebius_eq_ite (n : ℕ) :
     ∑ e ∈ n.divisors, μ e = if n = 1 then 1 else 0 := by
-  have h := congrArg (fun F : ArithmeticFunction ℤ => F n)
-    ArithmeticFunction.moebius_mul_coe_zeta
-  simp only at h
+  have h := DFunLike.congr_fun ArithmeticFunction.moebius_mul_coe_zeta n
   rw [ArithmeticFunction.coe_mul_zeta_apply, ArithmeticFunction.one_apply] at h
   exact h
 

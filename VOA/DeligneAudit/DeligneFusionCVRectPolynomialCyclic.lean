@@ -24,7 +24,7 @@ def cyclicRep (R : CurrentModule bracketTable V) (w : V) :
   op c s := (R.op c s).restrict (fun _ hx => cyclicSpan_inv R w c s hx)
   comm a b r s v := by
     apply Subtype.ext
-    simpa using R.comm a b r s (v : V)
+    simpa using! R.comm a b r s (v : V)
 
 def cyclicVector (R : CurrentModule bracketTable V) (w : V) :
     CVRectSingle.cyclicSpan R w := ⟨w, word_mem R w []⟩
@@ -41,7 +41,7 @@ theorem cyclic_word_coe (R : CurrentModule bracketTable V) (w : V)
     (↑(wordOp (cyclicRep R w) l v) : V) = wordOp R l (v : V) := by
   induction l with
   | nil => rfl
-  | cons x l ih => simpa only [wordOp, cyclicRep_op_coe] using congrArg (R.op x.1 x.2) ih
+  | cons x l ih => simpa only [wordOp, cyclicRep_op_coe] using! congrArg (R.op x.1 x.2) ih
 
 /-- Every source CV relation holds in the actual restricted representation. -/
 theorem cyclic_rel (R : CurrentModule bracketTable V) (w : V)
@@ -52,10 +52,10 @@ theorem cyclic_rel (R : CurrentModule bracketTable V) (w : V)
   constructor
   · intro t ht
     apply Subtype.ext
-    simpa only [cyclic_word_coe, cyclicVector_coe, Submodule.coe_zero] using hs.tail t ht
+    simpa only [cyclic_word_coe, cyclicVector_coe, Submodule.coe_zero] using! hs.tail t ht
   · intro p hp
     apply Subtype.ext
-    simpa only [cyclicRep_op_coe, cyclicVector_coe, Submodule.coe_smul] using hs.eig p hp
+    simpa only [cyclicRep_op_coe, cyclicVector_coe, Submodule.coe_smul] using! hs.eig p hp
 
 def currentMode (R : CurrentModule bracketTable V) (b : Bool) (s : ℕ) : Module.End ℂ V :=
   if b then R.op 5 s else R.op 3 s

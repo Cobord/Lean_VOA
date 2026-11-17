@@ -86,7 +86,7 @@ theorem doublyStratum_finrank_le_layer {C : Type*} [CommRing C] [Algebra ℂ C]
       groupSubtopCoefficient (fun j => r (u.succAbove j)) Y'ᶜ := by
     have h := groupSubtopCoefficient_map (aeval (fun j => r (u.succAbove j))).toRingHom
       (X : Fin n → MvPolynomial (Fin n) ℂ) Y'ᶜ
-    simpa using h
+    simpa using! h
   have h3 : doublyMarkedStratumIdeal I' Y' = Ideal.span {Ideal.Quotient.mk I' (∏ j ∈ Y'ᶜ, X j),
       Ideal.Quotient.mk I' (groupSubtopCoefficient X Y'ᶜ)} := by
     rw [doublyMarkedStratumIdeal, groupSubtopCoefficient_map, map_prod]

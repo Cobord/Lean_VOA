@@ -27,7 +27,7 @@ theorem source_action_identity (c : Fin 28) (k : ℕ) (hk : k < 4) (i : Fin 841)
     actionIndex_mode c k i c.isLt i.isLt] at he
   apply (flatCoordinates 28).injective
   simpa only [map_smul,source_flat_current,wordVector,LinearEquiv.apply_symm_apply,
-    map_list_sum,List.map_map,Function.comp_def,anyWordVector] using he
+    map_list_sum,List.map_map,Function.comp_def,anyWordVector] using! he
 
 theorem source_action_mem (M : Submodule ℂ Source) (c : Fin 28) (k : ℕ)
     (hk : k < 4) (i : Fin 841)
@@ -44,7 +44,7 @@ theorem source_action_mem (M : Submodule ℂ Source) (c : Fin 28) (k : ℕ)
     obtain ⟨p,hp,rfl⟩ := List.mem_map.mp hv
     exact M.smul_mem _ (htarget p hp)
   have h := M.smul_mem (((actionCase (actionIndex c k i)).denominator : ℂ)⁻¹) hh
-  simpa only [smul_smul,inv_mul_cancel₀ hdC,one_smul] using h
+  simpa only [smul_smul,inv_mul_cancel₀ hdC,one_smul] using! h
 
 def wordSpan : Submodule ℂ Source := Submodule.span ℂ (Set.range wordVector)
 
@@ -60,7 +60,7 @@ theorem source_generator_mem_wordSpan : sourceGenerator ∈ wordSpan := by
   apply Submodule.subset_span
   refine ⟨(0 : Fin 841),?_⟩
   apply (flatCoordinates 28).injective
-  simpa only [wordVector,LinearEquiv.apply_symm_apply] using flat_source_generator.symm
+  simpa only [wordVector,LinearEquiv.apply_symm_apply] using! flat_source_generator.symm
 
 theorem source_current_high (c : Fin 28) (k : ℕ) (hk : 2 ≤ k) :
     sourceRep.op c k = ((3 : ℂ)-(k : ℂ)) • sourceRep.op c 2 +
@@ -75,10 +75,10 @@ theorem wordSpan_eq_top : wordSpan = ⊤ :=
 
 def actualBasis : Module.Basis (Fin 841) ℂ Source :=
   basisOfSpanningWords wordVector wordSpan_eq_top
-    (by simpa only [Fintype.card_fin] using source_dimension.symm)
+    (by simpa only [Fintype.card_fin] using! source_dimension.symm)
 
 @[simp] theorem actualBasis_apply (i : Fin 841) : actualBasis i = wordVector i := by
-  rw [actualBasis,basisOfSpanningWords_apply]
+  exact basisOfSpanningWords_apply _ _ _ i
 
 end
 #print axioms source_action_identity

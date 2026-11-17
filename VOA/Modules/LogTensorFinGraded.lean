@@ -81,7 +81,7 @@ theorem eq_zero_of_proj {y : M} (h : ∀ α, proj N α y = 0) : y = 0 := by
     have := h α
     simp only [proj, LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe,
       Submodule.coe_subtype] at this
-    simpa [DirectSum.component] using this
+    simpa [DirectSum.component] using! this
   have := congrArg (gradEquiv N) h0
   rwa [LinearEquiv.apply_symm_apply, map_zero] at this
 

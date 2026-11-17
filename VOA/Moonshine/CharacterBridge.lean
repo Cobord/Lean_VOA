@@ -192,9 +192,11 @@ theorem norm_eq_of_nonneg {g : ℝ⟦X⟧} (hg : Nonneg g) {r : ℝ} (hr : 0 ≤
 theorem SumAt.mul {g h : ℝ⟦X⟧} (hg : Nonneg g) (hh : Nonneg h) {r : ℝ} (hr : 0 ≤ r)
     (sg : SumAt g r) (sh : SumAt h r) : SumAt (g * h) r := by
   have sg' : Summable fun n => ‖coeff n g * r ^ n‖ := by
-    simpa only [norm_eq_of_nonneg hg hr] using sg
+    simpa only [norm_eq_of_nonneg hg hr] using
+      show Summable fun n => coeff n g * r ^ n from sg
   have sh' : Summable fun n => ‖coeff n h * r ^ n‖ := by
-    simpa only [norm_eq_of_nonneg hh hr] using sh
+    simpa only [norm_eq_of_nonneg hh hr] using
+      show Summable fun n => coeff n h * r ^ n from sh
   have := summable_norm_sum_mul_antidiagonal_of_summable_norm sg' sh'
   unfold SumAt
   simp_rw [coeff_mul_pow_eq_sum]
@@ -203,9 +205,11 @@ theorem SumAt.mul {g h : ℝ⟦X⟧} (hg : Nonneg g) (hh : Nonneg h) {r : ℝ} (
 theorem evR_mul {g h : ℝ⟦X⟧} (hg : Nonneg g) (hh : Nonneg h) {r : ℝ} (hr : 0 ≤ r)
     (sg : SumAt g r) (sh : SumAt h r) : evR (g * h) r = evR g r * evR h r := by
   have sg' : Summable fun n => ‖coeff n g * r ^ n‖ := by
-    simpa only [norm_eq_of_nonneg hg hr] using sg
+    simpa only [norm_eq_of_nonneg hg hr] using
+      show Summable fun n => coeff n g * r ^ n from sg
   have sh' : Summable fun n => ‖coeff n h * r ^ n‖ := by
-    simpa only [norm_eq_of_nonneg hh hr] using sh
+    simpa only [norm_eq_of_nonneg hh hr] using
+      show Summable fun n => coeff n h * r ^ n from sh
   have hm := tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm sg' sh'
   unfold evR
   rw [hm]
@@ -492,7 +496,7 @@ theorem prod_one_add_pow_le {e : ℕ → ℕ} (he : ∀ i, i + 1 ≤ e i) (m : �
     (hr : r < 1) (N : ℕ) :
     ∏ i ∈ range N, (1 + r ^ e i) ^ m ≤ Real.exp (m * (1 - r)⁻¹) := by
   calc ∏ i ∈ range N, (1 + r ^ e i) ^ m ≤ ∏ i ∈ range N, Real.exp (m * r ^ e i) := by
-        refine prod_le_prod (fun i _ => pow_nonneg (by positivity) m) fun i _ => ?_
+        gcongr with i _
         rw [Real.exp_nat_mul]
         exact pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp (r ^ e i)]) m
     _ = Real.exp (m * ∑ i ∈ range N, r ^ e i) := by
@@ -518,8 +522,8 @@ theorem prod_geom_pow_le {e : ℕ → ℕ} (he : ∀ i, i + 1 ≤ e i) (m : ℕ)
     pow_le_of_le_one hr0 hr.le (by have := he i; omega)
   calc ∏ i ∈ range N, ((1 - r ^ e i)⁻¹) ^ m
         ≤ ∏ i ∈ range N, Real.exp (m * (r ^ e i * (1 - r)⁻¹)) := by
-        refine prod_le_prod (fun i _ => pow_nonneg (inv_nonneg.mpr (by linarith [hle i])) m)
-          fun i _ => ?_
+        gcongr with i _
+        case h0 => exact fun i _ => pow_nonneg (inv_nonneg.mpr (by linarith [hle i])) m
         rw [Real.exp_nat_mul]
         exact pow_le_pow_left₀ (inv_nonneg.mpr (by linarith [hle i]))
           (inv_one_sub_le_exp (pow_nonneg hr0 _) (hle i) hr) m

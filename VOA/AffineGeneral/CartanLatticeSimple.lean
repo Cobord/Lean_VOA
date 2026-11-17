@@ -72,8 +72,9 @@ theorem cartan_isSimple (hdiag : ∀ i, G i i = 2) (i0 : Fin n) (d : Fin n → �
   simp only [simpleRoot, form_single]
   have hsymm : ∀ a b, G a b ≠ 0 → G b a ≠ 0 := fun a b h => by
     rwa [← hG.apply b a]
-  have hi : Relation.ReflTransGen (fun a b => G a b ≠ 0) i i0 :=
-    Relation.ReflTransGen.symmetric hsymm (reach_of_dist i0 d hd i)
+  have hi : Relation.ReflTransGen (fun a b => G a b ≠ 0) i i0 := by
+    haveI : Std.Symm (fun a b => G a b ≠ 0) := ⟨hsymm⟩
+    exact Std.Symm.symm _ _ (reach_of_dist i0 d hd i)
   exact hi.trans (reach_of_dist i0 d hd j)
 
 theorem cartan_finiteDimensional (hdiag : ∀ i, G i i = 2) :

@@ -5,8 +5,8 @@ import VOA.Huang.DLNSmallAverage
 
 For a central extension `π : E ↠ G` and commuting `a b : G`, the commutator of lifts
 `⁅â, b̂⁆` is independent of the lifts and central. On commuting pairs it is bimultiplicative
-and invariant under simultaneous conjugation. This file records these facts for the chosen
-section `Function.surjInv`.
+and invariant under simultaneous conjugation. This file records these facts for the
+chosen section `Function.surjInv`.
 -/
 
 namespace VOA.Huang.DLNSchur

@@ -52,7 +52,7 @@ theorem boundaryMinimalCentralCharge_neg (n : ℕ) (hn : 2 ≤ n) :
 theorem lengthTwoRho_lt_twentyTwo_fifths (m : ℕ) (hm : 3 ≤ m) :
     lengthTwoRho m < 22 / 5 := by
   induction m, hm using Nat.le_induction with
-  | base => simpa using lengthTwoRho_succ_lt 2 (by omega)
+  | base => simpa using! lengthTwoRho_succ_lt 2 (by omega)
   | succ m hm ih => exact (lengthTwoRho_succ_lt m (by omega)).trans ih
 
 /-- For `n>2`, the boundary charge lies strictly below the Lee--Yang charge. -/
@@ -99,7 +99,7 @@ theorem boundaryLengthTwoBaseNorm_pos (n m : ℕ) (hn : 2 ≤ n) (hm : 2 ≤ m)
   have hfirst : 0 < (1 / 2 : ℚ) * Nat.choose (4 * m - 2) (2 * m - 4) := by positivity
   have hneg : (1 / 2 : ℚ) * Nat.choose (4 * m - 2) (2 * m - 4) *
       boundaryMinimalCentralCharge n < 0 := mul_neg_of_pos_of_neg hfirst hc
-  simpa only [boundaryLengthTwoBaseNorm] using mul_pos_of_neg_of_neg hneg hsum
+  simpa only [boundaryLengthTwoBaseNorm] using! mul_pos_of_neg_of_neg hneg hsum
 
 /-- The complex canonical norm is the embedding of the rational boundary norm. -/
 theorem canB_boundary_lengthTwoQ_self (n m : ℕ) (hm : 2 ≤ m) :
@@ -191,8 +191,9 @@ theorem boundaryLengthLETwoTowerAt_eq_mkQ (n N : ℕ)
     rfl
   · have hm2 : 2 ≤ m.1.1 := by have := m.1.2.1; omega
     rw [boundaryLengthLETwoTowerAt, dif_neg hm,
-      lengthLETwoTowerAt_of_two_le (boundaryCharge n) m.1 hm2,
-      lengthTwoTowerAt, lengthTwoQSimple, mkQ_L_pow]
+      lengthLETwoTowerAt_of_two_le (boundaryCharge n) m.1 hm2]
+    unfold lengthTwoTowerAt
+    rw [lengthTwoQSimple, mkQ_L_pow]
 
 /-- The simple stress-tensor tower is a nonzero `L₋₁L₁` eigenvector. -/
 theorem boundaryLengthOneTowerAt_hasEigenvector (n N : ℕ) (hn : 2 ≤ n) :
@@ -218,7 +219,7 @@ theorem boundaryLengthTwoTowerAt_hasEigenvector (n N m : ℕ) (hn : 2 ≤ n) (hm
   have hgr : lengthTwoQSimple (boundaryCharge n) m ∈
       (virasoroSimple (boundaryCharge n)).grading (2 * m : ℤ) := by
     apply goodFil_le_grading (boundaryCharge n) 2 (2 * m : ℤ)
-    simpa only [Nat.cast_mul, Nat.cast_ofNat] using
+    simpa only [Nat.cast_mul, Nat.cast_ofNat] using!
       lengthTwoQSimple_mem_goodFil (boundaryCharge n) m hm
   exact globalDescendant_hasEigenvector (virasoroSimple (boundaryCharge n))
     (m := (2 * m : ℕ)) (v := lengthTwoQSimple (boundaryCharge n) m) (by omega)
@@ -232,7 +233,7 @@ theorem boundaryLengthLETwoTowerAt_hasEigenvector (n N : ℕ) (hn : 2 ≤ n)
   by_cases hm : m.1.1 = 1
   · rw [boundaryLengthLETwoTowerAt, dif_pos hm, boundaryLengthOneTowerAt,
       ← globalTowerEigenvalue_eq_lengthLETwoTowerEigenvalue N m.1]
-    simpa only [hm] using boundaryLengthOneTowerAt_hasEigenvector n N hn
+    simpa only [hm] using! boundaryLengthOneTowerAt_hasEigenvector n N hn
   · have hm1 : 1 ≤ m.1.1 := m.1.2.1
     have hm2 : 2 ≤ m.1.1 := by omega
     rw [boundaryLengthLETwoTowerAt, dif_neg hm,
@@ -261,9 +262,10 @@ theorem mkQ_lengthLETwoTowerAt_eq_zero_of_deleted (n N : ℕ)
   have hm : m.1 = 2 := by tauto
   subst n
   have hm2 : 2 ≤ m.1 := by omega
-  rw [lengthLETwoTowerAt_of_two_le (boundaryCharge 2) m hm2, lengthTwoTowerAt,
-    mkQ_L_pow, boundaryCharge_two_eq_leeYangC]
-  simpa [hm] using LeeYang.lengthTwoQSimple_two_tower_eq_zero (N - 2 * m.1)
+  rw [lengthLETwoTowerAt_of_two_le (boundaryCharge 2) m hm2]
+  unfold lengthTwoTowerAt
+  rw [mkQ_L_pow, boundaryCharge_two_eq_leeYangC]
+  simpa [hm] using! LeeYang.lengthTwoQSimple_two_tower_eq_zero (N - 2 * m.1)
 
 /-- The retained quotient towers span the full length-at-most-two filtration step.  No character
 or admissible-basis theorem is used. -/
@@ -350,13 +352,13 @@ theorem Bsimp_boundaryLengthLETwoTowerAt_self (n N : ℕ) (hn : 2 ≤ n)
         (omegaVir (boundaryCharge n))
         (omegaVir_mem_gradingVir_two (boundaryCharge n))]
     · rw [hT, smul_eq_mul]
-    · simpa [virasoroVOA_L_eq_Lop] using
+    · simpa [virasoroVOA_L_eq_Lop] using!
         L1_conformal_zero (virasoroVOA (boundaryCharge n))
   · have hm1 : 1 ≤ m.1.1 := m.1.2.1
     have hm2 : 2 ≤ m.1.1 := by omega
-    rw [dif_neg hm, lengthLETwoTowerAt_of_two_le (boundaryCharge n) m.1 hm2,
-      lengthTwoTowerAt,
-      form_lengthTwoQ_tower (boundaryCharge n) (VirGram4.canB (boundaryCharge n)) m.1.1 hm2,
+    rw [dif_neg hm, lengthLETwoTowerAt_of_two_le (boundaryCharge n) m.1 hm2]
+    unfold lengthTwoTowerAt
+    rw [form_lengthTwoQ_tower (boundaryCharge n) (VirGram4.canB (boundaryCharge n)) m.1.1 hm2,
       canB_boundary_lengthTwoQ_self n m.1.1 hm2, smul_eq_mul]
 
 /-- Odd (`m=1`) and even (`m≥2`) retained towers have the required strict diagonal signs. -/

@@ -28,14 +28,14 @@ theorem jointIndex_multiplicity_le (n : ℕ) (c : ℤ) (d : JointIndex n c) (v :
 theorem occupationEnergy_remove (d : Occupation) (v : Fin 3×ℕ) (r : ℕ) (hr : r≤d v) :
     occupationEnergy (d-Finsupp.single v r)+r*oscillatorEnergy v=occupationEnergy d := by
   have he := congrArg occupationEnergy (tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr hr))
-  simpa only [map_add,occupationEnergy,Finsupp.weight_single,nsmul_eq_mul] using he
+  simpa only [map_add,occupationEnergy,Finsupp.weight_single,nsmul_eq_mul] using! he
 
 /-- Removing r available copies subtracts their signed charge, without
 natural-number truncation in this weight. -/
 theorem occupationCharge_remove (d : Occupation) (v : Fin 3×ℕ) (r : ℕ) (hr : r≤d v) :
     occupationCharge (d-Finsupp.single v r)+(r : ℤ)*oscillatorCharge v=occupationCharge d := by
   have he := congrArg occupationCharge (tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr hr))
-  simpa only [map_add,occupationCharge,Finsupp.weight_single,nsmul_eq_mul] using he
+  simpa only [map_add,occupationCharge,Finsupp.weight_single,nsmul_eq_mul] using! he
 
 /-- An available multiplicity cannot spend more than the original energy;
 this statement permits zero-energy gamma copies. -/
@@ -62,7 +62,7 @@ def removeOccupationEquiv (n : ℕ) (c : ℤ) (v : Fin 3×ℕ) (r : ℕ)
   invFun d := ⟨⟨d.val+Finsupp.single v r,by
     constructor
     · rw [map_add,d.property.1]
-      simpa only [occupationEnergy,Finsupp.weight_single,nsmul_eq_mul,Nat.cast_id] using Nat.sub_add_cancel he
+      simpa only [occupationEnergy,Finsupp.weight_single,nsmul_eq_mul,Nat.cast_id] using! Nat.sub_add_cancel he
     · rw [map_add,d.property.2]
       simp only [occupationCharge,Finsupp.weight_single,nsmul_eq_mul]
       omega⟩,by simp⟩
@@ -90,8 +90,8 @@ theorem occupationThreshold_card (n : ℕ) (c : ℤ) (v : Fin 3×ℕ) (r : ℕ) 
 
 /-- A finite natural multiplicity is the sum of its positive threshold indicators. -/
 theorem multiplicity_threshold_sum (N m : ℕ) (hm : m≤N) :
-    m=∑ r∈Finset.range N,if r+1≤m then 1 else 0 := by
-  have he : (Finset.range N).filter (fun r => r+1≤m)=Finset.range m := by
+    m=∑ r∈Finset.range N,if r+1≤ m then 1 else 0 := by
+  have he : (Finset.range N).filter (fun r => r+1≤ m)=Finset.range m := by
     ext r
     simp only [Finset.mem_filter,Finset.mem_range]
     omega

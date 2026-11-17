@@ -22,6 +22,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open Module Finset
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ### Height coordinates and sigma-indexed letters -/
 
 /-- Height coordinates `(m, n) ↦ (m, m + n)`. -/

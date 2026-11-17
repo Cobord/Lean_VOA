@@ -172,7 +172,7 @@ theorem torusTrace_eq_range (n s : ℕ) (hs : s * s ≤ n) (hs' : n < (s + 1) * 
     ?_ ?_ ?_ ?_ ?_
   · intro v hv
     rw [mem_normLE_latP1 n s hs hs'] at hv
-    rw [Finset.mem_range]; simp only; omega
+    rw [Finset.mem_range]; omega
   · intro i hi
     rw [Finset.mem_range] at hi
     rw [mem_normLE_latP1 n s hs hs', ci_lp1]
@@ -322,7 +322,7 @@ theorem exists_torus (n : ℕ) (x : Aut V1) (hx : IsOfFinOrder x) :
     · rintro h; rw [h]; group
     · intro h
       have := congrArg (fun y => φ⁻¹ * y * φ) h
-      simpa [mul_assoc] using this
+      simpa [mul_assoc] using! this
 
 theorem isOfFinOrder_of_pow {x : Aut V1} {k : ℕ} (hk : 0 < k) (h : x ^ k = 1) : IsOfFinOrder x :=
   isOfFinOrder_iff_pow_eq_one.mpr ⟨k, hk, h⟩
@@ -563,7 +563,6 @@ theorem fockCountOdd_one_four_le : fockCountOdd 1 4 ≤ 2 := by
     refine Finsupp.ext fun i => ?_
     by_cases hi : i.1 < 4
     · have := congrArg (fun c => ((c (⟨i.1, hi⟩, i.2) : Fin 5) : ℕ)) h
-      simp only at this
       rw [hφ d hd', hφ e he'] at this
       exact this
     · have hdz : d i = 0 := by
@@ -636,13 +635,13 @@ theorem two_card_mul_finrank (n : ℕ) (G : Subgroup (Aut V1)) [Fintype G] {H : 
       obtain ⟨u, hu, -, hP⟩ := exists_torus_pow (n := n) two_pos ((hp 2).mpr h2)
       rw [hu]
       refine ha2 u ((hP 2).mp ((hp 2).mpr h2)) fun e1 => ?_
-      exact h1 (by simpa using (hp 1).mp ((hP 1).mpr (by simpa using e1)))
+      exact h1 (by simpa using! (hp 1).mp ((hP 1).mpr (by simpa using! e1)))
     · obtain ⟨h2, h3⟩ := hh
       obtain ⟨u, hu, -, hP⟩ := exists_torus_pow (n := n) three_pos ((hp 3).mpr h3)
       rw [hu]
       refine ha3 u ((hP 3).mp ((hp 3).mpr h3)) fun e1 => ?_
       apply h2
-      have : ((e.symm h : G) : Aut V1) ^ 1 = 1 := (hP 1).mpr (by simpa using e1)
+      have : ((e.symm h : G) : Aut V1) ^ 1 = 1 := (hP 1).mpr (by simpa using! e1)
       rw [pow_one] at this
       rw [← (hp 2), show (2 : ℕ) = 1 + 1 from rfl, pow_add, pow_one, this, one_mul]
     · obtain ⟨h2, -, h4⟩ := hh
@@ -658,7 +657,7 @@ theorem two_card_mul_finrank (n : ℕ) (G : Subgroup (Aut V1)) [Fintype G] {H : 
       rw [map_pow, Subgroup.coe_pow]
     rw [hsq, hu, hu2]
     refine ha5 u ((hP 5).mp ((hp 5).mpr h5)) fun e1 => h2 ?_
-    have : ((e.symm h : G) : Aut V1) ^ 1 = 1 := (hP 1).mpr (by simpa using e1)
+    have : ((e.symm h : G) : Aut V1) ^ 1 = 1 := (hP 1).mpr (by simpa using! e1)
     rw [pow_one] at this
     rw [← hp 2, sq, this, one_mul]
 

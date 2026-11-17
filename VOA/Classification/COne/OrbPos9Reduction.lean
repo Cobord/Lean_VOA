@@ -75,7 +75,7 @@ theorem exceptionalExtensionAlgebraExists_iff_associativity :
     obtain ⟨E⟩ := h G hG hSR
     letI := monoidalCategoryOfStronglyRational_pbw (fusionChoice_pbw hSR) hSR
     letI := E.monoid
-    simpa only [E.mul_eq] using MonObj.mul_assoc (ambient G)
+    simpa only [E.mul_eq] using! MonObj.mul_assoc (ambient G)
   · intro h G hG hSR
     let F := fusionChoice_pbw hSR
     letI := monoidalCategoryOfStronglyRational_pbw F hSR

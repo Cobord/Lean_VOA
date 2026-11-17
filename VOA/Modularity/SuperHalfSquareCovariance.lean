@@ -17,6 +17,8 @@ Koszul factor is `koszul 0 p = 1`; every operator identity below is therefore th
 commutator identity, even when the inserted state is odd.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open PowerSeries
@@ -98,7 +100,7 @@ theorem sqBracketCoeffC_gBinom_collapse {q : ℕ} (hq : 1 ≤ q)
       sqBracketCoeffC H m (m + (n : ℤ)) := by
     intro H n
     exact (SuperNearVOA.sqBracketCoeffC_eq_coeff_superSqGenC H m n).symm
-  simpa only [hgen] using hc
+  simpa only [hgen] using! hc
 
 /-- The combined `L(-1)`/`L(0)` scalar identity at an arbitrary complex declared weight. -/
 theorem sqLowPair_powerSeriesC (h : ℂ) (m : ℤ) :
@@ -148,6 +150,12 @@ theorem sqLowPair_powerSeriesC (h : ℂ) (m : ℤ) :
   simp only [map_sub, map_add, map_one] at hode ⊢
   linear_combination (PowerSeries.C h) * hHG - hode
 
+/-- `coeff_derivativeFun` restated with `derivativeFun` (Mathlib's alias is stated with `d⁄dX`). -/
+private theorem coeff_derivativeFun_shsc (f : PowerSeries ℂ) (n : ℕ) :
+    PowerSeries.coeff (R := ℂ) n (derivativeFun f)
+      = PowerSeries.coeff (R := ℂ) (n + 1) f * (n + 1) :=
+  coeff_derivativeFun f n
+
 /-- Coefficient form of the complex-weight low-pair collapse. -/
 theorem sqBracketCoeffC_low_pair_collapse (h : ℂ) (m : ℤ) (t : ℕ) :
     ∑ r ∈ Finset.range (t + 1),
@@ -178,7 +186,7 @@ theorem sqBracketCoeffC_low_pair_collapse (h : ℂ) (m : ℤ) (t : ℕ) :
   have hHcoeff : ∀ r : ℕ, coeff r (derivativeFun (X * Pw 0)) =
       ((r : ℂ) + 1) * sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ) := by
     intro r
-    rw [coeff_derivativeFun, coeff_succ_X_mul, hDcoeff]
+    rw [coeff_derivativeFun_shsc, coeff_succ_X_mul, hDcoeff]
     push_cast
     ring
   have hGcoeff : ∀ n : ℕ, coeff n (SuperNearVOA.superSqGenC h m) =
@@ -215,7 +223,7 @@ theorem sqBracketCoeffC_low_pair_collapse (h : ℂ) (m : ℤ) (t : ℕ) :
   rw [Finset.sum_sub_distrib, hlead, hconst]
   dsimp only [A]
   simpa only [Nat.cast_add, Nat.cast_one, sub_eq_add_neg, neg_add_rev,
-    add_assoc, add_comm, add_left_comm] using hc
+    add_assoc, add_comm, add_left_comm] using! hc
 
 /-- Module-valued complex-weight low-pair collapse. -/
 theorem sqLowPairC_vector_collapse {M : Type*} [AddCommMonoid M] [Module ℂ M]
@@ -296,7 +304,7 @@ theorem superDLNat_support_finite (v : VType) :
   have hs := (dL_support_finite V 0 v).preimage
     (f := fun r : ℕ ↦ (r : ℤ)) (Function.Injective.injOn Int.ofNat_injective)
   refine hs.subset fun r hr ↦ ?_
-  simpa only [Set.mem_preimage] using hr
+  simpa only [Set.mem_preimage] using! hr
 
 theorem superSqCNat_support_finite (a : VType) (h : ℂ) (m : ℤ) (v : VType) :
     (Function.support fun n : ℕ ↦
@@ -307,7 +315,7 @@ theorem superSqCNat_support_finite (a : VType) (h : ℂ) (m : ℤ) (v : VType) :
       have : (r : ℤ) = (s : ℤ) := add_left_cancel hrs
       exact_mod_cast this : Function.Injective fun n : ℕ ↦ m + (n : ℤ)).injOn
   refine hs.subset fun n hn ↦ ?_
-  simpa only [Set.mem_preimage] using hn
+  simpa only [Set.mem_preimage] using! hn
 
 /-! ## The locally finite square/ordinary commutator -/
 
@@ -414,7 +422,7 @@ theorem superLsq_zero_superVSqC_comm_double
       intro hz
       apply hr
       have hz' := congrArg (fun x ↦ V.smul a (m + (n : ℤ)) x) hz
-      simpa only [SuperVertexAlgebra.smul_smul_right, V.smul_zero_rightε] using hz'
+      simpa only [SuperVertexAlgebra.smul_smul_right, V.smul_zero_rightε] using! hz'
     have heq : (∑ᶠ r : ℕ,
         (sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ)
           * sqBracketCoeffC h m (m + (n : ℤ))) •
@@ -470,7 +478,7 @@ theorem superLsq_zero_superVSqC_comm_double
     have hmap : sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ) •
         V.smul a (m + (n : ℤ)) (V.L (r : ℤ) v) = 0 := by
       have hz := congrArg (fun x ↦ V.smul a (m + (n : ℤ)) x) hbase
-      simpa only [SuperVertexAlgebra.smul_smul_right, V.smul_zero_rightε] using hz
+      simpa only [SuperVertexAlgebra.smul_smul_right, V.smul_zero_rightε] using! hz
     calc
       (sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ)
           * sqBracketCoeffC h m (m + (n : ℤ))) •
@@ -505,7 +513,7 @@ theorem superL_nat_mode_comm_of_mem_parity {p : ZMod 2} {a : VType}
         ∑ j : Fin N, gBinom ((r + 1 : ℕ) : ℤ) (j : ℕ) •
           mode (V.Y (V.smul V.conformalVector (j : ℕ) a))
             (((r + 1 : ℕ) : ℤ) + i - (j : ℕ)) := by
-    simpa only [koszul_zero_left, modeBracketε, one_smul] using hcomm
+    simpa only [koszul_zero_left, modeBracketε, one_smul] using! hcomm
   rw [hcomm']
   rw [VertexOperatorAlgebra.finN_gBinom_collapse (r + 1) N
     (fun ℓ ↦ mode (V.Y (V.smul V.conformalVector (ℓ : ℤ) a))
@@ -696,7 +704,7 @@ theorem superSqLowCommTerm_support_finite (a : VType) (h : ℂ)
   change g (Prod.swap p) ≠ 0
   rcases p with ⟨n, r⟩
   simpa only [g, superSqLowCommTerm, Prod.swap_prod_mk, Prod.fst, Prod.snd,
-    Nat.add_comm] using hp
+    Nat.add_comm] using! hp
 
 theorem superSqPositiveReindexedTerm_support_finite (a : VType) (h : ℂ)
     (m : ℤ) (v : VType) (Q : ℕ) :
@@ -724,7 +732,7 @@ theorem superSqPositiveCommTerm_support_finite (a : VType) (h : ℂ)
     change V.superSqPositiveCommTerm a h m v Q p ≠ 0 at hp
     simpa only [superSqPositiveCommTerm, superSqPositiveReindexedTerm,
       Prod.fst, Prod.snd, hs, Nat.add_sub_cancel_left, Nat.add_comm,
-      Nat.add_left_comm, Nat.add_assoc, mul_assoc, mul_comm, mul_left_comm] using hp
+      Nat.add_left_comm, Nat.add_assoc, mul_assoc, mul_comm, mul_left_comm] using! hp
   exact ⟨(s, p.1), hterm, by ext <;> simp [φ, hs]⟩
 
 theorem superSqPositiveCommTerm_collapse {Q : ℕ} (hQ : 1 ≤ Q)

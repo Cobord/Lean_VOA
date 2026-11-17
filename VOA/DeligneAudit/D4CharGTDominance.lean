@@ -31,7 +31,7 @@ theorem gtRows_prefix_le {N : ℕ} {lam : Fin (N + 1) → ℤ} {μ : Fin N → �
 
 /-- Every nonzero coefficient has the correct total weight and is dominated by the top row. -/
 theorem gtPoly_support_bounds (q : R) (N : ℕ) (lam : Fin N → ℤ) (a : ℕ →₀ ℤ)
-    (ha : gtPoly q N lam a ≠ 0) :
+    (ha : (gtPoly q N lam).coeff a ≠ 0) :
     (∀ i, N ≤ i → a i = 0) ∧ gtPrefix a N = ∑ i, lam i ∧
       ∀ k, k ≤ N → gtPrefix a k ≤ gtPrefix (gtExponent lam) k := by
   classical
@@ -52,7 +52,7 @@ theorem gtPoly_support_bounds (q : R) (N : ℕ) (lam : Fin N → ℤ) (a : ℕ �
       obtain ⟨μ, hμ, hterm⟩ := Finset.exists_ne_zero_of_sum_ne_zero ha
       let d : ℤ := (∑ i, lam i) - ∑ i, μ i
       let b : ℕ →₀ ℤ := -Finsupp.single N d + a
-      have hb : gtPoly q N μ b ≠ 0 := fun h => hterm (by rw [h, mul_zero])
+      have hb : (gtPoly q N μ).coeff b ≠ 0 := fun h => hterm (by rw [h, mul_zero])
       obtain ⟨hout, htotal, hdom⟩ := ih μ b hb
       have hab : a = b + Finsupp.single N d := by simp [b, add_comm]
       have htotal' : gtPrefix a (N + 1) = ∑ i, lam i := by
@@ -72,7 +72,7 @@ theorem gtPoly_support_bounds (q : R) (N : ℕ) (lam : Fin N → ℤ) (a : ℕ �
 
 /-- Lemma 3.2(a), dominance half, for the original integral GT polynomials. -/
 theorem gtP_support_bounds (N : ℕ) (lam : Fin N → ℤ) (a : ℕ →₀ ℤ)
-    (ha : gtP N lam a ≠ 0) :
+    (ha : (gtP N lam).coeff a ≠ 0) :
     (∀ i, N ≤ i → a i = 0) ∧ gtPrefix a N = ∑ i, lam i ∧
       ∀ k, k ≤ N → gtPrefix a k ≤ gtPrefix (gtExponent lam) k := by
   apply gtPoly_support_bounds (Polynomial.X : Polynomial ℤ) N lam a

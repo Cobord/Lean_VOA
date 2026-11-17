@@ -51,7 +51,6 @@ theorem boson_exponential_product_error (r D M m : ℕ) (hm : 0<m) (hmd : m≤D)
     (fun j => if j+1=m then (-(M : ℂ)/m) • auxiliaryPowerSum r m else 0)
     (fun j _ => exponentialFactor_lower r D M (j+1)) (by
       intro j hj
-      dsimp only
       by_cases h : j+1=m
       · rw [if_pos h,h]; exact exponential_boson_error r D M m hm
       · rw [if_neg h,zero_mul,sub_zero,
@@ -96,7 +95,7 @@ corrections have been excluded by the proved support estimate. -/
 theorem state_boson_derivative_within (r q M m : ℕ) (hq : 0<q)
     (hm : 0<m) (hmd : m≤r*(q-1)) :
     pderiv (2,m-1) (state r q M)=(-(M : ℂ)/m) •
-      ((auxiliaryPowerSum r m*integrand r q M)
+      ((auxiliaryPowerSum r m*integrand r q M).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
   let B := ∏ i : Fin r,betaFactor r (r*(q-1)) i
   let E := ∏ j∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (j+1)
@@ -109,7 +108,7 @@ theorem state_boson_derivative_within (r q M m : ℕ) (hq : 0<q)
     rw [Nat.cast_mul,Nat.cast_sub (by omega : 1≤q),Nat.cast_one]
   rw [hc] at he
   have herr : LowerDegree ((r : ℤ)*(q-1)+1) (B*(D E-a*E)) := by
-    simpa using hb.mul he
+    simpa using! hb.mul he
   have hz := screening_high_degree_zero r q M hq _ herr
   have ha : D (integrand r q M)-a*integrand r q M=
       delta r^(2*M)*(B*(D E-a*E)) := by
@@ -118,7 +117,7 @@ theorem state_boson_derivative_within (r q M m : ℕ) (hq : 0<q)
     dsimp only [B,E]
     ring
   rw [← ha] at hz
-  change (D (integrand r q M)) _-(a*integrand r q M) _=0 at hz
+  change (D (integrand r q M)).coeff _-(a*integrand r q M).coeff _=0 at hz
   rw [oscillatorPartial_apply] at hz
   have hs := sub_eq_zero.mp hz
   rw [show a*integrand r q M=(-(M : ℂ)/m) •
@@ -136,7 +135,7 @@ theorem state_boson_derivative_above (r q M m : ℕ) (hmd : r*(q-1)<m) :
 /-- A power-sum insertion above the remaining auxiliary degree has zero
 selected coefficient in the complete integrand. -/
 theorem state_powerSum_above (r q M m : ℕ) (hq : 0<q) (hmd : r*(q-1)<m) :
-    (auxiliaryPowerSum r m*integrand r q M)
+    (auxiliaryPowerSum r m*integrand r q M).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   have hp : LowerDegree ((r : ℤ)*(q-1)+1) (auxiliaryPowerSum r m) := by
     apply (auxiliaryPowerSum_lower r m).mono
@@ -147,7 +146,7 @@ theorem state_powerSum_above (r q M m : ℕ) (hq : 0<q) (hmd : r*(q-1)<m) :
   have hz := screening_high_degree_product_zero r q M hq _ _ hp
     (screening_factors_lower r q M)
   convert hz using 1
-  rw [integrand]
+  unfold integrand
   ring
 
 /-- For EVERY positive boson mode, differentiation of the actual screening
@@ -155,7 +154,7 @@ state equals the finite auxiliary power-sum insertion with coefficient -M/m.
 This includes modes above the truncation bound, where both sides vanish. -/
 theorem state_boson_derivative (r q M m : ℕ) (hq : 0<q) (hm : 0<m) :
     pderiv (2,m-1) (state r q M)=(-(M : ℂ)/m) •
-      ((auxiliaryPowerSum r m*integrand r q M)
+      ((auxiliaryPowerSum r m*integrand r q M).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
   by_cases hmd : m≤r*(q-1)
   · exact state_boson_derivative_within r q M m hq hm hmd

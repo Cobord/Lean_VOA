@@ -39,7 +39,7 @@ theorem key_localWeyl_quot
     exact hh
   · intro i
     have hh := (key_simple_sharp_quot ρ w m h i k hv).2 (hdom i)
-    simpa [keyWeight] using hh
+    simpa [keyWeight] using! hh
 
 theorem key_vector_rank
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
@@ -60,7 +60,7 @@ theorem key_vector_rank
     fin_cases i <;> rfl
   have hrel := key_localWeyl_quot ρ w m h k hdom hv
   rw [hw] at hrel
-  simpa [a, b, c] using VOA.DeligneAudit.A3Sector.a3_all_weight_rank
+  simpa [a, b, c] using! VOA.DeligneAudit.A3Sector.a3_all_weight_rank
     (keyQuotCurrent ρ w m k) ((higherOrbit ρ w m k).mkQ v)
     a b c hrel
 

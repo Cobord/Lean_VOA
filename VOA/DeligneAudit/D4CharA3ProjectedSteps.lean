@@ -16,11 +16,11 @@ theorem a3KeyLayer_homogeneous (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
   have hr (l : List (Fin 3 × ℕ)) :
       radicalWord (radicalOp ρ) l • w ∈ g.piece (l.map Prod.snd).sum := by
     induction l with
-    | nil => simpa [radicalWord] using hw
+    | nil => simpa [radicalWord] using! hw
     | cons x l ih => exact g.op_piece (A3Sector.F x.1) x.2 _ _ ih
   apply Submodule.span_le.mpr
   rintro z ⟨l, _, _, _, hd, _, rfl⟩
-  simpa only [hd] using hr l
+  simpa only [hd] using! hr l
 
 theorem a3KeyPrefix_projection (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
     (a b c N i : ℕ) (hi : i ≤ (a3KeyBox a b c).card) :
@@ -76,7 +76,7 @@ theorem a3ProjectedStep_bound (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
     · rw [a3LeviOrbit_projection ρ g k.degree N (hgrade j) hd, hF]
       have hh := a3GradedKey_orbit_bound ρ w a b c h k (v j).property
         (hb j).2.1 (hb j).2.2 (N - k.degree)
-      exact ⟨hh.1, by simpa only [L, if_pos hd] using hh.2⟩
+      exact ⟨hh.1, by simpa only [L, if_pos hd] using! hh.2⟩
     · rw [a3LeviOrbit_projection_zero ρ g k.degree N (hgrade j) (by omega),
         Submodule.map_bot]
       exact ⟨inferInstance, by simp [L, hd]⟩
@@ -85,7 +85,7 @@ theorem a3ProjectedStep_bound (g : CurrentGrading ρ) (hw : w ∈ g.piece 0)
     (fun j => a3LeviClosure ρ (ℂ ∙ (v j : V))) hv
     (fun j => (horbit j).1) (fun j => (horbit j).2)
   refine ⟨hs.1, hs.2.trans ?_⟩
-  simpa only [L, a3GradedKeyContribution, ite_mul, zero_mul] using
+  simpa only [L, a3GradedKeyContribution, ite_mul, zero_mul] using!
     Nat.mul_le_mul_left L hm
 
 end

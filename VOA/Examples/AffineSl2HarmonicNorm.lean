@@ -115,7 +115,8 @@ theorem form_fHarmonic_eHarmonic {k : ℂ} (hk : k + 2 ≠ 0)
         ∏ j ∈ Finset.range r, (k - (j : ℂ)) := by
   induction r with
   | zero =>
-      simpa using hn.vacuum_self
+      have h0 : B.form (vacuumA k) (vacuumA k) = 1 := hn.vacuum_self
+      simpa using h0
   | succ r ih =>
       rw [form_fHarmonic_eHarmonic_succ hk B hB hqp, ih,
         Finset.prod_range_succ, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add,

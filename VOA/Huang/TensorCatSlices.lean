@@ -29,9 +29,9 @@ def FivePointTest.leftSlice (d : FivePointTest X Y Z T U) (w : ℂ) :
   hx := by
     have h := FusionTop.mem_weight (F X Y).intertwiner.property d.hx d.hy
       (d.α + d.β - w - 1)
-    convert h using 1
-    congr 1
-    ring
+    have e : d.α + d.β - (d.α + d.β - w - 1) - 1 = w := by ring
+    rw [e] at h
+    exact h
   hy := d.hz
   hz := d.ht
   supported := d.supported
@@ -54,9 +54,9 @@ def FivePointTest.innerSlice (d : FivePointTest X Y Z T U) (w : ℂ) :
   hy := by
     have h := FusionTop.mem_weight (F Y Z).intertwiner.property d.hy d.hz
       (d.β + d.γ - w - 1)
-    convert h using 1
-    congr 1
-    ring
+    have e : d.β + d.γ - (d.β + d.γ - w - 1) - 1 = w := by ring
+    rw [e] at h
+    exact h
   hz := d.ht
   supported := d.supported
   coordinate := d.s + d.r
@@ -79,9 +79,9 @@ def FivePointTest.rightSlice (d : FivePointTest X Y Z T U) (w : ℂ) :
   hz := by
     have h := FusionTop.mem_weight (F Z T).intertwiner.property d.hz d.ht
       (d.γ + d.δ - w - 1)
-    convert h using 1
-    congr 1
-    ring
+    have e : d.γ + d.δ - (d.γ + d.δ - w - 1) - 1 = w := by ring
+    rw [e] at h
+    exact h
   supported := d.supported
   coordinate := d.r / (1 + d.s)
   positive := div_pos d.positive (by linarith [d.positive, d.smaller])

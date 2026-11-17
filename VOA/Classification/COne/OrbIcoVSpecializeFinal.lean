@@ -52,10 +52,10 @@ theorem exists_specialized_vacuum_Xu :
         (2:ℂ)^37*finiteBlockProbe false 76 a ⟨74,by omega⟩ v=(xuU37:ℂ) ∧
         (2:ℂ)^38*finiteBlockProbe false 76 a ⟨76,by omega⟩ v=(xuU38:ℂ) := by
   obtain ⟨a,v,hLI,hv0,hvw,hvs⟩ := exists_specialized_finite_Fock false 38 (by decide)
-    (by decide) (fun r => if r=0 then 37 else 38) (by intro r; dsimp only; split_ifs <;> decide)
+    (by decide) (fun r => if r=0 then 37 else 38) (by intro r; split_ifs <;> decide)
   refine ⟨a,v,hv0,hvw,?_,?_⟩
-  · simpa only [Fin.val_zero,if_pos rfl,finiteEvenPositions,OrbIcoW.vac37_value] using hvs 0
-  · simpa only [show (1:Fin 2)≠0 by decide,if_neg,finiteEvenPositions,OrbIcoW.vac38_value] using hvs 1
+  · simpa only [Fin.val_zero,if_pos rfl,finiteEvenPositions,OrbIcoW.vac37_value] using! hvs 0
+  · simpa only [show (1:Fin 2)≠0 by decide,if_neg,finiteEvenPositions,OrbIcoW.vac38_value] using! hvs 1
 
 /-- Both self-channel Xu coefficients occur in one genuine normalized c=1 Ward solution. -/
 theorem exists_specialized_self_Xu :
@@ -66,9 +66,9 @@ theorem exists_specialized_self_Xu :
         (2:ℂ)^19*finiteBlockProbe true 40 a ⟨38,by omega⟩ v=(xuV19:ℂ) ∧
         (2:ℂ)^20*finiteBlockProbe true 40 a ⟨40,by omega⟩ v=(xuV20:ℂ) := by
   obtain ⟨a,v,hLI,hv0,hvw,hvs⟩ := exists_specialized_finite_Fock true 20 (by decide)
-    (by decide) (fun r => if r=0 then 19 else 20) (by intro r; dsimp only; split_ifs <;> decide)
+    (by decide) (fun r => if r=0 then 19 else 20) (by intro r; split_ifs <;> decide)
   refine ⟨a,v,hv0,hvw,?_,?_⟩
-  · simpa only [Fin.val_zero,if_pos rfl,finiteEvenPositions,OrbIcoW.self19_value] using hvs 0
-  · simpa only [show (1:Fin 2)≠0 by decide,if_neg,finiteEvenPositions,OrbIcoW.self20_value] using hvs 1
+  · simpa only [Fin.val_zero,if_pos rfl,finiteEvenPositions,OrbIcoW.self19_value] using! hvs 0
+  · simpa only [show (1:Fin 2)≠0 by decide,if_neg,finiteEvenPositions,OrbIcoW.self20_value] using! hvs 1
 
 end VOA.Classification.COne.OrbIcoV

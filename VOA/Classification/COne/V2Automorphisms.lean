@@ -172,7 +172,8 @@ theorem aut_mem_chargeSec (φ : Aut VV) (hh : φ (hSt (latP m) (a1 m)) = hSt (la
   rcases smul_eq_zero.mp h2 with h3 | h3
   · exfalso
     apply hν
-    rw [sub_eq_zero, Int.cast_inj, latP_form, latP_form] at h3
+    rw [sub_eq_zero, Int.cast_inj] at h3
+    erw [latP_form, latP_form] at h3
     have hm0 : (2 * (m : ℤ) * 1) ≠ 0 := by omega
     have := mul_left_cancel₀ hm0 h3
     exact this.symm
@@ -218,7 +219,11 @@ theorem aut_eq_one_of_fix (φ : Aut VV)
   have h1 : charVal (latP m) d (a1 m) = 1 := by
     have h := hd (latChargeGen (latP m) (a1 m))
     rw [he, latChargeGen, charLat_latStateGen _ _ (latP_posDef m hm)] at h
-    exact (smul_left_injective ℂ (latChargeGen_ne_zero m (a1 m))) (by simpa using h.symm)
+    exact (smul_left_injective ℂ (latChargeGen_ne_zero m (a1 m))) (by
+      show charVal (latP m) d (a1 m) • latChargeGen (latP m) (a1 m) =
+        (1 : ℂ) • latChargeGen (latP m) (a1 m)
+      rw [one_smul]
+      exact h.symm)
   have hd0 : d = 0 := by
     apply AddMonoidHom.ext_int
     show d (a1 m) = 0
@@ -358,7 +363,7 @@ local notation "α₁" => a1 1
 theorem latP1_root : (latP 1).form (a1 1) (a1 1) = 2 := by rw [latP_form]; norm_num
 
 theorem latP1_root' : (latP 1).form (-a1 1) (-a1 1) = 2 := by
-  rw [latP_form]; show 2 * ((1 : ℕ) : ℤ) * (-1) * (-1) = 2; norm_num
+  erw [latP_form]; show 2 * ((1 : ℕ) : ℤ) * (-1) * (-1) = 2; norm_num
 
 /-- The sign `ε = ε(α, −α)` of the root `sl₂`-triple. -/
 noncomputable def eps1 : ℂ := latticeCocycle (latP 1) (a1 1) (-a1 1)

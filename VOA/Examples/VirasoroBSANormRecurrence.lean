@@ -140,7 +140,7 @@ open PowerSeries
 /-- Euler's formal differential operator multiplies the coefficient at
 level n by n. It is used only algebraically; no convergence is required. -/
 noncomputable def bsaEuler (F : PowerSeries ℂ) : PowerSeries ℂ :=
-  X * derivative ℂ F
+  X * derivative (R := ℂ) F
 
 /-- The diagonal action of the Euler operator on coefficients. -/
 theorem bsaEuler_coeff (F : PowerSeries ℂ) (n : ℕ) :
@@ -254,7 +254,7 @@ noncomputable def bsaGaugeSeries (α : ℂ) : PowerSeries ℂ :=
 /-- The formal binomial gauge solves its first-order differential equation.
 This is proved coefficient by coefficient from its nonsingular recursion. -/
 theorem bsaGaugeSeries_derivative (α : ℂ) :
-    (1-X)*derivative ℂ (bsaGaugeSeries α) = PowerSeries.C α*bsaGaugeSeries α := by
+    (1-X)*derivative (R := ℂ) (bsaGaugeSeries α) = PowerSeries.C α*bsaGaugeSeries α := by
   ext n
   cases n with
   | zero =>
@@ -365,7 +365,7 @@ theorem bsaSeries_mul_vanish (F G : PowerSeries ℂ) (N : ℕ)
   rw [coeff_mul]
   apply Finset.sum_eq_zero
   intro ab hab
-  have hsum := Finset.mem_antidiagonal.mp hab
+  have hsum := Finset.HasAntidiagonal.mem_antidiagonal.mp hab
   rw [hG ab.2 (by omega), mul_zero]
 
 /-- Removing a factor 1-X preserves an initial segment of zero coefficients:
@@ -374,7 +374,7 @@ theorem bsaSeries_remove_one_sub (G : PowerSeries ℂ) (N : ℕ)
     (hG : ∀ n, n≤N → coeff n ((1-X)*G)=0) (n : ℕ) (hn : n≤N) :
     coeff n G=0 := by
   induction n with
-  | zero => simpa only [sub_mul, one_mul, map_sub, coeff_zero_X_mul, sub_zero] using hG 0 hn
+  | zero => simpa only [sub_mul, one_mul, map_sub, coeff_zero_X_mul, sub_zero] using! hG 0 hn
   | succ n ih =>
     have hh := hG (n+1) hn
     rw [sub_mul, one_mul, map_sub, coeff_succ_X_mul, ih (by omega), sub_zero] at hh

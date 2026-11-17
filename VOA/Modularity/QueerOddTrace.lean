@@ -59,7 +59,11 @@ def equivProd : Queer n ≃ Matrix n n ℂ × Matrix n n ℂ where
 
 instance instAddCommGroup : AddCommGroup (Queer n) := equivProd.addCommGroup
 
-instance instModule : Module ℂ (Queer n) := equivProd.module ℂ
+/-- The product equivalence as an additive equivalence (for the transported additive group). -/
+def addEquivProd : Queer n ≃+ Matrix n n ℂ × Matrix n n ℂ :=
+  { equivProd with map_add' := fun _ _ => rfl }
+
+instance instModule : Module ℂ (Queer n) := addEquivProd.module ℂ
 
 @[simp] theorem evenPart_zero : (0 : Queer n).evenPart = 0 := rfl
 
@@ -159,7 +163,7 @@ noncomputable instance instAlgebra : Algebra ℂ (Queer n) :=
 /-- The transported product equivalence, as a complex-linear equivalence. -/
 noncomputable def linearEquivProd :
     Queer n ≃ₗ[ℂ] Matrix n n ℂ × Matrix n n ℂ :=
-  equivProd.linearEquiv ℂ
+  addEquivProd.linearEquiv ℂ
 
 /-- For finite `n`, the underlying vector space of `Q(n)` is finite-dimensional. -/
 noncomputable instance instFiniteDimensional : FiniteDimensional ℂ (Queer n) :=
@@ -282,13 +286,13 @@ theorem oddTrace_koszul_cyclic {p q : ZMod 2} {x y : Queer n}
   rcases zmod2_cases p with hp | hp <;> rcases zmod2_cases q with hq | hq <;>
     subst hp <;> subst hq
   · simp only [parity_zero, mem_evenSubmodule] at hx hy
-    simp [oddTrace, hx, hy]
+    simp [oddTrace_apply, hx, hy]
   · simp only [parity_zero, parity_one, mem_evenSubmodule, mem_oddSubmodule] at hx hy
-    simpa [oddTrace, hx, hy] using Matrix.trace_mul_comm x.evenPart y.oddPart
+    simpa [oddTrace_apply, hx, hy] using Matrix.trace_mul_comm x.evenPart y.oddPart
   · simp only [parity_zero, parity_one, mem_evenSubmodule, mem_oddSubmodule] at hx hy
-    simpa [oddTrace, hx, hy] using Matrix.trace_mul_comm x.oddPart y.evenPart
+    simpa [oddTrace_apply, hx, hy] using Matrix.trace_mul_comm x.oddPart y.evenPart
   · simp only [parity_one, mem_oddSubmodule] at hx hy
-    simp [oddTrace, hx, hy]
+    simp [oddTrace_apply, hx, hy]
 
 /-- The odd trace as an element of the supersymmetric-functional space of `Q(n)`. -/
 theorem oddTrace_mem_supersymmetricFunctionals :
@@ -311,20 +315,20 @@ def blockRealization : Queer n →ₗ[ℂ] Matrix (n ⊕ n) (n ⊕ n) ℂ where
 /-- The block realization preserves the queer product. -/
 theorem blockRealization_mul (x y : Queer n) :
     blockRealization (x * y) = blockRealization x * blockRealization y := by
-  simp [blockRealization, Matrix.fromBlocks_multiply, add_comm]
+  simp [blockRealization_apply, Matrix.fromBlocks_multiply, add_comm]
 
 /-- The block realization preserves the unit. -/
 theorem blockRealization_one : blockRealization (1 : Queer n) = 1 := by
-  simp [blockRealization, Matrix.fromBlocks_one]
+  simp [blockRealization_apply, Matrix.fromBlocks_one]
 
 /-- The standard block realization is faithful. -/
 theorem blockRealization_injective : Function.Injective (blockRealization (n := n)) := by
   intro x y h
   apply Queer.ext
   · have := congrArg Matrix.toBlocks₁₁ h
-    simpa [blockRealization] using this
+    simpa [blockRealization_apply] using this
   · have := congrArg Matrix.toBlocks₁₂ h
-    simpa [blockRealization] using this
+    simpa [blockRealization_apply] using this
 
 /-! ## Nontriviality and separation from the regular supertrace -/
 

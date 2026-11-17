@@ -32,7 +32,7 @@ theorem sum_shifted_joint_count (N L : ℕ) (q : ℤ)
         simp only [chargeWindow,Finset.mem_Icc]
         omega
       refine ⟨b-q,ha,?_,by omega⟩
-      simpa only [sub_add_cancel] using hn
+      simpa only [sub_add_cancel] using! hn
     · intro c hc hn
       rfl
   rw [hsum,← universal_grading_finrank_eq_sum_joint 1 (by norm_num),

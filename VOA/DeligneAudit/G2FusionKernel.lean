@@ -99,17 +99,17 @@ theorem adL_pow_key {X : Module.End ℂ V} {r : ℕ} (hX : (adL A)^[r + 1] X = 0
       refine ⟨fun i hi => ?_, (r * (p + 1)).choose (r * p) * c, ?_, ?_⟩
       · rw [pow_succ, adL_leibniz]
         refine sum_eq_zero fun ⟨a, b⟩ hab => ?_
-        rw [mem_antidiagonal] at hab
+        rw [Finset.HasAntidiagonal.mem_antidiagonal] at hab
         rw [hterm a b (by omega) (by omega), smul_zero]
       · exact mul_ne_zero (Nat.choose_pos (by omega)).ne' hc
       · rw [pow_succ, adL_leibniz, sum_eq_single (r * p, r)]
         · rw [show r * p + r = r * (p + 1) by omega] at *
           rw [ih2, smul_mul_assoc, smul_smul, pow_succ]
         · rintro ⟨a, b⟩ hab hne
-          rw [mem_antidiagonal] at hab
+          rw [Finset.HasAntidiagonal.mem_antidiagonal] at hab
           simp only [ne_eq, Prod.mk.injEq] at hne
           rw [hterm a b hne (by omega), smul_zero]
-        · intro h; exact absurd (mem_antidiagonal.mpr (by omega)) h
+        · intro h; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by omega)) h
 
 /-- **Leibniz nilpotency**: `A w = 0`, `(ad A)^{r+1} X = 0`, `X^p w = 0` give
 `((ad A)^r X)^p w = 0`. -/
@@ -184,12 +184,12 @@ theorem cart01 (c : Fin 14) (h : c.val = 0 ∨ c.val = 1) :
 
 theorem g2_tauH (h : Fin 14) (hh : h.val ∈ ([0] : List ℕ)) :
     ((g2τZ h : ℤ) : ℂ) = ((thetaH h : ℕ) : ℂ) := by
-  have h0 : h.val = 0 := by simpa using hh
+  have h0 : h.val = 0 := by simpa using! hh
   simp [g2τZ, thetaH, h0]
 
 theorem g2_tauN (h : Fin 14) (hh : h.val ∈ ([1] : List ℕ)) :
     ((g2τZ h : ℤ) : ℂ) = -((thetaN h : ℕ) : ℂ) := by
-  have h1 : h.val = 1 := by simpa using hh
+  have h1 : h.val = 1 := by simpa using! hh
   simp [g2τZ, thetaN, h1]
 
 theorem g2_truncUp (x : Fin 14) (hx : x.val ∈ negL ∨ x.val ∈ ([4, 13] : List ℕ)) :
@@ -212,8 +212,8 @@ theorem g2_cartTau (h : Fin 14) (hh : h.val ∈ ([0] : List ℕ) ∨ h.val ∈ (
     (c : Fin 14) : fG2 h 12 c = if c = 12 then -((g2τZ h : ℤ) : ℂ) else 0 := by
   have hh' : h.val = 0 ∨ h.val = 1 := by
     rcases hh with hh | hh
-    · left; simpa using hh
-    · right; simpa using hh
+    · left; simpa using! hh
+    · right; simpa using! hh
   rw [fG2_12, g2_cartTauZ h c hh']
   split_ifs <;> simp
 

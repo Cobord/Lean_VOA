@@ -22,7 +22,7 @@ noncomputable def ordinaryField (j : ℤ) (u : Space) : Fld Space :=
     obtain ⟨K, hK⟩ := (latticeModule 1 le_rfl j).truncation u x
     refine ⟨-K - 1, fun t ht => ?_⟩
     have h := hK (-t - 1) (by omega)
-    simpa only [mode_apply, show -(-t - 1) - 1 = t by omega] using h⟩
+    simpa only [mode_apply, show -(-t - 1) - 1 = t by omega] using! h⟩
 
 theorem ordinaryField_prod (j ℓ : ℤ) (u v : Space) :
     Fld.prod ℓ (ordinaryField j u) (ordinaryField j v) =
@@ -50,7 +50,9 @@ theorem resc_chargeField {n : ℕ} (hn : 0 < n) (a j β e : ℤ)
   change resc (shiftedY n a j (latChargeGen (latP 1) β)) n e = _
   have hc : shiftedY n a j (latChargeGen (latP 1) β) =
       coefficientField n a j β 0 1 := by
-    rw [latChargeGen, shiftedY_latState]
+    rw [show latChargeGen (latP 1) β =
+        latStateGen (latP 1) (HeisenbergN.vacuumN (rank (latP 1))) β from rfl,
+      shiftedY_latState]
     change (Finsupp.lsum ℂ (coefficientField n a j β)) (deltaCoeffs _ 1) = _
     rw [deltaCoeffs_one, Finsupp.lsum_single]
   rw [hc, resc_coefficientField hn, if_pos he]

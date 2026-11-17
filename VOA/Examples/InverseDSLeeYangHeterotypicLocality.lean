@@ -124,7 +124,7 @@ theorem sectorCurrentDist_heterotypic_EEC (c : ℂ) (j s : ℤ) :
       (2 * c) • EEC c (s + j + 1) := by
   have h := sectorCurrent_heterotypic_EEC c (-j - 1) s
   rw [← Module.End.mul_eq_comp, ← Module.End.mul_eq_comp] at h
-  simpa only [sectorCurrentDist_apply, show s - (-j - 1) = s + j + 1 by ring] using h
+  simpa only [sectorCurrentDist_apply, show s - (-j - 1) = s + j + 1 by ring] using! h
 
 /-- The current-current bracket is independent of the momentum sector. -/
 theorem sectorCurrentDist_comm_independent (p : ℂ) (j l : ℤ) :

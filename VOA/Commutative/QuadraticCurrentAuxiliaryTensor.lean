@@ -31,14 +31,13 @@ variable {K σ ρ : Type*} [Field K] [Fintype σ]
 omit [Fintype σ] in
 theorem coefficient_auxiliary_rename {m d : ℕ} (a : Exponent d)
     (h : Equiv.Perm (Fin d)) (p : MvPolynomial (Particle m d) K) :
-    MvPolynomial.coeff (a.mapDomain h)
-        (split m d (MvPolynomial.rename
-          (particlePermutation (Equiv.refl (Fin m)) h) p)) =
-      MvPolynomial.coeff a (split m d p) := by
+    (split m d (MvPolynomial.rename
+        (particlePermutation (Equiv.refl (Fin m)) h) p)).coeff (a.mapDomain h) =
+      (split m d p).coeff a := by
   rw [particlePermutation_coe, split_rename]
   simp only [Equiv.coe_refl, MvPolynomial.rename_id]
-  change MvPolynomial.coeff (a.mapDomain h)
-    (MvPolynomial.rename h (MvPolynomial.map (RingHom.id _) (split m d p))) = _
+  change (MvPolynomial.rename h (MvPolynomial.map (RingHom.id _) (split m d p))).coeff
+    (a.mapDomain h) = _
   rw [MvPolynomial.map_id, MvPolynomial.coeff_rename_mapDomain h h.injective]
 
 omit [Fintype σ] in
@@ -51,9 +50,8 @@ theorem auxiliarySymmetric_iff_coefficients {m d : ℕ}
   constructor
   · intro hp h a
     funext t
-    have hc := congrArg (fun f => MvPolynomial.coeff (a.mapDomain h) (split m d f))
+    have hc := congrArg (fun f => (split m d f).coeff (a.mapDomain h))
       (hp h t)
-    dsimp only at hc
     rw [coefficient_auxiliary_rename] at hc
     exact hc.symm
   · intro hp h t
@@ -82,10 +80,9 @@ def assembleLinear (Q : ρ → σ × σ → K) (m d : ℕ) :
     (c : Exponent d →₀ currentCarrier Q m 0) (a : Exponent d) :
     auxiliaryCoefficient a (assembleLinear Q m d c) = (c a).1 := by
   funext t
-  change MvPolynomial.coeff a
-    (split m d ((split m d).symm
-      ((AddMonoidAlgebra.coeffLinearEquiv K).symm
-        (Finsupp.mapRange.linearMap (componentLinear Q m t) c)))) = _
+  change (split m d ((split m d).symm
+    ((AddMonoidAlgebra.coeffLinearEquiv K).symm
+      (Finsupp.mapRange.linearMap (componentLinear Q m t) c)))).coeff a = _
   rw [AlgEquiv.apply_symm_apply]
   rfl
 
@@ -159,7 +156,6 @@ theorem currentAuxiliaryTensorEquiv_symm_tmul_coefficient
       (K := K) (W := currentCarrier Q m 0) d => c.1 a)
     ((invariantCoefficientsEquiv Q m d).apply_symm_apply
       ((tensorEquiv (K := K) (W := currentCarrier Q m 0) d).symm (w ⊗ₜ[K] s)))
-  dsimp only at hc
   rw [tensorEquiv_symm_tmul] at hc
   exact congrArg Subtype.val hc
 
@@ -195,7 +191,7 @@ theorem currentAuxiliaryTensorEquiv_symm_tmul
   rw [mul_comm, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_map]
   have hc := congrFun
     (currentAuxiliaryTensorEquiv_symm_tmul_coefficient Q m d w s a) t
-  simpa [auxiliaryCoefficient, Algebra.smul_def, mul_comm] using hc
+  simpa [auxiliaryCoefficient, Algebra.smul_def, mul_comm] using! hc
 
 /-- The fundamental theorem of symmetric polynomials gives an ordinary
 polynomial tensor factor, whose elementary generators have weights `1,...,d`. -/

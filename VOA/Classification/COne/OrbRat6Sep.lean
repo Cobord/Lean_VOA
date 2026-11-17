@@ -89,7 +89,8 @@ theorem sm_charge (k : ℤ) :
         latChargeGen (latP 1) (scaleIota 1 3 k) := by
   show latMorphC (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3)
     (latCob (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3)) (latChargeGen (latP (1 * 3 ^ 2)) k) = _
-  rw [latMorphC_latChargeGen]
+  exact latMorphC_latChargeGen (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3)
+    (latCob (latP (1 * 3 ^ 2)) (latP 1) (scaleIota 1 3)) k
 
 theorem scaleIota_one : scaleIota 1 3 (1 : ℤ) = (3 : ℤ) := by
   show ((3 : ℕ) : ℤ) * (1 : ℤ) = 3; norm_num
@@ -132,7 +133,7 @@ theorem charged_top_zero {j : ℤ} (hj9 : |j| < 9) (k : ℤ) (hk : k = 1 ∨ k =
   rw [mode_apply, h]
   have hj1 : -9 < j := by rw [abs_lt] at hj9; exact hj9.1
   have hj2 : j < 9 := by rw [abs_lt] at hj9; exact hj9.2
-  rw [show (1 : FockN _) = vacuumN _ from rfl, EEVec_vacuum, if_neg (by
+  rw [show (1 : FockN _) = vacuumN _ from rfl, EEVec_vacuum (latP (1 * 3 ^ 2)) k, if_neg (by
     rcases hk with rfl | rfl <;> push_cast <;> omega)]
   simp [latStateGen]
 

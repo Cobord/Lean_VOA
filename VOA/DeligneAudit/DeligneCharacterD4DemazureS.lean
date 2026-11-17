@@ -45,7 +45,7 @@ theorem pi0S_div (F : S) :
 theorem mon_ne_one (v : V) (hv : v ≠ 0) : mon v 1 ≠ 1 := by
   intro h
   have : mon v 1 = mon 0 1 := h
-  exact hv ((Finsupp.single_left_inj one_ne_zero).mp this)
+  exact hv ((AddMonoidAlgebra.single_left_inj one_ne_zero).mp this)
 
 theorem C_one_sub_mon_ne_zero (v : V) (c : Kq) (hv : v ≠ 0) :
     (C (1 - mon v c) : S) ≠ 0 := by
@@ -53,7 +53,7 @@ theorem C_one_sub_mon_ne_zero (v : V) (c : Kq) (hv : v ≠ 0) :
   have h' := congrArg constantCoeff h
   rw [constantCoeff_C, map_zero, sub_eq_zero] at h'
   have : mon 0 1 = mon v c := h'
-  rcases (Finsupp.single_eq_single_iff _ _ _ _).mp this with ⟨h1, -⟩ | ⟨h1, -⟩
+  rcases AddMonoidAlgebra.single_inj.mp this with ⟨h1, -⟩ | ⟨h1, -⟩
   · exact hv h1.symm
   · exact one_ne_zero h1
 

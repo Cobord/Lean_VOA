@@ -68,14 +68,14 @@ theorem bsaState_mem_grading (c : ℂ) (N r : ℕ) :
   induction r using Nat.strong_induction_on with
   | h r ih =>
     cases r with
-    | zero => simpa [bsaState_zero] using (virasoroVOA c).vacuum_mem
+    | zero => simpa [bsaState_zero] using! (virasoroVOA c).vacuum_mem
     | succ r =>
       rw [bsaState]
       apply Submodule.smul_mem
       apply Submodule.sum_mem
       intro j hj
       have hh := Lop_maps_grading c ((j:ℤ)-((r:ℤ)+1)) (ih j j.isLt)
-      simpa using hh
+      simpa using! hh
 
 /-- The source sum is homogeneous too: each term raises the level j to r. -/
 theorem bsaSource_mem_grading (c : ℂ) (N r : ℕ) :
@@ -83,7 +83,7 @@ theorem bsaSource_mem_grading (c : ℂ) (N r : ℕ) :
   apply Submodule.sum_mem
   intro j hj
   have hh := Lop_maps_grading c ((j:ℤ)-(r:ℤ)) (bsaState_mem_grading c N j)
-  simpa using hh
+  simpa using! hh
 
 
 /-- Commuting L₁ through the next source sum collapses all interior terms
@@ -307,7 +307,7 @@ theorem bsaSource_L2_terminal (N : ℕ) (hN : 3 ≤ N) :
     push_cast
     field_simp [hd, hn]
     <;> ring_nf
-    <;> field_simp [show (3:ℂ)+(r:ℂ) ≠ 0 by simpa [add_comm] using hn]
+    <;> field_simp [show (3:ℂ)+(r:ℂ) ≠ 0 by simpa [add_comm] using! hn]
     <;> ring
   rw [he, zero_smul]
 

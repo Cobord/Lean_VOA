@@ -154,12 +154,12 @@ theorem isModularDataWeak_perturbS (D : VOA.Classification.COne.ModularData W) (
   d_ge_one := hD.d_ge_one
   S_vac_left := fun x => by
     change perturbS D a b b' t D.vac x = _
-    rw [perturbS_apply_of_ne D (Ne.symm ha)]
-    exact hD.S_vac_left x
+    exact (perturbS_apply_of_ne D (b := b) (b' := b') (Ne.symm ha) t x).trans
+      (hD.S_vac_left x)
   S_vac_right := fun x => by
     change perturbS D a b b' t x D.vac = _
-    rw [perturbS_apply_of_ne_right D (Ne.symm hb) (Ne.symm hb')]
-    exact hD.S_vac_right x
+    exact (perturbS_apply_of_ne_right D (a := a) (Ne.symm hb) (Ne.symm hb') t x).trans
+      (hD.S_vac_right x)
   S_bound := by
     intro x y
     change ‖perturbS D a b b' t x y‖ ≤ D.S00 * D.d x * D.d y
@@ -170,7 +170,8 @@ theorem isModularDataWeak_perturbS (D : VOA.Classification.COne.ModularData W) (
       · by_cases hy' : y = b'
         · rw [hy', perturbS_apply_ab' D hbb]; exact hbd'
         · rw [perturbS_apply_of_ne_right D hy hy']; exact hD.S_bound a y
-    · rw [perturbS_apply_of_ne D hx]; exact hD.S_bound x y
+    · exact (congrArg (fun z : ℂ => ‖z‖)
+        (perturbS_apply_of_ne D (b := b) (b' := b') hx t y)).le.trans (hD.S_bound x y)
 
 /-! ## §2 The categorical side does not see the `S`-matrix -/
 

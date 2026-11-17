@@ -69,14 +69,14 @@ theorem sectorSugawaraWard_negOne :
   intro s
   have h := sectorSugawara_EEC_of_sugawara k85FockCharge (-1)
     sugawaraEECWardAt_negOne s
-  simpa only [Module.End.mul_eq_comp] using h
+  simpa only [Module.End.mul_eq_comp] using! h
 
 theorem sectorSugawaraWard_zero :
     SectorSugawaraWardAt k85FockCharge 0 := by
   intro s
   have h := sectorSugawara_EEC_of_sugawara k85FockCharge 0
     sugawaraEECWardAt_zero s
-  simpa only [Module.End.mul_eq_comp] using h
+  simpa only [Module.End.mul_eq_comp] using! h
 
 /-- The `m=-2` sector-Sugawara Ward identity. -/
 theorem sectorSugawaraWard_negTwo :

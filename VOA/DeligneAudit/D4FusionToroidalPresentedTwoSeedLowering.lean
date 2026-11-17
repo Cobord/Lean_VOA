@@ -28,10 +28,10 @@ private theorem simple_negative_index : ∀ i : Fin 12,
 theorem two_seed_lowering_commG (i : Fin 12) (s : ℕ) (_hs : s ≤ 1)
     (x : PTE 2) : Y i s (G x) = G (Y i s x) := by
   have h := (ρPTE 2).comm (negativeIndex i) D4sector.c₀ 0 1 s 0 x
-  have hf : ∀ e : Fin 28, D4sector.f (negativeIndex i) D4sector.c₀ e = 0 := by
+  have hf : ∀ e : Fin D4sector.n, D4sector.f (negativeIndex i) D4sector.c₀ e = 0 := by
     intro e
     change (fZ br (negativeIndex i) 27 e : ℂ) = 0
-    rw [negative_theta_zero]
+    rw [negative_theta_zero i e]
     simp
   simp only [hf, zero_smul, Finset.sum_const_zero, ite_self] at h
   exact sub_eq_zero.mp h
@@ -39,11 +39,11 @@ theorem two_seed_lowering_commG (i : Fin 12) (s : ℕ) (_hs : s ≤ 1)
 theorem two_seed_lowering_comm_self (i : Fin 12) (s : ℕ) (_hs : s ≤ 1)
     (x : PTE 2) : F i (Y i s x) = Y i s (F i x) := by
   have h := (ρPTE 2).comm (negativeIndex i) (negativeIndex i) 0 0 0 s x
-  have hf : ∀ e : Fin 28,
+  have hf : ∀ e : Fin D4sector.n,
       D4sector.f (negativeIndex i) (negativeIndex i) e = 0 := by
     intro e
     change (fZ br (negativeIndex i) (negativeIndex i) e : ℂ) = 0
-    rw [negative_self_zero]
+    rw [negative_self_zero i e]
     simp
   simp only [hf, zero_smul, Finset.sum_const_zero, ite_self] at h
   exact sub_eq_zero.mp h

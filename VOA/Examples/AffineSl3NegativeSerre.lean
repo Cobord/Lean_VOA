@@ -13,6 +13,8 @@ Jacobi supplies the required raising equations, and the gamma-normalizer
 property is proved from the explicit current formulas. No Serre premise
 or abstract highest-weight existence assumption is used.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

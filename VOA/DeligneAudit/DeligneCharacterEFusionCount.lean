@@ -46,7 +46,7 @@ theorem e6_fusionModuleBoundZ_of_totalBound (hF : FusionTotalBoundG E6sector)
     FusionModuleBoundG E6sector e6FusionFZ :=
   fusionModuleBoundG_of_kernel (ravFam_zero E6sector) (ravFam_step E6sector) (ravKw_deg E6sector)
     hF E6K.e6_ravinderKernelRel' (fun n => realizationG_hilbSeriesG _ _ _ (hD n))
-    (fun m => by simpa using e6FusionFZ_count m)
+    (fun m => by simpa using! e6FusionFZ_count m)
 
 open VOA.DeligneAudit.DeligneCarrier.E6 (E6sector) in
 /-- **U5 for `E₆`** (original clamped statement) from `hF` and `hD` alone — no count input. -/
@@ -64,7 +64,7 @@ theorem e6FusionCount_of_totalBound (hF : FusionTotalBoundG E6sector)
     E6K.E6FusionCount := by
   intro m
   rw [e6_hilbSeries_eq_Z (e6_fusionModuleBoundZ_of_totalBound hF hD)]
-  simpa using e6FusionFZ_count m
+  simpa using! e6FusionFZ_count m
 
 open VOA.DeligneAudit.DeligneCarrier.E7 (E7sector) in
 /-- **U5 for `e7FusionFZ`** from `FusionTotalBoundG E7sector` and the realizations. -/
@@ -73,7 +73,7 @@ theorem e7_fusionModuleBoundZ_of_totalBound (hF : FusionTotalBoundG E7sector)
     FusionModuleBoundG E7sector e7FusionFZ :=
   fusionModuleBoundG_of_kernel (ravFam_zero E7sector) (ravFam_step E7sector) (ravKw_deg E7sector)
     hF e7_ravinderKernelRel' (fun n => realizationG_hilbSeriesG _ _ _ (hD n))
-    (fun m => by simpa using e7FusionFZ_count m)
+    (fun m => by simpa using! e7FusionFZ_count m)
 
 open VOA.DeligneAudit.DeligneCarrier.E7 (E7sector) in
 /-- **U5 for `E₇`** (original clamped statement) from `hF` and `hD` alone — no count input. -/
@@ -91,7 +91,7 @@ theorem e7FusionCount_of_totalBound (hF : FusionTotalBoundG E7sector)
     E7FusionCount := by
   intro m
   rw [e7_hilbSeries_eq_Z (e7_fusionModuleBoundZ_of_totalBound hF hD)]
-  simpa using e7FusionFZ_count m
+  simpa using! e7FusionFZ_count m
 
 end VOA.DeligneAudit.UnivG
 

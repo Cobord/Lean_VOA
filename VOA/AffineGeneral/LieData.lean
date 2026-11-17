@@ -217,7 +217,7 @@ theorem trace_kappaInv_formTable :
     (∑ a, ∑ b, D.kappaInv a b * D.formTable a b) = Fintype.card ι := by
   have hrow (a : ι) : (∑ b, D.kappaInv a b * D.formTable a b) = 1 := by
     have h := D.kappaInv_kappa a a
-    simpa only [if_pos rfl, D.kappaInv_symm, mul_comm] using h
+    simpa only [if_pos rfl, D.kappaInv_symm, mul_comm, ↓reduceIte] using h
   simp only [hrow, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one]
 
 end LieData

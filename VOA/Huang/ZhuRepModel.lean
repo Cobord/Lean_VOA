@@ -93,7 +93,7 @@ theorem modelTwist_unit : (modelTwist (𝕄).E (𝟙_ (𝕄).C)).hom = 𝟙 (�
   have hs : (modelTwist (𝕄).E (F.simple D.vac)).hom = 𝟙 _ := by
     have := modelTwist_simple (𝕄).E D hD D.vac
     rw [hD.h_vac] at this
-    simpa using this
+    simpa using! this
   have hn := modelTwist_naturality (𝕄).E e.hom
   rw [hs, Category.id_comp] at hn
   calc (modelTwist (𝕄).E (𝟙_ (𝕄).C)).hom = e.inv ≫ e.hom ≫ (modelTwist (𝕄).E (𝟙_ (𝕄).C)).hom := by
@@ -111,15 +111,19 @@ theorem S_eq_S00_star_sTilde (a b : D.ι) :
   have hT : ∀ x, R.T x = twistOf (D.h x : ℂ) := fun x =>
     (𝕄).ribbon_T D hD (modelPivotal 𝕄) (ribbonDualInput_of_nice hW (𝕄) D hD) x
   have hq' : ∀ c, R.qdim (F.simple c) = (D.d c : ℂ) := fun c => qdim_eq_d hW D hD c
-  have hcat := sTilde_mul_T R a b
-  simp_rw [fusionN_eq hW (𝕄) D hD, hT, hq'] at hcat
+  have hcat : R.sTilde a b * (twistOf ((D.h a : ℚ) : ℂ) * twistOf ((D.h b : ℚ) : ℂ)) =
+      ∑ c : D.ι, (fus D a b c : ℂ) * (twistOf ((D.h c : ℚ) : ℂ) * (D.d c : ℂ)) :=
+    (congrArg (R.sTilde a b * ·) (congrArg₂ (· * ·) (hT a) (hT b))).symm.trans
+      ((sTilde_mul_T R a b).trans (Finset.sum_congr rfl fun (c : D.ι) _ =>
+        congrArg₂ (· * ·) (congrArg (fun n : ℕ => (n : ℂ)) (fusionN_eq hW (𝕄) D hD a b c))
+          (congrArg₂ (· * ·) (hT c) (hq' c))))
   have hc := congrArg star hcat
   simp only [star_mul', star_sum, star_natCast, Complex.star_def, Complex.conj_ofReal] at hc
   simp only [← Complex.star_def] at hc
   have hh : ∀ x : D.ι, star (twistOf ((D.h x : ℚ) : ℂ)) = (twistOf ((D.h x : ℚ) : ℂ))⁻¹ := by
     intro x
     have := star_twistOf ((D.h x : ℚ) : ℝ)
-    simpa using this
+    simpa using! this
   simp only [hh] at hc
   have hb := balancing_S hW D hD (S_symm hW D hD) a b
   have hc' : star (R.sTilde a b) * ((twistOf ((D.h a : ℚ) : ℂ))⁻¹ * (twistOf ((D.h b : ℚ) : ℂ))⁻¹)
@@ -148,9 +152,9 @@ theorem dual_simple_iso (σ : D.ι → D.ι) (hσ : ∀ x, σ (σ x) = x)
     let e3 : (F.simple c ⊗ F.simple x ⟶ 𝟙_ (𝕄).C) ≃ₗ[ℂ]
         (F.simple c ⊗ F.simple x ⟶ F.simple D.vac) :=
       Linear.homCongr ℂ (Iso.refl _) F.unitIso.symm
-    have h1 : mult (F.simple x)ᘁ c = finrank ℂ (F.simple c ⊗ F.simple x ⟶ F.simple D.vac) := by
-      rw [mult, e1.finrank_eq, e2.finrank_eq, e3.finrank_eq]
-    rw [h1, ← mult_eq_finrank_hom_to]
+    have h1 : mult (F.simple x)ᘁ c = finrank ℂ (F.simple c ⊗ F.simple x ⟶ F.simple D.vac) :=
+      e1.finrank_eq.trans (e2.finrank_eq.trans e3.finrank_eq)
+    rw [h1, ← mult_eq_finrank_hom_to (F.simple c ⊗ F.simple x) D.vac]
     have h2 := fusionN_eq hW (𝕄) D hD c x D.vac
     change mult (F.simple c ⊗ F.simple x) D.vac = _ at h2
     rw [h2, hvac]
@@ -159,22 +163,25 @@ theorem dual_simple_iso (σ : D.ι → D.ι) (hσ : ∀ x, σ (σ x) = x)
     · rw [if_neg h, if_neg (fun h' => h (by rw [h', hσ]))]
   obtain ⟨n, f, ⟨e⟩⟩ := F.semisimple (F.simple x)ᘁ
   have hcard : ∀ c, (Finset.univ.filter fun k => f k = c).card = if c = σ x then 1 else 0 :=
-    fun c => by rw [← mult_eq_card f e c, hmult]
+    fun c => by
+      rw [← mult_eq_card f e c, hmult c]
+      split_ifs <;> first | rfl | exact absurd ‹c = σ x› ‹¬c = σ x›
   have hn : n = 1 := by
     have := Finset.card_eq_sum_card_fiberwise (s := (Finset.univ : Finset (Fin n)))
       (t := (Finset.univ : Finset F.ι)) (f := f) (fun _ _ => Finset.mem_univ _)
     rw [Finset.card_univ, Fintype.card_fin] at this
     rw [this]
     simp_rw [hcard]
-    simp
+    convert (Finset.sum_ite_eq' (Finset.univ : Finset F.ι) (σ x) fun _ => (1 : ℕ)).trans
+      (if_pos (Finset.mem_univ _))
   subst hn
   have hf0 : f 0 = σ x := by
-    have h1 := hcard (σ x)
-    rw [if_pos rfl] at h1
-    obtain ⟨k, hk⟩ := Finset.card_pos.mp (by rw [h1]; exact Nat.one_pos)
+    have h1 := (hcard (σ x)).trans (if_pos rfl)
+    obtain ⟨k, hk⟩ := Finset.card_pos.mp (lt_of_lt_of_eq Nat.one_pos h1.symm)
     have hk0 : k = 0 := Subsingleton.elim _ _
     rw [← hk0]
-    exact (Finset.mem_filter.mp hk).2
+    exact (Finset.mem_filter.mp
+        (show k ∈ Finset.univ.filter (fun k => f k = σ x) by convert hk)).2
   exact ⟨e ≪≫ HuangModularity.biproductFinOneIso (fun k => F.simple (f k)) ≪≫ eqToIso (congrArg F.simple hf0)⟩
 
 /-- **The Ng–Schauenburg spherical fusion category of `Rep W`.** -/
@@ -259,8 +266,8 @@ theorem categoricalS_model_eq :
   obtain ⟨σ, hσ, hvac, -, hstar⟩ := exists_charge_star hW D hD
   have hS0 : (D.S00 : ℂ) ≠ 0 := by exact_mod_cast hD.S00_pos.ne'
   ext i j
-  rw [Matrix.smul_apply, Matrix.of_apply, smul_eq_mul,
-    S_eq_S00_mul_categoricalS hW D hD σ hσ hvac hstar i j, ← mul_assoc, inv_mul_cancel₀ hS0,
+  show _ = (D.S00 : ℂ)⁻¹ * D.S i j
+  rw [S_eq_S00_mul_categoricalS hW D hD σ hσ hvac hstar i j, ← mul_assoc, inv_mul_cancel₀ hS0,
     one_mul]
 
 /-- **The modular structure of `Rep W`** in the Ng–Schauenburg formalization: ribbon twist
@@ -275,7 +282,12 @@ def modelModular : Modular (modelSphericalFusion hW D hD) where
       exact mul_ne_zero (pow_ne_zero _ (inv_ne_zero hS0)) (det_S_ne_zero hW D hD)
     unfold NondegenerateS
     rw [categoricalS_model_eq]
-    convert hdet
+    have key : ∀ (i1 i2 : DecidableEq D.ι) (A : Matrix D.ι D.ι ℂ),
+        @Matrix.det D.ι i1 _ ℂ _ A = @Matrix.det D.ι i2 _ ℂ _ A := by
+      intro i1 i2 A
+      obtain rfl : i1 = i2 := Subsingleton.elim _ _
+      rfl
+    exact fun h0 => hdet ((key _ _ _).trans h0)
 
 /-- The categorical twist eigenvalue of `X_i` is `e^{2πi h_i}`. -/
 theorem twistScalar_model (i : D.ι) :

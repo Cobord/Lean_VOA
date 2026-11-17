@@ -109,8 +109,8 @@ def toArc (I : Ideal (MvPolynomial σ R)) (f : PresentedJet I →ₐ[R] A) :
 
 @[simp] theorem toArc_mk_X (I : Ideal (MvPolynomial σ R))
     (f : PresentedJet I →ₐ[R] A) (i : σ) :
-    toArc I f (Ideal.Quotient.mkₐ R I (MvPolynomial.X i)) = pointSeries I f i := by
-  simp [toArc]
+    toArc I f (Ideal.Quotient.mkₐ R I (MvPolynomial.X i)) = pointSeries I f i :=
+  MvPolynomial.aeval_X (R := R) (pointSeries I f) i
 
 /-- Generator series supplied by an arc satisfy the base relations. -/
 theorem arcGenerator_relations (I : Ideal (MvPolynomial σ R))
@@ -137,8 +137,8 @@ def ofArc (I : Ideal (MvPolynomial σ R))
 @[simp] theorem ofArc_mk_X (I : Ideal (MvPolynomial σ R))
     (u : (MvPolynomial σ R ⧸ I) →ₐ[R] PowerSeries A) (i : σ) (n : ℕ) :
     ofArc I u (presentedJetMk I (MvPolynomial.X (i, n))) =
-      PowerSeries.coeff n (u (Ideal.Quotient.mkₐ R I (MvPolynomial.X i))) := by
-  simp [ofArc, presentedJetMk, seriesJetEval]
+      PowerSeries.coeff n (u (Ideal.Quotient.mkₐ R I (MvPolynomial.X i))) :=
+  seriesJetEval_X (R := R) (fun i => u (Ideal.Quotient.mkₐ R I (MvPolynomial.X i))) i n
 
 @[simp] theorem ofArc_toArc (I : Ideal (MvPolynomial σ R))
     (f : PresentedJet I →ₐ[R] A) : ofArc I (toArc I f) = f := by

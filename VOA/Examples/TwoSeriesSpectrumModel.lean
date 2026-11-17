@@ -217,7 +217,7 @@ theorem jetSocleSpectrum (r : ℕ) :
   socleSpectrum_of_cyclic (jetZeroModeRel r) (jetCyclicVector r).w (jetCyclicVector r).cyclic
     (jetCyclicVector r).supp (jetCyclicVector r).charge
     (fun c x hx hc => jetImage_charge_bound x.2 (fun h => hx (Subtype.ext h))
-      (by simpa using congrArg Subtype.val hc))
+      (by simpa using! congrArg Subtype.val hc))
     (by
       intro m hm
       refine (iSup_le fun F => iSup_le fun hF => ?_ :

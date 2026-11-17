@@ -248,7 +248,7 @@ theorem nexp_derivation (δ : Derivation ℂ R R) (d : ℕ → R) (K : ℕ) (hK 
         theta_nexpPS]
       ring
     · rw [map_sub, coeff_dmap, coeff_nexpPS, nexp_zero, Derivation.map_one_eq_zero, coeff_mul]
-      simp only [hcK, Finset.antidiagonal_zero, Finset.sum_singleton]
+      simp only [hcK, Finset.Nat.antidiagonal_zero, Finset.sum_singleton]
       rw [if_neg (Ne.symm hK.ne'), zero_mul, sub_zero]
   have := congrArg (coeff p) hY
   rw [coeff_dmap, coeff_nexpPS, hKs, mul_assoc, coeff_C_mul, coeff_X_pow_mul'] at this

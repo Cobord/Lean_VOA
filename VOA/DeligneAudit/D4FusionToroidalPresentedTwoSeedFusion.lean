@@ -78,7 +78,7 @@ theorem two_seed_all_negative_zero (s : ℕ) (hs : s ≤ 1) :
           have hcomm' : (0 : PTE 2) =
               (∑ e : Fin 28, D4sector.f (fusionA c) (fusionB c) e •
                 (ρPTE 2).op e 0 t twoQuadraticSeed) := by
-            simpa only [Nat.zero_add, hA, hB, map_zero, sub_zero] using hcomm
+            simpa only [Nat.zero_add, hA, hB, map_zero, sub_zero] using! hcomm
           have hz : (fusionCoeff c : ℂ) •
               (ρPTE 2).op c 0 t twoQuadraticSeed = 0 :=
             (hcomm'.trans hsum).symm

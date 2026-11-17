@@ -220,7 +220,7 @@ theorem cubic_character_vacuum :
     (fun hz => latVacuumGen_ne_zero' 4 four_ge_one (congrArg Subtype.val hz))
     (fun _ => 0) (by
       intro i
-      simpa using oMod_adjoint_vacuum (V2mPlus 4 four_ge_one)
+      simpa using! oMod_adjoint_vacuum (V2mPlus 4 four_ge_one)
         (show 1 ≤ (wtP 4 i : ℤ) by fin_cases i <;> simp [wtP])
         (gP_mem_grading 4 four_ge_one i))
 
@@ -236,7 +236,7 @@ theorem cubic_character_sign :
         rw [oMod_conformalVector]
         exact (signModule 4 four_ge_one).L0_weight _ _ (signVector_mem 4 four_ge_one)
       · exact signVector_W 4 four_ge_one
-      · simpa using signVector_E 4 four_ge_one (by norm_num))
+      · simpa using! signVector_E 4 four_ge_one (by norm_num))
 
 /-- The charged characters (weight `j²/16`), from `V_{L+λ_j}`, `|j| < 4`. -/
 theorem cubic_character_charged (j : ℤ) (hj : |j| < 4) :
@@ -261,7 +261,7 @@ theorem cubic_character_charged (j : ℤ) (hj : |j| < 4) :
       · change oMod N (V2mPlus 4 four_ge_one).conformalVector _ = h • _
         rw [oMod_conformalVector]; exact N.L0_weight _ _ hx
       · exact hW
-      · simpa using hE)
+      · simpa using! hE)
 
 theorem cubic_character_weight (w : ℚ) (j : ℤ) (hj : |j| < 4) (hw : (j : ℚ) ^ 2 / 16 = w) :
     ∃ χ : VOA.A cubicModel →ₐ[ℂ] ℂ,
@@ -280,8 +280,8 @@ theorem cubic_five_characters :
   intro w hw
   simp only [Finset.mem_insert, Finset.mem_singleton] at hw
   rcases hw with rfl | rfl | rfl | rfl | rfl
-  · simpa using cubic_character_vacuum
-  · simpa using cubic_character_sign
+  · simpa using! cubic_character_vacuum
+  · simpa using! cubic_character_sign
   · exact cubic_character_weight _ 2 (by norm_num) (by norm_num)
   · exact cubic_character_weight _ 1 (by norm_num) (by norm_num)
   · exact cubic_character_weight _ 3 (by norm_num) (by norm_num)

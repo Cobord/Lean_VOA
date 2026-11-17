@@ -26,7 +26,7 @@ theorem natCoset_indicator (r γ C : ℂ) :
     have hs : Function.support (fun m : ℕ => if r+m=γ then C else 0)⊆{n} := by
       intro m hm
       by_contra hmn
-      have hmn' : m≠n := by simpa only [Set.mem_singleton_iff] using hmn
+      have hmn' : m≠n := by simpa only [Set.mem_singleton_iff] using! hmn
       change (if r+(m : ℂ)=γ then C else 0)≠0 at hm
       rw [if_neg ((he m).not.mpr hmn')] at hm
       exact hm rfl
@@ -54,7 +54,7 @@ theorem lowerSpectrum_indicator (hC2 : C2Cofinite W) (N : LogVModule W M)
     intro a ha
     by_cases he : a=γ
     · subst a
-      exact hweight (by simpa only [g,ite_true] using ha)
+      exact hweight (by simpa only [g,ite_true] using! ha)
     · simp only [g,if_neg he] at ha
       exact False.elim (ha rfl)
   have hs (mu : ℂ) : Summable fun n : ℕ => g (lowerSpectrumRep hC2 N hfg mu+n) :=

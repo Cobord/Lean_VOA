@@ -28,7 +28,7 @@ theorem pairRestriction_section (a b c : ℕ)
     pairRestriction a b c (pairSection a b c P) = P := by
   induction P using MvPolynomial.induction_on with
   | C z => simp [pairRestriction, pairSection]
-  | add P Q hP hQ => simpa only [map_add] using congrArg₂ (· + ·) hP hQ
+  | add P Q hP hQ => simpa only [map_add] using! congrArg₂ (· + ·) hP hQ
   | mul_X P t hP =>
       simp only [map_mul, hP]
       simp [pairRestriction, pairSection, pairVariable_section]
@@ -83,7 +83,7 @@ theorem pair_sub_section_mem (a b c : ℕ)
       convert h using 1 <;> simp [map_add] <;> abel
   | mul_X P i hP =>
       have hi : X i - F (X i) ∈ pairVariableIdeal a b c := by
-        simpa only [F, AlgHom.comp_apply] using
+        simpa only [F, AlgHom.comp_apply] using!
           pairVariable_sub_section_mem a b c i
       have h₁ := (pairVariableIdeal a b c).mul_mem_left (F P) hi
       have h₂ := (pairVariableIdeal a b c).mul_mem_right (X i) hP
@@ -98,7 +98,7 @@ theorem pairRestriction_kernel (a b c : ℕ) :
   · intro P hP
     have hzero : pairRestriction a b c P = 0 := hP
     have h := pair_sub_section_mem a b c P
-    simpa [hzero] using h
+    simpa [hzero] using! h
   · exact pairVariableIdeal_le_kernel a b c
 
 end VOA.DeligneAudit.D4Levi

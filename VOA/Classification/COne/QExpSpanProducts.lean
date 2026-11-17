@@ -44,7 +44,7 @@ theorem exists_int_lattice_of_mem_span_coeff {N : ℕ} (hN : 0 < N) {k : ℤ}
   rw [ModularForm.qExpansion_smul (by exact_mod_cast hN)
     (nat_mem_strictPeriods_Gamma N), PowerSeries.coeff_smul]
   have hm := L.smul_mem (⟨_, hE i n⟩ : A) (Submodule.subset_span ⟨i, rfl⟩)
-  simpa only [Algebra.smul_def, smul_eq_mul, mul_comm] using hm
+  simpa only [Algebra.smul_def, smul_eq_mul, mul_comm] using! hm
 
 abbrev SpanProductIndex (N : ℕ) := (Fin N × Fin N) × (Fin N × Fin N)
 
@@ -149,20 +149,26 @@ theorem fullLevelProductContainment24_iff_qSeriesSpan :
     intro τ
     have hev := congrArg (fun G : ModularForm
       (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2 => G τ) he
-    change (ModularForm.coeHom (∑ i, c (e i) •
-      spanWeightTwoProduct hN h24 hζ (e i))) τ = F τ at hev
-    simpa [map_sum, ModularForm.coeHom, ModularForm.coe_smul, ModularForm.coe_mul,
-      Finset.sum_apply, smul_eq_mul, spanWeightTwoProduct, weightOneModularForm] using hev.symm
+    change (FunLike.coeAddMonoidHom
+      (ModularForm (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2) ℍ ℂ
+      (∑ i, c (e i) • spanWeightTwoProduct hN h24 hζ (e i))) τ = F τ at hev
+    rw [map_sum] at hev
+    simpa [FunLike.coeAddMonoidHom_apply, FunLike.coe_smul, ModularForm.coe_smul,
+      ModularForm.coe_mul, Finset.sum_apply, smul_eq_mul, spanWeightTwoProduct,
+      weightOneModularForm] using! hev.symm
   · intro h N hN h24 ζ hζ F
     obtain ⟨d, a, b, a', b', c, hc⟩ := h N hN h24 ζ hζ F
     have he : restrictGamma1ToGamma hN F =
         ∑ i, c i • spanWeightTwoProduct hN h24 hζ ((a i, b i), (a' i, b' i)) := by
       apply ModularForm.ext
       intro τ
-      change F τ = (ModularForm.coeHom (∑ i, c i •
-        spanWeightTwoProduct hN h24 hζ ((a i, b i), (a' i, b' i)))) τ
-      simpa [map_sum, ModularForm.coeHom, ModularForm.coe_smul, ModularForm.coe_mul,
-        Finset.sum_apply, smul_eq_mul, spanWeightTwoProduct, weightOneModularForm] using hc τ
+      change F τ = (FunLike.coeAddMonoidHom
+        (ModularForm (CongruenceSubgroup.Gamma N : Subgroup (GL (Fin 2) ℝ)) 2) ℍ ℂ
+        (∑ i, c i • spanWeightTwoProduct hN h24 hζ ((a i, b i), (a' i, b' i)))) τ
+      rw [map_sum]
+      simpa [FunLike.coeAddMonoidHom_apply, FunLike.coe_smul, ModularForm.coe_smul,
+        ModularForm.coe_mul, Finset.sum_apply, smul_eq_mul, spanWeightTwoProduct,
+        weightOneModularForm] using! hc τ
     rw [he]
     apply Submodule.sum_mem
     intro i _

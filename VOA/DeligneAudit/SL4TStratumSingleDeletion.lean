@@ -16,7 +16,7 @@ theorem deletedConfigurationDoublesIn_castSucc {B N : ℕ} (k : ℕ)
   apply Finset.card_bij (fun b _ => b.castSucc)
   · intro b hb
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
-    exact ⟨hb.1, Fin.castSucc_ne_last b, by simpa only [Fin.castSucc_inj] using hb.2⟩
+    exact ⟨hb.1, Fin.castSucc_ne_last b, by simpa only [Fin.castSucc_inj] using! hb.2⟩
   · intro a ha b hb hab
     exact Fin.castSucc_injective _ hab
   · intro b hb
@@ -80,7 +80,7 @@ def deletedLabelStratumConfiguration_singleEquiv (B N k j : ℕ)
           Fin.castSucc_inj]
       rw [hf]
       have h := f.property.1 b.castSucc
-      simpa only [Fin.castSucc_ne_last, if_false, add_zero, Fin.val_castSucc] using h
+      simpa only [Fin.castSucc_ne_last, if_false, add_zero, Fin.val_castSucc] using! h
     · have h := deletedConfigurationDoublesIn_castSucc k Y
         (deletedLabelStratumConfiguration_shrink Y hk f) hk
       simp only [deletedLabelStratumConfiguration_shrink_castSucc] at h
@@ -92,7 +92,7 @@ def deletedLabelStratumConfiguration_singleEquiv (B N k j : ℕ)
       refine Fin.lastCases ?_ (fun b => ?_) b
       · simp [Nat.not_lt.mpr hk]
       · simpa only [Fin.castSucc_inj, Fin.castSucc_ne_last, if_false, add_zero,
-          Fin.val_castSucc] using f.property.1 b
+          Fin.val_castSucc] using! f.property.1 b
     · rw [deletedConfigurationDoublesIn_castSucc k Y f.val hk]
       exact f.property.2⟩
   left_inv f := by

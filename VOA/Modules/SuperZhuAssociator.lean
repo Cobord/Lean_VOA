@@ -651,8 +651,8 @@ theorem uside_a_reindexε (V : SuperNearVOA 𝒱) (hV : V.IntegralWeights) (K L 
       (fun p : ℤ => cbz (K : ℤ) p * cbz ((K : ℤ) + (L : ℤ) - p) (b + 1 - (i : ℤ))
         * ((-1 : ℂ) ^ i * gBinom (p - 1) i))
       (fun x => V.smul u x (V.smul v b w)) (-1 - (i : ℤ))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg (K : ℤ) hp]; ring)
-      (fun p hp => by dsimp only; rw [cbz_lt (by positivity) (by omega)]; ring)]
+      (fun p hp => by rw [cbz_apply_neg (K : ℤ) hp]; ring)
+      (fun p hp => by rw [cbz_lt (by positivity) (by omega)]; ring)]
   -- reindex the summation variable q (= old a) to the mode m via q = m+1+i
   rw [← finsum_comp_equiv (Equiv.addRight (1 + (i : ℤ)))
       (f := fun q : ℤ => (cbz (K : ℤ) q * cbz ((K : ℤ) + (L : ℤ) - q) (b + 1 - (i : ℤ))
@@ -937,8 +937,8 @@ theorem rhs_c_reindexε (V : SuperNearVOA 𝒱) (hV : V.IntegralWeights) (K L : 
   rw [rangeSmul_eq_finsumZ'
       (fun q : ℤ => cbz (K : ℤ) (p : ℤ) * cbz (L : ℤ) q)
       (fun x => V.smul u ((p : ℤ) - 1) (V.smul v x w)) (-1)
-      (fun q hq => by dsimp only; rw [cbz_apply_neg (L : ℤ) hq, mul_zero])
-      (fun q hq => by dsimp only
+      (fun q hq => by rw [cbz_apply_neg (L : ℤ) hq, mul_zero])
+      (fun q hq => by
                       rw [cbz_lt (show (0:ℤ) ≤ (L:ℤ) by positivity) (show (L:ℤ) < q by omega),
                         mul_zero])]
   rw [← finsum_comp_equiv (Equiv.addRight (1 : ℤ))
@@ -981,8 +981,8 @@ theorem RHS_eqε (V : SuperNearVOA 𝒱) (hV : V.IntegralWeights) {K L : ℕ} {u
     rw [rangeSmul_eq_finsumZ'
         (fun q : ℤ => cbz (K : ℤ) q * cbz (L : ℤ) (b + 1))
         (fun x => V.smul u x (V.smul v b w)) (-1)
-        (fun q hq => by dsimp only; rw [cbz_apply_neg (K : ℤ) hq, zero_mul])
-        (fun q hq => by dsimp only; rw [cbz_lt (by positivity) (by omega), zero_mul])]
+        (fun q hq => by rw [cbz_apply_neg (K : ℤ) hq, zero_mul])
+        (fun q hq => by rw [cbz_lt (by positivity) (by omega), zero_mul])]
     rw [← finsum_comp_equiv (Equiv.addRight (1 : ℤ))
         (f := fun q : ℤ => (cbz (K : ℤ) q * cbz (L : ℤ) (b + 1))
           • V.smul u (q + (-1)) (V.smul v b w))]

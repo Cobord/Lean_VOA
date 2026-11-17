@@ -45,7 +45,7 @@ theorem summable_product_double (k l j : ℕ) {t u : ℂ} (ht : ‖t‖ < 1) (hu
     intro R hR
     obtain ⟨G,hG⟩ := productCoeff_joint_geometric N₀ N₁ N₂ N₃ N₄ N₅ N₆
       hC2 hfg₀ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ hfg₆ Y₁ Y₂ Y₃ hx hy hz hw f a b c k l j hR hR
-    exact ⟨G,fun m n => by rw [pow_add]; simpa only [C,mul_assoc] using hG m n⟩
+    exact ⟨G,fun m n => by rw [pow_add]; simpa only [C,mul_assoc] using! hG m n⟩
   exact VOA.Huang.HuangODEThree.summable_of_jointSubexponential hC ht hu
 
 /-- The two actual internal coefficient sums can be interchanged. -/

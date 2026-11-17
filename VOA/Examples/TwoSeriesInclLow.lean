@@ -86,11 +86,21 @@ theorem coeff_zero_bS (s : A) : PowerSeries.coeff 0 (bS s) = 1 := by
 /-- `c' b - c b'`. -/
 def wS (s : A) : PowerSeries A := (cS s).derivativeFun * bS s - cS s * (bS s).derivativeFun
 
+-- Lean 4.35 port: `PowerSeries.coeff_derivativeFun`/`derivativeFun_C` are now aliases of the
+-- `PowerSeries.derivative` forms; these restate them for `derivativeFun` (proved by defeq).
+private theorem coeff_derivativeFun_low {R : Type*} [CommSemiring R] (f : PowerSeries R) (n : ℕ) :
+    PowerSeries.coeff n f.derivativeFun = PowerSeries.coeff (n + 1) f * (n + 1) :=
+  PowerSeries.coeff_derivative f n
+
+private theorem derivativeFun_C_low {R : Type*} [CommSemiring R] (r : R) :
+    (PowerSeries.C r : PowerSeries R).derivativeFun = 0 :=
+  PowerSeries.derivative_C
+
 omit [Algebra ℂ A] in
 theorem derivativeFun_one_add' (a : A) :
     (1 + PowerSeries.C a * PowerSeries.X).derivativeFun = PowerSeries.C a := by
   refine PowerSeries.ext fun k => ?_
-  rw [PowerSeries.coeff_derivativeFun, map_add, PowerSeries.coeff_one, PowerSeries.coeff_C_mul,
+  rw [coeff_derivativeFun_low, map_add, PowerSeries.coeff_one, PowerSeries.coeff_C_mul,
     PowerSeries.coeff_X, PowerSeries.coeff_C]
   rcases k with _ | k <;> simp
 
@@ -135,9 +145,9 @@ theorem coeff_wS (s : A) (m : ℕ) : PowerSeries.coeff m (wS s) = (-s) ^ (m + 1)
 
 omit [Algebra ℂ A] in
 theorem map_derivativeFun' {B : Type*} [CommRing B] (f : A →+* B) (g : PowerSeries A) :
-    PowerSeries.map f g.derivativeFun = PowerSeries.derivative B (PowerSeries.map f g) := by
+    PowerSeries.map f g.derivativeFun = PowerSeries.derivative (R := B) (PowerSeries.map f g) := by
   refine PowerSeries.ext fun n => ?_
-  rw [PowerSeries.coeff_map, PowerSeries.coeff_derivativeFun, PowerSeries.coeff_derivative,
+  rw [PowerSeries.coeff_map, coeff_derivativeFun_low, PowerSeries.coeff_derivative,
     PowerSeries.coeff_map, map_mul]
   congr 1
   rw [map_add, map_natCast, map_one]
@@ -146,7 +156,7 @@ omit [Algebra ℂ A] in
 theorem map_derivativeFun'' {B : Type*} [CommRing B] (f : A →+* B) (g : PowerSeries A) :
     PowerSeries.map f g.derivativeFun = (PowerSeries.map f g).derivativeFun := by
   refine PowerSeries.ext fun n => ?_
-  rw [PowerSeries.coeff_map, PowerSeries.coeff_derivativeFun, PowerSeries.coeff_derivativeFun,
+  rw [PowerSeries.coeff_map, coeff_derivativeFun_low, coeff_derivativeFun_low,
     PowerSeries.coeff_map, map_mul]
   congr 1
   rw [map_add, map_natCast, map_one]
@@ -154,7 +164,7 @@ theorem map_derivativeFun'' {B : Type*} [CommRing B] (f : A →+* B) (g : PowerS
 omit [Algebra ℂ A] in
 theorem derivativeFun_C_mul' (a : A) (g : PowerSeries A) :
     (PowerSeries.C a * g).derivativeFun = PowerSeries.C a * g.derivativeFun := by
-  rw [PowerSeries.derivativeFun_mul, PowerSeries.derivativeFun_C, smul_zero, add_zero,
+  rw [PowerSeries.derivativeFun_mul, derivativeFun_C_low, smul_zero, add_zero,
     smul_eq_mul]
 
 end Series
@@ -232,8 +242,8 @@ theorem eps_sq : (PowerSeries.C DualNumber.eps : PowerSeries DP) * PowerSeries.C
   rw [← map_mul, DualNumber.eps_mul_eps, map_zero]
 
 theorem derivative_C_mul' {B : Type*} [CommRing B] (a : B) (g : PowerSeries B) :
-    PowerSeries.derivative B (PowerSeries.C a * g) =
-      PowerSeries.C a * PowerSeries.derivative B g := by
+    PowerSeries.derivative (R := B) (PowerSeries.C a * g) =
+      PowerSeries.C a * PowerSeries.derivative (R := B) g := by
   rw [Derivation.leibniz, PowerSeries.derivative_C, smul_zero, add_zero, smul_eq_mul]
 
 theorem mapInl_mul (f g : PowerSeries Pl) :
@@ -357,7 +367,7 @@ theorem letter_form_mem (c : Cq) (g : PowerSeries Cq) (m : ℕ) :
     DualNumber.eps * TrivSqZeroExt.inl (Polynomial.C c) +
       TrivSqZeroExt.inl (PowerSeries.coeff m (cst g * zS)) ∈ W 1 := by
   refine mem_W.mpr ⟨?_, ?_⟩
-  · simpa using degree_coeff_cst_mul_zS g m
+  · simpa using! degree_coeff_cst_mul_zS g m
   · simp only [TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_mul, DualNumber.fst_eps,
       DualNumber.snd_eps, TrivSqZeroExt.snd_inl, TrivSqZeroExt.fst_inl, smul_zero, zero_add,
       op_smul_eq_mul, one_mul, add_zero]
@@ -401,7 +411,7 @@ theorem chi_letter_mem_W (a : Fin 3) (m : ℕ) : chi (letterSym (.current a, m))
     refine (W 1).neg_mem ((W 1).add_mem ?_ ?_) <;>
     · split_ifs
       · exact h _
-      · simpa using h 0
+      · simpa using! h 0
 
 /-! ### The Sugawara images -/
 
@@ -414,7 +424,7 @@ def Bco (m : ℕ) : Pl :=
   PowerSeries.coeff m (wS sv) + 2 * Polynomial.C (al * PowerSeries.coeff (m + 1) ξS)
 
 theorem ηS_derivativeFun : ηS.derivativeFun = PowerSeries.C (al ^ 2) * qS.derivativeFun := by
-  rw [ηS, ξS, derivativeFun_C_mul', PowerSeries.derivativeFun_add, PowerSeries.derivativeFun_C,
+  rw [ηS, ξS, derivativeFun_C_mul', PowerSeries.derivativeFun_add, derivativeFun_C_low,
     zero_add, derivativeFun_C_mul', ← mul_assoc, ← map_mul, sq]
 
 theorem chi_tSug (m : ℕ) :
@@ -497,7 +507,7 @@ theorem inv_smul_mul_natCast {σ : Type} (Y : MvPolynomial σ ℂ) (c : ℕ) (hc
 
 theorem coeff_qS_derivativeFun (m : ℕ) :
     PowerSeries.coeff m qS.derivativeFun = X (some (m + 1)) := by
-  rw [PowerSeries.coeff_derivativeFun, qS, PowerSeries.coeff_mk, if_neg (Nat.succ_ne_zero m),
+  rw [coeff_derivativeFun_low, qS, PowerSeries.coeff_mk, if_neg (Nat.succ_ne_zero m),
     show ((m : Cq) + 1) = ((m + 1 : ℕ) : Cq) by push_cast; ring,
     show ((m + 1 : ℕ) : ℂ) = (((m + 1 : ℕ) : ℕ) : ℂ) from rfl]
   exact inv_smul_mul_natCast _ (m + 1) (Nat.succ_ne_zero m)

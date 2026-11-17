@@ -92,7 +92,7 @@ theorem eT_add_two (m : ℕ) (t : ZMod 2) (a b : (latP m).carrier) :
 
 theorem eT_generator (m : ℕ) (t : ZMod 2) :
     eT m t (1 : ℤ) = VOA.Moonshine.Extraspecial.sgn t • (1 : Module.End ℂ ℂ) := by
-  simpa [eT] using chargeRep_generator t
+  simpa [eT] using! chargeRep_generator t
 
 open VOA.Moonshine.LatticeTwisted VOA.TwistedHeisenberg
 open scoped TensorProduct
@@ -146,10 +146,12 @@ theorem chargedModes_local (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (a b e e' : ℤ
   have heven : Even (2 * (m : ℤ) * a * b) := ⟨(m : ℤ) * a * b, by ring⟩
   have hg : eT m t b * eT m t a =
       (-1 : ℂ) ^ (2 * (m : ℤ) * a * b).natAbs • (eT m t a * eT m t b) := by
-    rw [heven.natAbs.neg_one_pow, one_smul, eT_mul, eT_mul,
-      PlusCharacterTable.rankOne_cocycle, PlusCharacterTable.rankOne_cocycle, one_smul, one_smul]
-    congr 1
-    exact add_comm _ _
+    rw [heven.natAbs.neg_one_pow, one_smul]
+    refine (eT_mul m t b a).trans (Eq.trans ?_ (eT_mul m t a b).symm)
+    exact congrArg₂ (· • ·)
+      ((PlusCharacterTable.rankOne_cocycle m b a).trans
+        (PlusCharacterTable.rankOne_cocycle m a b).symm)
+      (congrArg (eT m t) (add_comm _ _))
   exact YTg_local _ _ _ hn _ _ _ _ _ _ hg e e'
 
 /-- The sum of the two generator-charge fields at the expected E zero mode.

@@ -43,7 +43,7 @@ theorem translation_highest (c : ℂ) :
     change vermaMode c 0 0 (vermaMode c 0 (-1) _) = _
     rw [vermaMode_comm_apply]
     have hz : vermaMode c 0 0 (highestVector c 0) = 0 := by
-      simpa using verma_zero_acts c 0
+      simpa using! verma_zero_acts c 0
     simp [hz]
 
 /-- The genuine representation map from highest weight one to highest weight
@@ -108,7 +108,7 @@ theorem vacuumProjection_translationEmbedding (c : ℂ) :
   intro w
   suffices ∀ u : List ℕ,
       vacuumProjection c (translationEmbedding c (negWord c 1 u)) = 0 by
-    simpa using this w.val
+    simpa using! this w.val
   intro u
   induction u with
   | nil => simp only [negWord_nil, translationEmbedding_highest,
@@ -189,7 +189,7 @@ theorem sortedWord_zero_suffix {w : List ℕ} (hw : SortedWord w) (hz : 0 ∈ w)
         rw [he]
         exact List.mem_append_left _ hj
       · simp [he]
-    · have hi : i = 0 := by simpa [ht, eq_comm] using hz
+    · have hi : i = 0 := by simpa [ht, eq_comm] using! hz
       subst i
       have he : w = [] := by
         cases w with

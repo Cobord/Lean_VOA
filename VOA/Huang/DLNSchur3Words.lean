@@ -70,10 +70,10 @@ theorem map_gaussLift (π : E →* Matrix.SpecialLinearGroup (Fin 2) R)
   unfold gaussLift
   split_ifs with ha hc
   · simpa only [map_mul, hX, hY, toAdd_ofAdd,
-      map_torusWord π X Y hX hY] using
+      map_torusWord π X Y hX hY] using!
       (gauss_of_unit_top_left g ha.unit (IsUnit.unit_spec ha).symm).symm
   · simpa only [map_mul, hX, toAdd_ofAdd,
-      map_weylWord π X Y hX hY] using
+      map_weylWord π X Y hX hY] using!
       (gauss_of_unit_lower_left g hc.unit (IsUnit.unit_spec hc).symm).symm
   · exact False.elim (hg.elim ha hc)
 
@@ -101,12 +101,16 @@ theorem gaussLift_mul_upper (X Y : Multiplicative R →* E)
     gaussLift X Y (g * upperRoot t) = gaussLift X Y g * X (Multiplicative.ofAdd t) := by
   classical
   have h00 : (g * upperRoot t) 0 0 = g 0 0 := by
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have h10 : (g * upperRoot t) 1 0 = g 1 0 := by
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have h01 : (g * upperRoot t) 0 1 = g 0 0 * t + g 0 1 := by
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have h11 : (g * upperRoot t) 1 1 = g 1 0 * t + g 1 1 := by
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   unfold gaussLift
   simp only [h00, h10, h01, h11]
@@ -114,7 +118,7 @@ theorem gaussLift_mul_upper (X Y : Multiplicative R →* E)
   · have ht : (g 0 0 * t + g 0 1) * (↑ha.unit⁻¹ : R) =
         g 0 1 * (↑ha.unit⁻¹ : R) + t := by
       have hz : g 0 0 * (↑ha.unit⁻¹ : R) = 1 := by
-        simpa only [IsUnit.unit_spec] using Units.mul_inv ha.unit
+        simpa only [IsUnit.unit_spec] using! Units.mul_inv ha.unit
       calc
         _ = g 0 1 * (↑ha.unit⁻¹ : R) + (g 0 0 * (↑ha.unit⁻¹ : R)) * t := by ring
         _ = _ := by rw [hz, one_mul]
@@ -123,7 +127,7 @@ theorem gaussLift_mul_upper (X Y : Multiplicative R →* E)
   · have ht : (g 1 0 * t + g 1 1) * (↑hc.unit⁻¹ : R) =
         g 1 1 * (↑hc.unit⁻¹ : R) + t := by
       have hz : g 1 0 * (↑hc.unit⁻¹ : R) = 1 := by
-        simpa only [IsUnit.unit_spec] using Units.mul_inv hc.unit
+        simpa only [IsUnit.unit_spec] using! Units.mul_inv hc.unit
       calc
         _ = g 1 1 * (↑hc.unit⁻¹ : R) + (g 1 0 * (↑hc.unit⁻¹ : R)) * t := by ring
         _ = _ := by rw [hz, one_mul]

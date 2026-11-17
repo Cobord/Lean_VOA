@@ -84,7 +84,7 @@ theorem exCoeff_sum {ι : Type*} (S : Finset ι) (lam : ℂ) (p : ι → ℕ →
     exCoeff lam (∑ i ∈ S, p i) μ k = ∑ i ∈ S, exCoeff lam (p i) μ k := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using exCoeff_zero lam μ k
+  | empty => rw [Finset.sum_empty, Finset.sum_empty]; exact exCoeff_zero lam μ k
   | insert i S hi ih => rw [Finset.sum_insert hi, exCoeff_add, ih, Finset.sum_insert hi]
 
 /-- Shifting the exponent by `N ∈ ℕ` is the index shift `shiftIdx N`. -/
@@ -316,11 +316,13 @@ noncomputable def smul (a : ℂ) (E : LogExp) : LogExp where
 
 theorem eval_single (lam : ℂ) (p : ℕ → ℂ[X]) (hp : LogGood p) (t : ℂ) :
     (single lam p hp).eval t = logFun lam p t := by
-  simp [eval, single]
+  change ∑ _j : Unit, logFun lam p t = _
+  simp
 
 theorem coeff_single (lam : ℂ) (p : ℕ → ℂ[X]) (hp : LogGood p) (μ : ℂ) (k : ℕ) :
     (single lam p hp).coeff μ k = exCoeff lam p μ k := by
-  simp [coeff, single]
+  change ∑ _j : Unit, exCoeff lam p μ k = _
+  simp
 
 theorem eval_add (E E' : LogExp) (t : ℂ) : (E.add E').eval t = E.eval t + E'.eval t := by
   change ∑ j : E.ι ⊕ E'.ι, logFun (Sum.elim E.lam E'.lam j) (Sum.elim E.p E'.p j) t = _

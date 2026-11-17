@@ -38,7 +38,7 @@ theorem reflected_weightDeterminant_ne_zero (P r : ℕ) (hP : 0<P) (hr : 0<r)
     intro i hi
     apply derivativeMultiplier_ne_zero
     have hp : (P : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.ne_of_gt hP)
-    simpa only [sub_add_cancel] using div_ne_zero (by norm_num : (2 : ℂ) ≠ 0) hp
+    simpa only [sub_add_cancel] using! div_ne_zero (by norm_num : (2 : ℂ) ≠ 0) hp
   · exact reflected_kac_product_ne_zero P r hP hr hcop n c hn hc
 
 /-- The explicit horizontal-factor-removed product is nonzero strictly
@@ -86,7 +86,7 @@ theorem parabolic_quotientGram_below_ne_zero (P r : ℕ) (hP : 0<P) (hr : 0<r)
     (parabolicQuotientGram (2/(P : ℂ)-2) (2*r-2) n c).det ≠ 0 := by
   have he := parabolic_determinant_identity (2/(P : ℂ)-2) (2*r-2) n c
   have hlevel : 2/(P : ℂ)-2+2 ≠ 0 := by
-    simpa only [sub_add_cancel] using
+    simpa only [sub_add_cancel] using!
       div_ne_zero (by norm_num : (2 : ℂ) ≠ 0) (Nat.cast_ne_zero.mpr (Nat.ne_of_gt hP))
   have hnz := mul_ne_zero (parabolicDeterminantScale_ne_zero (2*r-2) n c)
     (mul_ne_zero (affineLeadingPolynomial_eval_ne_zero _ hlevel n c)

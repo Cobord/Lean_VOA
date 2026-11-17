@@ -107,8 +107,8 @@ theorem cvrel_parts123 (r n e : ℕ)
   · intro a ha
     simp only [List.mem_append, List.mem_replicate] at ha
     omega
-  · simpa [List.sum_append, List.sum_replicate, mul_comm, add_assoc] using hnil
-  · simpa [List.length_append, List.length_replicate, add_assoc] using hlin
+  · simpa [List.sum_append, List.sum_replicate, mul_comm, add_assoc] using! hnil
+  · simpa [List.length_append, List.length_replicate, add_assoc] using! hlin
   · intro s hs
     apply hquad s
     have heq : ((List.replicate r 3 ++ List.replicate n 2 ++ List.replicate e 1).map
@@ -129,13 +129,13 @@ theorem cvrel_parts32_one (r n : ℕ)
     (hsquare : (F (r + n) ^ 2) y = 0) :
     CVRel F (List.replicate r 3 ++ List.replicate n 2 ++ [1]) y := by
   have hR := cvrel_parts123 r n 1 hS hE hH hnil hlin (fun s hs => ?_)
-  · simpa only [List.replicate_one] using hR
+  · simpa only [List.replicate_one] using! hR
   have hslo : 2 * (r + n) ≤ s := by omega
   by_cases heq : s = 2 * (r + n)
   · subst s
     have ht := Q_top hS.hFF hlin 2
     have ht' : Q F 2 (2 * (r + n)) y = (F (r + n) ^ 2) y := by
-      simpa only [Nat.add_sub_cancel_right, mul_comm] using ht
+      simpa only [Nat.add_sub_cancel_right, mul_comm] using! ht
     exact ht'.trans hsquare
   · exact Q_high hS.hFF hlin 2 s
       (by simpa only [Nat.add_sub_cancel_right, mul_comm] using

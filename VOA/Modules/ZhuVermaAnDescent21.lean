@@ -106,10 +106,11 @@ theorem finsum_window (F : ℤ → 𝒱) (γ₀ : ℤ) (Γ : ℕ)
   · rw [Finset.sum_map]; rfl
   · intro γ hγ
     rw [Function.mem_support] at hγ
-    simp only [Finset.coe_map, Set.mem_image, Finset.mem_coe, Finset.mem_range, hemb,
-      Function.Embedding.coeFn_mk]
     obtain ⟨hlb, hub⟩ := hsupp γ hγ
-    exact ⟨(γ - γ₀).toNat, by omega, by omega⟩
+    refine Finset.mem_coe.mpr (Finset.mem_map.mpr ⟨(γ - γ₀).toNat, Finset.mem_range.mpr ?_, ?_⟩)
+    · omega
+    · show γ₀ + (((γ - γ₀).toNat : ℕ) : ℤ) = γ
+      omega
 
 /-! ## The grade witness `G` and its (unrestricted) `hG`. -/
 

@@ -27,7 +27,7 @@ theorem cvrel_zero_nil {F : ℕ → Module.End ℂ V} {ξ : List ℕ}
     (h : CVRel F ξ w) : (F 0 ^ (ξ.sum + 1)) w = 0 := by
   have hz := h (ξ.sum + 1) 0 0 (by omega)
     (by simp only [T, List.drop_zero, Nat.mul_zero, Nat.add_zero, Nat.zero_add]; omega)
-  simpa only [Q_s_zero] using hz
+  simpa only [Q_s_zero] using! hz
 
 /-- Total weight of the partition with parts 3, 2 and 1. -/
 theorem parts_sum (r n e : ℕ) : (parts r n e).sum = 3 * r + 2 * n + e := by
@@ -86,9 +86,9 @@ theorem first_same_root (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j) :
     (List.replicate ϱ.1 3 ++ List.replicate ν.1 2) j hj (CVRoots.sl2_first R)
     (fun s => h.raising 0 (by decide) s)
     (fun p hp => h.cartan_pos 6 (by decide) p hp)
-    (by simpa only [parts, Prod.fst_zero, Nat.zero_add] using h.first)
+    (by simpa only [parts, Prod.fst_zero, Nat.zero_add] using! h.first)
   simpa only [parts, List.length_append, List.length_replicate,
-    Nat.add_comm ϱ.1 ν.1] using hs
+    Nat.add_comm ϱ.1 ν.1] using! hs
 
 /-- The first zero-mode power is sharp at the smaller highest weight. -/
 theorem first_lowering_first (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j) :
@@ -114,9 +114,9 @@ theorem first_lowering_second (h : CV3Rel R w (0, 0) ν ϱ j) :
     exact op4_op5 0 a x
   have hn : (R.op 4 0 ^ (2 * ν.2 + 3 * ϱ.2 + j + 1)) w = 0 := by
     rw [Module.End.pow_apply]
-    simpa only [Prod.snd_zero, Nat.zero_add] using h.lowering_second
+    simpa only [Prod.snd_zero, Nat.zero_add] using! h.lowering_second
   have hz := Garland.Ypow_Xpow_apply hXY hYZ hn 1
-  simpa only [pow_one, Module.End.pow_apply, Nat.add_assoc, Nat.reduceAdd, a] using hz
+  simpa only [pow_one, Module.End.pow_apply, Nat.add_assoc, Nat.reduceAdd, a] using! hz
 
 /-- The highest-root zero mode has its sharp nilpotence degree on the first kernel vector. -/
 theorem first_lowering_highest (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j) :
@@ -136,12 +136,12 @@ theorem first_lowering_highest (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j) :
   have hEF : ∀ x, R.op 2 0 (R.op 5 0 x) - R.op 5 0 (R.op 2 0 x) = H x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hEF 0 0)
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using hc
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using! hc
   have hHF : ∀ x, H (R.op 5 0 x) - R.op 5 0 (H x) = (-2 : ℂ) • R.op 5 0 x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hHF 0 0)
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply,
-      Module.End.mul_apply, Nat.zero_add] using hc
+      Module.End.mul_apply, Nat.zero_add] using! hc
   have hn : (R.op 5 0)^[
       2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j + 1] u = 0 := by
     have hc : Commute (R.op 5 0) (R.op 3 (ν.1 + ϱ.1 + j - 1)) := by
@@ -164,7 +164,7 @@ theorem first_lowering_highest (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 2 ≤ j) :
       2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j := by
     dsimp only [l₁, l₂]
     omega
-  simpa only [Int.toNat_natCast, he] using hs
+  simpa only [Int.toNat_natCast, he] using! hs
 
 end
 

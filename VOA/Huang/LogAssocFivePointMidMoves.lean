@@ -49,7 +49,7 @@ theorem midNC_def (c ν μ : ℂ) (f : M₀ →ₗ[ℂ] ℂ) (w₁ : M₁) (w₂
 
 theorem cbz_neg_one_nat' (k : ℕ) : cbz (-1) (k : ℤ) = (-1 : ℂ) ^ k := by
   have h := cbz_neg_one_sub 0 k
-  simpa using h
+  simpa using! h
 
 /-- **Terminal move** of the middle chart (`u₋₁` on the terminal vector `w₂`). -/
 theorem midSeries_terminal

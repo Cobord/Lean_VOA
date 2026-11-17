@@ -28,16 +28,16 @@ private theorem highest_of_rav (h : Sat D4sector.f R w (ravFam D4sector m 0)) :
   · intro c hc
     have hh := rs_cartan_zero h hc
     by_cases h1 : c.val = 1
-    · simpa only [D4sector, thetaD4, h1, if_true, Nat.mul_one] using hh
+    · simpa only [D4sector, thetaD4, h1, if_true, Nat.mul_one] using! hh
     · simpa only [D4sector, thetaD4, h1, if_false, Nat.mul_zero,
-        Nat.cast_zero] using hh
+        Nat.cast_zero] using! hh
   · intro i
     have hi : D4sector.lowering (leviIndex i) := by
       change 16 ≤ (leviIndex i).val ∧ (leviIndex i).val < 20
       fin_cases i <;> decide
     have he : D4sector.lowExp (leviIndex i) = 0 := by fin_cases i <;> rfl
     have hh := rs_lowering h hi
-    simpa only [he, Nat.mul_zero, Nat.zero_add, Function.iterate_one] using hh
+    simpa only [he, Nat.mul_zero, Nat.zero_add, Function.iterate_one] using! hh
 
 private theorem center_pow_of_rav
     (h : Sat D4sector.f R w (ravFam D4sector m 0)) :
@@ -55,7 +55,7 @@ private theorem negative_high_from (h : HighestRel R w m) (i : Fin 12)
     R.op (negativeIndex i) r w = 0 := by
   obtain ⟨k, rfl⟩ : ∃ k, r = q + k := ⟨r - q, by omega⟩
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · simpa using hq
+  · simpa using! hq
   have hc := R.comm (negativeCartan i) (negativeIndex i) k q w
   rw [hq, map_zero, h.cartan_pos _ (negativeCartan_lt_four i) k hk,
     map_zero, sub_zero] at hc
@@ -73,7 +73,7 @@ theorem rav_high_kills_generator (hm : 1 ≤ m)
     (h : Sat D4sector.f R w (ravFam D4sector m 0)) :
     ∀ (c : Fin 28) r, 2 * m ≤ r → R.op c r w = 0 := by
   have hs : Sat D4sector.f R w (ravSpec D4sector m (2 * m)) := by
-    simpa only [ravFam_zero_right] using h
+    simpa only [ravFam_zero_right] using! h
   have hw := highest_of_rav h
   intro c r hr
   by_cases hc4 : c.val < 4
@@ -87,7 +87,7 @@ theorem rav_high_kills_generator (hm : 1 ≤ m)
         change 16 ≤ (negativeIndex i).val
         exact negativeIndex_range i)
     have hf' : R.op (negativeIndex i) (2 * m) w = 0 := by
-      simpa only [hi, if_pos] using hf
+      simpa only [hi, if_pos] using! hf
     exact negative_high_from hw i (2 * m) r hf' hr
   · have hf := rs_fusion hs
       (show D4sector.fusion (negativeIndex i) by
@@ -111,10 +111,10 @@ private theorem rav_currentWord_cutoff
   have hN := currentNormal_cutoff_of_center (highest_of_rav h)
     (2 * m + 1) hcenter a n c hp hsize
   have hN' : currentNormal R a n c w ∈ currentPiece R w (2 * m) := by
-    simpa only [Nat.add_sub_cancel] using hN
-  rw [currentNormal_eq_word] at hN'
+    simpa only [Nat.add_sub_cancel] using! hN
+  erw [currentNormal_eq_word] at hN'
   have hperm' : l.Perm (currentNormalList a n c) := by
-    simpa only [currentNormalList, List.append_assoc] using hperm
+    simpa only [currentNormalList, List.append_assoc] using! hperm
   have hdiff := currentRadicalWord_perm_sub R w hperm'
   have hdiff' : currentRadicalWord R l w -
       currentRadicalWord R (currentNormalList a n c) w ∈
@@ -126,7 +126,8 @@ private theorem rav_currentWord_cutoff
 private theorem rav_currentPiece_step
     (h : Sat D4sector.f R w (ravFam D4sector m 0)) :
     currentPiece R w (2 * m + 1) ≤ currentPiece R w (2 * m) := by
-  rw [currentPiece, Submodule.span_le]
+  unfold currentPiece
+  rw [Submodule.span_le]
   rintro _ ⟨l, hl, rfl⟩
   by_cases hs : l.length ≤ 2 * m
   · exact currentRadicalWord_mem R w l hs
@@ -167,7 +168,8 @@ theorem rav_currentPiece_finite
   have hA : A.Finite := FiniteG.finite_bounded_listsG (S := D4sector) (2 * m) (2 * m)
   have hspan : currentPiece R w (2 * m) ≤
       Submodule.span ℂ ((fun l => wordOp R l w) '' A) := by
-    rw [currentPiece, Submodule.span_le]
+    unfold currentPiece
+    rw [Submodule.span_le]
     rintro _ ⟨l, hl, rfl⟩
     by_cases hbad : ∃ x ∈ l, 2 * m ≤ x.2
     · obtain ⟨x, hx, hr⟩ := hbad

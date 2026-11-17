@@ -14,11 +14,9 @@ noncomputable section
 theorem two_syntax_tail (t : List (Ltr 28))
     (ht : t ∈ (ravFam D4sector 2 0).tails) :
     wordOpT (ρPTE 2) (symbolLetters 2 t) (pTE 2) = 0 := by
-  change wordOpT (rhoPT D4sector.f 2 (JprimeSyntaxE 2))
-    (symbolLetters 2 t) (pPT D4sector.f 2 (JprimeSyntaxE 2)) = 0
-  rw [wordOpT_rhoPT]
-  exact mk_syntax D4sector.f 2 (JprimeSyntaxE 2)
-    (swT (symbolLetters 2 t)) (Or.inl (Or.inl ⟨t, ht, rfl⟩))
+  exact (wordOpT_rhoPT D4sector.f 2 (JprimeSyntaxE 2) (symbolLetters 2 t)).trans
+    (mk_syntax D4sector.f 2 (JprimeSyntaxE 2)
+      (swT (symbolLetters 2 t)) (Or.inl (Or.inl ⟨t, ht, rfl⟩)))
 
 theorem two_current_word_small (t : List (Ltr 28))
     (ht : ∀ x ∈ t, x.2 < 2) :
@@ -63,7 +61,7 @@ theorem two_zero_eig (q : Fin D4sector.n × ℂ)
   have he : (ρPTE 2).op q.1 0 0 (pTE 2) = q.2 • pTE 2 :=
     sub_eq_zero.mp h
   change (twoN 1).mkQ (twoCurrent.op q.1 0 (pTE 2)) = _
-  simpa [twoCurrent, twoZeroGen] using congrArg (twoN 1).mkQ he
+  simpa [twoCurrent, twoZeroGen] using! congrArg (twoN 1).mkQ he
 
 theorem two_zero_single_high (c : Fin 28) (r : ℕ) (hr : 2 ≤ r) :
     twoZeroCurrent.op c r twoZeroGen = 0 := by
@@ -82,13 +80,13 @@ theorem two_zero_sat :
       · apply two_zero_tail_small _ ht
         intro y hy
         have hy' : y = (e, r) := List.eq_of_mem_singleton hy
-        simpa [hy'] using hr
+        simpa [hy'] using! hr
       · exact two_zero_single_high e r (by omega)
     · by_cases hs : r < 2
       · apply two_zero_tail_small _ ht
         intro y hy
         have hy' : y = (h, r) := List.eq_of_mem_singleton hy
-        simpa [hy'] using hs
+        simpa [hy'] using! hs
       · exact two_zero_single_high h r (by omega)
     · apply two_zero_tail_small _ ht
       intro y hy
@@ -100,7 +98,7 @@ theorem two_zero_sat :
       · apply two_zero_tail_small _ ht
         intro y hy
         have hy' : y = (h, r) := List.eq_of_mem_singleton hy
-        simpa [hy'] using hs
+        simpa [hy'] using! hs
       · exact two_zero_single_high h r (by omega)
   eig q hq := two_zero_eig q hq
 

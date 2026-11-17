@@ -94,8 +94,8 @@ theorem conformal_mem_gradedSpan {N : ℤ} {y : A₂ Wt} (hy : y ∈ gradedSpan 
     refine ⟨i, a + 1, by push_cast; omega, ?_⟩
     rw [exceptionalConformalEnd_mk, pow_succ', Module.End.mul_apply]
   | zero => simp
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 theorem gradedSpan_neg {N : ℤ} (hN : N < 0) : ∀ x ∈ Wt.grading N, mk₂ Wt x ∈ gradedSpan N := by
   intro x hx
@@ -111,7 +111,7 @@ theorem lowerDesc_mem_gradedSpan {N : ℤ}
   | mem y hy =>
     obtain ⟨m, z, hz, rfl⟩ := hy
     rcases m with _ | _ | m
-    · rw [(mk₂_eq_zero_iff Wt).mpr (by simpa using L_neg_one_mem_O₂ Wt z)]
+    · rw [(mk₂_eq_zero_iff Wt).mpr (by simpa using! L_neg_one_mem_O₂ Wt z)]
       exact Submodule.zero_mem _
     · have h1 : ((((0 : ℕ) + 1 : ℕ) : ℤ)) = 1 := by norm_num
       have hL : Wt.L (-(((0 + 1 : ℕ)) : ℤ) - 1) z = Wt.L (-2) z := by norm_num
@@ -125,8 +125,8 @@ theorem lowerDesc_mem_gradedSpan {N : ℤ}
       rw [(mk₂_eq_zero_iff Wt).mpr hO]
       exact Submodule.zero_mem _
   | zero => simp
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 theorem sup_mem_gradedSpan {N : ℤ}
     (ih : ∀ M : ℤ, M < N → ∀ x ∈ Wt.grading M, mk₂ Wt x ∈ gradedSpan M) {y}
@@ -228,8 +228,8 @@ theorem towers_span_all :
     rintro _ ⟨i, a, -, rfl⟩
     exact Submodule.subset_span ⟨(i, a), rfl⟩
   | zero => simp
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 /-- `ω̄¹¹ = 0` on `R(W)` (Dong–Jiang, `OrbC2h`). -/
 theorem tetra_conformal_pow_eleven : exceptionalConformalEnd Wt ^ 11 = 0 :=

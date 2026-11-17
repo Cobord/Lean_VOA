@@ -752,14 +752,14 @@ so matrix kernel coefficients translate into actual state relations. -/
 theorem canGram_basis5 :
     GramMat.canGram (vacVec_ne_zero c) (virasoroVOA_qp c) 5 (basis5 c) = canGram5 c := by
   ext i j
-  rw [GramMat.canGram_apply, canGram5]
+  erw [GramMat.canGram_apply]; rw [canGram5]
   fin_cases i <;> fin_cases j <;> simp [vec5, VirGram4.canB]
 
 /-- `canGram6` **is** the canonical Gram matrix of `Core/GradedFormMatrix` at level `6`. -/
 theorem canGram_basis6 :
     GramMat.canGram (vacVec_ne_zero c) (virasoroVOA_qp c) 6 (basis6 c) = canGram6 c := by
   ext i j
-  rw [GramMat.canGram_apply, canGram6]
+  erw [GramMat.canGram_apply]; rw [canGram6]
   fin_cases i <;> fin_cases j <;> simp [vec6, VirGram4.canB]
 
 /-! ## §7  **D3 at levels 5 and 6**: the determinant is a *nonzero* polynomial in `c`

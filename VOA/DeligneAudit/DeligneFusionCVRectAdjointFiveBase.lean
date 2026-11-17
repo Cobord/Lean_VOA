@@ -39,8 +39,7 @@ theorem three_tail_bound (active center : List ℕ) :
   haveI : FiniteDimensional ℂ (Model active.length N 0 μ) := by
     have hf := hb.1
     unfold CVRectStarFamily.Family at hf
-    simpa only [List.length_nil, List.length_cons, N, Nat.add_zero,
-      Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hf
+    exact hf
   have hr := CVRectAdjointBase.phantom_model_bound active.length N 0 μ
   have hweight : starWeight active [] (1 :: center) = 2 * starWeight active [] center := by
     simp only [starWeight, List.map_cons, List.prod_cons]
@@ -49,8 +48,7 @@ theorem three_tail_bound (active center : List ℕ) :
       2 * starWeight active [] center := by
     have hh := hb.2.trans_eq hweight
     unfold CVRectStarFamily.Family at hh
-    simpa only [List.length_nil, List.length_cons, N, Nat.add_zero,
-      Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hh
+    exact hh
   unfold ThreeTailFamily
   rw [three_tail_order]
   exact ⟨hr.1, hr.2.trans hsource⟩
@@ -67,12 +65,10 @@ theorem two_tail_bound (active center : List ℕ) :
   refine ⟨?_, ?_⟩
   · have hf := hb.1
     unfold CVRectStarFamily.Family at hf
-    simpa only [List.length_nil, List.length_cons, Nat.add_zero, Nat.add_assoc,
-      Nat.add_left_comm, Nat.add_comm] using hf
+    exact hf
   · have hh := hb.2.trans_eq hweight
     unfold CVRectStarFamily.Family at hh
-    simpa only [List.length_nil, List.length_cons, Nat.add_zero, Nat.add_assoc,
-      Nat.add_left_comm, Nat.add_comm] using hh
+    exact hh
 
 theorem five_tail_small_bound (active center : List ℕ)
     (hactive : ∀ k ∈ active, k ≤ 1) :

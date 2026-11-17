@@ -21,9 +21,9 @@ theorem two_zero_seedLine_stable
     exact hstable c s
   · simp
   · intro y z _ _ hy hz
-    simpa only [map_add] using Submodule.add_mem seedLine hy hz
+    simpa only [map_add] using! Submodule.add_mem seedLine hy hz
   · intro a y _ hy
-    simpa only [map_smul] using Submodule.smul_mem seedLine a hy
+    simpa only [map_smul] using! Submodule.smul_mem seedLine a hy
 
 theorem two_one_seedLine_zero_of_cube
     (hc : (ρPTE 2).op D4sector.c₀ 1 0 twoQuadraticSeed = 0)

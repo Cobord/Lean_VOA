@@ -74,7 +74,7 @@ theorem evalCyclic_top (hz : Function.Injective z) :
     induction T using Finset.induction_on with
     | empty =>
         intro v
-        simpa only [Finset.notMem_empty, if_false] using
+        simpa only [Finset.notMem_empty, if_false] using!
           evalCyclic_generator S hskew z
     | @insert q T hq ih =>
         intro v
@@ -116,7 +116,7 @@ theorem evalCyclic_top (hz : Function.Injective z) :
   rw [← PiTensorProduct.span_tprod_eq_top]
   apply Submodule.span_le.mpr
   rintro _ ⟨v, rfl⟩
-  simpa only [Finset.mem_univ, if_true] using hpartial Finset.univ v
+  simpa only [Finset.mem_univ, if_true] using! hpartial Finset.univ v
 
 theorem d4_evalCyclic_top (N : ℕ) :
     evalCyclic D4sector D1SiteG.D4Check.table_skewC (D1TensorG.points N) = ⊤ :=

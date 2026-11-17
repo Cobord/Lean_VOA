@@ -11,6 +11,8 @@ import VOA.Examples.AffineSl3LoweringProducts
 The opposite ghost-current anomaly is essential: its contribution lowers
 the k+1 derivative correction to the affine level k.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

@@ -17,8 +17,8 @@ theorem vacuum74_tower_norm (hc : A.centralCharge = 1)
     (hpos : ∀ m : ℤ, 0 < m → A.L m q = 0) :
     U.form (((A.L (-2)) ^ 37) q) (((A.L (-2)) ^ 37) q) =
       (vacuum74Norm : ℂ) * U.form q q := by
-  have hh := form_tower_pairWords A U q 1 0 (by simpa using hc)
-    (by simpa using hzero) hpos 37
+  have hh := form_tower_pairWords A U q 1 0 (by simpa using! hc)
+    (by simpa using! hzero) hpos 37
   rwa [vacuum74_pairing] at hh
 
 theorem vacuum76_tower_norm (hc : A.centralCharge = 1)
@@ -26,8 +26,8 @@ theorem vacuum76_tower_norm (hc : A.centralCharge = 1)
     (hpos : ∀ m : ℤ, 0 < m → A.L m q = 0) :
     U.form (((A.L (-2)) ^ 38) q) (((A.L (-2)) ^ 38) q) =
       (vacuum76Norm : ℂ) * U.form q q := by
-  have hh := form_tower_pairWords A U q 1 0 (by simpa using hc)
-    (by simpa using hzero) hpos 38
+  have hh := form_tower_pairWords A U q 1 0 (by simpa using! hc)
+    (by simpa using! hzero) hpos 38
   rwa [vacuum76_pairing] at hh
 
 theorem self38_tower_norm (hc : A.centralCharge = 1)
@@ -35,8 +35,8 @@ theorem self38_tower_norm (hc : A.centralCharge = 1)
     (hpos : ∀ m : ℤ, 0 < m → A.L m q = 0) :
     U.form (((A.L (-2)) ^ 19) q) (((A.L (-2)) ^ 19) q) =
       (self38Norm : ℂ) * U.form q q := by
-  have hh := form_tower_pairWords A U q 1 36 (by simpa using hc)
-    (by simpa using hzero) hpos 19
+  have hh := form_tower_pairWords A U q 1 36 (by simpa using! hc)
+    (by simpa using! hzero) hpos 19
   rwa [self38_pairing] at hh
 
 theorem self40_tower_norm (hc : A.centralCharge = 1)
@@ -44,8 +44,8 @@ theorem self40_tower_norm (hc : A.centralCharge = 1)
     (hpos : ∀ m : ℤ, 0 < m → A.L m q = 0) :
     U.form (((A.L (-2)) ^ 20) q) (((A.L (-2)) ^ 20) q) =
       (self40Norm : ℂ) * U.form q q := by
-  have hh := form_tower_pairWords A U q 1 36 (by simpa using hc)
-    (by simpa using hzero) hpos 20
+  have hh := form_tower_pairWords A U q 1 36 (by simpa using! hc)
+    (by simpa using! hzero) hpos 20
   rwa [self40_pairing] at hh
 
 end VOA.Classification.COne.OrbIcoU

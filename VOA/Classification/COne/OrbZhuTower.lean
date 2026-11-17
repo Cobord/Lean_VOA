@@ -53,7 +53,7 @@ theorem L_mem_grading_ {ℓ : ℤ} {v : 𝒱} (hv : v ∈ W.grading ℓ) (m : �
 theorem L_neg_two_pow_mem_grading {k : ℤ} {x : 𝒱} (hx : x ∈ W.grading k) (a : ℕ) :
     ((W.L (-2)) ^ a) x ∈ W.grading (k + 2 * a) := by
   induction a with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ a ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := L_mem_grading_ W ih (-2)
@@ -83,14 +83,14 @@ theorem omegaL_mem_towerSub (y : A W) {n : ℕ} {z : A W} (hz : z ∈ towerSub W
     rw [this]
     exact pow_mem_towerSub W y (by omega)
   | zero => simp
-  | add x y' _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | add x y' _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 /-- `[L(-2)^a x]` lies in the `Tω`-tower of `[x]` of height `a + 1`. -/
 theorem mk_L_neg_two_pow_mem {k : ℤ} {x : 𝒱} (hx : x ∈ W.grading k) (a : ℕ) :
     mk W (((W.L (-2)) ^ a) x) ∈ towerSub W (mk W x) (a + 1) := by
   induction a with
-  | zero => simpa using pow_mem_towerSub W (mk W x) (n := 1) (b := 0) (by omega)
+  | zero => simpa using! pow_mem_towerSub W (mk W x) (n := 1) (b := 0) (by omega)
   | succ a ih =>
     rw [pow_succ', Module.End.mul_apply,
       mk_L_neg_two W (L_neg_two_pow_mem_grading W hx a)]
@@ -129,7 +129,7 @@ theorem pow_mem_towerSub_of_monic (y : A W) {P : Polynomial ℂ} (hP : P.Monic)
     apply aeval_mem_towerSub
     have hdeg := Polynomial.degree_modByMonic_lt (Polynomial.X ^ b) hP
     by_cases hz : Polynomial.X ^ b %ₘ P = 0
-    · rw [hz]; simpa using hpos
+    · rw [hz]; simpa using! hpos
     · exact Polynomial.natDegree_lt_natDegree hz hdeg
 
 /-- **The tower span in `A(W)`.**  If the conformal towers `ω̄^a s̄_i` (`a < N i`) span
@@ -156,7 +156,7 @@ theorem span_towers_A_eq_top {ι : Type} [Fintype ι] (s : ι → 𝒱) (k : ι 
       · rintro ⟨_, ⟨p, rfl⟩, rfl⟩; exact ⟨p, rfl⟩
       · rintro ⟨p, rfl⟩; exact ⟨lift p, ⟨p, rfl⟩, rfl⟩
     have := congrArg (Submodule.comap (O₂ W).mkQ) hmap
-    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using this.symm
+    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using! this.symm
   have htop := span_sup_O_eq_top W S hShom htop₂
   let g : (Σ i, Fin (M i)) → A W := fun p => (omegaL W ^ (p.2 : ℕ)) (mk W (s p.1))
   have hsub : ∀ i, towerSub W (mk W (s i)) (M i) ≤ Submodule.span ℂ (Set.range g) := by
@@ -177,8 +177,8 @@ theorem span_towers_A_eq_top {ι : Type} [Fintype ι] (s : ι → 𝒱) (k : ι 
         exact hM p.1 j (by have := p.2.2; have := j.2; omega)
       exact hsub p.1 (h2 h1)
     | zero => simp
-    | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-    | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+    | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+    | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
   apply top_unique
   rintro q -
   obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective (O W) q
@@ -207,6 +207,6 @@ theorem finrank_A_le_of_towers {ι : Type} [Fintype ι] (s : ι → 𝒱) (k : �
   refine ⟨hfin, ?_⟩
   have h := finrank_range_le_card (R := ℂ) g
   rw [Set.finrank, hgtop, finrank_top] at h
-  simpa only [Fintype.card_sigma, Fintype.card_fin] using h
+  simpa only [Fintype.card_sigma, Fintype.card_fin] using! h
 
 end VOA.Classification.COne.OrbZhu

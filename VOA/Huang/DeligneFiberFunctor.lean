@@ -305,7 +305,8 @@ theorem frameMap_quot (J : LaxIdeal G) {X : D} {n : ℕ} (e : Fin n → G.obj X)
     frameMap J.quot (fun j => (Submodule.Quotient.mk (e j) : G.obj X ⧸ J.I X)) Z
       (fun j => (Submodule.Quotient.mk (a j) : G.obj Z ⧸ J.I Z)) =
       (Submodule.Quotient.mk (frameMap G e Z a) : G.obj (X ⊗ Z) ⧸ J.I (X ⊗ Z)) := by
-  rw [frameMap_apply, frameMap_apply, ← Submodule.mkQ_apply, map_sum]
+  refine (frameMap_apply J.quot _ Z _).trans ?_
+  rw [frameMap_apply, ← Submodule.mkQ_apply, map_sum]
   rfl
 
 /-- After base change the frame survives. -/

@@ -36,7 +36,7 @@ theorem two_high_word : ∀ (l : List (TLtr 28)) (c : Fin 28) (i s : ℕ),
         ∑ e : Fin 28, D4sector.f c x.1 e •
           ((ρPTE 2).op e (i + x.2.1) (s + x.2.2)) w else 0) = 0 at hright
       have hcomm' := hcomm.trans hright
-      simpa [hleft, w, wordOpT] using hcomm'
+      simpa [hleft, w, wordOpT] using! hcomm'
 
 theorem two_high_op_eq_zero (c : Fin 28) (i s : ℕ) (hi : 2 ≤ i) :
     (ρPTE 2).op c i s = 0 := by
@@ -51,8 +51,8 @@ theorem two_high_op_eq_zero (c : Fin 28) (i s : ℕ) (hi : 2 ≤ i) :
       obtain ⟨l, rfl⟩ := hx
       exact two_high_word l c i s hi
   | zero => simp
-  | add x y _ _ hx hy => simpa only [map_add] using congrArg₂ (· + ·) hx hy
-  | smul a x _ hx => simpa only [map_smul] using congrArg (a • ·) hx
+  | add x y _ _ hx hy => simpa only [map_add] using! congrArg₂ (· + ·) hx hy
+  | smul a x _ hx => simpa only [map_smul] using! congrArg (a • ·) hx
 
 end
 

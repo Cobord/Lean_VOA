@@ -49,14 +49,14 @@ theorem linearFlowCoeff_unique (D : Module.End ℂ M) (x : M) (f : ℕ → M)
     (h₀ : f 0 = x)
     (hf : ∀ n, ((n + 1 : ℕ) : ℂ) • f (n + 1) = D (f n)) :
     f = linearFlowCoeff D x :=
-  formal_linearFlow_unique D f _ (by simpa using h₀) hf (linearFlowCoeff_succ D x)
+  formal_linearFlow_unique D f _ (by simpa using! h₀) hf (linearFlowCoeff_succ D x)
 
 theorem linearFlowCoeff_support_finite {D : Module.End ℂ M} (hD : IsLocNilp D) (x : M) :
     (Function.support (linearFlowCoeff D x)).Finite := by
   obtain ⟨N, hN⟩ := hD x
   refine (Set.finite_Iio N).subset fun n hn => ?_
   by_contra h
-  exact hn (by rw [linearFlowCoeff, pow_apply_eq_zero_of_le hN (by simpa using h), smul_zero])
+  exact hn (by rw [linearFlowCoeff, pow_apply_eq_zero_of_le hN (by simpa using! h), smul_zero])
 
 /-- For a locally nilpotent operator, evaluating the formal solution is a finite sum. -/
 theorem expFun_eq_finsum_linearFlowCoeff {D : Module.End ℂ M} (hD : IsLocNilp D) (x : M) :
@@ -163,14 +163,14 @@ theorem conjugationCoeff_eq_sum (D : Module.End ℂ N) (E : Module.End ℂ M)
 
 /-- A finite double family can be summed by total degree. -/
 theorem finsum_antidiagonal (f : ℕ × ℕ → N) (hf : (Function.support f).Finite) :
-    (∑ᶠ n, ∑ ij ∈ Finset.antidiagonal n, f ij) = ∑ᶠ ij, f ij := by
+    (∑ᶠ n, ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal n, f ij) = ∑ᶠ ij, f ij := by
   classical
   let K := hf.toFinset.sup (fun p => p.1 + p.2) + 1
   have hK : ∀ p ∈ Function.support f, p.1 + p.2 < K := by
     intro p hp
     exact Nat.lt_succ_of_le (Finset.le_sup (f := fun p : ℕ × ℕ => p.1 + p.2)
       (hf.mem_toFinset.mpr hp))
-  have hs : Function.support (fun n => ∑ ij ∈ Finset.antidiagonal n, f ij) ⊆
+  have hs : Function.support (fun n => ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal n, f ij) ⊆
       (Finset.range K : Finset ℕ) := by
     intro n hn
     simp only [Finset.mem_coe, Finset.mem_range]
@@ -180,7 +180,7 @@ theorem finsum_antidiagonal (f : ℕ × ℕ → N) (hf : (Function.support f).Fi
     intro p hp
     by_contra hp0
     have := hK p hp0
-    have := Finset.mem_antidiagonal.mp hp
+    have := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     omega
   rw [finsum_eq_sum_of_support_subset _ hs, VOA.tri_reindex]
   symm
@@ -213,7 +213,7 @@ private theorem sandwichTerm_finite {D : Module.End ℂ N} {E : Module.End ℂ M
 private theorem conjugationCoeff_eq_antidiagonal (D : Module.End ℂ N) (E : Module.End ℂ M)
     (f : M →ₗ[ℂ] N) (n : ℕ) (x : M) :
     conjugationCoeff D E f n x =
-      ∑ p ∈ Finset.antidiagonal n, sandwichTerm D E f x p := by
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, sandwichTerm D E f x p := by
   rw [conjugationCoeff_eq_sum, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   apply Finset.sum_congr rfl
   intro i _
@@ -226,10 +226,10 @@ theorem conjugationCoeff_support_finite {D : Module.End ℂ N} {E : Module.End �
     (Function.support (fun n => conjugationCoeff D E f n x)).Finite := by
   refine ((sandwichTerm_finite hD hE f x).image (fun p => p.1 + p.2)).subset ?_
   intro n hn
-  have hne : (∑ p ∈ Finset.antidiagonal n, sandwichTerm D E f x p) ≠ 0 := by
+  have hne : (∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, sandwichTerm D E f x p) ≠ 0 := by
     rwa [← conjugationCoeff_eq_antidiagonal]
   obtain ⟨p, hp, hp0⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
-  exact ⟨p, hp0, Finset.mem_antidiagonal.mp hp⟩
+  exact ⟨p, hp0, Finset.HasAntidiagonal.mem_antidiagonal.mp hp⟩
 
 /-- Hadamard's conjugation formula for locally nilpotent operators on algebraic
 modules, with all finiteness obligations discharged. -/

@@ -6,6 +6,7 @@ Authors: Fedor K. Popov
 import VOA.LatticesAndCodes.Codes.Defs
 import VOA.LatticesAndCodes.Codes.Enumerator
 import VOA.LatticesAndCodes.Codes.Golay
+import VOA.LatticesAndCodes.Codes.Hamming
 import VOA.LatticesAndCodes.Codes.GolayEnumerator
 import VOA.LatticesAndCodes.Codes.MacWilliams
 import VOA.LatticesAndCodes.Construction.CodeToLattice

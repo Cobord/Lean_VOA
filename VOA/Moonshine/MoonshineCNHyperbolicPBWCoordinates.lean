@@ -9,7 +9,7 @@ namespace VOA.Moonshine.ConwayNorton
 open MvPolynomial
 
 def hypNegativeWordOperator (κ ell : ℂ) (v : List ℕ) : Module.End ℂ hypFock :=
-  (v.map fun j => hypSugawara κ ell (-(j + 1 : ℤ))).prod
+  (v.map fun j : ℕ => hypSugawara κ ell (-((j : ℤ) + 1))).prod
 
 theorem hypNegativeWordOperator_apply (κ ell : ℂ) (v : List ℕ) (p : hypFock) :
     hypNegativeWordOperator κ ell v p =
@@ -90,7 +90,7 @@ theorem hypPBWMap_sorted_word (κ ell : ℂ) (v : List ℕ) (hv : stringSortedWo
   rw [p.as_sum, Finset.mul_sum, map_sum, map_sum]
   apply Finset.sum_congr rfl
   intro e he
-  have hm : (monomial e (coeff e p) : hypFock) = coeff e p • monomial e 1 := by
+  have hm : (monomial e (p.coeff e) : hypFock) = p.coeff e • monomial e 1 := by
     rw [smul_monomial, smul_eq_mul, mul_one]
   rw [hm, mul_smul_comm, map_smul, map_smul,
     hypPBWMap_sorted_monomial κ ell v hv e (hypOneFamily_monomial_of_support 0 p hp e he)]

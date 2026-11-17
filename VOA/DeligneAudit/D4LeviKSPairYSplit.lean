@@ -52,11 +52,11 @@ theorem pairSplitAlgebra_xz (a b c : ℕ)
   have hC' (z : ℂ) :
       pairSplitAlgebra a b c (MvPolynomial.C z) =
         MvPolynomial.C (MvPolynomial.C z) := by
-    simpa only [rename_C] using hC z
+    simpa only [rename_C] using! hC z
   have hX' (t : PairXZ a b c) :
       pairSplitAlgebra a b c (X (pairXZSource a b c t)) =
         MvPolynomial.C (X t) := by
-    simpa only [rename_X] using hX t
+    simpa only [rename_X] using! hX t
   induction Q using MvPolynomial.induction_on' with
   | monomial d z =>
       simp [monomial_eq, hC', hX']
@@ -88,7 +88,7 @@ theorem pairY_decomposition (a b c : ℕ)
     P = ∑ d ∈ (pairSplitAlgebra a b c P).support,
       pairYFinsuppMonomial a b c d *
         rename (pairXZSource a b c)
-          (coeff d (pairSplitAlgebra a b c P)) := by
+          ((pairSplitAlgebra a b c P).coeff d) := by
   apply (pairSplitAlgebra a b c).injective
   simp_rw [map_sum, pairSplitAlgebra_y_xz]
   exact as_sum (pairSplitAlgebra a b c P)

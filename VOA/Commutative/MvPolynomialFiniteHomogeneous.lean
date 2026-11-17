@@ -42,8 +42,19 @@ theorem finiteDimensional_supported {s : Set I} (hs : s.Finite) :
 theorem finiteDimensional_weightedHomogeneousSubmodule [Finite I]
     (w : I → ℕ) (hw : ∀ i, w i ≠ 0) (n : ℕ) :
     FiniteDimensional K (MvPolynomial.weightedHomogeneousSubmodule K w n) := by
-  rw [MvPolynomial.weightedHomogeneousSubmodule_eq_finsupp_supported]
-  exact finiteDimensional_supported (finite_weightFiber w hw n)
+  -- Coefficients on the finite weight fiber embed the piece into a finite product.  (This avoids
+  -- `weightedHomogeneousSubmodule_eq_finsupp_supported`, whose right side changed type in later Mathlib.)
+  letI : Fintype {d : I →₀ ℕ | Finsupp.weight w d = n} := (finite_weightFiber w hw n).fintype
+  let L : MvPolynomial.weightedHomogeneousSubmodule K w n →ₗ[K]
+      ({d : I →₀ ℕ | Finsupp.weight w d = n} → K) :=
+    LinearMap.pi fun d => (MvPolynomial.lcoeff K d.1).comp (Submodule.subtype _)
+  refine FiniteDimensional.of_injective L fun p q hpq => Subtype.ext ?_
+  have hp := (MvPolynomial.mem_weightedHomogeneousSubmodule K w n p.1).mp p.2
+  have hq := (MvPolynomial.mem_weightedHomogeneousSubmodule K w n q.1).mp q.2
+  ext d
+  by_cases hd : Finsupp.weight w d = n
+  · exact congrFun hpq ⟨d, hd⟩
+  · rw [hp.coeff_eq_zero d hd, hq.coeff_eq_zero d hd]
 
 /-- The ordinary homogeneous degree-`n` submodule in finitely many variables is
 finite-dimensional. -/

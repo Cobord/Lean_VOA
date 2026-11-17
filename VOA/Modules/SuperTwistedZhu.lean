@@ -476,8 +476,8 @@ noncomputable def twistedAmul :
 @[simp] theorem twistedAmul_mk (u v : 𝒱) :
     hZ.twistedAmul (W.twistedMk hW g N u) (W.twistedMk hW g N v) =
       W.twistedMk hW g N (W.twistedZhuMul hW g N u v) := by
-  rw [twistedAmul, W.twistedDescendBilin_mk]
-  rfl
+  rw [twistedAmul]
+  exact W.twistedDescendBilin_mk hW g N _ _ _ u v
 
 theorem twistedAmul_assoc (a b c : W.twistedA hW g N) :
     hZ.twistedAmul (hZ.twistedAmul a b) c = hZ.twistedAmul a (hZ.twistedAmul b c) := by

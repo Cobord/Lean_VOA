@@ -61,14 +61,14 @@ theorem fThree_adjoint_X_single (ρ : CurrentModule D4sector.f V)
     (r s : ℕ) :
     pairAdjoint (ρ.op (17 : Fin 28)) [r] (pairRadicalOp ρ [(1, s)]) =
       -pairRadicalOp ρ [(3, r + s)] := by
-  simpa [pairAdjoint, threeWords] using
+  simpa [pairAdjoint, threeWords] using!
     fThree_adjoint_radicalOp ρ r [(1, s)]
 
 theorem fThree_adjoint_U_single (ρ : CurrentModule D4sector.f V)
     (r s : ℕ) :
     pairAdjoint (ρ.op (17 : Fin 28)) [r] (pairRadicalOp ρ [(2, s)]) =
       -pairRadicalOp ρ [(4, r + s)] := by
-  simpa [pairAdjoint, threeWords] using
+  simpa [pairAdjoint, threeWords] using!
     fThree_adjoint_radicalOp ρ r [(2, s)]
 
 end VOA.DeligneAudit.D4Levi

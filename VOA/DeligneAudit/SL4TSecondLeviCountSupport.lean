@@ -34,7 +34,7 @@ theorem radicalSecondLeviEvaluation_zero_of_count_excess (d : Fin 3 → ℕ)
       (radicalGrassmannianAmbientEvaluation ρ w a b c h d) e₁ e₂ P.val = 0 := by
   have hz := radicalSecondLeviEvaluation_relative_mul ρ w a b c h d e₁ e₂ j hm 0
     (by omega) (by omega) P.val P.property
-  simpa only [secondLeviRelativeComplete_zero, mul_one] using hz
+  simpa only [secondLeviRelativeComplete_zero, mul_one] using! hz
 
 set_option synthInstance.maxHeartbeats 100000 in
 -- Symmetric sources over nested quotient algebras need a larger synthesis budget.
@@ -55,9 +55,9 @@ theorem secondLeviMultiplicity_eq_bot_of_unsupported (d : Fin 3 → ℕ) (e₁ e
   rw [← hv]
   rcases he with he | he
   · exact radicalSecondLeviEvaluation_zero_of_count_excess ρ w a b c h d e₁ e₂ 0
-      (hm 0) (by simpa using he) P
+      (hm 0) (by simpa using! he) P
   · exact radicalSecondLeviEvaluation_zero_of_count_excess ρ w a b c h d e₁ e₂ 1
-      (hm 1) (by simpa using he) P
+      (hm 1) (by simpa using! he) P
 
 end
 

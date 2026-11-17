@@ -14,14 +14,18 @@ theorem scalarMatrixFirst_det (h : ℂ) :
     (scalarMatrix matrixFirst h).det =
       (detScalarFirst : ℂ) * (zp icoCandidateList).eval h * (zp icoExtra9).eval h := by
   unfold scalarMatrix
-  rw [← (Polynomial.evalRingHom h).map_det, matrixFirst_det_factorization]
+  rw [← (Polynomial.evalRingHom h).map_det
+      (fun i j => zp (matrixFirst i j) : Matrix (Fin 4) (Fin 4) (Polynomial ℂ)),
+    matrixFirst_det_factorization]
   simp only [Polynomial.coe_evalRingHom, Polynomial.eval_mul, Polynomial.eval_C]
 
 theorem scalarMatrixSecond_det (h : ℂ) :
     (scalarMatrix matrixSecond h).det =
       (detScalarSecond : ℂ) * (zp icoCandidateList).eval h * (zp icoExtra10).eval h := by
   unfold scalarMatrix
-  rw [← (Polynomial.evalRingHom h).map_det, matrixSecond_det_factorization]
+  rw [← (Polynomial.evalRingHom h).map_det
+      (fun i j => zp (matrixSecond i j) : Matrix (Fin 4) (Fin 4) (Polynomial ℂ)),
+    matrixSecond_det_factorization]
   simp only [Polynomial.coe_evalRingHom, Polynomial.eval_mul, Polynomial.eval_C]
 
 /-- The root is forced by actual null/circle equations on an actual nonzero bottom. -/
@@ -31,7 +35,7 @@ theorem candidate_lowest_root {M : Type} [AddCommGroup M] [Module ℂ M]
   obtain ⟨f, ht, hf⟩ := exists_topEigenfunctional N hl hne
   have hv : topVector f (0 : Fin 4) ∈ nonZeroDivisors ℂ := by
     rw [mem_nonZeroDivisors_iff_ne_zero]
-    simpa [topVector] using ht
+    simpa [topVector] using! ht
   have h1 := Matrix.det_eq_zero_of_mulVec_eq_zero_of_mem_nonZeroDivisors
     (scalarMatrixFirst_kernel h f hf) hv
   have h2 := Matrix.det_eq_zero_of_mulVec_eq_zero_of_mem_nonZeroDivisors

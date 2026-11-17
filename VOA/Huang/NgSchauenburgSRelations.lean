@@ -51,7 +51,7 @@ theorem categoricalS_dual_both (F : SphericalFusion C) (R : Ribbon F.toPivotal)
 theorem categoricalS_dual_left (F : SphericalFusion C) (R : Ribbon F.toPivotal)
     (i j : F.Label) :
     categoricalS F (F.dualLabel i) j = categoricalS F i (F.dualLabel j) := by
-  simpa only [F.dualLabel_involutive j] using categoricalS_dual_both F R i (F.dualLabel j)
+  simpa only [F.dualLabel_involutive j] using! categoricalS_dual_both F R i (F.dualLabel j)
 
 /-- The vacuum row is the categorical dimension vector. -/
 theorem categoricalS_unit_left (F : SphericalFusion C) (R : Ribbon F.toPivotal)
@@ -112,10 +112,10 @@ theorem categoricalS_inv_apply (F : SphericalFusion C) (M : Modular F)
     (i j : F.Label) :
     (categoricalS F)⁻¹ i j = F.globalDimension⁻¹ * categoricalS F (F.dualLabel i) j := by
   let B : Matrix F.Label F.Label ℂ :=
-    fun i j => F.globalDimension⁻¹ * categoricalS F (F.dualLabel i) j
+    Matrix.of fun i j => F.globalDimension⁻¹ * categoricalS F (F.dualLabel i) j
   have hb : B * categoricalS F = 1 := by
     ext a b
-    simp only [B, Matrix.mul_apply, mul_assoc, ← Finset.mul_sum]
+    simp only [B, Matrix.mul_apply, Matrix.of_apply, mul_assoc, ← Finset.mul_sum]
     simp_rw [categoricalS_symm F M.toRibbon _ b]
     rw [categoricalS_orthogonality F M, F.dualLabel_involutive]
     by_cases h : b = a

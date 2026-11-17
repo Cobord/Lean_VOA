@@ -135,7 +135,7 @@ theorem vectorEval_cyclic_coe (R : CurrentModule bracketTable V) (w : V) (N : �
     (↑(vectorEval (cyclicRep R w) (cyclicVector R w) N p) : V) = vectorEval R w N p := by
   induction p using MvPolynomial.induction_on with
   | C c => simp [vectorEval]
-  | add p q hp hq => simpa only [map_add, Submodule.coe_add] using congrArg₂ (· + ·) hp hq
+  | add p q hp hq => simpa only [map_add, Submodule.coe_add] using! congrArg₂ (· + ·) hp hq
   | mul_X p x hp =>
       rw [mul_comm p, vectorEval_X_mul, vectorEval_X_mul]
       have hh := congrArg (colorOp R x) hp

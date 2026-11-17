@@ -26,7 +26,7 @@ theorem gtPsi_normalized (q : R) (h : PochhammerUnits q) {N : ℕ}
     omega
   have he : (lam i.castSucc - lam i.succ).toNat - (lam i.castSucc - μ i).toNat =
       (μ i - lam i.succ).toNat := by omega
-  simpa only [he] using gtGaussian_normalized q h _ _ hk
+  simpa only [he] using! gtGaussian_normalized q h _ _ hk
 
 /-- Lemma 3.2(d): the explicit product, including the last-part denominator. -/
 theorem gtQBranch_product (q : R) (h : PochhammerUnits q) {N : ℕ}
@@ -64,8 +64,8 @@ theorem gtRows_degree_zero {N : ℕ} (lam : Fin (N + 1) → ℤ) (μ : Fin N →
   have he : μ = fun i => lam i.castSucc := gtRows_eq_top_of_sum hμ (by omega)
   funext i
   refine Fin.lastCases ?_ (fun j => ?_) i
-  · simpa using hz
-  · simpa using (congrFun he j).symm
+  · simpa using! hz
+  · simpa using! (congrFun he j).symm
 
 /-- The coefficient of the unique degree-zero normalized branch is one. -/
 theorem gtQBranch_degree_zero (q : R) (h : PochhammerUnits q) {N : ℕ}

@@ -36,7 +36,7 @@ theorem remainder_of_measurements (S : Submodule ℂ V) (u v y : V) (a b : ℂ)
     linear_combination hyg - hg0
   obtain ⟨hc, hd⟩ := exceptional_two_relations_vanish hdet he1 he2
   rw [sub_eq_zero] at hc hd
-  simpa only [hc, hd] using hcd
+  simpa only [hc, hd] using! hcd
 
 end General
 

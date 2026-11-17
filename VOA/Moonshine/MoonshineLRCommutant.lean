@@ -5,6 +5,11 @@ import VOA.Moonshine.MonsterGriess.ParityTraceSplitting
 # Parity blocks and short-line characters of the rational Griess commutant
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -116,7 +121,7 @@ theorem commutChar_nontrivial (p : ShortIdx) : ∃ r, commutChar p.1 r ≠ 1 := 
   apply Parity.ne_zero_of_isShortCoord p.2
   apply commutChar_injective
   intro r
-  simpa [commutChar] using h r
+  simpa [commutChar, MonsterGriess.sgn_zero] using h r
 
 theorem commutRho_Acomponent (r : Q) (u : SpaceB) : (rhoEquiv r u).1 = u.1 :=
   thetaA_one u.1
@@ -155,7 +160,7 @@ theorem commutFixed_eq_A (u : SpaceB) (h : ∀ r, rhoEquiv r u = u) :
     ext c
     obtain ⟨r, hr⟩ := commutChar_nontrivial c
     have e := congrArg (fun v : SpaceB => v.2.1 c) (h r)
-    dsimp only at e
+    try dsimp only at e
     rw [commutRho_Xcomponent] at e
     change u.2.1 c = 0
     exact (mul_eq_zero.mp (by nlinarith : (commutChar c.1 r - 1) * u.2.1 c = 0)).resolve_left
@@ -178,7 +183,7 @@ theorem commutCharacter_eigenspace (c : ShortIdx) (u : SpaceB)
   have ha : u.1 = 0 := by
     obtain ⟨r, hr⟩ := commutChar_nontrivial c
     have e := congrArg (fun v : SpaceB => v.1) (h r)
-    dsimp only at e
+    try dsimp only at e
     rw [commutRho_Acomponent] at e
     apply Subtype.ext
     ext i j
@@ -197,7 +202,7 @@ theorem commutCharacter_eigenspace (c : ShortIdx) (u : SpaceB)
         exact hd (Subtype.ext (commutChar_injective he))
       obtain ⟨r, hr⟩ := he
       have e := congrArg (fun v : SpaceB => v.2.1 d) (h r)
-      dsimp only at e
+      try dsimp only at e
       rw [commutRho_Xcomponent] at e
       change commutChar d.1 r * u.2.1 d = commutChar c.1 r * u.2.1 d at e
       have hz : u.2.1 d = 0 :=
@@ -282,7 +287,7 @@ theorem commutCancel_sign_eigen (T : SpaceB →ₗ[ℚ] SpaceB) (s : ZMod 2)
     rw [hz, zero_mul] at he
     exact zero_ne_one he
   apply smul_right_injective _ hs
-  dsimp only
+  try dsimp only
   rw [← map_smul, h, smul_comm]
 
 /-- The two spin signs share the coefficient of their associated odd short line. -/

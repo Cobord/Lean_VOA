@@ -19,7 +19,7 @@ def keyOrbit (k : RadicalKey) : Submodule ℂ V :=
 
 theorem keyLayer_le_orbit (k : RadicalKey) :
     keyLayer ρ w k ≤ keyOrbit ρ w k := by
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro z ⟨r, hr, rfl⟩
   exact Submodule.subset_span ⟨[], r, by simp, hr, rfl⟩
 
@@ -49,8 +49,8 @@ theorem levi_op_orbit (k : RadicalKey) (a : Fin 28) (s : ℕ)
       apply Submodule.subset_span
       exact ⟨(a, s) :: l, r, by simp [ha, hl], hk, rfl⟩
   | zero => simp
-  | add x y _ _ hx hy => simpa using (keyOrbit ρ w k).add_mem hx hy
-  | smul c x _ hx => simpa using (keyOrbit ρ w k).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (keyOrbit ρ w k).add_mem hx hy
+  | smul c x _ hx => simpa using! (keyOrbit ρ w k).smul_mem c hx
 
 private theorem encode_radical : ∀ r : List (Fin 28 × ℕ),
     r.Forall (fun p => IsRadical p.1) →
@@ -72,7 +72,7 @@ private theorem encode_radical : ∀ r : List (Fin 28 × ℕ),
 theorem leviSpan_eq_iSup_keyOrbit :
     leviSpan ρ w = ⨆ k : RadicalKey, keyOrbit ρ w k := by
   apply le_antisymm
-  · rw [leviSpan, Submodule.span_le]
+  · apply Submodule.span_le.mpr
     rintro z ⟨l, r, hl, hr, rfl⟩
     obtain ⟨q, hq⟩ := encode_radical r hr
     subst r

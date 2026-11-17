@@ -72,7 +72,7 @@ theorem ghostVacuum_mem_ghostDeg : sl2GhostSVA.vacuum ∈ ghostDeg ((0, 0), 0) :
   rw [sl2GhostSVA_vacuum]
   have h := tmul_mem_tensorDeg _ _ (tmul_mem_tensorDeg _ _ vacSF_mem_fockDeg vacSF_mem_fockDeg)
     vacSF_mem_fockDeg
-  simpa using h
+  simpa using! h
 
 /-- **The BRST vacuum has interpreted bidegree `(0, 0)` at weight `0`.** -/
 theorem brstVacuum_mem (w : Finset ModeIdx → ℝ) :
@@ -83,7 +83,7 @@ theorem brstVacuum_mem (w : Finset ModeIdx → ℝ) :
   have hU : USVA.vacuum ∈ uDeg ((0, 0), 0) := vacuum_mem_layerDeg auxiliaryForm auxiliaryFlag
   have h := tmul_mem_tensorDeg matterDeg (ghostRGrading w).deg
     (tmul_mem_tensorDeg _ _ (tmul_mem_tensorDeg _ _ hA hB) hU) ghostVacuum_mem_ghostDeg
-  simpa using h
+  simpa using! h
 
 /-! ### The vacuum generator test -/
 

@@ -52,7 +52,7 @@ theorem central_power_elimination [Finite ι]
     simp [e]
   have hx (x : E) : x = ∑ i, B.left (e i) x := by
     have hv := congrArg (fun b => B.left b x) he
-    simpa only [map_sum, LinearMap.sum_apply, B.left_one] using hv.symm
+    simpa only [map_sum, LinearMap.sum_apply, B.left_one] using! hv.symm
   intro x
   change f (B.left a x) = 0
   conv_lhs => rw [hx x]
@@ -84,7 +84,7 @@ theorem exists_end_bimodule_map_weighted
     simp only [pairing_apply, map_zero]
     rw [← hL, hT, ← B.left_mul, hcomm, B.left_mul]
     exact homega _
-  refine ⟨T, hL, hR, fun x => by simpa using (hT x).symm, ?_⟩
+  refine ⟨T, hL, hR, fun x => by simpa using! (hT x).symm, ?_⟩
   intro i hi x
   have he := congrArg (fun a => a i) (hz x)
   rw [hL] at he
@@ -140,7 +140,7 @@ theorem insertionTopDecomposition_weighted (P : ι → LWModule W)
     refine ⟨?_, ?_, ?_⟩
     · intro w hw
       change T ((fzO A.toWeakModule).mkQ w) i = 0
-      have hq : (fzO A.toWeakModule).mkQ w = 0 := by simpa using hw
+      have hq : (fzO A.toWeakModule).mkQ w = 0 := by simpa using! hw
       rw [hq, map_zero]
       rfl
     · intro p a ha w x
@@ -153,7 +153,7 @@ theorem insertionTopDecomposition_weighted (P : ι → LWModule W)
       congr 1
       apply Subtype.ext
       rw [rhoLW_apply_coe, oMod_homogeneous (P i).isMod ha, hx]
-  refine ⟨fun i => ⟨C i, hC i⟩, fun w => by simpa [g, C] using hT ((fzO A.toWeakModule).mkQ w), ?_⟩
+  refine ⟨fun i => ⟨C i, hC i⟩, fun w => by simpa [g, C] using! hT ((fzO A.toWeakModule).mkQ w), ?_⟩
   intro i hi
   apply Subtype.ext
   apply LinearMap.ext
@@ -190,7 +190,7 @@ theorem functional_realized_at_weight (P : ι → LWModule W)
     have hz := congrArg (fun t : M →ₗ[ℂ] FormalQSeries => t w b)
       (traceLinear (A := A) (N := (P i).isMod)).map_zero
     change trace (0 : IntertwiningOperator A (P i).isMod (P i).isMod) w b = 0 at hz
-    simpa only [ZeroMemClass.coe_zero, LinearMap.zero_apply, map_zero] using hz.symm
+    simpa only [ZeroMemClass.coe_zero, LinearMap.zero_apply, map_zero] using! hz.symm
 
 /-- Generalized central-character realization, the form needed for the
 leading coefficients of logarithmic expansions (Miyamoto (4.23)). Descent,
@@ -216,6 +216,6 @@ theorem functional_realized_at_weight_of_generalized (P : ι → LWModule W)
   rw [← insertionCuspOmega_eq_diagonal, insertionCuspOmega_mk] at hw
   change f (fzLeft A.toWeakModule 2 W.conformalVector w -
     (b + W.centralCharge / 24) • w) = 0 at hw
-  simpa only [map_sub, map_smul, smul_eq_mul, sub_eq_zero] using hw
+  simpa only [map_sub, map_smul, smul_eq_mul, sub_eq_zero] using! hw
 
 end VOA.Huang.GenusOne

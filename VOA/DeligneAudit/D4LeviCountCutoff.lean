@@ -74,7 +74,7 @@ theorem radicalEndWord_split_colour (j : Fin 6)
             (List.map (fun p => ρ.op (radicalColour p.1) p.2)
               (l.filter fun p => !decide (p.1 = j))).prod *
               ρ.op (radicalColour j) s := by
-          simpa only [radicalEndWord, ne_eq, decide_not] using hc
+          simpa only [radicalEndWord, ne_eq, decide_not] using! hc
         rw [← mul_assoc, hc', mul_assoc]
       · simp only [radicalEndWord, List.map_cons, List.prod_cons] at *
         simp only [List.filter_cons, colourModes] at *

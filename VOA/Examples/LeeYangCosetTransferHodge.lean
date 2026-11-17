@@ -108,7 +108,7 @@ theorem exists_add_mem_sesq_orthogonal [FiniteDimensional ℂ K]
         · subst x
           simp only [h.zero_left, map_zero, le_refl]
         · obtain ⟨r, hr, hrx⟩ := hpos x Submodule.mem_top hx
-          simpa only [hrx, Complex.ofReal_re] using le_of_lt hr
+          simpa only [hrx, RCLike.re_to_complex, Complex.ofReal_re] using le_of_lt hr
       add_left := h.add_left
       smul_left := fun x y c => h.smul_left c x y
       definite := fun x hx => eq_zero_of_sesq_self_eq_zero h hpos hx }

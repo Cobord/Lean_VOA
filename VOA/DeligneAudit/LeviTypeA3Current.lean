@@ -23,7 +23,7 @@ theorem a3Levi_comm (x y : Fin 8) (r s : ℕ) (v : V) :
     apply Finset.sum_subset (Finset.subset_univ _)
     intro z _ hz
     have hnot : z ∉ Set.range a3LeviColour := by
-      simpa using hz
+      simpa using! hz
     simp [F, a3Levi_bracket_outside x y z hnot]
   rw [← hsub]
   rw [Finset.sum_image]

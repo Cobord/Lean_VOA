@@ -402,7 +402,7 @@ theorem lc_eval {ι : Type*} (fld : ι → FormalDist (End ℂ V)) (c : ι →�
     (Finsupp.linearCombination ℂ fld c) p x
       = Finsupp.linearCombination ℂ (fun i => (fld i) p x) c := by
   have h := Finsupp.apply_linearCombination ℂ (evalAt p x) fld c
-  simpa only [evalAt_apply] using h
+  exact h
 
 /-! ## §4  The operator-first uniqueness (existence-direction Goddard)
 

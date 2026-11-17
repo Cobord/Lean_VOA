@@ -100,7 +100,7 @@ theorem choose_succ_mul (β : ℂ) (m : ℕ) :
   field_simp
 
 theorem binomial_ode (β : ℂ) :
-    (1 + X) * d⁄dX ℂ (PowerSeries.binomialSeries ℂ β) =
+    (1 + X) * d⁄dX (PowerSeries.binomialSeries ℂ β) =
       PowerSeries.C β * PowerSeries.binomialSeries ℂ β := by
   ext m
   rw [add_mul, one_mul, map_add, PowerSeries.coeff_C_mul, PowerSeries.binomialSeries_coeff,
@@ -122,8 +122,8 @@ theorem binomial_ode (β : ℂ) :
     linear_combination h
 
 theorem derivative_exponentialUnit :
-    X * d⁄dX ℂ exponentialUnit = exp ℂ - exponentialUnit := by
-  have h := congrArg (d⁄dX ℂ) X_mul_exponentialUnit
+    X * d⁄dX exponentialUnit = exp ℂ - exponentialUnit := by
+  have h := congrArg (PowerSeries.derivative (R := ℂ)) X_mul_exponentialUnit
   rw [Derivation.leibniz, PowerSeries.derivative_X, map_sub, PowerSeries.derivative_exp,
     Derivation.map_one_eq_zero,
     sub_zero, smul_eq_mul, smul_eq_mul, mul_one] at h
@@ -131,17 +131,16 @@ theorem derivative_exponentialUnit :
 
 /-- **The ODE of the complex unit power**: `z · d/dz E^b = b (E^{b−1} e^z − E^b)`. -/
 theorem unitPower_ode (β : ℂ) :
-    X * d⁄dX ℂ (exponentialUnitPower β) =
+    X * d⁄dX (exponentialUnitPower β) =
       PowerSeries.C β * (exponentialUnitPower (β - 1) * exp ℂ - exponentialUnitPower β) := by
   have ha := HasSubst.of_constantCoeff_zero' exponentialUnit_sub_one_constant
-  have hd : d⁄dX ℂ (exponentialUnitPower β) =
-      (d⁄dX ℂ (PowerSeries.binomialSeries ℂ β)).subst (exponentialUnit - 1) *
-        d⁄dX ℂ exponentialUnit := by
-    rw [exponentialUnitPower, PowerSeries.derivative_subst ℂ ha, map_sub,
+  have hd : d⁄dX (exponentialUnitPower β) =
+      (d⁄dX (PowerSeries.binomialSeries ℂ β)).subst (exponentialUnit - 1) *
+        d⁄dX exponentialUnit := by
+    rw [exponentialUnitPower, PowerSeries.derivative_subst ha, map_sub,
       Derivation.map_one_eq_zero,
       sub_zero]
   have hode := congrArg (fun f => f.subst (exponentialUnit - 1)) (binomial_ode β)
-  simp only at hode
   rw [PowerSeries.subst_mul ha, PowerSeries.subst_mul ha, PowerSeries.subst_add ha,
     PowerSeries.subst_X ha, subst_one' ha, subst_C' ha] at hode
   have h1 : (1 : PowerSeries ℂ) + (exponentialUnit - 1) = exponentialUnit := by ring
@@ -152,16 +151,16 @@ theorem unitPower_ode (β : ℂ) :
     rw [← this]; congr 1; push_cast; ring
   apply mul_left_cancel₀ exponentialUnit_ne_zero
   rw [hd]
-  calc exponentialUnit * (X * ((d⁄dX ℂ (PowerSeries.binomialSeries ℂ β)).subst
+  calc exponentialUnit * (X * ((d⁄dX (PowerSeries.binomialSeries ℂ β)).subst
           (exponentialUnit - 1) *
-          d⁄dX ℂ exponentialUnit))
-      = (exponentialUnit * (d⁄dX ℂ (PowerSeries.binomialSeries ℂ β)).subst (exponentialUnit - 1)) *
-          (X * d⁄dX ℂ exponentialUnit) := by ring
+          d⁄dX exponentialUnit))
+      = (exponentialUnit * (d⁄dX (PowerSeries.binomialSeries ℂ β)).subst (exponentialUnit - 1)) *
+          (X * d⁄dX exponentialUnit) := by ring
     _ = (PowerSeries.C β * exponentialUnitPower β) * (exp ℂ - exponentialUnit) := by
           rw [hode, derivative_exponentialUnit]; rfl
     _ = _ := by rw [hF]; ring
 
-theorem derivative_expA (α : ℂ) : d⁄dX ℂ (expA α) = PowerSeries.C α * expA α := by
+theorem derivative_expA (α : ℂ) : d⁄dX (expA α) = PowerSeries.C α * expA α := by
   ext m
   rw [PowerSeries.coeff_derivative, PowerSeries.coeff_C_mul, VOA.Huang.GenusOneG1e.coeff_expA,
     VOA.Huang.GenusOneG1e.coeff_expA, Nat.factorial_succ]
@@ -173,16 +172,16 @@ theorem derivative_expA (α : ℂ) : d⁄dX ℂ (expA α) = PowerSeries.C α * e
 
 /-- `z · d/dz (e^{αz} E^b) = α z e^{αz} E^b + b (e^{(α+1)z} E^{b−1} − e^{αz} E^b)`. -/
 theorem bracketFactor_ode (α β : ℂ) :
-    X * d⁄dX ℂ (expA α * exponentialUnitPower β) =
+    X * d⁄dX (expA α * exponentialUnitPower β) =
       PowerSeries.C α * (X * (expA α * exponentialUnitPower β)) +
         PowerSeries.C β * (expA (α + 1) * exponentialUnitPower (β - 1) -
           expA α * exponentialUnitPower β) := by
   rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul, mul_add, derivative_expA,
     ← expA_mul_exp]
   have h := unitPower_ode β
-  calc X * (expA α * d⁄dX ℂ (exponentialUnitPower β)) +
+  calc X * (expA α * d⁄dX (exponentialUnitPower β)) +
         X * (exponentialUnitPower β * (PowerSeries.C α * expA α))
-      = expA α * (X * d⁄dX ℂ (exponentialUnitPower β)) +
+      = expA α * (X * d⁄dX (exponentialUnitPower β)) +
           PowerSeries.C α * (X * (expA α * exponentialUnitPower β)) := by ring
     _ = _ := by rw [h]; ring
 
@@ -194,7 +193,7 @@ theorem energy_scalar_K_series (α β : ℂ) (t : ℕ) :
           β * coeff t (expA α * exponentialUnitPower β) := by
   have h := congrArg (coeff t) (bracketFactor_ode α β)
   rw [map_add, PowerSeries.coeff_C_mul, PowerSeries.coeff_C_mul, map_sub] at h
-  have key : coeff t (X * d⁄dX ℂ (expA α * exponentialUnitPower β)) =
+  have key : coeff t (X * d⁄dX (expA α * exponentialUnitPower β)) =
       (t : ℂ) * coeff t (expA α * exponentialUnitPower β) := by
     cases t with
     | zero => simp
@@ -209,7 +208,7 @@ def cc (k : ℕ) : ℂ := coeff k ((1 + X) * VOA.uSeries)
 
 theorem cc_eq_sqBracketCoeffZ (k : ℕ) : VOA.sqBracketCoeffZ 2 1 ((k + 1 : ℕ) : ℤ) = cc k := by
   have hc := VOA.sqBracketCoeffZ_two_eq_coeff_Pw 0 (k : ℤ)
-  simpa [VOA.Pw, VOA.uUnit_coe, cc] using hc
+  simpa [VOA.Pw, VOA.uUnit_coe, cc] using! hc
 
 theorem cc_zero : cc 0 = 1 := by
   simp [cc, VOA.uSeries]
@@ -251,7 +250,7 @@ def psi1 : PowerSeries ℂ := PowerSeries.mk fun k => cc k * ((k : ℂ) + 1)
 theorem psi1_eq : psi1 = 1 + PowerSeries.log ℂ := by
   have hG : (X : PowerSeries ℂ) * ((1 + X) * VOA.uSeries) = (1 + X) * PowerSeries.log ℂ := by
     rw [← VOA.logOnePlusXSeries_eq_log, VOA.logOnePlusX_eq_X_mul_u]; ring
-  have hd : psi1 = d⁄dX ℂ ((X : PowerSeries ℂ) * ((1 + X) * VOA.uSeries)) := by
+  have hd : psi1 = d⁄dX ((X : PowerSeries ℂ) * ((1 + X) * VOA.uSeries)) := by
     ext k
     rw [psi1, PowerSeries.coeff_mk, PowerSeries.coeff_derivative, PowerSeries.coeff_succ_X_mul, cc]
   rw [hd, hG, Derivation.leibniz, smul_eq_mul, smul_eq_mul, VOA.derivative_log_eq_geoAltSeries,
@@ -332,7 +331,6 @@ theorem psiJ_mul_onePlusX_pow (d : ℕ) :
 theorem psiJ_subst_mul (d : ℕ) :
     (psiJ d).subst xS * expA ((d : ℂ) + 1) = PowerSeries.C (cc (d + 1)) := by
   have h := congrArg (fun f => f.subst xS) (psiJ_mul_onePlusX_pow d)
-  simp only at h
   rw [PowerSeries.subst_mul hasSubst_xS, PowerSeries.subst_pow hasSubst_xS, subst_onePlusX_xS,
     subst_C' hasSubst_xS, exp_pow_eq] at h
   rw [← h]; push_cast; rfl

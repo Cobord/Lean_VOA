@@ -14,6 +14,8 @@ Killing-form-preserving affine action evaluates on the actual vacuum
 quotient and gives an involution preserving energy and reversing charge.
 This identifies the ordinary Verma convention with the VOA bilinear convention.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl2GeneralRigidity
 open AffineVOA AffineVOA.HighestModule AffineLie
 open Module (End)
@@ -34,9 +36,9 @@ theorem chevalleySl2_basis (a : Fin 3) : chevalleySl2 (basis a)=-basis (adjointC
   have he : adjointColour b=a ↔ b=adjointColour a := by
     constructor
     · intro h
-      simpa only [adjointColour_involutive] using congrArg adjointColour h
+      simpa only [adjointColour_involutive] using! congrArg adjointColour h
     · intro h
-      simpa only [adjointColour_involutive] using congrArg adjointColour h
+      simpa only [adjointColour_involutive] using! congrArg adjointColour h
   simp only [basis, Pi.single_apply, he]
 
 /-- The finite map preserves the actual sl2 Lie bracket. -/
@@ -153,7 +155,7 @@ theorem vacuumChevalley_mem_joint (k : ℂ) (hk : k+2≠0) (n c : ℤ) (v : WakM
     change vacuumChevalley k (J k 2 0 v)=_ at he
     rw [vacuumChevalley_current] at he
     change -J k 2 0 (vacuumChevalley k v)=(c : ℂ) • vacuumChevalley k v at he
-    simpa only [Int.cast_neg,neg_smul,neg_neg] using congrArg Neg.neg he
+    simpa only [Int.cast_neg,neg_smul,neg_neg] using! congrArg Neg.neg he
 
 end
 end VOA.AffineSl2GeneralRigidity

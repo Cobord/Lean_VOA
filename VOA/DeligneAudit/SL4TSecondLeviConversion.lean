@@ -31,15 +31,15 @@ theorem secondLeviConversion_lower_summand (n k : ℕ)
   have hlen := choices_length (List.replicate n 0 ++ List.replicate k 0) t ht
   simp only [List.length_append, List.length_replicate] at hlen
   have hb := a2_bWord_coeff_count Q (β φ) t.2 z.2 0 0 (a2CountSpan_zero Q (β φ))
-  have ha := a2CountSpan_first_word Q (β φ) t.1 0 t.2.length (by simpa using hb)
+  have ha := a2CountSpan_first_word Q (β φ) t.1 0 t.2.length (by simpa using! hb)
   have hbase : (aWord (fun i => Q.op 3 i) t.1 *
       PowerSeries.coeff z.2 (bWord (fun i => Q.op 5 i) t.2)) (β φ) ∈
         higherSecondLeviCountClosure Q β n k := by
     apply secondLeviCountLayer_le_higher Q β n k t.1.length t.2.length hlen (by omega)
     apply Submodule.mem_iSup_of_mem φ
-    simpa [aWord, Module.End.mul_apply] using ha
+    simpa [aWord, Module.End.mul_apply] using! ha
   have hf := a2_fCurrent_pow_preserves Q _ (k - t.2.length) z.1 hbase
-  simpa only [Module.End.smul_def, Module.End.mul_apply] using hf
+  simpa only [Module.End.smul_def, Module.End.mul_apply] using! hf
 
 theorem secondLeviConversion_lower_term (n k s : ℕ)
     (t : List ℕ × List ℕ) (ht : t ∈ choices (List.replicate n 0 ++ List.replicate k 0))
@@ -47,7 +47,7 @@ theorem secondLeviConversion_lower_term (n k s : ℕ)
     conversionTerm (fun i => Q.op 4 i) (fun i => Q.op 3 i) (fun i => Q.op 5 i)
       k s t (β φ) ∈ higherSecondLeviCountClosure Q β n k := by
   let N := higherSecondLeviCountClosure Q β n k
-  have hm : (∑ z ∈ Finset.antidiagonal s,
+  have hm : (∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
       (PowerSeries.coeff z.1 (fCurrent (fun i => Q.op 4 i) ^ (k - t.2.length)) *
         aWord (fun i => Q.op 3 i) t.1) *
           PowerSeries.coeff z.2 (bWord (fun i => Q.op 5 i) t.2)) (β φ) ∈ N := by
@@ -74,7 +74,7 @@ theorem secondLeviConversion_lowerSum (n k s : ℕ) (φ : B) :
   intro v hv
   obtain ⟨t, ht, rfl⟩ := List.mem_map.mp hv
   by_cases hlt : t.2.length < k
-  · simpa only [if_pos hlt] using secondLeviConversion_lower_term Q β n k s t ht hlt φ
+  · simpa only [if_pos hlt] using! secondLeviConversion_lower_term Q β n k s t ht hlt φ
   · simp [hlt]
 
 /-- With zero simple modes, every top contraction has the same coefficient. -/
@@ -93,7 +93,7 @@ theorem secondLeviConversion_topSum (n k s : ℕ) (v : V) :
     rintro x ⟨xs, ys, hs, rfl⟩
     simp at hs
   rw [BoxTopDecomposition, hz, Submodule.mem_bot] at ht
-  simpa [boxTarget, aWord, sub_eq_zero] using ht
+  simpa [boxTarget, aWord, sub_eq_zero] using! ht
 
 /-- Conversion of a current coefficient, retaining its nonzero source term. -/
 theorem secondLeviConversion_coefficient (n k s : ℕ) (φ : B) :
@@ -120,12 +120,11 @@ theorem secondLeviConversion_coefficient (n k s : ℕ) (φ : B) :
       (fun i => Q.op 5 i) k s (List.replicate n 0 ++ List.replicate k 0) (β φ)) = 0 :=
     (Submodule.Quotient.mk_eq_zero N).mpr (secondLeviConversion_lowerSum Q β n k s φ)
   have hv := congrArg (fun T : Module.End ℂ V => N.mkQ (T (β φ))) he
-  dsimp only at hv
   rw [hcast, LinearMap.add_apply, Module.End.mul_apply, map_add, hz, add_zero] at hv
   simp only [aWord, List.map_append, List.prod_append, List.map_replicate,
     List.prod_replicate, ← pow_add, Module.End.mul_apply] at hv
   simpa only [Module.algebraMap_end_apply, map_smul, secondLeviConversion_topSum,
-    Module.End.mul_apply, smul_smul, mul_comm] using hv
+    Module.End.mul_apply, smul_smul, mul_comm] using! hv
 
 end
 

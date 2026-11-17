@@ -63,7 +63,7 @@ theorem reductiveLevi_bracket_support (a b c : Fin 28)
     obtain ⟨k, hk⟩ := hh p hp
     exact hc ⟨k, Fin.ext (hk.trans hpc)⟩
   simpa [D4sector, fD4, VOA.DeligneAudit.DeligneSector.Sparse.fC,
-    VOA.DeligneAudit.DeligneSector.Sparse.fZ] using
+    VOA.DeligneAudit.DeligneSector.Sparse.fZ] using!
       congrArg (fun n : ℤ => (n : ℂ)) hzero
 
 /-- The high Levi images form a Levi current submodule. -/
@@ -83,9 +83,9 @@ theorem leviCurrentTail_stable (w : V) (N : ℕ) (a : Fin 28) (s : ℕ)
         · rw [reductiveLevi_bracket_support a b c ha hb hc, zero_smul]
           exact Submodule.zero_mem _
       · exact currentTail_contains ρ _ _ N hb hr (cycSubG_inv ρ w a s hu)
-  | zero => simpa using (leviCurrentTail ρ w N).zero_mem
-  | add x y _ _ hx hy => simpa using (leviCurrentTail ρ w N).add_mem hx hy
-  | smul c x _ hx => simpa using (leviCurrentTail ρ w N).smul_mem c hx
+  | zero => simpa using! (leviCurrentTail ρ w N).zero_mem
+  | add x y _ _ hx hy => simpa using! (leviCurrentTail ρ w N).add_mem hx hy
+  | smul c x _ hx => simpa using! (leviCurrentTail ρ w N).smul_mem c hx
 
 /-- Levi words preserve the high Levi images. -/
 theorem leviCurrentTail_word (w : V) (N : ℕ) (l : List (Fin 28 × ℕ))

@@ -114,21 +114,21 @@ theorem cv3Rel_swap (h : CV3Rel R w ε ν ϱ j) :
   · intro e he k
     have he' : e = 0 ∨ e = 1 ∨ e = 2 := by omega
     rcases he' with rfl | rfl | rfl
-    · simpa using h.raising 1 (by decide) k
-    · simpa using h.raising 0 (by decide) k
+    · simpa using! h.raising 1 (by decide) k
+    · simpa using! h.raising 0 (by decide) k
     · simp [h.raising 2 (by decide) k]
   · intro hh hhh k hk
     have hh' : hh = 6 ∨ hh = 7 := by omega
     rcases hh' with rfl | rfl
-    · simpa using h.cartan_pos 7 (by decide) k hk
-    · simpa using h.cartan_pos 6 (by decide) k hk
-  · simpa using h.cartan_second
-  · simpa using h.cartan_first
-  · simpa using h.lowering_second
-  · simpa using h.lowering_first
-  · simpa using h.second
-  · simpa using h.first
-  · simpa only [swapRep_op5, Nat.add_comm] using cvrel_neg h.highest
+    · simpa using! h.cartan_pos 7 (by decide) k hk
+    · simpa using! h.cartan_pos 6 (by decide) k hk
+  · simpa using! h.cartan_second
+  · simpa using! h.cartan_first
+  · simpa using! h.lowering_second
+  · simpa using! h.lowering_first
+  · simpa using! h.second
+  · simpa using! h.first
+  · simpa only [swapRep_op5, Nat.add_comm] using! cvrel_neg h.highest
 
 end
 

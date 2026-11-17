@@ -77,7 +77,7 @@ theorem vafa_relation (i : F.Label) :
   have hi := R.twistScalar_ne_zero i
   field_simp [hi, hn] at h
   simp only [SphericalFusion.vafaRow, pow_add, Finset.prod_mul_distrib]
-  simpa only [← pow_mul, show 2 * F.vafaDegree i * 2 = 4 * F.vafaDegree i by omega] using h
+  simpa only [← pow_mul, show 2 * F.vafaDegree i * 2 = 4 * F.vafaDegree i by omega] using! h
 
 /-- Vafa torsion for every simple twist in a complex ribbon fusion category. -/
 theorem twistScalar_isOfFinOrder (i : F.Label) : IsOfFinOrder (R.twistScalar i) := by
@@ -86,11 +86,11 @@ theorem twistScalar_isOfFinOrder (i : F.Label) : IsOfFinOrder (R.twistScalar i) 
   have ht : ∀ j, IsOfFinOrder (t j) := finite_order_of_vafa_rows t F.vafaDegree F.vafaRow
     F.vafaDegree_pos F.vafaRow_sum (fun j => by
       apply Units.ext
-      simpa [t] using R.vafa_relation j)
+      simpa [t] using! R.vafa_relation j)
   obtain ⟨n, hn, hh⟩ := isOfFinOrder_iff_pow_eq_one.mp (ht i)
   apply isOfFinOrder_iff_pow_eq_one.mpr
   refine ⟨n, hn, ?_⟩
-  simpa [t] using congrArg (fun x : ℂˣ => (x : ℂ)) hh
+  simpa [t] using! congrArg (fun x : ℂˣ => (x : ℂ)) hh
 
 /-- A uniform positive order annihilates the twist on every object. -/
 theorem finite_twist : 0 < R.twistOrder ∧ ∀ X : C, R.twistPower X R.twistOrder = 𝟙 X :=

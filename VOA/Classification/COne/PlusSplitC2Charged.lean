@@ -142,6 +142,6 @@ theorem W_E_relation :
   have hy' := (O₂ (V2mPlus m hm)).smul_mem (cα m ^ 2)⁻¹ hy
   rw [smul_smul, inv_mul_cancel₀ hn, one_smul] at hy'
   have hq := (mk₂_eq_zero_iff _).mpr hy'
-  simpa only [map_add, map_smul, VOA.TripletNilp.mk₂_smul_neg_one, mk₂_omegaIter] using hq
+  simpa only [map_add, map_smul, VOA.TripletNilp.mk₂_smul_neg_one, mk₂_omegaIter] using! hq
 
 end VOA.Classification.COne.PlusC2Charged

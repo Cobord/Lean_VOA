@@ -70,6 +70,9 @@ open Module (End)
 open VOA VOA.IntegralLattice HeisenbergN
 open VOA.LatGen
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §1  (a)  The rank-one lattice `L_p = ℤα`, `⟨α,α⟩ = 2p` -/
 
 /-- **The rank-one lattice `L_p`**: the ℤ-module `ℤ` with the form `⟨m,n⟩ = 2p·mn`.  For `p = 1`
@@ -120,7 +123,8 @@ theorem rank_latP (p : ℕ) : rank (latP p) = 1 := Module.finrank_self ℤ
 
 /-- `½⟨m,m⟩ = p m²`. -/
 theorem halfNorm_latP (p : ℕ) (m : ℤ) : halfNorm (latP p) m = (p : ℤ) * m ^ 2 := by
-  rw [halfNorm, latP_form,
+  show (latP p).form m m / 2 = _
+  rw [latP_form,
     show 2 * (p : ℤ) * m * m = 2 * ((p : ℤ) * m ^ 2) from by ring,
     Int.mul_ediv_cancel_left _ (by norm_num : (2 : ℤ) ≠ 0)]
 
@@ -138,7 +142,7 @@ noncomputable def lamP (p : ℕ) : Fin (rank (latP p)) → ℂ :=
 theorem bgPair_lamP (p : ℕ) (hp : 1 ≤ p) (m : ℤ) :
     BgA.bgPair (latP p) (lamP p) m = ((p : ℂ) - 1) * (m : ℂ) := by
   have hp0 : (p : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
-  rw [lamP, BgA.bgPair_latBg (latP p) (latP_posDef p hp), alphaP, latP_form, cP]
+  rw [lamP, BgA.bgPair_latBg (latP p) (latP_posDef p hp) (cP p) (alphaP p) m, alphaP, latP_form, cP]
   push_cast
   field_simp
 
@@ -283,7 +287,7 @@ theorem qFinite_qrP (p : ℕ) (hp : 1 ≤ p) : QFinite (latP p) (qrP p) := by
 theorem LBg_weight_latP (p : ℕ) (hp : 1 ≤ p) (m : ℤ) :
     BgA.LBg (latP p) (lamP p) 0 (latChargeGen (latP p) m)
       = ((qZP p m : ℤ) : ℂ) • latChargeGen (latP p) m := by
-  rw [BgA.LBg_weight_latChargeGen (latP p) (latP_posDef p hp), qZP_eq_halfNorm_sub_bgPair p hp]
+  rw [BgA.LBg_weight_latChargeGen (latP p) (latP_posDef p hp) (lamP p) m, qZP_eq_halfNorm_sub_bgPair p hp]
 
 /-- **(g)  `wt(e^α) = 1`.** -/
 theorem LBg_weight_alpha (p : ℕ) (hp : 1 ≤ p) :
@@ -493,7 +497,7 @@ theorem LBg_zero_bigradα (p : ℕ) (hp : 1 ≤ p) (k : ℤ) (β : (latP p).carr
         zero_add, BgA.scMom_zero, latStateGen_smul_boson]
     rw [show BgA.LBg (latP p) (lamP p) 0
         = LLGen (latP p) 0 - (((0 : ℤ) : ℂ) + 1) • BgA.bgCur (latP p) (lamP p) 0 from rfl,
-      LinearMap.sub_apply, LinearMap.smul_apply, h1, h2, bgPair_lamP_eq p hp, smul_smul,
+      LinearMap.sub_apply, LinearMap.smul_apply, h1, h2, bgPair_lamP_eq p hp β, smul_smul,
       ← sub_smul]
     congr 1
     rw [← hwz]

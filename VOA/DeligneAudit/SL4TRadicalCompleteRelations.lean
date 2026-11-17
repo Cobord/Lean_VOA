@@ -69,7 +69,7 @@ theorem radicalCompleteSource_mem_higher (a b c : ℕ)
       [] (List.replicate (d 2) 0)
     rw [he] at hm
     simpa [boxTarget, aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-      radicalCompleteSource, Module.End.mul_apply] using hm
+      radicalCompleteSource, Module.End.mul_apply] using! hm
   · have he : radicalConversionCounts 1 (d 2) (List.replicate (d 1) 0) []
         (List.replicate (d 0) 0) = d := by
       funext i
@@ -78,7 +78,7 @@ theorem radicalCompleteSource_mem_higher (a b c : ℕ)
       [] (List.replicate (d 0) 0)
     rw [he] at hm
     simpa [boxTarget, aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-      radicalCompleteSource, Module.End.mul_apply] using hm
+      radicalCompleteSource, Module.End.mul_apply] using! hm
 
 /-- The constant complete-function coefficient is the all-zero radical vector. -/
 theorem radicalCompleteSource_zero (d : Fin 3 → ℕ) (j : Fin 3) :
@@ -112,13 +112,13 @@ theorem radicalZeroModeVector_mem_higher_of_unsupported (a b c : ℕ)
   rcases hd with hd | hd | hd
   · rw [← radicalCompleteSource_zero ρ w d 0]
     exact radicalCompleteSource_mem_higher ρ w a b c h d 0 0
-      (by omega) (by simpa [weightABC] using hd)
+      (by omega) (by simpa [weightABC] using! hd)
   · rw [← radicalCompleteSource_zero ρ w d 1]
     exact radicalCompleteSource_mem_higher ρ w a b c h d 1 0
-      (by omega) (by simpa [weightABC] using hd)
+      (by omega) (by simpa [weightABC] using! hd)
   · rw [← radicalCompleteSource_zero ρ w d 2]
     exact radicalCompleteSource_mem_higher ρ w a b c h d 2 0
-      (by omega) (by simpa [weightABC] using hd)
+      (by omega) (by simpa [weightABC] using! hd)
 
 end
 

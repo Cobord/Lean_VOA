@@ -27,8 +27,7 @@ theorem source_grWord_high_zero (h : LocalWeylRelG D4sector R w m)
   apply symbol_zero_of_mem R w
   apply Pbelow_mono R w hl
   change nword R w l ∈ Ple R w (2 * m)
-  rw [Ple_eq_currentPiece]
-  exact localWeyl_currentWord_bound h l
+  exact (Ple_eq_currentPiece R w (2 * m)).ge (localWeyl_currentWord_bound h l)
 
 /-- All word monomials above the proved source cutoff. No finite
 enumeration or assumed polynomial dimension is built into this ideal. -/
@@ -40,8 +39,8 @@ theorem source_highWordIdeal_le_ann (h : LocalWeylRelG D4sector R w m) :
   apply Ideal.span_le.mpr
   rintro _ ⟨l,hl,rfl⟩
   change polyEval R w (modeLetter m) (polyWord l) = 0
-  rw [polyEval_polyWord]
-  exact source_grWord_high_zero h (l.map (modeLetter m)) (by simpa only [List.length_map] using hl)
+  exact (polyEval_polyWord R w (modeLetter m) l).trans
+    (source_grWord_high_zero h (l.map (modeLetter m)) (by simpa only [List.length_map] using! hl))
 
 /-- Concrete finite-count target: the verified differential candidate
 plus the source-supplied high-word cutoff. -/

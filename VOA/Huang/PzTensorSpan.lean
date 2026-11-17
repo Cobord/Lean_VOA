@@ -121,7 +121,7 @@ theorem copT_coefFun_mem {f : P₄.carrier →ₗ[ℂ] ℂ} {w₃ : P₃.carrier
   have hw : ∀ i : ℕ, mode (P₃.isMod.YM a) i w₃ ∈ P₃.isMod.weight (α₃ + γ - i - 1) := by
     intro i
     have := VOA.mode_mem_weight P₃.isMod ha h₃ i
-    simpa using this
+    simpa using! this
   have key : copT ha p (coefFun Y₁ Y₂ f w₃ α₃ h₄ n k)
       = (∑ i ∈ Finset.range NA, (negOnePow i * cbz p i) •
           coefFun Y₁ Y₂ (f ∘ₗ mode (P₄.isMod.YM a) (p - i)) w₃ α₃ (h₄ - γ + (p - i : ℤ) + 1)
@@ -244,7 +244,7 @@ noncomputable def YMS : 𝒱 →ₗ[ℂ] (End ℂ (coefSpan Y₁ Y₂))⟦z^±�
 
 theorem YMS_apply (u : 𝒱) (p : ℤ) :
     YMS hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ u p = tauAt hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ (-p - 1) u := by
-  simp only [YMS, LinearMap.coe_mk, AddHom.coe_mk]
+  rfl
 
 theorem mode_YMS (u : 𝒱) (n : ℤ) :
     mode (YMS hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ u) n = tauAt hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ n u := by
@@ -334,7 +334,7 @@ theorem coe_finsum_sub {X : Type*} [AddCommGroup X] [Module ℂ X] {S : Submodul
     (f : ι → S) (h : (Function.support f).Finite) :
     ((∑ᶠ i, f i : S) : X) = ∑ᶠ i, (f i : X) := by
   have := map_finsum S.subtype h
-  simpa using this
+  simpa using! this
 
 section Assembly
 

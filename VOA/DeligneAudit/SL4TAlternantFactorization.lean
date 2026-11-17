@@ -17,7 +17,7 @@ variable {A : Type*} [CommRing A]
 /-- Evaluating a polynomial at a root is unchanged by monic reduction. -/
 theorem polynomial_eval_remainder_at_root (p P : Polynomial A) (x : A)
     (hx : P.eval x = 0) : (p %ₘ P).eval x = p.eval x := by
-  simpa only [Polynomial.eval₂_id] using
+  simpa only [Polynomial.eval₂_id] using!
     Polynomial.eval₂_modByMonic_eq_self_of_root (f := RingHom.id A) hx
 
 /-- Every polynomial evaluation determinant is divisible by the power determinant.
@@ -51,7 +51,7 @@ theorem polynomial_evaluation_determinant_factor (j : ℕ)
     have he := congrArg (fun p : Polynomial A => p.eval (x b))
       (Polynomial.sum_modByMonic_coeff (p := q i) hP hd)
     simpa only [Polynomial.eval_finsetSum, Polynomial.eval_monomial, C, V,
-      polynomial_eval_remainder_at_root (q i) P (x b) (hx b)] using he.symm
+      polynomial_eval_remainder_at_root (q i) P (x b) (hx b)] using! he.symm
   exact ⟨C.det, by rw [hm, Matrix.det_mul]⟩
 
 /-- A polynomial alternant in free variables has an integral power-alternant factor. -/
@@ -62,7 +62,7 @@ theorem polynomial_alternant_factor (j : ℕ) (q : Fin j → Polynomial A) :
       s * Matrix.det (fun i b : Fin j => (MvPolynomial.X b) ^ i.val) := by
   obtain ⟨s, hs⟩ := polynomial_evaluation_determinant_factor j
     (fun i => (q i).map MvPolynomial.C) (fun b => MvPolynomial.X b)
-  exact ⟨s, by simpa only [Polynomial.eval_map] using hs⟩
+  exact ⟨s, by simpa only [Polynomial.eval_map] using! hs⟩
 
 end
 

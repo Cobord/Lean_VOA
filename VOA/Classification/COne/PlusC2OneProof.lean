@@ -186,19 +186,53 @@ theorem Hb_smul_one (j : ℤ) (γ : (latP m).carrier) :
   · rw [oscN_pos _ _ _ hj]
     simp [latStateGen, hj.ne', not_lt.mpr hj.le]
 
-/-- `T e^α = c·y₁ e^α`. -/
-theorem T_eAlpha :
-    (V2m m hm).smul (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) (-2) (latVacuumGen (latP m)) =
-      cα m • latStateGen (latP m) (X (0, a0 m)) ((1 : ℤ) : (latP m).carrier) := by
+/-! Charge-`1` specializations: the `((1 : ℤ) : (latP m).carrier)` slot (an `ℤ` numeral at a
+`(latP m).carrier` position) blocks `rw` with the generic `L.carrier`-stated lemmas. -/
+
+private theorem latStateGen_add_boson_one (p q : FockN (rank (latP m))) :
+    latStateGen (latP m) (p + q) ((1 : ℤ) : (latP m).carrier) =
+      latStateGen (latP m) p ((1 : ℤ) : (latP m).carrier) +
+        latStateGen (latP m) q ((1 : ℤ) : (latP m).carrier) :=
+  latStateGen_add_boson (latP m) p q _
+
+private theorem latStateGen_csmul_one (c : ℂ) (p : FockN (rank (latP m))) :
+    latStateGen (latP m) (c • p) ((1 : ℤ) : (latP m).carrier) =
+      c • latStateGen (latP m) p ((1 : ℤ) : (latP m).carrier) :=
+  latStateGen_csmul (latP m) c p _
+
+private theorem smul_Hb_neg_one (k : ℕ) (p : FockN (rank (latP m))) :
+    (V2m m hm).smul (Hb m) (-(k : ℤ) - 1) (latStateGen (latP m) p ((1 : ℤ) : (latP m).carrier)) =
+      latStateGen (latP m) (X (k, a0 m) * p) ((1 : ℤ) : (latP m).carrier) :=
+  smul_bosonState_neg_latStateGen (latP m) (latP_even m) (latP_posDef m hm) (a0 m) k p _
+
+private theorem Hb_smul_one_one (j : ℤ) :
+    (V2m m hm).smul (Hb m) j (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) =
+      if j < 0 then latStateGen (latP m) (X ((-j - 1).toNat, a0 m)) ((1 : ℤ) : (latP m).carrier)
+      else if j = 0 then cα m • latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier) else 0 :=
+  Hb_smul_one m hm j _
+
+private theorem thetaLat_latStateGen_one (p : FockN (rank (latP m))) :
+    thetaLat (latP m) (latStateGen (latP m) p ((1 : ℤ) : (latP m).carrier)) =
+      latStateGen (latP m) (sigmaN (rank (latP m)) p) (-((1 : ℤ) : (latP m).carrier)) :=
+  thetaLat_latStateGen (latP m) p _
+
+private theorem T_eCharge (a : (latP m).carrier) :
+    (V2m m hm).smul (latStateGen (latP m) 1 a) (-2) (latVacuumGen (latP m)) =
+      chargeCoord (latP m) a (a0 m) • latStateGen (latP m) (X (0, a0 m)) a := by
   have hvac : latVacuumGen (latP m) = latStateGen (latP m) (vacuumN _) 0 := rfl
-  rw [hvac, V2m, show latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier) =
-      latChargeGen (latP m) ((1 : ℤ) : (latP m).carrier) from rfl,
+  rw [hvac, V2m, show latStateGen (latP m) 1 a = latChargeGen (latP m) a from rfl,
     latVOA_smul_latChargeGen_state, latticeCocycle_zero_right, one_smul,
-    show (latP m).form ((1 : ℤ) : (latP m).carrier) 0 = 0 by simp, sub_zero, add_zero,
+    show (latP m).form a 0 = 0 by simp, sub_zero, add_zero,
     show -(-2 : ℤ) - 1 = ((1 : ℕ) : ℤ) by norm_num, EEVec_vacuum, if_pos (by norm_num),
     Int.toNat_natCast, show (1 : ℕ) = 0 + 1 from rfl, vSchur_succ, Finset.sum_range_one,
     vSchur_zero, mul_one, vVar_rankOne, ← latStateGen_csmul]
   norm_num
+
+/-- `T e^α = c·y₁ e^α`. -/
+theorem T_eAlpha :
+    (V2m m hm).smul (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) (-2) (latVacuumGen (latP m)) =
+      cα m • latStateGen (latP m) (X (0, a0 m)) ((1 : ℤ) : (latP m).carrier) :=
+  T_eCharge m hm _
 
 /-- `T(y_n e^α) = c·y_n y_1 e^α + n·y_{n+1} e^α` (`y_n = X(n−1)`, here `n = k+1`). -/
 theorem T_yeAlpha (k : ℕ) :
@@ -209,7 +243,7 @@ theorem T_yeAlpha (k : ℕ) :
   set W := V2m m hm with hW
   have hy : latStateGen (latP m) (X (k, a0 m)) ((1 : ℤ) : (latP m).carrier) =
       W.smul (Hb m) (-(k : ℤ) - 1) (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) := by
-    rw [hW]; unfold V2m; rw [smul_bosonState_neg_latStateGen, mul_one]
+    rw [hW, smul_Hb_neg_one, mul_one]
   have hcomm := VertexOperatorAlgebra.smul_comm_T W (Hb m) (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) (-(k : ℤ) - 1)
   simp only [PreVertexAlgebra.T_apply] at hcomm
   have hvac : W.vacuum = latVacuumGen (latP m) := rfl
@@ -219,11 +253,11 @@ theorem T_yeAlpha (k : ℕ) :
   rw [hT, PreVertexAlgebra.smul_smul_right]
   have h1 : W.smul (Hb m) (-(k : ℤ) - 1) (latStateGen (latP m) (X (0, a0 m)) ((1 : ℤ) : (latP m).carrier)) =
       latStateGen (latP m) (X (k, a0 m) * X (0, a0 m)) ((1 : ℤ) : (latP m).carrier) := by
-    rw [hW]; unfold V2m; rw [smul_bosonState_neg_latStateGen]
+    rw [hW, smul_Hb_neg_one]
   have h2 : W.smul (Hb m) (-(k : ℤ) - 1 - 1) (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) =
       latStateGen (latP m) (X (k + 1, a0 m)) ((1 : ℤ) : (latP m).carrier) := by
-    rw [Hb_smul_one, if_pos (by omega), show (-(-(k : ℤ) - 1 - 1) - 1).toNat = k + 1 by omega]
-  rw [h1, h2, latStateGen_add_boson, latStateGen_csmul, latStateGen_csmul]
+    rw [hW, Hb_smul_one_one, if_pos (by omega), show (-(-(k : ℤ) - 1 - 1) - 1).toNat = k + 1 by omega]
+  rw [h1, h2, latStateGen_add_boson_one, latStateGen_csmul_one, latStateGen_csmul_one]
   rw [show ((-(k : ℤ) - 1 : ℤ) • latStateGen (latP m) (X (k + 1, a0 m)) ((1 : ℤ) : (latP m).carrier)) =
       (-((k : ℂ) + 1)) • latStateGen (latP m) (X (k + 1, a0 m)) ((1 : ℤ) : (latP m).carrier) by
     rw [← Int.cast_smul_eq_zsmul ℂ]; push_cast; ring_nf]
@@ -245,7 +279,7 @@ theorem word2_smul_eAlpha (k : ℕ) :
   rw [hu, VertexOperatorAlgebra.mode_iterate W (Hb m) (Hb m) (-(k : ℤ) - 1) (-1) x]
   have hHx : ∀ j : ℤ, W.smul (Hb m) j x = if j < 0 then latStateGen (latP m) (X ((-j - 1).toNat, a0 m))
       ((1 : ℤ) : (latP m).carrier) else if j = 0 then cα m • x else 0 := by
-    intro j; rw [hW, hx, Hb_smul_one]
+    intro j; rw [hW, hx, Hb_smul_one_one]
   have hHy : ∀ j : ℤ, j < 0 → ∀ (p : FockN (rank (latP m))),
       W.smul (Hb m) j (latStateGen (latP m) p ((1 : ℤ) : (latP m).carrier)) =
         latStateGen (latP m) (X ((-j - 1).toNat, a0 m) * p) ((1 : ℤ) : (latP m).carrier) := by
@@ -322,7 +356,7 @@ theorem factor_ne_zero (hm2 : 2 ≤ m) (n : ℕ) (hn : 1 ≤ n) :
 theorem PP_eAlpha : PP m hm (latStateGen (latP m) 1 ((1 : ℤ) : (latP m).carrier)) =
     (1 / 2 : ℂ) • xP m hm ((1 : ℤ) : (latP m).carrier) := by
   apply Subtype.ext
-  rw [PP_coe, thetaLat_latStateGen, sigmaN_one]
+  rw [PP_coe, thetaLat_latStateGen_one, sigmaN_one]
   rfl
 
 /-- For a `σ`-even `q`: `P(q₍₋₁₎e^α) ∈ Tgt`. -/
@@ -362,8 +396,8 @@ theorem base_mem (hm2 : 2 ≤ m) (k : ℕ) :
     have hR : cα m • (V2m m hm).smul (latStateGen (latP m) (X (j, a0 m) * X (0, a0 m)) 0) (-1) x -
         (V2m m hm).smul (latStateGen (latP m) (X (j, a0 m)) ((1 : ℤ) : (latP m).carrier)) (-2)
           (latVacuumGen (latP m)) = F • Y := by
-      rw [word2_smul_eAlpha m hm j, T_yeAlpha m hm j, latStateGen_add_boson, latStateGen_csmul,
-        latStateGen_csmul, smul_add, smul_smul, hF]
+      rw [word2_smul_eAlpha m hm j, T_yeAlpha m hm j, latStateGen_add_boson_one, latStateGen_csmul_one,
+        latStateGen_csmul_one, smul_add, smul_smul, hF]
       have h2 := cα_sq m hm
       have : cα m * (cα m * ((j : ℂ) + 1 - (-1) ^ (j + 1))) = 2 * (m : ℂ) * ((j : ℂ) + 1 - (-1) ^ (j + 1)) := by
         rw [← mul_assoc, h2]

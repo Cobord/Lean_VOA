@@ -110,7 +110,7 @@ theorem auxJetSubst_relationCoeff (p : ℕ) (f : MvPolynomial AuxVar ℂ) :
     intro n hn
     rw [relationCoeff_mul, map_sum, map_mul, relationCoeff_mul]
     refine Finset.sum_congr rfl fun ij hij => ?_
-    have hij' := Finset.mem_antidiagonal.mp hij
+    have hij' := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
     rw [map_mul, hf ij.1 (by omega), auxJetSubst_relationCoeff_X p ij.2 (by omega)]
 
 /-- Every auxiliary jet relation except the Casimir one lands in `jetIdeal p I₂ⁿˢ`. -/

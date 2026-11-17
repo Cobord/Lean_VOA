@@ -320,16 +320,12 @@ instance : (tensorG G B).LaxMonoidal where
   μ Y Z := ModuleCat.ofHom (TensorProduct.lift (tmul G B Y Z))
   μ_natural_left {Y Y'} f Z := by
     refine tensorG_tensor_ext G B fun a b x y => ?_
-    simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.whiskerRight_apply,
-      ModuleCat.hom_ofHom, TensorProduct.lift.tmul]
     change tmul G B Y' Z (tmap G B f (tlof G B Y a x)) (tlof G B Z b y) =
       tmap G B (f ▷ Z) (tmul G B Y Z (tlof G B Y a x) (tlof G B Z b y))
     rw [tmap_lof, tmul_lof, tmul_lof, tmap_lof, ← μ_whiskerRight_apply, map_map_apply, map_map_apply,
       GCMon.Φ_natural_left]
   μ_natural_right {Z Z'} Y g := by
     refine tensorG_tensor_ext G B fun a b x y => ?_
-    simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.whiskerLeft_apply,
-      ModuleCat.hom_ofHom, TensorProduct.lift.tmul]
     change tmul G B Y Z' (tlof G B Y a x) (tmap G B g (tlof G B Z b y)) =
       tmap G B (Y ◁ g) (tmul G B Y Z (tlof G B Y a x) (tlof G B Z b y))
     rw [tmap_lof, tmul_lof, tmul_lof, tmap_lof, ← μ_whiskerLeft_apply, map_map_apply, map_map_apply,
@@ -353,7 +349,8 @@ instance : (tensorG G B).LaxMonoidal where
         tmap G B (λ_ Y).hom (tmul G B (𝟙_ C) Y ((tlof G B (𝟙_ C) 0 ∘ₗ (G.map (B.ι0 (𝟙_ C))).hom ∘ₗ
           (ε G).hom) c) (tlof G B Y k y)) := by
       intro k y
-      rw [ModuleCat.MonoidalCategory.leftUnitor_hom_apply, LinearMap.comp_apply, LinearMap.comp_apply,
+      erw [ModuleCat.MonoidalCategory.leftUnitor_hom_apply]
+      rw [LinearMap.comp_apply, LinearMap.comp_apply,
         tmul_lof, tmap_lof, tlof_cast G B Y (Nat.zero_add k), ← μ_whiskerRight_apply,
         unit_left_inv_apply, map_map_apply, map_map_apply, map_map_apply, map_map_apply]
       try simp only [Category.assoc]
@@ -371,7 +368,8 @@ instance : (tensorG G B).LaxMonoidal where
         tmap G B (ρ_ Y).hom (tmul G B Y (𝟙_ C) (tlof G B Y k y) ((tlof G B (𝟙_ C) 0 ∘ₗ
           (G.map (B.ι0 (𝟙_ C))).hom ∘ₗ (ε G).hom) c)) := by
       intro k y
-      rw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply, LinearMap.comp_apply, LinearMap.comp_apply,
+      erw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply]
+      rw [LinearMap.comp_apply, LinearMap.comp_apply,
         tmul_lof, tmap_lof, ← μ_whiskerLeft_apply, unit_right_inv_apply, map_map_apply, map_map_apply,
         map_map_apply]
       try simp only [Category.assoc]
@@ -394,7 +392,8 @@ theorem tensorG_ε_apply (c : ℂ) :
 instance : (tensorG G B).LaxBraided where
   braided Y Z := by
     refine tensorG_tensor_ext G B fun a b x y => ?_
-    simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.MonoidalCategory.braiding_hom_apply]
+    simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+    erw [ModuleCat.MonoidalCategory.braiding_hom_apply]
     rw [tensorG_μ_lof, tensorG_μ_lof, tensorG_map_lof, tlof_cast G B _ (Nat.add_comm b a),
       ← μ_braid_apply G x y, map_map_apply, map_map_apply, map_map_apply, GCMon.Φ_braid]
 

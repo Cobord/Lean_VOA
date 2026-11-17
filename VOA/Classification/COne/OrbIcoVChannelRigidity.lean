@@ -48,10 +48,10 @@ private theorem project_seed_word (N : ℤ) (hpos : 0 < N)
     · rw [piHom_of_mem Wi (he ▸ hw)]
       cases ks with
       | nil =>
-        have hn : N = 36 := by simpa [OrbOctaR.wordWeight] using he.symm
+        have hn : N = 36 := by simpa [OrbOctaR.wordWeight] using! he.symm
         subst N
         apply Submodule.mem_sup_left
-        simpa [primaryLine, virWord] using Submodule.subset_span (s := {Xico}) (by simp)
+        simpa [primaryLine, virWord] using! Submodule.subset_span (s := {Xico}) (by simp)
       | cons k ks =>
         apply Submodule.mem_sup_right
         refine Submodule.subset_span ⟨k, virWord Wi ks Xico, ?_, rfl⟩
@@ -101,7 +101,7 @@ theorem vacuum_channel_positive_rigidity (N : ℤ) (hpos : 0 < N) (hN : N < 100)
   have hp : x ∈ prim Wi N := by
     rw [mem_prim]
     refine ⟨hx, fun m => ?_⟩
-    simpa using OrbOdd.L_pos_of_L1_L2 h1 h2 (m + 1) (by omega)
+    simpa using! OrbOdd.L_pos_of_L1_L2 h1 h2 (m + 1) (by omega)
   have hl := primary_below_hundred N hpos hN hp
   by_cases he : N = 36
   · subst N
@@ -122,8 +122,8 @@ theorem sixth_channel_positive_rigidity (N : ℤ) (hpos : 36 < N) (hN : N < 100)
   have hp : x ∈ prim Wi N := by
     rw [mem_prim]
     refine ⟨hx, fun m => ?_⟩
-    simpa using OrbOdd.L_pos_of_L1_L2 h1 h2 (m + 1) (by omega)
+    simpa using! OrbOdd.L_pos_of_L1_L2 h1 h2 (m + 1) (by omega)
   have hl := primary_below_hundred N (by omega) hN hp
-  simpa [primaryLine, show N ≠ 36 by omega] using hl
+  simpa [primaryLine, show N ≠ 36 by omega] using! hl
 
 end VOA.Classification.COne.OrbIcoV

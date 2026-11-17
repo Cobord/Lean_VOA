@@ -56,7 +56,7 @@ variable (m : ℕ) (hm : 1 ≤ m)
 
 /-- `φ_w(q)`: the coefficient of `α(−1)^w = X(0,a₀)^w` in `q`. -/
 noncomputable def topCoeff (w : ℕ) (q : FockN (rank (latP m))) : ℂ :=
-  MvPolynomial.coeff (Finsupp.single ((0 : ℕ), a0 m) w) q
+  q.coeff (Finsupp.single ((0 : ℕ), a0 m) w)
 
 theorem topCoeff_X_mul (w k : ℕ) (q : FockN (rank (latP m))) :
     topCoeff m (w + 1) (MvPolynomial.X ((k, a0 m)) * q) = if k = 0 then topCoeff m w q else 0 := by
@@ -115,7 +115,8 @@ theorem chargeCoord_nat_ne_zero (s : ℕ) (hs : 1 ≤ s) :
 include hm in
 theorem topCoeff_vSchur_ne_zero (s : ℕ) (hs : 1 ≤ s) (d : ℕ) :
     topCoeff m d (vSchur (latP m) ((s : ℤ) : (latP m).carrier) d) ≠ 0 := by
-  rw [topCoeff_vSchur]
+  have h := topCoeff_vSchur m ((s : ℤ) : (latP m).carrier) d
+  rw [h]
   exact div_ne_zero (pow_ne_zero _ (chargeCoord_nat_ne_zero m hm s hs))
     (by exact_mod_cast Nat.factorial_ne_zero d)
 

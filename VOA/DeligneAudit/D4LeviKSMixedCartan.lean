@@ -100,22 +100,22 @@ theorem selective_cartan_pairings (r s : ℕ) (v : V) :
   have hz := z_select_weight
   simp only [xShiftCartan, yShiftCartan, zShiftCartan, xOp, yOp, zOp]
   constructor
-  · simpa [hx.1] using cartanBlend_comm ρ 1 0 (-1) 1 r s v
+  · simpa [hx.1] using! cartanBlend_comm ρ 1 0 (-1) 1 r s v
   constructor
-  · simpa [hx.2.1] using cartanBlend_comm ρ 1 0 (-1) 4 r s v
+  · simpa [hx.2.1] using! cartanBlend_comm ρ 1 0 (-1) 4 r s v
   constructor
-  · simpa [hx.2.2] using cartanBlend_comm ρ 1 0 (-1) 5 r s v
+  · simpa [hx.2.2] using! cartanBlend_comm ρ 1 0 (-1) 5 r s v
   constructor
-  · simpa [hy.1] using cartanBlend_comm ρ (-1) 0 (-1) 1 r s v
+  · simpa [hy.1] using! cartanBlend_comm ρ (-1) 0 (-1) 1 r s v
   constructor
-  · simpa [hy.2.1] using cartanBlend_comm ρ (-1) 0 (-1) 4 r s v
+  · simpa [hy.2.1] using! cartanBlend_comm ρ (-1) 0 (-1) 4 r s v
   constructor
-  · simpa [hy.2.2] using cartanBlend_comm ρ (-1) 0 (-1) 5 r s v
+  · simpa [hy.2.2] using! cartanBlend_comm ρ (-1) 0 (-1) 5 r s v
   constructor
-  · simpa [hz.1] using cartanBlend_comm ρ (-1) (-1) 0 1 r s v
+  · simpa [hz.1] using! cartanBlend_comm ρ (-1) (-1) 0 1 r s v
   constructor
-  · simpa [hz.2.1] using cartanBlend_comm ρ (-1) (-1) 0 4 r s v
-  · simpa [hz.2.2] using cartanBlend_comm ρ (-1) (-1) 0 5 r s v
+  · simpa [hz.2.1] using! cartanBlend_comm ρ (-1) (-1) 0 4 r s v
+  · simpa [hz.2.2] using! cartanBlend_comm ρ (-1) (-1) 0 5 r s v
 
 /-- A positive selective Cartan mode kills the D4 cyclic source. -/
 theorem selective_cartan_source_zero
@@ -145,7 +145,7 @@ theorem cartanBlend_word_deriv
       cartanModeDeriv ρ w a b c r ls := by
   induction ls with
   | nil =>
-      simpa [radicalWord, cartanModeDeriv] using
+      simpa [radicalWord, cartanModeDeriv] using!
         cartanBlend_source_zero ρ w m h a b c r hr
   | cons p ls ih =>
       rcases p with ⟨j, s⟩

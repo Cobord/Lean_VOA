@@ -66,7 +66,7 @@ theorem statePhase_add_int (β : ℂ) (k : ℤ) : statePhase (β + k) = (-1 : �
 
 theorem statePhase_add_one (β : ℂ) : statePhase (β + 1) = -statePhase β := by
   have h := statePhase_add_int β 1
-  simpa using h
+  simpa using! h
 
 variable {V : Type u} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra V}
   {M₁ M₂ M₃ : Type u} [AddCommGroup M₁] [Module ℂ M₁] [AddCommGroup M₂] [Module ℂ M₂]

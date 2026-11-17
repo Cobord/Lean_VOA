@@ -146,9 +146,7 @@ theorem wt_combine (Q t : ℕ) (ht : 1 ≤ t) :
   obtain ⟨k, rfl⟩ : ∃ k, t = k + 1 := ⟨t - 1, by omega⟩
   rw [wt_partial Q k, wt]
   have hkeyN : ((k + 1) * (Q + 1).choose (k + 1) : ℕ) = ((Q + 1) * Q.choose k : ℕ) := by
-    have h := Nat.succ_mul_choose_eq Q k
-    simp only [Nat.succ_eq_add_one] at h
-    rw [h]; ring
+    rw [Nat.add_one_mul_choose_eq Q k]; ring
   have hkey : ((k : ℂ) + 1) * ((Q + 1).choose (k + 1) : ℂ) = ((Q : ℂ) + 1) * (Q.choose k : ℂ) := by
     exact_mod_cast hkeyN
   have hpow : (-1 : ℂ)^(k+1) = -((-1:ℂ)^k) := by rw [pow_succ]; ring
@@ -380,7 +378,7 @@ theorem aExpCZ_comp_EminusC_gen (c c' : ℂ) (N : ℤ) (hN : 0 ≤ N) (b : ℤ) 
               (kappa P i) • ((-(2 * c')) • g (i + j + 1))) from by
             funext j; refine Finset.sum_congr rfl fun i _ => ?_; rw [smul_smul, mul_comm]]
         rw [partB_reindex_gen (fun s => (-(2 * c')) • g s) N.toNat (kappa P)
-          (fun s hs => by simp only; rw [hgzero s hs, smul_zero])]
+          (fun s hs => by (try simp only); rw [hgzero s hs, smul_zero])]
         rw [Finset.smul_sum]
         refine Finset.sum_congr rfl fun s _ => ?_
         rw [smul_smul, smul_smul]; congr 1; ring
@@ -701,7 +699,7 @@ theorem G3g_support_finite (c c' : ℂ) (C D : ℤ) (x : B) :
   intro qpm hqpm
   obtain ⟨q, p, m⟩ := qpm
   rw [Function.mem_support, G3g] at hqpm
-  simp only at hqpm
+  try simp only at hqpm
   have hqS : q ∈ Sq := by
     rw [hSq, Function.mem_support]; intro h
     exact hqpm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -817,7 +815,7 @@ theorem G3g'_support_finite (c c' : ℂ) (C D : ℤ) (x : B) :
   intro pqm hpqm
   obtain ⟨p, q, m⟩ := pqm
   rw [Function.mem_support, G3gpre] at hpqm
-  simp only at hpqm
+  try simp only at hpqm
   have hpS : p ∈ Sp := by
     rw [hSp, Function.mem_support]; intro h
     exact hpqm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -1016,7 +1014,7 @@ theorem collapseL (Pn : ℕ) (cc c' : ℂ) (hP : 2 * cc * c' = -(Pn : ℂ)) (u v
       (fun i _ => (Wgen_antidiag_shift_finite Pn cc c' u v (i : ℤ) p).subset
         (fun s hs => by
           rw [Function.mem_support] at hs ⊢
-          simp only at hs ⊢
+          (try simp only at hs ⊢)
           exact fun h => hs (by rw [mul_smul, h, smul_zero])))]
   rw [show (∑ᶠ s : ℤ, ∑ i ∈ Finset.range (Pn + 1),
             (wt Pn i * kZ (-(Pn : ℂ)) (s - (i : ℤ))) • Wgen cc c' (u + s) (v - s) p)
@@ -1058,7 +1056,7 @@ theorem collapseR (Pn : ℕ) (cc c' : ℂ) (hP : 2 * cc * c' = -(Pn : ℂ)) (u v
       (fun i _ => (Wgen_antidiag_negshift_finite Pn cc c' u v (i : ℤ) p).subset
         (fun s hs => by
           rw [Function.mem_support] at hs ⊢
-          simp only at hs ⊢
+          (try simp only at hs ⊢)
           exact fun h => hs (by rw [mul_smul, h, smul_zero])))]
   rw [show (∑ᶠ s : ℤ, ∑ i ∈ Finset.range (Pn + 1),
             (wt Pn i * kZ (-(Pn : ℂ)) ((-s) - (i : ℤ))) • Wgen cc c' (u + s) (v - s) p)
@@ -1085,8 +1083,8 @@ theorem collapseR2 (Pn : ℕ) (cc c' : ℂ) (hP : 2 * cc * c' = -(Pn : ℂ)) (he
   refine (Finset.sum_nbij' (i := fun i => Pn - i) (j := fun i => Pn - i) ?_ ?_ ?_ ?_ ?_).symm
   · intro i hi; simp only [Finset.mem_range] at hi ⊢; omega
   · intro i hi; simp only [Finset.mem_range] at hi ⊢; omega
-  · intro i hi; simp only [Finset.mem_range] at hi; simp only []; omega
-  · intro i hi; simp only [Finset.mem_range] at hi; simp only []; omega
+  · intro i hi; simp only [Finset.mem_range] at hi; (try simp only []); omega
+  · intro i hi; simp only [Finset.mem_range] at hi; (try simp only []); omega
   · intro i hi
     simp only [Finset.mem_range] at hi
     rw [← wt_symm_even Pn i hev (by omega),
@@ -1115,7 +1113,7 @@ theorem Yemα_oppSign_bracket_binom_on_state (m m' : ℤ) (hsign : m * m' ≤ -1
         = ∑ i ∈ Finset.range (Pn + 1),
             wt Pn i • bracketDist (Yemα m) (Yemα m') (j - ((Pn : ℤ) - i)) (k - i) from
       mulBySubPow_binom Pn (bracketDist (Yemα m) (Yemα m')) j k]
-  rw [LinearMap.coeFn_sum, Finset.sum_apply]
+  rw [LinearMap.sum_apply]
   simp only [LinearMap.smul_apply]
   -- per `i`: reduce the bracket on the basis state.
   rw [show (∑ i ∈ Finset.range (Pn + 1),
@@ -1172,13 +1170,13 @@ theorem Yemα_oppSign_bracket_binom (m m' : ℤ) (hsign : m * m' ≤ -1) :
   | zero => rw [map_zero]
   | add y1 y2 h1 h2 => rw [map_add, h1, h2, add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, h1, h2, add_zero]
       | single nn a =>
-          rw [(Finsupp.smul_single_one nn a).symm]
+          rw [show (AddMonoidAlgebra.single nn a : LatGrp) = a • eVec nn by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul,
-            show (Finsupp.single nn (1 : ℂ) : LatGrp) = eVec nn from rfl,
             Yemα_oppSign_bracket_binom_on_state m m' hsign, smul_zero]
 
 /-- **The opposite-sign mutual locality** `Local (Yemα m) (Yemα m')` (`mm' ≤ -1`,

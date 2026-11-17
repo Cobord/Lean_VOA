@@ -22,12 +22,12 @@ theorem thomFlagIdeal_composite (ρ : R →ₐ[ℂ] S) (hρ : Function.Surjectiv
   · rintro ⟨x, ⟨z, hz, hx⟩, hy⟩
     obtain ⟨w, rfl⟩ := hρ z
     refine ⟨w, hz, x - v * w, ?_, ?_⟩
-    · simpa only [map_sub, map_mul, hv] using hx
+    · simpa only [map_sub, map_mul, hv] using! hx
     · convert hy using 1
       ring
   · rintro ⟨w, hw, z, hz, hy⟩
     refine ⟨z + v * w, ⟨ρ w, hw, ?_⟩, ?_⟩
-    · simpa only [map_add, map_mul, hv, add_sub_cancel_right] using hz
+    · simpa only [map_add, map_mul, hv, add_sub_cancel_right] using! hz
     · convert hy using 1
       ring
 
@@ -39,7 +39,7 @@ theorem thomFlagIdeal_composite_kernel (ρ : R →ₐ[ℂ] S) (ψ : S →ₐ[ℂ
   have hj : ρ (v * x) ∈ J := by
     rw [map_mul, hv]
     exact hker (ρ x) hx
-  simpa only [mul_assoc] using thomFlagIdeal_mul ρ t I J hj
+  simpa only [mul_assoc] using! thomFlagIdeal_mul ρ t I J hj
 
 /-- A one-dimensional step remains one-dimensional after two successive Thom operations. -/
 theorem thomFlagIdeal_composite_step (ρ : R →ₐ[ℂ] S) (hρ : Function.Surjective ρ)

@@ -151,11 +151,13 @@ theorem chargedField_creation_z0 (hε : ∀ α, ε α 0 = 1) (α : L.carrier) : 
 
 theorem chargedField_creation_nonneg (hε : ∀ α, ε α 0 = 1) (α : L.carrier) {n : ℤ} (hn : 0 ≤ n) :
     mode (chargedField F ε α) n (latVacuumGen L) = 0 := by
-  rw [mode_apply, chargedField_vacuum F ε hε, if_neg (by omega)]
+  change chargedField F ε α (-n - 1) (latVacuumGen L) = 0
+  rw [chargedField_vacuum F ε hε, if_neg (by omega)]
 
 theorem chargedField_mode_neg_one_vacuum (hε : ∀ α, ε α 0 = 1) (α : L.carrier) :
     mode (chargedField F ε α) (-1) (latVacuumGen L) = latChargeGen L α := by
-  rw [mode_apply, show -(-1 : ℤ) - 1 = 0 from by ring, chargedField_creation_z0 F ε hε]
+  change chargedField F ε α (-(-1) - 1) (latVacuumGen L) = latChargeGen L α
+  rw [show -(-1 : ℤ) - 1 = 0 from by ring, chargedField_creation_z0 F ε hε]
 
 theorem chargedField_isField (α : L.carrier) : IsField (chargedField F ε α) := by
   intro x
@@ -201,7 +203,8 @@ theorem dressingField_coefficient_finite (α : L.carrier) (t : ℤ)
 theorem chargedField_charge_leading (α β : L.carrier) :
     mode (chargedField F ε α) (-L.form α β - 1) (latChargeGen L β) =
       ε α β • latChargeGen L (α + β) := by
-  rw [mode_apply, latChargeGen, chargedField_tmul,
+  change chargedField F ε α (-(-L.form α β - 1) - 1) (latChargeGen L β) = _
+  rw [latChargeGen, chargedField_tmul,
     show -(-L.form α β - 1) - 1 - L.form α β = 0 by ring,
     dressingField_vacuum, if_pos le_rfl, Int.toNat_zero, creationCoefficient_zero]
   rfl
@@ -209,7 +212,8 @@ theorem chargedField_charge_leading (α β : L.carrier) :
 theorem chargedField_charge_higher_modes (α β : L.carrier) (n : ℤ)
     (hn : -L.form α β - 1 < n) :
     mode (chargedField F ε α) n (latChargeGen L β) = 0 := by
-  rw [mode_apply, latChargeGen, chargedField_tmul, dressingField_vacuum,
+  change chargedField F ε α (-n - 1) (latChargeGen L β) = 0
+  rw [latChargeGen, chargedField_tmul, dressingField_vacuum,
     if_neg (by omega), latStateGen, TensorProduct.zero_tmul, smul_zero]
 
 theorem chargedField_regularity (α : L.carrier) (v : LatModuleGen L) :

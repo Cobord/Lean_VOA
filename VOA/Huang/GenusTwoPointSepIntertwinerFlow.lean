@@ -28,10 +28,10 @@ theorem intertwiner_virasoro_comm (Y : IntertwiningOperator P.isMod Q.isMod N.is
           (mode (P.isMod.YM W.conformalVector) j w) x := by
   have h := Y.property.commutator W.conformalVector w x ((k : ℤ) + 1) n
   have hc (j : ℕ) : cbz ((k : ℤ) + 1) (j : ℤ) = ((k + 1).choose j : ℂ) := by
-    simpa only [Nat.cast_add, Nat.cast_one] using HuangODEModes.cbz_nat (k + 1) j
+    simpa only [Nat.cast_add, Nat.cast_one] using! HuangODEModes.cbz_nat (k + 1) j
   rw [HuangODEModes.finsum_eq_sum_range _ (k + 2)] at h
   · simpa only [SquareModule.roundL, Int.cast_add, Int.cast_natCast, Int.cast_one,
-      hc] using h
+      hc] using! h
   · intro j hj
     rcases hj with hj | hj
     · rw [cbz_apply_neg _ hj, zero_smul]

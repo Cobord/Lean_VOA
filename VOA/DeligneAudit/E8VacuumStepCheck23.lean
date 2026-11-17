@@ -11,6 +11,11 @@ import VOA.DeligneAudit.E8VacuumSteps
 
 namespace VOA.DeligneAudit.DeligneCarrier.E8
 
-theorem stepOK_23 : ∀ s, s < 3001 → 2876 ≤ s → stepOK s = true := by decide +kernel
+theorem stepOK_23 : ∀ s, s < 3001 → 2876 ≤ s → stepOK s = true := by
+  -- Offset form keeps the kernel's `Nat.decidableBallLT` recursion depth at 125.
+  have h : ∀ k, k < 125 → stepOK (2876 + k) = true := by decide +kernel
+  intro s hs ha
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le ha
+  exact h k (by omega)
 
 end VOA.DeligneAudit.DeligneCarrier.E8

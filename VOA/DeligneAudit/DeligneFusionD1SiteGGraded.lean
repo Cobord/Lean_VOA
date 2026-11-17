@@ -28,7 +28,7 @@ theorem word_positive_fst (c₀ : Fin n) (l : List (Fin n × ℕ))
       rcases a with ⟨c, r⟩
       rcases r with _ | r
       · change coOp f c (wordOp (rep f hJ hskew) l (w c₀)).1 = 0
-        rw [ih (by simpa [VOA.DeligneAudit.SectorGraded.wordDeg] using hd), map_zero]
+        rw [ih (by simpa [VOA.DeligneAudit.SectorGraded.wordDeg] using! hd), map_zero]
       · rcases r with _ | r <;> rfl
 
 theorem word_zero_snd (c₀ : Fin n) (l : List (Fin n × ℕ))
@@ -82,7 +82,7 @@ theorem cycDeg_one (c₀ : Fin n) :
     have hu : u.1 = 0 := word_positive_fst f hJ hskew c₀ l (by omega)
     have he : u = u.2 • vac n := by
       apply Prod.ext
-      · simpa [vac] using hu
+      · simpa [vac] using! hu
       · simp [vac]
     change u ∈ _
     rw [he]

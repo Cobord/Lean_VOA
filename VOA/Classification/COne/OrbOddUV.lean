@@ -58,8 +58,8 @@ theorem s7_zero : evV Wt tetraU s7v = 0 := by
   have hp : evV Wt tetraU s7v ∈ prim Wt (9 + (7 : ℕ)) := by
     rw [mem_prim]
     refine ⟨evV_mem_grading tetraU_mem (fun p hp => (s7v_spec p hp).1), fun m => ?_⟩
-    have := L_pos_of_L1_L2 (by simpa using h1) (by simpa using h2) (m + 1) (by omega)
-    simpa using this
+    have := L_pos_of_L1_L2 (by simpa using! h1) (by simpa using! h2) (m + 1) (by omega)
+    simpa using! this
   have hl := evV_mem_lowerDesc tetraU_mem (N := 7) (v := s7v) s7v_spec
   exact prim_lowerDesc_eq_zero hp hl
 
@@ -151,7 +151,7 @@ theorem mk_uv_partial (c : ℂ)
     have e := hN (16 - n) (by omega)
     rw [show (15 : ℤ) - ((16 - n : ℕ) : ℤ) = (n : ℤ) - 1 by omega] at e
     have hpos := posV_xsN (16 - n) (by omega)
-    have hmk := mk_evV Wt (h := 9) (x := tetraU) (by simpa using tetraU_mem) _ hpos
+    have hmk := mk_evV Wt (h := 9) (x := tetraU) (by simpa using! tetraU_mem) _ hpos
     rw [e, map_smul, hmk]
     simp only [qPart, zp_paddL, zp_pscaleL, map_add, map_mul, aeval_C, LinearMap.add_apply,
       Module.End.mul_apply, Module.algebraMap_end_apply, smul_add]

@@ -18,6 +18,8 @@ obstruction forces zero central motion, and fixed-charge reconstruction
 trivializes every graded first-order deformation. No Kac determinant or
 unproved general fusion normalization is assumed.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirDeformModes
 open Module (End)
 open VirModule VirSimple VertexOperatorAlgebra Deform
@@ -66,7 +68,7 @@ theorem tricritical_creation_survival (c : ℂ) (i : ℕ) (w : List ℕ) :
   have hh := InverseDS.VirasoroVerma.vacuumSurvival_mode c (i+1) (negWordVir c w)
   have hm : -((i+1:ℕ):ℤ)-1=-(i:ℤ)-2 := by push_cast; ring
   rw [hm] at hh
-  simpa only [show i+1=1 ↔ i=0 by omega] using hh
+  simpa only [show i+1=1 ↔ i=0 by omega] using! hh
 
 /-- The actual scalar survival value is 8000 at every charge: only the
 all-L-minus-two term contributes, with coefficient 512000 and six factors
@@ -107,11 +109,11 @@ theorem tricritical_universal_singular :
     Lop tricriticalC 2 (tricriticalState (virasoroVOA tricriticalC).L (vacVec tricriticalC))=0 := by
   let A := tricriticalUniversalData tricriticalC
   have hv (n : ℤ) (hn : -1≤n) : A.L n (vacVec tricriticalC)=0 := by
-    simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using Lop_vacuum tricriticalC hn
+    simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using! Lop_vacuum tricriticalC hn
   have hK : A.central=(7/10:ℂ) • 1 := rfl
   constructor
-  · simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using tricritical_L1_zero A _ hv hK
-  · simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using tricritical_L2_zero A _ hv hK
+  · simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using! tricritical_L1_zero A _ hv hK
+  · simpa only [A,tricriticalUniversalData,virasoroVOA_L_eq_Lop] using! tricritical_L2_zero A _ hv hK
 
 /-- The actual simple quotient kills the certified positive-weight singular
 state. This uses ordinary radical invariance, not a deformed invariant form. -/
@@ -120,7 +122,7 @@ theorem tricritical_simple_relation :
   have hz := NormalOrdering.singular_mkQ_eq_zero tricriticalC (n:=12) (by omega)
     _ (tricriticalState_mem_grading tricriticalC)
     tricritical_universal_singular.1 tricritical_universal_singular.2
-  simpa only [tricriticalState,map_sum,map_smul,virWord_mkQ,virasoroSimple_vacuum] using hz
+  simpa only [tricriticalState,map_sum,map_smul,virWord_mkQ,virasoroSimple_vacuum] using! hz
 
 set_option maxHeartbeats 1000000 in
 /-- Substituting the actual dual central operator into the norm polynomial

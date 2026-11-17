@@ -93,7 +93,7 @@ theorem higherRadicalCountClosure_le_fiber (d : Fin 3 → ℕ) :
   apply iSup_le
   intro hk
   apply le_iSup_of_le ![k.d₁, k.d₂, k.d₃]
-  apply le_iSup_of_le ((mem_radicalCountFiber _ _).mpr (by simpa using hk.1))
+  apply le_iSup_of_le ((mem_radicalCountFiber _ _).mpr (by simpa using! hk.1))
   apply le_iSup_of_le (higherRadicalCounts_position d k hk)
   apply a3LeviClosure_mono
   exact le_iSup_of_le k.degree le_rfl
@@ -152,7 +152,7 @@ theorem radicalCountFiltration_rank_le [FiniteDimensional ℂ V] (a b c : ℕ)
     (higherRadicalCountClosure_le_fiber ρ w)
     (fun d => by
       by_cases hd : d ∈ radicalSupportedCounts a b c
-      · simpa [c', hd] using hb d hd
+      · simpa [c', hd] using! hb d hd
       · have he : a < d 0 ∨ b < d 1 ∨ c < d 2 := by
           rw [mem_radicalSupportedCounts] at hd
           omega
@@ -160,7 +160,7 @@ theorem radicalCountFiltration_rank_le [FiniteDimensional ℂ V] (a b c : ℕ)
         simp [c', hd])
     (fun d hd => by simp [c', hd])
   rw [← cyclic_eq_radicalCountClosures ρ w a b c h] at hf
-  simpa only [c', Finset.sum_ite_mem, Finset.inter_self] using hf
+  simpa only [c', Finset.sum_ite_mem, Finset.inter_self] using! hf
 
 end
 

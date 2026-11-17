@@ -116,6 +116,6 @@ theorem fusion_associativity_of_dimension_bounds (hassoc : AssociativityInput W)
         (hupper A B C D iA iB iC iD).2)
   apply le_antisymm (hle P₁ P₂ P₃ P₄ i₁ i₂ i₃ i₄)
   simpa only [productMultiplicity_reverse R P₁ P₂ P₃ P₄,
-    ← productMultiplicity_reverse R P₃ P₂ P₁ P₄] using hle P₃ P₂ P₁ P₄ i₃ i₂ i₁ i₄
+    ← productMultiplicity_reverse R P₃ P₂ P₁ P₄] using! hle P₃ P₂ P₁ P₄ i₃ i₂ i₁ i₄
 
 end VOA.Huang.AssocConverse

@@ -212,10 +212,10 @@ theorem crossSlice_inner_vandermonde (K M : ℕ) (p : ℕ) (hp : p ≤ K) (Y : �
   rw [← ZhuRes.finsumZ_eq_range_sum
       (fun i : ℤ => cbz ((K : ℤ) - (p : ℤ)) (i - (p : ℤ)) * cbz (M : ℤ) (Y - i))
       (fun i hi => by
-        dsimp only
+        try dsimp only
         rw [cbz_apply_neg ((K : ℤ) - (p : ℤ)) (by omega), zero_mul])
       (fun i hi => by
-        dsimp only
+        try dsimp only
         rw [cbz_lt (by omega : (0 : ℤ) ≤ (K : ℤ) - (p : ℤ)) (by push_cast at hi ⊢; omega), zero_mul])]
   rw [← finsum_comp_equiv (Equiv.addRight (p : ℤ))
       (f := fun i : ℤ => cbz ((K : ℤ) - (p : ℤ)) (i - (p : ℤ)) * cbz (M : ℤ) (Y - i))]

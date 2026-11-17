@@ -62,12 +62,12 @@ theorem prefix_times_mixed_zero (Θ F : ℕ → Module.End ℂ V) (w : V) (N r s
   rw [PowerSeries.coeff_mul, LinearMap.sum_apply]
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  have hsum : i + j = s := Finset.mem_antidiagonal.mp hij
+  have hsum : i + j = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
   rw [Module.End.mul_apply, Polynomial.coeff_coe]
   by_cases hi : i < N
   · rw [finiteCurrent_coeff_lt N Θ i hi]
     have hz : PowerSeries.coeff j (Fs Θ * Fs F ^ r) w = 0 := by
-      simpa only [mixedCoeff, pow_one, show s - i = j by omega] using
+      simpa only [mixedCoeff, pow_one, show s - i = j by omega] using!
         hone i hi (by omega)
     rw [hz, map_zero]
   · rw [finiteCurrent_coeff_ge N Θ i (by omega), LinearMap.zero_apply]
@@ -81,7 +81,7 @@ theorem prefix_square_times_power_zero (Θ F : ℕ → Module.End ℂ V)
   rw [pow_two, mul_assoc, PowerSeries.coeff_mul, LinearMap.sum_apply]
   apply Finset.sum_eq_zero
   rintro ⟨i, j⟩ hij
-  have hsum : i + j = s := Finset.mem_antidiagonal.mp hij
+  have hsum : i + j = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hij
   rw [Module.End.mul_apply, Polynomial.coeff_coe]
   by_cases hi : i < N
   · rw [finiteCurrent_coeff_lt N Θ i hi]
@@ -90,12 +90,12 @@ theorem prefix_square_times_power_zero (Θ F : ℕ → Module.End ℂ V)
       rw [PowerSeries.coeff_mul, LinearMap.sum_apply]
       apply Finset.sum_eq_zero
       rintro ⟨k, l⟩ hkl
-      have hsum' : k + l = j := Finset.mem_antidiagonal.mp hkl
+      have hsum' : k + l = j := Finset.HasAntidiagonal.mem_antidiagonal.mp hkl
       rw [Module.End.mul_apply, Polynomial.coeff_coe]
       by_cases hk : k < N
       · rw [finiteCurrent_coeff_lt N Θ k hk]
         have hF : Q F r l w = 0 := by
-          simpa only [show s - i - k = l by omega] using hsimple i k hi hk (by omega)
+          simpa only [show s - i - k = l by omega] using! hsimple i k hi hk (by omega)
         change Θ k (Q F r l w) = 0
         rw [hF, map_zero]
       · rw [finiteCurrent_coeff_ge N Θ k (by omega), LinearMap.zero_apply]

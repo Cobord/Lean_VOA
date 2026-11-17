@@ -85,13 +85,13 @@ theorem currentNormal_cutoff_of_center (h : HighestRel R w m) (D : ℕ)
             rw [current_raise_center0_pow_apply, map_add, map_nsmul] at hExtract
             have hscalar : (n+1) • currentNormal R (b++[x]) n c w ∈
                 currentPiece R w (D-1) := by
-              simpa only [add_sub_cancel_right, ← currentNormal_append] using
+              simpa only [add_sub_cancel_right, ← currentNormal_append] using!
                 (currentPiece R w (D-1)).sub_mem hExtract hTail
             rw [← Nat.cast_smul_eq_nsmul ℂ] at hscalar
             exact (Submodule.smul_mem_iff _
               (by exact_mod_cast Nat.succ_ne_zero n : ((n+1 : ℕ) : ℂ) ≠ 0)).mp hscalar
         apply inner c.length x n c rfl hp
-        simpa only [List.length_append, List.length_singleton] using hs
+        simpa only [List.length_append, List.length_singleton] using! hs
   exact main a.length a n c rfl hp hsize
 
 open VOA.DeligneAudit.DeligneSector
@@ -106,7 +106,7 @@ theorem localWeyl_currentNormal_cutoff (h : LocalWeylRelG D4sector R w m)
     currentNormal R a n c w ∈ currentPiece R w (2 * m) := by
   have hh := currentNormal_cutoff_of_center (highestRel_of_localWeyl h) (2 * m + 1)
     (localWeyl_current_center_word_zero h) a n c hp hsize
-  simpa only [Nat.add_sub_cancel] using hh
+  simpa only [Nat.add_sub_cancel] using! hh
 
 end
 end VOA.DeligneAudit.D4FusionContact

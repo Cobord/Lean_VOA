@@ -17,13 +17,13 @@ def evaluationAnnihilator (π : R →ₗ[ℂ] V) : Ideal R where
   smul_mem' := by
     intro x y hy z
     change π ((x * y) * z) = 0
-    simpa only [mul_left_comm, mul_assoc] using hy (x * z)
+    simpa only [mul_left_comm, mul_assoc] using! hy (x * z)
 
 /-- Annihilation of all multiples implies ordinary membership in the linear kernel. -/
 theorem evaluationAnnihilator_le_kernel (π : R →ₗ[ℂ] V) :
     (evaluationAnnihilator π).restrictScalars ℂ ≤ LinearMap.ker π := by
   intro x hx
-  simpa only [LinearMap.mem_ker, mul_one] using hx 1
+  simpa only [LinearMap.mem_ker, mul_one] using! hx 1
 
 /-- The three type-A Cartan symbols separate the two chosen alphabets and their base. -/
 theorem threeCartan_symbols_annihilate (π : R →ₗ[ℂ] V) (g₁ g₂ x : R)
@@ -75,11 +75,11 @@ theorem fourBlockPowerSumIdeal_le_kernel (π : R →ₗ[ℂ] V)
   obtain ⟨h₁, h₂, h₂₃⟩ := threeCartan_symbols_annihilate π
     (p 1 N) (p 2 N) (p 2 N + p 3 N) hfirst hmiddle hlast
   have h₃ : p 3 N ∈ evaluationAnnihilator π := by
-    simpa only [add_sub_cancel_left] using (evaluationAnnihilator π).sub_mem h₂₃ h₂
+    simpa only [add_sub_cancel_left] using! (evaluationAnnihilator π).sub_mem h₂₃ h₂
   have h₀ : p 0 N ∈ evaluationAnnihilator π := by
     have he : p 0 N = -(p 1 N + p 2 N + p 3 N) := by
       apply eq_neg_of_add_eq_zero_left
-      simpa only [add_assoc] using htotal
+      simpa only [add_assoc] using! htotal
     rw [he]
     exact (evaluationAnnihilator π).neg_mem
       ((evaluationAnnihilator π).add_mem ((evaluationAnnihilator π).add_mem h₁ h₂) h₃)

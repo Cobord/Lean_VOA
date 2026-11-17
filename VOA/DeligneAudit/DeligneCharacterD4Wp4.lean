@@ -25,14 +25,14 @@ noncomputable section
 /-- `a^j qⁿ ↦ x^j r^{2n-j}`. -/
 def tau (F : PowerSeries L) : PowerSeries L :=
   PowerSeries.mk fun m => ∑ n ∈ Finset.range (m + 1),
-    AddMonoidAlgebra.single (2 * (n : ℤ) - m) ((coeff n F) (2 * (n : ℤ) - m))
+    AddMonoidAlgebra.single (2 * (n : ℤ) - m) ((coeff n F).coeff (2 * (n : ℤ) - m))
 
 theorem coeff_tau (F : PowerSeries L) (m : ℕ) :
     coeff m (tau F) = ∑ n ∈ Finset.range (m + 1),
-      AddMonoidAlgebra.single (2 * (n : ℤ) - m) ((coeff n F) (2 * (n : ℤ) - m)) := coeff_mk _ _
+      AddMonoidAlgebra.single (2 * (n : ℤ) - m) ((coeff n F).coeff (2 * (n : ℤ) - m)) := coeff_mk _ _
 
-theorem L_add_apply (f g : L) (i : ℤ) : (f + g) i = f i + g i := rfl
-theorem L_zero_apply (i : ℤ) : (0 : L) i = 0 := rfl
+theorem L_add_apply (f g : L) (i : ℤ) : (f + g).coeff i = f.coeff i + g.coeff i := rfl
+theorem L_zero_apply (i : ℤ) : (0 : L).coeff i = 0 := rfl
 
 theorem tau_add (F G : PowerSeries L) : tau (F + G) = tau F + tau G := by
   ext m : 1
@@ -51,7 +51,7 @@ theorem tau_sum {ι : Type*} (s : Finset ι) (f : ι → PowerSeries L) :
     tau (∑ i ∈ s, f i) = ∑ i ∈ s, tau (f i) := map_sum tauHom f s
 
 /-- The support condition `j ≤ n`. -/
-def SC (F : PowerSeries L) : Prop := ∀ (n : ℕ) (j : ℤ), (n : ℤ) < j → (coeff n F) j = 0
+def SC (F : PowerSeries L) : Prop := ∀ (n : ℕ) (j : ℤ), (n : ℤ) < j → (coeff n F).coeff j = 0
 
 theorem tau_monomial (j : ℤ) (c : ℚ) (n : ℕ) (hj : j ≤ n) :
     tau (PowerSeries.C (AddMonoidAlgebra.single j c) * X ^ n) =
@@ -63,13 +63,13 @@ theorem tau_monomial (j : ℤ) (c : ℚ) (n : ℕ) (hj : j ≤ n) :
   · rw [Finset.sum_eq_single n]
     · rw [if_pos rfl]
       have : 2 * (n : ℤ) - m = j := by omega
-      rw [this, Finsupp.single_eq_same]
+      rw [this, AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same]
     · intro b _ hb; rw [if_neg hb, L_zero_apply, AddMonoidAlgebra.single_zero]
     · intro hn; exfalso; rw [Finset.mem_range] at hn; omega
   · refine Finset.sum_eq_zero fun b _ => ?_
     split_ifs with hb
     · subst hb
-      rw [Finsupp.single_apply, if_neg (by omega), AddMonoidAlgebra.single_zero]
+      rw [AddMonoidAlgebra.coeff_single, Finsupp.single_apply, if_neg (by omega), AddMonoidAlgebra.single_zero]
     · rw [L_zero_apply, AddMonoidAlgebra.single_zero]
 
 theorem tau_agree {K : ℕ} {F G : PowerSeries L} (h : AgreeTo K F G) : AgreeTo K (tau F) (tau G) :=
@@ -78,14 +78,13 @@ theorem tau_agree {K : ℕ} {F G : PowerSeries L} (h : AgreeTo K F G) : AgreeTo 
     exact Finset.sum_congr rfl fun n hn => by
       rw [h.coeff_eq (by rw [Finset.mem_range] at hn; omega)]
 
-theorem L_sum_single (f : L) : ∑ j ∈ f.support, AddMonoidAlgebra.single j (f j) = f := by
-  show (Finsupp.sum (f : ℤ →₀ ℚ) Finsupp.single) = f
-  exact Finsupp.sum_single f
+theorem L_sum_single (f : L) : ∑ j ∈ f.coeff.support, AddMonoidAlgebra.single j (f.coeff j) = f :=
+  AddMonoidAlgebra.sum_coeff_single f
 
 /-- Finite truncation as a sum of monomials. -/
 def trS (K : ℕ) (F : PowerSeries L) : PowerSeries L :=
-  ∑ p ∈ (Finset.range K).sigma (fun n => (coeff n F).support),
-    PowerSeries.C (AddMonoidAlgebra.single p.2 ((coeff p.1 F) p.2)) * X ^ p.1
+  ∑ p ∈ (Finset.range K).sigma (fun n => (coeff n F).coeff.support),
+    PowerSeries.C (AddMonoidAlgebra.single p.2 ((coeff p.1 F).coeff p.2)) * X ^ p.1
 
 theorem agree_trS (K : ℕ) (F : PowerSeries L) : AgreeTo K F (trS K F) := by
   apply AgreeTo.of_coeff
@@ -110,9 +109,9 @@ theorem tau_mul_trS (K : ℕ) (F G : PowerSeries L) (hF : SC F) (hG : SC G) :
     by_contra h; exact hp.2 (hF _ _ (by omega))
   have h2 : p'.2 ≤ p'.1 := by
     by_contra h; exact hp'.2 (hG _ _ (by omega))
-  rw [show PowerSeries.C (AddMonoidAlgebra.single p.2 ((coeff p.1 F) p.2)) * X ^ p.1 *
-      (PowerSeries.C (AddMonoidAlgebra.single p'.2 ((coeff p'.1 G) p'.2)) * X ^ p'.1) =
-      PowerSeries.C (AddMonoidAlgebra.single (p.2 + p'.2) ((coeff p.1 F) p.2 * (coeff p'.1 G) p'.2)) *
+  rw [show PowerSeries.C (AddMonoidAlgebra.single p.2 ((coeff p.1 F).coeff p.2)) * X ^ p.1 *
+      (PowerSeries.C (AddMonoidAlgebra.single p'.2 ((coeff p'.1 G).coeff p'.2)) * X ^ p'.1) =
+      PowerSeries.C (AddMonoidAlgebra.single (p.2 + p'.2) ((coeff p.1 F).coeff p.2 * (coeff p'.1 G).coeff p'.2)) *
         X ^ (p.1 + p'.1) by
     rw [← AddMonoidAlgebra.single_mul_single, map_mul, pow_add]; ring]
   rw [tau_monomial _ _ _ (by push_cast; omega), tau_monomial _ _ _ h1, tau_monomial _ _ _ h2,
@@ -134,13 +133,13 @@ theorem tau_mul (F G : PowerSeries L) (hF : SC F) (hG : SC G) : tau (F * G) = ta
 /-! ## Support condition: closure -/
 
 /-- `f` is supported in degrees `≤ a`. -/
-def Supp (f : L) (a : ℤ) : Prop := ∀ j, a < j → f j = 0
+def Supp (f : L) (a : ℤ) : Prop := ∀ j, a < j → f.coeff j = 0
 
 theorem Supp_mul {f g : L} {a b : ℤ} (hf : Supp f a) (hg : Supp g b) : Supp (f * g) (a + b) := by
   intro j hj
   by_contra h
-  have hs : j ∈ (f * g).support := Finsupp.mem_support_iff.mpr h
-  obtain ⟨x, hx, y, hy, rfl⟩ := Finset.mem_add.mp (AddMonoidAlgebra.support_mul f g hs)
+  have hs : j ∈ (f * g).coeff.support := Finsupp.mem_support_iff.mpr h
+  obtain ⟨x, hx, y, hy, rfl⟩ := Finset.mem_add.mp (AddMonoidAlgebra.support_coeff_mul_subset f g hs)
   rw [Finsupp.mem_support_iff] at hx hy
   by_cases hxa : a < x
   · exact hx (hf x hxa)
@@ -168,14 +167,14 @@ theorem SC_mul {F G : PowerSeries L} (hF : SC F) (hG : SC G) : SC (F * G) := by
   rw [coeff_mul]
   refine Supp_sum _ _ n (fun p hp => ?_) j hj
   have := Supp_mul (hF p.1) (hG p.2)
-  rw [Finset.mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   rwa [show ((p.1 : ℕ) : ℤ) + p.2 = n by rw [← hp]; push_cast; ring] at this
 
 theorem SC_add {F G : PowerSeries L} (hF : SC F) (hG : SC G) : SC (F + G) := fun n j hj => by
   rw [map_add, L_add_apply, hF n j hj, hG n j hj, add_zero]
 
 theorem SC_neg {F : PowerSeries L} (hF : SC F) : SC (-F) := fun n j hj => by
-  rw [map_neg, show ((-coeff n F : L) j) = -(coeff n F j) from rfl, hF n j hj, neg_zero]
+  rw [map_neg, show ((-coeff n F : L).coeff j) = -((coeff n F).coeff j) from rfl, hF n j hj, neg_zero]
 
 theorem SC_sub {F G : PowerSeries L} (hF : SC F) (hG : SC G) : SC (F - G) := by
   rw [sub_eq_add_neg]; exact SC_add hF (SC_neg hG)
@@ -185,7 +184,7 @@ theorem SC_C_mul_X_pow (j : ℤ) (c : ℚ) (n : ℕ) (hj : j ≤ n) :
   intro m i hi
   rw [coeff_C_mul_X_pow]
   split_ifs with h
-  · subst h; rw [Finsupp.single_apply, if_neg (by omega)]
+  · subst h; rw [AddMonoidAlgebra.coeff_single, Finsupp.single_apply, if_neg (by omega)]
   · rfl
 
 theorem SC_one : SC (1 : PowerSeries L) := by
@@ -235,13 +234,13 @@ theorem tau_infProd (f : ℕ → PowerSeries L) (hf : ProdFactors f) (h : ∀ k,
 /-! ## `tau` and `D` -/
 
 theorem wd_apply {G : Type*} [AddCommGroup G] (w : G →+ ℤ) (f : AddMonoidAlgebra ℚ G) (g : G) :
-    (wd w f) g = (w g : ℚ) * f g := by
+    (wd w f).coeff g = (w g : ℚ) * f.coeff g := by
   classical
   induction f using AddMonoidAlgebra.induction_linear with
   | zero => rw [wd_zero]; show (0 : ℚ) = (w g : ℚ) * 0; ring
   | add f f' hf hf' =>
       rw [wd_add]
-      show (wd w f) g + (wd w f') g = (w g : ℚ) * (f g + f' g)
+      show (wd w f).coeff g + (wd w f').coeff g = (w g : ℚ) * (f.coeff g + f'.coeff g)
       rw [hf, hf']; ring
   | single a c =>
       rw [wd_single]

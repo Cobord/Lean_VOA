@@ -17,8 +17,8 @@ theorem a3_cartan_weight_key_local (a b c : ℕ)
   apply a3_cartan_weight_key ρ w b c
   · intro j
     fin_cases j
-    · simpa [leviH, simpleH, weightABC] using h.cartan_zero 1
-    · simpa [leviH, simpleH, weightABC] using h.cartan_zero 2
+    · simpa [leviH, simpleH, weightABC] using! h.cartan_zero 1
+    · simpa [leviH, simpleH, weightABC] using! h.cartan_zero 2
   · exact hv
 
 theorem a3_key_cartan_pos_quot (a b c : ℕ)
@@ -43,7 +43,7 @@ theorem a3_key_cartan_zero_quot (a b c : ℕ)
   have hw := a3_cartan_weight_key_local ρ w a b c h i k hv
   fin_cases i <;>
     simpa [a3KeyLeviQuotCurrent, a3LeviQuotCurrent,
-      a3LeviCurrent, a3LeviColour, leviH, map_smul] using
+      a3LeviCurrent, a3LeviColour, leviH, map_smul] using!
       congrArg (a3HigherLeviClosure ρ w b c k).mkQ hw
 
 end VOA.DeligneAudit.A3Sector

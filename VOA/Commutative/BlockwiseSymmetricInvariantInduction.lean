@@ -57,7 +57,8 @@ theorem coefficient_mem_rightFixed_of_invariant (act : H → Equiv.Perm tau)
   have hcov := sumAlgEquiv_rename_blockPermutation
     (K := K) (sigma := sigma) (tau := tau) (Equiv.refl sigma) (act h) p
   rw [hp h] at hcov
-  have hcoeff := congrArg (MvPolynomial.coeff d) hcov
+  have hcoeff := congrArg (fun q : MvPolynomial _ _ => q.coeff d) hcov
+  beta_reduce at hcoeff
   simpa [MvPolynomial.coeff_map] using hcoeff.symm
 
 /-- Lift the iterated polynomial associated to a right-invariant polynomial to coefficients in

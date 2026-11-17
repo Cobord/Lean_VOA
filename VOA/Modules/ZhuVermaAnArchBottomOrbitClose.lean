@@ -75,6 +75,9 @@ open VertexOperatorAlgebra
 open scoped BigOperators TensorProduct DirectSum
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -285,7 +288,7 @@ theorem repMULevel_isBlockDiag (W : VertexOperatorAlgebra 𝒱) (U : AMod W)
     · intro a b _ _ ha hb
       simp only [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ ha hb
     · intro c a _ ha
-      simp only [map_smul, LinearMap.smul_apply]; exact Submodule.smul_mem _ c ha
+      rw [map_smul ρ c a, LinearMap.smul_apply]; exact Submodule.smul_mem _ c ha
 
 /-! ## (F) `BottomOrbitDefectVanishes` for the concrete `repMULevel`
 

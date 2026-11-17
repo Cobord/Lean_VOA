@@ -53,8 +53,7 @@ noncomputable def oLevAnmFullDescend (A : WeakModule W M) (L : AdmLev W A) (n : 
 
 @[simp] theorem oLevAnmFullDescend_mk (L : AdmLev W A) (n : ℕ) {w : M} (hw : w ∈ L.lev 0) (v : 𝒱) :
     oLevAnmFullDescend A L n hw (mkAnmFull W n 0 v) = oLevW A (((0 : ℕ) : ℤ) - (n : ℤ)) v w := by
-  simp only [oLevAnmFullDescend, mkAnmFull, Submodule.mkQ_apply, Submodule.liftQ_apply,
-    LinearMap.flip_apply]
+  rfl
 
 /-- The descended map lands in the level-`n` piece `L.lev n`. -/
 theorem oLevAnmFullDescend_mem_lev (L : AdmLev W A) (n : ℕ) {w : M} (hw : w ∈ L.lev 0) (x : 𝒱) :
@@ -89,8 +88,7 @@ noncomputable def oLevCoverBil (A : WeakModule W M) (L : AdmLev W A) (n : ℕ) (
 @[simp] theorem oLevCoverBil_mk (L : AdmLev W A) (n : ℕ) (φ : X →ₗ[ℂ] M) (hφ : ∀ x, φ x ∈ L.lev 0)
     (v : 𝒱) (x : X) :
     oLevCoverBil A L n φ hφ (mkAnmFull W n 0 v) x = oLevW A (((0 : ℕ) : ℤ) - (n : ℤ)) v (φ x) := by
-  simp only [oLevCoverBil, mkAnmFull, Submodule.mkQ_apply, Submodule.liftQ_apply,
-    LinearMap.coe_mk, AddHom.coe_mk, LinearMap.comp_apply]
+  rfl
 
 /-- **The `⊗_ℂ`-cover map** `A_{n,0}(𝒱) ⊗ X →ₗ M`, `[v] ⊗ x ↦ o_{n,0}(v)·(φ x)`. -/
 noncomputable def oLevCoverMap (A : WeakModule W M) (L : AdmLev W A) (n : ℕ) (φ : X →ₗ[ℂ] M)

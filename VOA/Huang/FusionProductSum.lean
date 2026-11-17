@@ -28,7 +28,7 @@ private theorem support_pi {J : Type*} (f : J → ∀ i, E i)
   apply hj
   funext i
   have hi : j ∉ Function.support (fun j => f j i) := fun hi => h (Set.mem_iUnion.mpr ⟨i, hi⟩)
-  simpa only [Function.mem_support, not_not] using hi
+  simpa only [Function.mem_support, not_not] using! hi
 
 private theorem finsum_pi {J : Type*} (f : J → ∀ i, E i)
     (hf : ∀ i, (Function.support (fun j => f j i)).Finite) (i : ι) :

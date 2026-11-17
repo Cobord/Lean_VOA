@@ -169,7 +169,12 @@ noncomputable def WeakModule.toSuper (A : WeakModule W M) :
   jacobi := by
     intro p q u hu v hv x ℓ m n
     rcases zmod2_cases p with rfl | rfl
-    · simpa using A.jacobi u v x ℓ m n
+    · first
+        | exact A.jacobi u v x ℓ m n
+        | (have hj := A.jacobi u v x ℓ m n
+           simp at hj ⊢
+           exact hj)
+        | simpa [VertexOperatorAlgebra.toSuper, PreVertexAlgebra.toSuper] using A.jacobi u v x ℓ m n
     · have hu0 : u = 0 := by
         have : u ∈ (⊥ : Submodule ℂ 𝒱) := by
           simpa [VertexOperatorAlgebra.toSuper, PreVertexAlgebra.toSuper,

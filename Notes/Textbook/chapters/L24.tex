@@ -518,7 +518,11 @@ inductive HigherRankDeligneCase
   | E6
   | E7
   | E8
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype HigherRankDeligneCase where
+  elems := {.A2, .G2, .D4, .F4, .E6, .E7, .E8}
+  complete x := by cases x <;> simp
 
 def currentDimension : HigherRankDeligneCase → ℕ
   | A2 => 8
@@ -1688,7 +1692,7 @@ def sectorDim (N m d : ℕ) : ℕ := if m + 2 * d ≤ N then (auxDim D) m d (N -
 
 structure CasimirAuxiliaryBound : Prop where
   le : ∀ N, (carrierDim D) N ≤
-    ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n, (sectorDim D) N md.1 md.2
+    ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n, (sectorDim D) N md.1 md.2
 
 structure SectorFusionBound (F : ℕ → PowerSeries ℚ) : Prop where
   le : ∀ m d r, ((currentDim D) m d r : ℚ) ≤ coeff r (F m * (qpoch m)⁻¹ * (qpoch d)⁻¹)
@@ -1822,7 +1826,7 @@ def sectorTerm (F : ℕ → PowerSeries ℚ) (m d : ℕ) : PowerSeries ℚ :=
   X ^ (m + d + d * (m + d)) * (F m * (qpoch m)⁻¹ * (qpoch d)⁻¹)
 
 def sectorCoeff (F : ℕ → PowerSeries ℚ) (N : ℕ) : ℚ :=
-  ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n, coeff N (sectorTerm F md.1 md.2)
+  ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n, coeff N (sectorTerm F md.1 md.2)
 
 def demazureCoeffOf (Dem : ℕ → PowerSeries ℚ) (N : ℕ) : ℚ :=
   ∑ n ∈ Finset.range (N + 1), coeff N (X ^ n * Dem n * (qpoch n)⁻¹)

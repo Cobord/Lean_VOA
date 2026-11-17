@@ -110,9 +110,14 @@ theorem mulBySubPow_congrMap (Ψ : C →ₗ[ℂ] D) (N : ℕ) (f : FormalDist₂
   | zero =>
     apply FormalDist₂.ext; intro m n
     simp only [mulBySubPow_zero, LinearMap.id_coe, id_eq]
+    try rfl
   | succ k ih =>
+    rw [mulBySubPow_succ]
+    change mulBySub (mulBySubPow k ((fun m n => Ψ (f m n)) : FormalDist₂ D)) = _
+    rw [ih]
     apply FormalDist₂.ext; intro m n
-    simp only [mulBySubPow_succ, LinearMap.comp_apply, mulBySub_apply, ih, map_sub]
+    simp only [mulBySubPow_succ, LinearMap.comp_apply, mulBySub_apply, map_sub]
+    try exact mulBySub_apply _ m n
 
 /-- **Transfer of `ε`-locality along a linear map of operator algebras.**  If the twisted
 commutator of `a'` and `b'` is the image of that of `a` and `b` under a linear `Ψ`, then

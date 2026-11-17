@@ -68,7 +68,7 @@ theorem analyticOnNhd_tsum_pow (c : ℕ → ℂ)
   intro x hx
   have hx' : x ∈ Metric.eball (0 : ℂ) p.radius := by
     refine Metric.eball_subset_eball hrad ?_
-    simpa [Metric.mem_eball, edist_zero_right, enorm_eq_nnnorm] using hx
+    simpa [Metric.mem_eball, edist_zero_right, enorm_eq_nnnorm] using! hx
   have := ha x hx'
   convert this using 1
   funext y
@@ -215,7 +215,7 @@ theorem analyticOnNhd_iterValue_upper (hV : StronglyRational W) (i₁ : P₁.IsI
       simp only [Complex.sub_im, Complex.one_im, sub_zero]
       exact hx.1.ne'
     · have hx1 : x - 1 ∈ Metric.ball (0 : ℂ) 1 := by
-        simpa [Metric.mem_ball, dist_zero_right] using hx.2
+        simpa [Metric.mem_ball, dist_zero_right] using! hx.2
       exact AnalyticAt.comp (f := fun y : ℂ => y - 1) (hS (x - 1) hx1)
         (analyticAt_id.sub analyticAt_const)
   refine hmodel.congr ?_
@@ -257,7 +257,7 @@ theorem analyticOnNhd_iterModel (hV : StronglyRational W) (i₁ : P₁.IsIrreduc
   · exact AnalyticAt.cpow (analyticAt_const.sub analyticAt_id) analyticAt_const
       (Complex.mem_slitPlane_iff.2 (Or.inl hx.2))
   · have hx1 : x - 1 ∈ Metric.ball (0 : ℂ) 1 := by
-      simpa [Metric.mem_ball, dist_zero_right] using hx.1
+      simpa [Metric.mem_ball, dist_zero_right] using! hx.1
     exact AnalyticAt.comp (f := fun y : ℂ => y - 1) (hS (x - 1) hx1)
       (analyticAt_id.sub analyticAt_const)
 
@@ -498,7 +498,7 @@ theorem analyticOnNhd_iterValue_slit (hV : StronglyRational W) {P₁ P₂ P₃ P
       simp only [Complex.sub_re, Complex.one_re]
       linarith [hx.2]
     · have hx1 : x - 1 ∈ Metric.ball (0 : ℂ) 1 := by
-        simpa [Metric.mem_ball, dist_zero_right] using hx.1
+        simpa [Metric.mem_ball, dist_zero_right] using! hx.1
       exact AnalyticAt.comp (f := fun y : ℂ => y - 1) (hS (x - 1) hx1)
         (analyticAt_id.sub analyticAt_const)
   refine hmodel.congr ?_

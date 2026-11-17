@@ -94,7 +94,7 @@ theorem moonshineMatterMomentum_mode (α β : lorentzianLattice.carrier)
   refine TensorVA.tenSub_induction (P := ⊤)
     (Q := latticeMomentumGrading lorentzianLattice α)
     (motive := fun u => C u v ∈ moonshineMatterMomentum (α + β)) ?_ ?_ ?_ ?_ hu
-  · dsimp only
+  · try dsimp only
     rw [map_zero, LinearMap.zero_apply]; exact Submodule.zero_mem _
   · intro x y hx hy; rw [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ hx hy
   · intro c x hx; rw [map_smul, LinearMap.smul_apply]; exact Submodule.smul_mem _ c hx
@@ -102,7 +102,7 @@ theorem moonshineMatterMomentum_mode (α β : lorentzianLattice.carrier)
     refine TensorVA.tenSub_induction (P := ⊤)
       (Q := latticeMomentumGrading lorentzianLattice β)
       (motive := fun v => C (a ⊗ₜ b) v ∈ moonshineMatterMomentum (α + β)) ?_ ?_ ?_ ?_ hv
-    · dsimp only
+    · try dsimp only
       rw [map_zero]; exact Submodule.zero_mem _
     · intro x y hx hy; rw [map_add]; exact Submodule.add_mem _ hx hy
     · intro c x hx; rw [map_smul]; exact Submodule.smul_mem _ c hx

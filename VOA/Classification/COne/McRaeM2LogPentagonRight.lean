@@ -95,13 +95,15 @@ theorem fivePointTerm_right_summable_norm (N P Q R : LogModuleCat W)
     (F := fun γ δ => fivePointTerm hC2 N P Q R .right a b c d β x y z w r s f γ δ) h h'
     (Complex.exp (e₁*(β-a-h'))*Complex.exp (e₂*(h'-b-h))) Prod.swap Prod.swap_injective hG ?_
   intro p
-  simp only []
-  rw [fivePointTerm_right_eq, productPointProfile_eq_polynomial _ _ _ _ _ _ _
+  -- 4.35: the carriers of `tensorIntertwiner` and `tensorObject` agree only up to
+  -- default-transparency defeq, so the profile lemmas are applied in term mode.
+  refine (fivePointTerm_right_eq hC2 N P Q R a b c d β x y z w r s f _ _).trans ?_
+  refine (productPointProfile_eq_polynomial _ _ _ _ _ _ _
     (tensorObject hC2 N (tensorObject hC2 P (tensorObject hC2 Q R))).finiteGeneration
     N.finiteGeneration P.finiteGeneration Q.finiteGeneration R.finiteGeneration
     (tensorObject hC2 Q R).finiteGeneration
-    (tensorObject hC2 P (tensorObject hC2 Q R)).finiteGeneration,
-    Prod.fst_swap, Prod.snd_swap, fullLogProductCoefficient_eq]
+    (tensorObject hC2 P (tensorObject hC2 Q R)).finiteGeneration
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).trans ?_
   have h1 : a+(h'+(p.2 : ℂ))-β-1=a+h'-β-1+(p.2 : ℂ) := by ring
   have h2 : b+(h+(p.1 : ℂ))-(h'+(p.2 : ℂ))-1=b+h-h'-1-(p.2 : ℂ)+(p.1 : ℂ) := by ring
   have h3 : c+d-(h+(p.1 : ℂ))-1=c+d-h-1-(p.1 : ℂ) := by ring
@@ -115,6 +117,7 @@ theorem fivePointTerm_right_summable_norm (N P Q R : LogModuleCat W)
     congr 1
     ring
   rw [hexp]
-  ring
+  have key : ∀ E X Y Z : ℂ, E*(X*Y)*Z=E*(Z*X*Y) := fun E X Y Z => by ring
+  exact key _ _ _ _
 
 end VOA.Huang.LogAssocFivePoint

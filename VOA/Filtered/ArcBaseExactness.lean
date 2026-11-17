@@ -46,7 +46,8 @@ theorem baseC2Map_li_commutes
   rw [InfiniteJet.baseToJet_mk_X]
   change liInfinitePresentedJetMap W _ I hLi (InfiniteJet.generator I i 0) = _
   rw [liInfinitePresentedJetMap_generator_zero]
-  simp [baseC2Map]
+  change _ = c2ToLiAlgebra W (MvPolynomial.aeval (fun i => mk₂ W (gen i).1) (MvPolynomial.X i))
+  rw [MvPolynomial.aeval_X, c2ToLiAlgebra_homogeneous]
 
 /-- Injectivity of the canonical arc-to-Li map proves exactness of the actual C2 presentation. -/
 theorem baseC2Map_injective_of_arc_injective

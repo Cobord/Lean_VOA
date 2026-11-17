@@ -11,6 +11,11 @@ from the matrix and spin blocks. Its visible-centralizer coset then lifts `tauB`
 The final theorem retains only `tauB ∈ AutO` and `Generated.Gmat = AutO`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -89,7 +94,9 @@ theorem tauBLiftConjugate_A (A : symMat) :
   rw [untwistedDict_symBlock]
   have hf : plusFrame (matDict A) = matDict A := by
     have h := mem_frameSector'.mp (V0Sub_carrier ▸ sigmaBlockMat_mem A)
-    simpa only [Extraspecial.sgn_zero, one_smul] using h
+    first
+      | simpa only [Extraspecial.sgn_zero, one_smul] using h
+      | (simp only [Extraspecial.sgn_zero, one_smul] at h; exact h)
   simp only [map_zero, sigmaBlockFrameSign, blockOp_apply, LinearMap.zero_apply,
     add_zero, hf]
 
@@ -176,12 +183,27 @@ theorem tauBLiftTriality_A (g : SpaceB ≃ₗ[ℚ] SpaceB) (s : Fin 3 → ℚ)
     induction z using Sym2.ind with
     | h i j =>
       rcases lt_trichotomy i j with hij | rfl | hji
-      · simpa [oddSign, tbasis_pair_zero] using
-          hg (.inr (.inl (⟨(i, j), hij⟩, 0)))
-      · simpa [oddSign, tbasis_diag] using hg (.inl i)
+      · first
+          | simpa [oddSign, tbasis_pair_zero] using
+              hg (.inr (.inl (⟨(i, j), hij⟩, 0)))
+          | (have h := hg (.inr (.inl (⟨(i, j), hij⟩, 0)))
+             simp [oddSign, tbasis_pair_zero] at h
+             simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.inl_apply]
+             exact h)
+      · first
+          | simpa [oddSign, tbasis_diag] using hg (.inl i)
+          | (have h := hg (.inl i)
+             simp [oddSign, tbasis_diag] at h
+             simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.inl_apply]
+             exact h)
       · rw [Sym2.eq_swap]
-        simpa [oddSign, tbasis_pair_zero] using
-          hg (.inr (.inl (⟨(j, i), hji⟩, 0)))
+        first
+          | simpa [oddSign, tbasis_pair_zero] using
+              hg (.inr (.inl (⟨(j, i), hji⟩, 0)))
+          | (have h := hg (.inr (.inl (⟨(j, i), hji⟩, 0)))
+             simp [oddSign, tbasis_pair_zero] at h
+             simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.inl_apply]
+             exact h)
   exact LinearMap.congr_fun h A
 
 /-- The frame sign on a signed elementary spin column. -/

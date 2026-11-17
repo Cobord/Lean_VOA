@@ -62,11 +62,11 @@ theorem exists_ne_of_two_le (hr : 2 ≤ r) (b : Fin r) : ∃ a : Fin r, a ≠ b 
   by_cases hb : b.val = 0
   · refine ⟨⟨1, by omega⟩, fun h => ?_⟩
     have h' := congrArg Fin.val h
-    simp only at h'
+    try simp only at h'
     omega
   · refine ⟨⟨0, by omega⟩, fun h => ?_⟩
     have h' := congrArg Fin.val h
-    simp only at h'
+    try simp only at h'
     omega
 
 /-- The twisted weights `μ k = k + ½` have positive pairwise sums. -/

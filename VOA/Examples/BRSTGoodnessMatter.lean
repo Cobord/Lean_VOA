@@ -269,7 +269,7 @@ theorem correctedWord_J_nonneg (a : Fin 3) {n : ℤ} (hn : 0 ≤ n) :
       · have h := mode_piece_mem_piece_add k hk (conformalVector_mem_piece_one k hk) ih
           ((-(r : ℤ) - 2) + 1)
         rw [add_comm 1] at h
-        simpa only [closed_smul, closed_conformalVector] using h
+        simpa only [closed_smul, closed_conformalVector] using! h
       · rw [← smul_currentState_eq_J k hk a _ _, add_comm]
         exact mode_piece_mem_piece_add k hk (currentState_mem_piece_one k hk a) hrest _
 

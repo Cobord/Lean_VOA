@@ -178,7 +178,7 @@ theorem subst_mulBySub {f : FormalDist₂ 𝒲} (hf : IsBddBelow₂ f) :
           rw [hp]; ring]
     rw [← finsum_int_succ_shift (fun k : ℤ => cbz (a - 1 + k) (k - 1) • f (a - 1 + k) (b - k))]
     refine finsum_congr fun k => ?_
-    dsimp only
+    try dsimp only
     rw [show a - 1 + (k + 1) = a + k from by ring, show k + 1 - 1 = k from by ring,
       show b - (k + 1) = b - 1 - k from by ring]
   rw [add_comm]

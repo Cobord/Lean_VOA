@@ -51,10 +51,10 @@ def traceFunStateLinear (hC2 : C2Cofinite W) (x : ι) (τ : UpperHalfPlane) : V 
     unfold traceFun
     rw [torusOnePoint_add]
     apply qEvalAt_add
-    · simpa only [trace_moduleIntertwiner, torusOnePoint] using
+    · simpa only [trace_moduleIntertwiner, torusOnePoint] using!
         (summable_trace_moduleIntertwiner (D.Mfam x).isMod (D.hasWeight x)
           hC2 (norm_qParam_lt_one τ) v).of_norm
-    · simpa only [trace_moduleIntertwiner, torusOnePoint] using
+    · simpa only [trace_moduleIntertwiner, torusOnePoint] using!
         (summable_trace_moduleIntertwiner (D.Mfam x).isMod (D.hasWeight x)
           hC2 (norm_qParam_lt_one τ) w).of_norm
   map_smul' c v := by

@@ -47,7 +47,7 @@ theorem PowerSeriesAbsConv.mul {φ ψ : PowerSeries ℂ} {z : ℂ} (hφ : PowerS
   congr 1
   rw [PowerSeries.coeff_mul, Finset.sum_mul]
   refine Finset.sum_congr rfl fun kl hkl => ?_
-  rw [Finset.mem_antidiagonal] at hkl
+  replace hkl : kl.1 + kl.2 = n := Finset.HasAntidiagonal.mem_antidiagonal.mp hkl
   rw [← hkl, pow_add]
   ring
 
@@ -59,7 +59,7 @@ theorem powerSeriesEval_mul {φ ψ : PowerSeries ℂ} {z : ℂ} (hφ : PowerSeri
   refine tsum_congr fun n => ?_
   rw [PowerSeries.coeff_mul, Finset.sum_mul]
   refine Finset.sum_congr rfl fun kl hkl => ?_
-  rw [Finset.mem_antidiagonal] at hkl
+  replace hkl : kl.1 + kl.2 = n := Finset.HasAntidiagonal.mem_antidiagonal.mp hkl
   rw [← hkl, pow_add]
   ring
 
@@ -143,7 +143,7 @@ theorem powerSeriesEval_qSeriesUnit {c : ℕ → ℂ} (hc : IsJDominated c) (τ 
   simp only [Finset.sum_range_succ, Finset.sum_range_zero, coeff_qSeriesUnit]
   norm_num
   refine tsum_congr fun n => ?_
-  rw [if_neg (by omega)]
+  try rw [if_neg (by omega)]
   ring
 
 /-! ### Polynomials -/
@@ -208,7 +208,7 @@ theorem powerSeriesEval_polyUnitSeries {c : ℕ → ℂ} (hc : IsJDominated c) (
 theorem hasSum_mul_eval_qSeriesFun {c : ℕ → ℂ} (hc : IsJDominated c) (P : ℂ[X]) (τ : ℍ) :
     HasSum (fun n : ℕ => (aeval (qSeriesLaurent c) P).coeff ((n : ℤ) - P.natDegree) * qPar τ ^ n)
       (qPar τ ^ P.natDegree * P.eval (qSeriesFun c τ)) := by
-  rw [← powerSeriesEval_polyUnitSeries hc P τ]
+  rw [← powerSeriesEval_polyUnitSeries hc P τ, powerSeriesEval]
   have h := (Summable.of_norm (powerSeriesAbsConv_polyUnitSeries hc P τ)).hasSum
   convert h using 1
   funext n

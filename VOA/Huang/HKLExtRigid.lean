@@ -259,13 +259,24 @@ theorem funCopair_zigzag :
     ((ConcreteCategory.hom ((ModuleCat.ofHom (LinearMap.toSpanSingleton ℂ _ copairVec)) ▷
       (ModuleCat.of ℂ (G → ℂ))))
     ((ConcreteCategory.hom (λ_ (ModuleCat.of ℂ (G → ℂ))).inv) f)))) = f
-  rw [ModuleCat.MonoidalCategory.leftUnitor_inv_apply,
-    ModuleCat.MonoidalCategory.whiskerRight_apply]
+  rw [ModuleCat.MonoidalCategory.leftUnitor_inv_apply (M := ModuleCat.of ℂ (G → ℂ)) f]
+  erw [ModuleCat.MonoidalCategory.whiskerRight_apply
+      (ModuleCat.ofHom (LinearMap.toSpanSingleton ℂ _ copairVec)) (ModuleCat.of ℂ (G → ℂ))
+      (1 : ℂ) f]
   simp only [ModuleCat.hom_ofHom, LinearMap.toSpanSingleton_apply, one_smul, copairVec,
     TensorProduct.sum_tmul, map_sum]
   have hf : f = ∑ x : G, f x • (Pi.single x (1 : ℂ) : G → ℂ) := by
-    funext t; simp [Finset.sum_apply, Pi.single_apply]
+    funext t
+    simp [Finset.sum_apply, Pi.single_apply]
+    convert ((Finset.sum_ite_eq Finset.univ t (fun x => f x)).trans
+      (if_pos (Finset.mem_univ t))).symm
   conv_rhs => rw [hf]
+  erw [TensorProduct.sum_tmul,
+    map_sum (ConcreteCategory.hom (α_ (ModuleCat.of ℂ (G → ℂ)) (ModuleCat.of ℂ (G → ℂ))
+      (ModuleCat.of ℂ (G → ℂ))).hom),
+    map_sum (ConcreteCategory.hom ((ModuleCat.of ℂ (G → ℂ)) ◁
+      (ModuleCat.ofHom ((LinearMap.mul' ℂ (G → ℂ)).comp (LinearMap.id)) ≫ funSum.hom.hom))),
+    map_sum (ConcreteCategory.hom (ρ_ (ModuleCat.of ℂ (G → ℂ))).hom)]
   refine Finset.sum_congr rfl fun x _ => ?_
   have h1 := ModuleCat.MonoidalCategory.associator_hom_apply (R := ℂ)
     (M := ModuleCat.of ℂ (G → ℂ)) (N := ModuleCat.of ℂ (G → ℂ)) (K := ModuleCat.of ℂ (G → ℂ))
@@ -283,6 +294,8 @@ theorem funCopair_zigzag :
   congr 1
   change ∑ t, (Pi.single x (1 : ℂ) : G → ℂ) t * f t = f x
   simp [Pi.single_apply]
+  convert (Finset.sum_ite_eq' Finset.univ x (fun t => f t)).trans
+    (if_pos (Finset.mem_univ x))
 
 end Regular
 

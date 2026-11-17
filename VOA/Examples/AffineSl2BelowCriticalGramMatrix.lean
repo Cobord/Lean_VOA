@@ -77,7 +77,8 @@ theorem sum_EIdx_eq_finsupp {E : ℤ} (f : CurrentIndex → WakModule k) (s : Fi
     (hs : ∀ mu ∈ s, currentEnergy mu = E) (hf : ∀ mu, mu ∉ s → f mu = 0) :
     ∑ i : EIdx E, f i.val = ∑ mu ∈ s, f mu := by
   classical
-  let T : Finset CurrentIndex := Finset.univ.map ⟨fun i : EIdx E => i.val, Subtype.val_injective⟩
+  have hinj : Function.Injective (fun i : EIdx E => i.val) := Subtype.val_injective
+  let T : Finset CurrentIndex := Finset.univ.map ⟨fun i : EIdx E => i.val, hinj⟩
   have hT : ∑ i : EIdx E, f i.val = ∑ mu ∈ T, f mu := by simp [T, Finset.sum_map]
   rw [hT]
   have hsT : s ⊆ T := by
@@ -98,7 +99,6 @@ theorem eq_sum_coords {E : ℤ} {x : WakModule k} (hx : x ∈ (universal k hk).g
     by_contra hne
     exact (Finsupp.mem_support_iff.mp hmu) (repr_eq_zero_of_energy_ne hk hx mu hne)
   · intro mu hmu
-    simp only
     rw [Finsupp.notMem_support_iff.mp hmu, zero_smul]
 
 /-- Coordinates of a finite combination of energy-`E` monomials. -/
@@ -239,7 +239,7 @@ theorem matrixStepNondeg_of_layerNondeg {E : ℤ}
           change (universalForm k hk).form ((x : (universal k hk).grading E) : WakModule k) u = 0
           exact horth _ x.2)
         have h2 := congrArg Subtype.val (congrArg Subtype.val this)
-        simpa using h2
+        simpa using! h2
       apply hz
       funext j
       have := congrFun hcu j.1

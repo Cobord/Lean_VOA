@@ -32,7 +32,7 @@ theorem gtMixedExtra_isUnit (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ) 
   apply PowerSeries.isUnit_iff_constantCoeff.mpr
   have hc : constantCoeff (constantCoeff (gtMixedExtra q h x y)) = 1 := by
     simpa only [gtBiCoeff, AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe,
-      coeff_zero_eq_constantCoeff, gtOneRowCoeff_zero_degree, one_mul] using
+      coeff_zero_eq_constantCoeff, gtOneRowCoeff_zero_degree, one_mul] using!
         gtMixedExtra_coeff q h x y 0 0
   rw [hc]
   exact isUnit_one
@@ -98,7 +98,7 @@ theorem gtMixedFiveSeries_branch_one (q : R) (h : PochhammerUnits q)
     gtBiCoeff m n (gtMixedExtra q h x y * gtMixedFourSeries q h x y u)
   rw [gtMixedExtra_mul_coeff]
   simpa only [gtBiCoeff, AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe,
-    gtMixedFiveSeries, gtMixedFourSeries, coeff_mk] using
+    gtMixedFiveSeries, gtMixedFourSeries, coeff_mk] using!
       gtMixedFive_hom_branch_one q h x y u hu n m
 
 theorem gtMixedFiveSeries_eq_kernel (q : R) (h : PochhammerUnits q)
@@ -110,7 +110,7 @@ theorem gtMixedFiveSeries_eq_kernel (q : R) (h : PochhammerUnits q)
   intro n
   apply PowerSeries.ext
   intro m
-  simpa only [gtMixedFiveSeries, coeff_mk] using
+  simpa only [gtMixedFiveSeries, coeff_mk] using!
     (gtMixed_five_collapsed q h x y u n m).symm
 
 theorem gtEulerInv_rescale_one (q : R) (h : PochhammerUnits q) (a : R) :

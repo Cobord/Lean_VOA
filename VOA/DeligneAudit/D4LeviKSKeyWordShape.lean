@@ -74,9 +74,9 @@ theorem ksPair_key_word_symmetric_lift (ρ : CurrentModule D4sector.f V) (w : V)
     have hdegree := congrArg RadicalKey.degree hk
     change (l.map Prod.snd).sum = d at hdegree
     simpa only [shapedModes, List.map_map, Function.comp_def,
-      Finset.sum_map_toList, hdegree] using hsum.symm
+      Finset.sum_map_toList, hdegree] using! hsum.symm
   obtain ⟨P, hP, he⟩ := ksPair_monomial_symmetric_lift ρ w a b c f
-  refine ⟨P, by simpa only [hd] using hP, ?_⟩
+  refine ⟨P, by simpa only [hd] using! hP, ?_⟩
   rw [he, xyzEvaluation_prod_X_pow]
   exact (radicalWord_perm ρ w hf).symm
 

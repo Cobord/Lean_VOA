@@ -20,20 +20,20 @@ noncomputable section
 /-- Multiplication of a selected auxiliary coefficient by an oscillator
 polynomial can be moved inside as a constant Laurent monomial. -/
 theorem selected_constant_mul (r : ℕ) (P : WakFock) (Q : Auxiliary r) (g : Fin r→ℤ) :
-    ((single 0 P : Auxiliary r)*Q) g=P*Q g :=
-  AddMonoidAlgebra.single_zero_mul_apply _ _ _
+    ((single 0 P : Auxiliary r)*Q).coeff g=P*Q.coeff g :=
+  AddMonoidAlgebra.coeff_single_zero_mul _ _ _
 
 /-- The actual finite boson-beta sum equals the extracted boson insertions
 into the single-omission integrands. -/
 theorem state_boson_sum_selected (r q M : ℕ) :
     (∑ j∈Finset.range (r*(q-1)),X (2,j)*pderiv (0,j+1) (state r q M))=
-      ∑ i : Fin r,(bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i)
+      ∑ i : Fin r,(bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   classical
   calc
     _ = ∑ j∈Finset.range (r*(q-1)),∑ i : Fin r,
       ((single (((j+1 : ℕ) : ℤ) • unitExponent r i) (X (2,j)) : Auxiliary r)*
-        omittedIntegrand r q M i) (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
+        omittedIntegrand r q M i).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
       apply Finset.sum_congr rfl
       intro j hj
       rw [state_beta_partial_omissions r q M (j+1) (by have := Finset.mem_range.mp hj; omega),
@@ -53,7 +53,7 @@ Vandermonde; the same holds for the finite exponential. -/
 theorem pairOmission_remainder_lower (r q M : ℕ) (i j : Fin r) :
     LowerDegree 0 ((∏ l∈(Finset.univ.erase i).erase j,betaFactor r (r*(q-1)) l)*
       ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1)) := by
-  simpa using (lowerDegree_prod_zero _ _ (fun l _ => betaFactor_lower r _ l)).mul
+  simpa using! (lowerDegree_prod_zero _ _ (fun l _ => betaFactor_lower r _ l)).mul
     (lowerDegree_prod_zero _ _ (fun m _ => exponentialFactor_lower r _ M (m+1)))
 
 /-- A pair insertion above the remaining total degree has zero selected
@@ -62,7 +62,7 @@ theorem selected_pair_above_degree (r q M a b : ℕ) (hq : 0<q)
     (hab : r*(q-1)<a+b) (i j : Fin r) :
     ((single ((a : ℤ) • unitExponent r i) 1 : Auxiliary r)*
       (single ((b : ℤ) • unitExponent r j) 1 : Auxiliary r)*
-      pairOmittedIntegrand r q M i j)
+      pairOmittedIntegrand r q M i j).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   let T : Auxiliary r := single ((a : ℤ) • unitExponent r i) 1*
     single ((b : ℤ) • unitExponent r j) 1
@@ -76,10 +76,12 @@ theorem selected_pair_above_degree (r q M a b : ℕ) (hq : 0<q)
     omega
   have hz := screening_high_degree_product_zero r q M hq T _ (hT.mono hbound)
     (pairOmission_remainder_lower r q M i j)
-  convert hz using 1
-  congr 1
-  dsimp only [T,pairOmittedIntegrand]
-  ring
+  have key (a b d p e : Auxiliary r) : a*b*(d*p*e)=d*(a*b*(p*e)) := by
+    rw [mul_assoc d p e,mul_left_comm (a*b) d]
+  refine (congrArg (fun P : Auxiliary r => P.coeff
+    (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) ?_).trans hz
+  rw [pairOmittedIntegrand]
+  exact key _ _ _ _ _
 
 /-- Actual second beta partials vanish whenever their total depth exceeds
 the remaining screening degree, with no separate index-bound assumption. -/
@@ -119,7 +121,7 @@ theorem state_quadratic_sum_selected (r q M : ℕ) :
     (∑ d∈Finset.range (r*(q-1)+1),X (0,d)*
       ∑ a∈Finset.range (d+1),pderiv (0,d-a) (pderiv (0,a) (state r q M)))=
     ∑ i : Fin r,∑ j∈Finset.univ.erase i,
-      (betaDivided r (r*(q-1)) i j*pairOmittedIntegrand r q M i j)
+      (betaDivided r (r*(q-1)) i j*pairOmittedIntegrand r q M i j).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   classical
   have hterm (d : ℕ) (hd : d∈Finset.range (r*(q-1)+1))
@@ -131,7 +133,7 @@ theorem state_quadratic_sum_selected (r q M : ℕ) :
     _ = ∑ d∈Finset.range (r*(q-1)+1),∑ a∈Finset.range (d+1),
       ∑ i : Fin r,∑ j∈Finset.univ.erase i,
         (((single 0 (X (0,d)) : Auxiliary r)*single ((a : ℤ) • unitExponent r i) 1*
-          single (((d-a : ℕ) : ℤ) • unitExponent r j) 1)*pairOmittedIntegrand r q M i j : Auxiliary r)
+          single (((d-a : ℕ) : ℤ) • unitExponent r j) 1)*pairOmittedIntegrand r q M i j : Auxiliary r).coeff
           (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
       apply Finset.sum_congr rfl
       intro d hd
@@ -145,8 +147,9 @@ theorem state_quadratic_sum_selected (r q M : ℕ) :
       apply Finset.sum_congr rfl
       intro j hj
       rw [← selected_constant_mul]
-      congr 1
-      ring
+      refine congrArg (fun P : Auxiliary r => P.coeff
+        (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) ?_
+      simp only [mul_assoc]
     _ = _ := by
       simp_rw [Finset.sum_comm (s := Finset.range _) (t := Finset.univ)]
       apply Finset.sum_congr rfl

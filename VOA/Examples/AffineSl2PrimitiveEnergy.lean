@@ -64,7 +64,7 @@ theorem highest_energy_constraint (k h : ℂ) (hk : k+2 ≠ 0)
   rw [hn, neg_smul, neg_neg] at hs
   have heq := (smul_left_injective ℂ hv) hs
   have hm := (eq_div_iff (mul_ne_zero (by norm_num : (4:ℂ) ≠ 0) hk)).mp heq
-  simpa only [mul_comm] using hm
+  simpa only [mul_comm] using! hm
 
 /-- The boundary levels force triangular primitive energies. -/
 theorem boundary_highest_energy (b : ℕ) (r n : ℤ)
@@ -131,7 +131,7 @@ theorem highest_image_energy_constraint {V : Type*} [AddCommGroup V] [Module ℂ
   rw [hn, neg_smul, neg_neg, map_smul] at hs
   have heq := (smul_left_injective ℂ hv) hs
   have hm := (eq_div_iff (mul_ne_zero (by norm_num : (4:ℂ) ≠ 0) hk)).mp heq
-  simpa only [mul_comm] using hm
+  simpa only [mul_comm] using! hm
 
 /-- Boundary primitive classes in actual current images have triangular energy. -/
 theorem boundary_highest_image_energy {V : Type*} [AddCommGroup V] [Module ℂ V]

@@ -156,7 +156,7 @@ theorem tsumx_shift {A B : ℕ → PowerSeries R} (hA : Vanish A) (h0 : A 0 = 0)
 
 theorem ipoch_zero : ipoch 0 = 1 := by
   have := poch_mul_ipoch 0
-  simpa [poch] using this
+  simpa [poch] using! this
 
 /-- The `t`-th peeling term `x^{K t} q^{K t² + e t}/(q)_t · f(x q^{2t})`. -/
 def pterm (K e t : ℕ) (f : PowerSeries R) : PowerSeries R :=
@@ -273,7 +273,7 @@ theorem F_rec : ∀ (n a : ℕ), a ≤ n →
       -- the case `a = 0` of the recursion for `n`
       have h0 : F n 1 = resc (F n (n + 1)) := by
         have := IH 0 (by omega)
-        simpa [F_zero] using this
+        simpa [F_zero] using! this
       rcases Nat.eq_zero_or_pos a with rfl | hapos
       · -- a = 0
         rw [F_zero, zero_add, pow_zero, pow_zero, map_one, one_mul, one_mul,
@@ -354,7 +354,7 @@ theorem F_eq_GG (n : ℕ) : ∀ i ≤ n + 1, F n i = GG n i := by
   intro i hi
   have : D i = 0 :=
     PowerSeries.ext fun m => PowerSeries.ext fun N => by rw [key N i hi m]; simp
-  exact (sub_eq_zero.mp (by simpa only [hD] using this)).symm
+  exact (sub_eq_zero.mp (by simpa only [hD] using! this)).symm
 
 /-- **The fixed-number-of-parts Andrews–Gordon multisum identity**:
 `[x^r q^N] F_{n,1} = gordonCoeff n N r`. -/

@@ -77,13 +77,23 @@ theorem moonshineMatterVnatVirasoroOne_pow (a : Vnat) (j : ℕ) :
 theorem moonshineMatterVnatGenerator_mem_weight {N : ℤ} {a : Vnat}
     (ha : a ∈ VnatVOA.grading N) :
     a ⊗ₜ[ℂ] lorentzianNearVOA.vacuum ∈ moonshineMatterNearVOA.grading N := by
-  simpa only [add_zero] using nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
-    ha lorentzianNearVOA.vacuum_mem
+  first
+  | simpa only [add_zero] using nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
+      ha lorentzianNearVOA.vacuum_mem
+  | have h := nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
+        ha lorentzianNearVOA.vacuum_mem
+    simp only [add_zero] at h
+    exact h
 
 theorem moonshineMatterLatticeGenerator_mem_weight {N : ℤ} {b : LorentzianFockSpace}
     (hb : b ∈ lorentzianNearVOA.grading N) :
     VnatVOA.vacuum ⊗ₜ[ℂ] b ∈ moonshineMatterNearVOA.grading N := by
-  simpa only [zero_add] using nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
-    VnatVOA.vacuum_mem hb
+  first
+  | simpa only [zero_add] using nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
+      VnatVOA.vacuum_mem hb
+  | have h := nearTensorGrading_tmul VnatVOA.toNearVOA lorentzianNearVOA
+        VnatVOA.vacuum_mem hb
+    simp only [zero_add] at h
+    exact h
 
 end VOA.Moonshine.ConwayNorton

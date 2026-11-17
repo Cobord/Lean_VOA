@@ -96,7 +96,7 @@ theorem exists_pos_le_fintype {κ : Type*} [Finite κ] (f : κ → ℝ) (hf : �
   have := Fintype.ofFinite κ
   obtain ⟨δ, hδ, h⟩ := exists_pos_le_fin
     (fun j : Fin (Fintype.card κ) => f ((Fintype.equivFin κ).symm j)) (fun j => hf _)
-  exact ⟨δ, hδ, fun k => by simpa using h (Fintype.equivFin κ k)⟩
+  exact ⟨δ, hδ, fun k => by simpa using! h (Fintype.equivFin κ k)⟩
 
 section Chain
 
@@ -490,7 +490,7 @@ theorem vacuumChannelTransport_of_inputs (hNice : Nice W) (hZ : ZhuModularityAna
     intro w z
     have := congrFun (congrFun hTS w) z
     rw [Matrix.mul_apply, Matrix.one_apply] at this
-    simpa only [Matrix.of_apply] using this
+    simpa only [Matrix.of_apply] using! this
   -- the genus-zero choices
   obtain ⟨π, hπ⟩ := exists_vacuumRetraction F hNice hcomp v0 hv0 c.η c.η_ne
   obtain ⟨r, lab, i, p, htot⟩ :=

@@ -20,7 +20,6 @@ theorem sum_gtRows_shift {R : Type*} [AddCommMonoid R] {N : ℕ}
     apply (mem_gtRows _ _).mpr
     intro i
     have hi := hm i
-    dsimp only at hi ⊢
     constructor <;> omega
   · intro μ hμ
     exact (gtRows_shift lam μ c).mpr hμ
@@ -61,7 +60,7 @@ theorem gtEval_zero_weight {R : Type*} [CommRing R] (q : R) (u : ℕ → Rˣ) (N
 theorem gtEval_constant_weight {R : Type*} [CommRing R] (q : R) (u : ℕ → Rˣ)
     (N : ℕ) (c : ℤ) :
     gtEval q u N (fun _ => c) = ∏ i : Fin N, (((u i) ^ c : Rˣ) : R) := by
-  simpa only [zero_add, gtEval_zero_weight, mul_one] using
+  simpa only [zero_add, gtEval_zero_weight, mul_one] using!
     gtEval_central_shift q u N (fun _ => 0) c
 
 /-- Lemma 3.2(c) for the Laurent polynomials themselves. -/

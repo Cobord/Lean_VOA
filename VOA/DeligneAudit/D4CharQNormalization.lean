@@ -77,7 +77,7 @@ theorem gtGaussian_normalized (q : R) (h : PochhammerUnits q) (n k : ℕ) (hk : 
       ((gtPochUnit q h k)⁻¹ : Rˣ) * ((gtPochUnit q h (n - k))⁻¹ : Rˣ)) hb
   simp only [← gtPochUnit_val q h] at he
   simpa only [mul_assoc, mul_comm, mul_left_comm, Units.val_mul, Units.mul_inv,
-    mul_one, one_mul] using he
+    mul_one, one_mul] using! he
 
 /-- Q evaluated at unit variables. For partitions, the normalization is b_lambda P_lambda. -/
 def gtQ (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ) (N : ℕ) (lam : Fin N → ℤ) : R :=

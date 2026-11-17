@@ -18,6 +18,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 section ConeBasis
 
 variable {M : Type*} [AddCommGroup M] [Module ℂ M]

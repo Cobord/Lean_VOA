@@ -105,7 +105,9 @@ private def correctionTerm (a b x : V) (ℓ n i : ℤ) : V :=
 private theorem correctionTerm_finite (a b x : V) (ℓ n : ℤ) :
     Function.HasFiniteSupport (correctionTerm D a b x ℓ n) := by
   unfold correctionTerm
-  simpa only [add_zero, zero_add] using D.jacobiLHS_support_finite a b x ℓ 0 n
+  have h := D.jacobiLHS_support_finite a b x ℓ 0 n
+  simp only [add_zero, zero_add] at h
+  exact h
 
 /-- Differentiating the iterate identity corrects both the acting product state
 and the field attached to its ordinary value. Both terms are essential. -/

@@ -219,7 +219,8 @@ theorem weightBlock_eq_zero_of_shift (N : OrdVModule W M') (A : Module.End ℂ M
   letI := DirectSum.IsInternal.chooseDecomposition N.weight N.isInternal
   refine LinearMap.ext (fun y => Subtype.ext ?_)
   have h := DirectSum.decompose_of_mem_ne N.weight (hA _ y.2) hne
-  simpa [weightBlock, internalProjTo, ← DirectSum.apply_eq_component] using h
+  simpa [weightBlock, internalProjTo, ← DirectSum.apply_eq_component,
+    DirectSum.decomposeLinearEquiv_apply] using h
 
 /-- The graded trace of a strictly weight-shifting operator vanishes. -/
 theorem trace_weightBlock_eq_zero_of_shift (N : OrdVModule W M') (A : Module.End ℂ M') {α β : ℂ}

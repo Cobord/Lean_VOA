@@ -145,6 +145,8 @@ file and is a **theorem**: its field
 
 namespace VOA
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open Finsupp
 
 /-! ## Invariant bilinear forms (Gannon §3.2) -/
@@ -410,7 +412,7 @@ def ofProd : (ℤ →₀ 𝔤) × ℂ × ℂ ≃ AffineLie 𝔤 κ hκ where
   right_inv _ := rfl
 
 noncomputable instance : AddCommGroup (AffineLie 𝔤 κ hκ) := (ofProd κ hκ).symm.addCommGroup
-noncomputable instance : Module ℂ (AffineLie 𝔤 κ hκ) := (ofProd κ hκ).symm.module ℂ
+noncomputable instance : Module ℂ (AffineLie 𝔤 κ hκ) := AddEquiv.module ℂ (ofProd κ hκ).symm.addEquiv
 
 @[simp] theorem of_zero : ofProd κ hκ (0 : (ℤ →₀ 𝔤) × ℂ × ℂ) = 0 := rfl
 @[simp] theorem of_add (x y : (ℤ →₀ 𝔤) × ℂ × ℂ) :
@@ -612,7 +614,7 @@ abbrev UEnv (𝔤 : Type*) [LieRing 𝔤] [LieAlgebra ℂ 𝔤]
 since `C` is central in `ĝ` (Gannon §3.2.2). -/
 theorem commute_ι_C (a : UEnv 𝔤 κ hκ) : Commute (ι ℂ (C κ hκ)) a := by
   have hsurj : Function.Surjective (mkAlgHom ℂ (AffineLie 𝔤 κ hκ)) :=
-    RingQuot.mkAlgHom_surjective ℂ (Rel ℂ (AffineLie 𝔤 κ hκ))
+    RingCon.mkₐ_surjective _
   obtain ⟨p, rfl⟩ := hsurj a
   induction p using TensorAlgebra.induction with
   | algebraMap r => rw [AlgHom.commutes]; exact Algebra.commute_algebraMap_right r _
@@ -1159,7 +1161,8 @@ theorem negSpan_smul_stable (k : ℂ) (r : UEnv 𝔤 κ hκ) {s : vacuumSpace κ
     (hs : s ∈ negSpan κ hκ k) : r • s ∈ negSpan κ hκ k := by
   suffices H : ∀ p : TensorAlgebra ℂ (AffineLie 𝔤 κ hκ), ∀ t ∈ negSpan κ hκ k,
       (mkAlgHom ℂ _ p) • t ∈ negSpan κ hκ k by
-    obtain ⟨p, rfl⟩ := (RingQuot.mkAlgHom_surjective ℂ (Rel ℂ (AffineLie 𝔤 κ hκ))) r
+    obtain ⟨p, rfl⟩ := (RingCon.mkₐ_surjective _ :
+      Function.Surjective (mkAlgHom ℂ (AffineLie 𝔤 κ hκ))) r
     exact H p s hs
   intro p
   induction p using TensorAlgebra.induction with

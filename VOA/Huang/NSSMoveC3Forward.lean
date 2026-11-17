@@ -63,7 +63,7 @@ theorem cap_braiding_slide {A B : C} (d : A ⊗ B ⟶ 𝟙_ C) (U : C) :
   have h2 : d ▷ U ≫ (λ_ U).hom = ((α_ A B U).hom ≫ A ◁ (β_ B U).hom ≫ (α_ A U B).inv ≫
       (β_ A U).hom ▷ B ≫ (α_ U A B).hom) ≫ U ◁ d ≫ (ρ_ U).hom := by
     rw [← cancel_mono (ρ_ U).inv]
-    simpa using h
+    simpa using! h
   rw [h2]
   simp
 

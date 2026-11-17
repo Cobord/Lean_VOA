@@ -30,7 +30,8 @@ theorem evaluate_primeData : evaluate primeData =
       (27 : ℂ) • latChargeGen (latP 4) ((2 : ℤ) : (latP 4).carrier) := by
   simp only [primeData, evaluate, evRc_liftR, sector, LinearMap.coe_mk, AddHom.coe_mk,
     evRc_cons, evRc_nil, add_zero, evalWordC_nil]
-  rw [latStateGen_csmul, latStateGen_csmul]
+  rw [latStateGen_csmul (latP 4) _ _ ((-2 : ℤ) : (latP 4).carrier),
+    latStateGen_csmul (latP 4) _ _ ((2 : ℤ) : (latP 4).carrier)]
   push_cast
   rw [add_assoc]
   rfl
@@ -86,8 +87,9 @@ theorem prime_smul_boson :
     (V8).smul (evaluate primeData) 15 (bosonState (latP 4) (a0 4)) = 0 := by
   rw [evaluate_primeData, PreVertexAlgebra.smul_add_left, PreVertexAlgebra.smul_add_left,
     PreVertexAlgebra.smul_smul_left, PreVertexAlgebra.smul_smul_left,
-    PlusCharacterTable.charge_positive_boson 4 four_ge_one _ 15 (by norm_num),
-    PlusCharacterTable.charge_positive_boson 4 four_ge_one _ 15 (by norm_num), smul_zero, zero_add, add_zero,
+    PlusCharacterTable.charge_positive_boson 4 four_ge_one ((-2 : ℤ) : (latP 4).carrier) 15 (by norm_num),
+    PlusCharacterTable.charge_positive_boson 4 four_ge_one ((2 : ℤ) : (latP 4).carrier) 15 (by norm_num),
+    smul_zero, zero_add, add_zero,
     bosonState_eq_evR, ls, V2m_smul_evR_W, ← evR_normR,
     show (-(15 : ℤ) - 1) = -16 by norm_num, primeFock_h, evR_nil]
   simp [latStateGen]

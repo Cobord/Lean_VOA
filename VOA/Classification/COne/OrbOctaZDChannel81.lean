@@ -36,6 +36,7 @@ theorem first46 : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 1 ≤ t → t ≤ 19
       refine Submodule.sub_mem _ ?_ (Submodule.smul_mem _ _ (wv_grading _ _))
       have h := V2v.smul_mem_grading (wv_grading 4 i) (wv_grading 6 j) (-30)
       convert h using 2
+      all_goals norm_num
     have hho : ho (Φ i j) = (((2 * 9 : ℕ) : ℂ) - 2 * ((t - 1 : ℕ) : ℂ)) • Φ i j := by
       subst hij
       simp only [hΦ]

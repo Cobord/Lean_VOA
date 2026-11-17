@@ -68,11 +68,11 @@ theorem a3_compound_one_nilpotence (a b c : ℕ)
         abel
       _ = 0 := by rw [hc]; simp
   have hY : (Y ^ (a + 1)) w = 0 := by
-    simpa [Y, simpleF, F, weightABC, Module.End.pow_apply] using h.lowering 0
+    simpa [Y, simpleF, F, weightABC, Module.End.pow_apply] using! h.lowering 0
   have hX : (X ^ (b + 1)) w = 0 := by
-    simpa [X, leviF, simpleF, weightABC, Module.End.pow_apply] using h.lowering 1
+    simpa [X, leviF, simpleF, weightABC, Module.End.pow_apply] using! h.lowering 1
   have hN : Z^[a + 1 + 2 * b] w = 0 := by
-    simpa [← Module.End.pow_apply] using
+    simpa [← Module.End.pow_apply] using!
       two_root_nil_large X Y Z w a b hXY hXXY hYYX hY hX
   have hEF : ∀ v, E (Z v) - Z (E v) = H v := by
     intro v
@@ -96,13 +96,13 @@ theorem a3_compound_one_nilpotence (a b c : ℕ)
   have hH : H w = ((a + b : ℕ) : ℂ) • w := by
     change ρ.op 12 0 w + ρ.op 13 0 w = ((a + b : ℕ) : ℂ) • w
     rw [show ρ.op 12 0 w = (a : ℂ) • w by
-      simpa [simpleH, weightABC] using h.cartan_zero 0]
+      simpa [simpleH, weightABC] using! h.cartan_zero 0]
     rw [show ρ.op 13 0 w = (b : ℂ) • w by
-      simpa [simpleH, weightABC] using h.cartan_zero 1]
+      simpa [simpleH, weightABC] using! h.cartan_zero 1]
     simp [Nat.cast_add, add_smul]
   have hsharp := sl2_lowering_of_nilpotent E Z H hEF hHF w
     (a + b) (a + 1 + 2 * b) hE hH hN (by omega)
-  simpa [Z, Module.End.pow_apply] using hsharp
+  simpa [Z, Module.End.pow_apply] using! hsharp
 
 end VOA.DeligneAudit.A3Sector
 

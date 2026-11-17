@@ -18,7 +18,7 @@ theorem componentWeight_nonneg (m : ℕ) (x : Fin 9 × Fin m) (j : Fin 3) :
     simp only [zero_add,one_mul]
     exact Nat.cast_nonneg _
   · change 0 ≤ cWeight x.1 + 0 * x.2.val
-    simpa only [zero_mul,add_zero] using cWeight_nonneg x.1
+    simpa only [zero_mul,add_zero] using! cWeight_nonneg x.1
 
 theorem component_monomial_weight_eq (m : ℕ) (e : (Fin 9 × Fin m) →₀ ℕ) (j : Fin 3) :
     Finsupp.weight (componentWeight m) e j =
@@ -98,7 +98,7 @@ theorem matching_c_contacts_exact (m D T : ℕ) (i : OrbitSourceIndex m)
   have hs : orbitSourcePoly m i ≠ 0 := right_ne_zero_of_mul hne
   have hl : ∀ x ∈ i.outer, category x.1 = 0 := by
     intro x hx
-    simpa only [branchCategory,hb,if_true] using i.branch x hx
+    simpa only [branchCategory,hb,if_true] using! i.branch x hx
   have hlen : i.outer.length ≤ i.seed.val.2.1 := by
     by_contra h
     apply hs
@@ -127,7 +127,7 @@ theorem matching_multiplier_c_zero (m D T : ℕ) (i : OrbitSourceIndex m)
       have he := congrFun hmatch 2
       change Finsupp.weight (componentWeight m) e 2 +
         (if i.seed.val.1 then (i.seed.val.2.1 : ℤ) - i.outer.length else 0) = 0 at he
-      simpa only [hb,Bool.false_eq_true,if_false,add_zero] using he
+      simpa only [hb,Bool.false_eq_true,if_false,add_zero] using! he
 
 theorem matching_multiplier_no_c (m D T : ℕ) (i : OrbitSourceIndex m)
     (e : (Fin 9 × Fin m) →₀ ℕ)

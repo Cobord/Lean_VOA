@@ -162,7 +162,7 @@ theorem rawSpatialTrace_left_normalOrder
   have h := fun b n => trace_product_mode_iterate_left_transport Y₁ Y₂ ha hx hy ell
     (b - (-α₁ - α₂ - k + ell + 1) - 1) (-b - 1) (by ring) n
   choose J I _ hI using h
-  exact ⟨J, I, fun b => by ext n; simpa using hI b n⟩
+  exact ⟨J, I, fun b => by ext n; simpa using! hI b n⟩
 
 /-- The opposite normal order uses its own q-shift factors. -/
 theorem rawSpatialTrace_right_normalOrder
@@ -184,7 +184,7 @@ theorem rawSpatialTrace_right_normalOrder
   have h := fun b n => trace_product_mode_iterate_right_transport Y₁ Y₂ ha hx hy ell
     (b - (-α₁ - α₂ - k + ell + 1) - 1) (-b - 1) (by ring) n
   choose J I _ hI using h
-  exact ⟨J, I, fun b => by ext n; simpa using hI b n⟩
+  exact ⟨J, I, fun b => by ext n; simpa using! hI b n⟩
 
 /-- The zero-mode energy identity before spatial evaluation, including c/24. -/
 theorem rawSpatialTrace_middle_energy

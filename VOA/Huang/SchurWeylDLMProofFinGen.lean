@@ -125,7 +125,7 @@ theorem orbifold_generates [Finite G] (hW : W.IsSimple) :
     simp only [Submodule.mem_iInf, LinearMap.mem_ker]
     intro w hw
     have := congrFun ((LinearMap.mem_ker).mp hc) ⟨w, hw⟩
-    simpa [Θ] using this
+    simpa [Θ] using! this
   obtain ⟨R, hR⟩ := Θ.exists_leftInverse_of_injective hΘ
   let F : (S → 𝒱) →ₗ[ℂ] 𝒱 := orbitMap G v ∘ₗ R
   let s : S → Finset 𝒱 := fun j => Finset.univ.image fun g : G => orbitMap G (j : 𝒱) (Pi.single g 1)
@@ -165,7 +165,7 @@ theorem orbifold_generates [Finite G] (hW : W.IsSimple) :
     rw [orbitMap_single]
     exact hP u hu n w (hSP hw)
   have := hle hinv
-  simpa [orbitMap_single] using this
+  simpa [orbitMap_single] using! this
 
 omit [Fintype G] in
 /-- **`𝒱` is a finitely generated weak `W^G`-module** (restriction of the adjoint module). -/

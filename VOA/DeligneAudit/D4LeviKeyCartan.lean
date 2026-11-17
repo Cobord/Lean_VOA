@@ -34,7 +34,7 @@ theorem cartan_radical_comm (i : Fin 3) (j : Fin 6) (r s : ℕ) (v : V) :
       ρ.op (radicalColour j) s
         (ρ.op (leviColour (VOA.DeligneAudit.A3Sector.simpleH i)) r v) =
       (letterWeight i j : ℂ) • ρ.op (radicalColour j) (r + s) v := by
-  rw [ρ.comm]
+  refine (ρ.comm _ _ _ _ _).trans ?_
   have hcoeff : ∀ z : Fin 28,
       D4sector.f (leviColour (VOA.DeligneAudit.A3Sector.simpleH i))
         (radicalColour j) z =
@@ -42,16 +42,14 @@ theorem cartan_radical_comm (i : Fin 3) (j : Fin 6) (r s : ℕ) (v : V) :
     intro z
     by_cases hz : z = radicalColour j
     · subst z
-      simpa using cartan_radical_coefficient i j
-    · simp only [hz, ↓reduceIte]
-      exact cartan_radical_support i j z hz
-  simp_rw [hcoeff]
-  simp only [ite_smul, zero_smul]
-  change (Finset.univ : Finset (Fin 28)).sum
-    (fun x => if x = radicalColour j then
-      (letterWeight i j : ℂ) • ρ.op x (r + s) v else 0) = _
-  rw [Finset.sum_ite_eq']
-  simp
+      simpa using! cartan_radical_coefficient i j
+    · exact (cartan_radical_support i j z hz).trans (if_neg hz).symm
+  -- 4.35: `D4sector.f` takes `Fin D4sector.n`, an alias of `Fin 28`; avoid rewriting the ill-typed target.
+  refine (Finset.sum_eq_single (radicalColour j) (fun z _ hz => ?_)
+    (fun h => absurd (Finset.mem_univ _) h)).trans ?_
+  · exact (congrArg (· • ρ.op z (r + s) v) (hcoeff z)).trans
+      ((congrArg (· • ρ.op z (r + s) v) (if_neg hz)).trans (zero_smul ℂ _))
+  · exact congrArg (· • ρ.op (radicalColour j) (r + s) v) ((hcoeff _).trans (if_pos rfl))
 
 /-- The source vector has sl4 highest weight (0,m,0) in the raw D4 Cartan colours. -/
 theorem source_cartan (m : ℕ)
@@ -64,7 +62,7 @@ theorem source_cartan (m : ℕ)
   fin_cases i <;>
     simpa [leviCurrent, leviSign, leviColour,
       VOA.DeligneAudit.A3Sector.simpleH,
-      VOA.DeligneAudit.A3Sector.weightABC] using h'
+      VOA.DeligneAudit.A3Sector.weightABC] using! h'
 
 /-- Every radical word has the integer Cartan labels recorded by its key. -/
 theorem cartan_weight_word (m : ℕ)
@@ -77,7 +75,7 @@ theorem cartan_weight_word (m : ℕ)
   induction l with
   | nil =>
       have hs := source_cartan ρ w m h i
-      fin_cases i <;> simpa [radicalWord, wordKey, keyLabel] using hs
+      fin_cases i <;> simpa [radicalWord, wordKey, keyLabel] using! hs
   | cons p l ih =>
       rcases p with ⟨j, s⟩
       have hc := cartan_radical_comm ρ i j 0 s (radicalWord ρ w l)
@@ -97,7 +95,7 @@ theorem cartan_weight_key (m : ℕ)
   induction hv using Submodule.span_induction with
   | mem z hz =>
       obtain ⟨l, hk, rfl⟩ := hz
-      simpa [← hk] using cartan_weight_word ρ w m h i l
+      simpa [← hk] using! cartan_weight_word ρ w m h i l
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy, smul_add]
   | smul c x _ hx =>

@@ -172,8 +172,8 @@ noncomputable def Y1map (c : ℂ) (k : ℤ) : VirUniv c →ₗ[ℂ] VirUniv c �
 /-- **`∂_c Y` at `c`**: the first-order correction field. -/
 noncomputable def Y1 (c : ℂ) : VirUniv c →ₗ[ℂ] FormalDist (Module.End ℂ (VirUniv c)) where
   toFun x := fun t => Y1map c (-t - 1) x
-  map_add' x y := by funext t; simp
-  map_smul' a x := by funext t; simp
+  map_add' x y := by funext t; exact map_add (Y1map c (-t - 1)) x y
+  map_smul' a x := by funext t; exact map_smul (Y1map c (-t - 1)) a x
 
 theorem mode_Y1 (c : ℂ) (x : VirUniv c) (k : ℤ) (y : VirUniv c) :
     mode (Y1 c x) k y = polyComb c (tensor' k (lift c x) (lift c y)) := by

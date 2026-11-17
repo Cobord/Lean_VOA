@@ -36,7 +36,7 @@ theorem grading_mem_remainderSpace (r : ℕ) (hr : 18 ≤ r) (hmax : r < 50)
     | zero => simp
     | add z t _ _ hz ht => rw [map_add]; exact Submodule.add_mem _ hz ht
     | smul c z _ hz => rw [map_smul]; exact Submodule.smul_mem _ c hz
-  simpa only [piHom_of_mem Wi hv] using hproject v hs
+  simpa only [piHom_of_mem Wi hv] using! hproject v hs
 
 /-- Existence is unconditional; numerical identification is a separate step. -/
 theorem mode_remainder_exists (r : ℕ) (hr : 18 ≤ r) (hmax : r < 50) :
@@ -59,11 +59,11 @@ theorem mode_remainder_exists (r : ℕ) (hr : 18 ≤ r) (hmax : r < 50) :
 theorem weight74_remainder_exists : ∃ a b : ℂ,
     OrbXu.modeSymbol Wi Xico (-3) 37 19 a b ∈
       virError Wi Wi.vacuum ⊔ virError Wi Xico := by
-  simpa [OrbXu.modeSymbol, sub_sub] using mode_remainder_exists 37 (by decide) (by decide)
+  simpa [OrbXu.modeSymbol, sub_sub] using! mode_remainder_exists 37 (by decide) (by decide)
 
 theorem weight76_remainder_exists : ∃ a b : ℂ,
     OrbXu.modeSymbol Wi Xico (-5) 38 20 a b ∈
       virError Wi Wi.vacuum ⊔ virError Wi Xico := by
-  simpa [OrbXu.modeSymbol, sub_sub] using mode_remainder_exists 38 (by decide) (by decide)
+  simpa [OrbXu.modeSymbol, sub_sub] using! mode_remainder_exists 38 (by decide) (by decide)
 
 end VOA.Classification.COne.OrbIcoS

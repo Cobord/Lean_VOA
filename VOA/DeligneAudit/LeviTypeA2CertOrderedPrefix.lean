@@ -12,7 +12,7 @@ noncomputable def a2KeyEnum (p q : ℕ) :
 theorem a2KeyEnum_mem (p q : ℕ) (j : Fin ((a2KeyBox p q).card)) :
     a2KeyEnum p q j ∈ a2KeyBox p q := by
   apply (mem_a2OrderedKeys p q _).mp
-  simpa only [a2KeyEnum] using
+  simpa only [a2KeyEnum] using!
     (List.get_mem (a2OrderedKeys p q)
       (Fin.cast (length_a2OrderedKeys p q).symm j))
 
@@ -22,14 +22,14 @@ theorem a2KeyEnum_cover (p q : ℕ) (x : A2RadicalKey)
   have hx' : x ∈ a2OrderedKeys p q := (mem_a2OrderedKeys p q x).mpr hx
   obtain ⟨j, hj⟩ := List.mem_iff_get.mp hx'
   refine ⟨Fin.cast (length_a2OrderedKeys p q) j, ?_⟩
-  simpa [a2KeyEnum] using hj
+  simpa [a2KeyEnum] using! hj
 
 theorem a2KeyEnum_descending (p q : ℕ)
     (i j : Fin ((a2KeyBox p q).card)) (hij : i < j) :
     a2KeyLess q (a2KeyEnum p q j) (a2KeyEnum p q i) := by
   let i' := Fin.cast (length_a2OrderedKeys p q).symm i
   let j' := Fin.cast (length_a2OrderedKeys p q).symm j
-  have hlt : i' < j' := by simpa [i', j'] using hij
+  have hlt : i' < j' := by simpa [i', j'] using! hij
   have hrel := (List.pairwise_iff_get.mp
     (pairwise_a2OrderedKeys p q)) i' j' hlt
   have hne : i' ≠ j' := ne_of_lt hlt

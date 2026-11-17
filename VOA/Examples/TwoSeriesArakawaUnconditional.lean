@@ -159,7 +159,7 @@ theorem repr_aeval_of_diag (T : Module.End ℂ (WakModule k)) (lam : (RLetter �
     · subst he; ring
     · ring
   have := LinearMap.congr_fun h y
-  simpa using this
+  simpa using! this
 
 theorem Lm0_Fbasis (μ : RLetter →₀ ℕ) :
     Lm k hk 0 (Fbasis k hk μ) = (wtR (expWord μ) : ℂ) • Fbasis k hk μ := by
@@ -328,7 +328,7 @@ theorem sumN_eq_zero (hkN : ∀ i : ℕ, k ≠ i) {y : WakModule k} (hy : y ∈ 
   -- apply `e₁^N`
   have he : (J k 0 1 ^ N) z ∈ Imax k hk := by
     have := aeval_mem k _ (fun x hx => J_mem_Imax k hk 0 1 hx) (Polynomial.X ^ N) z hz
-    simpa using this
+    simpa using! this
   rw [hzS, map_smul, e1pow_fpow_vac, smul_smul] at he
   by_contra hS
   have hcoef : κ * S * nN k N ≠ 0 := mul_ne_zero (mul_ne_zero hκ hS) (nN_ne_zero k hkN N)

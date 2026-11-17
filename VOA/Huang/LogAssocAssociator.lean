@@ -69,15 +69,14 @@ theorem prodCoeff_assoc_left {Y₁ : IntertwiningModes M₁ M₅ M₄}
   have J := hY₁.jacobi u w₁ q ℓ 0 n
   have hRHS := finsum_eq_single (fun i : ℤ =>
       cbz 0 i • Y₁ (((0 : ℤ) : ℂ) + n - i) (mode (A₁.YM u) (ℓ + i) w₁) q) 0
-    (fun i hi => by simp only; rw [cbz_zero_left, if_neg hi, zero_smul])
+    (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])
   have hLHS := finsum_eq_sum_range (R := R) (g := fun i : ℤ => (negOnePow i * cbz ℓ i) •
       (mode (A₄.YM u) (ℓ + 0 - i) (Y₁ (n + i) w₁ q)
         - negOnePow ℓ • Y₁ (ℓ + n - i) w₁ (mode (A₅.YM u) (0 + i) q)))
-    (fun i hi => by simp only; rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
+    (fun i hi => by rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
     (fun i hi => by
       have e1 : Y₁ (n + i) w₁ q = 0 := hR₁ i (by omega)
       have e2 : mode (A₅.YM u) (0 + i) q = 0 := hR₂ _ (by omega)
-      simp only
       rw [e1, e2, map_zero, map_zero, smul_zero, sub_zero, smul_zero])
   rw [hRHS, hLHS] at J
   have J' := congrArg f J
@@ -347,17 +346,16 @@ theorem prodCoeff_assoc_right {Y₁ : IntertwiningModes M₁ M₅ M₄}
   have J := hY₂.jacobi u w₂ w₃ ℓ 0 n₂
   have hRHS := finsum_eq_single (fun i : ℤ =>
       cbz 0 i • Y₂ (((0 : ℤ) : ℂ) + n₂ - i) (mode (A₂.YM u) (ℓ + i) w₂) w₃) 0
-    (fun i hi => by simp only; rw [cbz_zero_left, if_neg hi, zero_smul])
+    (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])
   have hLHS := finsum_eq_sum_range (R := R) (g := fun i : ℤ => (negOnePow i * cbz ℓ i) •
       (mode (A₅.YM u) (ℓ + 0 - i) (Y₂ (n₂ + i) w₂ w₃)
         - negOnePow ℓ • Y₂ (ℓ + n₂ - i) w₂ (mode (A₃.YM u) (0 + i) w₃)))
-    (fun i hi => by simp only; rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
+    (fun i hi => by rw [cbz_apply_neg ℓ hi, mul_zero, zero_smul])
     (fun i hi => by
       have e1 : Y₂ (n₂ + i) w₂ w₃ = 0 := hR₁ i (by omega)
       obtain ⟨i', rfl⟩ : ∃ i' : ℕ, i = i' := ⟨i.toNat, by omega⟩
       have e2 : mode (A₃.YM u) (0 + (i' : ℤ)) w₃ = 0 := by
         rw [zero_add]; exact h₃ i' (by omega)
-      simp only
       rw [e1, e2, map_zero, map_zero, smul_zero, sub_zero, smul_zero])
   rw [hRHS, hLHS] at J
   have J' := congrArg (fun x => f (Y₁ n w₁ x)) J

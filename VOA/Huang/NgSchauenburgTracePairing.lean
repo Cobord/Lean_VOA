@@ -47,9 +47,9 @@ theorem exists_trace_pair_ne_zero {X Y : C} (f : X ⟶ Y) (hf : f ≠ 0) :
     have he : e.inv ≫ f = 0 := by
       apply biproduct.hom_ext'
       intro k
-      simpa only [Category.assoc, comp_zero] using h k
+      simpa only [Category.assoc, comp_zero] using! h k
     have := congrArg (fun g => e.hom ≫ g) he
-    simpa using this
+    simpa using! this
   obtain ⟨k, hk⟩ := hex
   letI := F.simple_isSimple (a k)
   obtain ⟨q, hq⟩ := F.exists_retraction_of_simple _ hk
@@ -59,10 +59,10 @@ theorem exists_trace_pair_ne_zero {X Y : C} (f : X ⟶ Y) (hf : f ≠ 0) :
     calc
       _ = F.scalarTrace (F.simple (a k))
           ((biproduct.ι (fun k => F.simple (a k)) k ≫ e.inv) ≫ (f ≫ q)) := by
-        simpa only [Category.assoc] using F.scalarTrace_comp_comm
+        simpa only [Category.assoc] using! F.scalarTrace_comp_comm
           (f ≫ q) (biproduct.ι (fun k => F.simple (a k)) k ≫ e.inv)
       _ = _ := by
-        simpa only [Category.assoc] using congrArg (F.scalarTrace (F.simple (a k))) hq
+        simpa only [Category.assoc] using! congrArg (F.scalarTrace (F.simple (a k))) hq
   rw [he]
   exact F.dimension_simple_ne_zero (a k)
 

@@ -129,7 +129,7 @@ theorem unmarkedLayer_finrank_le_bound (i : ℕ) (hi : i < n + 1 - k) :
   · have h := deletedLayer_finrank_le _ (quotientRoot_aeval_surjective _) u i _
       (unmarkedLayer_same_le_ker n (n + 1 - k) u i)
     rw [unmarkedLayer_child_same_eq n k hk (by omega)] at h
-    simpa [unmarkedLayerBound, hik, show 0 < k by omega] using h
+    simpa [unmarkedLayerBound, hik, show 0 < k by omega] using! h
   · have h := deletedLayer_finrank_le _ (quotientRoot_aeval_surjective _) u i _
       (unmarkedLayer_lower_le_ker n (n + 1 - k) u k (by omega) (by omega) i (by omega))
     rwa [unmarkedLayer_child_lower_eq n k hk i (by omega) hi] at h

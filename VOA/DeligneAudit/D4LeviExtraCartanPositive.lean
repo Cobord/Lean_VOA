@@ -15,7 +15,7 @@ theorem source_extra_pos
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (r : ℕ) (hr : 0 < r) : ρ.op (0 : Fin 28) r w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   exact rs_cartan_pos hs
     (by change (0 : Fin 28).val < 4; decide : D4sector.cartan (0 : Fin 28))
     r hr
@@ -60,9 +60,9 @@ theorem extra_pos_key
       exact extra_pos_word ρ w m h r hr l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (keyLayer ρ w (keyShift r k)).add_mem hx hy
+      simpa using! (keyLayer ρ w (keyShift r k)).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (keyLayer ρ w (keyShift r k)).smul_mem c hx
+      simpa using! (keyLayer ρ w (keyShift r k)).smul_mem c hx
 
 theorem extra_pos_higher
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))

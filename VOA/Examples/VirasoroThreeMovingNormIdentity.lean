@@ -32,7 +32,7 @@ theorem threeMovingVacuum_L1 (r : ℕ) (hr : r+1<R) :
     Lop (vermaBSACharge t) 1 (threeMovingVacuum t (r+1))=(r:ℂ) • threeMovingVacuum t r := by
   have hh := nonresonant_first_below 0 (vermaBSAWeight 3 t) t 3 R ht (by omega)
     (threeMovingSequence (vermaBSACharge t) t) (threeMovingSequence_below t ht R hd)
-    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using hd j hj hjR) r (by omega)
+    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using! hd j hj hjR) r (by omega)
   change vermaMode _ 0 1 _-(0-vermaBSAWeight 3 t+vermaBSAWeight 3 t+(r:ℂ)) • _=0 at hh
   have he : 0-vermaBSAWeight 3 t+vermaBSAWeight 3 t+(r:ℂ)=(r:ℂ) := by ring
   rw [he,sub_eq_zero] at hh
@@ -47,10 +47,10 @@ theorem threeMovingVacuum_L2 (r : ℕ) (hr : r+2<R) :
       (vermaBSAWeight 3 t+(r:ℂ)) • threeMovingVacuum t r := by
   have hP := nonresonant_first_below 0 (vermaBSAWeight 3 t) t 3 R ht (by omega)
     (threeMovingSequence (vermaBSACharge t) t) (threeMovingSequence_below t ht R hd)
-    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using hd j hj hjR) r (by omega)
+    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using! hd j hj hjR) r (by omega)
   have hQ := nonresonant_second_below 0 (vermaBSAWeight 3 t) t 3 R ht (by omega)
     (threeMovingSequence (vermaBSACharge t) t) (threeMovingSequence_below t ht R hd)
-    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using hd j hj hjR) r (by omega)
+    (fun j hj hjR => by simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using! hd j hj hjR) r (by omega)
   change vermaMode _ 0 2 _-(0-vermaBSAWeight 3 t+2*vermaBSAWeight 3 t+(r:ℂ)) • _-
     (3:ℂ) • (wardP1Map _ 0 _ _ (threeMovingSequence _ t)).val r=0 at hQ
   rw [hP,smul_zero,sub_zero] at hQ
@@ -65,7 +65,7 @@ theorem threeMovingVacuum_higher (m r : ℕ) (hr : r+m+2<R) :
     Lop (vermaBSACharge t) ((m:ℤ)+2) (threeMovingVacuum t (r+m+2))=
       (((m:ℂ)+1)*vermaBSAWeight 3 t+(r:ℂ)) • threeMovingVacuum t r := by
   induction m generalizing r with
-  | zero => simpa using threeMovingVacuum_L2 t ht R hd r hr
+  | zero => simpa using! threeMovingVacuum_L2 t ht R hd r hr
   | succ m ih =>
     have hA := ih (r+1) (by omega)
     have hB := ih r (by omega)
@@ -99,7 +99,7 @@ theorem threeMovingVacuum_positive_to (r j : ℕ) (hj : j<r) (hr : r<R) :
       ((j:ℂ)+((r:ℂ)-(j:ℂ)-1)*vermaBSAWeight 3 t) • threeMovingVacuum t j := by
   by_cases he : r=j+1
   · subst r
-    simpa using threeMovingVacuum_L1 t ht R hd j hr
+    simpa using! threeMovingVacuum_L1 t ht R hd j hr
   · have hk : r=j+(r-j-2)+2 := by omega
     have hh := threeMovingVacuum_higher t ht R hd (r-j-2) j (by omega)
     rw [← hk] at hh
@@ -108,7 +108,7 @@ theorem threeMovingVacuum_positive_to (r j : ℕ) (hj : j<r) (hr : r<R) :
       have hi : ((r-j-2:ℕ):ℤ)+1=(r:ℤ)-(j:ℤ)-1 := by omega
       exact_mod_cast hi
     rw [hz,hc] at hh
-    simpa only [add_comm] using hh
+    simpa only [add_comm] using! hh
 end Ward
 
 /-- The actual norm-weighted Ward sum; every term involves an earlier
@@ -140,7 +140,7 @@ theorem threeMoving_norm_equation (t : ℂ) (ht : t≠0) (r : ℕ) (hr : 0<r)
     (VirGram4.canB _).form (Lop _ ((j:ℤ)-(r:ℤ)) (threeMovingVacuum t j))
       (threeMovingVacuum t r)=0 at he
   simp only [hs] at he
-  simpa only [threeMovingNormSum,mul_assoc] using he
+  simpa only [threeMovingNormSum,mul_assoc] using! he
 
 /-- Off resonance, multiplying the actual norm recurrence by its diagonal
 gives the norm of the undivided source, without guessing a norm product. -/
@@ -153,7 +153,7 @@ theorem threeMoving_source_norm_nonresonant (t : ℂ) (ht : t≠0) (r : ℕ) (hr
   have he := threeMovingState_equation (vermaBSACharge t) t r hr (hd r hr le_rfl)
   have hs : threeMovingSource (vermaBSACharge t) t r=
       -threeMovingDiagonal t r • threeMovingState (vermaBSACharge t) t r := by
-    simpa only [neg_smul] using (eq_neg_of_add_eq_zero_right he)
+    simpa only [neg_smul] using! (eq_neg_of_add_eq_zero_right he)
   rw [hs]
   simp only [map_smul,LinearMap.smul_apply,smul_eq_mul]
   have hh := threeMoving_norm_equation t ht r hr hd
@@ -170,10 +170,10 @@ theorem threeMoving_source_norm_resonant (t : ℂ) (ht : t≠0) (r : ℕ) (hr : 
       (vacuumProjection _ (threeMovingSource (vermaBSACharge t) t r))
       (vacuumProjection _ (threeMovingSource (vermaBSACharge t) t r))=0 := by
   have hz' : wardBSASourceDiagonal 0 (vermaBSAWeight 3 t) t 3 r 3 (vermaBSAWeight 3 t+3)=0 := by
-    simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using hz
+    simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using! hz
   have hd' (j : ℕ) (hj : 0<j) (hjr : j<r) :
       wardBSASourceDiagonal 0 (vermaBSAWeight 3 t) t 3 j 3 (vermaBSAWeight 3 t+3)≠0 := by
-    simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using hd j hj hjr
+    simpa only [threeMovingDiagonal,threeStateDiagonal_eq,Nat.cast_ofNat] using! hd j hj hjr
   have he : (wardSourceAt (vermaBSACharge t) 0 (vermaBSAWeight 3 t) t (vermaBSAWeight 3 t) 3
       (threeMovingSequence (vermaBSACharge t) t)).val r=threeMovingSource (vermaBSACharge t) t r := by
     rw [wardSourceAt_three_state_recursion]

@@ -34,11 +34,11 @@ variable {k : ℕ}
 /-! ### The coefficient dot product -/
 
 /-- `⟨A, Z⟩ = Σ_e A_e Z_e`. -/
-def dot (A Z : XP k) : ℂ := Z.sum fun e z => coeff e A * z
+def dot (A Z : XP k) : ℂ := Z.coeff.sum fun e z => A.coeff e * z
 
 theorem dot_eq_sum {A Z : XP k} {T : Finset (Fin k →₀ ℕ)} (hT : Z.support ⊆ T) :
-    dot A Z = ∑ e ∈ T, coeff e A * coeff e Z :=
-  Finsupp.sum_of_support_subset Z hT (fun e z => coeff e A * z) (fun _ _ => mul_zero _)
+    dot A Z = ∑ e ∈ T, A.coeff e * Z.coeff e :=
+  Finsupp.sum_of_support_subset Z.coeff hT (fun e z => A.coeff e * z) (fun _ _ => mul_zero _)
 
 theorem dot_comm (A Z : XP k) : dot A Z = dot Z A := by
   classical
@@ -51,12 +51,15 @@ theorem dot_add_right (A Z₁ Z₂ : XP k) : dot A (Z₁ + Z₂) = dot A Z₁ + 
   rw [dot_eq_sum (T := Z₁.support ∪ Z₂.support) support_add,
     dot_eq_sum (T := Z₁.support ∪ Z₂.support) subset_union_left,
     dot_eq_sum (T := Z₁.support ∪ Z₂.support) subset_union_right, ← sum_add_distrib]
-  exact sum_congr rfl fun e _ => by rw [coeff_add, mul_add]
+  exact sum_congr rfl fun e _ => by rw [MvPolynomial.coeff_add, mul_add]
 
 theorem dot_add_left (A₁ A₂ Z : XP k) : dot (A₁ + A₂) Z = dot A₁ Z + dot A₂ Z := by
   rw [dot_comm, dot_add_right, dot_comm, dot_comm Z]
 
-theorem dot_zero_right (A : XP k) : dot A 0 = 0 := Finsupp.sum_zero_index
+theorem dot_zero_right (A : XP k) : dot A 0 = 0 := by
+  unfold dot
+  rw [MvPolynomial.coeff_zero]
+  exact Finsupp.sum_zero_index
 
 theorem dot_zero_left (Z : XP k) : dot 0 Z = 0 := by
   rw [dot_comm, dot_zero_right]
@@ -82,7 +85,7 @@ theorem dot_smul_left (c : ℂ) (A Z : XP k) : dot (c • A) Z = c * dot A Z := 
   rw [dot_comm, dot_smul_right, dot_comm]
 
 theorem dot_monomial_right (A : XP k) (e : Fin k →₀ ℕ) (c : ℂ) :
-    dot A (monomial e c) = coeff e A * c := by
+    dot A (monomial e c) = A.coeff e * c := by
   classical
   by_cases hc : c = 0
   · simp [hc, dot_zero_right]
@@ -111,7 +114,7 @@ theorem dot_eq_zero_of_lt (l : Fin k) (n : ℕ) {A : XP k} (hA : ∀ e ∈ A.sup
   refine sum_eq_zero fun e he => ?_
   rw [coeff_monomial_mul']
   split_ifs with hle
-  · exact absurd (hA e he) (not_lt.mpr (by simpa using hle l))
+  · exact absurd (hA e he) (not_lt.mpr (by simpa using! hle l))
   · rw [zero_mul]
 
 /-! ### Freeness of a variable -/
@@ -153,8 +156,8 @@ theorem hsum_comm (a b : Fin k) (j : ℕ) : hsum a b j = hsum b a j := by
 
 theorem coeff_X_mul_key {a b : Fin k} (hab : a ≠ b) {e' : Fin k →₀ ℕ} (hb : e' b = 0) (p q : ℕ)
     (u : XP k) :
-    coeff (Finsupp.single a p + Finsupp.single b q + e') (X b * u) =
-      if q = 0 then 0 else coeff (Finsupp.single a p + Finsupp.single b (q - 1) + e') u := by
+    (X b * u).coeff (Finsupp.single a p + Finsupp.single b q + e') =
+      if q = 0 then 0 else u.coeff (Finsupp.single a p + Finsupp.single b (q - 1) + e') := by
   classical
   rw [coeff_X_mul']
   have hmem : b ∈ (Finsupp.single a p + Finsupp.single b q + e').support ↔ q ≠ 0 := by
@@ -175,7 +178,7 @@ theorem dot_key {a b : Fin k} (hab : a ≠ b) (j : ℕ) {P : XP k} (ha : a ∉ P
     (hb : b ∉ P.vars) (u : XP k) : dot (hsum a b j * P) ((X b - X a) * u) = 0 := by
   classical
   have hexp : hsum a b j * P = ∑ x ∈ antidiagonal j, ∑ e' ∈ P.support,
-      monomial (Finsupp.single a x.1 + Finsupp.single b x.2 + e') (coeff e' P) := by
+      monomial (Finsupp.single a x.1 + Finsupp.single b x.2 + e') (P.coeff e') := by
     conv_lhs => rw [as_sum P]
     rw [hsum, sum_mul]
     refine sum_congr rfl fun x _ => ?_
@@ -191,11 +194,11 @@ theorem dot_key {a b : Fin k} (hab : a ≠ b) (j : ℕ) {P : XP k} (ha : a ∉ P
   have hea := coeff_eq_zero_of_not_mem_vars ha he'
   have heb := coeff_eq_zero_of_not_mem_vars hb he'
   simp only [sub_mul, coeff_sub, sum_sub_distrib]
-  have hb' : ∀ p q, coeff (Finsupp.single a p + Finsupp.single b q + e') (X b * u) =
-      if q = 0 then 0 else coeff (Finsupp.single a p + Finsupp.single b (q - 1) + e') u :=
+  have hb' : ∀ p q, (X b * u).coeff (Finsupp.single a p + Finsupp.single b q + e') =
+      if q = 0 then 0 else u.coeff (Finsupp.single a p + Finsupp.single b (q - 1) + e') :=
     fun p q => coeff_X_mul_key hab heb p q u
-  have ha' : ∀ p q, coeff (Finsupp.single a p + Finsupp.single b q + e') (X a * u) =
-      if p = 0 then 0 else coeff (Finsupp.single a (p - 1) + Finsupp.single b q + e') u := by
+  have ha' : ∀ p q, (X a * u).coeff (Finsupp.single a p + Finsupp.single b q + e') =
+      if p = 0 then 0 else u.coeff (Finsupp.single a (p - 1) + Finsupp.single b q + e') := by
     intro p q
     have := coeff_X_mul_key hab.symm hea q p u
     rw [add_comm (Finsupp.single b q)] at this
@@ -219,7 +222,7 @@ def evT (k : ℕ) : TPoly →ₐ[ℂ] OP k :=
 def ind (B : Finset (Fin k)) : Fin k →₀ ℕ := ∑ i ∈ B, Finsupp.single i 1
 
 /-- **The polarization** `pol_B(F) = [t_B] F(T_m ↦ Σ_i t_i x_i^m)`. -/
-def pol (B : Finset (Fin k)) (F : TPoly) : XP k := coeff (ind B) (evT k F)
+def pol (B : Finset (Fin k)) (F : TPoly) : XP k := (evT k F).coeff (ind B)
 
 theorem ind_apply (B : Finset (Fin k)) (i : Fin k) : ind B i = if i ∈ B then 1 else 0 := by
   classical
@@ -250,13 +253,13 @@ theorem ind_eq_zero_iff {B : Finset (Fin k)} : ind B = 0 ↔ B = ∅ := by
   · rintro rfl; simp [ind]
 
 theorem pol_add (B : Finset (Fin k)) (F G : TPoly) : pol B (F + G) = pol B F + pol B G := by
-  rw [pol, map_add, coeff_add]; rfl
+  rw [pol, map_add, MvPolynomial.coeff_add]; rfl
 
 theorem pol_smul (B : Finset (Fin k)) (c : ℂ) (F : TPoly) : pol B (c • F) = c • pol B F := by
   rw [pol, map_smul, coeff_smul]; rfl
 
 theorem pol_zero (B : Finset (Fin k)) : pol B 0 = 0 := by
-  rw [pol, map_zero, coeff_zero]
+  rw [pol, map_zero, MvPolynomial.coeff_zero, Finsupp.zero_apply]
 
 theorem pol_sum {ι : Type*} (s : Finset ι) (B : Finset (Fin k)) (F : ι → TPoly) :
     pol B (∑ i ∈ s, F i) = ∑ i ∈ s, pol B (F i) := by
@@ -316,7 +319,7 @@ theorem monomial_induction {P : (ℕ →₀ ℕ) → Prop} (h0 : P 0)
     have key : ∀ c : ℕ, P (Finsupp.single a c + f) := by
       intro c
       induction c with
-      | zero => simpa using ih
+      | zero => simpa using! ih
       | succ c ihc =>
         have := hs _ a ihc
         rwa [add_right_comm, ← Finsupp.single_add] at this
@@ -380,7 +383,7 @@ theorem expProp_X_mul {S : Finset ℕ} {G : TPoly} {m : ℕ} (hm : m ∈ S)
 
 theorem expProp_monomial (S : Finset ℕ) : ∀ s : ℕ →₀ ℕ, s.support ⊆ S →
     ExpProp (k := k) S (monomial s 1) := by
-  refine monomial_induction (fun _ => by simpa using expProp_one S) fun s m ih hsub => ?_
+  refine monomial_induction (fun _ => by simpa using! expProp_one S) fun s m ih hsub => ?_
   have hm : m ∈ S := hsub (Finsupp.mem_support_iff.mpr (by simp))
   have hs : s.support ⊆ S := fun i hi => hsub (Finsupp.mem_support_iff.mpr (by
     have := Finsupp.mem_support_iff.mp hi
@@ -396,7 +399,7 @@ theorem pol_expand {S : Finset ℕ} {F : TPoly} (hS : F.vars ⊆ S) {B : Finset 
   have h : ExpProp (k := k) S F := by
     conv => arg 2; rw [as_sum F]
     have : ∀ t : Finset (ℕ →₀ ℕ), t ⊆ F.support →
-        ExpProp (k := k) S (∑ v ∈ t, monomial v (coeff v F)) := by
+        ExpProp (k := k) S (∑ v ∈ t, monomial v (F.coeff v)) := by
       intro t
       induction t using Finset.induction_on with
       | empty =>
@@ -406,7 +409,7 @@ theorem pol_expand {S : Finset ℕ} {F : TPoly} (hS : F.vars ⊆ S) {B : Finset 
         intro hsub
         rw [sum_insert ha]
         refine expProp_add ?_ (ih (fun x hx => hsub (mem_insert_of_mem hx)))
-        have hmon : (monomial a (coeff a F) : TPoly) = coeff a F • monomial a 1 := by
+        have hmon : (monomial a (F.coeff a) : TPoly) = F.coeff a • monomial a 1 := by
           rw [smul_monomial, smul_eq_mul, mul_one]
         rw [hmon]
         refine expProp_smul _ (expProp_monomial S a fun i hi => hS ?_)
@@ -505,9 +508,9 @@ theorem dot_pol_W {N : ℕ} {F : TPoly} (hF : ∀ M, N ≤ M → pderiv M F ∈ 
   refine Submodule.iSup_induction (p := fun l : Fin k =>
     Ideal.span {(X l ^ N : XP k)} * Qid k l) (motive := fun w => dot (pol univ F) w = 0) hw
     (fun l x hx => ?_) (dot_zero_right _)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [dot_add_right, hx, hy, add_zero])
+    (fun x y hx hy => by rw [dot_add_right, hx, hy, add_zero])
   refine Submodule.mul_induction_on hx (fun a ha y hy => ?_)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [dot_add_right, hx, hy, add_zero])
+    (fun x y hx hy => by rw [dot_add_right, hx, hy, add_zero])
   obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp ha
   rw [show c * (X l : XP k) ^ N * y = (X l : XP k) ^ N * (c * y) by ring]
   exact dot_pol_pow_mul hF l (Ideal.mul_mem_left _ _ hy)

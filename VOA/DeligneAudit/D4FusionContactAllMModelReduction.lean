@@ -40,9 +40,9 @@ theorem fusionTotalDimG_of_modelBound (hQ : ∀ m, 3 ≤ m → ModelBound m) :
     FiniteG.FusionTotalDimG D4sector := by
   intro m V _ _ R w h B
   match m, h with
-  | 0, h => simpa using localWeyl_zero_total_dim h B
-  | 1, h => simpa using localWeyl_one_total_dim h B
-  | 2, h => simpa using localWeyl_two_total_dim h B
+  | 0, h => simpa using! localWeyl_zero_total_dim h B
+  | 1, h => simpa using! localWeyl_one_total_dim h B
+  | 2, h => simpa using! localWeyl_two_total_dim h B
   | m + 3, h => exact localWeyl_total_dim_of_modelBound (by omega) (hQ (m + 3) (by omega)) h B
 
 /-- D4 classical freeness from the commutative model bounds and the realizations. -/

@@ -5,6 +5,8 @@ This is a statement about actual Virasoro operators, independent of a Fock evalu
 
 set_option Elab.async false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 namespace VOA.Classification.COne.OrbOctaR
 open VOA VertexOperatorAlgebra OrbC2c
@@ -22,7 +24,7 @@ private theorem negative_comm (m n : ℕ) (hm : 0 < m) (hn : 0 < n) (x : V) :
   rw [if_neg (by omega), add_zero] at h
   simp only [LieRing.of_associative_ring_bracket, LinearMap.sub_apply,
     Module.End.mul_apply, LinearMap.smul_apply] at h
-  simpa only [Int.cast_neg, Int.cast_natCast, Nat.cast_add, neg_sub_neg, neg_add] using h
+  simpa only [Int.cast_neg, Int.cast_natCast, Nat.cast_add, neg_sub_neg, neg_add] using! h
 
 private theorem neg_three_range (n : ℕ) (hn : 3 ≤ n) (x : V) :
     A.L (-(n : ℤ)) x ∈ twoBadRanges A := by
@@ -40,7 +42,7 @@ private theorem neg_three_range (n : ℕ) (hn : 3 ≤ n) (x : V) :
       apply sub_ne_zero.mpr
       exact_mod_cast (show n ≠ 1 by omega)
     have hh := (Submodule.smul_mem_iff _ hn0).mp h
-    simpa only [Nat.cast_add, Nat.cast_one, neg_add_rev, add_comm] using hh
+    simpa only [Nat.cast_add, Nat.cast_one, neg_add_rev, add_comm] using! hh
 
 private theorem neg_two_preserves {x : V} (hx : x ∈ twoBadRanges A) :
     A.L (-2) x ∈ twoBadRanges A := by
@@ -82,9 +84,9 @@ theorem virError_le_twoBadRanges (x : V) : virError A x ≤ twoBadRanges A := by
       exact Submodule.mem_sup_left ⟨_, rfl⟩
     by_cases hk1 : k = 1
     · subst k
-      exact neg_two_preserves A (ih (by simpa using hks))
+      exact neg_two_preserves A (ih (by simpa using! hks))
     · have h := neg_three_range A (k + 1) (by omega) (virWord A ks x)
-      simpa only [Nat.cast_add, Nat.cast_one, neg_add, sub_eq_add_neg] using h
+      simpa only [Nat.cast_add, Nat.cast_one, neg_add, sub_eq_add_neg] using! h
 
 /-- A linear functional only has to annihilate these two operator images. -/
 theorem virError_le_ker_of_two_modes (f : V →ₗ[ℂ] ℂ)

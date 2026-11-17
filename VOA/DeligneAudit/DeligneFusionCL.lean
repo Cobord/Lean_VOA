@@ -54,7 +54,7 @@ theorem finite_lists (L B : ℕ) : {l : List ℕ | l.length ≤ L ∧ ∀ x ∈ 
     (fun x y h => by simp only [Fin.mk.injEq] at h; exact Subtype.ext h)
   refine ((List.finite_length_le {x : ℕ // x ≤ B} L).image (List.map Subtype.val)).subset ?_
   rintro l ⟨hl, hb⟩
-  exact ⟨l.pmap Subtype.mk hb, by simpa using hl, by simp [List.map_pmap]⟩
+  exact ⟨l.pmap Subtype.mk hb, by simpa using! hl, by simp [List.map_pmap]⟩
 
 theorem boxT_bound {B : ℤ} {s : List ℕ} (h : BoxT B s) (x : ℕ) (hx : x ∈ s) : x ≤ B.toNat := by
   have := h.2 x hx; omega
@@ -109,7 +109,7 @@ theorem wordOp_mem_grading (l : List (Fin 8 × ℕ)) {k : ℤ} {x : LatModuleGen
     (hx : x ∈ WA.grading k) :
     wordOp latRep l x ∈ WA.grading (k - VOA.DeligneAudit.SectorGraded.wordDeg l) := by
   induction l with
-  | nil => simpa [VOA.DeligneAudit.SectorGraded.wordDeg] using hx
+  | nil => simpa [VOA.DeligneAudit.SectorGraded.wordDeg] using! hx
   | cons y l ih =>
       have h := WA.grading_mode (Xs y.1) (Xs_mem y.1) _ ih y.2
       have e : (1 : ℤ) + (k - VOA.DeligneAudit.SectorGraded.wordDeg l) - y.2 - 1 =
@@ -125,7 +125,7 @@ theorem cycDeg_latRep_le (N d : ℕ) :
   have h0 : ch N N ∈ WA.grading ((N : ℤ) * N) := by
     have := latChargeGen_mem_grading a2 (lv (N : ℤ) N)
     rw [halfNorm_lv] at this
-    simpa using this
+    simpa using! this
   have := wordOp_mem_grading l h0
   rw [hl] at this
   exact this

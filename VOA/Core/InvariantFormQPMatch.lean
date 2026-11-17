@@ -36,6 +36,9 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra 
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## The raising engine `(*)` and the low-mode vanishing for a quasi-primary `a`. -/
 
 /-- **The raising engine.** For quasi-primary `a ∈ 𝒱_p` (`L₁a=0`) and any `X`:
@@ -48,7 +51,7 @@ theorem vacCoord_a_raise (hne : W.vacuum ≠ 0)
   have hbr := W.L1_bracket_smul ha M X
   rw [hqpa, PreVertexAlgebra.smul_zero_left, add_zero] at hbr
   have h := congrArg (fun y => vacCoord W hne y) hbr
-  simp only at h
+  try simp only at h
   rw [map_sub, map_smul, vacCoord_L1_eq_zero hne hqp (W.smul a M X), zero_sub] at h
   exact h.symm
 
@@ -495,7 +498,7 @@ lemma gBinom_neg_iter_diff_eval (m t : ℕ) :
     rw [show m + (t - m) = t by omega] at h
     simp only [add_zero] at h
     have happ := congrArg (fun f => f (0:ℤ)) h
-    simp only at happ
+    try simp only at happ
     rw [happ]
     congr 2
     omega
@@ -577,7 +580,7 @@ theorem comm_rel (u a b : V) (p q : ℤ) (j : ℕ) :
   refine ⟨N, hzero, ?_⟩
   -- apply both sides to b
   have happ := congrArg (fun (f : Module.End ℂ V) => f b) hN
-  simp only at happ
+  try simp only at happ
   -- LHS: ⁅mode (Y u)(-j), mode (Y a)(p+q-1+j)⁆ b = u₍-j₎(a₍..₎b) - a₍..₎(u₍-j₎b)
   rw [LieRing.of_associative_ring_bracket, LinearMap.sub_apply, Module.End.mul_apply,
     Module.End.mul_apply] at happ

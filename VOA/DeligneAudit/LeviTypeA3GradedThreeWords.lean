@@ -16,7 +16,7 @@ private theorem a3_weight_first_degree (f : ℕ →₀ ℕ) (d s : ℕ)
     (hw : Finsupp.weight om f = (d, s)) : Finsupp.degree f = d := by
   have h := congrArg Prod.fst hw
   simpa [Finsupp.weight_apply, om, Finsupp.degree_apply,
-    Finsupp.sum, Prod.fst_sum] using h
+    Finsupp.sum, Prod.fst_sum] using! h
 
 /-- The product of three box monomials is one of the finite key vectors. -/
 theorem a3_three_box_word_mem (a b c : ℕ) (k : A3RadicalKey)
@@ -48,7 +48,7 @@ theorem a3_three_box_word_mem (a b c : ℕ) (k : A3RadicalKey)
     simp only [a3ThreeBoxKeyTriples, Finset.mem_filter,
       a3ThreeBoxModeSet, Finset.mem_product]
     refine ⟨⟨⟨hmf, hmg⟩, hmh⟩, ?_⟩
-    simpa [a3BoxDegree, hwf, hwg, hwh] using hd
+    simpa [a3BoxDegree, hwf, hwg, hwh] using! hd
   have hv : a3ThreeBoxValue ρ w ((f, g), h) ∈
       a3ThreeBoxKeyVectors ρ w a b c k.d₁ k.d₂ k.d₃ k.degree := by
     exact Finset.mem_image.mpr ⟨((f, g), h), hfg, rfl⟩
@@ -58,7 +58,7 @@ theorem a3_three_box_word_mem (a b c : ℕ) (k : A3RadicalKey)
       (a3ThreeBoxKeyVectors ρ w a b c k.d₁ k.d₂ k.d₃ k.degree : Set V) ≤
         a3ThreeBoxTarget ρ w a b c k)
       (Submodule.subset_span hv)
-  simpa [a3EffectiveTarget, h₁, h₂, h₃, a3ThreeBoxValue] using hs
+  simpa [a3EffectiveTarget, h₁, h₂, h₃, a3ThreeBoxValue] using! hs
 
 end
 end VOA.DeligneAudit.A3Sector

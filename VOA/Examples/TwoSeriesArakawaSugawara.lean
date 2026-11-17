@@ -137,7 +137,7 @@ theorem nprod_coeff_singP (t : WakModule k) (ht : SingP k t) (a b : Fin 3) (m : 
         simp only [hF, if_neg h0]
         rw [ht a _ (by omega), map_zero]
   rw [finsum_eq_sum_of_support_subset F hsupp,
-    Finset.sum_image (fun x _ y _ h => by simpa using h), Finset.sum_range_succ']
+    Finset.sum_image (fun x _ y _ h => by simpa using! h), Finset.sum_range_succ']
   rw [add_comm]
   congr 1
   · simp only [hF, Nat.cast_zero, zero_sub]

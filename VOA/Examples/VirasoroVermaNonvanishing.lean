@@ -16,6 +16,8 @@ pair (c,h). Their nonzero polynomial vacuum witnesses that the universal
 Verma highest vector is nonzero. This proves nontriviality for every (c,h),
 without PBW, but does not prove a Verma basis or singular-vector existence.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 open Module (End)
 open VirModule LeeYangWardClosure

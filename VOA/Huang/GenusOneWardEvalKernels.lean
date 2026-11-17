@@ -33,18 +33,18 @@ theorem rowEval_eq {t₀ : ℂ} {f : R2} (hf : Conv t₀ f) (n : ℕ) :
     ∑' k, c2 f n k * t₀ ^ k = spatialEval t₀ ⟨PowerSeries.coeff n f, hf n⟩ := rfl
 
 theorem Conv.add {t₀ : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) : Conv t₀ (f + g) :=
-  fun n => by simpa only [map_add] using (hf n).add (hg n)
+  fun n => by simpa only [map_add] using! (hf n).add (hg n)
 
 theorem Conv.smul {t₀ : ℂ} {f : R2} (hf : Conv t₀ f) (a : ℂ) : Conv t₀ (a • f) := fun n => by
   have h := (spatialConvergent t₀).smul_mem (show PowerSeries.coeff n f ∈ spatialConvergent t₀
     from hf n) a
-  simpa only [map_smul] using h
+  simpa only [map_smul] using! h
 
 theorem Conv.neg {t₀ : ℂ} {f : R2} (hf : Conv t₀ f) : Conv t₀ (-f) := by
-  simpa only [neg_one_smul] using hf.smul (-1)
+  simpa only [neg_one_smul] using! hf.smul (-1)
 
 theorem Conv.sub {t₀ : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) : Conv t₀ (f - g) := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+  simpa only [sub_eq_add_neg] using! hf.add hg.neg
 
 theorem Conv.mul {t₀ : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) : Conv t₀ (f * g) :=
   fun n => by
@@ -54,13 +54,13 @@ theorem Conv.mul {t₀ : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) :
         from hf p.1) (show PowerSeries.coeff p.2 g ∈ spatialConvergent t₀ from hg p.2)
 
 theorem conv_zero (t₀ : ℂ) : Conv t₀ 0 := fun n => by
-  simpa using spatialSummable_C t₀ 0
+  simpa using! spatialSummable_C t₀ 0
 
 theorem Conv.sum {t₀ : ℂ} {ι : Type*} (s : Finset ι) {f : ι → R2}
     (h : ∀ i ∈ s, Conv t₀ (f i)) : Conv t₀ (∑ i ∈ s, f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using conv_zero t₀
+  | empty => simpa using! conv_zero t₀
   | insert a s ha ih =>
     rw [Finset.sum_insert ha]
     exact (h a (Finset.mem_insert_self a s)).add
@@ -103,7 +103,7 @@ theorem evF_mul {t₀ s : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) 
     evF t₀ s (f * g) = evF t₀ s f * evF t₀ s g := by
   ext n
   have hrow : (⟨PowerSeries.coeff n (f * g), (hf.mul hg) n⟩ : spatialConvergent t₀) =
-      ∑ p ∈ Finset.antidiagonal n, (⟨PowerSeries.coeff p.1 f, hf p.1⟩ : spatialConvergent t₀) *
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, (⟨PowerSeries.coeff p.1 f, hf p.1⟩ : spatialConvergent t₀) *
         ⟨PowerSeries.coeff p.2 g, hg p.2⟩ := by
     apply Subtype.ext
     change PowerSeries.coeff n (f * g) = _
@@ -115,7 +115,7 @@ theorem evF_mul {t₀ s : ℂ} {f g : R2} (hf : Conv t₀ f) (hg : Conv t₀ g) 
   apply Finset.sum_congr rfl
   intro p hp
   rw [map_mul, coeff_evF, coeff_evF, rowEval_eq hf, rowEval_eq hg,
-    ← Finset.mem_antidiagonal.mp hp, pow_add]
+    ← Finset.HasAntidiagonal.mem_antidiagonal.mp hp, pow_add]
   ring
 
 /-! ## Kernels -/

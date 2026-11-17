@@ -77,7 +77,7 @@ theorem fock_weight_one_mem_span {r : ℕ} {p : FockN r} (hp : p ∈ gradingWN r
     omega
   rw [he0, add_zero] at hde
   have hi2 : i = ((0 : ℕ), i.2) := Prod.ext hi0 rfl
-  rw [show monomial d (coeff d p) = coeff d p • (X i : FockN r) by
+  rw [show monomial d (p.coeff d) = p.coeff d • (X i : FockN r) by
     rw [X, smul_monomial, smul_eq_mul, mul_one, ← hde]]
   refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨i.2, ?_⟩)
   change X ((0 : ℕ), i.2) = X i
@@ -157,10 +157,12 @@ theorem eig_hSt_int {y : LatModuleGen (latP m)} (hy : y ≠ 0) {lam : ℂ}
     rw [sub_smul, h1, sub_self]
   refine (smul_eq_zero.mp h2).resolve_left ?_
   intro h0
-  rw [sub_eq_zero, latP_form] at h0
+  rw [sub_eq_zero] at h0; erw [latP_form] at h0
   apply hne ν
   rw [h0]
-  simp [a1]
+  have hν : ∀ n : ℤ, ((2 * (m : ℤ) * (1 : ℤ) * n : ℤ) : ℂ) = 2 * (m : ℂ) * (n : ℂ) := by
+    intro n; push_cast; ring
+  exact hν ν
 
 theorem smul_hSt_zero_latChargeGen :
     (VV).smul (hSt (latP m) (a1 m)) 0 (latChargeGen (latP m) (a1 m))
@@ -307,7 +309,7 @@ theorem torus_part (G : Subgroup (Aut VV)) [Finite G] :
     have := pow_card_eq_one' (x := (⟨x, hx⟩ : H))
     exact congrArg Subtype.val this
   have heq : H = rootsOfUnity (Nat.card H) ℂ :=
-    Subgroup.eq_of_le_of_card_ge hle (by rw [Nat.card_eq_fintype_card, Complex.card_rootsOfUnity])
+    Subgroup.eq_of_le_of_card_ge hle (by rw [Complex.card_rootsOfUnity])
   rw [← heq]
   rfl
 

@@ -48,6 +48,11 @@ set_option linter.style.show false
 
 /-! ### From `CFSG/Monster/Code/LoopIdentities.lean` and `CFSG/Monster/Spin/FourierPauli.lean` -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess.Code
 
 private theorem two_eq_zero' : (2 : ZMod 2) = 0 := rfl

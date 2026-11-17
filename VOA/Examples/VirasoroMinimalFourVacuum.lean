@@ -43,7 +43,7 @@ theorem minimalFour_diagonal (p r : ℕ) (hp : 3≤p) (ho : Odd p)
     (hr : 0<r) (hrN : r<(p-1)*3) :
     wardBSASourceDiagonal 0 (vermaBSAWeight 4 ((4:ℂ)/(p:ℂ))) ((4:ℂ)/(p:ℂ))
       4 r 4 (vermaBSAWeight 4 ((4:ℂ)/(p:ℂ))+4)≠0 := by
-  have hcop : Nat.Coprime p 4 := by simpa using ho.coprime_two_right.pow_right 2
+  have hcop : Nat.Coprime p 4 := by simpa using! ho.coprime_two_right.pow_right 2
   have hh := minimal_fusion_diagonal_prime_power p 4 r (by omega) (by omega)
     hcop (by decide) hr hrN
   have hw := minimal_fusion_weight_zero p 4 (by omega) (by omega)
@@ -125,12 +125,12 @@ theorem minimalFour_terminal_survival (p : ℕ) (hp : 3≤p) (ho : Odd p)
   have hh := vacuumFour_terminal_ne_zero_of_integer
     (vermaBSACharge ((4:ℂ)/(p:ℂ))) (p:ℤ)
     (by exact_mod_cast (by omega : p≠0)) f (fourTerminalIndex p-2)
-    (by simpa only [Int.cast_natCast] using ht) (by simp [h0])
+    (by simpa only [Int.cast_natCast] using! ht) (by simp [h0])
     (fun j hj hjM => by
-      simpa only [Int.cast_natCast] using hf (2*j) (by omega))
+      simpa only [Int.cast_natCast] using! hf (2*j) (by omega))
     (by rw [hk]; exact fourTerminalInteger_ne_zero p hp ho)
   have hr : 2*(fourTerminalIndex p-2+2)=(p-1)*3 := by omega
-  simpa only [hr,Int.cast_natCast] using hh
+  simpa only [hr,Int.cast_natCast] using! hh
 
 /-- At every coprime M(p,4) parameter there is an actual nonzero vacuum
 singular state of weight 3(p-1). Both positive Ward equations and survival
@@ -141,7 +141,7 @@ theorem minimalFour_nonzero_vacuum_singular (p : ℕ) (hp : 2≤p) (hcop : Nat.C
       v≠0 ∧ Lop (vermaBSACharge ((4:ℂ)/(p:ℂ))) 1 v=0 ∧
       Lop (vermaBSACharge ((4:ℂ)/(p:ℂ))) 2 v=0 := by
   have ho : Odd p := Nat.coprime_two_right.mp
-    ((Nat.coprime_pow_right_iff (by omega : 0<2) p 2).mp (by simpa using hcop))
+    ((Nat.coprime_pow_right_iff (by omega : 0<2) p 2).mp (by simpa using! hcop))
   have hp3 : 3≤p := by obtain ⟨a,ha⟩ := ho; omega
   obtain ⟨f,h0,hf⟩ := exists_minimalFour_vacuum_kernel p hp3 ho
   let t : ℂ := 4/(p:ℂ)

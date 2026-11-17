@@ -139,16 +139,11 @@ The charged label has r.val=9, corresponding to charge r=10. -/
 theorem twisted_charged_resonance :
     (Sum.inr 5, Sum.inl (9 : Fin 15)) ∈ positivePairs 16 := by
   norm_num [positivePairs, weight]
-  change (9/16 : ℚ) < 25/16 ∧ ((25/16 : ℚ) - 9/16).den = 1
-  norm_num
 
 /-- Both half-lattice signs resonate with the vacuum when m=8. -/
 theorem vacuum_half_resonance :
     (Sum.inr 0, Sum.inr 2) ∈ positivePairs 8 ∧
       (Sum.inr 0, Sum.inr 3) ∈ positivePairs 8 := by
   norm_num [positivePairs, weight]
-  change (0 < (2 : ℚ) ∧ (2 : ℚ).den = 1) ∧
-    (0 < (2 : ℚ) ∧ (2 : ℚ).den = 1)
-  norm_num
 
 end VOA.Classification.COne.PlusResonantPairs

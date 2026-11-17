@@ -181,11 +181,11 @@ theorem Wdag_comm_qp (N : OrdVModule W M) {p : ℤ} {u : 𝒱} (hu : u ∈ W.gra
     intro b s hbs
     refine eq_zero_of_lt N (k := p + (w - b) - s - 1) (by omega) ?_
     have h := mode_mem_weight N hu (Lp1_pow_mem N ht b) s
-    convert h using 2; push_cast; ring
+    convert h using 2 <;> first | (push_cast; ring) | rfl
   have hmem_r : ∀ r : ℕ, N.act u r t ∈ N.weight (((p + w - r - 1 : ℤ)) : ℂ) := by
     intro r
     have h := mode_mem_weight N hu ht r
-    convert h using 2; push_cast; ring
+    convert h using 2 <;> first | (push_cast; ring) | rfl
   have hvan_r : ∀ r k : ℕ, K ≤ k → (Lp1 N ^ k) (N.act u r t) = 0 := fun r k hk =>
     Lp1_pow_eq_zero N (hmem_r r) (by omega)
   -- the common terms
@@ -242,7 +242,7 @@ theorem Wdag_comm_qp (N : OrdVModule W M) {p : ℤ} {u : 𝒱} (hu : u ∈ W.gra
           (((b.factorial : ℂ)⁻¹) * gBinom (2 * p - r - 2) c) •
             wMode A (N.act u ((r + c : ℕ) : ℤ) ((Lp1 N ^ b) t))
               (2 * p + 2 * w - m - n - 4 - b - (r + c : ℕ)) φ) (fun b c hbc => by
-        dsimp only
+        try dsimp only
         rw [hvanish b (r + c) (by omega), wMode_zero_right, smul_zero]), Finset.smul_sum,
         Finset.smul_sum]
       refine Finset.sum_congr rfl fun b _ => ?_

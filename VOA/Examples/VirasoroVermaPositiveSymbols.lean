@@ -54,10 +54,10 @@ theorem vermaLeadingDerivation_X (m i : ℕ) :
 mode's next symbol is just multiplication by its oscillator variable. -/
 theorem vermaSymbol_negative_top (ell p : ℂ) (i d : ℕ)
     (v : Verma (3 - 24 * ell ^ 2) (p ^ 2 - 2 * ell * p))
-    (hv : vermaPolynomialLift ell p v (d+1)=0) :
+    (hv : (vermaPolynomialLift ell p v).coeff (d+1)=0) :
     vermaSymbol ell p (d+1) (vermaMode _ _ (-(i:ℤ)-1) v)=
       MvPolynomial.X (i,0)*vermaSymbol ell p d v := by
-  change vermaSymbolProjection (vermaPolynomialLift ell p _ (d+1))=_
+  change vermaSymbolProjection ((vermaPolynomialLift ell p _).coeff (d+1))=_
   rw [vermaPolynomialLift_negative_coeff,hv,map_zero,zero_add,
     if_pos (by omega),Nat.add_sub_cancel,vermaSymbolProjection_momentum]
   rfl
@@ -65,14 +65,14 @@ theorem vermaSymbol_negative_top (ell p : ℂ) (i d : ℕ)
 /-- Scalar multiplication acts coefficientwise on the vector polynomial
 lift. This keeps scalar and polynomial multiplication separate. -/
 theorem vermaScalarPolynomial_coeff (a : ℂ) (q : PolynomialModule ℂ VermaFockFamily) (k : ℕ) :
-    (a • q) k=a • q k := rfl
+    (a • q).coeff k=a • q.coeff k := rfl
 
 /-- Positive modes cannot increase the momentum degree of an actual word.
 The proof tracks each commutator through its negative, zero or positive
 case rather than assuming a filtered action on the module. -/
 theorem vermaPositive_word_above (ell p : ℂ) (w : List ℕ) (m k : ℕ)
     (hm : 0 < m) (hk : w.length < k) :
-    vermaPolynomialLift ell p (vermaMode _ _ (m:ℤ) (negWord _ _ w)) k=0 := by
+    (vermaPolynomialLift ell p (vermaMode _ _ (m:ℤ) (negWord _ _ w))).coeff k=0 := by
   induction w generalizing m k with
   | nil =>
     rw [negWord_nil,show vermaMode _ _ (m:ℤ) (highestVector _ _)=0 from
@@ -80,12 +80,12 @@ theorem vermaPositive_word_above (ell p : ℂ) (w : List ℕ) (m k : ℕ)
     rfl
   | cons i w ih =>
     rw [negWord_cons,vermaMode_comm_apply,map_add,map_add,map_smul]
-    simp only [PolynomialModule.add_apply,vermaScalarPolynomial_coeff,Int.cast_natCast,Int.cast_sub,Int.cast_neg,Int.cast_one]
+    simp only [PolynomialModule.coeff_add,Finsupp.add_apply,vermaScalarPolynomial_coeff,Int.cast_natCast,Int.cast_sub,Int.cast_neg,Int.cast_one]
     have hk' : w.length+1<k := hk
     rw [vermaPolynomialLift_negative_coeff,ih m k hm (by omega),map_zero,
       if_pos (by omega),ih m (k-1) hm (by omega),map_zero,zero_add]
-    have hz : vermaPolynomialLift ell p
-        (vermaMode _ _ ((m:ℤ)+(-(i:ℤ)-1)) (negWord _ _ w)) k=0 := by
+    have hz : (vermaPolynomialLift ell p
+        (vermaMode _ _ ((m:ℤ)+(-(i:ℤ)-1)) (negWord _ _ w))).coeff k=0 := by
       by_cases hmi : m ≤ i
       · have he : (m:ℤ)+(-(i:ℤ)-1)=-((i-m:ℕ):ℤ)-1 := by omega
         rw [he,← negWord_cons,vermaPolynomialLift_word,
@@ -93,17 +93,17 @@ theorem vermaPositive_word_above (ell p : ℂ) (w : List ℕ) (m k : ℕ)
       · by_cases heq : m=i+1
         · have he : (m:ℤ)+(-(i:ℤ)-1)=0 := by omega
           rw [he,vermaMode_zero_negWord,map_smul,vermaScalarPolynomial_coeff]
-          change _ • vermaPolynomialLift ell p (negWord _ _ w) k=0
+          change _ • (vermaPolynomialLift ell p (negWord _ _ w)).coeff k=0
           rw [vermaPolynomialLift_word,vermaWordPolynomial_coeff_above ell p w k (by omega),smul_zero]
         · have he : (m:ℤ)+(-(i:ℤ)-1)=((m-i-1:ℕ):ℤ) := by omega
           rw [he]
           exact ih (m-i-1) k (by omega) (by omega)
     rw [zero_add]
-    change _ • vermaPolynomialLift ell p _ k + _=0
+    change _ • (vermaPolynomialLift ell p _).coeff k + _=0
     rw [hz,smul_zero,zero_add]
-    split_ifs <;> simp only [LinearMap.smul_apply,Module.End.one_apply,zero_smul,map_zero,PolynomialModule.zero_apply]
+    split_ifs <;> simp only [LinearMap.smul_apply,Module.End.one_apply,zero_smul,map_zero,PolynomialModule.coeff_zero,Finsupp.coe_zero,Pi.zero_apply]
     rw [map_smul,vermaScalarPolynomial_coeff]
-    change _ • vermaPolynomialLift ell p (negWord _ _ w) k=0
+    change _ • (vermaPolynomialLift ell p (negWord _ _ w)).coeff k=0
     rw [vermaPolynomialLift_word,vermaWordPolynomial_coeff_above ell p w k (by omega),smul_zero]
 
 /-- On the longest-degree coefficient of ANY creation word, the actual
@@ -123,7 +123,7 @@ theorem vermaPositive_word_symbol (ell p : ℂ) (w : List ℕ) (m : ℕ) (hm : 0
         (vermaPositive_word_above ell p w m (w.length+1) hm (by omega)),ih]
     simp only [Int.cast_natCast,Int.cast_sub,Int.cast_neg,Int.cast_one]
     have hword : vermaSymbol ell p (w.length+1) (negWord _ _ w)=0 := by
-      change vermaSymbolProjection (vermaPolynomialLift ell p _ (w.length+1))=0
+      change vermaSymbolProjection ((vermaPolynomialLift ell p _).coeff (w.length+1))=0
       rw [vermaPolynomialLift_word,vermaWordPolynomial_coeff_above ell p w _ (by omega),map_zero]
     have hcentral : vermaSymbol ell p (w.length+1)
         (if (m:ℤ)+(-(i:ℤ)-1)=0 then
@@ -137,7 +137,7 @@ theorem vermaPositive_word_symbol (ell p : ℂ) (w : List ℕ) (m : ℕ) (hm : 0
       rw [if_pos hmi,he,vermaSymbol_negative_top ell p (i-m) w.length _
         (by rw [vermaPolynomialLift_word]; exact vermaWordPolynomial_coeff_above ell p w _ (by omega))]
       have hs : vermaSymbol ell p w.length (negWord _ _ w)=vermaWordSymbol w := by
-        change vermaSymbolProjection (vermaPolynomialLift ell p _ w.length)=_
+        change vermaSymbolProjection ((vermaPolynomialLift ell p _).coeff w.length)=_
         rw [vermaPolynomialLift_word,vermaWordPolynomial_top]
         rfl
       rw [hs]
@@ -153,7 +153,7 @@ theorem vermaPositive_word_symbol (ell p : ℂ) (w : List ℕ) (m : ℕ) (hm : 0
           rw [he,vermaMode_zero_negWord,map_smul,hword,smul_zero]
         · have he : (m:ℤ)+(-(i:ℤ)-1)=((m-i-1:ℕ):ℤ) := by omega
           rw [he]
-          change vermaSymbolProjection (vermaPolynomialLift ell p _ (w.length+1))=0
+          change vermaSymbolProjection ((vermaPolynomialLift ell p _).coeff (w.length+1))=0
           rw [vermaPositive_word_above ell p w (m-i-1) _ (by omega) (by omega),map_zero]
       rw [hz,smul_zero,add_zero]
 

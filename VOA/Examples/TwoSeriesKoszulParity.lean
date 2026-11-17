@@ -93,7 +93,7 @@ theorem ghostParity_odd (j : ℤ) (hj : ¬ Even j) (w : ℂ) (x : (BRSTSpace L))
     apply hj
     have := he.add hb.1
     rw [hb.2] at this
-    simpa using this
+    simpa using! this
   · rw [(matterDeg_evenZero L) b hb, Submodule.mem_bot] at hm
     rw [hm, TensorProduct.zero_tmul, map_zero, neg_zero]
 

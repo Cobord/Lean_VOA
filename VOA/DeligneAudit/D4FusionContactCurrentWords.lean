@@ -31,7 +31,7 @@ theorem currentAWord_eq (l : List ACurrentLetter) (v : V) :
 theorem currentAWord_mem (w : V) (l : List ACurrentLetter) {d : ℕ} {v : V}
     (hv : v ∈ currentPiece R w d) : currentAWord R l v ∈ currentPiece R w (l.length+d) := by
   rw [currentAWord_eq]
-  simpa only [List.length_map] using
+  simpa only [List.length_map] using!
     current_prefix_mem R w (l.map fun x => (x.1.castSucc,x.2)) hv
 
 theorem current_center_AWord_comm (r : ℕ) (l : List ACurrentLetter) :

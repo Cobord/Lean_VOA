@@ -84,7 +84,7 @@ theorem threeWords_shapedModes_positions {σ : Type*}
           have hit : t ≠ i := by
             intro heq
             exact ht (heq ▸ (List.mem_filter.mp hi).1)
-          simpa only [ht1, Function.comp_apply] using
+          simpa only [ht1, Function.comp_apply] using!
             (pairPositionWord_cons_other shape t i ts hit d r).symm
       · simp only [shapedModes, List.map_cons, threeWords,
           ht1, if_false, ht2, List.filter_cons,
@@ -185,7 +185,7 @@ theorem pairPositionalEvaluation_eq_sum
       congr 1
       apply List.map_congr_left
       intro t ht
-      simpa only [modeWordEvaluation_monomial] using
+      simpa only [modeWordEvaluation_monomial] using!
         pairPositionEvaluation_eq_shift ρ w shape t r
           (modeMonomial σ d)
   | add P Q ihP ihQ =>

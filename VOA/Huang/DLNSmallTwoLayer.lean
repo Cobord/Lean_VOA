@@ -105,9 +105,9 @@ theorem lowerRoot_two_mul_mem (w : ZMod (2 ^ (a + 1))) : lowerRoot (2 * w) ∈ l
   refine ⟨!![0, 0; w, 0], ?_⟩
   ext i j; fin_cases i <;> fin_cases j <;> simp [lowerRoot]
 
-theorem x2_mem : x2 a ∈ levelOneTwo a := by simpa using upperRoot_two_mul_mem (a := a) 1
+theorem x2_mem : x2 a ∈ levelOneTwo a := by simpa using! upperRoot_two_mul_mem (a := a) 1
 
-theorem y2_mem : y2 a ∈ levelOneTwo a := by simpa using lowerRoot_two_mul_mem (a := a) 1
+theorem y2_mem : y2 a ∈ levelOneTwo a := by simpa using! lowerRoot_two_mul_mem (a := a) 1
 
 theorem mI2_mem : mI2 a ∈ levelOneTwo a := by
   rw [mem_levelOneTwo_iff]
@@ -158,11 +158,11 @@ theorem layerTwo_le_closure (ha : 1 ≤ a) :
   set q : ZMod (2 ^ (a + 1)) := 2 ^ a with hqdef
   have hq : q * q = 0 := two_pow_mul_self ha
   have e00 : n 0 0 = 1 + q * W 0 0 := by
-    have := congrFun (congrFun hW 0) 0; simpa using this
+    have := congrFun (congrFun hW 0) 0; simpa using! this
   have e01 : n 0 1 = q * W 0 1 := by
-    have := congrFun (congrFun hW 0) 1; simpa using this
+    have := congrFun (congrFun hW 0) 1; simpa using! this
   have e10 : n 1 0 = q * W 1 0 := by
-    have := congrFun (congrFun hW 1) 0; simpa using this
+    have := congrFun (congrFun hW 1) 0; simpa using! this
   let u0 : (ZMod (2 ^ (a + 1)))ˣ :=
     ⟨1 + q * W 0 0, 1 - q * W 0 0, by linear_combination (-(W 0 0) ^ 2) * hq,
       by linear_combination (-(W 0 0) ^ 2) * hq⟩
@@ -212,11 +212,11 @@ theorem levelOneTwo_le_closure (ha : 1 ≤ a) :
   set C := Subgroup.closure {x2 a, y2 a, mI2 a}
   obtain ⟨V, hV⟩ := (mem_levelOneTwo_iff g).mp hg
   have e00 : g 0 0 = 1 + 2 * V 0 0 := by
-    have := congrFun (congrFun hV 0) 0; simpa using this
+    have := congrFun (congrFun hV 0) 0; simpa using! this
   have e01 : g 0 1 = 2 * V 0 1 := by
-    have := congrFun (congrFun hV 0) 1; simpa using this
+    have := congrFun (congrFun hV 0) 1; simpa using! this
   have e10 : g 1 0 = 2 * V 1 0 := by
-    have := congrFun (congrFun hV 1) 0; simpa using this
+    have := congrFun (congrFun hV 1) 0; simpa using! this
   have hnil : IsNilpotent (2 * V 0 0 : ZMod (2 ^ (a + 1))) :=
     ⟨a + 1, by rw [mul_pow, two_pow_succ_eq_zero, zero_mul]⟩
   obtain ⟨u0, hu0'⟩ := hnil.isUnit_one_add
@@ -251,7 +251,7 @@ theorem levelOneTwo_le_closure (ha : 1 ≤ a) :
     refine C.mul_mem (C.pow_mem hm _) ?_
     rw [torus_eq_four_roots b 2 _ hbval]
     refine C.mul_mem (C.mul_mem (C.mul_mem ?_ ?_) ?_) ?_
-    · simpa using hup 1
+    · simpa using! hup 1
     · exact hlow _
     · rw [show -2 * ((b⁻¹ : (ZMod (2 ^ (a + 1)))ˣ) : ZMod (2 ^ (a + 1))) =
         2 * (-((b⁻¹ : (ZMod (2 ^ (a + 1)))ˣ) : ZMod (2 ^ (a + 1)))) by ring]

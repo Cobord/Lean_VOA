@@ -61,7 +61,8 @@ theorem remainderCramerPolynomial_coeff (xs : List A) (N j : ℕ) (cols : Fin j 
     by_cases ha : a = b
     · subst a
       simp
-    · simp only [Matrix.updateRow_ne ha, Function.update_of_ne ha, M]
+    · exact (congrFun (Matrix.updateRow_ne ha) c).trans
+        (by simp only [Function.update_of_ne ha, M])
   rw [remainderRowMinor, ← hm, ← determinant_row_cramer]
   simp only [remainderCramerPolynomial, Polynomial.finsetSum_coeff,
     Polynomial.coeff_mul_C, alphabetPowerRemainder, M, mul_comm]
@@ -78,7 +79,7 @@ theorem remainderCramerPolynomial_top_coeff (xs : List A) (N j : ℕ)
   simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul, Pi.single_apply,
     mul_ite, mul_one, mul_zero] at h
   simpa only [remainderCramerPolynomial, Polynomial.finsetSum_coeff,
-    Polynomial.coeff_mul_C, alphabetPowerRemainder, remainderTopMinor, M, mul_comm] using h
+    Polynomial.coeff_mul_C, alphabetPowerRemainder, remainderTopMinor, M, mul_comm] using! h
 
 /-- Cramer uses only polynomial multiples of the characteristic and of the cutoff power. -/
 theorem remainderCramerPolynomial_mem (xs : List A) (N j : ℕ)
@@ -159,7 +160,7 @@ theorem remainderTopMinor_cramer_certificate (xs : List A) (N j : ℕ)
     Polynomial.C (remainderTopMinor xs N j cols) * Polynomial.X ^ (xs.length - j)
   refine ⟨p, remainderCramerPolynomial_correction_degree xs N j cols hj hjr, ?_, ?_⟩
   · intro l
-    simpa only [Fin.val_zero, Nat.add_zero] using
+    simpa only [Fin.val_zero, Nat.add_zero] using!
       remainderCramerPolynomial_correction_coeff_mem xs N j cols ⟨0, hj⟩ l
   · have he : Polynomial.C (remainderTopMinor xs N j cols) *
         Polynomial.X ^ (xs.length - j) + p =

@@ -60,7 +60,7 @@ theorem WB.sum {κ : Type*} (s : Finset κ) {r : ℝ} (hr : 0 ≤ r) {F : κ →
     (h : ∀ i ∈ s, WB r (F i)) : WB r (∑ i ∈ s, F i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using WB.zero r
+  | empty => simpa using! WB.zero r
   | insert a s ha ih =>
     rw [Finset.sum_insert ha]
     exact (h a (Finset.mem_insert_self a s)).add
@@ -131,7 +131,6 @@ theorem euler_eval {lam : ℂ} {E : ℕ} {Pol : κ → κ → ℕ → Polynomial
     (lam + n) * ((1 - t) ^ E * evS (ph f n) t) =
       ∑ g, ∑ p ∈ Finset.range (n + 1), (Pol f g p).eval t * evS (ph g (n - p)) t := by
   have h := congrArg (fun F => evS F t) (H1 f n)
-  simp only at h
   have homt : omt ^ E = pc ((1 - Polynomial.X) ^ E) := by
     rw [map_pow, VOA.Huang.GenusOneWard.pc_omt]
   rw [evS_smul, homt, evS_pc_mul (hph f n)] at h

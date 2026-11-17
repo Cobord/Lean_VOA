@@ -21,7 +21,7 @@ private theorem raised_insert_compound (r s : ℕ) (k : A2RadicalKey)
     a2KeyRaised r (a2KeyInsert 1 s k) =
       a2KeyInsert 1 s (a2KeyRaised r k) := by
   rcases k with ⟨d₁, d₂, degree⟩
-  have hd : 1 ≤ d₂ := by simpa using hk
+  have hd : 1 ≤ d₂ := by simpa using! hk
   simp [a2KeyRaised, a2KeyInsert, Nat.sub_add_cancel hd,
     Nat.add_comm, Nat.add_left_comm]
 
@@ -53,7 +53,7 @@ theorem a2_raising_word_key (p q : ℕ)
           exact a2RadicalOp_maps_key ρ w 0 s (a2KeyRaised r (a2WordKey l)) ih
         change ρ.op 1 r (a2RadicalOp ρ 0 s u) ∈ _
         rw [sub_eq_iff_eq_add.mp happ]
-        simpa using hmap
+        simpa using! hmap
       · have hc := a2_raising_compound_comm ρ r s
         have happ := congrArg (fun T : Module.End ℂ V => T u) hc
         simp only [LinearMap.sub_apply, Module.End.mul_apply] at happ

@@ -1798,7 +1798,7 @@ scalar, namely the constant term of its value on $1$.
 theorem hypCommutant_scalar (D : Module.End ℂ hypFock) (charges : Fin 2 → ℂ)
     (hD : ∀ a n, n ≠ 0 → D * hypOscillator a (charges a) n =
       hypOscillator a (charges a) n * D) :
-    D = coeff 0 (D 1) • LinearMap.id := by
+    D = (D 1).coeff 0 • LinearMap.id := by
 \end{leancode}
 
 \begin{dictionary}
@@ -1895,8 +1895,8 @@ def hypMonomialNorm (d : (ℕ × Fin 2) →₀ ℕ) : ℂ :=
 
 /-- The explicit isotropic monomial pairing. -/
 def hypForm : LinearMap.BilinForm ℂ hypFock :=
-  Finsupp.lsum ℂ fun d =>
-    LinearMap.smulRight LinearMap.id (hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d))
+  (basisMonomials (ℕ × Fin 2) ℂ).constr ℂ fun d =>
+    hypMonomialNorm d • lcoeff ℂ (hypSwapExponent d)
 \end{leancode}
 
 \begin{dictionary}
@@ -1930,7 +1930,7 @@ $B^{\mathrm{iso}}(L_np,q)=B^{\mathrm{iso}}(p,L_{-n}q)$.
 \begin{leancode}
 theorem hypForm_symm (p q : hypFock) : hypForm p q = hypForm q p := by
 
-theorem hypForm_one (q : hypFock) : hypForm 1 q = coeff 0 q := by
+theorem hypForm_one (q : hypFock) : hypForm 1 q = q.coeff 0 := by
 
 theorem hypForm_nondegenerate (p : hypFock) (hp : p ≠ 0) : ∃ q, hypForm p q ≠ 0 := by
 
@@ -2020,7 +2020,7 @@ theorem hypOneFamily_iff_oscillator (a : Fin 2) (charge : ℂ) (p : hypFock) :
 /-- The form restricted to one isotropic family is the product of evaluations. -/
 theorem hypOneFamily_form (a : Fin 2) (p q : hypFock)
     (hp : p ∈ hypOneFamily a) (hq : q ∈ hypOneFamily a) :
-    hypForm p q = coeff 0 p * coeff 0 q := by
+    hypForm p q = p.coeff 0 * q.coeff 0 := by
 
 theorem hypOneFamily_radical_iff (a : Fin 2) (p : hypOneFamily a) :
     (∀ q : hypOneFamily a, hypForm p q = 0) ↔ p ∈ hypOneFamilyAugmentation a := by
@@ -2079,9 +2079,10 @@ theorem hypSugawara_negative_leading_filtered (κ ell : ℂ) (j d w : ℕ)
       hypBFiltered (d + 1) (w + j + 1) := by
 
 def hypPBWMap (κ ell : ℂ) : Module.End ℂ hypFock :=
-  Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
+  (Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
     (stringNegativeWord (fun j => hypSugawara κ ell (-(j + 1 : ℤ)))
-      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))
+      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- The sorted-word map is triangular with diagonal `κ` to the b-count. -/
 theorem hypPBWMap_leading (κ ell : ℂ) (e : (ℕ × Fin 2) →₀ ℕ) :
@@ -3593,8 +3594,9 @@ theorem envelopingEmbedding_injective :
 \end{leancode}
 
 \begin{dictionary}
-\chseventeenL{L} is a section variable: any type with \chseventeenL{[LieRing L] [LieAlgebra ℂ L]}.  Mathlib v4.30 does not provide this
-injectivity for infinite-dimensional Lie algebras (it is a consequence of PBW).
+\chseventeenL{L} is a section variable: any type with \chseventeenL{[LieRing L] [LieAlgebra ℂ L]}.  Mathlib (v4.30, against which this part was written, and
+equally the current commit \texttt{b63f6e8a}) does not provide this injectivity for infinite-dimensional Lie algebras
+(it is a consequence of PBW).
 \end{dictionary}
 
 \begin{proof}[Proof on paper]

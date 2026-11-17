@@ -67,12 +67,12 @@ theorem zeroModeWitness_mem (m : ℕ) : zeroModeWitness m ∈ AllM.candidateIdea
       constructor <;> simp only [AllM.seedThreshold,Bool.false_eq_true,if_false] <;> omega⟩)
   change PowerSeries.coeff 0 (colorCurrent ℂ m 0 ^ (m+1)) ∈ AllM.candidateIdeal m at h
   simpa only [PowerSeries.coeff_zero_eq_constantCoeff,map_pow,colorCurrent,
-    PowerSeries.constantCoeff_mk] using h
+    PowerSeries.constantCoeff_mk] using! h
 
 theorem zeroModeWitness_graded (m : ℕ) :
     (zeroModeWitness m).IsWeightedHomogeneous (modeWeight m (fun _ => 0) 1) 0 := by
   have hh := (mode_graded ℂ m (fun _ => 0) 1 0 0).pow (m+1)
-  simpa only [zero_mul,add_zero,nsmul_zero] using hh
+  simpa only [zero_mul,add_zero,nsmul_zero] using! hh
 
 theorem zeroModeWitness_ne_zero (m : ℕ) (hm : 1 ≤ m) : zeroModeWitness m ≠ 0 := by
   unfold zeroModeWitness

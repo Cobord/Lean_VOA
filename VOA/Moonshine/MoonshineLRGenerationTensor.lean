@@ -22,6 +22,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open UniversalEnvelopingAlgebra Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ### Words in the free algebra -/
 
 theorem basisFreeMonoid_eq_prod {κ : Type*} (w : FreeMonoid κ) :
@@ -194,7 +197,7 @@ def basisDegSeries : PowerSeries (LaurentSeries ℂ) :=
 
 /-- An indicator on the first components of the two antidiagonals picks one term. -/
 theorem sum_antidiagonal_ite_fst_two (a b s₀ u₀ : ℕ) (F : ℕ → ℕ → ℂ) :
-    ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
         (if (x.1, y.1) = (s₀, u₀) then F x.2 y.2 else 0) =
       if s₀ ≤ a ∧ u₀ ≤ b then F (a - s₀) (b - u₀) else 0 := by
   rw [← sum_antidiagonal_ite_two a b s₀ u₀ F, ← Finset.Nat.sum_antidiagonal_swap]
@@ -216,17 +219,17 @@ include hdegS hlowS in
 /-- `W(a,b) = [a = b = 0] + Σ_{s+j=a} Σ_{u+v=b} d(s,u) W(j,v)`. -/
 theorem wordCount_coeff_identity (a b : ℕ) :
     (wordCount degS lowS (a, b) : ℂ) = (if a = 0 ∧ b = 0 then 1 else 0) +
-      ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+      ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
         (basisDegCount degS lowS (x.1, y.1) : ℂ) * wordCount degS lowS (x.2, y.2) := by
   by_cases h0 : a = 0 ∧ b = 0
   · obtain ⟨rfl, rfl⟩ := h0
-    simp [Finset.antidiagonal_zero, show ((0 : ℕ), (0 : ℕ)) = 0 from rfl,
+    simp [Finset.Nat.antidiagonal_zero, show ((0 : ℕ), (0 : ℕ)) = 0 from rfl,
       basisDegCount_zero degS hdegS lowS, wordCount_zero]
   rw [if_neg h0, zero_add]
   have hΓ : ((a, b) : ℕ × ℕ) ≠ 0 := fun h => h0 ⟨congrArg Prod.fst h, congrArg Prod.snd h⟩
   rw [wordCount_rec degS hdegS lowS hlowS hΓ, Nat.cast_sum]
   have hterm : ∀ k ∈ lowS (a, b), (wordCount degS lowS ((a, b) - degS k) : ℂ) =
-      ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+      ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
         (if (x.1, y.1) = degS k then (wordCount degS lowS (x.2, y.2) : ℂ) else 0) := by
     intro k hk
     have hle := (hlowS (a, b) k).mp hk
@@ -238,7 +241,7 @@ theorem wordCount_coeff_identity (a b : ℕ) :
   refine Finset.sum_congr rfl fun x hx => ?_
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun y hy => ?_
-  rw [Finset.mem_antidiagonal] at hx hy
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx hy
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul,
     basisDegCount_eq_card_filter degS lowS hlowS (Γ := (a, b))
       (Prod.le_def.mpr ⟨by omega, by omega⟩),

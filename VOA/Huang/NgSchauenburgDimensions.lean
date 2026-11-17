@@ -241,7 +241,7 @@ theorem exists_retraction_of_simple {X Y : C} [Simple X] (f : X ⟶ Y) (hf : f �
     apply (cancel_mono e.hom).mp
     apply biproduct.hom_ext
     intro k
-    simpa using h k
+    simpa using! h k
   obtain ⟨k, hk⟩ := hex
   letI := F.simple_isSimple (a k)
   letI := (isIso_iff_nonzero (f ≫ e.hom ≫ biproduct.π _ k)).mpr hk
@@ -260,7 +260,7 @@ theorem dimension_simple_ne_zero (i : F.Label) : F.dimension (F.simple i) ≠ 0 
     rw [h] at hh
     have : 𝟙 X = 0 := by
       have := congrArg (fun f => (λ_ X).inv ≫ f ≫ (ρ_ X).hom) hh
-      simpa using this.symm
+      simpa using! this.symm
     exact id_nonzero X this
   have heps : ε_ X Xᘁ ≠ 0 := by
     intro h
@@ -268,7 +268,7 @@ theorem dimension_simple_ne_zero (i : F.Label) : F.dimension (F.simple i) ≠ 0 
     rw [h] at hh
     have : 𝟙 X = 0 := by
       have := congrArg (fun f => (λ_ X).inv ≫ f ≫ (ρ_ X).hom) hh
-      simpa using this.symm
+      simpa using! this.symm
     exact id_nonzero X this
   have hcup : F.toPivotal.cup X ≠ 0 := by
     rw [← F.toPivotal.rotation_coevaluation]
@@ -284,7 +284,7 @@ theorem dimension_simple_ne_zero (i : F.Label) : F.dimension (F.simple i) ≠ 0 
   have ht : F.traceLeft (𝟙 X) = 0 := by
     rw [F.spherical]
     have hh := congrArg F.unitScalar hd
-    simpa [dimension, X] using hh
+    simpa [dimension, X] using! hh
   rw [Pivotal.traceLeft_id_eq_cup] at ht
   rw [← hz, Linear.comp_smul, ht, smul_zero] at hg
   exact id_nonzero (𝟙_ C) hg.symm

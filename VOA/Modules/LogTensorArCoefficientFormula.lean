@@ -87,7 +87,7 @@ theorem transformBranch_coefficient_pair (r : ℤ) (n : ℂ) (k : ℕ) {a b : �
     rw [logShift_eq_sum (transformBranch N₁ N₂ N₃ Y r).2.logFinite K hK,map_sum] at ht
     simp only [map_smul,shc,Nat.choose_zero_right,Nat.cast_one,one_mul,Nat.sub_zero,smul_eq_mul] at ht
     simp only [f,g,L]
-    simpa only [mul_comm] using ht.symm
+    simpa only [mul_comm] using! ht.symm
   have he := finite_coefficient_ext f g K L hf hg heval
   exact congrFun he k
 

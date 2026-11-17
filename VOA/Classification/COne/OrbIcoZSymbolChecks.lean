@@ -43,7 +43,7 @@ theorem equalRawCheck_sound (k : ℤ) (a : ℤ → A W) {r s : RawSym}
   have hm : bp [[-1]] = (-1 : Biv) := by simp [bp, qp]
   rw [hm] at hh
   simpa only [map_neg, map_one, LinearMap.neg_apply, Module.End.one_apply,
-    add_neg_eq_zero] using hh
+    add_neg_eq_zero] using! hh
 
 end General
 

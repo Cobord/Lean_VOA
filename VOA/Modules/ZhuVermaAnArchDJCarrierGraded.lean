@@ -136,15 +136,15 @@ noncomputable def DJCarrier.degEquivPiece (W : VertexOperatorAlgebra 𝒱) (U : 
     (LinearMap.codRestrict (DJCarrier.deg W U n) (DJCarrier.incl W U n) (fun x => ⟨x, rfl⟩))
     (by
       refine LinearMap.ext fun x => ?_
-      simp only [LinearMap.comp_apply, LinearMap.codRestrict_apply, Submodule.subtype_apply,
-        DJCarrier.proj_incl_same, LinearMap.id_apply])
+      exact DJCarrier.proj_incl_same W U n x)
     (by
       refine LinearMap.ext fun z => ?_
       obtain ⟨w, hw⟩ := z
       obtain ⟨y, rfl⟩ := hw
       refine Subtype.ext ?_
-      simp only [LinearMap.comp_apply, LinearMap.codRestrict_apply, Submodule.subtype_apply,
-        DJCarrier.proj_incl_same, LinearMap.id_apply])
+      simp only [LinearMap.comp_apply, Submodule.subtype_apply,
+        DJCarrier.proj_incl_same, LinearMap.id_apply]
+      rfl)
 
 @[simp] theorem DJCarrier.degEquivPiece_incl (W : VertexOperatorAlgebra 𝒱) (U : AmMod W m) (n : ℕ)
     (x : DJPiece W U n) :

@@ -46,7 +46,7 @@ theorem a2_span_box_with_defect (y : V) (m : ℕ) (P : R) :
   let D : Submodule ℂ V := a2BoxDefect F hFF y m
   obtain ⟨b, hb, j, hj, rfl⟩ := Submodule.mem_sup.mp (box_span m P)
   have hjD : Sl2Weyl.evAlg F hFF j y ∈ D := by
-    simpa only [one_mul] using a2BoxDefect_mul_mem F hFF y m hj 1
+    simpa only [one_mul] using! a2BoxDefect_mul_mem F hFF y m hj 1
   have hbB : Sl2Weyl.evAlg F hFF b y ∈ B := by
     induction hb using Submodule.span_induction with
     | mem x hx =>
@@ -77,7 +77,7 @@ theorem a2_span_box_graded_with_defect (y : V) (m : ℕ)
   let D : Submodule ℂ V := a2BoxDefect F hFF y m
   obtain ⟨b, hb, j, hj, rfl⟩ := Submodule.mem_sup.mp (box_span_graded m hp)
   have hjD : Sl2Weyl.evAlg F hFF j y ∈ D := by
-    simpa only [one_mul] using a2BoxDefect_mul_mem F hFF y m hj 1
+    simpa only [one_mul] using! a2BoxDefect_mul_mem F hFF y m hj 1
   clear hp
   have hbB : Sl2Weyl.evAlg F hFF b y ∈ B := by
     induction hb using Submodule.span_induction with

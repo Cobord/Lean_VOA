@@ -75,7 +75,7 @@ theorem moduleCoordGen_intertwiner_commutator {P₁ P₂ P₃ : LWModule W}
       Y.val n w (mode (P₂.isMod.YM W.conformalVector) ((j : ℤ) + 2) x))).Finite := by
     refine hr.subset fun j hj => ?_
     intro hz
-    exact hj (by simpa only [map_smul, map_zero] using congrArg (Y.val n w) hz)
+    exact hj (by simpa only [map_smul, map_zero] using! congrArg (Y.val n w) hz)
   change (∑ᶠ j, c j • mode (P₃.isMod.YM W.conformalVector) ((j : ℤ) + 2)
       (Y.val n w x)) - Y.val n w (∑ᶠ j, c j •
         mode (P₂.isMod.YM W.conformalVector) ((j : ℤ) + 2) x) = _

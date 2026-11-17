@@ -79,7 +79,7 @@ theorem fusionLabel_intermediate_nonresonant (A N r i : ℕ) (t : ℂ)
   · have hlast' : (N:ℤ)-1-(i:ℤ)=0 := by exact_mod_cast hlast
     have hn : N=i+1 := by omega
     rw [hn,Nat.add_sub_cancel] at hrN
-    have hir' : r=A*i := by simpa [Nat.mul_comm] using hir.symm
+    have hir' : r=A*i := by simpa [Nat.mul_comm] using! hir.symm
     omega
 
 /-- The ACTUAL BSA source diagonal is nonzero at every strictly intermediate

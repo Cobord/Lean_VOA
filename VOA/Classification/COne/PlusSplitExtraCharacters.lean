@@ -190,8 +190,8 @@ theorem zhu_finrank_eq_of_fourExtraCharacters (hc : V2mPlusFourExtraCharacters)
   letI := finiteDimensional_A_of_C2Cofinite _ (V2mPlus_c2Cofinite m hm)
   obtain ⟨χ, hχ⟩ := zhuDistinctCharacters_of_fourExtraCharacters hc m hm hm2
   have he := PlusSplitting.characterAlgEquiv χ hχ
-    (by simpa using v2mPlusZhuDimensionBound_holds m hm hm2)
-  simpa using he.toLinearEquiv.finrank_eq
+    (by simpa using! v2mPlusZhuDimensionBound_holds m hm hm2)
+  simpa using! he.toLinearEquiv.finrank_eq
 
 theorem zhuSemisimple_of_fourExtraCharacters (hc : V2mPlusFourExtraCharacters) :
     ZhuV2mPlusSemisimple :=

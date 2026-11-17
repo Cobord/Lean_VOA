@@ -70,7 +70,6 @@ theorem auxiliaryEuler_variable (r : ℕ) (i j : Fin r) :
   by_cases h : i=j
   · subst j; simp [unitExponent]
   · simp [unitExponent,Pi.single_eq_of_ne h,h]
-    rfl
 
 /-- The weighted derivative of one coordinate restores its omitted beta weight. -/
 theorem weightedEuler_variable (r N : ℕ) (i : Fin r) :

@@ -44,7 +44,7 @@ theorem fullCoset_commutator (u : V) (m : ℤ) (f : M₄ →ₗ[ℂ] ℂ)
       Summable (prodTermZ (fun n => Y₁.1 n k) (fun n => Y₂.1 n 0)
         g w₁ w₂ w₃ S ν (1+Complex.exp t) 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ g w₁ w₂ w₃ S ν k 0 one_ne_zero (by simpa only [norm_one] using hz)
+      Y₁ Y₂ g w₁ w₂ w₃ S ν k 0 one_ne_zero (by simpa only [norm_one] using! hz)
   have hk (k : ℕ) :
       logProductIntegerCosetFun Y₁.1 Y₂.1 (f ∘ₗ mode (N₄.YM u) m) x y z a b k 0 t=
         logProductIntegerCosetFun Y₁.1 Y₂.1 f x y (mode (N₃.YM u) m z) a b k 0 t+

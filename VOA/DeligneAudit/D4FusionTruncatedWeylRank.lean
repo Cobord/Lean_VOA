@@ -25,7 +25,7 @@ theorem fusionTotalDimG_of_univTruncatedRank (h : UnivTruncatedRank) :
     FiniteG.FusionTotalDimG D4sector := by
   intro m V _ _ ρ w hw B
   rcases Nat.eq_zero_or_pos m with rfl | hm
-  · simpa using D4FusionContact.localWeyl_zero_total_dim hw B
+  · simpa using! D4FusionContact.localWeyl_zero_total_dim hw B
   · obtain ⟨hfd, hrk⟩ := h m hm
     have hs := (localWeylRelG_iff D4sector ρ w m).mp hw
     exact (D4FusionContact.Polynomial.sum_source_cycDeg_le_univ hs B).trans hrk

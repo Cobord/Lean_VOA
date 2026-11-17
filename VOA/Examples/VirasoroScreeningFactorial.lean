@@ -71,8 +71,8 @@ theorem screeningPrefactor_add_single (β : ℚ) (d : ℕ →₀ ℕ) (i : ℕ) 
 one occupation up and multiplying by its new multiplicity. -/
 theorem screening_pderiv_coeff {σ : Type*} (i : σ) (d : σ →₀ ℕ)
     (P : MvPolynomial σ ℂ) :
-    MvPolynomial.coeff d (MvPolynomial.pderiv i P) =
-      ((d i+1:ℕ):ℂ) * MvPolynomial.coeff (d + Finsupp.single i 1) P := by
+    (MvPolynomial.pderiv i P).coeff d =
+      ((d i+1:ℕ):ℂ) * P.coeff (d + Finsupp.single i 1) := by
   classical
   induction P using MvPolynomial.induction_on' with
   | add P Q hP hQ => simp only [map_add, MvPolynomial.coeff_add, hP, hQ, mul_add]

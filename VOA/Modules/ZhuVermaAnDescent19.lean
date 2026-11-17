@@ -106,9 +106,9 @@ theorem vandermonde_range_top (m : ℕ) (nn k : ℤ) {N : ℕ} (hm : m < N) :
     ∑ a ∈ Finset.range N, cbz (m : ℤ) (a : ℤ) * cbz nn (k - (a : ℤ)) = cbz ((m : ℤ) + nn) k := by
   rw [← cbz_vandermonde (m : ℤ) nn k, cbzConvol,
     finsumZ_eq_range_sum (N := N) (fun a : ℤ => cbz (m : ℤ) a * cbz nn (k - a))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg (m : ℤ) hp, zero_mul])
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg (m : ℤ) hp, zero_mul])
       (fun p hp => by
-        dsimp only
+        try dsimp only
         rw [cbz_lt (by positivity) (by
           have : (N : ℤ) ≤ p := hp
           have : (m : ℤ) < (N : ℤ) := by exact_mod_cast hm
@@ -133,9 +133,9 @@ theorem SR_collapse (Q : ℕ) (μ c : ℤ) {N : ℕ} (hQ : Q < N) :
       = cbz ((Q : ℤ) - μ - 1) ((Q : ℤ) - c) := by
   -- Pass the range sum to the full `∑ᶠ` (the first factor's support `[0,Q]` lies in `[0,N)`).
   rw [← finsumZ_eq_range_sum (N := N) (fun i : ℤ => cbz (Q : ℤ) i * cbz (-μ - 1) (i - c))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg (Q : ℤ) hp, zero_mul])
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg (Q : ℤ) hp, zero_mul])
       (fun p hp => by
-        dsimp only
+        try dsimp only
         rw [cbz_lt (by positivity) (by
           have h1 : (N : ℤ) ≤ p := hp
           have h2 : (Q : ℤ) < (N : ℤ) := by exact_mod_cast hQ
@@ -283,9 +283,9 @@ theorem ASum_eq_kFinsum (M P n j : ℕ) (γ μ : ℤ) :
         (fun a : ℤ => cbz ((M : ℤ) + n) a
             * (cbz ((P : ℤ) + n + 1 + j) (((P : ℤ) - 2 * n - 2 - μ - γ) + a)
                 * cbz ((a : ℤ) - μ - 1) ((a : ℤ) - 2 * n - 2 - μ)))
-        (fun p hp => by dsimp only; rw [cbz_apply_neg ((M : ℤ) + n) hp, zero_mul])
+        (fun p hp => by (try dsimp only); rw [cbz_apply_neg ((M : ℤ) + n) hp, zero_mul])
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_lt (by positivity) (by
             have : (M + n + 1 : ℤ) ≤ p := by exact_mod_cast hp
             omega), zero_mul])).symm
@@ -334,8 +334,8 @@ theorem tower_swap (K : ℕ) (s : ℤ) (H : ℤ → ℂ) (R : ℕ)
             * cbz ((K : ℤ) + ν) (s + ν) := by
   -- pass the `∑ᶠ` to a range sum.
   rw [finsumZ_eq_range_sum (N := R) (fun k : ℤ => cbz (K : ℤ) (s + k) * H k)
-      (fun p hp => by dsimp only; rw [hlo p hp, mul_zero])
-      (fun p hp => by dsimp only; rw [hhi p hp, mul_zero])]
+      (fun p hp => by (try dsimp only); rw [hlo p hp, mul_zero])
+      (fun p hp => by (try dsimp only); rw [hhi p hp, mul_zero])]
   -- expand each `C(K, s+k)` into the ν-tower, then swap.
   rw [show ∑ k ∈ Finset.range R, cbz (K : ℤ) (s + (k : ℤ)) * H (k : ℤ)
         = ∑ k ∈ Finset.range R, ∑ ν ∈ Finset.range R,

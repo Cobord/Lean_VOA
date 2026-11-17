@@ -26,12 +26,10 @@ theorem lowering_boson_reindex (P : WakFock) :
   · intro m hm
     have := Finset.mem_Icc.mp hm
     apply Finset.mem_range.mpr
-    dsimp only
     omega
   · intro m hm n hn he
     have := Finset.mem_Icc.mp hm
     have := Finset.mem_Icc.mp hn
-    dsimp only at he
     omega
   · intro j hj
     have := Finset.mem_range.mp hj
@@ -39,7 +37,6 @@ theorem lowering_boson_reindex (P : WakFock) :
   · intro m hm
     have := Finset.mem_Icc.mp hm
     rw [aV_of_pos (by omega),bD_of_pos (by omega),dV_apply]
-    dsimp only
     rw [show (m+1-1).toNat=(m-1).toNat+1 by omega]
 
 /-- Replace the boson sum bound by any proved beta depth cutoff. -/
@@ -50,10 +47,10 @@ theorem lowering_boson_cutoff (P : WakFock) (N : ℕ)
   have hNB := two_le_NB P
   apply Finset.sum_congr_of_eq_on_inter
   · intro j hj hout
-    have : N≤j := by simpa using hout
+    have : N≤j := by simpa using! hout
     rw [hN (j+1) (by omega),mul_zero]
   · intro j hj hout
-    have : (NB P-2).toNat≤j := by simpa using hout
+    have : (NB P-2).toNat≤j := by simpa using! hout
     rw [pderiv_eq_zero_of_NB_le (by omega),mul_zero]
   · intro j hj hj2
     rfl
@@ -68,12 +65,10 @@ theorem lowering_inner_reindex (P : WakFock) (m : ℤ) (hm : 1≤m) :
   · intro u hu
     have := Finset.mem_Icc.mp hu
     apply Finset.mem_range.mpr
-    dsimp only
     omega
   · intro u hu v hv he
     have := Finset.mem_Icc.mp hu
     have := Finset.mem_Icc.mp hv
-    dsimp only at he
     omega
   · intro a ha
     have := Finset.mem_range.mp ha
@@ -81,7 +76,6 @@ theorem lowering_inner_reindex (P : WakFock) (m : ℤ) (hm : 1≤m) :
   · intro u hu
     have := Finset.mem_Icc.mp hu
     rw [bD_of_pos (by omega : 1≤m+1-u),bD_of_pos (by omega : 1≤u),dV_apply,dV_apply]
-    dsimp only
     have he : (m+1-u-1).toNat=(m-1).toNat-(u-1).toNat := by omega
     rw [he]
 
@@ -96,12 +90,10 @@ theorem lowering_quadratic_reindex (P : WakFock) :
   · intro m hm
     have := Finset.mem_Icc.mp hm
     apply Finset.mem_range.mpr
-    dsimp only
     omega
   · intro m hm n hn he
     have := Finset.mem_Icc.mp hm
     have := Finset.mem_Icc.mp hn
-    dsimp only at he
     omega
   · intro d hd
     have := Finset.mem_range.mp hd
@@ -129,7 +121,7 @@ theorem state_lowering_quadratic_cutoff (r q M : ℕ) (hq : 0<q) :
       ∑ a∈Finset.range (d+1),pderiv (0,d-a) (pderiv (0,a) (state r q M)) := by
   apply Finset.sum_congr_of_eq_on_inter
   · intro d hd hout
-    have hd' : r*(q-1)<d := by simpa using hout
+    have hd' : r*(q-1)<d := by simpa using! hout
     have hz : (∑ a∈Finset.range (d+1),pderiv (0,d-a) (pderiv (0,a) (state r q M)))=0 := by
       apply Finset.sum_eq_zero
       intro a ha
@@ -137,7 +129,7 @@ theorem state_lowering_quadratic_cutoff (r q M : ℕ) (hq : 0<q) :
       exact state_beta_double_above_degree r q M a (d-a) hq (by omega)
     rw [hz,mul_zero]
   · intro d hd hout
-    have hd' : (2*NB (state r q M)-2).toNat≤d := by simpa using hout
+    have hd' : (2*NB (state r q M)-2).toNat≤d := by simpa using! hout
     have hz : (∑ a∈Finset.range (d+1),pderiv (0,d-a) (pderiv (0,a) (state r q M)))=0 := by
       apply Finset.sum_eq_zero
       intro a ha

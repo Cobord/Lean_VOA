@@ -85,7 +85,7 @@ theorem wordExpressionPair_eval (c : ℂ) (f g : VirWordExpression) :
         (VirGram4.canB c).form (virWord (Lop c) u (vacVec c))
           (virWord (Lop c) v (vacVec c)) by
             simpa only [show (virasoroVOA c).L = Lop c from
-              funext (virasoroVOA_L_eq_Lop c)] using universal_gram_entry c u v]
+              funext (virasoroVOA_L_eq_Lop c)] using! universal_gram_entry c u v]
       ring
 
 /-- A charge-independent word expression for every intermediate BSA state.
@@ -241,7 +241,7 @@ theorem graded_rigidity_of_wordExpression (c : ℂ) (f : VirWordExpression)
   simp only [virWord_mkQ] at hq
   apply graded_rigidity_of_relation c (fun w : f.support => w.val)
     (fun w : f.support => f w) hq
-  simpa only [wordExpressionPair_eq_relation] using hd
+  simpa only [wordExpressionPair_eq_relation] using! hd
 
 /-- For the explicit BSA family, the ONE remaining scalar input is the
 nonvanishing of the actual norm response at c_N. Its identification with

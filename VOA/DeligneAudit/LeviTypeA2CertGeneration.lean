@@ -73,8 +73,8 @@ private theorem positive_inv (h : A2LocalWeylRel ρ w p q)
       obtain ⟨l, r, hl, hr, rfl⟩ := hz
       exact positive_on_normal ρ w h l r hl hr a s ha
   | zero => simp
-  | add x y _ _ hx hy => simpa using (a2LeviSpan ρ w).add_mem hx hy
-  | smul c x _ hx => simpa using (a2LeviSpan ρ w).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (a2LeviSpan ρ w).add_mem hx hy
+  | smul c x _ hx => simpa using! (a2LeviSpan ρ w).smul_mem c hx
 
 /-- PBW/Levi generation: all current words are spanned by Levi words on
 negative radical monomials. -/

@@ -3,6 +3,8 @@ import VOA.Huang.LiRegularExp
 
 /-! # The ordinary Virasoro calculation underlying reflection -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Huang.VerlindeRho
 open VOA VertexOperatorAlgebra
 open scoped BigOperators
@@ -13,10 +15,16 @@ variable {W : VertexOperatorAlgebra V}
 noncomputable def expL1 (W : VertexOperatorAlgebra V) : Module.End ℂ V :=
   LiRegular.expOp (isLocNilp_L_one W) 1
 
+/-- `isLocNilp_L_one` restated with `LiRegular.LocNil` (the two predicates are defeq but
+4.35 `rw` needs the exact type of the proof argument of `expOp`). -/
+private theorem locNil_L_one (W : VertexOperatorAlgebra V) : LiRegular.LocNil (W.L 1) :=
+  isLocNilp_L_one W
+
 theorem contraTwist_eq_expL1 {n : ℤ} {v : V} (hv : v ∈ W.grading n) :
     contraTwist W v = (-1 : ℂ) ^ n • expL1 W v := by
-  rw [contraTwist_homogeneous hv, contraState, expL1,
-    LiRegular.expOp_eq_sum _ _ (L_one_pow_eq_zero W hv
+  rw [contraTwist_homogeneous hv, contraState]
+  change _ = _ • LiRegular.expOp (locNil_L_one W) 1 v
+  rw [LiRegular.expOp_eq_sum _ _ (L_one_pow_eq_zero W hv
       (by omega : n - (n.toNat + 1 : ℕ) < 0))]
   simp only [one_pow, one_div]
 
@@ -28,7 +36,7 @@ theorem expL1_mem_gradeLE {d : ℤ} {v : V} (hv : v ∈ gradeLE W d) :
     rw [contraTwist_eq_expL1 hx] at ht
     exact (Submodule.smul_mem_iff _ (zpow_ne_zero _ (by norm_num : (-1 : ℂ) ≠ 0))).mp ht
   | zero => simp
-  | add x y _ _ hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
+  | add x y _ _ hx hy => simpa only [map_add] using! Submodule.add_mem _ hx hy
 
 /-- The positive-mode tail vanishes on the ordinary-weight filtration. -/
 theorem L_eq_zero_of_mem_gradeLE {d a : ℤ} {v : V}
@@ -50,7 +58,7 @@ theorem expL1_L (a : ℤ) (v : V) :
         (n : ℂ) • W.L (1 - (n - 1)) y := by
     intro n y
     have h := congrArg (fun F : Module.End ℂ V => F y) (W.L_virasoro 1 (1 - n))
-    simpa [Ring.lie_def, sub_sub, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+    simpa [Ring.lie_def, sub_sub, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using! h
   have ht : ∀ y : V, ∃ K : ℤ, ∀ n : ℤ, n ≤ K → W.L (1 - n) y = 0 := by
     intro y
     obtain ⟨d, hd⟩ := exists_mem_gradeLE W y
@@ -58,7 +66,7 @@ theorem expL1_L (a : ℤ) (v : V) :
   have h := LiRegular.expOp_conj (isLocNilp_L_one W)
     (fun n => W.L (1 - n)) hc ht 1 (1 - a) v
   simpa only [show 1 - (1 - a) = a by omega, one_pow, mul_one,
-    show ∀ k : ℕ, 1 - (1 - a - (k : ℤ)) = a + k by intro k; omega] using h
+    show ∀ k : ℕ, 1 - (1 - a - (k : ℤ)) = a + k by intro k; omega] using! h
 
 theorem expL1_L_eq_sum (d a : ℕ) {v : V} (hv : v ∈ gradeLE W (d : ℤ)) :
     expL1 W (W.L (a : ℤ) v) = ∑ k ∈ Finset.range (d + 1 - a),

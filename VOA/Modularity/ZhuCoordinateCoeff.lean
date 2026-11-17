@@ -170,7 +170,7 @@ theorem euler_deriv (p : ℕ) (n : ℤ) :
   rw [O_succ_succ, O_succ, PowerSeries.derivativeFun_mul]
   have hd : derivativeFun ((1 + PowerSeries.X : PowerSeries ℂ) ^ (p + 1))
       = PowerSeries.C ((p : ℂ) + 1) * (1 + PowerSeries.X) ^ p := by
-    have h := PowerSeries.derivative_pow ℂ (1 + PowerSeries.X : PowerSeries ℂ) (p + 1)
+    have h := PowerSeries.derivative_pow (g := (1 + PowerSeries.X : PowerSeries ℂ)) (n := p + 1)
     change derivativeFun _ = _ at h
     rw [h, Nat.add_sub_cancel, map_add, Derivation.map_one_eq_zero, zero_add,
       PowerSeries.derivative_X, mul_one, map_add, map_one, map_natCast]

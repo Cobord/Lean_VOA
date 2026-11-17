@@ -34,7 +34,7 @@ weight `2m+r`. -/
 theorem lengthTwoQ_tower_mem_virFil (m : ℕ) (hm : 2 ≤ m) (r : ℕ) :
     (Lop c (-1) ^ r) (lengthTwoQ c m) ∈ virFil c 2 ((2 * m + r : ℕ) : ℤ) := by
   induction r with
-  | zero => simpa using lengthTwoQ_mem_virFil c m hm
+  | zero => simpa using! lengthTwoQ_mem_virFil c m hm
   | succ r ih =>
       rw [pow_succ', Module.End.mul_apply]
       have h := Lop_neg_one_virFil c ih
@@ -71,7 +71,7 @@ theorem form_lengthTwoQ_tower (B : InvariantForm (virasoroVOA c)) (m : ℕ) (hm 
         B.form (lengthTwoQ c m) (lengthTwoQ c m) := by
   apply B.form_globalDescendant
   · exact lengthTwoQ_mem_grading c m hm
-  · simpa [virasoroVOA_L_eq_Lop] using lengthTwoQ_quasiPrimary c m hm
+  · simpa [virasoroVOA_L_eq_Lop] using! lengthTwoQ_quasiPrimary c m hm
 
 /-- Distinct descendant depths of length-two quasi-primary towers are orthogonal.  In particular,
 at a fixed final weight this separates towers born at distinct even weights. -/
@@ -82,9 +82,9 @@ theorem form_lengthTwoQ_towers_eq_zero_of_depth_ne
         (((virasoroVOA c).L (-1) ^ s) (lengthTwoQ c k)) = 0 := by
   apply B.form_globalTowers_eq_zero_of_ne hB
   · exact lengthTwoQ_mem_grading c m hm
-  · simpa [virasoroVOA_L_eq_Lop] using lengthTwoQ_quasiPrimary c m hm
+  · simpa [virasoroVOA_L_eq_Lop] using! lengthTwoQ_quasiPrimary c m hm
   · exact lengthTwoQ_mem_grading c k hk
-  · simpa [virasoroVOA_L_eq_Lop] using lengthTwoQ_quasiPrimary c k hk
+  · simpa [virasoroVOA_L_eq_Lop] using! lengthTwoQ_quasiPrimary c k hk
   · exact hrs
 
 /-! ## The triangular family at a fixed final weight -/

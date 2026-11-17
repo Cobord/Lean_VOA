@@ -234,7 +234,7 @@ theorem exists_gen_span {N m : ℕ} (hm : N ≤ m) {pt : Fin (r + 1) → Fin k} 
   rw [dD_self, degree_dT hpt] at h2
   rw [h2, show Finsupp.single (pt 0) m = Finsupp.single (pt 0) r + Finsupp.single (pt 0) (m - r) by
     rw [← Finsupp.single_add, Nat.add_sub_cancel' hrm]] at h1
-  have h3 := add_left_cancel (by simpa only [add_assoc] using h1)
+  have h3 := add_left_cancel (by simpa only [add_assoc] using! h1)
   rw [add_comm (Finsupp.single (pt 0) (m - r))] at h3
   exact add_left_cancel h3
 

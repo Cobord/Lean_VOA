@@ -31,7 +31,7 @@ theorem Q_mem_invariant (F : ℕ → Module.End ℂ V) (M : Submodule ℂ V)
   | 0, s, v, hv => by
       rw [Q_zero_r]
       split_ifs
-      · simpa using hv
+      · simpa using! hv
       · exact M.zero_mem
   | r + 1, s, v, hv => by
       rw [Q_succ, LinearMap.coe_sum, Finset.sum_apply]
@@ -114,7 +114,7 @@ theorem f2_square_QFrom (ρ : CurrentModule bracketTable V) {w : V} {L b p : ℕ
     (thetaKernel ρ L)
   · intro k v hv
     by_cases hk : p ≤ k
-    · simpa only [fromMode, if_pos hk] using thetaKernel_f1 ρ L k hv
+    · simpa only [fromMode, if_pos hk] using! thetaKernel_f1 ρ L k hv
     · simp only [fromMode, if_neg hk, LinearMap.zero_apply]
       exact (thetaKernel ρ L).zero_mem
   · intro v hv
@@ -133,7 +133,7 @@ theorem f2_square_f1 (ρ : CurrentModule bracketTable V) {w : V} {L b k : ℕ}
     (hy2 : (ρ.op 4 b ^ 2) w = 0) :
     (ρ.op 4 b ^ 2) (ρ.op 3 k w) = 0 := by
   have h := f2_square_QFrom ρ hbk htheta hy2 1 k
-  simpa only [QFrom, Q_one, fromMode, if_pos le_rfl] using h
+  simpa only [QFrom, Q_one, fromMode, if_pos le_rfl] using! h
 
 /-- The tail annihilation needed in SRK's quadratic and cubic coefficient identities. -/
 theorem tail_square_kills (ρ : CurrentModule bracketTable V) {w : V} (A B j : ℕ)

@@ -26,13 +26,13 @@ noncomputable def rootH (j : Fin 6) (r : ℕ) : Module.End ℂ V :=
 theorem rootF_comm (j : Fin 6) (r s : ℕ) :
     rootF ρ j r * rootF ρ j s = rootF ρ j s * rootF ρ j r := by
   ext v
-  simpa [rootF] using radical_ops_comm ρ j j r s v
+  simpa [rootF] using! radical_ops_comm ρ j j r s v
 
 theorem rootE_source_zero
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (j : Fin 6) : rootE ρ j w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   have hp : D4sector.raising (positiveColour j) := by
     change 4 ≤ (positiveColour j).val ∧ (positiveColour j).val < 16
     fin_cases j <;> decide
@@ -42,7 +42,7 @@ theorem rootH_source_pos_zero
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (j : Fin 6) (r : ℕ) (hr : 0 < r) : rootH ρ j r w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   simp only [rootH, LinearMap.smul_apply, LinearMap.sum_apply]
   have hz : (∑ c : Fin 28,
       D4sector.f (positiveColour j) (radicalColour j) c • ρ.op c r w) = 0 := by
@@ -64,7 +64,7 @@ theorem rootF_source_nil
     (rootF ρ j 0 ^ (rootWeight m j + 1)) w = 0 := by
   have hh := source_root_nil ρ w m h (radicalColour j)
     (by fin_cases j <;> decide)
-  simpa [rootF, rootExponent_eq m j] using hh
+  simpa [rootF, rootExponent_eq m j] using! hh
 
 theorem rootEF_comm (j : Fin 6) (r : ℕ) :
     rootE ρ j * rootF ρ j r - rootF ρ j r * rootE ρ j =
@@ -74,7 +74,8 @@ theorem rootEF_comm (j : Fin 6) (r : ℕ) :
     Module.End.mul_apply, LinearMap.smul_apply, map_smul,
     LinearMap.sum_apply]
   rw [← smul_sub]
-  rw [ρ.comm]
+  -- 4.35: `ρ.op` takes `Fin D4sector.n`, an alias of `Fin 28`; avoid rewriting the ill-typed target.
+  refine congrArg _ ((ρ.comm _ _ _ _ _).trans ?_)
   simp only [Nat.add_comm 1 r]
   rfl
 
@@ -98,7 +99,9 @@ theorem rootHF_comm (j : Fin 6) (r s : ℕ) :
           (∑ c : Fin 28, D4sector.f p f c • ρ.op c t v)) =
       (-2 : ℂ) • ρ.op f (t + s) v
   rw [map_smul, ← smul_sub, hsum]
-  simp_rw [ρ.comm]
+  -- 4.35: `simp_rw [ρ.comm]` fails on the `Fin D4sector.n` alias; rewrite each summand by `congrArg`.
+  refine (congrArg (fun x => (rootSign j : ℂ) • x) (Finset.sum_congr rfl fun c _ =>
+    congrArg (fun x => D4sector.f p f c • x) (ρ.comm c f t s v))).trans ?_
   have hcollapse : (rootSign j : ℂ) •
       (∑ c : Fin 28, D4sector.f p f c •
         (∑ d : Fin 28, D4sector.f c f d • ρ.op d (t + s) v)) =

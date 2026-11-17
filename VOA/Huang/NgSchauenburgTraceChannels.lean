@@ -66,7 +66,7 @@ theorem hom_ext_from_simples {X Y : C} {f g : X ⟶ Y}
   apply (cancel_epi e.inv).mp
   apply biproduct.hom_ext'
   intro k
-  simpa only [Category.assoc] using
+  simpa only [Category.assoc] using!
     h (a k) (biproduct.ι (fun k => F.simple (a k)) k ≫ e.inv)
 
 /-- A resolution of the identity through all simple channels. No completeness
@@ -112,7 +112,7 @@ theorem hom_eq_sum_trace_channels {X Y : C} {ι κ : F.Label → Type*}
       intro d _
       congr 1
       rw [← F.traceDualBasis_pair (c i) d]
-      simpa only [Category.assoc] using
+      simpa only [Category.assoc] using!
         F.scalarTrace_comp_comm (b i a) (f ≫ F.traceDualBasis (c i) d)
 
 /-- The channel form of the ordinary linear trace on `Hom(X,Y)`. This is

@@ -38,6 +38,11 @@ coordinates of `(T⁺)₂` (`MoonshineCNGriessTwistedTop`), and `λ` a fixed squ
   `bform (N·M) u = bform (M, u·N)` for `u` with zero `W`-part, proved from the formulas.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.GriessDictionary

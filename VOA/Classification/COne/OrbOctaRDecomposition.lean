@@ -17,7 +17,7 @@ def wordWeight (ks : List ℕ) : ℕ := (ks.map (fun k => k + 1)).sum
 theorem virWord_grading {d : ℤ} {v : V} (hv : v ∈ A.grading d) (ks : List ℕ) :
     virWord A ks v ∈ A.grading (d + wordWeight ks) := by
   induction ks with
-  | nil => simpa [virWord, wordWeight] using hv
+  | nil => simpa [virWord, wordWeight] using! hv
   | cons k ks ih =>
     have h := L_mem_grading_conv A ih (-(k : ℤ) - 1)
     have he : d + (wordWeight (k :: ks) : ℤ) =
@@ -37,7 +37,7 @@ theorem project_word_mem {d : ℤ} {v : V} (hv : v ∈ A.grading d)
   · rw [piHom_of_mem A (he ▸ hg)]
     by_cases hb : ∃ k ∈ ks, k ≠ 1
     · exact Submodule.mem_sup_right (Submodule.subset_span ⟨⟨ks, hb⟩, rfl⟩)
-    · have hall : ∀ k ∈ ks, k = 1 := by simpa using hb
+    · have hall : ∀ k ∈ ks, k = 1 := by simpa using! hb
       have hks := List.eq_replicate_length.mpr hall
       have hw : wordWeight ks = 2 * ks.length := by
         conv_lhs => rw [hks]
@@ -78,7 +78,7 @@ theorem grading_mem_remainderSpace (r : ℕ) (hr : 8 ≤ r) (hmax : r < 18)
     | zero => simp
     | add z t _ _ hz ht => rw [map_add]; exact Submodule.add_mem _ hz ht
     | smul c z _ hz => rw [map_smul]; exact Submodule.smul_mem _ c hz
-  simpa only [piHom_of_mem W hv] using hproject v hs
+  simpa only [piHom_of_mem W hv] using! hproject v hs
 
 /-- Existence is unconditional; numerical identification is a separate step. -/
 theorem mode_remainder_exists (r : ℕ) (hr : 8 ≤ r) (hmax : r < 18) :
@@ -102,12 +102,12 @@ theorem weight32_remainder_exists : ∃ a b : ℂ,
     W.smul X (-1) X -
       (a • ((W.L (-2)) ^ 16) W.vacuum + b • ((W.L (-2)) ^ 8) X) ∈
         virError W W.vacuum ⊔ virError W X := by
-  simpa using mode_remainder_exists 16 (by decide) (by decide)
+  simpa using! mode_remainder_exists 16 (by decide) (by decide)
 
 theorem weight34_remainder_exists : ∃ a b : ℂ,
     W.smul X (-3) X -
       (a • ((W.L (-2)) ^ 17) W.vacuum + b • ((W.L (-2)) ^ 9) X) ∈
         virError W W.vacuum ⊔ virError W X := by
-  simpa using mode_remainder_exists 17 (by decide) (by decide)
+  simpa using! mode_remainder_exists 17 (by decide) (by decide)
 
 end VOA.Classification.COne.OrbOctaR

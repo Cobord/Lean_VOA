@@ -44,7 +44,7 @@ theorem complementCharacteristic_boundary (M A a : ℕ) (cutL cutR : Bool)
       have he := SL4T.descendingPoly_step
         (leftH (M - 1) A (boundaryIndex a cutR)) (M - 1 - A)
       rw [hz, map_zero, add_zero] at he
-      simpa only [hs, Bool.false_eq_true, if_false] using he
+      simpa only [hs, Bool.false_eq_true, if_false] using! he
 
 /-- A divided complementary characteristic projects to the smaller complement alphabet. -/
 theorem complementCharacteristic_boundary_division (M A a : ℕ) (cutR : Bool)
@@ -57,8 +57,14 @@ theorem complementCharacteristic_boundary_division (M A a : ℕ) (cutR : Bool)
   have hc := congrArg (fun P => P.coeff (n + 1)) h
   change ((leftPbar M A a).map _).coeff (n + 1) =
     (X * leftPbar (M - 1) A (boundaryIndex a cutR)).coeff (n + 1) at hc
-  rw [coeff_map, coeff_X_mul] at hc
-  simpa only [coeff_map, coeff_divX] using hc
+  have key : ∀ (f : S M A a →+* S (M - 1) (boundaryIndex A false) (boundaryIndex a cutR))
+      (P : (S M A a)[X]) (Q : (S (M - 1) (boundaryIndex A false) (boundaryIndex a cutR))[X]),
+      (P.map f).coeff (n + 1) = (X * Q).coeff (n + 1) → (P.divX.map f).coeff n = Q.coeff n := by
+    intro f P Q hPQ
+    rw [coeff_map, coeff_X_mul] at hPQ
+    rw [coeff_map, coeff_divX]
+    exact hPQ
+  exact key _ _ _ hc
 
 /-- The empty-site Thom multiplier preserves the divided complement relation. -/
 theorem commonRoot_emptySite_relation (M A a : ℕ) (hM : 0 < M) (hA : A ≤ M) :
@@ -74,9 +80,14 @@ theorem commonRoot_emptySite_relation (M A a : ℕ) (hM : 0 < M) (hA : A ≤ M) 
     (isUnit_neg_one.pow a)).mp
   change (-1 : (S M A a)[X]) ^ a *
     (Polynomial.C (leftE M A a A * rightE M A a a) * (leftPbar M A a).divX) ∈ _
-  convert h using 1
-  simp only [map_mul, map_pow, map_neg, map_one]
-  ring
+  have e : (-1 : (S M A a)[X]) ^ a *
+      (Polynomial.C (leftE M A a A * rightE M A a a) * (leftPbar M A a).divX) =
+        Polynomial.C (leftE M A a A * ((-1) ^ a * rightE M A a a)) *
+          (leftPbar M A a).divX := by
+    simp only [map_mul, map_pow, map_neg, map_one]
+    ring
+  rw [e]
+  exact h
 
 /-- A site outside the left alphabet shifts both common-root relations by one. -/
 theorem commonRoot_adjointSite_relations (M A a : ℕ) (hM : 0 < M) (hA : A ≤ M) :
@@ -88,7 +99,7 @@ theorem commonRoot_adjointSite_relations (M A a : ℕ) (hM : 0 < M) (hA : A ≤ 
   · rw [rightP_constant]
     have hmem : leftE M A a A * rightE M A a a ∈ thomI1 M A a :=
       Ideal.subset_span (Set.mem_singleton _)
-    simpa only [mul_comm, mul_left_comm, mul_assoc] using
+    simpa only [mul_comm, mul_left_comm, mul_assoc] using!
       (thomI1 M A a).mul_mem_left ((-1) ^ a) hmem
   · rw [leftPbar_constant, left_boundary_product M A a hM hA]
     exact Ideal.zero_mem _
@@ -107,7 +118,7 @@ theorem commonRoot_intersectionSite_relation (M A a : ℕ)
   have hc : (leftP M A a).coeff 0 ∈ thomI2 M A a := by
     rw [leftP_constant]
     exact (thomI2 M A a).mul_mem_left _ (Ideal.subset_span (Set.mem_singleton _))
-  simpa only [rightPbar_constant] using commonRoot_containedSite
+  simpa only [rightPbar_constant] using! commonRoot_containedSite
     (rightP M A a) (rightPbar M A a) (leftP M A a) (leftPbar M A a)
     (M - 1) (thomI2 M A a) hp hg hc
 

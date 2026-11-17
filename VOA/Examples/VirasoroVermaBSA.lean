@@ -64,7 +64,7 @@ theorem vermaBSAState_L0 (c h t : ℂ) (N r : ℕ) :
   | h r ih =>
     by_cases hr : r=0
     · subst r
-      simpa [vermaMode] using verma_zero_acts c h
+      simpa [vermaMode] using! verma_zero_acts c h
     · rw [vermaBSAState_eq_source c h t N r (by omega),map_smul,
         vermaBSASource_L0 c h t N r (fun j => ih j j.isLt),smul_comm]
 
@@ -347,7 +347,7 @@ theorem vermaBSAState_mem_level (c h t : ℂ) (N r : ℕ) :
       have hs := sortedSpan_stable c h (vermaMode_sorted_insert c h j) (r-j-1) (ih j j.isLt)
       have hn : (j:ℕ)+(r-j-1)+1=r := by omega
       have hi : -((r-j-1:ℕ):ℤ)-1=(j:ℤ)-(r:ℤ) := by omega
-      simpa only [hn,hi] using hs
+      simpa only [hn,hi] using! hs
 
 /-- The terminal source itself belongs to its advertised level span. -/
 theorem vermaBSASource_mem_level (c h t : ℂ) (N r : ℕ) :
@@ -358,6 +358,6 @@ theorem vermaBSASource_mem_level (c h t : ℂ) (N r : ℕ) :
     (vermaBSAState_mem_level c h t N j)
   have hn : (j:ℕ)+(r-j-1)+1=r := by omega
   have hi : -((r-j-1:ℕ):ℤ)-1=(j:ℤ)-(r:ℤ) := by omega
-  simpa only [hn,hi] using hs
+  simpa only [hn,hi] using! hs
 
 end VOA.InverseDS.VirasoroVerma

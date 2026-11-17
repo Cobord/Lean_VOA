@@ -101,7 +101,7 @@ theorem sum_optionElim (a : ℕ) (d : ℕ →₀ ℕ) :
 
 /-- The `b^a`-coefficient of a polynomial of total degree `≤ r` has degree `≤ r - a`. -/
 theorem degree_le_of_coeff_ne {p : AbH} {r a : ℕ} (hp : p.totalDegree ≤ r) {d : ℕ →₀ ℕ}
-    (hd : coeff d (κ a p) ≠ 0) : a + Finsupp.degree d ≤ r := by
+    (hd : (κ a p).coeff d ≠ 0) : a + Finsupp.degree d ≤ r := by
   rw [κ, optionEquivLeft_coeff_coeff] at hd
   have := le_totalDegree (mem_support_iff.mpr hd)
   rw [sum_optionElim] at this
@@ -112,7 +112,7 @@ theorem hc_coeff_eq_zero {p : AbH} {r a k : ℕ} (hp : p.totalDegree ≤ r) (hak
     homogeneousComponent k (κ a p) = 0 := by
   classical
   ext d
-  rw [coeff_homogeneousComponent, coeff_zero]
+  rw [coeff_homogeneousComponent, MvPolynomial.coeff_zero, Finsupp.zero_apply]
   split_ifs with hdk
   · by_contra hne
     have := degree_le_of_coeff_ne hp hne

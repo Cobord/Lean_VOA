@@ -56,6 +56,9 @@ def purePBWLetterEmbedding : Fin 3 ↪ (Fin 3 ×ₗ ℕ) where
     apply symbolToCurrentColor.injective
     exact congrArg (fun q => (ofLex q).1) hij
 
+@[simp] theorem purePBWLetterEmbedding_apply (i : Fin 3) :
+    purePBWLetterEmbedding i = toLex (symbolToCurrentColor i, 0) := rfl
+
 /-- Extend a three-variable monomial exponent by zero to the full affine PBW alphabet. -/
 def purePBWIndex (mu : Fin 3 →₀ ℕ) : (Fin 3 ×ₗ ℕ) →₀ ℕ :=
   Finsupp.embDomain purePBWLetterEmbedding mu
@@ -199,7 +202,7 @@ theorem pbwWord_purePBWIndex (mu : Fin 3 →₀ ℕ) :
   by_cases h0 : mu 0 = 0 <;> by_cases h1 : mu 1 = 0 <;> by_cases h2 : mu 2 = 0
   all_goals
     rw [hmu]
-    simp [pbwWord, purePBWIndex, purePBWLetterEmbedding,
+    simp [pbwWord, purePBWIndex, purePBWLetterEmbedding_apply,
       pureLieWord, pureCurrentWord, h0, h1, h2, Pi.basisFun_apply, basis,
       supportSort_q0_q1, supportSort_q0_q2, supportSort_q2_q1, supportSort_q0_q2_q1]
 
@@ -376,7 +379,7 @@ theorem pureCurrentC2Independent_of_o2Separated
     change f x = 0 ↔ x ∈ O₂ (W k hk)
     exact mk₂_eq_zero_iff (W k hk)
   have hd : Disjoint (Submodule.span ℂ (Set.range (pureCurrentState k)))
-      (LinearMap.ker f) := by simpa [hker] using hsep
+      (LinearMap.ker f) := by rw [hker]; exact hsep
   exact (f.linearIndependent_iff_of_disjoint hd).mpr hli
 
 /-- With independence of the representatives before quotienting, `C₂` independence is exactly
@@ -406,7 +409,7 @@ theorem symbolAlg_injective_of_pureCurrentC2Independent
   have himages : LinearIndependent ℂ fun mu : Fin 3 →₀ ℕ =>
       symbolAlg k hk (b mu) := by
     simpa only [b, MvPolynomial.coe_basisMonomials,
-      symbolAlg_monomial k hk] using h
+      symbolAlg_monomial k hk, PureCurrentC2Independent] using h
   have hmap : (symbolAlg k hk).toLinearMap =
       b.constr ℂ (fun mu => symbolAlg k hk (b mu)) := by
     apply b.ext
@@ -426,7 +429,8 @@ theorem pureCurrentC2Independent_of_symbolAlg_injective
   have himage : LinearIndependent ℂ fun mu : Fin 3 →₀ ℕ =>
       symbolAlg k hk ((MvPolynomial.basisMonomials (Fin 3) ℂ) mu) :=
     hb.map' (symbolAlg k hk).toLinearMap (LinearMap.ker_eq_bot.mpr h)
-  simpa only [MvPolynomial.coe_basisMonomials, symbolAlg_monomial k hk] using himage
+  simpa only [MvPolynomial.coe_basisMonomials, symbolAlg_monomial k hk,
+    PureCurrentC2Independent] using himage
 
 /-- Exact reformulation of universal-symbol injectivity as depth-zero PBW independence modulo
 `O₂`. -/
@@ -578,7 +582,7 @@ private theorem basis_eq_lexWordState_exponentWord
   change AffineLie.negWord kappaForm kappaForm_isInvariant k
       ((exponentWord mu).map (fun q => (basis (ofLex q).1, (ofLex q).2))) =
     wordStateA k ((exponentWord mu).map currentLetter)
-  simpa only [currentLetter, List.map_map, Function.comp_apply] using
+  simpa only [currentLetter, List.map_map, Function.comp_def] using
     negWord_map_basis_eq_wordStateA k ((exponentWord mu).map currentLetter)
 
 /-- A sorted positive-depth current word is one of the positive-depth PBW basis vectors. -/
@@ -615,7 +619,7 @@ private theorem inversionCount_swap (pre post : List PBWLetter) (a b : PBWLetter
   | cons q pre ih =>
       simp only [List.cons_append, inversionCount, List.filter_append, List.length_append,
         List.filter_cons]
-      split_ifs <;> simp only [List.length_cons] at ih ⊢ <;> omega
+      split_ifs <;> (try simp only [List.length_cons] at ih ⊢) <;> omega
 
 /-- A non-sorted list in a linear order contains an adjacent inverted pair. -/
 private theorem exists_adjacent_inversion_of_not_pairwise :
@@ -742,7 +746,7 @@ private theorem orderedCreationState_eq_lexWordState (mu : PBWLetter →₀ ℕ)
   change AffineLie.negWord kappaForm kappaForm_isInvariant k
       ((exponentWord mu).map (fun q => (basis (ofLex q).1, (ofLex q).2))) =
     wordStateA k ((exponentWord mu).map currentLetter)
-  simpa only [currentLetter, List.map_map, Function.comp_apply] using
+  simpa only [currentLetter, List.map_map, Function.comp_def] using
     negWord_map_basis_eq_wordStateA k ((exponentWord mu).map currentLetter)
 
 /-- Every basis-coloured negative-current word is in the span of ordered creation states. -/
@@ -792,8 +796,7 @@ theorem orderedCreationState_span_eq_top :
     have hfun : (currentLetter ∘ fun q : Fin 3 × ℕ => toLex q) = id := by
       funext q
       exact currentLetter_toLex q
-    simpa only [List.map_map, List.map_id_fun] using
-      congrArg (fun f : (Fin 3 × ℕ) → (Fin 3 × ℕ) => l.map f) hfun
+    rw [hfun, List.map_id]
   rwa [lexWordState, hl] at h
 
 /-- In the concrete affine `sl₂` vacuum module, the named ordinary `PBWBasis` package is
@@ -805,7 +808,7 @@ theorem pbwBasis_iff_orderedCreationState_linearIndependent :
       LinearIndependent ℂ (orderedCreationState k) := by
   constructor
   · intro hPBW
-    simpa only [orderedCreationState] using PBWBasis.linearIndependent hPBW
+    exact PBWBasis.linearIndependent hPBW
   · intro hli
     let B : Module.Basis (PBWLetter →₀ ℕ) ℂ (WakModule k) :=
       Module.Basis.mk hli (orderedCreationState_span_eq_top k).ge
@@ -824,16 +827,15 @@ theorem positiveDepthPBWSpanning_of_basis
   rw [PositiveDepthPBWSpanning, currentWordPiece, Submodule.span_le]
   rintro _ ⟨w, hw, rfl⟩
   have hlevel : 0 < lexWordLevel (w.map toLex) := by
-    simpa only [lexWordLevel, List.map_map, Function.comp_apply, ofLex_toLex,
-      currentWordLevel, pairsLevel] using hw
+    simpa only [lexWordLevel, List.map_map, Function.comp_def, ofLex_toLex,
+      currentWordLevel, pairsLevel, Nat.lt_iff_add_one_le, zero_add] using hw
   have h := lexWordState_mem_positiveSpan_of_level k B hB (w.map toLex) hlevel
   have hwmap : (w.map toLex).map currentLetter = w := by
     rw [List.map_map]
     have hfun : (currentLetter ∘ fun q : Fin 3 × ℕ => toLex q) = id := by
       funext q
       exact currentLetter_toLex q
-    simpa only [List.map_map, List.map_id_fun] using
-      congrArg (fun f : (Fin 3 × ℕ) → (Fin 3 × ℕ) => w.map f) hfun
+    rw [hfun, List.map_id]
   rwa [lexWordState, hwmap] at h
 
 /-- Ordinary affine PBW is automatically compatible with the positive-depth Li filtration. -/
@@ -922,7 +924,7 @@ theorem currentWordPiece_eq_orderedDepthSpan (p : ℕ) :
   · rw [currentWordPiece, Submodule.span_le]
     rintro _ ⟨w,hw,rfl⟩
     have hlevel : p ≤ lexWordLevel (w.map toLex) := by
-      simpa only [lexWordLevel,List.map_map,Function.comp_apply,ofLex_toLex,
+      simpa only [lexWordLevel,List.map_map,Function.comp_def,ofLex_toLex,
         currentWordLevel,pairsLevel] using hw
     have h := lexWordState_mem_depthSpan k p (w.map toLex) hlevel
     have hwmap : (w.map toLex).map currentLetter = w := by
@@ -937,7 +939,7 @@ theorem currentWordPiece_eq_orderedDepthSpan (p : ℕ) :
     rw [orderedCreationState_eq_lexWordState,lexWordState]
     apply wordStateA_mem_currentWordPiece
     simpa only [orderedCreationDepth,lexWordLevel,currentWordLevel,pairsLevel,
-      List.map_map,Function.comp_apply,currentLetter] using hmu
+      List.map_map,Function.comp_def,currentLetter,Set.mem_setOf_eq] using hmu
 
 /-- All-depth Li filtration equality for the universal affine sl2 VOA. -/
 theorem liFiltration_eq_orderedDepthSpan (p : ℕ) :

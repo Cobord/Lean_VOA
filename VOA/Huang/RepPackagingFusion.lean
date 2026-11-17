@@ -21,7 +21,7 @@ theorem simple_of_image (X : C) [Simple (E.functor.obj X)] : Simple X := by
   rw [← isIso_iff_of_reflects_iso f E.functor, Simple.mono_isIso_iff_nonzero]
   apply not_congr
   constructor
-  · intro h; apply E.functor.map_injective; simpa using h
+  · intro h; apply E.functor.map_injective; simpa using! h
   · intro h; simp [h]
 
 variable (hW : StronglyRational W) (hΦ : Finite (Φ W))
@@ -52,7 +52,8 @@ def fusionOfEquivalence (unit : E.functor.obj (𝟙_ C) ≅ vacuumObject (W := W
   isSimple := modelSimple_isSimple E D hD
   unitLabel := D.vac
   unitIso := E.functor.preimageIso
-    (modelSimpleIso E D D.vac ≪≫ Ordinary.isoOfModuleEquiv hD.vac_iso.some ≪≫ unit.symm)
+    (modelSimpleIso E D D.vac ≪≫
+      Ordinary.isoOfModuleEquiv (Y := vacuumObject (W := W)) hD.vac_iso.some ≪≫ unit.symm)
   inequivalent a b e := module_injective D hD a b
     (e.map fun e => (modelSimpleIso E D a).symm ≪≫ E.functor.mapIso e ≪≫ modelSimpleIso E D b)
   semisimple X := by

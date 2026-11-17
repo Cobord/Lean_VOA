@@ -75,7 +75,7 @@ theorem entriesIn_one (K : Subalgebra ℚ ℂ) : EntriesIn K (1 : (I → ℂ) �
 theorem entriesIn_pow {K : Subalgebra ℚ ℂ} {L : (I → ℂ) ≃ₗ[ℂ] (I → ℂ)}
     (h : EntriesIn K L) (n : ℕ) : EntriesIn K (L ^ n) := by
   induction n with
-  | zero => simpa using entriesIn_one K
+  | zero => simpa using! entriesIn_one K
   | succ n ih => rw [pow_succ]; exact entriesIn_mul ih h
 
 end Entries
@@ -122,11 +122,11 @@ theorem mixedRepresentation_entriesIn (F : SphericalFusion C) (M : Modular F)
     simp [SpecialLinearGroup.SL2Z_generators]
   induction hg using Subgroup.closure_induction'' with
   | mem x hx =>
-    rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using hx) with rfl | rfl
+    rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using! hx) with rfl | rfl
     · exact hS
     · exact hT
   | inv_mem x hx =>
-    rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using hx) with rfl | rfl
+    rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using! hx) with rfl | rfl
     · have he : mixedRepresentation ρ ModularGroup.S⁻¹ =
           mixedRepresentation ρ ModularGroup.S ^ 3 := by
         rw [map_inv, inv_eq_of_mul_eq_one_right]

@@ -30,7 +30,7 @@ theorem one_mem_Z0 : (1 : FockN (rank (latP 1))) ∈ gradingZN (rank (latP 1)) 0
 theorem xo_mem_Z1 : xo 0 ∈ gradingZN (rank (latP 1)) 1 := by
   rw [gradingZN_of_nonneg (by norm_num)]
   have := isWeightedHomogeneous_X ℂ (weightFnN (r := rank (latP 1))) ((0 : ℕ), a0 1)
-  simpa using this
+  simpa using! this
 
 theorem ne_zero_of_one (n : ℤ) : latStateGen (latP 1) (1 : FockN (rank (latP 1))) n ≠ 0 :=
   Screen.latStateGen_ne_zero (latP 1) one_ne_zero n
@@ -46,7 +46,7 @@ theorem Fm_Sd_zero {n d : ℤ} {x : Sp} (hx : x ∈ Sd n d) (h : d + 2 * n < 0) 
 theorem Fm_pow_Sd {n d : ℤ} {x : Sp} (hx : x ∈ Sd n d) (k : ℕ) :
     (Fm ^ k) x ∈ Sd (n - k) (d + k * (2 * n - k + 1)) := by
   induction k with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply]
     have := Fm_Sd ih
@@ -174,8 +174,8 @@ theorem lift_GC_Sd (u : ℂˣ) {n d : ℤ} {x : Sp} (hx : x ∈ Sd n d) :
   obtain ⟨p, hp, rfl⟩ := hx
   exact lift_GC u p n
 
-theorem qv_Sd0 : qv 0 ∈ Sd 1 0 := by simpa using qv_Sd 0
-theorem qv_Sd1 : qv 1 ∈ Sd 0 2 := by simpa using qv_Sd 1
+theorem qv_Sd0 : qv 0 ∈ Sd 1 0 := by simpa using! qv_Sd 0
+theorem qv_Sd1 : qv 1 ∈ Sd 0 2 := by simpa using! qv_Sd 1
 theorem qv_Sd2 : qv 2 ∈ Sd (-1) 2 := by
   have := qv_Sd 2; norm_num at this; exact this
 theorem qv_Sd3 : qv 3 ∈ Sd (-2) 0 := by

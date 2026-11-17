@@ -81,12 +81,26 @@ theorem pairOne_xy_transfer_higher
           higherOrbit ρ w m (pairOneTargetKey xs zs r) := by
   have hh := pairOne_transfer_higher ρ w m h xs zs r
   rw [pairOne_tail_derivative ρ w r zs] at hh
-  have hneg (l : List (Fin 28 × ℕ)) (v : V) :
-      wordOp ρ l (-v) = -wordOp ρ l v := by
-    simpa using wordOp_smul ρ l (-1 : ℂ) v
-  rw [hneg] at hh
-  convert (higherOrbit ρ w m (pairOneTargetKey xs zs r)).neg_mem hh using 1
-  abel
+  have hneg :
+      wordOp ρ ((pairOneXWords xs).map fun p => (radicalColour p.1, p.2))
+          (-yOp ρ r (radicalWord ρ w (zs.map fun s => (5, s)))) =
+        -wordOp ρ ((pairOneXWords xs).map fun p => (radicalColour p.1, p.2))
+          (yOp ρ r (radicalWord ρ w (zs.map fun s => (5, s)))) := by
+    simpa using! wordOp_smul ρ ((pairOneXWords xs).map fun p => (radicalColour p.1, p.2))
+      (-1 : ℂ) (yOp ρ r (radicalWord ρ w (zs.map fun s => (5, s))))
+  have key :
+      wordOp ρ ((pairOneXWords xs).map fun p => (radicalColour p.1, p.2))
+          (yOp ρ r (radicalWord ρ w (zs.map fun s => (5, s)))) -
+        fThreeDerivative ρ r (pairOneXWords xs)
+          (radicalWord ρ w (pairOneUTail zs)) =
+      -(fThreeDerivative ρ r (pairOneXWords xs)
+          (radicalWord ρ w (pairOneUTail zs)) +
+        wordOp ρ ((pairOneXWords xs).map fun p => (radicalColour p.1, p.2))
+          (-yOp ρ r (radicalWord ρ w (zs.map fun s => (5, s))))) := by
+    rw [hneg]
+    abel
+  rw [key]
+  exact (higherOrbit ρ w m (pairOneTargetKey xs zs r)).neg_mem hh
 
 end VOA.DeligneAudit.D4Levi
 

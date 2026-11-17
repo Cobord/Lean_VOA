@@ -108,7 +108,7 @@ theorem demazureRealization_zero : DemazureRealization 0 := by
         rw [eq_top_iff]
         intro x _
         have := Submodule.smul_mem _ x hmem
-        simpa using this
+        simpa using! this
       rw [htop, finrank_top, Module.finrank_self]
     · exact Nat.zero_le _
 

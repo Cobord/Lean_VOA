@@ -99,7 +99,7 @@ theorem L1_oppB (v : V) (n : ℤ) (x : M) :
     subst hv0; simp
   obtain ⟨w, rfl⟩ : ∃ w : ℕ, wt = w := ⟨wt.toNat, (Int.toNat_of_nonneg hw).symm⟩
   rw [oppB_homog N hv, oppB_homog N hv]
-  simp only [Int.toNat_natCast, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+  simp only [Int.toNat_natCast, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply,
     map_smul, map_sum]
   set T : ℕ → M := fun j =>
     mode (N.YM ((W.L 1 ^ j) v)) (2 * (w : ℤ) - (n - 1) - 2 - (j : ℤ)) x with hT
@@ -252,8 +252,7 @@ theorem L1m_pow_mem {α : ℂ} {x : M} (hx : x ∈ N.weight α) (J : ℕ) :
   | succ J ih =>
     rw [pow_succ', Module.End.mul_apply, L1m]
     have h := mode_mem_weight N W.conformalVector_mem_grading_two ih 2
-    convert h using 2
-    push_cast; ring
+    convert h using 2 <;> first | rfl | (push_cast; ring)
 
 /-- `L(1)` is locally nilpotent on an ordinary module. -/
 theorem L1m_locNil : LocNil (L1m N) := by

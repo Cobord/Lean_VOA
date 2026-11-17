@@ -47,7 +47,7 @@ def aAction : TranslatedAffineSl2Action (ASVA L) L.kAct where
   current_weight := (simpleAction L.kA L.aNoncritical).current_weight
   current_even := (simpleAction L.kA L.aNoncritical).current_even
   current_comm a b m n := by
-    simpa only [L.kAct_eq] using (simpleAction L.kA L.aNoncritical).current_comm a b m n
+    simpa only [L.kAct_eq] using! (simpleAction L.kA L.aNoncritical).current_comm a b m n
   translation := (simpleAction L.kA L.aNoncritical).translation
 
 def uAction : TranslatedAffineSl2Action (USVA L) L.kU :=
@@ -128,7 +128,7 @@ def matterAction : TranslatedAffineSl2Action (matterSVA L) (-4) where
     (aParityCompatible L) bParityCompatible (uParityCompatible L) (abTensorGrading L)
     (abuTensorGrading L)).current_even
   current_comm a b m n := by
-    simpa only [L.sum] using
+    simpa only [L.sum] using!
       (tensorThreeTranslatedAffineAction (aAction L) bAction (uAction L)
         (aParityCompatible L) bParityCompatible (uParityCompatible L) (abTensorGrading L)
         (abuTensorGrading L)).current_comm a b m n

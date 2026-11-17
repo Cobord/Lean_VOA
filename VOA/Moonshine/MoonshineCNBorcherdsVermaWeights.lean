@@ -13,6 +13,10 @@ noncomputable section
 open scoped TensorProduct
 open Module
 namespace VOA.Moonshine.ConwayNorton
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace BorcherdsData
 
 variable {g W : Type*} [LieRing g] [LieAlgebra ℂ g] [AddCommGroup W] [Module ℂ W]

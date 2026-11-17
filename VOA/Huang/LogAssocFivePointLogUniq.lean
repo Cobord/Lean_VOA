@@ -46,11 +46,11 @@ theorem loggps_coeff_zero_core (S : Finset ℂ) (c₀ : ℂ) (A : ℂ → Polyno
         dsimp only [p]
         split_ifs
         · exact hbM _ k
-        · simpa using hM k
+        · simpa using! hM k
       calc
         ‖(p j n).coeff k‖≤M k := hb
         _ ≤M k*r^n := by
-          simpa only [mul_one] using mul_le_mul_of_nonneg_left (one_le_pow₀ hr.le) (hM k)
+          simpa only [mul_one] using! mul_le_mul_of_nonneg_left (one_le_pow₀ hr.le) (hM k)
   have hz' : ∀ t : ℝ,-1<t → t<0 → ∑ j,logFun (lam j) (p j) t=0 := by
     intro t ht ht0
     let r : ℝ := Real.exp t

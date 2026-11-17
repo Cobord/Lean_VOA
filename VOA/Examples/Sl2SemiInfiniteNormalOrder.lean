@@ -13,6 +13,8 @@ using super locality, translation covariance and creation. This supplies a mode-
 expansion without assuming any BRST identity.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2SemiInfinite.TranslationCovariant
 open Module (End)
 open scoped BigOperators

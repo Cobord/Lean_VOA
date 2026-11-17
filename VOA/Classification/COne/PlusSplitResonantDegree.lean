@@ -31,11 +31,11 @@ theorem homogeneousDegreeSpan_gen (A : WeakModule W M) {x : M} {k : ℂ}
   subst d
   change homogeneousWord A l x ∈ (L0 A).maxGenEigenspace (k + (homogeneousDegree l : ℂ))
   induction l with
-  | nil => simpa [homogeneousWord, homogeneousDegree] using hx
+  | nil => simpa [homogeneousWord, homogeneousDegree] using! hx
   | cons a l ih =>
     have h := mode_mem_maxGenEigenspace A a.homogeneous a.modeIndex ih
     simpa only [homogeneousWord, LinearMap.comp_apply, homogeneousDegree, Int.cast_add,
-      add_assoc, add_comm, add_left_comm] using h
+      add_assoc, add_comm, add_left_comm] using! h
 
 theorem cyclic_eq_iSup_homogeneousDegreeSpan (hC2 : C2Cofinite W)
     (A : WeakModule W M) (x : M) :
@@ -57,7 +57,7 @@ theorem cyclic_inf_gen_eq_degreeSpan (hC2 : C2Cofinite W) (A : WeakModule W M)
     have h := spectralPart_disjoint A
       (s := {k + (d : ℂ)}) (t := {μ | μ ≠ k + (d : ℂ)})
       (Set.disjoint_left.mpr (by intro μ hμ hn; exact hn (Set.mem_singleton_iff.mp hμ)))
-    simpa [spectralPart, other] using h
+    simpa [spectralPart, other] using! h
   have hs : (cyclic A x).restrictScalars ℂ ≤ homogeneousDegreeSpan A x d ⊔ other := by
     rw [cyclic_eq_iSup_homogeneousDegreeSpan hC2 A x]
     apply iSup_le
@@ -79,7 +79,7 @@ theorem cyclic_inf_gen_eq_degreeSpan (hC2 : C2Cofinite W) (A : WeakModule W M)
       rw [he]
       exact Submodule.sub_mem _ hy.2 (homogeneousDegreeSpan_gen A hx d ha)
     have hb0 := Submodule.disjoint_def.mp hd b hbgen hb
-    simpa [← hab, hb0] using ha
+    simpa [← hab, hb0] using! ha
   · exact le_inf (homogeneousDegreeSpan_le_cyclic A x d) (homogeneousDegreeSpan_gen A hx d)
 
 /-- The full mode-algebra avoidance test is precisely one degree-span test. -/

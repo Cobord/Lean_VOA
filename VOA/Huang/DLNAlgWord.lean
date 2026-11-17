@@ -33,7 +33,7 @@ theorem diagonalWord_reduction {N : ℕ} {a b : ℤ} (hab : a * b ≡ 1 [ZMOD N]
     (reduction N (diagonalWord a b) : Matrix (Fin 2) (Fin 2) (ZMod N)) =
       !![(a : ZMod N), 0; 0, (b : ZMod N)] := by
   have h : (a : ZMod N) * (b : ZMod N) = 1 := by
-    simpa using (ZMod.intCast_eq_intCast_iff (a * b) 1 N).mpr hab
+    simpa using! (ZMod.intCast_eq_intCast_iff (a * b) 1 N).mpr hab
   change ((diagonalWord a b : Matrix (Fin 2) (Fin 2) ℤ).map
     (Int.castRingHom (ZMod N))) = _
   rw [coe_diagonalWord]
@@ -61,8 +61,8 @@ theorem hasDiagonalReduction_of_modEq {N : ℕ} {a b : ℤ} {γ : SL2Z}
   ext i j
   fin_cases i <;> fin_cases j
   · exact (ZMod.intCast_eq_intCast_iff _ _ N).mpr h00
-  · simpa using (ZMod.intCast_eq_intCast_iff _ _ N).mpr h01
-  · simpa using (ZMod.intCast_eq_intCast_iff _ _ N).mpr h10
+  · simpa using! (ZMod.intCast_eq_intCast_iff _ _ N).mpr h01
+  · simpa using! (ZMod.intCast_eq_intCast_iff _ _ N).mpr h10
   · exact (ZMod.intCast_eq_intCast_iff _ _ N).mpr h11
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -102,9 +102,9 @@ theorem allLiftsGaloisLaw_iff (ρ : SL2Z →* Matrix ι ι ℂ) (S : Matrix ι �
         change reduction N γ = 1 at he
         simp [HasDiagonalReduction, he, Matrix.one_fin_two]
       have hh := h 1 1 (by simp) γ hr
-      have he : S = ρ γ * S := by simpa [hσ] using hh
+      have he : S = ρ γ * S := by simpa [hσ] using! hh
       apply hS.mul_right_cancel
-      simpa using he.symm
+      simpa using! he.symm
     · intro a b hab
       exact h a b hab _ (diagonalWord_reduction hab)
   · rintro ⟨hk, hw⟩ a b hab γ hγ

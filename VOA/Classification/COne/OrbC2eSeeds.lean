@@ -24,8 +24,9 @@ theorem coord_charge_product (m : ℕ) (hm : 1 ≤ m)
         (if 0 ≤ -n-1-(latP m).form β γ then
           schurR (-n-1-(latP m).form β γ).toNat else []) else 0) := by
   classical
-  rw [V2m_charge_smul_charge, map_smul, latStateGen, coordEα_apply]
-  congr 2
+  rw [V2m_charge_smul_charge m hm β γ n, map_smul, latStateGen]
+  refine congrArg _ ((coordEα_apply (latP m) δ (β + γ) _).trans ?_)
+  congr 1
 
 def weightSixteen : VP 4 four_ge_one :=
   (V2mPlus 4 four_ge_one).smul (J 4 four_ge_one) (-9) (J 4 four_ge_one) +
@@ -40,15 +41,17 @@ theorem coord_weightSixteen :
       ((V2mPlus 4 four_ge_one).smul (J 4 four_ge_one) (-9) (J 4 four_ge_one) :
         LatModuleGen (latP 4)) = 0 := by
     rw [hasN_smul_left 4 four_ge_one (hasN_J 4 four_ge_one) (hasN_J 4 four_ge_one),
-      ls, latStateGen, coordEα_apply]
-    exact if_neg (by change ¬(2 : ℤ) = 0; omega)
+      ls, latStateGen]
+    exact (coordEα_apply (latP 4) _ _ _).trans (if_neg (by change ¬(2 : ℤ) = 0; omega))
   have hEE : coordEα (latP 4) ((2 : ℤ) : (latP 4).carrier)
       ((V2mPlus 4 four_ge_one).smul (EP 4 four_ge_one) (-9) (EP 4 four_ge_one) :
         LatModuleGen (latP 4)) = 1 := by
     rw [V2mPlus_smul_coe, EP_coe, PreVertexAlgebra.smul_add_left,
       PreVertexAlgebra.smul_add_right, PreVertexAlgebra.smul_add_right, map_add, map_add, map_add]
     rw [coord_charge_product, coord_charge_product, coord_charge_product, coord_charge_product]
-    norm_num [latP_form, PlusCharacterTable.rankOne_cocycle, schurR,
+    have h1 : ∀ a b : ℤ, (latP 4).latticeCocycle a b = 1 :=
+      PlusCharacterTable.rankOne_cocycle 4
+    norm_num [latP_form, h1, schurR,
       evRc_cons, evRc_nil, evalWordC_nil]
   change coordEα (latP 4) (2 : ℤ) (_ + (27 : ℂ) • _) = _
   rw [map_add, map_smul, hJJ, hEE, zero_add]

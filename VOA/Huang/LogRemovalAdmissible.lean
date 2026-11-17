@@ -315,7 +315,6 @@ theorem coefFun_log_eq_zero (n : ℂ) {K : ℕ}
         rfl
       have h1 := sub_L0_eq_zero_of_sq A.toWeakModule hcompl n h2
       have h1' := congrArg (fun G : M => (G : HomPair P₁ P₂ → ℂ)) h1
-      simp only at h1'
       rw [hsub k'] at h1'
       have hne : ((k' : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero k'
       exact (smul_eq_zero.mp h1').resolve_left hne

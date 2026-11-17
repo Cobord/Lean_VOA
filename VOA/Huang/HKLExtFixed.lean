@@ -55,8 +55,8 @@ variable (F : FusionChoice V) {A : Ordinary V} (m : tensorObj F A A ⟶ A) (η :
 /-- An algebra endomorphism commutes with `Y_W`: `φ(a_k b) = (φ a)_k (φ b)`. -/
 theorem ext_map_hom (φ : A ⟶ A) (hm : tensorHom F φ φ ≫ m = m ≫ φ) (n : ℂ) (a b : A.carrier) :
     φ.val ((extIntertwiner F m).val n a b) = (extIntertwiner F m).val n (φ.val a) (φ.val b) := by
-  rw [extIntertwiner_val, extIntertwiner_val, ← tensorHom_intertwiner F φ φ n a b,
-    ← Ordinary.comp_apply, ← Ordinary.comp_apply, hm]
+  rw [extIntertwiner_val, extIntertwiner_val, ← tensorHom_intertwiner F φ φ n a b]
+  exact (congrArg (fun g : tensorObj F A A ⟶ A => g.val ((F A A).intertwiner.val n a b)) hm).symm
 
 variable {F m η}
 variable {hl : tensorHom F η (𝟙 A) ≫ m = (leftUnitor F A).hom}
@@ -85,10 +85,10 @@ def extAut (φ : A ≅ A) (hm : tensorHom F φ.hom φ.hom ≫ m = m ≫ φ.hom) 
     exact ext_map_hom F m φ.hom hm (n : ℂ) u v
   map_vacuum := by
     change φ.hom.val (η.val V.vacuum) = η.val V.vacuum
-    rw [← Ordinary.comp_apply, hη]
+    exact congrArg (fun g : vacuumObject ⟶ A => g.val V.vacuum) hη
   map_omega := by
     change φ.hom.val (η.val V.conformalVector) = η.val V.conformalVector
-    rw [← Ordinary.comp_apply, hη]
+    exact congrArg (fun g : vacuumObject ⟶ A => g.val V.conformalVector) hη
 
 @[simp] theorem extAut_apply (φ : A ≅ A) (hm hη) (x : A.carrier) :
     extAut hl hr htw hloc hvac hpos φ hm hη x = φ.hom.val x := rfl
@@ -116,11 +116,12 @@ def extAutHom (ρ : G →* CategoryTheory.Aut A)
 /-- The kernel of a module map out of the adjoint module is an ideal. -/
 theorem ker_isIdeal (η : vacuumObject ⟶ A) : V.IsIdeal (LinearMap.ker η.val) := by
   intro u v n hv
-  rw [LinearMap.mem_ker] at hv ⊢
+  have hv' : η.val v = 0 := LinearMap.mem_ker.mp hv
+  refine LinearMap.mem_ker.mpr ?_
   have h := η.property u n v
   change η.val (mode (V.Y u) n v) = mode (A.isMod.YM u) n (η.val v) at h
   rw [PreVertexAlgebra.smul_def]
-  exact h.trans (by erw [hv]; exact map_zero _)
+  exact h.trans (by erw [hv']; exact map_zero _)
 
 /-- **The unit of a haploid algebra is injective** (simplicity of `V`). -/
 theorem eta_injective (hV : Nice V) (hl : tensorHom F η (𝟙 A) ≫ m = (leftUnitor F A).hom)
@@ -156,7 +157,7 @@ theorem voaIsomorphic_orbifold (hV : Nice V) (hhap : finrank ℂ (vacuumObject �
   have hfix : ∀ v : 𝒱, η.val v ∈ (orbifold Γ).carrier := by
     rintro v _ ⟨g, rfl⟩
     change (ρ g).hom.val (η.val v) = η.val v
-    rw [← Ordinary.comp_apply, hη]
+    exact congrArg (fun f : vacuumObject ⟶ A => f.val v) (hη g)
   let e₀ : 𝒱 →ₗ[ℂ] (orbifold Γ).carrier := LinearMap.codRestrict _ η.val hfix
   have hinj : Function.Injective e₀ := fun x y hxy =>
     eta_injective hV hl hhap (congrArg Subtype.val hxy)

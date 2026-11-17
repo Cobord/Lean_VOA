@@ -57,7 +57,7 @@ theorem twoStepSplitting_of_resonantWholeSplitting (hC2 : C2Cofinite W)
   by_cases hcos : SameCoset h k
   · obtain ⟨z, hz⟩ := hcos
     by_cases hz0 : z = 0
-    · have hkh : k = h := by simpa [hz0] using hz
+    · have hkh : k = h := by simpa [hz0] using! hz
       rw [hkh] at hk
       exact relativeComplement_of_semisimpleZhu_equalBottom hC2 hss A hab hbc h hh hk
     · exact relativeComplement_of_whole_factorBottoms hC2 A hab hbc h k hh hk
@@ -93,7 +93,7 @@ theorem wholeSplitting_of_admissiblyRational (hC2 : C2Cofinite W) (hR : Admissib
       intro x hx
       exact he ⟨hp hx, hx⟩
     · refine min_le_of_right_le (ht.2 a ?_)
-      simpa only [FactorWeight, Submodule.restrictScalars_top, top_inf_eq] using hp
+      simpa only [FactorWeight, Submodule.restrictScalars_top, top_inf_eq] using! hp
   obtain ⟨μ, hμ⟩ : ∃ μ : ℂ, μ.re = min h.re k.re := by
     rcases le_total h.re k.re with hle | hle
     · exact ⟨h, (min_eq_left hle).symm⟩

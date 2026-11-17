@@ -33,14 +33,14 @@ variable (Q : CurrentModule VOA.AffineSl3.bracketTable W)
 theorem leviLast_middle_comm (r s : ℕ) (X : W) :
     Q.op 4 r (Q.op 3 s X) = Q.op 3 s (Q.op 4 r X) + Q.op 5 (r + s) X := by
   have h : Q.op 4 r (Q.op 3 s X) - Q.op 3 s (Q.op 4 r X) = Q.op 5 (r + s) X := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 4 3 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 4 3 r s X
   exact sub_eq_iff_eq_add'.mp h
 
 /-- `[q(r), g(s)] = 0` in the rank-two Levi. -/
 theorem leviCompound_middle_comm (r s : ℕ) (X : W) :
     Q.op 5 r (Q.op 3 s X) = Q.op 3 s (Q.op 5 r X) := by
   have h : Q.op 5 r (Q.op 3 s X) - Q.op 3 s (Q.op 5 r X) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 5 3 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 5 3 r s X
   exact sub_eq_zero.mp h
 
 /-- `q(r)` commutes with every power of `g(0)`. -/
@@ -57,7 +57,7 @@ theorem leviLast_middlePower_comm (r m : ℕ) (X : W) :
   induction m with
   | zero =>
     simpa only [zero_add, pow_one, pow_zero, Nat.cast_one, one_smul, Module.End.one_apply,
-      add_zero] using leviLast_middle_comm Q r 0 X
+      add_zero] using! leviLast_middle_comm Q r 0 X
   | succ m ih =>
     have hg : ∀ k (v : W), Q.op 3 0 ((Q.op 3 0 ^ k) v) = (Q.op 3 0 ^ (k + 1)) v := by
       intro k v
@@ -126,7 +126,7 @@ theorem adjointSite_highModeCompound_mem_higherSecondLevi (B h : ℕ)
     apply Submodule.mem_iSup_of_mem φ
     have hw := A3Sector.a2CountSpan_first_word Q (β φ) (List.replicate (E + 1) 0) 0 0
       (A3Sector.a2CountSpan_zero Q (β φ))
-    simpa [List.map_replicate, List.prod_replicate] using hw
+    simpa [List.map_replicate, List.prod_replicate] using! hw
   have hmem : (Q.op 3 0 ^ (E + 1)) (β φ) ∈ ⨆ u : ℕ, ⨆ v : ℕ,
       ⨆ (_ : u + v = E + 1 ∧ E < u), secondLeviCountLayer Q β u v :=
     Submodule.mem_iSup_of_mem (E + 1) (Submodule.mem_iSup_of_mem 0

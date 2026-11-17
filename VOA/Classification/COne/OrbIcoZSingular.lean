@@ -175,13 +175,13 @@ theorem s13_zero : evV Wi Xico s13v = 0 := by
     rw [Wi.L_zero_grading _ Xico_grading]; norm_num
   have hc : Wi.centralCharge = ((1 : ℚ) : ℂ) := by
     change (V2m 1 le_rfl).centralCharge = _
-    simpa using V2m_centralCharge 1 le_rfl
+    simpa using! V2m_centralCharge 1 le_rfl
   have hp : evV Wi Xico s13v ∈ prim Wi (36 + (13 : ℕ)) := by
     rw [mem_prim]
     refine ⟨evV_mem_grading Xico_grading (fun p hp => (s13v_spec p hp).1), fun m => ?_⟩
     have h := L_pos_of_L1_L2 (s13chk_sound hc hx hx0 s13chk_one)
       (s13chk_sound hc hx hx0 s13chk_two) (m + 1) (by omega)
-    simpa using h
+    simpa using! h
   have hl := evV_mem_lowerDesc Xico_grading (N := 13) (v := s13v) s13v_spec
   have hz := prim_inf_lowerDesc (W := Wi)
     ((v2VirUnitary_holds.some).restrict (orbifold ico)) (36 + (13 : ℕ))

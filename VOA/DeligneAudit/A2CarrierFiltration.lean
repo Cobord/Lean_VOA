@@ -95,7 +95,7 @@ structure CasimirLayerBound : Prop where
 theorem sum_pd_eq_sum_antidiagonal (N : ℕ) (h : ℕ → ℕ → ℕ) :
     (∑ p ∈ Finset.range (N + 1), ∑ d ∈ Finset.range (N / 2 + 1),
         if p + 2 * d ≤ N then h (N - p - 2 * d) d else 0) =
-      ∑ n ∈ Finset.range (N + 1), ∑ x ∈ Finset.antidiagonal n,
+      ∑ n ∈ Finset.range (N + 1), ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n,
         if x.1 + 2 * x.2 ≤ N then h x.1 x.2 else 0 := by
   rw [← Finset.sum_product', Finset.sum_sigma', ← Finset.sum_filter, ← Finset.sum_filter]
   refine Finset.sum_bij' (fun x _ => (⟨N - x.1 - x.2, (N - x.1 - 2 * x.2, x.2)⟩ :
@@ -104,11 +104,11 @@ theorem sum_pd_eq_sum_antidiagonal (N : ℕ) (h : ℕ → ℕ → ℕ) :
   · rintro ⟨p, d⟩ hx
     simp only [Finset.mem_filter, Finset.mem_product, Finset.mem_range] at hx
     simp only [Finset.mem_filter, Finset.mem_sigma, Finset.mem_range,
-      Finset.mem_antidiagonal]
+      Finset.HasAntidiagonal.mem_antidiagonal]
     omega
   · rintro ⟨n, m, d⟩ hy
     simp only [Finset.mem_filter, Finset.mem_sigma, Finset.mem_range,
-      Finset.mem_antidiagonal] at hy
+      Finset.HasAntidiagonal.mem_antidiagonal] at hy
     simp only [Finset.mem_filter, Finset.mem_product, Finset.mem_range]
     omega
   · rintro ⟨p, d⟩ hx
@@ -119,7 +119,7 @@ theorem sum_pd_eq_sum_antidiagonal (N : ℕ) (h : ℕ → ℕ → ℕ) :
     omega
   · rintro ⟨n, m, d⟩ hy
     simp only [Finset.mem_filter, Finset.mem_sigma, Finset.mem_range,
-      Finset.mem_antidiagonal] at hy
+      Finset.HasAntidiagonal.mem_antidiagonal] at hy
     have h1 : N - (N - m - 2 * d) - d = n := by omega
     have h2 : N - (N - m - 2 * d) - 2 * d = m := by omega
     simp only [h1, h2]
@@ -129,7 +129,7 @@ theorem sum_pd_eq_sum_antidiagonal (N : ℕ) (h : ℕ → ℕ → ℕ) :
 /-- **B1 from the layer bound.** -/
 theorem casimirAuxiliaryBound_of_layerBound (hL : CasimirLayerBound) : CasimirAuxiliaryBound := by
   refine ⟨fun N => ?_⟩
-  have hsec : ∀ n ∈ Finset.range (N + 1), ∀ x ∈ Finset.antidiagonal n,
+  have hsec : ∀ n ∈ Finset.range (N + 1), ∀ x ∈ Finset.HasAntidiagonal.antidiagonal n,
       sectorDim N x.1 x.2 =
         if x.1 + 2 * x.2 ≤ N then (fun m d => auxDim m d (N - m - 2 * d)) x.1 x.2 else 0 :=
     fun _ _ _ _ => rfl

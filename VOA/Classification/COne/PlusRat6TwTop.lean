@@ -77,7 +77,7 @@ theorem lvl_term (s : (ℕ × Fin (rank (latP m))) →₀ ℕ) (v : ℕ × Fin (
   · have hmem : v ∈ s.support := Finsupp.mem_support_iff.mpr hv
     have := Finset.single_le_sum (f := fun i => s i • wT i) (fun _ _ => Nat.zero_le _) hmem
     rw [lvl, Finsupp.weight_apply, Finsupp.sum]
-    simpa only [smul_eq_mul, wT_apply] using this
+    simpa only [smul_eq_mul, wT_apply] using! this
 
 theorem lvl_eq_zero {s : (ℕ × Fin (rank (latP m))) →₀ ℕ} (h : lvl m s = 0) : s = 0 := by
   ext v

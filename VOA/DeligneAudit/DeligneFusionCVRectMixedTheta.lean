@@ -43,7 +43,7 @@ private theorem add_comm_kill_power (D Y Z : Module.End ℂ V) (v : V)
     (hZ : ∀ d : ℕ, Z ((Y ^ d) v) = 0) : ∀ d : ℕ, D ((Y ^ d) v) = 0 := by
   intro d
   induction d with
-  | zero => simpa only [pow_zero, Module.End.one_apply] using hD
+  | zero => simpa only [pow_zero, Module.End.one_apply] using! hD
   | succ d ih =>
       rw [pow_succ', Module.End.mul_apply, ← Module.End.mul_apply D Y, hDY,
         LinearMap.add_apply, Module.End.mul_apply, ih, map_zero, hZ d, add_zero]
@@ -53,7 +53,7 @@ private theorem weight_power (H Y : Module.End ℂ V) (v : V) (μ γ : ℂ)
     ∀ d : ℕ, H ((Y ^ d) v) = (μ + d * γ) • (Y ^ d) v := by
   intro d
   induction d with
-  | zero => simpa using hH
+  | zero => simpa using! hH
   | succ d ih =>
       rw [pow_succ', Module.End.mul_apply, ← Module.End.mul_apply H Y, hHY,
         LinearMap.add_apply, Module.End.mul_apply, LinearMap.smul_apply,
@@ -62,17 +62,17 @@ private theorem weight_power (H Y : Module.End ℂ V) (v : V) (μ γ : ℂ)
       module
 
 theorem first_pos (h : TwoRectRel R w k l) (r : ℕ) (hr : 1 ≤ r) : R.op 3 r w = 0 :=
-  trunc_of_cvrel h.first r (by simpa using hr)
+  trunc_of_cvrel h.first r (by simpa using! hr)
 
 theorem second_pos (h : TwoRectRel R w k l) (r : ℕ) (hr : 1 ≤ r) : R.op 4 r w = 0 :=
-  trunc_of_cvrel h.second r (by simpa using hr)
+  trunc_of_cvrel h.second r (by simpa using! hr)
 
 /-- Higher theta truncation follows from the two simple-root truncations. -/
 theorem theta_high (h : TwoRectRel R w k l) (r : ℕ) (hr : 2 ≤ r) : R.op 5 r w = 0 := by
   have hc := congrArg (fun T : Module.End ℂ V => T w) (c_f4f3 R (r - 1) 1)
   simp only [Module.End.mul_apply, LinearMap.add_apply,
     first_pos h 1 le_rfl, second_pos h (r - 1) (by omega), map_zero, zero_add] at hc
-  simpa only [show r - 1 + 1 = r by omega] using hc.symm
+  simpa only [show r - 1 + 1 = r by omega] using! hc.symm
 
 theorem first_pos_desc (h : TwoRectRel R w k l) (d r : ℕ) (hr : 1 ≤ r) :
     R.op 3 r (thetaDesc R w d) = 0 :=
@@ -131,21 +131,21 @@ theorem first_weight_desc (h : TwoRectRel R w k l) (d : ℕ) :
     R.op 6 0 (thetaDesc R w d) = ((k : ℂ) - d) • thetaDesc R w d := by
   have hh := weight_power (R.op 6 0) (R.op 5 1) w (k : ℂ) (-1)
     (c_h1 R 0 1).2.1 h.cartan_first d
-  simpa only [mul_neg, mul_one, sub_eq_add_neg] using hh
+  simpa only [mul_neg, mul_one, sub_eq_add_neg] using! hh
 
 theorem second_weight_desc (h : TwoRectRel R w k l) (d : ℕ) :
     R.op 7 0 (thetaDesc R w d) = ((l : ℂ) - d) • thetaDesc R w d := by
   have hh := weight_power (R.op 7 0) (R.op 5 1) w (l : ℂ) (-1)
     (c_h2 R 0 1).2.1 h.cartan_second d
-  simpa only [mul_neg, mul_one, sub_eq_add_neg] using hh
+  simpa only [mul_neg, mul_one, sub_eq_add_neg] using! hh
 
 theorem first_nil (h : TwoRectRel R w k l) : (R.op 3 0 ^ (k + 1)) w = 0 := by
   have hn := h.first (k + 1) 0 0 (by omega) (by simp [T]; omega)
-  simpa only [Q_s_zero] using hn
+  simpa only [Q_s_zero] using! hn
 
 theorem second_nil (h : TwoRectRel R w k l) : (R.op 4 0 ^ (l + 1)) w = 0 := by
   have hn := h.second (l + 1) 0 0 (by omega) (by simp [T]; omega)
-  simpa only [Q_s_zero] using hn
+  simpa only [Q_s_zero] using! hn
 
 theorem first_local_nil_desc (h : TwoRectRel R w k l) (d : ℕ) :
     (R.op 3 0 ^ (k + 1)) (thetaDesc R w d) = 0 :=
@@ -162,17 +162,17 @@ private theorem sharp_nil_of_local (E F H : Module.End ℂ V) (u : V) (m K : ℕ
     (hHF : ∀ x, H (F x) - F (H x) = (-2 : ℂ) • F x)
     (hE : E u = 0) (hH : H u = (m : ℂ) • u) (hN : (F ^ K) u = 0) :
     (F ^ (m + 1)) u = 0 := by
-  have hH' : H u = (((m : ℕ) : ℤ) : ℂ) • u := by simpa using hH
+  have hH' : H u = (((m : ℕ) : ℤ) : ℂ) • u := by simpa using! hH
   rw [Module.End.pow_apply] at hN ⊢
   have hs := (hw_pow E F H hEF hHF hE hH' K hN).2 (by omega)
-  simpa only [Int.toNat_natCast] using hs
+  simpa only [Int.toNat_natCast] using! hs
 
 theorem first_sharp_nil_desc (h : TwoRectRel R w k l) (d : ℕ) (hd : d ≤ k) :
     (R.op 3 0 ^ (k - d + 1)) (thetaDesc R w d) = 0 := by
   apply sharp_nil_of_local (R.op 0 0) (R.op 3 0) (R.op 6 0)
     (thetaDesc R w d) (k - d) (k + 1)
   · intro v
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using!
       congrArg (fun T : Module.End ℂ V => T v) ((CVRoots.sl2_first R).hEF 0 0)
   · intro v
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply,
@@ -188,7 +188,7 @@ theorem second_sharp_nil_desc (h : TwoRectRel R w k l) (d : ℕ) (hd : d ≤ l) 
   apply sharp_nil_of_local (R.op 1 0) (R.op 4 0) (R.op 7 0)
     (thetaDesc R w d) (l - d) (l + 1)
   · intro v
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using!
       congrArg (fun T : Module.End ℂ V => T v) ((CVRoots.sl2_second R).hEF 0 0)
   · intro v
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply,
@@ -218,12 +218,12 @@ private theorem root_negative_kills (E H F : ℕ → Module.End ℂ V) (hS : SL2
     (hHu : H 0 u = (μ : ℂ) • u) (K : ℕ) (hN : (F 0 ^ K) u = 0) : u = 0 := by
   have hEF : ∀ v, E 0 (F 0 v) - F 0 (E 0 v) = H 0 v := by
     intro v
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using!
       congrArg (fun T : Module.End ℂ V => T v) (hS.hEF 0 0)
   have hHF : ∀ v, H 0 (F 0 v) - F 0 (H 0 v) = (-2 : ℂ) • F 0 v := by
     intro v
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply,
-      Nat.zero_add] using congrArg (fun T : Module.End ℂ V => T v) (hS.hHF 0 0)
+      Nat.zero_add] using! congrArg (fun T : Module.End ℂ V => T v) (hS.hHF 0 0)
   rw [Module.End.pow_apply] at hN
   exact (hw_pow (E 0) (F 0) (H 0) hEF hHF hEu hHu K hN).1 hμ
 

@@ -54,13 +54,23 @@ theorem hypLorentzianPolynomial_X_zero (j : ℕ) :
     hypLorentzianPolynomialEquiv (X (j, 0)) =
       (1 / 2 : ℂ) • X (j, (finCongr lorentzian_rank).symm 0) -
         (Complex.I / 2) • X (j, (finCongr lorentzian_rank).symm 1) := by
-  simp [hypLorentzianPolynomialEquiv, hypLorentzianFrameEquiv, hypLorentzianFrameForward]
+  change renameEquiv ℂ (Equiv.prodCongr (Equiv.refl ℕ) (finCongr lorentzian_rank).symm)
+    (hypLorentzianFrameForward (X (j, 0))) = _
+  rw [hypLorentzianFrameForward, bind₁_X_right]
+  rw [if_pos (show ((j, (0 : Fin 2)).2 = 0) from rfl)]
+  simp only [map_sub, map_smul, renameEquiv_apply, rename_X, Equiv.prodCongr_apply,
+    Equiv.refl_apply, Prod.map_apply]
 
 theorem hypLorentzianPolynomial_X_one (j : ℕ) :
     hypLorentzianPolynomialEquiv (X (j, 1)) =
       X (j, (finCongr lorentzian_rank).symm 0) +
         Complex.I • X (j, (finCongr lorentzian_rank).symm 1) := by
-  simp [hypLorentzianPolynomialEquiv, hypLorentzianFrameEquiv, hypLorentzianFrameForward]
+  change renameEquiv ℂ (Equiv.prodCongr (Equiv.refl ℕ) (finCongr lorentzian_rank).symm)
+    (hypLorentzianFrameForward (X (j, 1))) = _
+  rw [hypLorentzianFrameForward, bind₁_X_right]
+  rw [if_neg (show ((j, (1 : Fin 2)).2 ≠ 0) from (by decide : (1 : Fin 2) ≠ 0))]
+  simp only [map_add, map_smul, renameEquiv_apply, rename_X, Equiv.prodCongr_apply,
+    Equiv.refl_apply, Prod.map_apply]
 
 /-- Inserting a fixed charge is an equivalence onto precisely that momentum sector. -/
 def lorentzianSectorFockEquiv (α : lorentzianLattice.carrier) :
@@ -109,8 +119,17 @@ theorem hypLorentzianSector_zeroCharges (x y : ℤ) (p : hypFock) :
         (x : ℂ) • (hypLorentzianSectorEquiv ![x, y] p : LorentzianFockSpace) ∧
       mode (lorentzianHeisenbergField ![1, 0]) 0 (hypLorentzianSectorEquiv ![x, y] p) =
         (y : ℂ) • (hypLorentzianSectorEquiv ![x, y] p : LorentzianFockSpace) := by
-  rw [hypLorentzianSectorEquiv_apply, lorentzianHeisenberg_zeroMode,
-    lorentzianHeisenberg_zeroMode]
-  simp [lorentzian_form_apply]
+  first
+  | (rw [hypLorentzianSectorEquiv_apply, lorentzianHeisenberg_zeroMode,
+      lorentzianHeisenberg_zeroMode]
+     simp [lorentzian_form_apply])
+  | exact ⟨(lorentzianHeisenberg_zeroMode ![0, 1] ![x, y] (hypLorentzianPolynomialEquiv p)).trans
+        (congrArg (fun c : ℂ => c • (hypLorentzianSectorEquiv ![x, y] p : LorentzianFockSpace))
+          (congrArg (fun z : ℤ => (z : ℂ))
+            ((lorentzian_form_apply ![0, 1] ![x, y]).trans (by simp : (_ : ℤ) = x)))),
+      (lorentzianHeisenberg_zeroMode ![1, 0] ![x, y] (hypLorentzianPolynomialEquiv p)).trans
+        (congrArg (fun c : ℂ => c • (hypLorentzianSectorEquiv ![x, y] p : LorentzianFockSpace))
+          (congrArg (fun z : ℤ => (z : ℂ))
+            ((lorentzian_form_apply ![1, 0] ![x, y]).trans (by simp : (_ : ℤ) = y))))⟩
 
 end VOA.Moonshine.ConwayNorton

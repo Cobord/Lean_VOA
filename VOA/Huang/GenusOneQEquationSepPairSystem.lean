@@ -51,7 +51,7 @@ theorem series_mem_subexp_of_euler_system {ι : Type*} [Fintype ι]
       rw [h]
       exact (e.symm.sum_comp _).symm)
   intro i
-  simpa only [Equiv.symm_apply_apply] using hs (e i)
+  simpa only [Equiv.symm_apply_apply] using! hs (e i)
 
 universe u
 variable {V E F : Type u} [AddCommGroup V] [Module ℂ V]
@@ -120,10 +120,10 @@ theorem exists_pair_euler_system (R : Subalgebra ℂ (PowerSeries ℂ))
   choose C hC using hsys
   refine ⟨C, ?_, ?_⟩
   · intro k
-    simpa only [Algebra.smul_def, Subalgebra.algebraMap_eq] using hC k
+    simpa only [Algebra.smul_def, Subalgebra.algebraMap_eq] using! hC k
   · intro x y
     obtain ⟨c, hc⟩ := hUZ S hS x y
-    exact ⟨c, by simpa only [Algebra.smul_def, Subalgebra.algebraMap_eq] using hc⟩
+    exact ⟨c, by simpa only [Algebra.smul_def, Subalgebra.algebraMap_eq] using! hc⟩
 
 /-- Two-insertion counterpart of the one-point finite-system convergence
 argument. The two Ward hypotheses are retained explicitly. -/
@@ -154,6 +154,6 @@ theorem summable_pairSeries_of_C2 (R : Subalgebra ℂ (PowerSeries ℂ))
     Summable (fun n => ‖PowerSeries.coeff n (S x y) * q ^ n‖) := by
   have hs := summable_of_subexponential (fun n => norm_nonneg (PowerSeries.coeff n (S x y)))
     (pairSeries_mem_subexp_of_C2 R hR A B hA hB S lam hS hD x y) (norm_nonneg q) hq
-  simpa only [norm_mul, norm_pow] using hs
+  simpa only [norm_mul, norm_pow] using! hs
 
 end VOA.Huang.GenusTwoPoint.Separate

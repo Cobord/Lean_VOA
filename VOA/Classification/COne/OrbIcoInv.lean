@@ -107,7 +107,7 @@ theorem psi_surj_hom {B : P2} {m : ℕ} (hB : B.IsHomogeneous (2 * m)) :
     obtain ⟨E, hE, rfl⟩ := hx
     refine ⟨c • E, ?_, map_smul _ _ _⟩
     rw [smul_eq_C_mul]
-    simpa using hE.C_mul c
+    simpa using! hE.C_mul c
 
 /-! ## Evaluations -/
 
@@ -117,7 +117,7 @@ theorem eval_smul_hom {F : P3} {n : ℕ} (hF : F.IsHomogeneous n) (c : ℂ) (v :
   refine Finset.sum_congr rfl fun d hd => ?_
   have hdeg : ∑ i, d i = n := by
     have := hF (mem_support_iff.mp hd)
-    simpa [Finsupp.weight_apply, Finsupp.sum_fintype] using this
+    simpa [Finsupp.weight_apply, Finsupp.sum_fintype] using! this
   simp only [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
     hdeg]
   ring
@@ -134,7 +134,7 @@ theorem eval_phiE (g : Aut V1) (F : P3) (v : Fin 3 → ℂ) :
     change eval v (lin _) = _
     rw [eval_lin]
   have := congrArg (fun φ : P3 →ₐ[ℂ] ℂ => φ F) h
-  simpa [MvPolynomial.coe_aeval_eq_eval] using this
+  simpa [MvPolynomial.coe_aeval_eq_eval] using! this
 
 theorem autL_rotZ (v : Fin 3 → ℂ) : autL rotZ v = ![-v 0, -v 1, v 2] := by
   apply xyzL_injective
@@ -182,7 +182,7 @@ theorem eval_binary_scale {B : P2} {d : ℕ} (hB : B.IsHomogeneous d) (c : ℂ) 
   refine Finset.sum_congr rfl fun e he => ?_
   have hdeg : ∑ i, e i = d := by
     have := hB (mem_support_iff.mp he)
-    simpa [Finsupp.weight_apply, Finsupp.sum_fintype] using this
+    simpa [Finsupp.weight_apply, Finsupp.sum_fintype] using! this
   simp only [Pi.smul_apply, smul_eq_mul, mul_pow, Finset.prod_mul_distrib,
     Finset.prod_pow_eq_pow_sum, hdeg]
   ring
@@ -223,7 +223,7 @@ theorem X0_dvd_of_eval {B : P2} {d : ℕ} (hB : B.IsHomogeneous d) (h : eval ![0
     (X 0 : P2) ∣ B := by
   set sw : P2 ≃ₐ[ℂ] P2 := renameEquiv ℂ (Equiv.swap (0 : Fin 2) 1)
   have hB' : (sw B).IsHomogeneous d := by
-    simpa using hB.rename_isHomogeneous (f := Equiv.swap (0 : Fin 2) 1)
+    simpa using! hB.rename_isHomogeneous (f := Equiv.swap (0 : Fin 2) 1)
   have h' : eval ![1, 0] (sw B) = 0 := by
     rw [show sw B = rename (Equiv.swap (0 : Fin 2) 1) B from rfl, eval_rename]
     have hv : ((![1, 0] : Fin 2 → ℂ) ∘ (Equiv.swap (0 : Fin 2) 1)) = ![0, 1] := by
@@ -385,9 +385,9 @@ theorem icoInvariantSpan_of_small (J10 : P3) (h10 : IcoInv J10) (h10h : J10.IsHo
   rcases Nat.even_or_odd n with hev | hodd
   · by_cases hn0 : n = 0
     · subst hn0
-      have hC : F = MvPolynomial.C (coeff 0 F) := by
+      have hC : F = MvPolynomial.C (F.coeff 0) := by
         rw [← homogeneousComponent_zero, hc_self hh]
-      rw [hC, show (MvPolynomial.C (coeff 0 F) : P3) = coeff 0 F • (1 : P3) by
+      rw [hC, show (MvPolynomial.C (F.coeff 0) : P3) = F.coeff 0 • (1 : P3) by
         rw [smul_eq_C_mul, mul_one], map_smul]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨1, ⟨0, 0, 0, rfl, by simp⟩,
         rfl⟩)
@@ -408,7 +408,7 @@ theorem icoInvariantSpan_of_small (J10 : P3) (h10 : IcoInv J10) (h10h : J10.IsHo
     have hD : IcoInv D := hF.sub (hMinv.smul c)
     have hDh : D.IsHomogeneous n := by
       rw [hDdef, sub_eq_add_neg, ← neg_smul, smul_eq_C_mul]
-      exact hh.add (by simpa using hMh.C_mul (-c))
+      exact hh.add (by simpa using! hMh.C_mul (-c))
     have hDv : eval ![1, I, 0] D = 0 := by
       rw [hDdef, map_sub, MvPolynomial.smul_eval, div_mul_cancel₀ _ hMv, sub_self]
     have hFD : psi F = c • psi M + psi D := by

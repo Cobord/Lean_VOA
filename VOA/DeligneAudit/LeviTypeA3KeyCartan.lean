@@ -33,8 +33,8 @@ theorem a3_cartan_pos_word_key (a b c : ℕ)
   | nil =>
       have hzero : ρ.op (leviH i) r w = 0 := by
         fin_cases i
-        · simpa [leviH, simpleH] using h.cartan_pos 1 r hr
-        · simpa [leviH, simpleH] using h.cartan_pos 2 r hr
+        · simpa [leviH, simpleH] using! h.cartan_pos 1 r hr
+        · simpa [leviH, simpleH] using! h.cartan_pos 2 r hr
       simp [radicalWord, hzero]
   | cons x l ih =>
       rcases x with ⟨j, s⟩
@@ -57,7 +57,7 @@ theorem a3_cartan_pos_word_key (a b c : ℕ)
           (leviWeight i j : ℂ) • radicalOp ρ j (r + s) u +
             radicalOp ρ j s (ρ.op (leviH i) r u) := by
         have hc' := (sub_eq_iff_eq_add.mp hc)
-        simpa only [radicalOp, add_comm] using hc'
+        simpa only [radicalOp, add_comm] using! hc'
       rw [heq]
       exact (a3KeyLayer ρ w _).add_mem
         ((a3KeyLayer ρ w _).smul_mem _ hsecond) hfirst
@@ -77,9 +77,9 @@ theorem a3_cartan_pos_maps_key (a b c : ℕ)
       exact a3_cartan_pos_word_key ρ w a b c h i r hr l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (a3KeyLayer ρ w (a3KeyShift r k)).add_mem hx hy
+      simpa using! (a3KeyLayer ρ w (a3KeyShift r k)).add_mem hx hy
   | smul d x _ hx =>
-      simpa using (a3KeyLayer ρ w (a3KeyShift r k)).smul_mem d hx
+      simpa using! (a3KeyLayer ρ w (a3KeyShift r k)).smul_mem d hx
 
 theorem a3_cartan_pos_mem_higher (a b c : ℕ)
     (h : LocalWeylRel ρ w (weightABC a b c))

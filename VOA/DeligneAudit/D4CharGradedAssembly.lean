@@ -91,8 +91,8 @@ theorem gradedLeviBound_of_supported_keys (hkeys : SupportedGradedKeyBound) :
     by_cases hk : ksCorrectedSupported n (keyEnum n i)
     · by_cases hd : (keyEnum n i).degree ≤ N
       · exact hkeys n N i hk hd
-      · rw [gradedKeyStep_above_degree _ n N i (Nat.lt_of_not_ge hd)]
-        exact Nat.zero_le _
+      · exact (gradedKeyStep_above_degree (ravFam D4sector n 0) n N i
+          (Nat.lt_of_not_ge hd)).le.trans (Nat.zero_le _)
     · rw [gradedKeyStep_unsupported n ρ w h N i hk]
       exact Nat.zero_le _
   calc

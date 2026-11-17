@@ -38,6 +38,7 @@ theorem sigmaN_monomial (d : (ℕ × Fin r) →₀ ℕ) :
   rw [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum, ← Finsupp.prod, Finsupp.prod,
     prod_X_pow_eq_monomial, Algebra.smul_def]
   simp [Finsupp.degree]
+  try rfl
 
 /-- The total degree of a monomial is at most its Fock weight (every variable has weight `≥ 1`). -/
 theorem degree_le_weight (d : (ℕ × Fin r) →₀ ℕ) :

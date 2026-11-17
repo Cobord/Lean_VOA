@@ -30,7 +30,7 @@ theorem a2_gradedLowerModeSpan_le_key (xs ys : List ℕ) (k d : ℕ) :
       List.map_map, Function.comp_def, List.prod_append, mul_smul]
   have hw := radicalWord_mem_own_key ρ w l
   rw [hword, hkey] at hw
-  simpa only [one_smul] using hw
+  simpa only [one_smul] using! hw
 
 end VOA.DeligneAudit.A3Sector
 

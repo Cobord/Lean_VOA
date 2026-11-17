@@ -228,7 +228,7 @@ theorem polynomialCostToAssociated_surjective
 
 /-- Positive variable weights make the fixed-weight polynomial source
 finite dimensional. -/
-instance homogeneousSource_finiteDimensional [Finite σ]
+theorem homogeneousSource_finiteDimensional [Finite σ]
     (w : σ → ℕ) (hw : ∀ i, w i ≠ 0) (N : ℕ) :
     FiniteDimensional K (HomogeneousSource (K := K) w N) :=
   finiteDimensional_weightedHomogeneousSubmodule w hw N

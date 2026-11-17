@@ -31,7 +31,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V] (F : ℕ → Module.End ℂ
 /-- `[z^M] F(z)^k w` as a nested sum over compositions. -/
 def garlandVec : ℕ → ℕ → V → V
   | 0, M, w => if M = 0 then w else 0
-  | k + 1, M, w => ∑ p ∈ Finset.antidiagonal M, F p.1 (garlandVec k p.2 w)
+  | k + 1, M, w => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, F p.1 (garlandVec k p.2 w)
 
 theorem garlandVec_eq_coeff : ∀ (k M : ℕ) (w : V),
     garlandVec F k M w = (coeff M (Garland.Fs F ^ k)) w
@@ -48,7 +48,7 @@ theorem garlandVec_one (M : ℕ) (w : V) : garlandVec F 1 M w = F M w := by
   rw [Finset.sum_eq_single (M, 0)]
   · simp
   · rintro ⟨a, b⟩ hp hne
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     have hb : b ≠ 0 := by
       intro hb
       apply hne
@@ -56,11 +56,11 @@ theorem garlandVec_one (M : ℕ) (w : V) : garlandVec F 1 M w = F M w := by
       omega
     simp [hb]
   · intro h
-    exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h
+    exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h
 
 theorem garlandVec_two (M : ℕ) (w : V) :
-    garlandVec F 2 M w = ∑ p ∈ Finset.antidiagonal M, F p.1 (F p.2 w) := by
-  change ∑ p ∈ Finset.antidiagonal M, F p.1 (garlandVec F 1 p.2 w) = _
+    garlandVec F 2 M w = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, F p.1 (F p.2 w) := by
+  change ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, F p.1 (garlandVec F 1 p.2 w) = _
   simp only [garlandVec_one]
 
 end Vec
@@ -173,7 +173,7 @@ theorem d4_garland_univ (m r s : ℕ) (hr : 1 ≤ r) (hs : 2 * m + 1 ≤ r + s) 
 
 /-- The quadratic case: `∑_{a+b=s} (f_θ⊗t^a)(f_θ⊗t^b) v = 0` for `s ≥ 2m − 1`. -/
 theorem d4_garland_two (m s : ℕ) (hs : 2 * m + 1 ≤ s + 2) :
-    ∑ p ∈ Finset.antidiagonal s, d4Ftheta m p.1 (d4Ftheta m p.2 (d4Gen m)) = 0 := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s, d4Ftheta m p.1 (d4Ftheta m p.2 (d4Gen m)) = 0 := by
   rw [← garlandVec_two]
   exact d4_garland_univ m 2 s (by norm_num) (by omega)
 

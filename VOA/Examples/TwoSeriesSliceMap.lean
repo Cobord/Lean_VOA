@@ -146,7 +146,10 @@ theorem correctedWordState_mem_KC :
           rw [letterOp_sugawara]
           have h := Lm_KC k hk m ih
           simp only [List.map_cons, List.sum_cons, kazL, chL]
-          convert h using 2 <;> ring
+          convert h using 2
+          all_goals first
+            | ring1
+            | (unfold Lm; congr 1 <;> ring1)
 
 theorem kazL_le (l : Generator × ℕ) : kazL l ≤ 2 * ((1 : ℤ) - chL l).toNat := by
   obtain ⟨g, m⟩ := l
@@ -253,7 +256,7 @@ theorem Wslice_current_lower (b : Fin 3) (hb : b ≠ 1) (m : ℕ) (w : List (Gen
     rw [show (-(m : ℤ) - 1) = -(m : ℤ) - 1 from rfl] at h0
     convert Submodule.zero_mem (vLenZ c _)
     convert congrArg (psi c k hk) h0 using 1
-    simp
+    all_goals simp
 
 theorem Wslice_sugawara (m : ℕ) (w : List (Generator × ℕ)) (a : ℤ) :
     Wslice c k hk (correctedWordState k hk ((Generator.sugawara, m) :: w)) a -

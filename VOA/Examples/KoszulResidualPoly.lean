@@ -26,6 +26,10 @@ namespace VOA.KoszulResidual
 
 open MvPolynomial
 
+-- Lean 4.35 port (dual-compatible): newer Mathlib states `MvPolynomial.coeff_zero` as a function equality.
+private theorem mvCoeff_zero {σ R : Type*} [CommSemiring R] (m : σ →₀ ℕ) :
+    (0 : MvPolynomial σ R).coeff m = 0 := rfl
+
 noncomputable section
 
 variable {σ : Type*} [DecidableEq σ]
@@ -66,16 +70,16 @@ theorem sProj_monomial (s : Finset σ) (d : ℕ) (μ : σ →₀ ℕ) (a : ℂ) 
   split_ifs <;> simp [smul_monomial]
 
 theorem coeff_sProj (s : Finset σ) (d : ℕ) (p : MvPolynomial σ ℂ) (μ : σ →₀ ℕ) :
-    coeff μ (sProj s d p) = if sdeg s μ = d then coeff μ p else 0 := by
+    (sProj s d p).coeff μ = if sdeg s μ = d then p.coeff μ else 0 := by
   induction p using MvPolynomial.induction_on' with
   | monomial ν a =>
       rw [sProj_monomial]
       split_ifs with h1 h2 h2
       · rfl
       · rw [coeff_monomial, if_neg]; rintro rfl; exact h2 h1
-      · rw [coeff_zero, coeff_monomial, if_neg]; rintro rfl; exact h1 h2
-      · rw [coeff_zero]
-  | add p q hp hq => rw [map_add, coeff_add, coeff_add, hp, hq]; split_ifs <;> simp
+      · rw [mvCoeff_zero, coeff_monomial, if_neg]; rintro rfl; exact h1 h2
+      · rw [mvCoeff_zero]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq]; split_ifs <;> simp
 
 /-- The partial Euler operator `Σ_{q ∈ s} x_q ∂_q`. -/
 def sEuler (s : Finset σ) : MvPolynomial σ ℂ →ₗ[ℂ] MvPolynomial σ ℂ :=
@@ -155,7 +159,7 @@ theorem exists_sProj_eq_zero (s : Finset σ) (p : MvPolynomial σ ℂ) :
   classical
   refine ⟨p.support.sup (sdeg s), fun d hd => ?_⟩
   ext μ
-  rw [coeff_sProj, coeff_zero]
+  rw [coeff_sProj, mvCoeff_zero]
   split_ifs with h
   · by_contra hne
     have hmem : μ ∈ p.support := mem_support_iff.mpr hne
@@ -166,8 +170,8 @@ theorem exists_sProj_eq_zero (s : Finset σ) (p : MvPolynomial σ ℂ) :
 theorem eq_zero_of_sProj (s : Finset σ) {p : MvPolynomial σ ℂ} (h : ∀ d, sProj s d p = 0) :
     p = 0 := by
   ext μ
-  have := congrArg (coeff μ) (h (sdeg s μ))
-  rwa [coeff_sProj, if_pos rfl, coeff_zero] at this
+  have : (sProj s (sdeg s μ) p).coeff μ = (0 : MvPolynomial σ ℂ).coeff μ := by rw [h]
+  rwa [coeff_sProj, if_pos rfl, mvCoeff_zero] at this
 
 /-! ### Weyl relations -/
 

@@ -36,7 +36,7 @@ theorem complementAlphabet_complete (n : ℕ) :
     calc
       K = (E * H) * K := by rw [hEH, one_mul]
       _ = E := by rw [mul_assoc, hHK, mul_one]
-  simpa only [K, E, PowerSeries.coeff_mk] using congrArg (PowerSeries.coeff n) hKE
+  simpa only [K, E, PowerSeries.coeff_mk] using! congrArg (PowerSeries.coeff n) hKE
 
 /-- Applying alphabet complementation twice recovers every symmetric polynomial. -/
 theorem complementAlphabet_involutive : Function.Involutive complementAlphabet := by
@@ -106,7 +106,7 @@ theorem completeAlphabet_powerSum {R : Type*} [CommRing R] [Algebra ℂ R]
     exact specializedElementary_complete_inverse φ
   have hc : newtonCoeff (fun r => -p r) = fun n => φ (complete n) := by
     funext n
-    simpa only [newtonCoefficientSeries, PowerSeries.coeff_mk] using
+    simpa only [newtonCoefficientSeries, PowerSeries.coeff_mk] using!
       congrArg (PowerSeries.coeff n) he
   rw [← hc]
   exact powerSumOfCoeff_newtonCoeff d (fun r => -p r) s hs

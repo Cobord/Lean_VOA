@@ -81,12 +81,12 @@ theorem gtCauchy_two_of_shift (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
     apply qDifference_unique q (pochhammerUnits_qDifferenceUnits q h) 1 B
       (gtCauchyTwoSeries q h u N r) (PowerSeries.C c * K) (by simp)
     · simp [B]
-    · simpa only [mul_one] using hshift r
+    · simpa only [mul_one] using! hshift r
     · exact hK
     · simp [gtCauchyTwoSeries, gtCauchyTwoCoeff_zero_right, c, K]
   have hc := congrArg (coeff s) he
   simpa only [gtCauchyTwoSeries, coeff_mk, coeff_C_mul,
-    gtEulerInv_product_coeff, c, K] using hc
+    gtEulerInv_product_coeff, c, K] using! hc
 
 end
 

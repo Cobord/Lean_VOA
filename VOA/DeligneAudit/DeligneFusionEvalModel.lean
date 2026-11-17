@@ -14,6 +14,8 @@ Lagrange interpolation isolates single sites, so `w₀` is cyclic in bounded deg
 **`demazureRealization_all : ∀ N, A2.DemazureRealization N`**, i.e. U7, with no appeal to CL-V.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.DeligneAudit.EvalModel
 
 open VOA.AffineSl3 VOA.DeligneAudit.SectorWeyl VOA.DeligneAudit.GrFilt
@@ -149,7 +151,7 @@ def evalRep : CurrentModule (bracketTable) (TT N) where
   op := op N
   comm a b r s v := by
     have := congrArg (fun T => T v) (op_comm N a b r s)
-    simpa [Module.End.mul_apply, LinearMap.sub_apply] using this
+    simpa [Module.End.mul_apply, LinearMap.sub_apply] using! this
 
 @[simp] theorem evalRep_op (c : Fin 8) (k : ℕ) : (evalRep N).op c k = op N c k := rfl
 
@@ -320,12 +322,12 @@ theorem hw_low (E F H : Fin 8) (hEF : ∀ x, op N E 0 (op N F 0 x) - op N F 0 (o
   have hKw : (op N F 0)^[K] (w0 N) = 0 := by
     rw [← Module.End.pow_apply, hK, LinearMap.zero_apply]
   have := (CLFilt.hw_pow (op N E 0) (op N F 0) (op N H 0) hEF hHF hE hH K hKw).2 (by positivity)
-  simpa using this
+  simpa using! this
 
 theorem comm0 (a b : Fin 8) (x : TT N) :
     op N a 0 (op N b 0 x) - op N b 0 (op N a 0 x) = ∑ e, bracketTable a b e • op N e 0 x := by
   have := congrArg (fun T => T x) (op_comm N a b 0 0)
-  simpa [Module.End.mul_apply, LinearMap.sub_apply] using this
+  simpa [Module.End.mul_apply, LinearMap.sub_apply] using! this
 
 /-- **The filtered relations of `M_{N,0}`** for `w₀` in the evaluation model. -/
 theorem filtRel_w0 : FiltRel (evalRep N) (w0 N) N where
@@ -352,13 +354,13 @@ theorem filtRel_w0 : FiltRel (evalRep N) (w0 N) N where
     · rw [op_cartan_w0 N 7 (by decide) 0]; simp [sum_dg N 7 (by decide)]
   trunc_f1 := by
     have := trunc_gen N 3 _ _ (op_w0_left N 3 (fun j a => by fin_cases a <;> simp [R, β0, matT]))
-    simpa using this
+    simpa using! this
   trunc_f2 := by
     have := trunc_gen N 4 _ _ (op_w0_right N 4 (fun j a => by fin_cases a <;> simp [R, β0, matT]))
-    simpa using this
+    simpa using! this
   trunc_theta := by
     have := trunc_gen N 5 (z N) (fun i => loc i (R N i 5) (w0 N)) (op_w0 N 5)
-    simpa [two_mul] using this
+    simpa [two_mul] using! this
 
 /-! ## Cyclicity: Lagrange interpolation isolates a site -/
 
@@ -455,7 +457,7 @@ theorem Fle_top : Fle (evalRep N) (w0 N) (Fintype.card (Site N) * (N + N)) = ⊤
   rw [hf]
   refine Submodule.sum_mem _ fun β _ => Submodule.smul_mem _ _ ?_
   have := reach N β Finset.univ
-  simpa using this
+  simpa using! this
 
 /-- **U7 without CL-V**: `DemazureRealization N` for every `N`. -/
 theorem demazureRealization_all (N : ℕ) : A2.DemazureRealization N := by

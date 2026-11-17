@@ -124,7 +124,7 @@ theorem grProj_pieceSum (s : Finset ℕ)
     grProj R w i.1 (pieceSum R w s x) = x i := by
   change grProj R w i.1 (∑ d, (x d : Gr R w)) = x i
   rw [map_sum, Finset.sum_eq_single i]
-  · simpa using grProj_piece R w i.1 i.1 (x i).property
+  · simpa using! grProj_piece R w i.1 i.1 (x i).property
   · intro d _ hdi
     rw [grProj_piece R w i.1 d.1 (x d).property,
       if_neg (fun h => hdi (Subtype.ext h))]
@@ -135,7 +135,7 @@ theorem pieceSum_injective (s : Finset ℕ) : Function.Injective (pieceSum R w s
   funext i
   apply Subtype.ext
   have hh := congrArg (grProj R w i.1) hxy
-  simpa only [grProj_pieceSum] using hh
+  simpa only [grProj_pieceSum] using! hh
 
 theorem sum_finrank_piece_le (s : Finset ℕ) [FiniteDimensional ℂ (Gr R w)] :
     (∑ n ∈ s, Module.finrank ℂ (Piece R w n)) ≤ Module.finrank ℂ (Gr R w) := by
@@ -155,7 +155,7 @@ def readAmbient (n : ℕ) : AmbientGr R w →ₗ[ℂ] (V ⧸ Pbelow R w n) :=
     change (Pbelow R w n).mkQ ((Finsupp.single m v) n) = 0
     by_cases hm : m = n
     · subst m
-      simpa using (Submodule.Quotient.mk_eq_zero (Pbelow R w n)).mpr hv
+      simpa using! (Submodule.Quotient.mk_eq_zero (Pbelow R w n)).mpr hv
     · simp [Finsupp.single_apply, hm])
 
 def readD (n : ℕ) : Gr R w →ₗ[ℂ] (V ⧸ Pbelow R w n) :=

@@ -16,7 +16,7 @@ theorem a2_raising_word_zero_no_compound (p q : ℕ)
     (hl : l.countP (fun x => x.1 = 1) = 0) :
     ρ.op 1 r (radicalWord (a2RadicalOp ρ) l • w) = 0 := by
   induction l with
-  | nil => simpa [radicalWord] using h.raising 1 (by decide) r
+  | nil => simpa [radicalWord] using! h.raising 1 (by decide) r
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       have hi : i = 0 := by
@@ -25,7 +25,7 @@ theorem a2_raising_word_zero_no_compound (p q : ℕ)
         · simp at hl
       subst i
       have ht : l.countP (fun x => x.1 = 1) = 0 := by
-        simpa using hl
+        simpa using! hl
       have hc := a2_raising_simple_comm ρ r s
       have happ := congrArg (fun T : Module.End ℂ V =>
         T (radicalWord (a2RadicalOp ρ) l • w)) hc

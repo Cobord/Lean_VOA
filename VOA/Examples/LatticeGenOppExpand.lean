@@ -100,7 +100,7 @@ theorem G3gVec_support_finite (α β : L.carrier) (C D : ℤ) (x : FockN (rank L
   intro qpm hqpm
   obtain ⟨q, p, m⟩ := qpm
   rw [Function.mem_support, G3gVec] at hqpm
-  simp only at hqpm
+  try simp only at hqpm
   have hqS : q ∈ Sq := by
     rw [hSq, Function.mem_support]; intro h
     exact hqpm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -257,7 +257,7 @@ theorem G3gVec'_support_finite (hPos : L.PosDef) (α β : L.carrier) (C D : ℤ)
   intro pqm hpqm
   obtain ⟨p, q, m⟩ := pqm
   rw [Function.mem_support, G3gVecpre] at hpqm
-  simp only at hpqm
+  try simp only at hpqm
   have hpS : p ∈ Sp := by
     rw [hSp, Function.mem_support]; intro h
     exact hpqm (by rw [h, map_zero, map_zero, map_zero, smul_zero])

@@ -104,13 +104,13 @@ theorem lower_one_mul_upper_of_defect_eq_one (s : ZMod n) (v : (ZMod n)ˣ)
       X (Multiplicative.ofAdd (s * (↑v⁻¹ : ZMod n))) *
         torusWord X Y v⁻¹ * Y (Multiplicative.ofAdd (↑v⁻¹ : ZMod n)) := by
   have hm := upper_mul_lower_unit_of_defect_eq_one h2 h3 π hs X Y hX hY hn hz
-    (-s) (-1) v (by simpa using hv)
+    (-s) (-1) v (by simpa using! hv)
   have ht : (torusWord X Y v)⁻¹ = torusWord X Y v⁻¹ := by
     symm
     apply eq_inv_of_mul_eq_one_right
     rw [torusWord_mul_of_defect_eq_one X Y hz, mul_inv_cancel, torusWord_one]
   have hi := congrArg Inv.inv hm
-  simpa [mul_inv_rev, rootHom_neg, ht, mul_assoc] using hi
+  simpa [mul_inv_rev, rootHom_neg, ht, mul_assoc] using! hi
 
 /-- Compatibility of the lower-pivot word with the upper-pivot word on their overlap. -/
 theorem upper_unit_mul_weylWord (r u : (ZMod n)ˣ) (t : ZMod n) :
@@ -144,16 +144,19 @@ theorem gaussLift_upper_weyl_upper (r t : ZMod n) (u : (ZMod n)ˣ) :
     simp only [map_mul, hX, hY, toAdd_ofAdd, map_torusWord π X Y hX hY,
       map_weylWord π X Y hX hY, IsUnit.unit_spec] at hm
     rw [hm, gaussLift_lower_torus_upper]
-    simpa only [IsUnit.unit_spec] using he.symm
+    simpa only [IsUnit.unit_spec] using! he.symm
   · have h00 : (upperRoot r * weyl u * upperRoot t) 0 0 = r * (-u⁻¹ : (ZMod n)ˣ) := by
+      simp only [Matrix.SpecialLinearGroup.coe_mul]
       simp [upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two]
     have h10 : (upperRoot r * weyl u * upperRoot t) 1 0 = (-u⁻¹ : (ZMod n)ˣ) := by
+      simp only [Matrix.SpecialLinearGroup.coe_mul]
       simp [upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two]
     have ha : ¬ IsUnit ((upperRoot r * weyl u * upperRoot t) 0 0) := by
       rw [h00]; exact fun h => hr (isUnit_of_mul_isUnit_left h)
     have hb : IsUnit ((upperRoot r * weyl u * upperRoot t) 1 0) := h10 ▸ (-u⁻¹).isUnit
     have he : hb.unit = -u⁻¹ := Units.ext ((IsUnit.unit_spec hb).trans h10)
     simp only [gaussLift, dif_neg ha, dif_pos hb, he]
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two, mul_assoc, mul_comm,
       mul_left_comm]
 

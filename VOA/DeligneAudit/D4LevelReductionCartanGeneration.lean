@@ -19,7 +19,7 @@ theorem reductiveCartan_commute (i j : Fin 4) (r s : ℕ) (v : V) :
     ρ.op (reductiveCartanColour i) r (ρ.op (reductiveCartanColour j) s v) =
       ρ.op (reductiveCartanColour j) s (ρ.op (reductiveCartanColour i) r v) := by
   apply sub_eq_zero.mp
-  rw [ρ.comm]
+  refine (ρ.comm _ _ _ _ _).trans ?_
   have hb : ∀ i j : Fin 4, br i.val j.val = [] := by decide +kernel
   simp [D4sector, fD4, VOA.DeligneAudit.DeligneSector.Sparse.fC,
     VOA.DeligneAudit.DeligneSector.Sparse.fZ,
@@ -33,17 +33,17 @@ theorem bottomVector_extraCartan (m a c : ℕ)
   by_cases hr : r = 0
   · subst r
     have hv : bottomVector ρ w a c ∈ keyLayer ρ w (bottomRadicalKey a c 0) := by
-      simpa only [bottomVector, bottomRadicalWord_key] using
+      simpa only [bottomVector, bottomRadicalWord_key] using!
         radicalWord_mem_key ρ w (bottomRadicalWord a c)
     have hx := extra_weight_key ρ w m h (bottomRadicalKey a c 0) hv
     have hh := cartan_weight_key ρ w m h 0 (bottomRadicalKey a c 0) hv
     have hx' : ρ.op (reductiveCartanColour 0) 0 (bottomVector ρ w a c) =
         -(a : ℂ) • bottomVector ρ w a c := by
-      simpa [extraLabel, bottomRadicalKey, reductiveCartanColour] using hx
+      simpa [extraLabel, bottomRadicalKey, reductiveCartanColour] using! hx
     have hh' : ρ.op (reductiveCartanColour 2) 0 (bottomVector ρ w a c) =
         (a : ℂ) • bottomVector ρ w a c := by
       simpa [keyLabel, bottomRadicalKey, reductiveCartanColour,
-        A3Sector.simpleH, leviColour] using hh
+        A3Sector.simpleH, leviColour] using! hh
     rw [hx', hh', neg_smul]
   · have hc : ∀ q ∈ bottomRadicalWord a c, q.1 = 1 ∨ q.1 = 5 := by
       simp only [bottomRadicalWord, List.mem_append, List.mem_replicate]
@@ -53,7 +53,7 @@ theorem bottomVector_extraCartan (m a c : ℕ)
     simp only [show (0 : Fin 3) ≠ 1 by decide, if_false] at hh
     rw [← hh] at hx
     simpa [bottomVector, reductiveCartanColour, leviCurrent, leviSign,
-      A3Sector.simpleH, leviColour] using hx
+      A3Sector.simpleH, leviColour] using! hx
 
 /-- The extra Cartan identity holds on the entire bottom Cartan orbit. -/
 theorem bottomCartanSpan_extraCartan (m a c : ℕ)

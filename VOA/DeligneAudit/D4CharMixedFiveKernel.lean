@@ -81,7 +81,7 @@ theorem gtMixedFiveKernelCoeff_recurrence (q : R) (h : PochhammerUnits q) (u : �
         if p then gtBiCoeff t v F else gtBiCoeff t v G := by split_ifs <;> rfl
   simp only [map_add, map_sub, map_sum, hit, map_zero, gtBiCoeff_C_mul,
     gtBiCoeff_yZero, gtBiCoeff_yOne, gtBiCoeff_yZeroOne, mul_ite, mul_zero] at hk
-  simpa only [gtMixedFiveKernelCoeff, ← ite_and] using hk
+  simpa only [gtMixedFiveKernelCoeff, ← ite_and] using! hk
 
 end
 

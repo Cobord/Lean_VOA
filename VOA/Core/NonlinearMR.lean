@@ -520,8 +520,8 @@ over *any* interface term is the two-sided ideal `MRtwoCar` of
 `Core.NonlinearVirasoro` §4.  This is what would reconcile the `NPExtension` layer with the
 linear Virasoro presentation: `Examples.NonlinearVirasoroGenuine` (which proves
 `MRtwoCar = ker PhiVir` and the genuine presentation equivalence) is then the linear
-instance of the new layer, untouched — though that composition is not performed in Lean
-anywhere (module header).
+instance of the new layer, untouched; the composition is `MRfullCar_virasoro_eq_ker_PhiVir`
+(`Examples/NonlinearMRVirasoro.lean`).
 
 ⚠ **Parametric in `NP`, and that is the whole caveat.**  No `NPExtension` is inhabited,
 so this is a conditional whose antecedent the [DK] recursion must supply; as a Lean proposition
@@ -572,9 +572,9 @@ theorem virasoroOPE_isLinear (c : ℂ) : (virasoroOPE c).IsLinear := by
 /-- **The Virasoro instance of the compatibility theorem.**  Composing this with
 `Examples.NonlinearVirasoroGenuine.MRtwo_eq_ker_PhiVir` *would* exhibit `MRfullCar NP` as
 `ker PhiVir`, and `virasoro_presentation_equivalence_genuine` as the linear instance of
-the presentation layer.  ⚠ That composition is **not** performed anywhere in the
-repository (see the module header): `Core` cannot import `Examples`, so it needs a new
-`Examples/` module.  ⚠ Also conditional on an interface term `NP` — no `NPExtension`
+the presentation layer.  The composition is performed in the `Examples/` module
+`NonlinearMRVirasoro.lean` (`MRfullCar_virasoro_eq_ker_PhiVir`), since `Core` cannot import
+`Examples`.  ⚠ Also conditional on an interface term `NP` — no `NPExtension`
 instance is constructed anywhere in the library. -/
 theorem MRfull_virasoro (c : ℂ) (NP : NPExtension (virasoroOPE c)) :
     MRfullCar NP = MRtwoCar (virasoroOPE c) :=

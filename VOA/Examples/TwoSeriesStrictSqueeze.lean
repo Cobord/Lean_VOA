@@ -106,7 +106,7 @@ theorem sum_finrank_grDegL (R : ℕ) (d : ℤ) :
   | zero =>
     have h := finrank_grDeg_addL L 0 d
     rw [show pieceLTL L 0 d = ⊥ from rfl, finrank_bot ℂ (ASpace L), add_zero] at h
-    simpa using h
+    simpa using! h
   | succ R ih =>
     rw [Finset.sum_range_succ, ih, add_comm, ← finrank_grDeg_addL L (R + 1) d]
     rfl
@@ -119,7 +119,7 @@ theorem exists_piece_eq_gradingL (d : ℤ) :
   have hdir : DirectedOn (· ≤ ·) (Set.range fun p : ℕ => (affineFlag L).piece p d) :=
     ((affineFlag L).directed d).directedOn_range
   obtain ⟨_, ⟨R, rfl⟩, hR⟩ :=
-    (CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le _ _).mp hc
+    (isCompactElement_iff_le_of_directed_sSup_le _).mp hc
       (Set.range fun p : ℕ => (affineFlag L).piece p d) (Set.range_nonempty _) hdir
       (by rw [sSup_range, (affineFlag L).exhaustive d])
   exact ⟨R, le_antisymm ((affineFlag L).le_grading R d) hR⟩
@@ -132,13 +132,12 @@ theorem iSup_grDegL (r : ℕ) : ⨆ d, grDeg L r d = ⊤ := by
     (motive := fun z hz => Submodule.Quotient.mk (p := grKer L r) (⟨z, hz⟩ : aFil L r) ∈
       ⨆ d, grDeg L r d)
     (fun d z hz => Submodule.mem_iSup_of_mem d (Submodule.mem_map.mpr ⟨_, hz, rfl⟩))
-    (by dsimp only
-        rw [show (⟨0, _⟩ : aFil L r) = 0 from rfl, Submodule.Quotient.mk_zero]
-        exact Submodule.zero_mem _)
+    (by
+        convert Submodule.zero_mem (⨆ d, grDeg L r d) using 1 <;>
+          exact Submodule.Quotient.mk_zero _)
     (fun a b ha hb hha hhb => by
-      dsimp only at hha hhb ⊢
-      rw [show (⟨a + b, _⟩ : aFil L r) = ⟨a, ha⟩ + ⟨b, hb⟩ from rfl, Submodule.Quotient.mk_add]
-      exact add_mem hha hhb) hy
+      convert add_mem hha hhb using 1 <;>
+        exact Submodule.Quotient.mk_add _ (x := (⟨a, ha⟩ : aFil L r)) (y := ⟨b, hb⟩)) hy
 
 /-! ### The squeeze -/
 

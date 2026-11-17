@@ -93,9 +93,9 @@ theorem scalarDualMonodromy_of_unit (F : SphericalFusion C) (r b : F.Label)
   have hu := transparentDualPair_unitLabel F
   rcases h with h | h
   · subst r
-    exact ⟨1, by simpa using hu.2 (F.simple b)⟩
+    exact ⟨1, by simpa using! hu.2 (F.simple b)⟩
   · subst b
-    exact ⟨1, by simpa using hu.1 (F.simple r)ᘁ⟩
+    exact ⟨1, by simpa using! hu.1 (F.simple r)ᘁ⟩
 
 /-- Schur's lemma supplies scalar monodromy if the relevant tensor product
 is simple. This is a sufficient hypothesis, not a consequence of modularity. -/

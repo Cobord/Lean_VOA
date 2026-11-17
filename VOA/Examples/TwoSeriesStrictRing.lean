@@ -101,22 +101,21 @@ theorem evR_C_mul (a : R) (Q : MPoly R) : evR R (MvPolynomial.C a * Q) = a * evR
 
 /-- Apply a functional `φ : R → ℂ` to every coefficient. -/
 def Φ (φ : R →ₗ[ℂ] ℂ) : MPoly R →ₗ[ℂ] JetPoly where
-  toFun Q := Finsupp.mapRange φ φ.map_zero Q
+  toFun Q := AddMonoidAlgebra.ofCoeff (Q.coeff.mapRange φ φ.map_zero)
   map_add' P Q := by
     apply MvPolynomial.ext
     intro s
-    rw [coeff_add]
-    change φ (coeff s (P + Q)) = φ (coeff s P) + φ (coeff s Q)
-    rw [coeff_add, map_add]
+    change φ ((P + Q).coeff s) = φ (P.coeff s) + φ (Q.coeff s)
+    rw [MvPolynomial.coeff_add, map_add]
   map_smul' c Q := by
     apply MvPolynomial.ext
     intro s
     rw [RingHom.id_apply, MvPolynomial.coeff_smul]
-    change φ (coeff s (c • Q)) = c • φ (coeff s Q)
+    change φ ((c • Q).coeff s) = c • φ (Q.coeff s)
     rw [MvPolynomial.coeff_smul, map_smul]
 
 theorem coeff_Φ (φ : R →ₗ[ℂ] ℂ) (Q : MPoly R) (s : Fin 2 × ℕ →₀ ℕ) :
-    coeff s (Φ R φ Q) = φ (coeff s Q) := rfl
+    (Φ R φ Q).coeff s = φ (Q.coeff s) := rfl
 
 theorem Φ_C_mul_ι (φ : R →ₗ[ℂ] ℂ) (a : R) (P : JetPoly) :
     Φ R φ (MvPolynomial.C a * ι R P) = φ a • P := by
@@ -125,7 +124,7 @@ theorem Φ_C_mul_ι (φ : R →ₗ[ℂ] ℂ) (a : R) (P : JetPoly) :
   rw [coeff_Φ, coeff_C_mul, coeff_smul, smul_eq_mul]
   simp only [ι, MvPolynomial.mapAlgHom_apply, coeff_map]
   rw [mul_comm]
-  change φ (algebraMap ℂ R (coeff s P) * a) = _
+  change φ (algebraMap ℂ R (P.coeff s) * a) = _
   rw [← Algebra.smul_def, map_smul, smul_eq_mul, mul_comm]
 
 theorem monomial_eq_C_mul_ι (s : Fin 2 × ℕ →₀ ℕ) (a : R) :
@@ -162,10 +161,11 @@ theorem m_cyclic (Q : MPoly R)
     jet_cyclic _ fun l => by rw [← Φ_word, evalBase_Φ, hQ l, map_zero]
   apply MvPolynomial.ext
   intro s
-  rw [coeff_zero]
-  refine (Module.forall_dual_apply_eq_zero_iff ℂ (coeff s Q)).mp fun φ => ?_
-  have h := congrArg (coeff s) (hΦ φ)
-  rwa [coeff_Φ, coeff_zero] at h
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
+  refine (Module.forall_dual_apply_eq_zero_iff ℂ (Q.coeff s)).mp fun φ => ?_
+  have h := congrArg (fun P : JetPoly => P.coeff s) (hΦ φ)
+  rw [coeff_Φ] at h
+  simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] using h
 
 /-! ### The model letter symbols -/
 

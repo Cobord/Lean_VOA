@@ -488,12 +488,11 @@ theorem opeFamily_pair_support_finite (W : VertexOperatorAlgebra 𝒱) (c v : �
     (Function.support fun z : ℕ × ℕ => g z.2 • H z.1 z.2).Finite := by
   obtain ⟨Nz, hNz⟩ := W.smul_eventually_zero c v
   refine support_pair_finite Nz.toNat (fun i p => g p • H i p) (fun i p hp => ?_) (fun p => ?_)
-  · dsimp only
-    rw [hz p i (hNz (p : ℤ) (by omega)), smul_zero]
+  · rw [hz p i (hNz (p : ℤ) (by omega)), smul_zero]
   · refine Set.Finite.subset (hrow p) fun i hi => ?_
     rw [Function.mem_support] at hi ⊢
     intro h
-    exact hi (by dsimp only; rw [h, smul_zero])
+    exact hi (by rw [h, smul_zero])
 
 /-! ### The mode-shift law for the shifted normal-ordered sum -/
 
@@ -517,25 +516,25 @@ theorem gsum_actMode_shift (ρ : VHatRep W M) (htr : ActModeTruncated ρ) (a b c
       pterm ρ a (W.smul c (z.2 : ℤ) b) x 0 (k + N - (z.2 : ℤ)) z.1).Finite :=
     opeFamily_pair_support_finite W c b (fun p => cbz k (p : ℤ))
       (fun i p => pterm ρ a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)) i)
-      (fun p i h => by dsimp only; rw [h, pterm_zero_right])
+      (fun p i h => by rw [h, pterm_zero_right])
       (fun p => pterm_support_finite ρ htr a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)))
   have hDp : (Function.support fun z : ℕ × ℕ => cbz k (z.2 : ℤ) •
       pterm ρ (W.smul c (z.2 : ℤ) a) b x (k - (z.2 : ℤ)) N z.1).Finite :=
     opeFamily_pair_support_finite W c a (fun q => cbz k (q : ℤ))
       (fun i q => pterm ρ (W.smul c (q : ℤ) a) b x (k - (q : ℤ)) N i)
-      (fun q i h => by dsimp only; rw [h, pterm_zero_left])
+      (fun q i h => by rw [h, pterm_zero_left])
       (fun q => pterm_support_finite ρ htr (W.smul c (q : ℤ) a) b x (k - (q : ℤ)) N)
   have hCq : (Function.support fun z : ℕ × ℕ => cbz k (z.2 : ℤ) •
       qterm ρ a (W.smul c (z.2 : ℤ) b) x 0 (k + N - (z.2 : ℤ)) z.1).Finite :=
     opeFamily_pair_support_finite W c b (fun p => cbz k (p : ℤ))
       (fun i p => qterm ρ a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)) i)
-      (fun p i h => by dsimp only; rw [h, qterm_zero_right])
+      (fun p i h => by rw [h, qterm_zero_right])
       (fun p => qterm_support_finite ρ htr a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)))
   have hDq : (Function.support fun z : ℕ × ℕ => cbz k (z.2 : ℤ) •
       qterm ρ (W.smul c (z.2 : ℤ) a) b x (k - (z.2 : ℤ)) N z.1).Finite :=
     opeFamily_pair_support_finite W c a (fun q => cbz k (q : ℤ))
       (fun i q => qterm ρ (W.smul c (q : ℤ) a) b x (k - (q : ℤ)) N i)
-      (fun q i h => by dsimp only; rw [h, qterm_zero_left])
+      (fun q i h => by rw [h, qterm_zero_left])
       (fun q => qterm_support_finite ρ htr (W.smul c (q : ℤ) a) b x (k - (q : ℤ)) N)
   have hBp : (Function.support fun i : ℕ => ρ.actMode c k (pterm ρ a b x 0 N i)).Finite := by
     refine Set.Finite.subset (pterm_support_finite ρ htr a b x 0 N) fun i hi => ?_
@@ -558,7 +557,6 @@ theorem gsum_actMode_shift (ρ : VHatRep W M) (htr : ActModeTruncated ρ) (a b c
     (fun i p => cbz k (p : ℤ) • qterm ρ a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)) i)
     (fun i q => cbz k (q : ℤ) • qterm ρ (W.smul c (q : ℤ) a) b x (k - (q : ℤ)) N i)
     (fun i => qterm_actMode_shift ρ a b c x k N i) hBq hCq hDq
-  dsimp only at hP hQ
   -- pull the mode and the scalars out of the inner sums
   rw [← map_finsum (ρ.actMode c k) (pterm_support_finite ρ htr a b x 0 N)] at hP
   rw [← map_finsum (ρ.actMode c k) (qterm_support_finite ρ htr a b x 0 N)] at hQ
@@ -732,8 +730,7 @@ theorem vlevel_cancel (ρ : VHatRep W M) (a b c : 𝒱) (x : M) (k N : ℤ) :
       (fun t j => (cbz k (t : ℤ) * cbz (t : ℤ) (j : ℤ)) •
         ρ.actMode (W.smul (W.smul c (j : ℤ) a) ((t : ℤ) - (j : ℤ) - 1) b) (k + N - (t : ℤ)) x)
       (fun t j hj => ?_) (fun j => ?_)
-    · dsimp only
-      rw [hNca (j : ℤ) (by omega), PreVertexAlgebra.smul_zero_left, actMode_zero_left,
+    · rw [hNca (j : ℤ) (by omega), PreVertexAlgebra.smul_zero_left, actMode_zero_left,
         LinearMap.zero_apply, smul_zero]
     · obtain ⟨Kj, hKj⟩ := W.smul_eventually_zero (W.smul c (j : ℤ) a) b
       refine Set.Finite.subset (Set.finite_Iio (Kj + (j : ℤ) + 1).toNat) fun t ht => ?_
@@ -741,7 +738,6 @@ theorem vlevel_cancel (ρ : VHatRep W M) (a b c : 𝒱) (x : M) (k N : ℤ) :
       rw [Set.mem_Iio]
       by_contra h
       exact ht (by
-        dsimp only
         rw [hKj ((t : ℤ) - (j : ℤ) - 1) (by omega), actMode_zero_left, LinearMap.zero_apply,
           smul_zero])
   have hvan : ∀ t j : ℕ, t < j → (cbz k (t : ℤ) * cbz (t : ℤ) (j : ℤ)) •
@@ -852,14 +848,12 @@ theorem defectModeShift_of_truncated (ρ : VHatRep W M) (htr : ActModeTruncated 
     opeSlot_support_finite W c b (fun p => cbz k (p : ℤ))
       (fun p => ρ.actMode (W.smul a (-1) (W.smul c (p : ℤ) b)) (k + N - (p : ℤ)) x)
       (fun p h => by
-        dsimp only
         rw [h, PreVertexAlgebra.smul_zero_right, actMode_zero_left, LinearMap.zero_apply])
   have hfPd : (Function.support fun p : ℕ => cbz k (p : ℤ) •
       defectVec ρ a (W.smul c (p : ℤ) b) x (-1) (k + N - (p : ℤ))).Finite :=
     opeSlot_support_finite W c b (fun p => cbz k (p : ℤ))
       (fun p => defectVec ρ a (W.smul c (p : ℤ) b) x (-1) (k + N - (p : ℤ)))
       (fun p h => by
-        dsimp only
         rw [h, defectVec_zero_left₂ ρ htr a x (-1) (k + N - (p : ℤ))])
   have hfQ1 : (Function.support fun q : ℕ => cbz k (q : ℤ) • ∑ᶠ r : ℕ, cbz (k - (q : ℤ)) (r : ℤ) •
       ρ.actMode (W.smul (W.smul c (q : ℤ) a) ((r : ℤ) - 1) b)
@@ -868,7 +862,6 @@ theorem defectModeShift_of_truncated (ρ : VHatRep W M) (htr : ActModeTruncated 
       (fun q => ∑ᶠ r : ℕ, cbz (k - (q : ℤ)) (r : ℤ) •
         ρ.actMode (W.smul (W.smul c (q : ℤ) a) ((r : ℤ) - 1) b) (N + k - (q : ℤ) - (r : ℤ)) x)
       (fun q h => by
-        dsimp only
         exact finsum_eq_zero_of_forall_eq_zero fun r => by
           rw [h, PreVertexAlgebra.smul_zero_left, actMode_zero_left, LinearMap.zero_apply,
             smul_zero])
@@ -877,7 +870,6 @@ theorem defectModeShift_of_truncated (ρ : VHatRep W M) (htr : ActModeTruncated 
     opeSlot_support_finite W c a (fun q => cbz k (q : ℤ))
       (fun q => defectVec ρ (W.smul c (q : ℤ) a) b x (-1) (N + k - (q : ℤ)))
       (fun q h => by
-        dsimp only
         rw [h, defectVec_zero_left₁ ρ htr b x (-1) (N + k - (q : ℤ))])
   -- the two outer corrections, split
   have hPsum : (∑ᶠ p : ℕ, cbz k (p : ℤ) • gsum ρ a (W.smul c (p : ℤ) b) x 0 (k + N - (p : ℤ)))

@@ -27,7 +27,7 @@ theorem y_mixed_lower_term_height (rs xs : List ℕ) (c d : ℕ)
   let B := (rs.map (transportCurrent (yOp ρ))).prod
   have hB : PowerSeries.coeff q.2 B w ∈
       xyzCountSpan ρ w 0 rs.length 0 := by
-    simpa [B] using y_transport_coeff_count ρ w rs q.2 0 0 0
+    simpa [B] using! y_transport_coeff_count ρ w rs q.2 0 0 0
       (xyzCountSpan_zero ρ w)
   have hlen := choices_length (xs ++ List.replicate c 0) p hp
   simp only [List.length_append, List.length_replicate] at hlen
@@ -44,7 +44,7 @@ theorem y_mixed_lower_term_height (rs xs : List ℕ) (c d : ℕ)
     have hz : PowerSeries.coeff t.2 (bWord (zOp ρ) p.2)
         (PowerSeries.coeff q.2 B w) ∈
         xyzCountSpan ρ w 0 rs.length p.2.length := by
-      simpa using xyzCountSpan_z_coeff ρ w p.2 t.2 0 rs.length 0 hB
+      simpa using! xyzCountSpan_z_coeff ρ w p.2 t.2 0 rs.length 0 hB
     have hx := xyzCountSpan_x_word ρ w p.1 0 rs.length p.2.length hz
     have hbase :
         (aWord (xOp ρ) p.1 *
@@ -52,12 +52,12 @@ theorem y_mixed_lower_term_height (rs xs : List ℕ) (c d : ℕ)
           (PowerSeries.coeff q.2 B w) ∈ N := by
       apply xyzCountSpan_le_heightHigher ρ w m p.1.length rs.length p.2.length
         (yMixedKeyHeight rs xs c d) hheight
-      simpa [aWord, mul_smul] using hx
+      simpa [aWord, mul_smul] using! hx
     have hf := fTop_coeff_preserves_heightHigher ρ w m
       (yMixedKeyHeight rs xs c d) (c - p.2.length) t.1 hbase
-    simpa [N, mul_assoc, mul_smul] using hf
+    simpa [N, mul_assoc, mul_smul] using! hf
   have hsum :
-      (∑ t ∈ Finset.antidiagonal q.1,
+      (∑ t ∈ Finset.HasAntidiagonal.antidiagonal q.1,
         (PowerSeries.coeff t.1 (fCurrent (fTopOp ρ) ^ (c - p.2.length)) *
           aWord (xOp ρ) p.1) *
           PowerSeries.coeff t.2 (bWord (zOp ρ) p.2)) •
@@ -66,13 +66,13 @@ theorem y_mixed_lower_term_height (rs xs : List ℕ) (c d : ℕ)
     exact N.sum_mem (fun t ht => hterm t)
   have hscalar (z : ℂ) :
       (algebraMap ℂ (Module.End ℂ V) z) •
-        ((∑ t ∈ Finset.antidiagonal q.1,
+        ((∑ t ∈ Finset.HasAntidiagonal.antidiagonal q.1,
           (PowerSeries.coeff t.1
             (fCurrent (fTopOp ρ) ^ (c - p.2.length)) *
               aWord (xOp ρ) p.1) *
             PowerSeries.coeff t.2 (bWord (zOp ρ) p.2)) •
           (PowerSeries.coeff q.2 B w)) ∈ N := by
-    simpa using N.smul_mem z hsum
+    simpa using! N.smul_mem z hsum
   have hcast : ((-1 : Module.End ℂ V) ^ p.2.length *
       (c.descFactorial p.2.length : Module.End ℂ V)) =
       algebraMap ℂ (Module.End ℂ V)
@@ -80,7 +80,7 @@ theorem y_mixed_lower_term_height (rs xs : List ℕ) (c d : ℕ)
     simp
   unfold conversionTerm
   rw [hcast]
-  simpa only [mul_smul] using
+  simpa only [mul_smul] using!
     hscalar ((-1 : ℂ) ^ p.2.length * (c.descFactorial p.2.length : ℂ))
 
 theorem y_mixed_lower_mem_height (rs xs : List ℕ) (c s d : ℕ) :
@@ -89,7 +89,7 @@ theorem y_mixed_lower_mem_height (rs xs : List ℕ) (c s d : ℕ) :
       (rs.map (transportCurrent (yOp ρ))).prod w ∈
         heightHigherOrbit ρ w m (yMixedKeyHeight rs xs c d) := by
   let N := heightHigherOrbit ρ w m (yMixedKeyHeight rs xs c d)
-  change (∑ q ∈ Finset.antidiagonal s,
+  change (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
     lowerSum (fTopOp ρ) (xOp ρ) (zOp ρ) c q.1
       (xs ++ List.replicate c 0) *
       PowerSeries.coeff q.2
@@ -102,9 +102,9 @@ theorem y_mixed_lower_mem_height (rs xs : List ℕ) (c s d : ℕ) :
     (PowerSeries.coeff q.2
       (rs.map (transportCurrent (yOp ρ))).prod) w N
     (fun p hp hshort => by
-      simpa [mul_smul] using
+      simpa [mul_smul] using!
         y_mixed_lower_term_height ρ w m rs xs c d p hp hshort q)
-  simpa [mul_smul] using hl
+  simpa [mul_smul] using! hl
 
 /-- Graded YZG(b) in its full positional-contraction form. -/
 theorem yz_full_contractions_height
@@ -120,7 +120,7 @@ theorem yz_full_contractions_height
     (fTop_x_comm ρ) (fTop_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [xOp, zOp] using radical_ops_comm ρ 1 5 i j v)
+      simpa [xOp, zOp] using! radical_ops_comm ρ 1 5 i j v)
   · exact y_partial_garland_zero ρ w m h rs c s (by omega) hks
   · exact y_mixed_lower_mem_height ρ w m rs xs c s
       (rs.sum + xs.sum + s)

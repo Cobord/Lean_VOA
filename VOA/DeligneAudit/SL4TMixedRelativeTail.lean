@@ -36,7 +36,7 @@ theorem mixedConv_relative_tail (φ : MixedPoly →+* R) (f g u : ℕ → MixedP
         rw [hu n (by omega)] at h
         simp only [mixedConv, map_sum, map_mul] at h
         rw [Finset.sum_eq_single 0] at h
-        · simpa only [hf0, Nat.sub_zero, one_mul] using h
+        · simpa only [hf0, Nat.sub_zero, one_mul] using! h
         · intro i hi hne
           by_cases hid : d < i
           · rw [hf i hid, zero_mul]
@@ -85,7 +85,7 @@ theorem mixedG1prime_tail (q : MixedParams) (hq : MixedValid q) (n : ℕ)
     rw [mixedG1prime_convolution]
   · intro j hj
     exact mixedRelation_zero q hq _
-      (Or.inl ⟨3, j, by simpa [mixedLengths] using hj, rfl⟩)
+      (Or.inl ⟨3, j, by simpa [mixedLengths] using! hj, rfl⟩)
   · intro j hj hu
     exact mixedRelation_zero q hq _
       (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨j, by omega, hu, rfl⟩)))))
@@ -105,7 +105,7 @@ theorem mixedG2prime_tail (q : MixedParams) (hq : MixedValid q) (n : ℕ)
     rw [mixedG2prime_convolution]
   · intro j hj
     exact mixedRelation_zero q hq _
-      (Or.inl ⟨4, j, by simpa [mixedLengths] using hj, rfl⟩)
+      (Or.inl ⟨4, j, by simpa [mixedLengths] using! hj, rfl⟩)
   · intro j hj hu
     exact mixedRelation_zero q hq _
       (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨j, by omega, hu, rfl⟩)))))

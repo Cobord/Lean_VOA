@@ -93,7 +93,7 @@ theorem cpow_ofReal_eq_exp {a : ℝ} (ha : 0 < a) (w : ℂ) :
 theorem cpow_natCast_eq_exp {n : ℕ} (hn : 0 < n) (w : ℂ) :
     ((n : ℂ)) ^ w = exp (w * (Real.log n : ℂ)) := by
   have := cpow_ofReal_eq_exp (a := (n : ℝ)) (by exact_mod_cast hn) w
-  simpa using this
+  simpa using! this
 
 /-- The exponent of `Pref(z) ∏_p p^{2 L₀ z}`. -/
 def Aexp (z : ℂ) : ℂ :=
@@ -211,11 +211,11 @@ theorem LSeriesHasSum_eulAF (c : ℂ) {k : ℕ} (hk : k ≠ 0) (z : ℂ) :
   have h1 : LSeriesHasSum ⇑(1 : ArithmeticFunction ℂ) z 1 := by
     have := (LSeriesSummable_one_AF z).LSeriesHasSum
     rw [coe_one_AF, LSeries_delta] at this
-    rw [coe_one_AF]; simpa using this
+    rw [coe_one_AF]; simpa using! this
   have h2 := (LSeriesHasSum_dltAF hk z).smul c
   unfold eulAF
   have := h1.sub h2
-  simpa [smul_eq_mul] using this
+  simpa [smul_eq_mul] using! this
 
 /-- `e' = ∏_p (1 − ψ̄(p) δ_{p²})`. -/
 def eAF : ArithmeticFunction ℂ := ∏ p : S.ι, eulAF (S.ψ⁻¹ p.1) (p.1 ^ 2)
@@ -361,7 +361,7 @@ theorem coeff_identity (hprim : S.ψ.IsPrimitive) (hev : S.ψ.Even) {n : ℕ} (h
   set F1 := dil S.D0 ⇑(S.eAF * toArithmeticFunction (thetaTypeCoeff (fricke S.N f)))
   set F2 : ℕ → ℂ := S.Kc • ⇑(toArithmeticFunction (S.Hf (S.gf hf)) * sqAF S.χbar)
   have hz : ∀ x : ℝ, X ≤ x → X ≤ ((x : ℂ) + Complex.I).re ∧ ((x : ℂ) + Complex.I).im = 1 :=
-    fun x hx => ⟨by simpa using hx, by simp⟩
+    fun x hx => ⟨by simpa using! hx, by simp⟩
   have heq : ∀ x : ℝ, X ≤ x → LSeries (twI F1) x = LSeries (twI F2) x := by
     intro x hx
     obtain ⟨-, -, h⟩ := hX _ (hz x hx).1 (hz x hx).2
@@ -370,11 +370,11 @@ theorem coeff_identity (hprim : S.ψ.IsPrimitive) (hev : S.ψ.Even) {n : ℕ} (h
     obtain ⟨h1, -, -⟩ := hX _ (hz X le_rfl).1 (hz X le_rfl).2
     have : LSeriesSummable (twI F1) (X : ℂ) :=
       LSeriesSummable_twI.2 (LSeriesSummable_dil S.D0_pos h1)
-    exact lt_of_le_of_lt (by simpa using this.abscissaOfAbsConv_le) (by simp)
+    exact lt_of_le_of_lt (by simpa using! this.abscissaOfAbsConv_le) (by simp)
   have hF2 : LSeries.abscissaOfAbsConv (twI F2) < ⊤ := by
     obtain ⟨-, h2, -⟩ := hX _ (hz X le_rfl).1 (hz X le_rfl).2
     have : LSeriesSummable (twI F2) (X : ℂ) := LSeriesSummable_twI.2 (h2.smul _)
-    exact lt_of_le_of_lt (by simpa using this.abscissaOfAbsConv_le) (by simp)
+    exact lt_of_le_of_lt (by simpa using! this.abscissaOfAbsConv_le) (by simp)
   have hev' : (fun x : ℝ => LSeries (twI F1) x) =ᶠ[atTop] fun x : ℝ => LSeries (twI F2) x := by
     filter_upwards [eventually_ge_atTop X] with x hx using heq x hx
   have h := LSeries.eq_of_LSeries_eventually_eq hF1 hF2 hev' hn
@@ -382,7 +382,7 @@ theorem coeff_identity (hprim : S.ψ.IsPrimitive) (hev : S.ψ.Even) {n : ℕ} (h
   have hne : (n : ℂ) ^ (-Complex.I) ≠ 0 :=
     cpow_ne_zero_iff.2 (Or.inl (Nat.cast_ne_zero.2 hn))
   have := mul_right_cancel₀ hne h
-  simpa [F2] using this
+  simpa [F2] using! this
 
 /-! ## Valuations -/
 
@@ -403,7 +403,6 @@ theorem D0_factorization (p : S.ι) :
     S.D0.factorization p.1 + S.N.factorization p.1 =
       (4 * S.t * S.r ^ 2).factorization p.1 + 2 * S.L0 := by
   have h := congrArg (fun n => n.factorization p.1) S.D0_mul_N
-  simp only at h
   have hX0 : 4 * S.t * S.r ^ 2 ≠ 0 := by have := S.t_pos; have := S.r_pos; positivity
   rw [Nat.factorization_mul S.D0_pos.ne' S.hN.ne',
     Nat.factorization_mul hX0 (pow_ne_zero _ S.M0_pos.ne'), Finsupp.add_apply,

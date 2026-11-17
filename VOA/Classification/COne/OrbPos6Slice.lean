@@ -15,7 +15,7 @@ theorem resc_chargeField_off {n : ℕ} (hn : 0 < n) (a j β e : ℤ)
   rw [shiftedY_charge]
   apply fractionalChargeMode_support
   simpa only [show (n : ℤ) * (-t - 1) + e - a * β = (n : ℤ) * (-t - 1) + (e - a * β) by ring,
-    Int.add_emod, Int.mul_emod_right, zero_add, Int.emod_emod] using he
+    Int.add_emod, Int.mul_emod_right, zero_add, Int.emod_emod] using! he
 
 theorem shiftedY_charge_smul_off (n : ℕ) (a j β γ ℓ k : ℤ)
     (hk : (k - a * (β + γ)) % (n : ℤ) ≠ 0) :
@@ -43,7 +43,7 @@ theorem charge_product_all_right_offsets {n : ℕ} (hn : 0 < n) (a j β γ e f �
     rw [shiftedY_charge_smul_off n a j β γ (ℓ + d) _ (by
       simpa only [show (n : ℤ) * (s - d) + e + f - a * (β + γ) =
           (n : ℤ) * (s - d) + (e - a * β) + (f - a * γ) by ring,
-        Int.add_emod, Int.mul_emod_right, he, Int.zero_emod, zero_add, Int.emod_emod] using hf),
+        Int.add_emod, Int.mul_emod_right, he, Int.zero_emod, zero_add, Int.emod_emod] using! hf),
       LinearMap.zero_apply, smul_zero]
 
 theorem charge_eigen_residue {n : ℕ} (hn : 0 < n) (a β : ℤ) (r : ℕ)
@@ -56,7 +56,9 @@ theorem charge_eigen_residue {n : ℕ} (hn : 0 < n) (a β : ℤ) (r : ℕ)
     simp only [phase, Int.cast_neg, Int.cast_natCast]
     congr 1
     ring
-  rw [latChargeGen, shiftAut_latState] at he
+  rw [show latChargeGen (latP 1) β =
+      latStateGen (latP 1) (HeisenbergN.vacuumN (rank (latP 1))) β from rfl,
+    shiftAut_latState] at he
   have hc : phase n (a * β) = phase n (-(r : ℤ)) :=
     (smul_left_injective ℂ (COne.latChargeGen_ne_zero 1 β)) he
   exact (phase_eq_iff hn _ _).mp hc.symm
@@ -83,7 +85,7 @@ theorem shiftedProductFormulaCharged_of_full {n : ℕ} (hn : 0 < n) (a j : ℤ)
 theorem shiftedProductFormulaCharged {n : ℕ} (hn : 0 < n) (a j : ℤ) :
     ShiftedProductFormulaCharged hn a j := by
   intro r β hu γ e _ _ ℓ s x
-  simpa only [sub_eq_add_neg, Int.cast_neg] using
+  simpa only [sub_eq_add_neg, Int.cast_neg] using!
     charge_product_all_right_offsets hn a j β γ (-(r : ℤ)) e ℓ s
       (charge_eigen_residue hn a β r hu) x
 

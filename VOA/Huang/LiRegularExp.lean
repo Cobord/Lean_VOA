@@ -119,7 +119,6 @@ theorem expOp_add {A : Module.End ℂ M} (hA : LocNil A) (c d : ℂ) (x : M) :
   rw [Finset.sum_congr rfl hL]
   have htri := tri_reindex J (fun k i =>
     ((c ^ k / (k.factorial : ℂ)) * (d ^ i / (i.factorial : ℂ))) • (A ^ (i + k)) x)
-  simp only at htri
   rw [htri]
   refine Finset.sum_congr rfl fun k hk => ?_
   rw [Finset.mem_range] at hk
@@ -219,7 +218,6 @@ theorem expOp_conj {A : Module.End ℂ M} (hA : LocNil A) (X : ℤ → Module.En
   simp only [pow_comm_formula A X hX, Finset.smul_sum, smul_smul]
   have htri := tri_reindex B (fun k i => ((c ^ (k + i) / ((k + i).factorial : ℂ)) *
     (((k + i).choose k : ℂ) * ff n k)) • X (n - k) ((A ^ i) x))
-  simp only at htri
   have hre : ∀ N ∈ Finset.range B, ∑ k ∈ Finset.range (N + 1),
       ((c ^ N / (N.factorial : ℂ)) * ((N.choose k : ℂ) * ff n k)) •
         X (n - k) ((A ^ (N - k)) x)

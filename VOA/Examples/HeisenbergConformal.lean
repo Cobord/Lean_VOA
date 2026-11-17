@@ -20,6 +20,9 @@ open scoped BigOperators
 open MvPolynomial
 open Module (End)
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §1  THE BRIDGE: `Y k (ω k) = sugawaraField k` -/
 
 /-- `osc k (-1) (osc k (-1) vacuum) = X 0 ^ 2`: applying the lowest creation twice to the
@@ -181,7 +184,7 @@ theorem Lvir_zero_gradingW (k : ℂ) (hk : k ≠ 0) {w : ℕ} {p : Fock} (hp : p
   have hwa : Finsupp.weight weightFn a = w := by
     rw [mem_gradingW] at hp
     exact hp (MvPolynomial.mem_support_iff.mp ha)
-  rw [Lvir_zero_monomial k hk (MvPolynomial.coeff a p) a, hwa]
+  rw [Lvir_zero_monomial k hk (p.coeff a) a, hwa]
 
 /-- **VOA2 (conformal weight)** in the exact `VertexOperatorAlgebra.L0_grading` shape:
 `L₀ = mode (Y ω) 1` acts on each graded piece `gradingZ n` as multiplication by `n`,

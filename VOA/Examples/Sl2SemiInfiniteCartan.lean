@@ -21,7 +21,7 @@ open scoped BigOperators
 theorem bGhost_cGhost_product (a b : Fin 3) (n : ℤ) (hn : 0 ≤ n) :
     mode (sl2GhostSVA.Y (bGhost a)) n (cGhost b) =
       if a = b ∧ n = 0 then sl2GhostSVA.vacuum else 0 := by
-  simpa using ghostGenerator_nonneg_product a b 0 1 n hn
+  simpa using! ghostGenerator_nonneg_product a b 0 1 n hn
 
 /-- Negative first products of `b` and `c` anticommute. -/
 theorem cGhost_negOne_bGhost (a b : Fin 3) :

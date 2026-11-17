@@ -22,7 +22,7 @@ theorem semisimpleCyclic_unsigned (v : V) (e : Fin 15) (r : ℕ)
     fin_cases e <;> norm_num [leviSign]
   have hh := (cycSubG (leviCurrent ρ) v).smul_mem (leviSign e : ℂ)
     (cycSubG_inv (leviCurrent ρ) v e r hu)
-  simpa only [leviCurrent, LinearMap.smul_apply, smul_smul, hs, one_smul] using hh
+  simpa only [leviCurrent, LinearMap.smul_apply, smul_smul, hs, one_smul] using! hh
 
 /-- Stability of the extra Cartan on the generator extends to its semisimple cyclic module. -/
 theorem semisimpleCyclic_extraCartan (v : V)

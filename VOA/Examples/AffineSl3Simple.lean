@@ -124,7 +124,7 @@ def simpleWeightOneBasis (k : ℂ) (hk : k+3≠0) (hk0 : k≠0) :
 noncritical level; no additional singular-vector input is required. -/
 theorem simple_weightOne_finrank (k : ℂ) (hk : k+3≠0) (hk0 : k≠0) :
     Module.finrank ℂ ((simpleVOA k hk).grading 1)=8 := by
-  simpa using Module.finrank_eq_card_basis (simpleWeightOneBasis k hk hk0)
+  simpa using! Module.finrank_eq_card_basis (simpleWeightOneBasis k hk hk0)
 
 end
 end VOA.AffineSl3

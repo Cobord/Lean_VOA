@@ -839,15 +839,19 @@ noncomputable def glueLat (m : ℕ) (j : ℤ) : IntegralLattice.{0} where
 theorem glueLat_form (m : ℕ) (j : ℤ) (x y : (glueLat m j).carrier) :
     (glueLat m j).form x y = glueForm m j x y := rfl
 
+theorem glueLat_form_eq (m : ℕ) (j : ℤ) (x y : (glueLat m j).carrier) :
+    (glueLat m j).form x y = 2 * (m : ℤ) * x 0 * y 0 + j * (x 0 * y 1 + x 1 * y 0) +
+      2 * (j ^ 2 + 1) * x 1 * y 1 := rfl
+
 theorem glueLat_even (m : ℕ) (j : ℤ) : (glueLat m j).Even := by
   intro x
   refine ⟨(m : ℤ) * x 0 * x 0 + j * x 0 * x 1 + (j ^ 2 + 1) * x 1 * x 1, ?_⟩
-  rw [glueLat_form, glueForm]
+  rw [glueLat_form_eq]
   ring
 
 theorem glueLat_posDef (m : ℕ) (hm : 1 ≤ m) (j : ℤ) : (glueLat m j).PosDef := by
   intro x hx
-  rw [glueLat_form, glueForm]
+  rw [glueLat_form_eq]
   have hm' : (1 : ℤ) ≤ (m : ℤ) := by exact_mod_cast hm
   have hx' : x 0 ≠ 0 ∨ x 1 ≠ 0 := by
     by_contra hc
@@ -879,12 +883,12 @@ def glueDelta (m : ℕ) (j : ℤ) : (glueLat m j).carrier := Pi.single (1 : Fin 
 
 theorem glueIota_isometry (m : ℕ) (j : ℤ) (a b : ℤ) :
     (glueLat m j).form (glueIota m j a) (glueIota m j b) = (latP m).form a b := by
-  rw [glueLat_form, glueForm, latP_form, glueIota_apply, glueIota_apply]
+  rw [glueLat_form_eq, latP_form, glueIota_apply, glueIota_apply]
   simp
 
 theorem glueIota_delta (m : ℕ) (j : ℤ) (n : ℤ) :
     (glueLat m j).form (glueIota m j n) (glueDelta m j) = j * n := by
-  rw [glueLat_form, glueForm, glueIota_apply, glueDelta]
+  rw [glueLat_form_eq, glueIota_apply, glueDelta]
   simp
 
 variable (m : ℕ) (hm : 1 ≤ m) (j : ℤ)
@@ -931,7 +935,8 @@ theorem shiftWeight_rankOne (w : ℕ) (n : ℤ) :
       = (((w : ℝ) + ((2 * m * n + j : ℤ) : ℝ) ^ 2 / (4 * m) : ℝ) : ℂ) := by
   have hK := latP_posDef m hm
   have hN := glueLat_posDef m hm j
-  rw [shiftWeight_eq _ _ _ _ hK hN, lamShift_sq_rankOne m hm j, latP_form, glueIota_delta]
+  refine (shiftWeight_eq _ _ _ _ hK hN w n).trans ?_
+  rw [lamShift_sq_rankOne m hm j, latP_form, glueIota_delta]
   have hm0 : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
   push_cast
   field_simp
@@ -1034,7 +1039,7 @@ theorem latticeModule_vacuum_mem :
 theorem latticeModule_weight_ne_bot {h : ℂ} (hh : (latticeModule m hm j).weight h ≠ ⊥) :
     ∃ (w : ℕ) (n : ℤ), h = (((w : ℝ) + ((2 * m * n + j : ℤ) : ℝ) ^ 2 / (4 * m) : ℝ) : ℂ) := by
   obtain ⟨⟨w, n⟩, _, hpw⟩ := shiftWeightSpace_ne_bot _ _ _ _ hh
-  exact ⟨w.toNat, n, by rw [← hpw, shiftWeight_rankOne m hm j]⟩
+  exact ⟨w.toNat, n, by rw [← hpw]; exact shiftWeight_rankOne m hm j w.toNat n⟩
 
 /-- **Lowest weight** `h_j = j²/(4m)` (for the representative `|j| ≤ m`): every nonzero weight
 space of `V_{L+λ_j}` has real weight `≥ j²/(4m)`, and the weight `j²/(4m)` occurs. -/

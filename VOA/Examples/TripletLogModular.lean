@@ -687,7 +687,7 @@ theorem not_admissiblyRational_of_hasLogTerm_vacChar (W : VertexOperatorAlgebra 
   intro hwr
   obtain ⟨n, D, i, hD, hchar⟩ := hzhu hwr hC2
   refine not_zhuModularityAnalytic_of_hasLogTerm D ModularGroup.S i ?_ hD
-  simpa only [hchar] using hlog
+  simpa only [hchar] using! hlog
 
 end VacuumRoute
 

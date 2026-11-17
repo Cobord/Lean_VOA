@@ -145,7 +145,7 @@ theorem superGradingZ_le_pullback
         rw [hp]
         exact ha
       have hvgrade : V.gradingZ 0 = ℂ ∙ W.vacuum := by
-        simpa only [V, SuperNearVOA.gradingZ_apply, Int.cast_zero] using W.vacuum_grade
+        simpa only [V, SuperNearVOA.gradingZ_apply, Int.cast_zero] using! W.vacuum_grade
       rw [hvgrade, Submodule.mem_span_singleton] at ha0
       obtain ⟨c, rfl⟩ := ha0
       have hp0' : p.toNat = 0 := by omega

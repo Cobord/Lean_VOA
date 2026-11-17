@@ -27,10 +27,10 @@ theorem phi_of_sector0 {v : Sp} {d : ℤ} (hv : v ∈ Sd 0 d) (hE : Ep v = 0)
   have hH : Hm v = (1 : ℂ) • v := by rw [Hm_Sd hv]; norm_num
   have hEF' : Ep (Fm v) = eps1 • v := by
     have := E_Fpow hEF hHF hE hH 0
-    simpa using this
+    simpa using! this
   have hfv : Fm v ∈ Sd (-1) d := by
     have := Fm_Sd hv
-    simpa using this
+    simpa using! this
   exact phi_doublet hv hfv hE hEF' hFF
 
 /-- `e^{β/2}`. -/
@@ -55,12 +55,12 @@ theorem xx_mem_Z2 : xo 0 * xo 0 ∈ gradingZN (rank (latP 1)) 2 := by
   rw [gradingZN_of_nonneg (by norm_num)]
   have h := isWeightedHomogeneous_X ℂ (weightFnN (r := rank (latP 1))) ((0 : ℕ), a0 1)
   have := h.mul h
-  simpa using this
+  simpa using! this
 
 theorem x1_mem_Z2 : xo 1 ∈ gradingZN (rank (latP 1)) 2 := by
   rw [gradingZN_of_nonneg (by norm_num)]
   have := isWeightedHomogeneous_X ℂ (weightFnN (r := rank (latP 1))) ((1 : ℕ), a0 1)
-  simpa using this
+  simpa using! this
 
 abbrev u1 : Sp := latStateGen (latP 1) (xo 0 * xo 0) (0 : ℤ)
 abbrev u2 : Sp := latStateGen (latP 1) (xo 1) (0 : ℤ)
@@ -70,7 +70,7 @@ theorem u2_Sd : u2 ∈ Sd 0 2 := latStateGen_mem_Sd x1_mem_Z2
 
 theorem exists_Ep_u (x : Sp) (hx : x ∈ Sd 0 2) : ∃ c : ℂ, Ep x = c • q0 := by
   have h := Ep_Sd hx
-  have h' : Ep x ∈ ℂ ∙ q0 := Sd_zero 1 (by simpa using h)
+  have h' : Ep x ∈ ℂ ∙ q0 := Sd_zero 1 (by simpa using! h)
   obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp h'
   exact ⟨c, hc.symm⟩
 
@@ -348,7 +348,8 @@ theorem Tm0_qv3_exists : ∃ κ : ℂ, κ ≠ 0 ∧ Tm 0 (qv 3) = κ • qv 0 :=
     rw [show (-8 - 1 - 2 * (3 : ℤ) * (-2) - 3) = 0 by norm_num,
       show ((3 : ℤ) + (-2 : ℤ)) = (1 : ℤ) by norm_num]
     change latStateGen (latP 1) (EEVec (latP 1) _ 0 (vacuumN _)) _ = _
-    rw [EEVec_vacuum, if_pos le_rfl, show ((0 : ℤ).toNat) = 0 from rfl, vSchur_zero]
+    rw [EEVec_vacuum (latP 1) (3 : ℤ), if_pos le_rfl, show ((0 : ℤ).toNat) = 0 from rfl,
+      vSchur_zero (latP 1) (3 : ℤ)]
   refine ⟨c * (latCob (latP 1) (glueLat 1 1) (glueIota 1 1) (3 : ℤ) *
       latticeCocycle (glueLat 1 1) (glueIota 1 1 (3 : ℤ))
         (glueIota 1 1 (-2 : ℤ) + glueDelta 1 1)), ?_, ?_⟩

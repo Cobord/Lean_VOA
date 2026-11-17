@@ -5,6 +5,9 @@ noncomputable section
 namespace VOA.Moonshine.ConwayNorton
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem borcherdsCasimirScalar_positive_simple_step (μ α : ℤ × ℤ)
     (hα : borcherdsSimpleRoot α) :
     borcherdsCasimirScalar (μ + α) = borcherdsCasimirScalar μ +

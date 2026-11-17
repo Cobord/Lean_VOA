@@ -78,7 +78,6 @@ theorem affineVacuumProduct_admissible_factor_charge (p q : ℕ) (hp : 2≤p) (h
     Finset.mem_erase.mpr ⟨by simp,admissible_first_label_mem_charge p q hp hq c hc⟩
   have he := Finset.mul_prod_erase ((affineKacLabels (q*(p-1)) c).erase ((1,0),0))
     (fun i => (affineRootPolynomial i)^affineKacMultiplicity (q*(p-1)) c i) hm
-  dsimp only at he
   rw [admissible_first_multiplicity_charge p q hp hq c hc,pow_one,
     admissible_first_root_polynomial p q hp hq] at he
   exact he.symm
@@ -110,7 +109,7 @@ theorem affineVacuumProduct_admissible_simple_charge (p q : ℕ) (hp : 2≤p) (h
   · have hqC : -(q : ℂ)≠0 := neg_ne_zero.mpr (by exact_mod_cast (Nat.ne_of_gt hq))
     simpa only [derivative_mul,derivative_C,derivative_sub,derivative_X,
       sub_zero,zero_mul,mul_one,zero_add,eval_add,eval_mul,eval_sub,eval_X,eval_C,
-      sub_self,mul_zero,zero_add,add_zero] using
+      sub_self,mul_zero,zero_add,add_zero] using!
       mul_ne_zero hqC (admissibleVacuumRemainderCharge_ne_zero p q hp hq hcop c)
 theorem admissible_minus_two_labels_charge (p q : ℕ) (hp : 2≤p) (hq : 0<q)
     (hcop : p.Coprime q) (c : ℤ) (i : (Fin 3×ℕ)×ℕ)
@@ -126,20 +125,20 @@ theorem admissible_minus_two_labels_charge (p q : ℕ) (hp : 2≤p) (hq : 0<q)
       linear_combination -hz
     have eqn := negative_weight_zero_equation p q (m+1) (r+1) hq hz'
     have hs := plus_resonance_energy_gt hp hq (by omega) hcop eqn
-    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
     omega
   · have hz' : (m : ℂ)*((p : ℂ)/q)-((r+1 : ℕ) : ℂ)-1=0 := by
       norm_num [realRootWeight,realRootSlope,realRootOffset,Fin.ext_iff] at hz
       push_cast
       linear_combination -hz
     have eqn := positive_weight_zero_equation p q m (r+1) hq hz'
-    have hm : 0<m := by
+    have hm : 0 < m := by
       by_contra hn
       have hm0 : m=0 := by omega
       simp only [hm0,zero_mul] at eqn
       have : 0<q*(r+1+1) := Nat.mul_pos hq (by omega)
       omega
-    have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+    have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
     obtain ⟨hm',hr⟩ := first_minus_resonance_unique hp hq hm hcop eqn hb
     have hr' : r=p-2 := by omega
     simp [hm',hr']
@@ -177,7 +176,7 @@ theorem affineMinusTwoPolynomial_admissible_ne_zero_charge (p q : ℕ) (hp : 2�
     (affineMinusTwoPolynomial (q*(p-1)) (c+1)).eval ((p : ℂ)/q-2)≠0 := by
   have ht : (p : ℂ)/q≠0 := div_ne_zero
     (by exact_mod_cast (show p≠0 by omega)) (by exact_mod_cast (Nat.ne_of_gt hq))
-  have hk : (p : ℂ)/q-2+2≠0 := by simpa only [sub_add_cancel] using ht
+  have hk : (p : ℂ)/q-2+2≠0 := by simpa only [sub_add_cancel] using! ht
   rw [affineMinusTwoPolynomial_eval,weightDeterminant_eq_affineKacProduct_all,
     eval_mul,eval_C]
   exact mul_ne_zero (Finset.prod_ne_zero_iff.mpr (fun i _ => derivativeMultiplier_ne_zero _ hk _ _))

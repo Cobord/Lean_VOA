@@ -38,7 +38,7 @@ theorem vermaContractionFiltration_single (k : ℕ) (w : List ℕ) (a : ℂ)
     Finsupp.single w (a • (X^k : Polynomial ℂ))∈vermaContractionFiltration d := by
   have hm : Finsupp.single w (X^k : Polynomial ℂ)∈vermaContractionFiltration d :=
     Submodule.subset_span ⟨k,w,h,rfl⟩
-  simpa only [Finsupp.smul_single] using (vermaContractionFiltration d).smul_mem a hm
+  simpa only [Finsupp.smul_single] using! (vermaContractionFiltration d).smul_mem a hm
 
 /-- Prefixing one negative mode increases the permitted creation length by one. -/
 theorem vermaContractionFiltration_prepend (i : ℕ) {d : ℕ}
@@ -48,10 +48,10 @@ theorem vermaContractionFiltration_prepend (i : ℕ) {d : ℕ}
   | mem f hf =>
     obtain ⟨k,w,hw,rfl⟩ := hf
     simp only [polynomialPrepend,Finsupp.lmapDomain_apply,Finsupp.mapDomain_single]
-    simpa only [one_smul] using vermaContractionFiltration_single k (i::w) 1 (by simp only [List.length_cons]; omega)
+    simpa only [one_smul] using! vermaContractionFiltration_single k (i::w) 1 (by simp only [List.length_cons]; omega)
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Multiplication by p powers of highest weight increases the filtration
 bound by twice p, for arbitrary finite polynomial word expressions. -/
@@ -62,10 +62,10 @@ theorem vermaContractionFiltration_shift (p : ℕ) {d : ℕ}
   | mem f hf =>
     obtain ⟨k,w,hw,rfl⟩ := hf
     rw [Finsupp.smul_single,smul_eq_mul,← pow_add]
-    simpa only [one_smul] using vermaContractionFiltration_single (p+k) w 1 (by omega)
+    simpa only [one_smul] using! vermaContractionFiltration_single (p+k) w 1 (by omega)
   | zero => simp
-  | add f g _ _ hf hg => simpa only [smul_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [smul_comm (X^p : Polynomial ℂ) a] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [smul_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [smul_comm (X^p : Polynomial ℂ) a] using! Submodule.smul_mem _ a hf
 
 /-- A negative mode simply prefixes its creation index in the polynomial
 word algorithm, including the translation mode L₋₁. -/
@@ -102,38 +102,38 @@ theorem vermaModePolynomial_contractionFiltration (c : ℂ) (m : ℤ) (w : List 
   | nil =>
     by_cases hm : m<0
     · rw [vermaModePolynomial_negative c m hm]
-      simpa only [pow_zero,one_smul,if_neg (by omega : m≠0)] using
+      simpa only [pow_zero,one_smul,if_neg (by omega : m≠0)] using!
         vermaContractionFiltration_single 0 [(-m-1).toNat] 1 (by simp)
     · by_cases hz : m=0
       · subst m
         rw [vermaModePolynomial_zero]
-        simpa [energyHW_nil] using vermaContractionFiltration_single 1 [] 1 (by simp)
+        simpa [energyHW_nil] using! vermaContractionFiltration_single 1 [] 1 (by simp)
       · simp [vermaModePolynomial,hm,hz]
   | cons i w ih =>
     by_cases hz : m=0
     · subst m
       rw [vermaModePolynomial_zero,Finsupp.single_add]
       apply Submodule.add_mem
-      · simpa only [pow_one,one_smul,ite_true] using
+      · simpa only [pow_one,one_smul,ite_true] using!
           vermaContractionFiltration_single 1 (i::w) 1 (by simp; omega)
-      · simpa [Algebra.smul_def] using
+      · simpa [Algebra.smul_def] using!
           vermaContractionFiltration_single 0 (i::w) (energyHW (i::w) : ℂ) (by simp)
     · by_cases hm : m<0
       · rw [vermaModePolynomial_negative c m hm]
-        simpa only [pow_zero,one_smul,if_neg hz] using
+        simpa only [pow_zero,one_smul,if_neg hz] using!
           vermaContractionFiltration_single 0 ((-m-1).toNat::i::w) 1 (by simp)
       · rw [vermaModePolynomial,if_neg hm,if_neg hz]
         apply Submodule.add_mem
         · apply Submodule.add_mem
-          · simpa only [if_neg hz,List.length_cons] using
+          · simpa only [if_neg hz,List.length_cons] using!
               vermaContractionFiltration_prepend i (ih m)
           · have hh := vermaContractionFiltration_mono
               (show w.length+(if m-(i:ℤ)-1=0 then 2 else 1)≤(i::w).length+1
                 by simp only [List.length_cons]; split_ifs <;> omega) (ih _)
-            simpa only [algebraMap_smul] using
+            simpa only [algebraMap_smul] using!
               (vermaContractionFiltration _).smul_mem ((m:ℂ)+(i:ℂ)+1) hh
         · split_ifs
-          · simpa [Algebra.smul_def,← map_mul] using
+          · simpa [Algebra.smul_def,← map_mul] using!
               vermaContractionFiltration_single 0 w ((((m:ℂ)^3-m)/12)*c) (by simp; omega)
           · exact Submodule.zero_mem _
 
@@ -157,7 +157,7 @@ theorem vermaContractionNormal_mem (m : ℤ) (w : List ℕ) :
     apply Submodule.add_mem
     · exact vermaContractionFiltration_prepend i ih
     · split_ifs
-      · simpa only [pow_one,Algebra.smul_def] using
+      · simpa only [pow_one,Algebra.smul_def] using!
           vermaContractionFiltration_single 1 w ((m:ℂ)+(i:ℂ)+1) (by simp; omega)
       · exact Submodule.zero_mem _
 
@@ -186,9 +186,9 @@ theorem vermaModePolynomial_sub_contraction_mem (c : ℂ) (m : ℤ) (hm : 0<m)
       · apply Submodule.add_mem _ (vermaContractionFiltration_prepend i ih)
         rw [algebraMap_smul]
         apply Submodule.smul_mem
-        simpa [Algebra.smul_def] using
+        simpa [Algebra.smul_def] using!
           vermaContractionFiltration_single 0 w (energyHW w : ℂ) (by simp)
-      · simpa [Algebra.smul_def,← map_mul] using
+      · simpa [Algebra.smul_def,← map_mul] using!
           vermaContractionFiltration_single 0 w ((((m:ℂ)^3-m)/12)*c) (by simp)
     · have he : vermaModePolynomial (Polynomial.C c) X m (i::w)-vermaContractionNormal m (i::w)=
           polynomialPrepend i (vermaModePolynomial (Polynomial.C c) X m w-vermaContractionNormal m w)+
@@ -221,10 +221,10 @@ theorem polynomialModeAction_contractionFiltration (c : ℂ) (m : ℤ) (hm : 0<m
     have hh := vermaContractionFiltration_shift k
       (vermaModePolynomial_contractionFiltration c m w)
     apply vermaContractionFiltration_mono (show 2*k+(w.length+1)≤d+1 by omega)
-    simpa only [if_neg (by omega : m≠0)] using hh
+    simpa only [if_neg (by omega : m≠0)] using! hh
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Leading contractions obey the same upper bound on arbitrary inputs. -/
 theorem vermaContractionAction_mem (m : ℤ) {d : ℕ}
@@ -237,8 +237,8 @@ theorem vermaContractionAction_mem (m : ℤ) {d : ℕ}
     exact vermaContractionFiltration_mono (by omega)
       (vermaContractionFiltration_shift k (vermaContractionNormal_mem m w))
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Replacing one positive mode by its leading contraction leaves an error
 that preserves, rather than raises, the input's weighted filtration. -/
@@ -256,8 +256,8 @@ theorem polynomialModeAction_sub_contraction_mem (c : ℂ) (m : ℤ) (hm : 0<m)
     exact vermaContractionFiltration_mono hw
       (vermaContractionFiltration_shift k (vermaModePolynomial_sub_contraction_mem c m hm w))
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Extract the polynomial coefficient of the highest vector after constant
 negative-word straightening. This is polynomial-linear, so differences and
@@ -282,7 +282,7 @@ theorem vermaHighestPolynomial_natDegree_le {d : ℕ}
     obtain ⟨k,w,hw,rfl⟩ := hf
     simp only [vermaHighestPolynomial,Finsupp.linearCombination_single,smul_eq_mul]
     apply natDegree_mul_le.trans
-    simpa using (show k≤d/2 by omega)
+    simpa using! (show k≤d/2 by omega)
   | zero => simp
   | add f g _ _ hf hg =>
     rw [map_add]
@@ -320,9 +320,9 @@ theorem vermaPositiveWord_mem (c : ℂ) (u : List ℕ) {d : ℕ}
     {f : VermaPolynomialForm (Polynomial ℂ)} (h : f∈vermaContractionFiltration d) :
     vermaPositiveWord c u f∈vermaContractionFiltration (d+u.length) := by
   induction u generalizing d f with
-  | nil => simpa [vermaPositiveWord] using h
+  | nil => simpa [vermaPositiveWord] using! h
   | cons i u ih =>
-    simpa only [vermaPositiveWord,LinearMap.comp_apply,List.length_cons,Nat.add_right_comm] using
+    simpa only [vermaPositiveWord,LinearMap.comp_apply,List.length_cons,Nat.add_right_comm] using!
       ih (polynomialModeAction_contractionFiltration c ((i:ℤ)+1) (by omega) h)
 
 /-- The leading contraction word obeys the same weighted upper bound. -/
@@ -330,9 +330,9 @@ theorem vermaContractionWord_mem (u : List ℕ) {d : ℕ}
     {f : VermaPolynomialForm (Polynomial ℂ)} (h : f∈vermaContractionFiltration d) :
     vermaContractionWord u f∈vermaContractionFiltration (d+u.length) := by
   induction u generalizing d f with
-  | nil => simpa [vermaContractionWord] using h
+  | nil => simpa [vermaContractionWord] using! h
   | cons i u ih =>
-    simpa only [vermaContractionWord,LinearMap.comp_apply,List.length_cons,Nat.add_right_comm] using
+    simpa only [vermaContractionWord,LinearMap.comp_apply,List.length_cons,Nat.add_right_comm] using!
       ih (vermaContractionAction_mem ((i:ℤ)+1) h)
 
 /-- Replacing every positive mode by its leading contraction leaves a total
@@ -354,9 +354,9 @@ theorem vermaPositiveWord_sub_contractions_mem (c : ℂ) (u : List ℕ) {d : ℕ
       abel
     rw [he]
     apply Submodule.add_mem
-    · simpa only [List.length_cons,Nat.add_right_comm] using
+    · simpa only [List.length_cons,Nat.add_right_comm] using!
         vermaPositiveWord_mem c u (polynomialModeAction_sub_contraction_mem c ((i:ℤ)+1) (by omega) h)
-    · simpa only [List.length_cons,Nat.add_right_comm] using
+    · simpa only [List.length_cons,Nat.add_right_comm] using!
         ih (vermaContractionAction_mem ((i:ℤ)+1) h)
 
 /-- For equally long words, the coefficient at maximal highest-weight degree
@@ -374,7 +374,7 @@ theorem vermaPairPolynomial_top_eq_contractions (c : ℂ) (u v : List ℕ)
     rfl
   · have hm : Finsupp.single v (1 : Polynomial ℂ)∈
         vermaContractionFiltration ((v.length-1)+1) := by
-      simpa only [pow_zero,one_smul] using vermaContractionFiltration_single 0 v 1 (by omega)
+      simpa only [pow_zero,one_smul] using! vermaContractionFiltration_single 0 v 1 (by omega)
     have he := vermaPositiveWord_sub_contractions_mem c u hm
     have hb := vermaHighestPolynomial_natDegree_le he
     have hz := coeff_eq_zero_of_natDegree_lt (lt_of_le_of_lt hb

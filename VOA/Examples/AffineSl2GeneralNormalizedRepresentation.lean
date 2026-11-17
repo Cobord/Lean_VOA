@@ -14,6 +14,8 @@ a full affine Lie representation whose center is kI+δN, with N²=0. The scalar
 is extracted from that deformation, not supplied as an independent obstruction
 assumption. Its vanishing remains to be proved for general admissible levels.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl2GeneralRigidity
 open AffineVOA AffineVOA.Inst AffineLie Deform
 open Module (End)

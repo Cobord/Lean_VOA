@@ -43,6 +43,9 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra 
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## Axiom-free sl₂ bricks -/
 
 /-- **The sl₂ commutator on a graded piece.**  For `c ∈ 𝒱_q`,

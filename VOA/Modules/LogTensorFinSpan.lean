@@ -78,7 +78,7 @@ theorem wordL_mem_weight (D : GenData W) (l : List (Ltr D)) {x : M} {β : ℂ}
     (hx : x ∈ N.weight β) :
     wordL D N.toWeakModule l x ∈ N.weight (β + (degree D l : ℂ)) := by
   induction l with
-  | nil => simpa using hx
+  | nil => simpa using! hx
   | cons a l ih =>
     rw [wordL_cons]
     have h := mode_mem_weight N (D.gen_mem a.1) a.2 ih
@@ -192,9 +192,9 @@ theorem exists_c2_cofinite_weights (hC2 : C2Cofinite W) (hfg : FinGen N.toWeakMo
     (hspan w) ?_ ?_ ?_
   · intro p z hz
     exact (hdat p z hz).1 α hα
-  · dsimp only; rw [map_zero]; exact Submodule.zero_mem _
+  · rw [map_zero]; exact Submodule.zero_mem _
   · intro a b ha hb
-    dsimp only at ha hb ⊢; rw [map_add]; exact Submodule.add_mem _ ha hb
+    rw [map_add]; exact Submodule.add_mem _ ha hb
 
 /-- The weights of a finitely generated logarithmic module lie in finitely many `ℤ`-cosets. -/
 theorem exists_weight_cosets (hC2 : C2Cofinite W) (hfg : FinGen N.toWeakModule) :
@@ -211,9 +211,9 @@ theorem exists_weight_cosets (hC2 : C2Cofinite W) (hfg : FinGen N.toWeakModule) 
   refine Submodule.iSup_induction _ (motive := fun z => proj N α z = 0) (hspan w) ?_ ?_ ?_
   · intro p z hz
     exact (hdat p z hz).2 α (fun d hd => hno p.1.2 (Finset.mem_image.mpr ⟨p.1, p.2, rfl⟩) d hd)
-  · dsimp only; rw [map_zero]
+  · rw [map_zero]
   · intro a b ha hb
-    dsimp only at ha hb ⊢; rw [map_add, ha, hb, add_zero]
+    rw [map_add, ha, hb, add_zero]
 
 /-- Only finitely many weights of a finitely generated logarithmic module have `Re α < C`. -/
 theorem exists_finset_weights_re_lt (hC2 : C2Cofinite W) (hfg : FinGen N.toWeakModule)

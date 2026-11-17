@@ -938,7 +938,7 @@ theorem IsModularData.vacuum_identity (hD : D.IsModularData) (hc : V.centralChar
     rw [projZ_congr (g := fun τ => (((Real.sqrt (2 * t))⁻¹ : ℝ) : ℂ) *
         (rankOneTheta 0 1 (1 / (4 * (t : ℝ))) τ / ModularForm.eta τ))
       (fun τ hτ => by
-        simp only
+        try simp only
         rw [hP _ (im_neg_one_div_pos hτ), theta01_div_eta_S htpos hτ]) hτ,
       projZ_const_mul, projZ_theta01_div_eta hN.1 ht htN hτ, hP τ hτ]
   have h := hA.symm.trans hB

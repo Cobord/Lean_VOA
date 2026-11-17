@@ -75,11 +75,11 @@ theorem wordNorm_moving_derivative {ι : Type*} [Fintype ι]
   classical
   have hrow (i : ι) : ∑ j, (wordExpressionPair (w i) (w j)).eval (c t0)*v j t0=0 := by
     have h := hright (wordExpressionEval (c t0) (w i))
-    simpa only [map_sum,map_smul,smul_eq_mul,← wordExpressionPair_eval,mul_comm] using h
+    simpa only [map_sum,map_smul,smul_eq_mul,← wordExpressionPair_eval,mul_comm] using! h
   have hcol (j : ι) : ∑ i, v i t0*(wordExpressionPair (w i) (w j)).eval (c t0)=0 := by
     have h := hleft (wordExpressionEval (c t0) (w j))
     simpa only [map_sum,map_smul,LinearMap.sum_apply,LinearMap.smul_apply,
-      smul_eq_mul,← wordExpressionPair_eval] using h
+      smul_eq_mul,← wordExpressionPair_eval] using! h
   have h := finiteGram_moving_derivative (fun i j => wordExpressionPair (w i) (w j))
     v v' c c' t0 hv hc hrow hcol
   convert h using 1
@@ -135,6 +135,6 @@ theorem minimalThree_moving_norm_hasDerivAt {ι : Type*} [Fintype ι]
       (minimalThreeChargeVacuum_L1 p hp hcop _)
       (minimalThreeChargeVacuum_L2_at_root p hp hcop)
   have hh := wordNorm_moving_derivative w v v' c c' t0 hv hc hleft hright
-  simpa only [hs,hc0,minimalThreeNormPolynomial] using hh
+  simpa only [hs,hc0,minimalThreeNormPolynomial] using! hh
 
 end VOA.InverseDS.VirasoroVerma

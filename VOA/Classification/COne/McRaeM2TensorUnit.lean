@@ -51,7 +51,6 @@ theorem tensorLeftUnit_hom_inv (x : R) :
   have h := congrArg (fun Y : LogIntertwiningOperator (adjointModule W).toWeakModule
       N.toWeakModule N.toWeakModule => Y.1 (-1) 0 W.vacuum x)
     (tensorLeftUnit_intertwiner hC2 N hN)
-  dsimp only at h
   rw [postcompose_apply,logModuleIntertwiner_vacuum,LinearMap.id_apply] at h
   exact h
 

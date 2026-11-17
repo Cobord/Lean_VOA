@@ -280,11 +280,12 @@ variable (Bs z) in
 /-- `Y^R` with a Laurent-polynomial test function. -/
 noncomputable def yRres (hz : z ≠ 0) (a : V) (φ : ℂ[T;T⁻¹]) (α : Module.Dual ℂ M) :
     Module.Dual ℂ M :=
-  Finsupp.linearCombination ℂ (fun n => Bs.yR z hz a n α) φ
+  (Finsupp.linearCombination ℂ (fun n => Bs.yR z hz a n α) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) φ
 
 theorem yRres_CT (hz : z ≠ 0) (a : V) (c : ℂ) (n : ℤ) (α : Module.Dual ℂ M) :
     Bs.yRres z hz a (LC c * T n) α = c • Bs.yR z hz a n α := by
-  rw [yRres, ← single_eq_C_mul_T, Finsupp.linearCombination_single]
+  rw [yRres, ← single_eq_C_mul_T]; exact Finsupp.linearCombination_single ℂ _ _
 
 theorem yRres_T (hz : z ≠ 0) (a : V) (n : ℤ) (α : Module.Dual ℂ M) :
     Bs.yRres z hz a (T n) α = Bs.yR z hz a n α := by

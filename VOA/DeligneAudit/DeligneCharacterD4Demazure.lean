@@ -39,7 +39,8 @@ def piStr (α : V) (v : V) : R :=
   else -∑ k ∈ Finset.range ((-dotZ v α).toNat - 1), mon (v + ((k : ℤ) + 1) • α) 1
 
 /-- The isobaric Demazure operator `π_α`. -/
-def piR (α : V) : R →ₗ[Kq] R := Finsupp.linearCombination Kq (piStr α)
+def piR (α : V) : R →ₗ[Kq] R :=
+  (Finsupp.linearCombination Kq (piStr α)).comp (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 theorem piR_mon (α v : V) (c : Kq) : piR α (mon v c) = c • piStr α v := by
   change (Finsupp.linearCombination Kq _) (Finsupp.single v c) = _
@@ -53,7 +54,7 @@ theorem piR_div (α : V) (f : R) :
     (1 - mon (-α) 1) * piR α f = f - mon (-α) 1 * domHom (reflV α) f := by
   have : LinearMap.mulLeft Kq (1 - mon (-α) 1) ∘ₗ piR α =
       LinearMap.id - LinearMap.mulLeft Kq (mon (-α) 1) ∘ₗ (domHom (reflV α)).toLinearMap := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change (1 - mon (-α) 1) * piR α (mon v c) =
       mon v c - mon (-α) 1 * domHom (reflV α) (mon v c)
@@ -109,7 +110,8 @@ def pi0Str (v : V) : R :=
     mon (v - ((k : ℤ) + 1) • thetaV) (qq ^ ((k : ℤ) + 1))
 
 /-- The affine Demazure operator `π₀`. -/
-def pi0R : R →ₗ[Kq] R := Finsupp.linearCombination Kq pi0Str
+def pi0R : R →ₗ[Kq] R :=
+  (Finsupp.linearCombination Kq pi0Str).comp (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 theorem pi0R_mon (v : V) (c : Kq) : pi0R (mon v c) = c • pi0Str v := by
   change (Finsupp.linearCombination Kq _) (Finsupp.single v c) = _
@@ -131,7 +133,7 @@ theorem pi0R_div (f : R) :
       LinearMap.id - LinearMap.mulLeft Kq (mon ((2 : ℤ) • thetaV) (qq ^ (-2 : ℤ))) ∘ₗ
         (twist chiTheta qq⁻¹ (inv_ne_zero qq_ne_zero)).toLinearMap ∘ₗ
         (domHom (reflV thetaV)).toLinearMap := by
-    apply Finsupp.lhom_ext
+    apply lhom_ext_mon
     intro v c
     change (1 - mon thetaV qq⁻¹) * pi0R (mon v c) = mon v c - mon ((2 : ℤ) • thetaV)
       (qq ^ (-2 : ℤ)) * twist chiTheta qq⁻¹ _ (domHom (reflV thetaV) (mon v c))

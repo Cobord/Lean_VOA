@@ -7,6 +7,8 @@ import VOA.Classification.COne.OrbSglCwsDefs
 set_option maxSynthPendingDepth 3
 set_option maxRecDepth 4096
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 namespace VOA.Classification.COne.OrbSgl

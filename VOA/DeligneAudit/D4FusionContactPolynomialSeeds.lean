@@ -34,26 +34,26 @@ theorem source_seed_word_zero (h : LocalWeylRelG D4sector R w 2) (j : Fin 7) :
   have hs := PolynomialSource.source_seedRel h
   fin_cases j
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      PolynomialSource.simpleF, pow_succ, Module.End.mul_apply] using hs.a_cube
+      PolynomialSource.simpleF, pow_succ, Module.End.mul_apply] using! hs.a_cube
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      PolynomialSource.simpleF] using hs.a_pair
+      PolynomialSource.simpleF] using! hs.a_pair
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      PolynomialSource.simpleF] using hs.a_square
+      PolynomialSource.simpleF] using! hs.a_square
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      currentCenter, pow_succ, Module.End.mul_apply] using hs.c_five
+      currentCenter, pow_succ, Module.End.mul_apply] using! hs.c_five
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      currentCenter, pow_succ, Module.End.mul_apply] using hs.c31
+      currentCenter, pow_succ, Module.End.mul_apply] using! hs.c31
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      currentCenter] using hs.c12
+      currentCenter] using! hs.c12
   · simpa [seedList, modeLetter, currentRadicalWord, wordOp, radIndex,
-      currentCenter] using hs.c03
+      currentCenter] using! hs.c03
 
 /-- Every actual seed belongs to the full vector annihilator ideal. -/
 theorem source_seed_mem_ann (h : LocalWeylRelG D4sector R w 2) (j : Fin 7) :
     seedPoly j ∈ annIdeal R w (modeLetter 2) := by
-  change polyEval R w (modeLetter 2) (seedPoly j) = 0
-  rw [seedPoly, polyEval_polyWord]
-  exact grWord_zero_of_source_zero R w _ (source_seed_word_zero h j)
+  change polyEval R w (modeLetter 2) (polyWord (seedList j)) = 0
+  exact (polyEval_polyWord R w (modeLetter 2) (seedList j)).trans
+    (grWord_zero_of_source_zero R w _ (source_seed_word_zero h j))
 
 /-- All polynomial multiples of the seven seeds are included. This does
 not yet claim stability under the candidate current derivations. -/

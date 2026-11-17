@@ -31,18 +31,18 @@ def harmonicLine (n : ℕ) : SymSl2 :=
 theorem casSym_homogeneous : (casSym : SymSl2).IsHomogeneous 2 := by
   rw [casSym]
   have hh : (hSym ^ 2 : SymSl2).IsHomogeneous 2 := by
-    simpa using (MvPolynomial.isHomogeneous_X_pow (R := ℂ) 1 2)
+    simpa [hSym] using (MvPolynomial.isHomogeneous_X_pow (R := ℂ) 1 2)
   have hef : ((MvPolynomial.C (4 : ℂ) : SymSl2) * eSym * fSym).IsHomogeneous 2 := by
     have he : (eSym : SymSl2).IsHomogeneous 1 := by
-      simpa using (MvPolynomial.isHomogeneous_X (R := ℂ) 0)
+      simpa [eSym] using (MvPolynomial.isHomogeneous_X (R := ℂ) 0)
     have hf : (fSym : SymSl2).IsHomogeneous 1 := by
-      simpa using (MvPolynomial.isHomogeneous_X (R := ℂ) 2)
+      simpa [fSym] using (MvPolynomial.isHomogeneous_X (R := ℂ) 2)
     simpa [mul_assoc, mul_left_comm, mul_comm] using (he.C_mul (4 : ℂ)).mul hf
-  simpa [casSym, add_comm, add_left_comm, add_assoc] using hh.add hef
+  simpa [casSym, map_ofNat, add_comm, add_left_comm, add_assoc] using hh.add hef
 
 /-- The coefficient of the top pure-`h` monomial in `casSym^n` is `1`. -/
 theorem coeff_casSym_pow_pure_h (n : ℕ) :
-    MvPolynomial.coeff (Finsupp.single 1 (2 * n)) (casSym ^ n) = 1 := by
+    (casSym ^ n).coeff (Finsupp.single 1 (2 * n)) = 1 := by
   induction n with
   | zero =>
       simp [casSym]
@@ -77,28 +77,24 @@ theorem coeff_casSym_pow_pure_h (n : ℕ) :
         have h0 := hs 0
         simp at h0
       have hfirst :
-          MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-            (hSym ^ 2 * casSym ^ n) = 1 := by
+          (hSym ^ 2 * casSym ^ n).coeff (Finsupp.single 1 (2 * (n + 1))) = 1 := by
         rw [hh, MvPolynomial.coeff_monomial_mul']
         rw [if_pos hle, hsub, ih, one_mul]
       have hsecond :
-          MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-            (((4 : SymSl2) * eSym * fSym) * casSym ^ n) = 0 := by
-        change MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-          (((MvPolynomial.C (4 : ℂ) : SymSl2) * eSym * fSym) * casSym ^ n) = 0
+          (((4 : SymSl2) * eSym * fSym) * casSym ^ n).coeff
+            (Finsupp.single 1 (2 * (n + 1))) = 0 := by
+        change (((MvPolynomial.C (4 : ℂ) : SymSl2) * eSym * fSym) * casSym ^ n).coeff
+          (Finsupp.single 1 (2 * (n + 1))) = 0
         rw [hef, MvPolynomial.coeff_monomial_mul']
         rw [if_neg hbad]
       calc
-        MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1))) (casSym ^ (n + 1))
-            = MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-                ((hSym ^ 2 + ((4 : SymSl2) * eSym * fSym)) * casSym ^ n) := by
-                  rw [pow_succ, casSym]
-                  congr 1
-                  exact mul_comm _ _
-        _ = MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-              (hSym ^ 2 * casSym ^ n) +
-            MvPolynomial.coeff (Finsupp.single 1 (2 * (n + 1)))
-              (((4 : SymSl2) * eSym * fSym) * casSym ^ n) := by
+        (casSym ^ (n + 1)).coeff (Finsupp.single 1 (2 * (n + 1)))
+            = ((hSym ^ 2 + ((4 : SymSl2) * eSym * fSym)) * casSym ^ n).coeff
+                (Finsupp.single 1 (2 * (n + 1))) := by
+                  rw [pow_succ', casSym]
+        _ = (hSym ^ 2 * casSym ^ n).coeff (Finsupp.single 1 (2 * (n + 1))) +
+            (((4 : SymSl2) * eSym * fSym) * casSym ^ n).coeff
+              (Finsupp.single 1 (2 * (n + 1))) := by
                   rw [add_mul, MvPolynomial.coeff_add]
         _ = 1 := by
           simp [hfirst, hsecond]
@@ -167,7 +163,7 @@ theorem adH_monomial_general (m : Fin 3 →₀ ℕ) (r : ℂ) :
 /-- The coefficient of `adH p` at a fixed monomial is the expected horizontal weight times the
 coefficient of `p`. -/
 theorem coeff_adH (p : SymSl2) (s : Fin 3 →₀ ℕ) :
-    MvPolynomial.coeff s (adH p) = ((2 * s 0 - 2 * s 2 : ℂ)) * MvPolynomial.coeff s p := by
+    (adH p).coeff s = ((2 * s 0 - 2 * s 2 : ℂ)) * p.coeff s := by
   classical
   rw [MvPolynomial.as_sum p, map_sum, MvPolynomial.coeff_sum]
   by_cases hs : s ∈ p.support
@@ -177,7 +173,7 @@ theorem coeff_adH (p : SymSl2) (s : Fin 3 →₀ ℕ) :
         (fun h => by
           exact absurd hs h)]
     simp [adH_monomial_general]
-  · have hcoeff : MvPolynomial.coeff s p = 0 := by
+  · have hcoeff : p.coeff s = 0 := by
       simpa [MvPolynomial.notMem_support_iff] using hs
     simp [hcoeff, adH_monomial_general, hs]
 
@@ -265,9 +261,9 @@ theorem targetExp_minus_h_ne (n i j : ℕ) (hij : i ≠ j + 1) :
 
 /-- The `e`-branch contribution vanishes away from the matching harmonic index. -/
 theorem coeff_target_first_term_zero (n i j : ℕ) (hj : j < n) (hij : i ≠ j) (a c : ℂ) :
-    MvPolynomial.coeff (targetExp n j)
-      (((MvPolynomial.C a : SymSl2) * eSym) * MvPolynomial.monomial (harmonicExp n i - Finsupp.single 1 1)
-        c) = 0 := by
+    (((MvPolynomial.C a : SymSl2) * eSym) *
+        MvPolynomial.monomial (harmonicExp n i - Finsupp.single 1 1) c).coeff
+      (targetExp n j) = 0 := by
   have he : ((MvPolynomial.C a : SymSl2) * eSym : SymSl2) =
       MvPolynomial.monomial (Finsupp.single 0 1) a := by
     simpa [eSym, MvPolynomial.monomial_eq, C_two]
@@ -275,8 +271,8 @@ theorem coeff_target_first_term_zero (n i j : ℕ) (hj : j < n) (hij : i ≠ j) 
   by_cases hsle : Finsupp.single 0 1 ≤ targetExp n j
   · rw [if_pos hsle]
     have hcoeff :
-        MvPolynomial.coeff (targetExp n j - Finsupp.single 0 1)
-          (MvPolynomial.monomial (harmonicExp n i - Finsupp.single 1 1) c) = 0 := by
+        (MvPolynomial.monomial (harmonicExp n i - Finsupp.single 1 1) c).coeff
+          (targetExp n j - Finsupp.single 0 1) = 0 := by
       rw [MvPolynomial.coeff_monomial]
       exact if_neg (by
         intro h
@@ -286,17 +282,16 @@ theorem coeff_target_first_term_zero (n i j : ℕ) (hj : j < n) (hij : i ≠ j) 
 
 /-- The `h`-branch contribution vanishes away from the matching harmonic index. -/
 theorem coeff_target_second_term_zero (n i j : ℕ) (hj : j < n) (hij : i ≠ j + 1) (c : ℂ) :
-    MvPolynomial.coeff (targetExp n j)
-      ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1)
-        c) = 0 := by
+    ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1)
+        c).coeff (targetExp n j) = 0 := by
   have hh : (hSym : SymSl2) = MvPolynomial.monomial (Finsupp.single 1 1) (1 : ℂ) := by
     simpa [hSym, MvPolynomial.monomial_eq, C_two]
   rw [hh, MvPolynomial.coeff_monomial_mul']
   by_cases hsle : Finsupp.single 1 1 ≤ targetExp n j
   · rw [if_pos hsle]
     have hcoeff :
-        MvPolynomial.coeff (targetExp n j - Finsupp.single 1 1)
-          (MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1) c) = 0 := by
+        (MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1) c).coeff
+          (targetExp n j - Finsupp.single 1 1) = 0 := by
       rw [MvPolynomial.coeff_monomial]
       exact if_neg (by
         intro h
@@ -306,9 +301,8 @@ theorem coeff_target_second_term_zero (n i j : ℕ) (hj : j < n) (hij : i ≠ j 
 
 /-- The first `adE` contribution at the target exponent. -/
 theorem coeff_target_first_term (n j : ℕ) (hj : j < n) (r : ℂ) :
-    MvPolynomial.coeff (targetExp n j)
-      ((-2 * eSym : SymSl2) * MvPolynomial.monomial (harmonicExp n j - Finsupp.single 1 1)
-        (r * (2 * (n - j) : ℂ))) =
+    ((-2 * eSym : SymSl2) * MvPolynomial.monomial (harmonicExp n j - Finsupp.single 1 1)
+        (r * (2 * (n - j) : ℂ))).coeff (targetExp n j) =
       (-4 * (n - j) : ℂ) * r := by
   have he : (-2 * eSym : SymSl2) = MvPolynomial.monomial (Finsupp.single 0 1) (-2 : ℂ) := by
     simpa [eSym, MvPolynomial.monomial_eq, C_two]
@@ -326,9 +320,8 @@ theorem coeff_target_first_term (n j : ℕ) (hj : j < n) (r : ℂ) :
 
 /-- The second `adE` contribution at the target exponent. -/
 theorem coeff_target_second_term (n j : ℕ) (hj : j < n) (r : ℂ) :
-    MvPolynomial.coeff (targetExp n j)
-      ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 2 1)
-        (r * ((j + 1 : ℕ) : ℂ))) =
+    ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 2 1)
+        (r * ((j + 1 : ℕ) : ℂ))).coeff (targetExp n j) =
       (j + 1 : ℂ) * r := by
   have hh : (hSym : SymSl2) = MvPolynomial.monomial (Finsupp.single 1 1) (1 : ℂ) := by
     simpa [hSym, MvPolynomial.monomial_eq, C_two]
@@ -347,8 +340,7 @@ theorem coeff_target_second_term (n j : ℕ) (hj : j < n) (r : ℂ) :
 
 /-- The coefficient of `adE` on a harmonic monomial only sees the two neighboring indices. -/
 theorem coeff_target_adE_harmonicExp (n i j : ℕ) (hj : j < n) (r : ℂ) :
-    MvPolynomial.coeff (targetExp n j)
-      (adE (MvPolynomial.monomial (harmonicExp n i) r)) =
+    (adE (MvPolynomial.monomial (harmonicExp n i) r)).coeff (targetExp n j) =
       (if i = j then (-4 * (n - j) : ℂ) * r else 0) +
         (if i = j + 1 then (j + 1 : ℂ) * r else 0) := by
   rw [adE_monomial, MvPolynomial.coeff_add]
@@ -367,9 +359,8 @@ theorem coeff_target_adE_harmonicExp (n i j : ℕ) (hj : j < n) (r : ℂ) :
       simpa [harmonicExp, mul_assoc, mul_left_comm, mul_comm] using
         congrArg (fun t : ℂ => r * t) (harmonicExp_two_cast (n := n) (j := j))
     have hfirst := coeff_target_first_term (n := n) (j := j) (hj := hj) (r := r)
-    have hzero : MvPolynomial.coeff (targetExp n j)
-        ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n j - Finsupp.single 2 1)
-          (r * ((j : ℕ) : ℂ))) = 0 := by
+    have hzero : ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n j - Finsupp.single 2 1)
+          (r * ((j : ℕ) : ℂ))).coeff (targetExp n j) = 0 := by
       exact coeff_target_second_term_zero (n := n) (i := j) (j := j) hj
         (Nat.ne_of_lt (Nat.lt_succ_self j)) (r * ((j : ℕ) : ℂ))
     rw [h1, h2, hfirst, hzero]
@@ -383,18 +374,16 @@ theorem coeff_target_adE_harmonicExp (n i j : ℕ) (hj : j < n) (r : ℂ) :
         simpa [harmonicExp, mul_assoc, mul_left_comm, mul_comm] using
           congrArg (fun t : ℂ => r * t) (harmonicExp_two_cast (n := n) (j := j + 1))
       have hsecond := coeff_target_second_term (n := n) (j := j) (hj := hj) (r := r)
-      have hzero : MvPolynomial.coeff (targetExp n j)
-          ((2 * eSym : SymSl2) *
+      have hzero : ((2 * eSym : SymSl2) *
             MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 1 1)
-              (r * (2 * ((n - (j + 1) : ℕ) : ℂ)))) = 0 := by
-        simpa using
+              (r * (2 * ((n - (j + 1) : ℕ) : ℂ)))).coeff (targetExp n j) = 0 := by
+        simpa [map_ofNat] using
           (coeff_target_first_term_zero (n := n) (i := j + 1) (j := j) hj
               (Nat.succ_ne_self j) (2 : ℂ) (r * (2 * ((n - (j + 1) : ℕ) : ℂ))))
       have hfirst :
-          MvPolynomial.coeff (targetExp n j)
-            ((-2 * eSym : SymSl2) *
+          ((-2 * eSym : SymSl2) *
               MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 1 1)
-                (r * (2 * ((n - (j + 1) : ℕ) : ℂ)))) = 0 := by
+                (r * (2 * ((n - (j + 1) : ℕ) : ℂ)))).coeff (targetExp n j) = 0 := by
         have hneg :
             ((-2 * eSym : SymSl2) *
               MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 1 1)
@@ -403,7 +392,7 @@ theorem coeff_target_adE_harmonicExp (n i j : ℕ) (hj : j < n) (r : ℂ) :
                 MvPolynomial.monomial (harmonicExp n (j + 1) - Finsupp.single 1 1)
                   (r * (2 * ((n - (j + 1) : ℕ) : ℂ)))) := by
           ring
-        rw [hneg, MvPolynomial.coeff_neg, hzero]
+        rw [hneg, AddMonoidAlgebra.coeff_neg, Finsupp.neg_apply, hzero]
         simp
       rw [h1, h2]
       have hcast :
@@ -412,16 +401,14 @@ theorem coeff_target_adE_harmonicExp (n i j : ℕ) (hj : j < n) (r : ℂ) :
       rw [hcast]
       rw [hfirst, hsecond]
       simp
-    · have hzero1 : MvPolynomial.coeff (targetExp n j)
-          ((2 * eSym : SymSl2) *
+    · have hzero1 : ((2 * eSym : SymSl2) *
             MvPolynomial.monomial (harmonicExp n i - Finsupp.single 1 1)
-              (r * (2 * ((n - i : ℕ) : ℂ)))) = 0 := by
-          simpa using
+              (r * (2 * ((n - i : ℕ) : ℂ)))).coeff (targetExp n j) = 0 := by
+          simpa [map_ofNat] using
             (coeff_target_first_term_zero (n := n) (i := i) (j := j) hj hij
               (2 : ℂ) (r * (2 * ((n - i : ℕ) : ℂ))))
-      have hzero2 : MvPolynomial.coeff (targetExp n j)
-          ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1)
-            (r * ((i : ℕ) : ℂ))) = 0 := by
+      have hzero2 : ((hSym : SymSl2) * MvPolynomial.monomial (harmonicExp n i - Finsupp.single 2 1)
+            (r * ((i : ℕ) : ℂ))).coeff (targetExp n j) = 0 := by
           exact coeff_target_second_term_zero (n := n) (i := i) (j := j) hj hij1
             (r * ((i : ℕ) : ℂ))
       have h1 : r * ↑((harmonicExp n i) 1) = r * ((2 * (n - i) : ℕ) : ℂ) := by
@@ -464,13 +451,13 @@ theorem support_harmonic (n : ℕ) (p : SymSl2)
       j = s 2 ∧
         s = Finsupp.single 0 (j + 1) + Finsupp.single 1 (2 * (n - j)) + Finsupp.single 2 j := by
   intro s hs
-  have hnonzero : MvPolynomial.coeff s p ≠ 0 := by
+  have hnonzero : p.coeff s ≠ 0 := by
     simpa [MvPolynomial.notMem_support_iff] using hs
-  have hEq' : MvPolynomial.coeff s (adH p) = (2 : ℂ) * MvPolynomial.coeff s p := by
-    have h := congrArg (MvPolynomial.coeff s) hH
+  have hEq' : (adH p).coeff s = (2 : ℂ) * p.coeff s := by
+    have h := congrArg (fun q : SymSl2 => q.coeff s) hH
     simpa [MvPolynomial.coeff_smul] using h
-  have hEq : ((2 * s 0 - 2 * s 2 : ℂ)) * MvPolynomial.coeff s p =
-      (2 : ℂ) * MvPolynomial.coeff s p := by
+  have hEq : ((2 * s 0 - 2 * s 2 : ℂ)) * p.coeff s =
+      (2 : ℂ) * p.coeff s := by
     rw [coeff_adH (p := p) s] at hEq'
     exact hEq'
   have hscalar : ((2 * s 0 - 2 * s 2 : ℂ)) = 2 := by
@@ -498,7 +485,7 @@ theorem support_harmonic (n : ℕ) (p : SymSl2)
 theorem harmonic_support_normalForm (n : ℕ) (p : SymSl2)
     (hp : p.IsHomogeneous (2 * n + 1)) (hH : adH p = (2 : ℂ) • p) :
     p = ∑ s ∈ p.support,
-      MvPolynomial.monomial (harmonicExp n (s 2)) (MvPolynomial.coeff (harmonicExp n (s 2)) p) := by
+      MvPolynomial.monomial (harmonicExp n (s 2)) (p.coeff (harmonicExp n (s 2))) := by
   conv_lhs => rw [MvPolynomial.as_sum p]
   refine Finset.sum_congr rfl ?_
   intro s hs
@@ -510,7 +497,7 @@ theorem harmonic_support_normalForm (n : ℕ) (p : SymSl2)
 theorem harmonic_range_normalForm (n : ℕ) (p : SymSl2)
     (hp : p.IsHomogeneous (2 * n + 1)) (hH : adH p = (2 : ℂ) • p) :
     p = ∑ j ∈ Finset.range (n + 1),
-      MvPolynomial.monomial (harmonicExp n j) (MvPolynomial.coeff (harmonicExp n j) p) := by
+      MvPolynomial.monomial (harmonicExp n j) (p.coeff (harmonicExp n j)) := by
   ext s
   by_cases hs : s ∈ p.support
   · rcases support_harmonic n p hp hH s hs with ⟨j, hj, hjs, hsdef⟩
@@ -531,7 +518,7 @@ theorem harmonic_range_normalForm (n : ℕ) (p : SymSl2)
         exact (hne h2) |> False.elim
       · simp
     · exact fun h => (h hjmem).elim
-  · have hzero : MvPolynomial.coeff s p = 0 := by
+  · have hzero : p.coeff s = 0 := by
       simpa [MvPolynomial.notMem_support_iff] using hs
     rw [MvPolynomial.coeff_sum]
     simp only [MvPolynomial.coeff_monomial]
@@ -548,9 +535,9 @@ theorem harmonic_range_normalForm (n : ℕ) (p : SymSl2)
 theorem harmonic_coeff_recurrence (n : ℕ) (p : SymSl2)
     (hp : p.IsHomogeneous (2 * n + 1)) (hH : adH p = (2 : ℂ) • p)
     (hE : adE p = 0) (j : ℕ) (hj : j < n) :
-    ((j + 1 : ℕ) : ℂ) * MvPolynomial.coeff (harmonicExp n (j + 1)) p =
-      (4 * (n - j) : ℂ) * MvPolynomial.coeff (harmonicExp n j) p := by
-  have hcoeff := congrArg (MvPolynomial.coeff (targetExp n j)) hE
+    ((j + 1 : ℕ) : ℂ) * p.coeff (harmonicExp n (j + 1)) =
+      (4 * (n - j) : ℂ) * p.coeff (harmonicExp n j) := by
+  have hcoeff := congrArg (fun q : SymSl2 => q.coeff (targetExp n j)) hE
   rw [harmonic_range_normalForm n p hp hH] at hcoeff
   simp only [map_sum, MvPolynomial.coeff_sum, MvPolynomial.coeff_zero] at hcoeff
   simp_rw [coeff_target_adE_harmonicExp n _ j hj] at hcoeff
@@ -573,7 +560,7 @@ theorem harmonicLine_homogeneous (n : ℕ) :
 
 /-- The top harmonic coefficient of `e · Cas^n` is `1`. -/
 theorem coeff_harmonicLine_top (n : ℕ) :
-    MvPolynomial.coeff (harmonicExp n 0) (harmonicLine n) = 1 := by
+    (harmonicLine n).coeff (harmonicExp n 0) = 1 := by
   have he : (eSym : SymSl2) =
       MvPolynomial.monomial (Finsupp.single 0 1) (1 : ℂ) := by
     simpa [eSym, MvPolynomial.monomial_eq, C_two]
@@ -631,7 +618,7 @@ theorem eq_smul_harmonicLine (n : ℕ) (p : SymSl2)
     (hp : p.IsHomogeneous (2 * n + 1))
     (hH : adH p = (2 : ℂ) • p) (hE : adE p = 0) :
     ∃ c : ℂ, p = c • harmonicLine n := by
-  let c := MvPolynomial.coeff (harmonicExp n 0) p
+  let c := p.coeff (harmonicExp n 0)
   let q : SymSl2 := c • harmonicLine n
   have hqhom : q.IsHomogeneous (2 * n + 1) := by
     simpa [q, Algebra.smul_def] using (harmonicLine_homogeneous n).C_mul c
@@ -640,8 +627,8 @@ theorem eq_smul_harmonicLine (n : ℕ) (p : SymSl2)
   have hqE : adE q = 0 := by
     simp [q, map_smul, adE_harmonicLine]
   have hcoeff : ∀ j ≤ n,
-      MvPolynomial.coeff (harmonicExp n j) p =
-        MvPolynomial.coeff (harmonicExp n j) q := by
+      p.coeff (harmonicExp n j) =
+        q.coeff (harmonicExp n j) := by
     intro j hj
     induction j with
     | zero =>
@@ -652,25 +639,25 @@ theorem eq_smul_harmonicLine (n : ℕ) (p : SymSl2)
         have hqRec := harmonic_coeff_recurrence n q hqhom hqH hqE j hjlt
         have hprev := ih (Nat.le_of_lt hjlt)
         have hmul :
-            (((j + 1 : ℕ) : ℂ) * MvPolynomial.coeff (harmonicExp n (j + 1)) p) =
-              (((j + 1 : ℕ) : ℂ) * MvPolynomial.coeff (harmonicExp n (j + 1)) q) := by
+            (((j + 1 : ℕ) : ℂ) * p.coeff (harmonicExp n (j + 1))) =
+              (((j + 1 : ℕ) : ℂ) * q.coeff (harmonicExp n (j + 1))) := by
           calc
-            (((j + 1 : ℕ) : ℂ) * MvPolynomial.coeff (harmonicExp n (j + 1)) p) =
-                (4 * (n - j) : ℂ) * MvPolynomial.coeff (harmonicExp n j) p := hpRec
-            _ = (4 * (n - j) : ℂ) * MvPolynomial.coeff (harmonicExp n j) q := by
+            (((j + 1 : ℕ) : ℂ) * p.coeff (harmonicExp n (j + 1))) =
+                (4 * (n - j) : ℂ) * p.coeff (harmonicExp n j) := hpRec
+            _ = (4 * (n - j) : ℂ) * q.coeff (harmonicExp n j) := by
               rw [hprev]
             _ = (((j + 1 : ℕ) : ℂ) *
-                MvPolynomial.coeff (harmonicExp n (j + 1)) q) := hqRec.symm
+                q.coeff (harmonicExp n (j + 1))) := hqRec.symm
         exact mul_left_cancel₀ (by exact_mod_cast Nat.succ_ne_zero j) hmul
   refine ⟨c, ?_⟩
   change p = q
   calc
     p = ∑ j ∈ Finset.range (n + 1),
         MvPolynomial.monomial (harmonicExp n j)
-          (MvPolynomial.coeff (harmonicExp n j) p) := harmonic_range_normalForm n p hp hH
+          (p.coeff (harmonicExp n j)) := harmonic_range_normalForm n p hp hH
     _ = ∑ j ∈ Finset.range (n + 1),
         MvPolynomial.monomial (harmonicExp n j)
-          (MvPolynomial.coeff (harmonicExp n j) q) := by
+          (q.coeff (harmonicExp n j)) := by
       apply Finset.sum_congr rfl
       intro j hj
       rw [hcoeff j (Nat.le_of_lt_succ (Finset.mem_range.mp hj))]

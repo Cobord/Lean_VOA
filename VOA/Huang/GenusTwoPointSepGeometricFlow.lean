@@ -32,7 +32,7 @@ theorem moduleCoordGen_jet (P : LWModule W) (a : ℕ → ℂ) (K : ℕ) :
     simp only [coordinateJet, if_pos (Finset.mem_range.mp hk)]
   · intro k hk
     by_contra h
-    have hkK : ¬k < K := by simpa only [Finset.mem_coe, Finset.mem_range] using h
+    have hkK : ¬k < K := by simpa only [Finset.mem_coe, Finset.mem_range] using! h
     exact hk (by simp [coordinateJet, hkK])
 
 /-- Complex-indexed formal fields; no integral-mode restriction is imposed. -/
@@ -97,7 +97,7 @@ theorem geometricJet_intertwiner
   simpa only [SquareModule.roundL, Nat.cast_add, Nat.cast_one,
     show k + 1 + 2 = k + 3 by omega, show k + 1 + 1 = k + 2 by omega,
     show (k : ℤ) + 1 + 1 = k + 2 by ring,
-    show (k : ℂ) + 1 + 1 = k + 2 by ring] using congrArg (a k • ·) h
+    show (k : ℂ) + 1 + 1 = k + 2 by ring] using! congrArg (a k • ·) h
 
 /-- Commuting generators agreeing at the initial vector have identical formal flows. -/
 theorem linearFlowCoeff_eq_of_commute {M : Type*} [AddCommGroup M] [Module ℂ M]
@@ -161,7 +161,7 @@ theorem intertwiner_geometricJet_flow_finite
     (n : ℂ) (w : P.carrier) (x : Q.carrier) :
     (Function.support (fun r =>
       linearFlowCoeff (geometricJet a K) (fun m v => Y.val m v) r n w x)).Finite := by
-  simpa only [← intertwiner_geometricJet_flow] using
+  simpa only [← intertwiner_geometricJet_flow] using!
     conjugationCoeff_support_finite (moduleCoordGen_isLocNilp N _)
       (moduleCoordGen_isLocNilp Q _) (Y.val n w) x
 

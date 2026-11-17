@@ -111,7 +111,7 @@ theorem Lsq_tower (W : SuperVertexOperatorAlgebra 𝒱) {a : 𝒱} {Δ : ℂ} (h
   | zero =>
       intro j
       rcases Nat.eq_zero_or_pos j with rfl | hj
-      · simpa using h0
+      · simpa using! h0
       · rw [towerScalar_zero_right, if_neg (by omega), zero_smul]
         exact hp (2 * (j : ℤ)) (by omega)
   | succ n ih =>
@@ -598,7 +598,7 @@ theorem formalODE_of_monic_of_unitriangular {S : 𝒱 →ₗ[ℂ] FormalQSeries}
   rw [Finset.sum_congr rfl (fun j (_ : j ∈ Finset.range s) => by
     rw [hπsmul, hπd])] at hcoe
   have hfun := congrFun hcoe e
-  simpa [psSMul] using hfun
+  simpa [psSMul] using! hfun
 
 /-- **Arakawa–Kawasetsu Theorem 5.7, equation (2) — formal form.**  For a VOA satisfying the
 Etingof–Schedler hypothesis, a **square-bracket primary** vector `a`, and any formal block `S`,

@@ -96,7 +96,7 @@ theorem quadraticRelation_fullMatrix (r : Option (Fin 105)) :
 /-- **The D₄ relations `I₂ = I₂ⁿˢ ⊕ ℂQ` are `ad`-stable.** -/
 theorem d4_relationsStable : RelationsStable fD4 D4data.fullMatrix := by
   intro x r
-  rw [fullMatrix_eq, quadraticRelation_adMatrix_castL d4_rangeCheck x _ (relZ_range (idx_lt r))]
+  erw [fullMatrix_eq, quadraticRelation_adMatrix_castL d4_rangeCheck x _ (relZ_range (idx_lt r))]
   set k := idx r with hk
   have hk106 : k < 106 := idx_lt r
   have h := d4_stabCheck x
@@ -166,7 +166,7 @@ theorem d4_table_wt (x y c : Fin 28) (h : wtD4 c ≠ wtD4 x + wtD4 y) : fD4 x y 
   funext i
   have := hw x x.2 y y.2 p hp i i.2
   rw [hpc] at this
-  simpa [wtD4] using this
+  simpa [wtD4] using! this
 
 /-- The functional `ℓ_i = ht ∘ s_i` for the lowering operator `i`. -/
 def ellD4 (i : Fin 28) : Fin 4 → ℤ :=

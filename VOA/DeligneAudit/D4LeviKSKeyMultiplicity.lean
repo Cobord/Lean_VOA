@@ -51,7 +51,7 @@ theorem ksFlag_target_image_le_box_span (ρ : CurrentModule D4sector.f V) (w : V
   rw [← heq, map_add, hzero, add_zero]
   have hh : q B ∈ (Submodule.span ℂ (ksFlagFiniteBox m a b c d : Set _)).map q :=
     ⟨B, hB, rfl⟩
-  simpa only [Submodule.map_span, Finset.coe_image] using hh
+  simpa only [Submodule.map_span, Finset.coe_image] using! hh
 
 /-- The key quotient and the image under the prefix quotient map have equal rank. -/
 theorem ksKey_quot_finrank_eq_image (F S : Submodule ℂ V) :
@@ -84,7 +84,7 @@ theorem ksKey_quot_finrank_le_corrected (ρ : CurrentModule D4sector.f V) (w : V
     let B : Finset (V ⧸ keyPrefix ρ w m i) := (ksFlagFiniteBox m a b c d).image q
     have hspan : (keyLayer ρ w (pairFinalKey a b c d)).map (keyPrefix ρ w m i).mkQ ≤
         Submodule.span ℂ (B : Set _) :=
-      by simpa only [B, Finset.coe_image] using
+      by simpa only [B, Finset.coe_image] using!
         himage.trans (ksFlag_target_image_le_box_span ρ w m i a b c d h hi hkey)
     haveI : FiniteDimensional ℂ
         (Submodule.span ℂ (B : Set (V ⧸ keyPrefix ρ w m i))) :=

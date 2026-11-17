@@ -200,8 +200,9 @@ theorem coefficientFunctional_bidegreeComponent {N m r : ℕ}
     (coefficientFunctional F).comp
       (MvPolynomial.weightedHomogeneousComponent (bidegreeWeight N) (m, r)) =
       coefficientFunctional F := by
-  apply Finsupp.lhom_ext
-  intro e c
+  apply MvPolynomial.linearMap_ext
+  intro e
+  refine LinearMap.ext fun c => ?_
   change coefficientFunctional F
     (MvPolynomial.weightedHomogeneousComponent (bidegreeWeight N) (m, r)
       (MvPolynomial.monomial e c)) = coefficientFunctional F (MvPolynomial.monomial e c)
@@ -223,7 +224,7 @@ theorem pieceDualCoefficients_injective (Q : ρ → σ × σ → K) (N m r : ℕ
   apply LinearMap.ext
   intro p
   have hp := DFunLike.congr_fun hpull p.1
-  simpa only [LinearMap.comp_apply, quotientProjection_piece] using hp
+  simpa only [LinearMap.comp_apply, quotientProjection_piece] using! hp
 
 /-- Restrict the descended full-quotient functional to the independently defined piece. -/
 def supportedCoefficientPieceDual {Q : ρ → σ × σ → K} {N m r : ℕ}
@@ -242,7 +243,7 @@ theorem pieceDualCoefficients_supportedCoefficientPieceDual
     (presentedJetMk (R := K) N (quadraticIdeal Q)
       (MvPolynomial.weightedHomogeneousComponent (bidegreeWeight N) (m, r)
         (MvPolynomial.monomial e 1))) = F.1 e
-  rw [quotientFunctional_mk]
+  refine (quotientFunctional_mk (Q := Q) F.1 F.2.2 _).trans ?_
   have hc := DFunLike.congr_fun (coefficientFunctional_bidegreeComponent F.1 F.2.1)
     (MvPolynomial.monomial e 1)
   change coefficientFunctional F.1
@@ -286,10 +287,10 @@ def restrictedDualEquivCurrentCarrier (Q : ρ → σ × σ → K) (N m r : ℕ) 
 theorem restrictedDualEquivCurrentCarrier_coeff {Q : ρ → σ × σ → K} {N m r : ℕ}
     (hr : r ≤ N) (L : quotientPiece Q N m r →ₗ[K] K)
     (t : Fin m → σ) (a : Fin m → Fin (N + 1)) :
-    MvPolynomial.coeff (VOA.ModeParticlePolynomial.labelledExponent a)
-      ((restrictedDualEquivCurrentCarrier Q N m r hr L).1.1 t) =
+    ((restrictedDualEquivCurrentCarrier Q N m r hr L).1.1 t).coeff
+        (VOA.ModeParticlePolynomial.labelledExponent a) =
       L (polynomialToPiece Q N m r (MvPolynomial.monomial (coloredExponent t a) 1)) := by
-  change MvPolynomial.coeff _ (tensorPolynomial (pieceDualCoefficients L) t) = _
+  change (tensorPolynomial (pieceDualCoefficients L) t).coeff _ = _
   rw [coeff_tensorPolynomial]
   rfl
 

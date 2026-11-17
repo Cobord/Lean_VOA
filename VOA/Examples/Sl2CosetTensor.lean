@@ -106,9 +106,9 @@ noncomputable def tensorAffineAction (A : AffineSl2Action V k)
   current := tensorCurrentState A B
   current_weight a := by
     apply Submodule.add_mem
-    · simpa only [add_zero] using tmul_mem_tenGrading_add V W
+    · simpa only [add_zero] using! tmul_mem_tenGrading_add V W
         (A.current_weight a) W.vacuum_mem
-    · simpa only [zero_add] using tmul_mem_tenGrading_add V W
+    · simpa only [zero_add] using! tmul_mem_tenGrading_add V W
         V.vacuum_mem (B.current_weight a)
   current_even a := by
     apply Submodule.add_mem
@@ -138,7 +138,7 @@ noncomputable def tensorTranslatedAffineActionAt (A : TranslatedAffineSl2Action 
   current_even := (tensorAffineAction A.toAffineSl2Action B.toAffineSl2Action
     hV hW hg).current_even
   current_comm a b m n := by
-    simpa only [hlevel] using
+    simpa only [hlevel] using!
       tensorCurrentMode_commutator A.toAffineSl2Action B.toAffineSl2Action a b m n
   translation := translationCovariant_tensorSVA A.translation B.translation hV hW hg
 

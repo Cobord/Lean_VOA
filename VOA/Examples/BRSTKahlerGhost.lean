@@ -175,7 +175,7 @@ theorem interpretedCreation_std (hs : Gh.IsStd)
     have h2 := creation_shift_std hs hA p (-(-(i : ℤ) - 1) - 1) h1
     have h3 := brst_to_degOn_std Gh hA hB hG hZ hD hK hs (n + i + 2) (hp (n + i + 2)) (p + 1)
       (creationOp n i v) (by rw [creationOp_coe, mode_apply]; exact h2)
-    simpa only [Nat.cast_add, Nat.cast_one] using h3
+    simpa only [Nat.cast_add, Nat.cast_one] using! h3
   · have h1 : ((modelUniversalCycles S n (hp n) x : LinearMap.ker (S.model n (hp n)).D) :
         relativeWeight n) = universalWeightRepresentative n x := cyclesCongr_coe _ _ _ _
     have h2 : ((modelUniversalCycles S (n + i + 2) (hp (n + i + 2)) (universalCreation n i x) :

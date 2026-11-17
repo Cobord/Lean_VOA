@@ -93,9 +93,9 @@ theorem cosetCycles_exact_zero (ident : CosetIdentification) (n : ℤ)
   have ha := weightBoundary_toAbsolute n (cosetWeightCycles ident n x) hb
   rw [cosetWeightCycles_toAbsolute] at ha
   have hz : leeYangCosetToH0 (ident.equiv.symm x) = 0 := Subtype.ext ha
-  have hi : ident.equiv.symm x = 0 := ident.cosetToH0_injective (by simpa using hz)
+  have hi : ident.equiv.symm x = 0 := ident.cosetToH0_injective (by simpa using! hz)
   apply Subtype.ext
-  exact ident.equiv.symm.injective (by simpa using hi)
+  exact ident.equiv.symm.injective (by simpa using! hi)
 
 /-- The actual relative cycles in the Kähler model, transported only across
 the proved equality of differentials. -/

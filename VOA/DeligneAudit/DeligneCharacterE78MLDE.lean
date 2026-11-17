@@ -103,7 +103,7 @@ theorem e7Target_eq_mldeCoeff (N : ℕ) :
   have hcs : coeff 3 (HE7 * Qk 34) = 42343741440 := by
     rw [hc, hA 3 (by simp)]; rfl
   have := eq_mldeCoeff_of_HOde 2 HE7 (HE7_ode ramanujanIdentities) hlow 42343741440 hcs (by norm_num) N
-  simpa using this
+  simpa using! this
 
 /-- `H` for `E8` (`h∨ = 30`), weight 30, depth 1, integer-normalised. -/
 def HE8 : PowerSeries ℚ :=
@@ -204,7 +204,7 @@ theorem e8Target_eq_mldeCoeff (N : ℕ) :
   have hcs : coeff 5 (HE8 * Qk 58) = 13909248338175590400 := by
     rw [hc, hA 5 (by simp)]; rfl
   have := eq_mldeCoeff_of_HOde 4 HE8 (HE8_ode ramanujanIdentities) hlow 13909248338175590400 hcs (by norm_num) N
-  simpa using this
+  simpa using! this
 
 end
 

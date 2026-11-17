@@ -95,7 +95,7 @@ theorem actualLevelState_grading (self : Bool) (N : ℕ) (a : VermaPartitions N 
     (actualChannelPrimary self) N
     (vermaLevelState Wi.centralCharge ((actualChannelWeight self : ℤ) : ℂ) N a)
     (vermaLevelState_mem _ _ _ _)
-  simpa only [vermaLevelState,map_sum,map_smul,seedMap_word,actualLevelState] using h
+  simpa only [vermaLevelState,map_sum,map_smul,seedMap_word,actualLevelState] using! h
 
 /-- The two actual oscillator probes agree with the universal PBW survival measure. -/
 theorem actualProbe_virWord (self : Bool) (w : List ℕ) :
@@ -104,9 +104,11 @@ theorem actualProbe_virWord (self : Bool) (w : List ℕ) :
   induction w with
   | nil =>
     cases self
-    · simpa only [actualChannelSeed,virWord,wordProbe,List.map_nil,List.prod_nil,one_mul]
+    · simpa only [actualChannelSeed,virWord,wordProbe,List.map_nil,List.prod_nil,one_mul,
+        Bool.false_eq_true,if_false,if_true,↓reduceIte]
         using vacuumProbe_vacuum
-    · simpa only [actualChannelSeed,virWord,wordProbe,List.map_nil,List.prod_nil,one_mul]
+    · simpa only [actualChannelSeed,virWord,wordProbe,List.map_nil,List.prod_nil,one_mul,
+        Bool.false_eq_true,if_false,if_true,↓reduceIte]
         using sixthProbe_Xico
   | cons k w ih =>
     cases self <;> simp only [Bool.false_eq_true,if_false,if_true] at ih ⊢
@@ -198,11 +200,11 @@ theorem actualFiberMap_ward_ground_zero (self : Bool) (R : ℕ)
       simp only [actualLevelState,actualChannelSeed,Bool.false_eq_true,if_false,map_sum,map_smul,
         Submodule.coe_sum,Submodule.coe_smul,spinCasimir_word_vacuum,smul_zero,Finset.sum_const_zero]
     have hu := vacuum_ward_sequence_unique R hR c₁ c₂ (fun n => actualFiberMap false (f n))
-      (fun _ => 0) hC (by simp) (by simpa [actualChannelWeight] using hg)
+      (fun _ => 0) hC (by simp) (by simpa [actualChannelWeight] using! hg)
       (by simp) hone (by simp) htwo (by simp) hzero
     exact hu
   · have hu := sixth_ward_sequence_unique R hR c₁ c₂ (fun n => actualFiberMap true (f n))
-      (fun _ => 0) (by simpa [actualChannelWeight] using hg) (by simp)
+      (fun _ => 0) (by simpa [actualChannelWeight] using! hg) (by simp)
       hone (by simp) htwo (by simp) hzero
     exact hu
 

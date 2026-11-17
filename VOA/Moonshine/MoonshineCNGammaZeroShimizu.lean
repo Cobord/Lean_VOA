@@ -254,7 +254,7 @@ theorem eq_of_invariant_of_tendsto_one {ψ : ℍ → ℂ} (hψ : MDifferentiable
       (𝓝 ((1 : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ)) :=
     (Units.continuous_val.tendsto _).comp hC
   rw [Units.val_one] at hval
-  simpa using ((continuous_id.matrix_elem i j).tendsto _).comp hval
+  exact ((continuous_id.matrix_elem i j).tendsto _).comp hval
 
 /-! ### Shimizu's sequence -/
 

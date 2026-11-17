@@ -245,6 +245,6 @@ theorem exists_uniform_analytic_system (hAC2 : ModuleC2Cofinite A.toWeakModule) 
   choose B hB using hsys
   refine ⟨U, B, c, fun F hF => ⟨fun k τ => hB k ⟨F, hF⟩ τ, fun w τ => ?_⟩⟩
   have hv := congrArg (eval ⟨F, hF⟩ τ) (hc w)
-  simpa only [map_sum] using hv
+  simpa only [map_sum] using! hv
 
 end VOA.Huang.GenusOne.Uniform

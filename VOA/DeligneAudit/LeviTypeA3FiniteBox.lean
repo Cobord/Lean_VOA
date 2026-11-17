@@ -19,13 +19,13 @@ theorem a3KeyLayer_eq_bot_of_count (a b c : ℕ) (k : A3RadicalKey)
   obtain ⟨l, hd₁, hd₂, hd₃, _, _, rfl⟩ := hz
   rcases hk with hk | hk | hk
   · rw [a3_radicalWord_zero_of_count ρ w a b c h 0 l
-      (by simpa [hd₁] using hk)]
+      (by simpa [hd₁] using! hk)]
     exact Submodule.zero_mem _
   · rw [a3_radicalWord_zero_of_count ρ w a b c h 1 l
-      (by simpa [hd₂] using hk)]
+      (by simpa [hd₂] using! hk)]
     exact Submodule.zero_mem _
   · rw [a3_radicalWord_zero_of_count ρ w a b c h 2 l
-      (by simpa [hd₃] using hk)]
+      (by simpa [hd₃] using! hk)]
     exact Submodule.zero_mem _
 
 /-- Search keys with the three sharp count limits and a uniform mode-degree limit. -/

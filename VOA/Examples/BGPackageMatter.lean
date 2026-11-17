@@ -88,11 +88,11 @@ theorem rho_layer {p : ℕ} {n : ℤ} {x : W.grading n}
   change rhoW R n x ∈ (LiRadical.gradedForm B n).orthogonal (F.pieceLT p n)
   rw [LinearMap.BilinForm.mem_orthogonal_iff]
   intro z hz
-  rw [LinearMap.BilinForm.isOrtho_def, LiRadical.gradedForm_apply, rhoW_coe]
+  rw [LiRadical.gradedForm_apply, rhoW_coe]
   have h1 : x ∈ (LiRadical.gradedForm B n).orthogonal (F.pieceLT p n) := hx.2
   rw [LinearMap.BilinForm.mem_orthogonal_iff] at h1
   have h2 := h1 _ (hC.rho_pieceLT hz)
-  rw [LinearMap.BilinForm.isOrtho_def, LiRadical.gradedForm_apply, rhoW_coe] at h2
+  rw [LiRadical.gradedForm_apply, rhoW_coe] at h2
   rw [← hC.sq (z : 𝒱), hC.conj, h2, map_zero]
 
 /-- **Distinct layers are `h`-orthogonal.** -/
@@ -105,13 +105,13 @@ theorem layer_h_orth {n : ℤ} {p q : ℕ} (hpq : p ≠ q) {x y : W.grading n}
     have h1 : y ∈ (LiRadical.gradedForm B n).orthogonal (F.pieceLT q n) := hy.2
     rw [LinearMap.BilinForm.mem_orthogonal_iff] at h1
     have h2 := h1 _ hρx
-    rwa [LinearMap.BilinForm.isOrtho_def, LiRadical.gradedForm_apply, rhoW_coe] at h2
+    rwa [LiRadical.gradedForm_apply, rhoW_coe] at h2
   · have hyl : y ∈ F.pieceLT p n := pieceIn_le_pieceLT F h n hy.1
     have h1 : rhoW R n x ∈ (LiRadical.gradedForm B n).orthogonal (F.pieceLT p n) :=
       (hC.rho_layer hx).2
     rw [LinearMap.BilinForm.mem_orthogonal_iff] at h1
     have h2 := h1 _ hyl
-    rw [LinearMap.BilinForm.isOrtho_def, LiRadical.gradedForm_apply, rhoW_coe] at h2
+    rw [LiRadical.gradedForm_apply, rhoW_coe] at h2
     rw [hC.symm]
     exact h2
 
@@ -482,7 +482,7 @@ def matterBGData (hA : GradedUnitary affineForm affineRealStructure affineFlag)
       (fun z => tensorMap_sq _ _ (fun x => by simp [affineCompactLayerData.sq])
         (fun y => by simp [hCB.sq]) z)
       (fun y => by simp [auxiliaryCompactLayerData.sq]) x
-    simpa using h
+    simpa using! h
   P_eq i x hx y :=
     tensorP_deg _ _ _ _ (TensorProduct.map (rsLin affineRealStructure) (rsLin RB))
       (rsLin auxiliaryRealStructure) _ _
@@ -503,7 +503,7 @@ def matterBGData (hA : GradedUnitary affineForm affineRealStructure affineFlag)
         simp [conjIdx, hg]
       rw [e]; exact h
     · have h0 := matterDeg_le_zeroGhost i hx
-      rw [eq_zero_of_mem_zeroGhost (by simpa using hg) h0, map_zero]
+      rw [eq_zero_of_mem_zeroGhost (by simpa using! hg) h0, map_zero]
       exact Submodule.zero_mem _
   ρ_J0 a x := matterRho_J0 RB hCB.rho_mode a x
 

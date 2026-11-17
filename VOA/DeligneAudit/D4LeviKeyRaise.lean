@@ -24,9 +24,9 @@ theorem simple_raise_key_higher
       exact simple_raise_word_higher ρ w m h i r l
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (higherOrbit ρ w m k).add_mem hx hy
+      simpa using! (higherOrbit ρ w m k).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (higherOrbit ρ w m k).smul_mem c hx
+      simpa using! (higherOrbit ρ w m k).smul_mem c hx
 
 theorem key_simple_raise_quot
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))

@@ -26,7 +26,7 @@ theorem a2_radicalWord_zero_of_second_count (p q : ℕ)
     have hlen : p + q < (secondModes l).length := by
       rw [secondModes_length]
       exact hl
-    simpa [a2RadicalOp] using
+    simpa [a2RadicalOp] using!
       a2_compound_word_length_zero ρ w p q h hN (secondModes l) hlen
   rw [radicalWord_split ρ l, mul_smul]
   change ((firstModes l).map fun s => a2RadicalOp ρ 0 s).prod •

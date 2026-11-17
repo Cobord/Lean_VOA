@@ -50,20 +50,20 @@ theorem cvrel_cutoff {F : ℕ → Module.End ℂ V}
   by_cases hp : p = 0
   · subst p
     have heq : fromMode F 0 = F := by ext k; simp [fromMode]
-    simpa only [QFrom, heq] using hR r s 0 hr hrs
+    simpa only [QFrom, heq] using! hR r s 0 hr hrs
   have hp1 : 1 ≤ p := by omega
   let L : ℕ → Module.End ℂ V := fun k => if k < p then -F k else 0
   have hLL : ∀ i j, L i * L j = L j * L i := by
     intro i j
     by_cases hi : i < p <;> by_cases hj : j < p
-    · simpa only [L, if_pos hi, if_pos hj, neg_mul, mul_neg, neg_neg] using hFF i j
+    · simpa only [L, if_pos hi, if_pos hj, neg_mul, mul_neg, neg_neg] using! hFF i j
     · simp [L, hi, hj]
     · simp [L, hi, hj]
     · simp [L, hi, hj]
   have hLF : ∀ i j, L i * F j = F j * L i := by
     intro i j
     by_cases hi : i < p
-    · simpa only [L, if_pos hi, neg_mul, mul_neg, neg_inj] using hFF i j
+    · simpa only [L, if_pos hi, neg_mul, mul_neg, neg_inj] using! hFF i j
     · simp [L, hi]
   have hfrom : Garland.Fs (fromMode F p) = Garland.Fs L + Garland.Fs F := by
     apply PowerSeries.ext
@@ -72,12 +72,12 @@ theorem cvrel_cutoff {F : ℕ → Module.End ℂ V}
     by_cases hk : p ≤ k
     · simp [hk, show ¬k < p by omega]
     · simp [hk, show k < p by omega]
-  have hterm (m : ℕ × ℕ) (hm : m ∈ Finset.antidiagonal r) :
+  have hterm (m : ℕ × ℕ) (hm : m ∈ Finset.HasAntidiagonal.antidiagonal r) :
       (PowerSeries.coeff s (Garland.Fs L ^ m.1 * Garland.Fs F ^ m.2)) y = 0 := by
-    have hmr : m.1 + m.2 = r := Finset.mem_antidiagonal.mp hm
+    have hmr : m.1 + m.2 = r := Finset.HasAntidiagonal.mem_antidiagonal.mp hm
     rw [PowerSeries.coeff_mul, LinearMap.coe_sum, Finset.sum_apply]
     refine Finset.sum_eq_zero fun n hn => ?_
-    have hns : n.1 + n.2 = s := Finset.mem_antidiagonal.mp hn
+    have hns : n.1 + n.2 = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hn
     rw [Module.End.mul_apply]
     by_cases hq : (p - 1) * m.1 < n.1
     · change Q L m.1 n.1 _ = 0

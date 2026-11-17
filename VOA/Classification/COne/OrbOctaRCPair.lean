@@ -42,7 +42,7 @@ theorem oscExp_eq_iff {r : ℕ} (a : Fin r) (w v : List ℕ) :
     apply List.perm_iff_count.mpr
     intro i
     rw [oscillators_count, oscillators_count]
-    simpa only [oscExp_apply] using congrArg (fun μ => μ (i, a)) h
+    simpa only [oscExp_apply] using! congrArg (fun μ => μ (i, a)) h
   · intro h
     ext ⟨i, b⟩
     by_cases hb : b = a
@@ -75,7 +75,7 @@ noncomputable def pairValue (c : ℂ) : (ℚ × ℚ) →+ ℂ where
 
 theorem power_two_reduce (c : ℂ) (hc : c * c = ((2 : ℚ) : ℂ)) (n : ℕ) :
     c ^ n = (2 : ℂ) ^ (n / 2) * (if n % 2 = 0 then 1 else c) := by
-  have hc' : c ^ 2 = 2 := by simpa only [pow_two, Rat.cast_ofNat] using hc
+  have hc' : c ^ 2 = 2 := by simpa only [pow_two, Rat.cast_ofNat] using! hc
   have hn : n % 2 = 0 ∨ n % 2 = 1 := by omega
   calc
     c ^ n = c ^ (n % 2 + 2 * (n / 2)) := by rw [Nat.mod_add_div]
@@ -142,8 +142,16 @@ theorem sector_form (d e : ℤ)
       if e = d then fockForm p q else 0 := by
   change latForm (VOA.LatGen.Triplet.latP 1) (VOA.LatGen.latStateGen _ p d)
     (VOA.LatGen.latStateGen _ q e) = _
-  rw [lattice_pair_right_sector, latE_latStateGen]
-  split_ifs <;> simp_all
+  rw [lattice_pair_right_sector (VOA.LatGen.Triplet.latP 1) _
+      (e : (VOA.LatGen.Triplet.latP 1).carrier) q,
+    latE_latStateGen (VOA.LatGen.Triplet.latP 1) p (d : (VOA.LatGen.Triplet.latP 1).carrier)
+      (e : (VOA.LatGen.Triplet.latP 1).carrier)]
+  split_ifs with h1 h2 h2
+  all_goals first
+    | (exfalso; exact h2 h1.symm)
+    | (exfalso; exact h1 h2.symm)
+    | rfl
+    | simp
 
 theorem cα_real : starRingEnd ℂ (PlusC2.cα 1) = PlusC2.cα 1 := by
   simp [PlusC2.cα, VOA.LatGen.chargeCoord, Complex.conj_ofReal]

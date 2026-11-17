@@ -18,6 +18,11 @@ spin blocks match. `liftVisLiftableOfCharge` gives the exact visible-pair conclu
 the normalized charge identity.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -198,7 +203,7 @@ theorem liftVisLwX_injective : Function.Injective (fun x : SpaceX => Lw (inX x))
   funext c
   have ht := congrArg
     (fun F => LinearMap.trace ℚ SpaceW (F * Lw (inX (Pi.single c 1)))) h
-  dsimp only at ht
+  try dsimp only at ht
   rw [trace_Lw_mul_Lw, trace_Lw_mul_Lw] at ht
   simp only [Am_inX, xs_inX, Matrix.trace_zero,
     mul_zero, zero_add, dotProduct_single, mul_one] at ht
@@ -211,7 +216,7 @@ theorem liftVisResX_eq {f g : SpaceB ≃ₗ[ℚ] SpaceB}
   apply LinearMap.ext
   intro x
   apply liftVisLwX_injective
-  dsimp only
+  try dsimp only
   rw [← hf.apply_inX, ← hg.apply_inX]
   apply LinearMap.ext
   intro N
@@ -277,9 +282,11 @@ theorem liftVisLiftableOfCharge (p : Pvis)
 theorem liftVisOrthogonal_cast (R : Matrix SpinIdx SpinIdx ℚ) (hR : Rᵀ * R = 1) :
     (R.map (Rat.castHom ℂ))ᵀ * R.map (Rat.castHom ℂ) = 1 := by
   have h := congrArg (fun M => M.map (Rat.castHom ℂ)) hR
-  dsimp only at h
+  try dsimp only at h
   rw [Matrix.map_mul (f := Rat.castHom ℂ)] at h
-  simpa using h
+  first
+  | simpa using h
+  | (rw [Matrix.transpose_map] at h; exact h.trans (by simp))
 
 /-- The complex linear equivalence attached to a rational orthogonal spin matrix. -/
 def liftVisMatrixEquiv (R : Matrix SpinIdx SpinIdx ℚ) (hR : Rᵀ * R = 1) :
@@ -311,7 +318,7 @@ theorem liftVisIntertwine_cast (R A B : Matrix SpinIdx SpinIdx ℚ) (e : ℚ)
     simp only [Matrix.map_apply, Matrix.smul_apply, Rat.coe_castHom, smul_eq_mul,
       Rat.cast_mul]
   have hc := congrArg (fun M => M.map (Rat.castHom ℂ)) h
-  dsimp only at hc
+  try dsimp only at hc
   rw [Matrix.map_mul (f := Rat.castHom ℂ), he,
     Matrix.map_mul (f := Rat.castHom ℂ)] at hc
   rw [Matrix.mulVec_mulVec, hc, Matrix.smul_mulVec, Matrix.mulVec_mulVec]
@@ -356,9 +363,16 @@ theorem liftVisRelativeCharge_signed (p : Pvis) :
       liftSpinCharge (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) v) ⬝ᵥ
       ((R.map (Rat.castHom ℂ))ᵀ *ᵥ
       liftSpinCharge (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) w) = _
-    rw [liftLiftableOrthogonalDot _ (by
-      rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp horth)]
-    exact liftLiftableChargeDot _ (liftVisIsometry_form p.1.2) v w
+    first
+    | (rw [liftLiftableOrthogonalDot _ (by
+        rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp horth)]
+       exact liftLiftableChargeDot _ (liftVisIsometry_form p.1.2) v w)
+    | (refine (liftLiftableOrthogonalDot _ (by
+          rw [Matrix.transpose_transpose]; exact mul_eq_one_comm.mp horth) _ _).trans ?_
+       exact (congrArg₂ (fun a b : SpinIdx → ℂ => a ⬝ᵥ b)
+         (liftSpinCharge_apply (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) v)
+         (liftSpinCharge_apply (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) w)).trans
+         (liftLiftableChargeDot _ (liftVisIsometry_form p.1.2) v w))
   apply liftSpinRational_of_diagonal (liftVisRelativeCharge p) hdot liftSpinTestValue
     (fun t i =>
       ((liftMonoWeight (liftVisIsometry p.1.2) (liftSpinTestVector t) *
@@ -386,9 +400,14 @@ theorem liftVisCharge_signed (p : Pvis) :
   change (liftVisMatrixEquiv _ (liftVisSpinOrthogonal p))
     ((liftVisMatrixEquiv _ (liftVisSpinOrthogonal p)).symm
       (liftSpinCharge (liftVisIsometry p.1.2) (liftVisIsometry_form p.1.2) v)) = _ at hv
-  rw [LinearEquiv.apply_symm_apply, liftVisMatrixEquiv_apply,
-    Matrix.mulVec_mulVec, ← Matrix.map_mul (f := Rat.castHom ℂ)] at hv
-  exact hv
+  first
+  | (rw [LinearEquiv.apply_symm_apply, liftVisMatrixEquiv_apply,
+      Matrix.mulVec_mulVec, ← Matrix.map_mul (f := Rat.castHom ℂ)] at hv
+     exact hv)
+  | (refine ((LinearEquiv.apply_symm_apply _ _).symm.trans
+        (hv.trans (liftVisMatrixEquiv_apply _ _ _))).trans ?_
+     exact (Matrix.mulVec_mulVec _ _ _).trans
+       (congrArg (· *ᵥ (v : SpinIdx → ℂ)) (Matrix.map_mul (f := Rat.castHom ℂ)).symm))
 
 /-- Every visible lattice component has a rational chosen normalized charge action. -/
 theorem liftVisCharge_rational (p : Pvis) :

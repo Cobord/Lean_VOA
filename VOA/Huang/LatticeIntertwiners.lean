@@ -1280,8 +1280,9 @@ theorem isoC_scalar (j : ℤ) (δ : (glueLat m 1).carrier) (β n : ℤ) :
         * latticeCocycle (glueLat m 1) (glueIota m 1 β) (glueIota m 1 n + δ)) * isoC m j δ (β + n)
       = isoC m j δ n * (latCob (latP m) (glueLat m j) (glueIota m j) β
         * latticeCocycle (glueLat m j) (glueIota m j β) (glueIota m j n + glueDelta m j)) := by
-  rw [kappa_gen (latP m) (glueLat m 1) (glueIota m 1) (latP_even m) (glueLat_even m 1)
-    (glueIota_isometry m 1), kappa_eq]
+  have hk := kappa_gen (latP m) (glueLat m 1) (glueIota m 1) (latP_even m) (glueLat_even m 1)
+    (glueIota_isometry m 1) δ β n
+  rw [hk, kappa_eq]
   set σ : ℤ → ℂ := fun n => latticeCocycle (glueLat m 1) (glueIota m 1 n) δ with hσ
   have hsa : σ (β + n) = σ β * σ n := by
     have e : glueIota m 1 (β + n) = glueIota m 1 β + glueIota m 1 n := (glueIota m 1).map_add β n
@@ -1320,12 +1321,20 @@ theorem isoE_intertw (j : ℤ) (δ : (glueLat m 1).carrier)
     (g := (latticeModule m hm j).YM (latChargeGen (latP m) β) t ∘ₗ (isoE m j δ).toLinearMap)
     (fun p (n : ℤ) => by
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, isoE]
-      rw [shiftWeakModule_latChargeGen, map_smul, relabel_latP, relabel_latP, map_smul,
+      have hsh : (shiftMod m hm δ).YM (latChargeGen (latP m) β) t (latStateGen (latP m) p n)
+          = (latCob (latP m) (glueLat m 1) (glueIota m 1) β
+              * latticeCocycle (glueLat m 1) (glueIota m 1 β) (glueIota m 1 n + δ)) •
+            latStateGen (latP m)
+              (EEVec (latP m) β (t - (latP m).form β n - (glueLat m 1).form (glueIota m 1 β) δ) p)
+              (β + n) :=
+        shiftWeakModule_latChargeGen (latP m) (glueLat m 1) (glueIota m 1) δ
+          (latP_even m) (latP_posDef m hm) (glueLat_even m 1) (glueLat_posDef m hm 1)
+          (glueIota_isometry m 1) β n t p
+      rw [hsh, map_smul, relabel_latP, relabel_latP, map_smul,
         latticeModule_latChargeGen, smul_smul, smul_smul]
       simp only [add_zero]
       erw [isoC_scalar]
-      rw [latP_form, hδ]
-      rfl)
+      rw [latP_form, hδ])
   exact LinearMap.congr_fun hext x
 
 /-- The glue vector `j·δ` of `N_{m,1}`, realising `λ_j = j/(2m)·α`. -/

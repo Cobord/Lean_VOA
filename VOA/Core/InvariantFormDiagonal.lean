@@ -46,6 +46,9 @@ namespace VOA.VertexOperatorAlgebra
 open scoped BigOperators
 open Classical
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝒱 : Type*} [AddCommGroup 𝒱] [Module ℂ 𝒱] {W : VertexOperatorAlgebra 𝒱}
 
 /-- Collapse a `Fin N` sum of `gBinom (K:ℤ) j • g j` (nat top index `K`), where additionally

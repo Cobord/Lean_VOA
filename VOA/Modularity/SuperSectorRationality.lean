@@ -217,7 +217,7 @@ theorem linearIndependent_hSupersymmetricSubtype :
     have hca := congrArg
       (fun f : hSupersymmetricFunctionals P R.centralizerAction.algAut =>
         (f : A →ₗ[ℂ] ℂ) a) hc
-    simpa using hca
+    simpa using! hca
   · exact hi
 
 /-- The exact equivariant dimension input needed to turn independence into spanning. -/
@@ -238,7 +238,7 @@ theorem finrank_hSupersymmetricFunctionals_eq_blockCount
     finrank ℂ (hSupersymmetricFunctionals P R.centralizerAction.algAut) = D.blockCount := by
   letI : FiniteDimensional ℂ A := D.finiteDimensional
   exact le_antisymm hbound
-    (by simpa using R.linearIndependent_hSupersymmetricSubtype.fintype_card_le_finrank)
+    (by simpa using! R.linearIndependent_hSupersymmetricSubtype.fintype_card_le_finrank)
 
 /-- Under the explicit equivariant dimension bound, the realized M/Q bottom functionals span the
 whole temporal supersymmetric-functional space. -/
@@ -253,10 +253,10 @@ theorem span_realizedFunctional_eq_hSupersymmetricFunctionals
     ⟨R.realizedFunctional i, R.realized_hSupersymmetric i⟩
   have hind : LinearIndependent ℂ t := R.linearIndependent_hSupersymmetricSubtype
   have hrank : finrank ℂ (Submodule.span ℂ (Set.range t)) = D.blockCount := by
-    simpa using finrank_span_eq_card hind
+    simpa using! finrank_span_eq_card hind
   apply Submodule.eq_top_of_finrank_eq
   rw [hrank]
-  exact le_antisymm (by simpa using hind.fintype_card_le_finrank) hbound
+  exact le_antisymm (by simpa using! hind.fintype_card_le_finrank) hbound
 
 /-- Coefficient form of the conditional finite sector-realization theorem.  The family and all
 module data are fixed before the functional `φ` is quantified. -/
@@ -278,7 +278,7 @@ theorem exists_eq_sum_hSupersymmetric_realizedFunctional
   have hca := congrArg
     (fun f : hSupersymmetricFunctionals P R.centralizerAction.algAut =>
       (f : A →ₗ[ℂ] ℂ) a) hc.symm
-  simpa using hca
+  simpa using! hca
 
 /-- The same realized block family spans ordinary supersymmetric functionals under the separate
 nonequivariant bound supplied by `SuperWedderburnTrace`. -/

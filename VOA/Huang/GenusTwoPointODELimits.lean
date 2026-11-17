@@ -30,7 +30,7 @@ theorem no_common_fuchsian_diagonal {d : ℕ → ℂ}
   have hz := hK _ (heq n) (fun j hj => by
     simp only [coeff_mk, if_neg (show j ≠ n by omega)])
   have he := congrArg (coeff n) hz
-  exact hd (by simpa using he)
+  exact hd (by simpa using! he)
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra V}
   {P N : LWModule W}
@@ -47,7 +47,7 @@ theorem vacuum_product_no_common_fuchsian (hv : W.vacuum ≠ 0)
     ¬ ∀ n, FuchsianEq lam s c (PowerSeries.mk (fun k =>
       productLevelCoeff (P₁ := vacuumLW W hv) (moduleIntertwiner N.isMod) Y
         W.vacuum w 0 α n k)) := by
-  simpa only [productLevelCoeff_vacuum hv Y hw] using
+  simpa only [productLevelCoeff_vacuum hv Y hw] using!
     no_common_fuchsian_diagonal hsupp lam s c hc
 
 /-- A scalar example, unrelated to VOA structure. -/

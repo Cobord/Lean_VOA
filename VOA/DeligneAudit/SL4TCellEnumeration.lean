@@ -49,18 +49,18 @@ theorem cellCatalog_complete (M a b : ℕ) (c : SiteCell) (h : CellValid M a b c
     c ∈ cellCatalog M a b := by
   induction M generalizing a b c with
   | zero =>
-      have hg : c.1 = ∅ := Finset.subset_empty.mp (by simpa using h.1)
-      have hh : c.2 = ∅ := Finset.subset_empty.mp (by simpa using h.2.2.1)
-      have ha : a = 0 := by simpa only [hg, Finset.card_empty] using h.2.1.symm
-      have hb : b = 0 := by simpa only [hh, Finset.card_empty] using h.2.2.2.symm
+      have hg : c.1 = ∅ := Finset.subset_empty.mp (by simpa using! h.1)
+      have hh : c.2 = ∅ := Finset.subset_empty.mp (by simpa using! h.2.2.1)
+      have ha : a = 0 := by simpa only [hg, Finset.card_empty] using! h.2.1.symm
+      have hb : b = 0 := by simpa only [hh, Finset.card_empty] using! h.2.2.2.symm
       have hc : c = (∅, ∅) := Prod.ext hg hh
       simp [cellCatalog, ha, hb, hc]
   | succ M ih =>
       have he := cellRemove_valid h
       have ha : a ≤ M + 1 := by
-        simpa only [Finset.card_range, h.2.1] using (Finset.card_le_card h.1)
+        simpa only [Finset.card_range, h.2.1] using! (Finset.card_le_card h.1)
       have hb : b ≤ M + 1 := by
-        simpa only [Finset.card_range, h.2.2.2] using (Finset.card_le_card h.2.2.1)
+        simpa only [Finset.card_range, h.2.2.2] using! (Finset.card_le_card h.2.2.1)
       have hrestore := cellLift_remove M c
       simp only [cellCatalog, List.mem_append]
       by_cases hg : M ∈ c.1 <;> by_cases hh : M ∈ c.2
@@ -70,37 +70,37 @@ theorem cellCatalog_complete (M a b : ℕ) (c : SiteCell) (h : CellValid M a b c
         rw [if_pos ⟨ha0, ha, hb0, hb⟩]
         apply List.mem_map.mpr
         refine ⟨cellRemove M c, ih (a - 1) (b - 1) _ ?_, ?_⟩
-        · simpa only [if_pos hg, if_pos hh] using he
-        · simpa only [cellLast, decide_eq_true hg, decide_eq_true hh] using hrestore
+        · simpa only [if_pos hg, if_pos hh] using! he
+        · simpa only [cellLast, decide_eq_true hg, decide_eq_true hh] using! hrestore
       · have ha0 : 0 < a := by rw [← h.2.1]; exact Finset.card_pos.mpr ⟨M, hg⟩
         have hbM : b ≤ M := by
           have hs := erase_last_subset h.2.2.1
           rw [Finset.erase_eq_of_notMem hh] at hs
-          simpa only [Finset.card_range, h.2.2.2] using Finset.card_le_card hs
+          simpa only [Finset.card_range, h.2.2.2] using! Finset.card_le_card hs
         apply Or.inr
         rw [if_pos ⟨ha0, ha, hbM⟩]
         apply List.mem_map.mpr
         refine ⟨cellRemove M c, ih (a - 1) b _ ?_, ?_⟩
-        · simpa only [if_pos hg, if_neg hh, Nat.sub_zero] using he
-        · simpa only [cellLast, decide_eq_true hg, decide_eq_false hh] using hrestore
+        · simpa only [if_pos hg, if_neg hh, Nat.sub_zero] using! he
+        · simpa only [cellLast, decide_eq_true hg, decide_eq_false hh] using! hrestore
       · have hb0 : 0 < b := by rw [← h.2.2.2]; exact Finset.card_pos.mpr ⟨M, hh⟩
         have haM : a ≤ M := by
           have hs := erase_last_subset h.1
           rw [Finset.erase_eq_of_notMem hg] at hs
-          simpa only [Finset.card_range, h.2.1] using Finset.card_le_card hs
+          simpa only [Finset.card_range, h.2.1] using! Finset.card_le_card hs
         apply Or.inl ∘ Or.inl ∘ Or.inr
         rw [if_pos ⟨haM, hb0, hb⟩]
         apply List.mem_map.mpr
         refine ⟨cellRemove M c, ih a (b - 1) _ ?_, ?_⟩
-        · simpa only [if_neg hg, if_pos hh, Nat.sub_zero] using he
-        · simpa only [cellLast, decide_eq_false hg, decide_eq_true hh] using hrestore
+        · simpa only [if_neg hg, if_pos hh, Nat.sub_zero] using! he
+        · simpa only [cellLast, decide_eq_false hg, decide_eq_true hh] using! hrestore
       · have he' : CellValid M a b c := by
           simpa only [if_neg hg, if_neg hh, Nat.sub_zero, cellRemove,
-            Finset.erase_eq_of_notMem hg, Finset.erase_eq_of_notMem hh, Prod.eta] using he
+            Finset.erase_eq_of_notMem hg, Finset.erase_eq_of_notMem hh, Prod.eta] using! he
         have haM : a ≤ M := by
-          simpa only [Finset.card_range, h.2.1] using (Finset.card_le_card he'.1)
+          simpa only [Finset.card_range, h.2.1] using! (Finset.card_le_card he'.1)
         have hbM : b ≤ M := by
-          simpa only [Finset.card_range, h.2.2.2] using (Finset.card_le_card he'.2.2.1)
+          simpa only [Finset.card_range, h.2.2.2] using! (Finset.card_le_card he'.2.2.1)
         apply Or.inl ∘ Or.inl ∘ Or.inl
         rw [if_pos ⟨haM, hbM⟩]
         exact ih a b c he'

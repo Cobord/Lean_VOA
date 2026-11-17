@@ -43,7 +43,10 @@ theorem OmegaN_le_omegaN {M : Type u} [AddCommGroup M] [Module ℂ M] (A : WeakM
   · intro x y _ _ hx hy
     simp only [map_add, LinearMap.add_apply, hx, hy, add_zero]
   · intro c x _ hx
-    simp only [map_smul, LinearMap.smul_apply, hx, smul_zero]
+    exact (congrArg (fun T : Module.End ℂ M => T w) ((weakRep A).map_smul c x)).trans
+      (by
+        simp only [LinearMap.smul_apply]
+        exact (congrArg (fun v : M => c • v) hx).trans (smul_zero c))
 
 /-- **Universal `Ω_N`-vectors exist** for every VOA and every `N` (DLM3 induced module of the
 free parabolic module). -/

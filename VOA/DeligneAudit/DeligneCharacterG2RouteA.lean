@@ -46,14 +46,15 @@ theorem one_sub_mono_ne_zero (v : E3) (hv : v ≠ 0) : (1 : K) - mono v ≠ 0 :=
   have h1 : algebraMap L K (monoL 0) = algebraMap L K (monoL v) := by
     rw [← mono, ← mono, mono_zero]; exact (sub_eq_zero.mp h)
   have h2 := IsFractionRing.injective L K h1
-  exact hv (Finsupp.single_left_injective one_ne_zero h2).symm
+  have h3 : Finsupp.single (0 : E3) (1 : ℚ) = Finsupp.single v 1 := congrArg AddMonoidAlgebra.coeff h2
+  exact hv (Finsupp.single_left_injective one_ne_zero h3).symm
 
 /-- Monomial substitution on `L`. -/
 def substL (M : E3 →+ E3) : L →+* L := mapDomainRingHom ℚ M
 
 theorem substL_injective (M : E3 →+ E3) (hM : Function.Injective M) :
     Function.Injective (substL M) :=
-  Finsupp.mapDomain_injective hM
+  AddMonoidAlgebra.mapDomain_injective hM
 
 /-- Monomial substitution on `K`. -/
 def subst (M : E3 →+ E3) (hM : Function.Injective M) : K →+* K :=

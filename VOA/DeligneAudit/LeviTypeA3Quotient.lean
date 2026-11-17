@@ -10,7 +10,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (ρ : CurrentModule bracketTable V)
 
 /-- The quotient of the embedded `sl₃[t]` current action. -/
-def a3LeviQuotCurrent (N : Submodule ℂ V)
+noncomputable def a3LeviQuotCurrent (N : Submodule ℂ V)
     (hN : ∀ a r, N ≤ N.comap (ρ.op (a3LeviColour a) r)) :
     CurrentModule VOA.AffineSl3.bracketTable (V ⧸ N) :=
   VOA.DeligneAudit.UnivG.quotRepG (a3LeviCurrent ρ) N hN
@@ -22,7 +22,7 @@ theorem a3LeviQuotCurrent_op (N : Submodule ℂ V)
       N.mkQ (ρ.op (a3LeviColour a) r v) := rfl
 
 /-- The canonical quotient by the closure of any Levi subspace. -/
-def a3LeviClosureQuotCurrent (S : Submodule ℂ V) :
+noncomputable def a3LeviClosureQuotCurrent (S : Submodule ℂ V) :
     CurrentModule VOA.AffineSl3.bracketTable (V ⧸ a3LeviClosure ρ S) :=
   a3LeviQuotCurrent ρ (a3LeviClosure ρ S)
     (fun a r => a3LeviClosure_inv ρ S a r)

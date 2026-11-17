@@ -48,7 +48,7 @@ theorem row_near_eval (r : WordRow) :
   have hh := Rows.eval_hom (A := MvPolynomial (Vars 2) ℂ)
     (B := MvPolynomial (Vars m) ℂ) (fun v => MvPolynomial.X (varIndex v))
     (MvPolynomial.rename (nearestPair b).embed).toRingHom r
-  simpa only [colorValue_near] using hh.symm
+  simpa only [colorValue_near] using! hh.symm
 
 def colorPolarRow (i j : Fin 9) (l : List (Fin 3)) : Rows.Row 27 :=
   Rows.multiply (colorFlatten i 0) (Rows.multiply (colorFlatten j 2)

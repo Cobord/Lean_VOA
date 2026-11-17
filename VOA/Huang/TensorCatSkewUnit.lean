@@ -117,15 +117,20 @@ theorem rightUnitor_naturality {X Y : Ordinary W} (f : X ⟶ Y) :
     unfold moduleModes
     split_ifs with h
     · exact (f.property v h.choose x).symm
-    · simp
+    · change (0 : Y.carrier) = f.val 0
+      exact (map_zero f.val).symm
   have hs := (skew_restrictInputs (moduleIntertwiner Y.isMod) (𝟙 vacuumObject) f).symm
   rw [he] at hs
   have hs' := hs.trans (skew_postcompose (X := vacuumObject) (Y := X) (Z := X)
     (T := Y) (moduleIntertwiner X.isMod) f)
   apply tensor_hom_ext F
   intro n x v
-  simp only [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply,
-    rightUnitor_intertwiner]
+  change (rightUnitor F Y).hom.val ((tensorHom F f (𝟙 vacuumObject)).val
+      ((F X vacuumObject).intertwiner.val n x v)) =
+    f.val ((rightUnitor F X).hom.val ((F X vacuumObject).intertwiner.val n x v))
+  rw [tensorHom_intertwiner]
+  refine (rightUnitor_intertwiner F Y n (f.val x) v).trans
+    (Eq.trans ?_ (congrArg f.val (rightUnitor_intertwiner F X n x v)).symm)
   exact congrArg (fun J : IntertwiningOperator X.isMod (adjointModule W) Y.isMod =>
     J.val n x v) hs'
 

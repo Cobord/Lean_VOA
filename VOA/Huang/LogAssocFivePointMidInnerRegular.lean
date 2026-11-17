@@ -68,7 +68,7 @@ theorem innerRegularMid_logNormalizedSeries (hC2 : C2Cofinite W)
     have hm := hmem p.1 p.2.1 p.2.2 n₀ n₁ n₂ (n₃+t) n₄ f x y
       ((⇑(Lm1 N₃.toWeakModule))^[t] z) w hx hy
       (Lm1_iterate_mem_weight (A₂ := N₃.toGW) hz t) hw
-    simpa only [Q,c,s,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using hm
+    simpa only [Q,c,s,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using! hm
   have hQ : ∀ p t,Q p (t+1)=thetaY (lam t) (Q p t)+d p • Q (next p) t := by
     intro p t
     dsimp only [Q,lam,d,next]
@@ -76,6 +76,6 @@ theorem innerRegularMid_logNormalizedSeries (hC2 : C2Cofinite W)
     exact logNormalizedSeries_Lm1_third Y₃ Y₁.1 (flipLogModes YB.1) c ν μ f x y
       ((⇑(Lm1 N₃.toWeakModule))^[t] z) w n₀ (s+t) p.1 p.2.1 p.2.2
   have hh := innerRegularMid_of_coupled_fg NN hFG Q next d lam hQ hQmem (k,l,j) v
-  simpa only [Q,c,s,Nat.add_zero,Function.iterate_zero,id] using hh
+  simpa only [Q,c,s,Nat.add_zero,Function.iterate_zero,id] using! hh
 
 end VOA.Huang.LogAssocFivePointGraded

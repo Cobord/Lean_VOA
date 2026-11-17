@@ -16,6 +16,8 @@ SAME Verma module M(c,h). Negative modes depend linearly on z. This supplies
 a route to Verma independence without specializing a singular-vector formula.
 This file constructs the family; it does not assert its faithfulness.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 open Module (End)
 open scoped TensorProduct
@@ -61,9 +63,9 @@ noncomputable def tensorVirasoroData (A : CentralVirasoroData V)
     rw [he]
     by_cases hh : m+n=0
     · simp only [if_pos hh, map_smul] at ha hb
-      simp only [if_pos hh, smul_add]
-      rw [ha,hb]
-      dsimp [F,G,End.rTensorAlgHom,End.lTensorAlgHom]
+      rw [if_pos hh, ha, hb]
+      change _ = ((m:ℂ)-n) • (F (A.L (m+n)) + G (B.L (m+n))) +
+        (((m:ℂ)^3-m)/12) • (F A.central + G B.central)
       module
     · simp only [if_neg hh, map_zero, add_zero] at ha hb
       simp only [if_neg hh, add_zero, smul_add]
@@ -115,9 +117,11 @@ noncomputable def isotropicFockData (z : ℂ) : CentralVirasoroData IsotropicFoc
 /-- The pair has central charge two, independently of its free momentum. -/
 theorem isotropicFock_central (z : ℂ) :
     (isotropicFockData z).central=(2:ℂ) • (1 : End ℂ IsotropicFock) := by
-  convert tensorVirasoroData_central (chargedFockData 0 z)
+  have h := tensorVirasoroData_central (chargedFockData 0 z)
     (chargedFockData 0 (Complex.I*z)) 1 1 (by simp [chargedFockData])
-      (by simp [chargedFockData]) using 1 <;> norm_num
+      (by simp [chargedFockData])
+  rw [show (1:ℂ)+1 = 2 by norm_num] at h
+  exact h
 
 /-- The tensor of the two polynomial vacua is the pair's highest vector. -/
 noncomputable def isotropicVacuum : IsotropicFock :=
@@ -249,7 +253,7 @@ noncomputable def fockConstantProjection (V : Type*) [AddCommGroup V] [Module �
 
 /-- On pure tensors, removing the Fock factor multiplies by its constant term. -/
 theorem fockConstantProjection_tmul (v : V) (f : LeeYangFock) :
-    fockConstantProjection V (v ⊗ₜ[ℂ] f)=MvPolynomial.coeff 0 f • v := by
+    fockConstantProjection V (v ⊗ₜ[ℂ] f)=f.coeff 0 • v := by
   simp [fockConstantProjection]
 
 /-- Remove the second and third bosons, retaining the first oscillator ring. -/

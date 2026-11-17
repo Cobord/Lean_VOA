@@ -76,7 +76,7 @@ theorem exceptionalZeroWeightVacuum_of_positiveWeights
   have hn : IsEmpty (ModuleEquiv (orbifoldVOA G) N (adjointModule (orbifoldVOA G))) :=
     ⟨fun e => he ⟨e⟩⟩
   have := hp G hG hSR M N hi hn 0 hh
-  simpa using this
+  simpa using! this
 
 /-- Under the concrete spectrum theorem, the only remaining logical condition
 for B5 is identification of the zero-weight vacuum. -/

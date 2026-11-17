@@ -729,7 +729,7 @@ theorem not_c2_of_h0 (hh : IsHeisVector W h) (h0 : ∀ x, W.smul h 0 x = 0)
     | succ n ih =>
       have := heis_mode_mem hh ih (-1)
       simp only [xs, pow_succ', Module.End.mul_apply]
-      convert this using 2
+      convert this using 2; push_cast; ring
   have hA1pow : ∀ (N : ℕ) (k : ℤ) (y : 𝒲), y ∈ W.grading k → (A1 ^ N) y ∈ W.grading (k - N) := by
     intro N
     induction N with
@@ -1490,7 +1490,7 @@ theorem V2m_hb_zero (p : FockN (rank (latP m))) (β : ℤ) :
     (V2m m hm).smul (hb m) 0 (latStateGen (latP m) p β)
       = chargeCoord (latP m) β (a0 m) • latStateGen (latP m) p β := by
   rw [V2m, PreVertexAlgebra.smul_def, hb, latVOA_Y_bosonState, mode_apply, alphaLatGen_apply,
-    LinearMap.add_apply, if_pos (by norm_num), zGradeOpGen_latStateGen]
+    LinearMap.add_apply, if_pos (by norm_num), zGradeOpGen_latStateGen (L := latP m) (β := β)]
   simp [latStateGen, currentN_apply]
 
 include hm in
@@ -1519,7 +1519,7 @@ theorem V2m_charge_int {c : ℂ} {x : LatModuleGen (latP m)} (hx0 : x ≠ 0)
       obtain ⟨⟨p, β⟩, rfl⟩ := hy
       refine le_iSup₂_of_le (f := fun (μ : ℂ) (_ : μ ≠ c) => f.eigenspace μ)
         (chargeCoord (latP m) β (a0 m)) ?_ le_rfl ?_
-      · rw [chargeCoord_eq m hm]; exact (hne β).symm
+      · rw [chargeCoord_eq m hm (β : ℤ)]; exact (hne β).symm
       · exact Module.End.mem_eigenspace_iff.mpr (V2m_hb_zero m hm p β)
     | zero => exact Submodule.zero_mem _
     | add y z _ _ hy hz => exact add_mem hy hz

@@ -129,7 +129,7 @@ theorem split_uniformG {M : Type} [AddCommGroup M] [Module ℂ M]
   have hux : u - x ∈ P := by
     have : u - x = c⁻¹ • (evalW A F x - c • x) := by
       rw [hu, smul_sub, smul_smul, inv_mul_cancel₀ hV0, one_smul]
-    rw [this]; exact P.smul_mem (algebraMap ℂ (modeAlg A) c⁻¹) (by simpa using hFx)
+    rw [this]; exact P.smul_mem (algebraMap ℂ (modeAlg A) c⁻¹) (by simpa using! hFx)
   have huP : u ∉ P := fun h0 => hxP (by
     have := P.sub_mem h0 hux
     rwa [sub_sub_cancel] at this)

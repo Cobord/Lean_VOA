@@ -64,7 +64,7 @@ def shiftRep (z : ℂ) : CurrentModule f (D1SiteG.Space n) where
   comm a b r s v := by
     have hh := congrArg (fun A => A v) (shiftOp_comm f hJ hskew z a b r s)
     simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply] using hh
+      LinearMap.smul_apply] using! hh
 
 @[simp] theorem shiftRep_op (z : ℂ) (c : Fin n) (k : ℕ) :
     (shiftRep f hJ hskew z).op c k = shiftOp f z c k := rfl

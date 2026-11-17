@@ -101,7 +101,7 @@ theorem completedLogIterate_summable (hC2 : C2Cofinite W)
     ring
   have hs (r : ℂ) (l : ℕ) : Summable fun n : ℕ =>
       PowerSeries.coeff n (logIterateLowerCosetSeries Y₃.1 Y₄.1 f x y z α₁ α₂ α₃ β r l)*(Complex.exp t)^n := by
-    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using
+    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using!
       summable_log_iterate_series hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₃ Y₄
         f x y z (r+α₃-β-1) (α₁+α₂-r-1) 0 l (by rw [Complex.norm_exp]; exact Real.exp_lt_one_iff.mpr ht.1)
   have hrows : ∀ mu∈spectrumCosets hC2 N₅ hfg₅,
@@ -172,7 +172,7 @@ theorem completedLogProduct_summable (hC2 : C2Cofinite W)
       (prodTermZ (fun n => Y₁.1 n k) (fun n => Y₂.1 n 0) f x y z
         (α₁+α₂+α₃-β-2) (α₂+α₃-r-1) z₁ 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ f x y z _ _ k 0 one_ne_zero (by simpa only [norm_one] using one_lt_norm ht)
+      Y₁ Y₂ f x y z _ _ k 0 one_ne_zero (by simpa only [norm_one] using! one_lt_norm ht)
   have hrows : ∀ mu∈spectrumCosets hC2 N₅ hfg₅,
       Summable fun d : ℤ => g (spectrumCosetRep hC2 N₅ hfg₅ mu+d) := by
     intro mu hmu

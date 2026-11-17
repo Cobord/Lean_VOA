@@ -20,7 +20,7 @@ theorem xyz_hsymm_evaluation_colourList
           ρ.op (radicalColour j) r)).prod)) w := by
   rw [xyz_hsymm_evaluation_current]
   have h : (List.finRange cs.length).map cs.get = cs := by
-    simpa [List.ofFn_eq_map] using List.ofFn_get cs
+    simpa [List.ofFn_eq_map] using! List.ofFn_get cs
   have hmap :
       (List.finRange cs.length).map (fun i =>
         fCurrent (fun r => ρ.op (radicalColour (cs.get i)) r)) =

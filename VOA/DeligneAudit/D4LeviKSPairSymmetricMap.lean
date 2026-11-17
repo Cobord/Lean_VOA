@@ -76,14 +76,14 @@ theorem pairRestriction_sourcePower_mem (a b c : ℕ)
   · change pairRestriction a b c (pairSourceXPsum a b c r) ∈ _
     rw [pairRestriction_XPsum]
     exact (pairTargetSymmetric a b c).add_mem
-      (by simpa [pairTargetPower] using pairTargetPower_mem a b c 1 r)
-      (by simpa [pairTargetPower] using pairTargetPower_mem a b c 0 r)
+      (by simpa [pairTargetPower] using! pairTargetPower_mem a b c 1 r)
+      (by simpa [pairTargetPower] using! pairTargetPower_mem a b c 0 r)
   · change pairRestriction a b c (sourceYPsum a b c r) ∈ _
     rw [pairRestriction_sourceYPsum]
-    simpa [pairTargetPower] using pairTargetPower_mem a b c 1 r
+    simpa [pairTargetPower] using! pairTargetPower_mem a b c 1 r
   · change pairRestriction a b c (pairSourceZPsum a b c r) ∈ _
     rw [pairRestriction_ZPsum]
-    simpa [pairTargetPower] using pairTargetPower_mem a b c 2 r
+    simpa [pairTargetPower] using! pairTargetPower_mem a b c 2 r
 
 theorem pairRestriction_symmetric (a b c : ℕ) :
     pairSourceSymmetric a b c ≤

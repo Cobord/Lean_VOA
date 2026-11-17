@@ -14,6 +14,7 @@ theorem sourceWithShifts_degree (m : ℕ) (i : OrbitSourceIndex m) (v : List ℕ
     (hv : v.sum = i.shifts.sum) :
     orbitSourceDegree m (sourceWithShifts m i v) = orbitSourceDegree m i := by
   simp only [orbitSourceDegree,sourceWithShifts,hv]
+  rfl
 
 theorem orbitSource_shift_seed_nonzero (m : ℕ) (i : OrbitSourceIndex m)
     (hne : orbitSourcePoly m i ≠ 0) : shiftWord m i.shifts (monoSeed m i.seed) ≠ 0 := by

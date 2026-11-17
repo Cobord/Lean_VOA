@@ -40,7 +40,7 @@ theorem scalarTracePolynomial_eq_constant {X : Type u} [AddCommGroup X] [Module 
       simp [logExpCoeff]
     · have hrz : r=0 := by omega
       subst r
-      have he : E=0 := by simpa using congrArg (fun T : End ℂ X => E*T) hr
+      have he : E=0 := by simpa using! congrArg (fun T : End ℂ X => E*T) hr
       rw [if_neg (by omega),he,map_zero]
   · rw [if_neg hk]
     by_cases hkr : k < r

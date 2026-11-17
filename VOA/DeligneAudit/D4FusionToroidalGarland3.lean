@@ -124,7 +124,7 @@ theorem coeff_pow_eq_zero_of_coeff_eq_zero {S : Type*} [Semiring S] (A : PowerSe
       rw [pow_succ', coeff_mul]
       apply Finset.sum_eq_zero
       intro p hp
-      have hpq := Finset.mem_antidiagonal.mp hp
+      have hpq := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
       rw [add_mul, one_mul] at hn
       by_cases hpm : m ≤ p.1
       · rw [hA p.1 hpm, zero_mul]
@@ -188,7 +188,7 @@ def d4ThetaAlg (m : ℕ) :
 
 instance d4ThetaAlg_isMulCommutative (m : ℕ) : IsMulCommutative (d4ThetaAlg m) :=
   Algebra.isMulCommutative_adjoin ℂ (by
-    rintro _ ⟨r, rfl⟩ _ ⟨s, rfl⟩
+    rintro _ ⟨r, rfl⟩ _ ⟨s, rfl⟩ -
     refine LinearMap.ext fun v => ?_
     exact d4Ftheta_comm m r s v)
 

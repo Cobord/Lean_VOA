@@ -122,7 +122,7 @@ and vacuum quotient. The opposite orientation is not asserted here. -/
 theorem pairSplitting_vacuum_quotient_of_gt_one (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m)
     (i : Label m) (hi : 1 < weight m i) : PairSplitting m hm i (.inr 0) := by
   intro M _ _ A P _ hQ hb ht
-  have ht0 : FactorBottom A P ⊤ 0 := by simpa [weight] using ht
+  have ht0 : FactorBottom A P ⊤ 0 := by simpa [weight] using! ht
   apply complement_of_zero_quotient_bottom_gt_one (V2mPlus_c2Cofinite m hm)
     (V2mPlus_pseudoUnitary_ge2 m hm hm2) A P hQ _ hb ht0
   change (1 : ℝ) < ((weight m i : ℚ) : ℝ)
@@ -159,12 +159,12 @@ theorem vacuum_quotient_family_iff_sign (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m)
     obtain ⟨z, hz, he⟩ := (mem_positivePairs_iff m (.inr 0) i).mp hi
     have hw : weight m i = (z : ℚ) := by
       apply Rat.cast_injective (α := ℂ)
-      simpa only [Rat.cast_intCast, weight, Matrix.cons_val_zero, Rat.cast_zero, zero_add] using he
+      simpa only [Rat.cast_intCast, weight, Matrix.cons_val_zero, Rat.cast_zero, zero_add] using! he
     by_cases h1 : z = 1
     · have heq : weight m i = weight m (.inr 1) := by
         rw [hw, h1]
         norm_num [weight]
-      exact hs A P hP hQ (by simpa only [heq] using hb) ht
+      exact hs A P hP hQ (by simpa only [heq] using! hb) ht
     · have hgt : 1 < weight m i := by
         rw [hw]
         exact_mod_cast (by omega : (1 : ℤ) < z)

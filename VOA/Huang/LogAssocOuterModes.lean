@@ -22,16 +22,12 @@ noncomputable def outerModeBlock (n γ c : ℂ) :
   LinearMap.mk₂ ℂ
     (fun ξ z => (outerEvaluationBlock N N₃ N₄ (γ+c-n-1) c (A (γ+c-n-1) γ c) ξ z : M₄))
     (fun ξ η z => by
-      dsimp only
       simp only [Submodule.coe_add,map_add,LinearMap.add_apply])
     (fun s ξ z => by
-      dsimp only
       simp only [Submodule.coe_smul,map_smul,LinearMap.smul_apply])
     (fun ξ z z' => by
-      dsimp only
       simp only [map_add,Submodule.coe_add])
     (fun s ξ z => by
-      dsimp only
       simp only [map_smul,Submodule.coe_smul])
 
 /-- Actual homogeneous pieces assemble the genuine outer zeroth-mode family. -/
@@ -72,7 +68,7 @@ theorem outerModes_truncated_homogeneous {γ c : ℂ}
     simp only [Complex.sub_re,Complex.add_re,Complex.intCast_re,Complex.one_re] at hb hK
     push_cast at hj'
     linarith
-  simpa only [hbot,Submodule.mem_bot] using hm
+  simpa only [hbot,Submodule.mem_bot] using! hm
 
 /-- Finite genuine generalized homogeneous decompositions give lower truncation
 on arbitrary outside vectors. -/

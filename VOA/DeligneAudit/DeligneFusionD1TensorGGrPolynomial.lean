@@ -25,7 +25,7 @@ theorem leading_mode_mem (c : Fin n) (P : ℂ[X]) (hP : P.Monic)
   have he : (∑ k ∈ Finset.range P.natDegree, P.coeff k • R.op c k w) +
       R.op c P.natDegree w = 0 := by
     simpa only [polynomialOp, Finset.sum_range_succ, LinearMap.add_apply,
-      LinearMap.sum_apply, LinearMap.smul_apply, hP.coeff_natDegree, one_smul] using hzero
+      LinearMap.sum_apply, LinearMap.smul_apply, hP.coeff_natDegree, one_smul] using! hzero
   have hlow : (∑ k ∈ Finset.range P.natDegree, P.coeff k • R.op c k w) ∈
       Fbelow R w P.natDegree := by
     apply Submodule.sum_mem

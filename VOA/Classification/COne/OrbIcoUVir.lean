@@ -5,6 +5,8 @@ The evaluator retains the order of negative modes. -/
 set_option Elab.async false
 set_option maxSynthPendingDepth 3
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Classification.COne.OrbIcoU
 open VOA VertexOperatorAlgebra OrbOctaRC
 
@@ -68,7 +70,7 @@ theorem virCombo_scale (a : ℚ) (cs : List (ℚ × List ℕ)) :
   | nil => simp [wordScale, virCombo]
   | cons t cs ih =>
     simpa [wordScale, virCombo, List.map_cons, List.sum_cons,
-      Rat.cast_mul, smul_add, mul_smul] using congrArg
+      Rat.cast_mul, smul_add, mul_smul] using! congrArg
         (fun v => ((a * t.1 : ℚ) : ℂ) • virDesc A t.2 q + v) ih
 
 theorem virCombo_prefix (k : ℕ) (cs : List (ℚ × List ℕ)) :
@@ -77,7 +79,7 @@ theorem virCombo_prefix (k : ℕ) (cs : List (ℚ × List ℕ)) :
   | nil => simp [wordPrefix, virCombo]
   | cons t cs ih =>
     simpa [wordPrefix, virCombo, virDesc, List.map_cons, List.sum_cons,
-      map_add, map_smul] using congrArg
+      map_add, map_smul] using! congrArg
         (fun v => (t.1 : ℂ) • A.L (-(k : ℤ)) (virDesc A t.2 q) + v) ih
 
 theorem L_commute_negative (m : ℤ) (k : ℕ) (v : V) :
@@ -103,7 +105,7 @@ theorem virWordAction_sound (c h : ℚ) (hc : A.centralCharge = (c : ℂ))
     by_cases hm : m < 0
     · simp [virWordAction, hm, virCombo, virDesc, Int.toNat_of_nonneg (by omega : 0 ≤ -m)]
     · by_cases hz : m = 0
-      · subst m; simpa [virWordAction, virCombo, virDesc] using hzero.symm
+      · subst m; simpa [virWordAction, virCombo, virDesc] using! hzero.symm
       · simp [virWordAction, hm, hz, virCombo, virDesc, hpos m (by omega)]
   | cons k ks ih =>
     by_cases hm : m < 0

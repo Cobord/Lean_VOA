@@ -31,7 +31,7 @@ theorem screeningFockState_vars_lt (r s t : ℕ) (β : ℚ)
 mode. Every sum is finite, and the total output energy is explicitly fixed. -/
 theorem screeningFockState_shift_coeff (r s t n : ℕ) (β : ℚ) (d : ℕ →₀ ℕ)
     (hd : Finsupp.weight (fun k => k+1) d + n = r*s) :
-    coeff (fockOccupation d) (fockShiftDerivation n (screeningFockState r s t β)) =
+    (fockShiftDerivation n (screeningFockState r s t β)).coeff (fockOccupation d) =
       ((screeningPrefactor β d * ∑ i ∈ Finset.range (r*s),
         ((i+1:ℕ):ℚ) * (d i:ℚ) * screeningMoment r s t
           (powerSumSubstitution (Fin r) (monomial
@@ -48,7 +48,6 @@ theorem screeningFockState_shift_coeff (r s t n : ℕ) (β : ℚ) (d : ℕ →�
   · have hpos : 0<d i := Nat.pos_of_ne_zero hdi
     have hw : Finsupp.weight (fun k => k+1) (d - Finsupp.single i 1) + (i+n+1) = r*s := by
       have he := Finsupp.weight_sub_single_add (w := fun k : ℕ => k+1) hdi
-      dsimp only at he
       omega
     rw [screeningFockState_migration_coeff r s t β d i (i+n) hpos hw]
     push_cast

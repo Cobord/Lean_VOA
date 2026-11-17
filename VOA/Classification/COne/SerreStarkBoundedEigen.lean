@@ -149,7 +149,7 @@ theorem norm_sq_lt_of_upOp_eigen {N r t : ℕ} {ψ : DirichletCharacter ℂ r} (
       have hu0 : 1 + j * N ≠ 0 := by omega
       rw [padicValNat.mul (Nat.mul_ne_zero (pow_ne_zero _ hp.ne_zero) hn₀.ne')
         (pow_ne_zero _ hu0), padicValNat.mul (pow_ne_zero _ hp.ne_zero) hn₀.ne',
-        padicValNat.prime_pow, padicValNat.pow _ hu0, padicValNat.eq_zero_of_not_dvd hu]
+        padicValNat.prime_pow, padicValNat.pow _ _, padicValNat.eq_zero_of_not_dvd hu]
       ring
     have hk : k = k' := by
       have := congrArg (padicValNat p) hkk
@@ -280,7 +280,7 @@ theorem upEnd_eigenvalue_norm_sq_lt {N r t : ℕ} (ψ : DirichletCharacter ℂ r
     have := congrFun (congrArg (fun x : classSpace N r ψ t => (x : ℍ → ℂ)) hgE') ⟨τ, hτ⟩
     simp only [upEnd, LinearMap.restrict_apply, Submodule.coe_smul] at this
     rw [← hfg, upH_restrictUpper] at this
-    simpa [restrictUpper_apply] using this
+    simpa [restrictUpper_apply] using! this
   -- a nonzero positive coefficient
   have hpos : ∃ n, 0 < n ∧ thetaTypeCoeff f n ≠ 0 := by
     by_contra hall

@@ -30,7 +30,7 @@ theorem topMap_shift (m k : ℕ) (p : TopPoly m) :
     topMap m (topShift m k p) = (-1/2:ℂ) • g0Deriv m 1 k (topMap m p) := by
   have h := map_derivation_to (topMap m) (topShift m k)
     ((-1/2:ℂ) • g0Deriv m 1 k) (fun i => ?_) p
-  · simpa only [Derivation.smul_apply] using h
+  · simpa only [Derivation.smul_apply] using! h
   · rw [show topShift m k (MvPolynomial.X i) = topModeX m (k+i.val) from
       MvPolynomial.mkDerivation_X ℂ _ _,topMap_modeX,topMap_X,
       Derivation.smul_apply,AllMNormal.cartan_modeX,smul_smul]

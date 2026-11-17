@@ -86,8 +86,10 @@ theorem local_off_off_iff (c c' : FormalDist (M →ₗ[ℂ] V)) (d d' : FormalDi
         ((fun m n => d m ∘ₗ c' n - d' n ∘ₗ c m) : FormalDist₂ (End ℂ M)) = 0) := by
   constructor
   · rintro ⟨N, hN⟩
-    rw [bracketDist_offF, mulBySubPow_blockF₂, blockF₂_eq_zero_iff] at hN
-    exact ⟨⟨N, hN.1⟩, ⟨N, hN.2.2.2⟩⟩
+    have hN' := (blockF₂_eq_zero_iff _ _ _ _).1
+      ((mulBySubPow_blockF₂ N _ _ _ _).symm.trans
+        ((congrArg (mulBySubPow N) (bracketDist_offF c c' d d')).symm.trans hN))
+    exact ⟨⟨N, hN'.1⟩, ⟨N, hN'.2.2.2⟩⟩
   · rintro ⟨⟨N₁, h₁⟩, ⟨N₂, h₂⟩⟩
     refine ⟨max N₁ N₂, ?_⟩
     rw [bracketDist_offF]

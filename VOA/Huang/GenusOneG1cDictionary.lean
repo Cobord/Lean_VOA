@@ -106,7 +106,8 @@ theorem muInt_apply (c : TransferChoice F D a b) (x : ι) (j : Fin (c.r x)) (n :
       ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u
         ((c.inc x j).val v)) := by
   change (tensorHom F (𝟙 (famObj D a)) (c.inc x j) ≫ vacuumProduct F H c x).val _ = _
-  rw [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply]
+  exact congrArg (vacuumProduct F H c x).val
+    (tensorHom_intertwiner F (𝟙 (famObj D a)) (c.inc x j) n u v)
 
 theorem nuInt_apply (c : TransferChoice F D a b) (x : ι) (j : Fin (c.r x)) (n : ℂ)
     (u : (lwOf D b).carrier) (v : (lwOf D x).carrier) :
@@ -142,8 +143,10 @@ theorem iterate_dictionary (hv : W.vacuum ≠ 0) (c : TransferChoice F D a b) (x
       ((F (tensorObj F (famObj D a) (famObj D b)) (famObj D x)).intertwiner.val n u m) =
     (moduleIntertwiner (lwOf D x).isMod).val n
       (((F (famObj D a) (famObj D b)).lift (vacuumLW W hv).isMod (epsInt F c)).val u) m
-  rw [hl, Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply, leftUnitor_intertwiner]
-  rfl
+  rw [hl]
+  exact (congrArg (leftUnitor F (famObj D x)).hom.val
+    (tensorHom_intertwiner F c.ε (𝟙 (famObj D x)) n u m)).trans
+    (leftUnitor_intertwiner F (famObj D x) n (c.ε.val u) m)
 
 /-- **Product dictionary.** The product channel of `ψ_x` is `Σ_j μ_j(·, z₁) ν_j(·, z₂)`. -/
 theorem product_dictionary (c : TransferChoice F D a b) (x : ι) :
@@ -159,7 +162,6 @@ theorem product_dictionary (c : TransferChoice F D a b) (x : ι) :
   refine LinearMap.ext fun u => LinearMap.ext fun v => ?_
   change _ = (∑ j, representedProduct F (P₁ := lwOf D a) (P₂ := lwOf D b) (P₃ := lwOf D x)
         (P₄ := lwOf D x) (Q := lwOf D (c.lab x j)) (muInt F H c x j) (nuInt F c x j)).val n u v
-  rw [intertwiner_sum_apply]
   have hterm : ∀ j, (representedProduct F (P₁ := lwOf D a) (P₂ := lwOf D b) (P₃ := lwOf D x)
       (P₄ := lwOf D x) (Q := lwOf D (c.lab x j)) (muInt F H c x j) (nuInt F c x j)).val n u v =
       (vacuumProduct F H c x).val
@@ -168,17 +170,27 @@ theorem product_dictionary (c : TransferChoice F D a b) (x : ι) :
     intro j
     change (muInt F H c x j).val n u
       (((F (famObj D b) (famObj D x)).lift (lwOf D (c.lab x j)).isMod (nuInt F c x j)).val v) = _
-    rw [hl j, muInt_apply]
-    rfl
-  simp only [hterm]
+    rw [hl j]
+    exact muInt_apply F H c x j n u ((c.proj x j).val v)
+  refine Eq.trans ?_ ((intertwiner_sum_apply Finset.univ (fun j => representedProduct F
+    (P₁ := lwOf D a) (P₂ := lwOf D b) (P₃ := lwOf D x) (P₄ := lwOf D x) (Q := lwOf D (c.lab x j))
+    (muInt F H c x j) (nuInt F c x j)) n u v).trans
+    (Finset.sum_congr rfl fun j _ => hterm j)).symm
   have hsum : ∑ j, (c.inc x j).val ((c.proj x j).val v) = v := by
     have htot := congrArg (fun f => f.val v) (c.total x)
-    simpa only [Ordinary.sum_val_apply, Ordinary.comp_apply, Ordinary.id_apply] using htot
-  set Y := (F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner with hY
-  calc _ = (vacuumProduct F H c x).val (Y.val n u v) := rfl
-    _ = (vacuumProduct F H c x).val (Y.val n u (∑ j, (c.inc x j).val ((c.proj x j).val v))) := by
-        rw [hsum]
-    _ = _ := by rw [map_sum]; exact map_sum (vacuumProduct F H c x).val _ _
+    simpa only [Ordinary.sum_val_apply, Ordinary.comp_apply, Ordinary.id_apply] using! htot
+  calc _ = (vacuumProduct F H c x).val
+        ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u v) := rfl
+    _ = (vacuumProduct F H c x).val
+        ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u
+          (∑ j, (c.inc x j).val ((c.proj x j).val v))) :=
+        congrArg (fun z => (vacuumProduct F H c x).val
+          ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u z))
+          hsum.symm
+    _ = _ := (congrArg (vacuumProduct F H c x).val (map_sum
+        ((F (famObj D a) (tensorObj F (famObj D b) (famObj D x))).intertwiner.val n u)
+        (fun j => (c.inc x j).val ((c.proj x j).val v)) Finset.univ)).trans
+        (map_sum (vacuumProduct F H c x).val _ Finset.univ)
 
 /-! ## §3 Genus-zero associativity for the categorical channels -/
 
@@ -235,8 +247,9 @@ theorem vacuum_coeff (hV : StronglyRational W) (hv : W.vacuum ≠ 0)
     rw [Complex.norm_real, Real.norm_of_nonneg hs0.le, norm_one]; exact hs1
   have hpn : ‖(1 : ℂ)‖ < ‖((1 + s : ℝ) : ℂ)‖ := by
     rw [Complex.norm_real, Real.norm_of_nonneg (by linarith), norm_one]; linarith
-  rw [iterateCoeff_eq_sum_iterValue hV (lwOf_irreducible D a) (lwOf_irreducible D b)
-    (lwOf_irreducible D x) _ _ hwa hwb β bs hs0' hsn]
+  refine (iterateCoeff_eq_sum_iterValue (Q := vacuumLW W hv) hV (lwOf_irreducible D a)
+    (lwOf_irreducible D b) (lwOf_irreducible D x) (moduleIntertwiner (lwOf D x).isMod)
+    (epsInt F c) hwa hwb β bs hs0' hsn).trans ?_
   simp_rw [productCoeff_eq_sum_prodValue hV (lwOf_irreducible D a) (lwOf_irreducible D b)
     (lwOf_irreducible D x) _ _ hwa hwb β bs one_ne_zero hpn]
   rw [Finset.sum_comm]
@@ -246,12 +259,13 @@ theorem vacuum_coeff (hV : StronglyRational W) (hv : W.vacuum ≠ 0)
     ⟨α₁, α₂, β, β, wa, wb, bs i, weightFunctional (lwOf D x).isMod β bs i, hwa, hwb,
       (bs i).property, supportedAt_weightFunctional (lwOf D x).isMod β bs i, s, hs0, hs1⟩
   have h := vacuum_fourPoint F H hV hv c x d
-  rw [iterateValue_eq_iterValue] at h
+  replace h := (iterateValue_eq_iterValue (Q := vacuumLW W hv)
+    (moduleIntertwiner (lwOf D x).isMod) (epsInt F c) d).symm.trans h
   simp only [productValue_eq_prodValue] at h
   have hσ : α₁ + α₂ + β - β - 2 = α₁ + α₂ - 2 := by ring
   have hcast : ((1 + s : ℝ) : ℂ) = 1 + (s : ℂ) := by push_cast; ring
   rw [hcast]
-  simpa only [d, hσ] using h
+  simpa only [d, hσ] using! h
 
 /-! ## §4 The genus-one vacuum-channel function -/
 

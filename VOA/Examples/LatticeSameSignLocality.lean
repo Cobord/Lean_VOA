@@ -134,13 +134,13 @@ theorem local_of_bracket_on_state {F G : FormalDist (End ℂ LatModule)}
   | zero => rw [map_zero]
   | add y1 y2 h1 h2 => rw [map_add, h1, h2, add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, h1, h2, add_zero]
       | single n a =>
-          rw [(Finsupp.smul_single_one n a).symm]
-          erw [TensorProduct.tmul_smul, map_smul,
-            show (Finsupp.single n (1 : ℂ) : LatGrp) = eVec n from rfl, h, smul_zero]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
+          erw [TensorProduct.tmul_smul, map_smul, h, smul_zero]
 
 theorem Yemα_zeroLeft_local (m' : ℤ) : Local (Yemα 0) (Yemα m') :=
   local_of_bracket_on_state (Yemα_zeroLeft_bracket_on_state m')
@@ -238,8 +238,8 @@ theorem shift_reindex (P T : ℕ) (g : ℕ → End ℂ B) (hg : ∀ j, T < j →
       simp only [Finset.mem_filter, Finset.mem_range]; omega
     · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj
       simp only [Finset.mem_range]; omega
-    · intro r hr; simp only [Finset.mem_range] at hr; simp only []; omega
-    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; simp only []; omega
+    · intro r hr; simp only [Finset.mem_range] at hr; (try simp only []); omega
+    · intro j hj; simp only [Finset.mem_filter, Finset.mem_range] at hj; (try simp only []); omega
     · intro r _; rfl
   rw [Finset.sum_congr rfl (fun i hi => by rw [hinner i hi])]
   -- now swap the two finite sums and pull the indicator into the inner range
@@ -310,7 +310,7 @@ theorem crossContr (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (N b : �
         rw [LinearMap.comp_smul, move_alphaC_past_EminusC, smul_sub]
       set op : ℤ → End ℂ B := fun j => (EminusC m' (b - j)).comp (aExpCZ m (N - j)) with hop
       have hopvanish : ∀ j : ℤ, N.toNat < j → op j = 0 := fun j hj => by
-        rw [hop]; dsimp only
+        rw [hop]; try dsimp only
         rw [aExpCZ_neg m (show N - j < 0 by omega), LinearMap.comp_zero]
       -- MAIN reassembly (per i): m • ∑_r (-α_{r+1})∘aExpCZ((N-i)-1-r) = (N-i) • aExpCZ(N-i)
       have hMain : ∀ i ∈ Finset.range (N.toNat + 1),
@@ -356,7 +356,7 @@ theorem crossContr (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (N b : �
           rw [← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun r _ => ?_
           rw [smul_sub, smul_comm (wC P i) (2 * m' : ℂ)]
-          rw [hop]; dsimp only
+          rw [hop]; try dsimp only
           rw [show b - (i : ℤ) - ((r : ℤ) + 1) = b - ((i : ℤ) + r + 1) from by ring,
             show N - 1 - (r : ℤ) - (i : ℤ) = N - ((i : ℤ) + r + 1) from by ring]]
         rw [← Finset.smul_sum, comp_sum', ← Finset.smul_sum, ← Finset.smul_sum]
@@ -435,7 +435,7 @@ theorem contr_P (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (a b : ℤ)
   set term : ℕ → End ℂ B :=
     fun i => wC P i • (EminusC m' (b - (i : ℤ))).comp (EplusC m (a + (i : ℤ))) with hterm
   have hvanA : ∀ i, (-a).toNat < i → term i = 0 := fun i hi => by
-    rw [hterm]; dsimp only
+    rw [hterm]; try dsimp only
     rw [EplusC_eq_aExpCZ m (a + (i : ℤ)),
       aExpCZ_neg m (show -(a + (i : ℤ)) < 0 by omega), LinearMap.comp_zero, smul_zero]
   have hvanP : ∀ i, P < i → term i = 0 := fun i hi => by
@@ -671,7 +671,7 @@ theorem eeMaster_P (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (c d : �
             ) (fun i _ => (ee_p_finite m m' c d (i : ℤ) q x).subset
               (fun p hp => by
                 rw [Function.mem_support] at hp ⊢
-                simp only [] at hp ⊢
+                (try simp only [] at hp ⊢)
                 exact fun h => hp (by rw [h, smul_zero])))]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [smul_finsum' (wC P i) (ee_p_finite m m' c d (i : ℤ) q x)]]
@@ -682,7 +682,7 @@ theorem eeMaster_P (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (c d : �
         ) (fun i _ => (ee_q_finite m m' c d (i : ℤ) x).subset
           (fun q hq => by
             rw [Function.mem_support] at hq ⊢
-            simp only [] at hq ⊢
+            (try simp only [] at hq ⊢)
             exact fun h => hq (by rw [h, smul_zero])))]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [← smul_finsum' (wC P i) (ee_q_finite m m' c d (i : ℤ) x), termX_i]
@@ -721,8 +721,8 @@ theorem shift_comm_P (m m' : ℤ) (P : ℕ) (hP : (P : ℤ) = 2 * m * m') (a b :
       (Finset.sum_nbij' (i := fun i => P - i) (j := fun i => P - i)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
         (fun i _ => rfl)).symm]
   refine Finset.sum_congr rfl fun i hi => ?_
   simp only [Finset.mem_range] at hi

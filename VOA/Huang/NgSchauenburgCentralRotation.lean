@@ -12,7 +12,18 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] [RightRigidCategory 
   [Preadditive C] [Linear ℂ C] [MonoidalPreadditive C] [MonoidalLinear ℂ C]
   [HasKernels C] [HasFiniteBiproducts C]
 
-set_option backward.isDefEq.respectTransparency false in
+omit [HasKernels C] [HasFiniteBiproducts C] in
+private theorem leftDuality_symm_apply_cr (X V W : C) (g : X ⟶ V ⊗ W) :
+    (leftDuality X V W).symm g = Vᘁ ◁ g ≫ (α_ Vᘁ V W).inv ≫ ε_ V Vᘁ ▷ W ≫ (λ_ W).hom := rfl
+
+omit [HasKernels C] [HasFiniteBiproducts C] in
+private theorem centerRotation_apply_cr (P : Pivotal C) (A : Center C) (V W : C)
+    (f : A.1 ⟶ V ⊗ W) :
+    centerRotation P A V W f =
+      (Iso.refl A.1).inv ≫ ((ρ_ A.1).inv ≫ A.1 ◁ η_ Vᘁ (Vᘁ)ᘁ ≫ (α_ A.1 Vᘁ (Vᘁ)ᘁ).inv ≫
+        ((A.2.β Vᘁ).symm.inv ≫ (leftDuality A.1 V W).symm f ≫ (Iso.refl W).hom) ▷ (Vᘁ)ᘁ) ≫
+        (whiskerLeftIso W (P.j V).symm).hom := rfl
+
 /-- Cup-cap expression for rotation with an arbitrary central source. -/
 theorem centerRotation_eq_cup (P : Pivotal C) (A : Center C) {X Y : C}
     (f : A.1 ⟶ X ⊗ Y) :
@@ -23,7 +34,9 @@ theorem centerRotation_eq_cup (P : Pivotal C) (A : Center C) {X Y : C}
     _ = (ρ_ A.1).inv ≫ A.1 ◁ η_ Xᘁ (Xᘁ)ᘁ ≫ (α_ A.1 Xᘁ (Xᘁ)ᘁ).inv ≫
         (A.2.β Xᘁ).hom ▷ (Xᘁ)ᘁ ≫ ((leftDuality A.1 X Y).symm f) ▷ (Xᘁ)ᘁ ≫
         Y ◁ (P.j X).inv := by
-      dsimp [centerRotation, homCongr, rightDuality, tensorRightHomEquiv]
+      rw [centerRotation_apply_cr]
+      simp only [Iso.refl_inv, Iso.refl_hom, Iso.symm_inv, whiskerLeftIso_hom, Iso.symm_hom,
+        Category.id_comp, Category.comp_id]
       monoidal
     _ = _ := by
       dsimp [Pivotal.cup]
@@ -38,7 +51,7 @@ theorem centerBend_tensor (P : Pivotal C) {A X Y Z : C} (f : A ⟶ (X ⊗ Y) ⊗
       (α_ Yᘁ Xᘁ A).hom ≫
         (leftDuality (Xᘁ ⊗ A) Y Z).symm
           ((leftDuality A X (Y ⊗ Z)).symm (f ≫ (α_ X Y Z).hom)) := by
-  dsimp [leftDuality, tensorLeftHomEquiv]
+  simp only [leftDuality_symm_apply_cr]
   simp only [Category.assoc, whiskerLeft_comp]
   rw [← whisker_exchange_assoc, associator_inv_naturality_left_assoc,
     ← comp_whiskerRight_assoc, P.dualTensor_eval]
@@ -85,7 +98,8 @@ theorem centerRotation_tensor (P : Pivotal C) (A : Center C) {X Y Z : C}
           rw [whisker_exchange, rightUnitor_inv_naturality_assoc]
         _ = _ := by
           simp only [centerRotation_eq_cup]
-          dsimp [h, b, leftDuality, tensorLeftHomEquiv]
+          dsimp only [h, b]
+          simp only [leftDuality_symm_apply_cr]
           monoidal
 
 /-- Naturality in the block that stays on the left after rotation. -/
@@ -93,7 +107,7 @@ theorem centerRotation_naturality_right (P : Pivotal C) (A : Center C) {X Y Z : 
     (f : A.1 ⟶ X ⊗ Y) (g : Y ⟶ Z) :
     centerRotation P A X Z (f ≫ X ◁ g) = centerRotation P A X Y f ≫ g ▷ X := by
   simp only [centerRotation_eq_cup]
-  dsimp [leftDuality, tensorLeftHomEquiv]
+  simp only [leftDuality_symm_apply_cr]
   simp only [whiskerLeft_comp, Category.assoc]
   rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc,
     leftUnitor_naturality]
@@ -105,7 +119,7 @@ theorem centerRotation_naturality_left (P : Pivotal C) (A : Center C) {X Y Z : C
     centerRotation P A Y Z (f ≫ g ▷ Z) = centerRotation P A X Z f ≫ Z ◁ g := by
   have hb : (leftDuality A.1 Y Z).symm (f ≫ g ▷ Z) =
       gᘁ ▷ A.1 ≫ (leftDuality A.1 X Z).symm f := by
-    dsimp [leftDuality, tensorLeftHomEquiv]
+    simp only [leftDuality_symm_apply_cr]
     simp only [whiskerLeft_comp, Category.assoc]
     rw [← whisker_exchange_assoc, associator_inv_naturality_left_assoc,
       ← comp_whiskerRight_assoc, rightAdjointMate_comp_evaluation, comp_whiskerRight]
@@ -131,7 +145,7 @@ theorem centerRotation_rotation (P : Pivotal C) (A : Center C) {X Y : C}
   have h₂ : (centerRotation P A X Y f ≫ (ρ_ Y).inv ▷ X) ≫ (α_ Y (𝟙_ C) X).hom =
       centerRotation P A X Y f ≫ Y ◁ (λ_ X).inv := by monoidal
   rw [h₂, centerRotation_naturality_right] at h
-  simpa [generalizedRotation, homCongr] using h.symm
+  simpa [generalizedRotation, homCongr] using! h.symm
 
 /-- Rotation with unit output is the identity, even for a nontrivial central source. -/
 theorem generalizedRotation_unit_output (P : Pivotal C) (A : Center C)
@@ -145,7 +159,7 @@ theorem generalizedRotation_unit_output (P : Pivotal C) (A : Center C)
     change 𝟙 _ ≫ centerRotation P A (𝟙_ C) (𝟙_ C)
       (𝟙 _ ≫ (g ≫ (λ_ (𝟙_ C)).hom) ≫ (ρ_ (𝟙_ C)).inv) ≫
         (λ_ (𝟙_ C)).hom = _ at he
-    simpa [unitors_equal, Category.assoc] using he
+    simpa [unitors_equal, Category.assoc] using! he
   have he (g : A.1 ⟶ (𝟙_ C) ⊗ (𝟙_ C)) :
       centerRotation P A (𝟙_ C) (𝟙_ C) g = g := by
     apply (centerRotation P A (𝟙_ C) (𝟙_ C)).injective

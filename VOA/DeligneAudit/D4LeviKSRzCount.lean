@@ -42,9 +42,9 @@ theorem xyzCountSpan_op (j : Fin 6) (r x y z : ℕ)
       all_goals subst j
       all_goals simp [he, hx, hu, hup, hy, hz, radicalWord, wordOp]
   | zero => simp
-  | add a b _ _ ha hb => simpa using
+  | add a b _ _ ha hb => simpa using!
       (xyzCountSpan ρ w _ _ _).add_mem ha hb
-  | smul c a _ ha => simpa using
+  | smul c a _ ha => simpa using!
       (xyzCountSpan ρ w _ _ _).smul_mem c ha
 
 /-- A fixed XYZ count with greater Levi height lies in the higher-key orbit. -/
@@ -55,7 +55,7 @@ theorem xyzCountSpan_le_higher (x y z : ℕ) (k : RadicalKey)
   rintro v ⟨l, he, hx, hu, hup, hy, hz, rfl⟩
   have hless : keyLess m k (wordKey l) := by
     left
-    simpa [keyHeight, wordKey, he, hx, hu, hup, hy, hz] using hh
+    simpa [keyHeight, wordKey, he, hx, hu, hup, hy, hz] using! hh
   exact keyOrbit_le_higher ρ w m k (wordKey l) hless
     (keyLayer_le_orbit ρ w (wordKey l) (radicalWord_mem_key ρ w l))
 

@@ -31,7 +31,6 @@ theorem boxDegree_card_product {α β : Type*}
       A2.conv (fun i => (s.filter fun x => d x = i).card)
         (fun j => (t.filter fun y => e y = j).card) N := by
   have hc := congrArg (fun p : ℚ[X] => p.coeff N) (boxDegreePoly_product s t d e)
-  dsimp only at hc
   rw [boxDegreePoly_coeff,
     A2.coeff_mul_eq_convQ (boxDegreePoly_coeff s d) (boxDegreePoly_coeff t e)] at hc
   exact_mod_cast hc
@@ -65,7 +64,7 @@ theorem natConv_comm (f g : ℕ → ℕ) : A2.conv f g = A2.conv g f := by
   rw [← Finset.sum_range_reflect (fun i => f i * g (N - i)) (N + 1)]
   apply Finset.sum_congr rfl
   intro i hi
-  have hi' : i ≤ N := by simpa using hi
+  have hi' : i ≤ N := by simpa using! hi
   simp only [Nat.add_sub_cancel, Nat.sub_sub_self hi', Nat.mul_comm]
 
 /-- Exact identification of the original per-degree box count with `qmultiCoeff`. -/

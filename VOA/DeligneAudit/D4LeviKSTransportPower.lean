@@ -15,7 +15,7 @@ private theorem comm_power_succ (E F B : R)
     (hEF : E * F - F * E = B) (hFB : F * B = B * F) (n : ℕ) :
     E * F ^ (n + 1) - F ^ (n + 1) * E = (n + 1) • (F ^ n * B) := by
   induction n with
-  | zero => simpa using hEF
+  | zero => simpa using! hEF
   | succ n ih =>
       have hmove : (F ^ n * B) * F = F ^ (n + 1) * B := by
         rw [mul_assoc, ← hFB, ← mul_assoc, ← pow_succ]

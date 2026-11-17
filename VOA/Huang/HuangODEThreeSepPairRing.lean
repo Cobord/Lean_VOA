@@ -54,7 +54,7 @@ instance : IsNoetherianRing pairRing := by
   have hfg : pairRing.FG := by
     have := Subalgebra.fg_adjoin_finset (R := ℂ) ({ιx X, ιy X, ιx (HuangODEAlgebra.geom 1),
       ιxy (HuangODEAlgebra.geom (-1)), ιm' (HuangODEAlgebra.geom 1)} : Finset PS2)
-    simpa [pairRing] using this
+    simpa [pairRing] using! this
   haveI : Algebra.FiniteType ℂ pairRing := (Subalgebra.fg_iff_finiteType _).mp hfg
   exact Algebra.FiniteType.isNoetherianRing ℂ pairRing
 
@@ -139,7 +139,7 @@ theorem thetaY_iter_mem_sub (NN : Submodule R PS2) (Q : ℕ → PS2) (lam : ℕ 
     ∀ i j, (thetaY μ)^[i] (Q j) ∈ NN := by
   intro i
   induction i with
-  | zero => intro j; simpa using hmem j
+  | zero => intro j; simpa using! hmem j
   | succ i ih =>
     intro j
     rw [Function.iterate_succ_apply]
@@ -156,17 +156,17 @@ theorem innerRegularAdm_of_fg [IsNoetherianRing R] (hR : ∀ r ∈ R, MidBound r
   have hmem : ∀ j, (thetaY lam)^[j] Q ∈ NN := by
     have key := thetaY_iter_mem_sub NN (fun j => (thetaY μ)^[j] Q) (fun _ => μ)
       (fun j => Function.iterate_succ_apply' _ _ _) h lam
-    intro j; simpa using key j 0
+    intro j; simpa using! key j 0
   haveI : Module.Finite R NN := Module.Finite.iff_fg.mpr hN
   obtain ⟨m, r, hr⟩ := VOA.Huang.MatrixCoeffODE.exists_monic_relation (R := R)
     (fun j => (⟨(thetaY lam)^[j] Q, hmem j⟩ : NN))
   have hr' : (thetaY lam)^[m] Q =
       ∑ k ∈ Finset.range m, (r k : PS2) * (thetaY lam)^[k] Q := by
     have := congrArg Subtype.val hr
-    simpa [Submodule.coe_sum, Subalgebra.smul_def] using this
+    simpa [Submodule.coe_sum, Subalgebra.smul_def] using! this
   rcases Nat.eq_zero_or_pos m with hm | hm
   · subst hm
-    have hQ : Q = 0 := by simpa using hr'
+    have hQ : Q = 0 := by simpa using! hr'
     refine ⟨1, fun _ _ _ => 0, le_rfl, fun R₁ R₂ _ => ⟨0, fun k _ i j => by simp⟩, ?_⟩
     intro a b
     simp [hQ, c2_zero]
@@ -175,7 +175,6 @@ theorem innerRegularAdm_of_fg [IsNoetherianRing R] (hR : ∀ r ∈ R, MidBound r
     · apply diagonalFuchsian_of_conv
       intro a b
       have hc := congrArg (fun P => c2 P a b) hr'
-      simp only at hc
       unfold diagPow
       rw [← c2_thetaY_iterate, hc, c2_sum]
       refine Finset.sum_congr rfl fun k _ => ?_

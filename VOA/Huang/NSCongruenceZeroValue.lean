@@ -143,9 +143,10 @@ theorem trace_closedRotation_mixed (F : SphericalFusion C) (i j : F.Label) (W : 
   have hrot : closedRotation F.toPivotal (mixedCenter (F.simple i) (F.simple j)) W =
       c • (1 : Module.End ℂ _) := by
     ext f
-    rw [closedRotation_mixed, rightLoop_eq_monodromyLoop, hW]
+    refine (closedRotation_mixed F.toPivotal (F.simple i) (F.simple j) W f).trans ?_
+    rw [rightLoop_eq_monodromyLoop, hW]
     simp
-    rfl
+    exact (Linear.smul_comp _ _ _ c (𝟙 _) f).trans (congrArg (fun g => c • g) (Category.id_comp f))
   letI := F.homFinite (F.simple i ⊗ F.simple j) (𝟙_ C)
   rw [hrot]
   calc _ = c • LinearMap.trace ℂ (F.simple i ⊗ F.simple j ⟶ 𝟙_ C) 1 := LinearMap.map_smul _ c 1

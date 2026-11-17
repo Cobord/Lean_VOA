@@ -22,7 +22,7 @@ def modelTwist (X : C) : X ≅ X := E.functor.preimageIso (twistIso (E.functor.o
 theorem modelTwist_naturality {X Y : C} (f : X ⟶ Y) :
     f ≫ (modelTwist E Y).hom = (modelTwist E X).hom ≫ f := by
   apply E.functor.map_injective
-  simpa only [Functor.map_comp, map_modelTwist] using twist_naturality (E.functor.map f)
+  simpa only [Functor.map_comp, map_modelTwist] using! twist_naturality (E.functor.map f)
 
 /-- The transported twist has precisely the prescribed eigenvalue on each labelled simple. -/
 theorem modelTwist_simple (D : VOA.Classification.COne.ModularData W) (hD : D.IsModularData)

@@ -46,7 +46,7 @@ theorem matrixDouble_eq_of_smul (A B : (Matrix I I ℂ)ˣ) {c : ℂ} (hc : c ≠
 /-- A scalar matrix acts trivially in the double. -/
 theorem matrixDouble_eq_one_of_scalar (A : (Matrix I I ℂ)ˣ) {c : ℂ} (hc : c ≠ 0)
     (h : (A : Matrix I I ℂ) = c • (1 : Matrix I I ℂ)) : matrixDouble A = 1 := by
-  simpa using matrixDouble_eq_of_smul A 1 hc h
+  simpa using! matrixDouble_eq_of_smul A 1 hc h
 end Matrices
 
 open CategoryTheory MonoidalCategory Limits BraidedCategory
@@ -121,7 +121,7 @@ theorem mixedST_cube (F : SphericalFusion C) (M : Modular F) :
   apply matrixDouble_eq_of_smul _ _ (gauss_ne_zero F M).1
   change (categoricalS F * categoricalT F M.toRibbon) ^ 3 =
     gaussPlus F M.toRibbon • categoricalS F ^ 2
-  simpa only [pow_two] using categoricalST_cube F M
+  simpa only [pow_two] using! categoricalST_cube F M
 
 open Classical in
 /-- The mixed S has fourth power one. -/
@@ -143,7 +143,7 @@ theorem mixedT_pow_eq_one_iff (F : SphericalFusion C) (R : Ribbon F.toPivotal) (
   · intro h i
     have hi := congrArg (fun A : Matrix (F.Label × F.Label) (F.Label × F.Label) ℂ =>
       A (i, F.unitLabel) (i, F.unitLabel)) h
-    simpa [R.twistScalar_unitLabel] using hi
+    simpa [R.twistScalar_unitLabel] using! hi
   · intro h
     ext ⟨i, j⟩ ⟨k, l⟩
     simp [Matrix.diagonal_apply, Matrix.one_apply, div_pow, h]

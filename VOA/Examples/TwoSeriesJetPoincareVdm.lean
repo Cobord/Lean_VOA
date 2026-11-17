@@ -239,8 +239,11 @@ theorem pow_mul_mem_Wid {N m : ℕ} (hm : N ≤ m) {l : Fin k} {Y : XP k} (hY : 
     (Ideal.mul_mem_mul (Ideal.mem_span_singleton_self _) (Ideal.mul_mem_left _ _ hY))
 
 theorem Wid_le_Lid (N : ℕ) : Wid k N ≤ Lid k N :=
-  iSup_le fun l => le_trans Ideal.mul_le_right
-    (Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (Ideal.subset_span ⟨l, rfl⟩)))
+  iSup_le fun l => le_trans
+    (show Ideal.span {(X l ^ N : XP k)} * Qid k l ≤ Ideal.span {(X l ^ N : XP k)} from by
+      first | exact Ideal.mul_le_right | exact Ideal.mul_le_left)
+    (show Ideal.span {(X l ^ N : XP k)} ≤ Ideal.span (Set.range fun i : Fin k => (X i ^ N : XP k)) from
+      Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (Ideal.subset_span ⟨l, rfl⟩)))
 
 theorem exists_ge_of_mem_Lid {N : ℕ} {f : XP k} (hf : f ∈ Lid k N) :
     ∀ e ∈ f.support, ∃ i, N ≤ e i := by

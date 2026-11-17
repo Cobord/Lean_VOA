@@ -36,7 +36,7 @@ theorem e8_kn : ∀ c : Fin 248, e8Kn c = true → E8sector.raising c ∨ E8sect
   change ∀ c : Fin 248, e8Kn c = true →
     (8 ≤ c.val ∧ c.val < 128) ∨ (c.val ∈ ([135, 134, 133, 132, 131, 130, 129, 128] : List ℕ))
   intro c h
-  simpa [e8Kn] using h
+  simpa [e8Kn] using! h
 
 theorem e8_hfz : ∀ a b c, E8sector.f a b c = (e8Fz a b c : ℂ) := fun _ _ _ => rfl
 

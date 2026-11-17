@@ -126,8 +126,9 @@ theorem signVector_E (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
   rw [oMod_homogeneous _ (EP_mem_grading m hm)]
   change (V2m m hm).smul ((EP m hm : VP m hm) : LatModuleGen (latP m))
     ((m : ℤ)-1) (bosonState (latP m) (a0 m)) = 0
-  rw [EP_coe, PreVertexAlgebra.smul_add_left,
-    charge_positive_boson m hm _ _ (by omega), charge_positive_boson m hm _ _ (by omega), zero_add]
+  rw [EP_coe, PreVertexAlgebra.smul_add_left]
+  exact (congrArg₂ (· + ·) (charge_positive_boson m hm _ _ (by omega))
+    (charge_positive_boson m hm _ _ (by omega))).trans (add_zero 0)
 
 theorem sign_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
     letI := instRingA (V2mPlus m hm); letI := instAlgebraA (V2mPlus m hm)
@@ -141,7 +142,7 @@ theorem sign_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
       · change oMod (signModule m hm) (V2mPlus m hm).conformalVector _ = _
         rw [oMod_conformalVector]; exact (signModule m hm).L0_weight _ _ (signVector_mem m hm)
       · exact signVector_W m hm
-      · simpa using signVector_E m hm hm2)
+      · simpa using! signVector_E m hm hm2)
   exact ⟨χ, hχ 0, hχ 1, hχ 2⟩
 
 end VOA.Classification.COne.PlusCharacterTable

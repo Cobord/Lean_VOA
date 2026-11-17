@@ -69,7 +69,7 @@ theorem exists_finite_C1_weights (N : LogVModule W M)
     obtain ⟨x,hx,rfl⟩ := Submodule.mem_map.mp hq
     have hq'' : C.mkQ x ∈ (⨆ (β : ℂ) (_ : β ≠ α), N.weight β).map C.mkQ := by
       rw [Submodule.map_iSup]
-      simpa only [Submodule.map_iSup,E] using hq'
+      simpa only [Submodule.map_iSup,E] using! hq'
     obtain ⟨y,hy,hxy⟩ := Submodule.mem_map.mp hq''
     have hdiff : y-x ∈ C := by
       apply (Submodule.Quotient.mk_eq_zero C).mp
@@ -93,7 +93,7 @@ theorem exists_finite_C1_weights (N : LogVModule W M)
     have hxC : x ∈ C := by
       have h1 := weightProj_mem_C1 N α hdiff
       rw [map_sub,hy0,zero_sub,weightProj_of_mem N hx] at h1
-      simpa using C.neg_mem h1
+      simpa using! C.neg_mem h1
     exact (Submodule.Quotient.mk_eq_zero C).mpr hxC
   letI := hind.fintypeNeBotOfFiniteDimensional
   let F : Finset ℂ := Finset.univ.image (fun i : {α // E α ≠ ⊥} => (i : ℂ))

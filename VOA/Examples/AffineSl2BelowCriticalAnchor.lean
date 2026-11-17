@@ -180,7 +180,6 @@ theorem layerSignAnchor_compact : LayerSignAnchor compactRealFamily := by
     have heq : Matrix.map (gramPoly E) (Polynomial.eval (x : ℂ)) =
         gram (noncritical_of_lt hx) (compactRealFamily x hx) E := by
       ext i j
-      rw [map_apply]
       exact (gram_eq_eval (noncritical_of_lt hx) (conj_ofReal x) hx0 E i j).symm
     rw [heq]
     exact gram_isHermitian (noncritical_of_lt hx) (conj_ofReal x) E
@@ -198,7 +197,6 @@ theorem layerSignAnchor_compact : LayerSignAnchor compactRealFamily := by
   have heq : gram (noncritical_of_lt hx) (compactRealFamily x hx) E =
       Matrix.map (gramPoly E) (Polynomial.eval (x : ℂ)) := by
     ext i j
-    rw [map_apply]
     exact gram_eq_eval (noncritical_of_lt hx) (conj_ofReal x) hx0 E i j
   rw [heq]
   exact hK x hxK r

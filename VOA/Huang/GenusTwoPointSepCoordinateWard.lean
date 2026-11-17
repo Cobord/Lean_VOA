@@ -64,7 +64,7 @@ theorem stateCoordinateChange_scale (a : ℕ → ℂ) (t : ℂ) (x : V) :
   apply expFun_intertwine (moduleWeightExp (adjointModule W) t)
     (coordGen_isLocNilp W _).neg (coordGen_isLocNilp W a).neg
   intro y
-  simpa only [LinearMap.neg_apply, map_neg] using congrArg Neg.neg (coordGen_scale a t y)
+  simpa only [LinearMap.neg_apply, map_neg] using! congrArg Neg.neg (coordGen_scale a t y)
 
 /-- U(1) on V in its proved normalized form. -/
 def huangStateU (W : VertexOperatorAlgebra V) : V ≃ₗ[ℂ] V :=
@@ -99,7 +99,7 @@ theorem vertexMode_weightExp (P : LWModule W) (a : V) (m : ℤ) (t : ℂ) (x : P
   have h := intertwiner_weightExp_conjugation (moduleIntertwiner P.isMod) t (m : ℂ) a
     (moduleWeightExp P.isMod t x)
   rw [← moduleWeightExp_add, neg_add_cancel, moduleWeightExp_zero] at h
-  simpa only [moduleIntertwiner, moduleModes_apply_intCast, OrdVModule.intMode] using h
+  simpa only [moduleIntertwiner, moduleModes_apply_intCast, OrdVModule.intMode] using! h
 
 /-- Huang (1.5) for vertex modes, conditional only on the normalized
 square-bracket coordinate law. All ordinary weight scaling is discharged. -/

@@ -34,13 +34,13 @@ The boson insertion equals the Vandermonde derivative contribution minus
 the selected exponent contribution, divided only formally by keeping M
 on the left. No inverse M or analytic contour is used in the theorem. -/
 theorem omittedIntegrand_ibp (r q M : ℕ) (hq : 0<q) (i : Fin r) :
-    (M : ℂ) • ((bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i)
+    (M : ℂ) • ((bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) =
     (auxiliaryEuler i (delta r^(2*M))*
       ((∏ j∈Finset.univ.erase i,betaFactor r (r*(q-1)) j)*
-        ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1)))
+        ∏ m∈Finset.range (r*(q-1)),exponentialFactor r (r*(q-1)) M (m+1))).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) -
-    (((r-1)*M+q-1 : ℕ) : ℂ) • (omittedIntegrand r q M i)
+    (((r-1)*M+q-1 : ℕ) : ℂ) • (omittedIntegrand r q M i).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   classical
   let B := ∏ j∈Finset.univ.erase i,betaFactor r (r*(q-1)) j
@@ -52,7 +52,7 @@ theorem omittedIntegrand_ibp (r q M : ℕ) (hq : 0<q) (i : Fin r) :
     rw [Nat.cast_mul,Nat.cast_sub (by omega : 1≤q),Nat.cast_one]
   rw [hc] at he
   have herr : LowerDegree ((r : ℤ)*(q-1)+1) (B*(auxiliaryEuler i E-a*E)) := by
-    simpa using (omittedBeta_lower r (r*(q-1)) i).mul he
+    simpa using! (omittedBeta_lower r (r*(q-1)) i).mul he
   have hz := screening_high_degree_zero r q M hq _ herr
   have ha : auxiliaryEuler i (omittedIntegrand r q M i)-a*omittedIntegrand r q M i-
       auxiliaryEuler i (delta r^(2*M))*(B*E)=
@@ -63,19 +63,19 @@ theorem omittedIntegrand_ibp (r q M : ℕ) (hq : 0<q) (i : Fin r) :
     dsimp only [B,E]
     ring
   rw [← ha] at hz
-  change (auxiliaryEuler i (omittedIntegrand r q M i)) _-
-    (a*omittedIntegrand r q M i) _-
-    (auxiliaryEuler i (delta r^(2*M))*(B*E)) _=0 at hz
+  change (auxiliaryEuler i (omittedIntegrand r q M i)).coeff _-
+    (a*omittedIntegrand r q M i).coeff _-
+    (auxiliaryEuler i (delta r^(2*M))*(B*E)).coeff _=0 at hz
   rw [auxiliaryEuler_apply] at hz
   have hs : a*omittedIntegrand r q M i=(-(M : ℂ)) •
       (bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i) :=
     smul_mul_assoc _ _ _
   rw [hs] at hz
-  change (((r-1)*M+q-1 : ℕ) : ℂ) • (omittedIntegrand r q M i) _-
-    (-(M : ℂ)) • (bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i) _-
-    (auxiliaryEuler i (delta r^(2*M))*(B*E)) _=0 at hz
+  change (((r-1)*M+q-1 : ℕ) : ℂ) • (omittedIntegrand r q M i).coeff _-
+    (-(M : ℂ)) • (bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i).coeff _-
+    (auxiliaryEuler i (delta r^(2*M))*(B*E)).coeff _=0 at hz
   simp only [neg_smul] at hz
-  change (M : ℂ) • _ = (auxiliaryEuler i (delta r^(2*M))*(B*E)) _-_
+  change (M : ℂ) • _ = (auxiliaryEuler i (delta r^(2*M))*(B*E)).coeff _-_
   linear_combination hz
 
 end

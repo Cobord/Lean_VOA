@@ -27,14 +27,14 @@ theorem rz_target_two_power_mem_ker
   apply pairTargetQuotientEvaluation_mem_ker_of_sat
     ρ w m i 0 0 2 s h hi hkey _ P
   · apply Subtype.ext
-    simpa [P, pairSourcePower, pairTargetPower] using
+    simpa [P, pairSourcePower, pairTargetPower] using!
       (pairRestriction_ZPsum 0 0 2 s)
   · have hz : zOp ρ s (zOp ρ 0 w) ∈ keyPrefix ρ w m i := by
       have hk : keyEnum m ⟨i, hi⟩ = rzKey [] [] [0] 1 s := by
-        simpa [pairFinalKey, rzKey] using hkey
+        simpa [pairFinalKey, rzKey] using! hkey
       have hr := rz_top_prefix ρ w m h [] [] [0] 1 s i
-        (by omega) (by omega) hi (by simpa using hk)
-      simpa [rz_single_topSum, yOp, zOp] using hr
+        (by omega) (by omega) hi (by simpa using! hk)
+      simpa [rz_single_topSum, yOp, zOp] using! hr
     have hp : (P : MvPolynomial (PairSource 0 0 2) ℂ) =
         X (Sum.inr (Sum.inr (0 : Fin 2))) ^ s +
           X (Sum.inr (Sum.inr (1 : Fin 2))) ^ s := by
@@ -69,7 +69,7 @@ theorem rz_target_two_power_mem_ker
           Finset.univ.toList
           (Finsupp.single (Sum.inr (Sum.inr (0 : Fin 2))) s)).Perm
           [(5, s), (5, 0)] := by
-        simpa [shapedModes, pairSourceShape] using
+        simpa [shapedModes, pairSourceShape] using!
           hperm.map (fun t => (pairSourceShape 0 0 2 t,
             (Finsupp.single (Sum.inr (Sum.inr (0 : Fin 2))) s) t))
       exact (radicalWord_perm ρ w hword).trans (by
@@ -86,14 +86,14 @@ theorem rz_target_two_power_mem_ker
           Finset.univ.toList
           (Finsupp.single (Sum.inr (Sum.inr (1 : Fin 2))) s)).Perm
           [(5, 0), (5, s)] := by
-        simpa [shapedModes, pairSourceShape] using
+        simpa [shapedModes, pairSourceShape] using!
           hperm.map (fun t => (pairSourceShape 0 0 2 t,
             (Finsupp.single (Sum.inr (Sum.inr (1 : Fin 2))) s) t))
       exact (radicalWord_perm ρ w hword).trans (by
         simp [radicalWord, wordOp, zOp, radicalColour])
     rw [h0, h1]
     have hcomm : zOp ρ 0 (zOp ρ s w) = zOp ρ s (zOp ρ 0 w) := by
-      simpa [zOp, radicalColour] using (radical_ops_comm ρ 5 5 0 s w)
+      simpa [zOp, radicalColour] using! (radical_ops_comm ρ 5 5 0 s w)
     rw [hcomm]
     exact (keyPrefix ρ w m i).add_mem hz hz
 

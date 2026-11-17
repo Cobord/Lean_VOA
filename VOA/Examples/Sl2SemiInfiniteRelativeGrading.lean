@@ -34,7 +34,7 @@ theorem tensorAntighost_ghost (a : Fin 3) :
 theorem totalCurrentZero_ghost (A : AffineSl2Action V k) (a : Fin 3) {g : ℤ}
     {x : M ⊗[ℂ] Sl2GhostSpace} (hx : x ∈ matterGhostGrading M g) :
     totalCurrentZero A a x ∈ matterGhostGrading M g := by
-  simpa only [zero_add] using
+  simpa only [zero_add] using!
     tenY_mem_matterGhostGrading V (totalCurrentState_ghost A a) hx (-1)
 
 /-- The antighost zero modes lower ghost number by one. -/
@@ -42,7 +42,7 @@ theorem antighostZero_ghost (a : Fin 3) {g : ℤ}
     {x : M ⊗[ℂ] Sl2GhostSpace} (hx : x ∈ matterGhostGrading M g) :
     antighostZero V a x ∈ matterGhostGrading M (g - 1) := by
   have h := tenY_mem_matterGhostGrading V (tensorAntighost_ghost (V := V) a) hx (-1)
-  simpa only [sub_eq_add_neg, add_comm] using h
+  simpa only [sub_eq_add_neg, add_comm] using! h
 
 /-- The ghost-degree component inside the relative carrier. -/
 noncomputable def relativeGhostGrading (A : AffineSl2Action V k) (g : ℤ) :

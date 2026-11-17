@@ -46,7 +46,7 @@ theorem exists_homogeneous_c2_basis_lifts (W : VertexOperatorAlgebra 𝒱)
     change Submodule.span ℂ (mk₂ W '' Set.range x) = ⊤
     rw [himg, b'.span_eq]
   have := congrArg (Submodule.comap (O₂ W).mkQ) hmap
-  simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using this.symm
+  simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using! this.symm
 
 /-- Zhu's weight-filtration dimension inequality, for any C₂-cofinite VOA. -/
 theorem finrank_zhu_le_finrank_c2Quotient (W : VertexOperatorAlgebra 𝒱)
@@ -58,7 +58,7 @@ theorem finrank_zhu_le_finrank_c2Quotient (W : VertexOperatorAlgebra 𝒱)
     rintro _ ⟨i, rfl⟩; exact hx i) hspan
   have hfin : (⊤ : Submodule ℂ 𝒱) =
       Submodule.span ℂ ((Finset.univ.image x : Finset 𝒱) : Set 𝒱) ⊔ O W := by
-    simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ] using hO
+    simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ] using! hO
   exact (finiteDimensional_and_finrank_quot_le_of_span_sup _ hfin).2.trans
     (Finset.card_image_le.trans (by simp))
 

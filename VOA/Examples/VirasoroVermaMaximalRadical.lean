@@ -15,6 +15,8 @@ adjointness then detects membership in the radical. The radical quotient
 therefore has no nontrivial invariant subspaces. No determinant or character
 formula is assumed in this construction of the irreducible quotient.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 open VirModule VirDeformModes
 
@@ -37,7 +39,7 @@ theorem verma_submodule_eq_top_of_highest (c h : ℂ) (S : Submodule ℂ (Verma 
   rw [← (vermaSortedBasis c h).linearCombination_repr v]
   change (∑ w ∈ ((vermaSortedBasis c h).repr v).support,
     (vermaSortedBasis c h).repr v w • vermaSortedBasis c h w)∈S
-  exact S.sum_mem (fun w _ => S.smul_mem _ (by simpa only [vermaSortedBasis_apply] using hw w.val))
+  exact S.sum_mem (fun w _ => S.smul_mem _ (by simpa only [vermaSortedBasis_apply] using! hw w.val))
 
 /-- Every state in a proper invariant subspace has highest coefficient zero.
 A nonzero coefficient would extract the highest vector by the finite L0
@@ -104,7 +106,7 @@ theorem verma_proper_submodule_le_radical (c h : ℂ)
   intro v hv
   apply (vermaSortedBasis c h).ext
   intro w
-  simpa only [vermaSortedBasis_apply,LinearMap.zero_apply] using hz w.val v hv
+  simpa only [vermaSortedBasis_apply,LinearMap.zero_apply] using! hz w.val v hv
 
 /-- An invariant subspace containing the radical is either the radical
 itself or the whole Verma module. This is maximality in the actual module. -/

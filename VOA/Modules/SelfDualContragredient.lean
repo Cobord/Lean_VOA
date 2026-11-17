@@ -107,7 +107,7 @@ theorem Φ_act_homog {wt : ℤ} {u : 𝒱} (hu : u ∈ W.grading wt) (n : ℤ) (
   congr 1
   rw [internalProjTo_coe_mem N (by
     have h := twistMode_mem_weight N hu hx n j
-    convert h using 2)]
+    convert h using 2 <;> rfl)]
 
 /-- **`a ↦ (a|·)` intertwines the action with the contragredient action.** -/
 theorem Φ_act (u : 𝒱) (n : ℤ) (a : M) :

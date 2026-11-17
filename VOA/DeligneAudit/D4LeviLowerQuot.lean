@@ -21,16 +21,16 @@ theorem key_simple_lower_nil_levi
   fin_cases i
   · simpa [leviCurrent, leviSign, leviColour,
       VOA.DeligneAudit.A3Sector.simpleF, simpleLowerIndex,
-      lowerColour] using hn
+      lowerColour] using! hn
   · simpa [leviCurrent, leviSign, leviColour,
       VOA.DeligneAudit.A3Sector.simpleF, simpleLowerIndex,
-      lowerColour] using hn
+      lowerColour] using! hn
   · simp only [leviCurrent, leviSign, leviColour,
       VOA.DeligneAudit.A3Sector.simpleF, Int.cast_neg,
       Int.cast_one, neg_one_smul]
     have hn' : (ρ.op (16 : Fin 28) 0 ^
         (lowerBaseExponent m 2 + 2 * keyDepth k)) v = 0 := by
-      simpa [simpleLowerIndex, lowerColour] using hn
+      simpa [simpleLowerIndex, lowerColour] using! hn
     rw [neg_pow]
     simp [hn']
 

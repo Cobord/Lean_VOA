@@ -36,7 +36,9 @@ theorem E_smul_E_neutral (m : ℕ) (hm : 1 ≤ m) (n : ℤ)
   have hpm := V2m_charge_smul_charge m hm (1 : ℤ) (-1 : ℤ) n
   have hmp := V2m_charge_smul_charge m hm (-1 : ℤ) (1 : ℤ) n
   have hmm := V2m_charge_smul_charge m hm (-1 : ℤ) (-1 : ℤ) n
-  simp only [PlusCharacterTable.rankOne_cocycle, one_smul, latP_form, mul_one,
+  have h1 : ∀ a b : ℤ, (latP m).latticeCocycle a b = 1 :=
+    PlusCharacterTable.rankOne_cocycle m
+  simp only [h1, one_smul, latP_form, mul_one,
     mul_neg_one, neg_neg, sub_neg_eq_add, hneg, if_false, evRc_nil, hz, hc] at hpp hpm hmp hmm
   rw [V2mPlus_smul_coe, EP_coe, PreVertexAlgebra.smul_add_left,
     PreVertexAlgebra.smul_add_right, PreVertexAlgebra.smul_add_right, hpp, hpm, hmp, hmm,

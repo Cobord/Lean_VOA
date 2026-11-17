@@ -59,7 +59,9 @@ theorem nestedCup_eq_cup (P : Pivotal C) (X Y : C) :
         (P.j X).inv ▷ ((Yᘁ ⊗ Y) ⊗ Xᘁ) ⊗≫ 𝟙 _ := by
       rw [← whisker_exchange]; monoidal
     _ = _ := by
-      rw [whisker_exchange]; monoidal
+      rw [whisker_exchange]
+      try rw [show (whiskerRightIso (P.j X) Yᘁ).inv = (P.j X).inv ▷ Yᘁ from rfl]
+      monoidal
 
 /-- A coupon commuting with every endomorphism of `Y ⊗ Xᘁ` slides from the
 right pair of the nested cup to its transported right mate on the left pair. -/

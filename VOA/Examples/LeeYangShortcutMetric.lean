@@ -111,7 +111,7 @@ def signTwistGUData {C : KahlerComplex K} (G : GUData C) : GUData C where
   h := G.h
   h_eq := by
     intro x y
-    simpa using G.h_eq x y
+    simpa using! G.h_eq x y
   P_eq := G.P_eq
   ρ_maps := by
     intro j x hx
@@ -120,7 +120,7 @@ def signTwistGUData {C : KahlerComplex K} (G : GUData C) : GUData C where
     intro j y hy
     obtain ⟨x, hx, hxy⟩ := G.ρ_onto j y hy
     refine ⟨-x, Submodule.neg_mem _ hx, ?_⟩
-    simpa using hxy
+    simpa using! hxy
 
 @[simp] theorem signTwistGUData_B {C : KahlerComplex K} (G : GUData C) (x y : K) :
     (signTwistGUData G).B x y = -G.B x y := rfl
@@ -149,7 +149,7 @@ theorem signTwistGUData_not_both_fix {C : KahlerComplex K}
   rw [signTwistGUData_rho, h] at ht
   have hsum : -v + v = 0 := neg_add_cancel v
   rw [ht] at hsum
-  have hz : (2 : ℂ) • v = 0 := by simpa only [two_smul] using hsum
+  have hz : (2 : ℂ) • v = 0 := by simpa only [two_smul] using! hsum
   exact hv ((smul_eq_zero.mp hz).resolve_left (by norm_num))
 
 /-- This ambiguity persists for the exact concrete field used by the old

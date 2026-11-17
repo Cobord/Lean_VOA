@@ -80,7 +80,7 @@ theorem isLogIntertwining_descend :
     obtain ⟨y, rfl⟩ := hq w
     simp only [LinearMap.add_apply, LinearMap.smul_apply, hap]
     have h := congrArg (fun F => F y) (Y.2.L_neg_one x n k)
-    simpa only [LinearMap.add_apply, LinearMap.smul_apply] using h
+    simpa only [LinearMap.add_apply, LinearMap.smul_apply] using! h
   · obtain ⟨y, rfl⟩ := hq w
     simp only [hmap, hap]
     exact Y.2.jacobi u x y ℓ m n k
@@ -127,8 +127,10 @@ theorem postcompose_tensorMorphism {N Y Q Z : LogModuleCat W} (q : Y ⟶ Q)
     (tensorMap hC2 N.act Y.act N.finiteGeneration Y.finiteGeneration
       N.act Q.act N.finiteGeneration Q.finiteGeneration (toWeakHom (𝟙 N)) (toWeakHom q)))
     (tensorIntertwiner hC2 N.act Y.act N.finiteGeneration Y.finiteGeneration) = _
-  rw [postcompose_homComp']
-  exact (congrArg (postcompose (toWeakHom a)) h).trans (postcompose_precompose' _ _ _ _)
+  -- 4.35: `tensorMap` lands in the `RestrictedDual` carrier, which agrees with the
+  -- `tensorObject` carrier only up to default-transparency defeq, so no `rw`.
+  exact (postcompose_homComp' _ _ _).trans
+    ((congrArg (postcompose (toWeakHom a)) h).trans (postcompose_precompose' _ _ _ _))
 
 set_option maxHeartbeats 1000000 in
 /-- Maps out of `N ⊠ Q` are determined after precomposition with `N ⊠ q`, `q` surjective. -/

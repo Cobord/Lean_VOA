@@ -21,7 +21,7 @@ theorem ksOneBox_eval_span (q n d : ℕ) (hn : n ≤ q)
   have hmap : L B ∈
       (Submodule.span ℂ (ksOneBoxPolys q n d : Set R)).map L :=
     ⟨B, hB, rfl⟩
-  simpa only [Submodule.map_span] using hmap
+  simpa only [Submodule.map_span] using! hmap
 
 /-- If the requested number of letters exceeds the Garland weight,
 every homogeneous evaluation is zero. -/
@@ -49,7 +49,7 @@ theorem ksOneBox_eval_range_rank (q n d : ℕ) (hn : n ≤ q)
     rintro v ⟨P, hP, rfl⟩
     have hp : MvPolynomial.IsWeightedHomogeneous om P (n, d) :=
       (MvPolynomial.mem_weightedHomogeneousSubmodule ℂ om (n, d) P).mp hP
-    simpa only [E, Finset.coe_image] using
+    simpa only [E, Finset.coe_image] using!
       ksOneBox_eval_span q n d hn L hJ P hp
   haveI : FiniteDimensional ℂ (Submodule.span ℂ (E : Set V)) :=
     FiniteDimensional.span_of_finite _ (Finset.finite_toSet E)

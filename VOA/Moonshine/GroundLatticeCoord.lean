@@ -257,7 +257,7 @@ theorem direct_even2 {g : Fin 24 → ℤ} (hgA : g ∈ subA) (hg : 12 ≤ g ⬝�
     · rw [abs_of_neg hn] at h2; omega
     · rw [abs_of_nonneg (not_lt.1 hn)] at h2; omega
   have hsg := sum_sign (s := S) (f := fun j => sg (g j)) (fun j _ => sg_cases _)
-  simp only at hsg
+  try simp only at hsg
   have h4 : (4 : ℤ) ∣ ∑ j, g j := hgA.2
   rw [hsum] at h4
   have hS3 : 3 ≤ S.card := by omega
@@ -415,7 +415,8 @@ theorem tau_flip {g : Fin 24 → ℤ} (hodd : ∀ j, g j % 2 = 1) (A : Finset (F
     tau (flip A g) = symmDiff (tau g) A := by
   ext j
   have := hodd j
-  simp only [tau, flip, mem_filter, mem_univ, true_and, Finset.mem_symmDiff]
+  simp only [tau, mem_filter, mem_univ, true_and, Finset.mem_symmDiff]
+  unfold flip
   by_cases hj : j ∈ A <;> (simp [hj]; try omega)
 
 theorem restr_mem {g : Fin 24 → ℤ} (hodd : ∀ j, g j % 2 = 1) (hτ : ind (tau g) ∈ golay)

@@ -184,10 +184,11 @@ theorem inCOneList_orbifold_V2_normalizer_all (G : Subgroup (Aut (V2m 1 le_rfl))
         · exact absurd hg (hnt u hu)
       · have hmem : charU 1 le_rfl (v⁻¹ * u) ∈ G := by
           have := G.mul_mem (G.inv_mem hv) hg
-          convert this using 1
-          change _ = (thetaM 1 le_rfl * charU 1 le_rfl v)⁻¹ * (thetaM 1 le_rfl * charU 1 le_rfl u)
-          rw [mul_inv_rev, ← map_inv, mul_assoc, ← mul_assoc (thetaM 1 le_rfl)⁻¹, inv_mul_cancel,
-            one_mul, ← map_mul]
+          have heq : charU 1 le_rfl (v⁻¹ * u) =
+              (thetaM 1 le_rfl * charU 1 le_rfl v)⁻¹ * (thetaM 1 le_rfl * charU 1 le_rfl u) := by
+            rw [mul_inv_rev, ← map_inv, mul_assoc, ← mul_assoc (thetaM 1 le_rfl)⁻¹, inv_mul_cancel,
+              one_mul, ← map_mul]
+          rw [heq]; exact this
         have huv : v⁻¹ * u = 1 := by
           by_contra hne
           exact hnt _ hne hmem

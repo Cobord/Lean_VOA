@@ -22,7 +22,7 @@ theorem quartic_polar_mode_step_mem_polarIdeal
   have h := iterate_zero_lower_mem m 2 c
     (iterate_zero_lower_mem m 1 b (iterate_zero_lower_mem m 0 a
       (quartic_highest_mode_step_mem_polarIdeal m s ell d hs)))
-  simpa only [VariablePower.iterate_deriv_sub] using h
+  simpa only [VariablePower.iterate_deriv_sub] using! h
 
 /-- The exact number of letters in a given cube-lowering direction. -/
 def negativeModeAxisCount (d : Fin 3) : List (Fin 3 × ℕ) → ℕ
@@ -64,7 +64,7 @@ theorem quartic_negativeModeWord_static_mem_polarIdeal
             g0Deriv m (cubeDirection d) ell
               (PowerSeries.coeff t (currentMap m (orbit ℂ 4 a' b' c'))) ∈
           quadraticCubicPolarIdeal m := by
-        simpa only [negativeModeWord] using
+        simpa only [negativeModeWord] using!
           negativeModeWord_congr_polarIdeal m [(d,ell)] ih
       have hstep := quartic_polar_mode_step_mem_polarIdeal m a' b' c' t ell d
         (by dsimp [t]; omega)
@@ -72,7 +72,7 @@ theorem quartic_negativeModeWord_static_mem_polarIdeal
       rw [actual_zero_polar_coefficient] at hsum
       fin_cases d <;>
         simpa [negativeModeWord,negativeModeAxisCount,polarZeroStep,t,a',b',c',
-          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hsum
+          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using! hsum
 
 end
 #print axioms quartic_polar_mode_step_mem_polarIdeal

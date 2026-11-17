@@ -31,7 +31,7 @@ theorem homogeneousDegreeSpan_eigen (A : WeakModule W M) {x : M} {α : ℂ}
   rw [Module.End.mem_eigenspace_iff]
   subst d
   induction l with
-  | nil => simpa [homogeneousDegree, homogeneousWord] using hx
+  | nil => simpa [homogeneousDegree, homogeneousWord] using! hx
   | cons a l ih =>
     change L0 A (mode (A.YM a.state) a.modeIndex (homogeneousWord A l x)) = _
     rw [L0_commutator_weak A a.homogeneous, ih, map_smul, ← add_smul]
@@ -116,7 +116,7 @@ theorem eigen_cyclic_isOrdinary (hC2 : C2Cofinite W) (A : WeakModule W M)
     intro j y hy
     have h := homogeneousDegreeSpan_eigen A hx (j + b) hy
     rw [Module.End.mem_eigenspace_iff] at h
-    simpa [Int.cast_add, add_assoc, add_comm, add_left_comm] using h
+    simpa [Int.cast_add, add_assoc, add_comm, add_left_comm] using! h
   refine ⟨AdmissibleOrdinary.ordinaryOfLevelScalar N (α + (b : ℂ)) hf he, rfl, ?_, ?_⟩
   · change x ∈ AdmissibleOrdinary.shiftedWeight N (α + (b : ℂ)) α
     have heq : α = α + (b : ℂ) + ((-b : ℤ) : ℂ) := by push_cast; ring
@@ -133,6 +133,6 @@ theorem eigen_cyclic_isOrdinary (hC2 : C2Cofinite W) (A : WeakModule W M)
   apply AdmissibleOrdinary.shiftedWeight_eq_bot
   intro j hj
   apply h (b + j)
-  simpa [Int.cast_add, add_assoc] using hj.symm
+  simpa [Int.cast_add, add_assoc] using! hj.symm
 
 end VOA.Classification.COne.ABDWeakAdmissible

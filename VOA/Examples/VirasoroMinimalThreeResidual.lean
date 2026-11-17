@@ -104,7 +104,7 @@ theorem minimalThreeNormOperator_resonance (p : ℕ) (hp : 2≤p) (hcop : Nat.Co
   rw [hG,minimalThreeNormOperator_pullback] at hd
   have hunit : IsUnit (bsaGaugeSeries (2*a)*(1-2*X)) := by
     apply isUnit_iff_constantCoeff.mpr
-    simpa [hB] using (isUnit_one : IsUnit (1:ℂ))
+    simpa [hB] using! (isUnit_one : IsUnit (1:ℂ))
   have hd' := minimalThree_remove_unit _ _ _ hunit hd
   let Q := minimalThreeQuadratic.substInvOfIsUnit minimalThreeQuadratic_linear_unit
   have hQ0 : PowerSeries.constantCoeff Q=0 := constantCoeff_substInvOfIsUnit _ _

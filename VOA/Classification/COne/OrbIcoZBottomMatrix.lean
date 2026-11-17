@@ -38,22 +38,22 @@ theorem scalarMatrixFirst_kernel (h : ℂ) (f : A Wi →ₗ[ℂ] ℂ)
       rw [← scalarRel_sound h f hf, matrixRow1_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixFirst, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow1, add_assoc] using hh
+      scalarRel, matrixRow1, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow3 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow3_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixFirst, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow3, add_assoc] using hh
+      scalarRel, matrixRow3, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow5 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow5_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixFirst, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow5, add_assoc] using hh
+      scalarRel, matrixRow5, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow7 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow7_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixFirst, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow7, add_assoc] using hh
+      scalarRel, matrixRow7, add_assoc] using! hh
 
 theorem scalarMatrixSecond_kernel (h : ℂ) (f : A Wi →ₗ[ℂ] ℂ)
     (hf : ∀ z, f (omegaL Wi z) = h * f z) :
@@ -65,22 +65,22 @@ theorem scalarMatrixSecond_kernel (h : ℂ) (f : A Wi →ₗ[ℂ] ℂ)
       rw [← scalarRel_sound h f hf, matrixRow1_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixSecond, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow1, add_assoc] using hh
+      scalarRel, matrixRow1, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow3 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow3_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixSecond, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow3, add_assoc] using hh
+      scalarRel, matrixRow3, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow5 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow5_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixSecond, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow5, add_assoc] using hh
+      scalarRel, matrixRow5, add_assoc] using! hh
   · have hh : scalarRel h f matrixRow9 = 0 := by
       rw [← scalarRel_sound h f hf, matrixRow9_holds, map_zero]
     simpa [scalarMatrix, Matrix.map, matrixSecond, topVector, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three, hs,
-      scalarRel, matrixRow9, add_assoc] using hh
+      scalarRel, matrixRow9, add_assoc] using! hh
 
 
 end VOA.Classification.COne.OrbIcoZ

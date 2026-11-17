@@ -365,8 +365,10 @@ noncomputable def minEquiv : {α : leech.carrier // leech.form α α = 4} ≃ mi
   invFun u := ⟨leechEquiv.symm ⟨u.1, u.2.1⟩, by
     rw [← leechEquiv_mem_minVecs_iff, AddEquiv.apply_symm_apply]
     exact u.2⟩
-  left_inv α := Subtype.ext (by simp)
-  right_inv u := Subtype.ext (by simp)
+  left_inv α := Subtype.ext (leechEquiv.symm_apply_apply α.1)
+  right_inv u := Subtype.ext (by
+    show (leechEquiv (leechEquiv.symm ⟨u.1, u.2.1⟩) : Fin 24 → ℤ) = u.1
+    rw [AddEquiv.apply_symm_apply])
 
 theorem minEquiv_apply (α : {α : leech.carrier // leech.form α α = 4}) :
     (minEquiv α : Fin 24 → ℤ) = leechEquiv α.1 := rfl
@@ -378,7 +380,9 @@ theorem four_le_form (w : leech.carrier) (hw : w ≠ 0) : 4 ≤ leech.form w w :
   have h1 := Leech.lattice_isEven w
   have h2 := Leech.lattice_isPosDef w hw
   have h3 := Leech.lattice_no_roots w
-  simp only [_root_.IntegralLattice.normSq_def] at h1 h2 h3
+  have h1 : (2 : ℤ) ∣ Leech.lattice.bilin w w := h1
+  have h2 : 0 < Leech.lattice.bilin w w := h2
+  have h3 : Leech.lattice.bilin w w ≠ 2 := h3
   change 4 ≤ Leech.lattice.bilin w w
   obtain ⟨k, hk⟩ := h1
   omega

@@ -47,17 +47,17 @@ theorem graded_Q_commute (a : Fin 3) (k r t : ℕ) :
       PowerSeries.coeff_mk]
     exact grOp_commute R w a 2 k j
   have he := congrArg (PowerSeries.coeff t) (hc.pow_right r).eq
-  simpa only [PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C, Q] using he
+  simpa only [PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C, Q] using! he
 
 /-- Every proved simple-root coefficient relation kills the entire commuting
 PBW cyclic representation, not merely its generator. -/
 theorem graded_Q_zero_of_source (r t : ℕ) (hQ : Q (R.op 4) r t w = 0) :
     Q (grOp R w 2) r t = 0 := by
   have hz : orderedCoeff R w 0 0 r t = 0 := by
-    simpa only [orderedCoeff, pow_zero, one_mul, Q] using hQ
+    simpa only [orderedCoeff, pow_zero, one_mul, Q] using! hQ
   have hh := gradedOrderedCoeff_zero R w 0 0 r t (by rw [hz]; exact Submodule.zero_mem _)
   apply gradedEnd_zero_of_commute R w _ (fun a k => (graded_Q_commute R w a k r t).symm)
-  simpa only [gradedOrderedCoeff, pow_zero, one_mul, Q] using hh
+  simpa only [gradedOrderedCoeff, pow_zero, one_mul, Q] using! hh
 
 variable {R w} {ε ν ϱ : Weight}
 
@@ -94,7 +94,7 @@ theorem first_theta_second (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
   · let T := s - S
     have hST : S + T = s := Nat.add_sub_of_le hS
     have hA : Q (R.op 3) 2 S w = 0 := by
-      have hCV : CVRel (R.op 3) (parts ϱ.1 ν.1 ε.1) w := by simpa using h.first
+      have hCV : CVRel (R.op 3) (parts ϱ.1 ν.1 ε.1) w := by simpa using! h.first
       exact coefficient_zero_of_cvrel_parts hCV 2 S (by change C < S + 2; omega)
     have hB : Q (R.op 4) (r + 1) T w = 0 :=
       second_coefficient_zero h (r + 1) T (by omega)
@@ -110,7 +110,7 @@ theorem first_theta_second (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
     have he' := congrArg (fun A : Module.End ℂ (Gr R w) => A (grGenerator R w)) he
     have he'' : gradedOrderedCoeff R w 1 1 r (S + T) = gradedLeadingRow R w S r T := by
       simpa only [gradedOrderedCoeff, gradedLeadingRow, Garland.Fs, pow_one,
-        LinearMap.sum_apply, Module.End.mul_apply] using he'
+        LinearMap.sum_apply, Module.End.mul_apply] using! he'
     rw [hST, gradedLeadingRow_zero R w S r T hA hB] at he''
     exact he''
   · have hclip := clippedSum_mono (parts ϱ.2 ν.2 ε.2) (by omega : r ≤ r + 1)

@@ -72,7 +72,7 @@ noncomputable def screeningFockState (r s t : ℕ) (β : ℚ) : FockN 1 :=
 is exactly the proposed finite residue with its exponential prefactor. -/
 theorem screeningFockState_coeff (r s t : ℕ) (β : ℚ)
     (d : (ℕ × Fin 1) →₀ ℕ) (hd : Finsupp.weight weightFnN d = r * s) :
-    MvPolynomial.coeff d (screeningFockState r s t β) =
+    (screeningFockState r s t β).coeff d =
       (screeningFockCoefficient r s t β (plainOccupation d) : ℂ) := by
   classical
   simp only [screeningFockState, MvPolynomial.coeff_sum, MvPolynomial.coeff_monomial]
@@ -103,7 +103,7 @@ theorem screeningFockState_ne_zero (r s t : ℕ) {β : ℚ} (hβ : β ≠ 0) :
     ((fockOccupation_weight d).trans hd)
   rw [plain_fockOccupation] at hc
   intro hz
-  rw [hz, MvPolynomial.coeff_zero] at hc
+  rw [hz, MvPolynomial.coeff_zero, Finsupp.zero_apply] at hc
   have hq : screeningFockCoefficient r s t β d ≠ 0 :=
     mul_ne_zero (screeningPrefactor_ne_zero hβ d) hn
   exact hq (by exact_mod_cast hc.symm)

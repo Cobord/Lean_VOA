@@ -94,7 +94,7 @@ theorem doubledSitePrepend_weight (p : MixedBState × MixedBState)
   have hs (q : MixedParams) (s : MixedBState) :
       mixedWeight (mixedBPrevious q s) = mixedWeight q + mixedBZeroRoots s := by
     have he := mixedBNext_weight (mixedBPrevious q s) s
-    simpa only [mixedBNext_previous] using he
+    simpa only [mixedBNext_previous] using! he
   simp only [doubledSitePrepend, mixedCellShift, hs, hc, Nat.cast_add]
   have hz : (doubledSiteRootCount p : ℤ) = mixedBZeroRoots p.1 + mixedBZeroRoots p.2 := by
     simp [doubledSiteRootCount]

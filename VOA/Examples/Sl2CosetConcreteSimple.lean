@@ -14,6 +14,8 @@ Its vertex operators satisfy the full affine commutator, by the quotient
 projection, and its translation is the actual conformal mode `L (-1)`.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2CosetConcrete
 
 open Sl2SemiInfinite AffineVOA
@@ -29,7 +31,7 @@ noncomputable def voaTranslation (W : VertexOperatorAlgebra M) :
   T := W.L (-1)
   vacuum_zero := W.L_neg_one_vacuum
   covariant u s := by
-    simpa only [LieRing.of_associative_ring_bracket] using W.L_comm_Ycoeff u s
+    simpa only [LieRing.of_associative_ring_bracket] using! W.L_comm_Ycoeff u s
 
 /-- Affine current actions descend through the actual maximal-ideal projection. -/
 noncomputable def maxQuotientAffineAction (W : VertexOperatorAlgebra M) {k : ℂ}

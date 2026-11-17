@@ -263,11 +263,11 @@ theorem latForm_orth_grading {m n : ℤ} (hmn : m ≠ n) {x y : LatModuleGen L}
   rw [gradingLatGen] at hx hy
   refine Submodule.iSup_induction _ (motive := fun x => latForm L x y = 0) hx (fun α x' hx' => ?_)
     (by simp) (fun a b ha hb => by
-      simp only at ha hb ⊢; rw [map_add, LinearMap.add_apply, ha, hb, add_zero])
+      (try simp only at ha hb ⊢); rw [map_add, LinearMap.add_apply, ha, hb, add_zero])
   obtain ⟨p, hp, rfl⟩ := hx'
   refine Submodule.iSup_induction _ (motive := fun y => latForm L (mkEα L α p) y = 0) hy
     (fun δ y' hy' => ?_) (by simp) (fun a b ha hb => by
-      simp only at ha hb ⊢; rw [map_add, ha, hb, add_zero])
+      (try simp only at ha hb ⊢); rw [map_add, ha, hb, add_zero])
   obtain ⟨q, hq, rfl⟩ := hy'
   rw [mkEα_apply, mkEα_apply, ← latStateGen, ← latStateGen, latForm_state]
   by_cases h : α + δ = 0

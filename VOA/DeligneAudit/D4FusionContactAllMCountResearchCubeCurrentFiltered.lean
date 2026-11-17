@@ -35,7 +35,7 @@ theorem chainTerm_coefficient_mem (m r a b c s : ℕ)
       PowerSeries.coeff s (currentMap m (chainTerm ℂ r a b c)) ∈
       (AllM.candidateIdeal m).restrictScalars ℂ ⊔ currentColorLow m (a+3*b+5*c) :=
     Submodule.mem_sup_right hlow
-  simpa only [sub_sub_cancel] using Submodule.sub_mem _ hsource herror
+  simpa only [sub_sub_cancel] using! Submodule.sub_mem _ hsource herror
 
 theorem chain_coefficient_mem (m r a b c s : ℕ)
     (hr : 1 ≤ r) (hs : m < r + s) (ha : a ≤ r) (hb : b ≤ a) (hc : c ≤ b) :

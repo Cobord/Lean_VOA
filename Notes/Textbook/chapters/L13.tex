@@ -82,6 +82,9 @@ and the warning boxes.
   (``the critical path of the Zhu bijection'') is \emph{not} on the critical path of \lean{zhuBijective}, and its
   headline \lean{zhuBijection_critpath} is vacuous: its hypothesis bundle cannot be inhabited (checked in Lean; the check is
   not part of this release).
+\item \textbf{The MU track's headlines are vacuous.} \lean{zhuBijection_trophy}, \lean{headline_zhuBijection_of_bridge} and six
+  related theorems assume a \lean{CarrierBridgeFamily} or \lean{CarrierBridgeDataFamily}, which the library proves empty for every $V$
+  (Warning~\ref{l13:warn:carrierbridge}; found by an external reviewer). They must not be cited.
 \item \textbf{The tower.} The library's circle-only $O_n(V)$ (\lean{On}, which omits Dong--Li--Mason's
   $(L_{-1}+L_0)a$ for $n\ge1$, Chapter~\ref{ch:L12}) is used on the critical path only at $n = 0$, where it equals
   $O(V)$. The construction of the induced module uses the corrected \lean{OnFull} and Dong--Jiang's full ideals
@@ -2231,6 +2234,57 @@ actual critical path is the one described above. The same vacuity affects \lean{
 records this only in \leanpath{ZhuVermaAnArchZhu534.lean} (\lean{not_nonempty_faithfulScorecard}).
 \end{warning}
 
+\begin{warning}[title={The MU track's carrier-bridge families are empty: its ``trophy'' theorems are vacuous (serious; found by an external reviewer)}]\label{l13:warn:carrierbridge}
+The superseded $\otimes_\C$ MU track (listed above under ``Earlier constructions'') ends in a family of headline theorems whose
+docstrings once called them the \emph{conditional} Zhu bijection: \lean{headline_zhuBijection_of_bridge}
+(\leanpath{ZhuVermaAnArchCarrierBridge.lean}), \lean{zhuBijection_of_bridgeData} (\leanpath{ZhuVermaAnArchCarrierBridgeBuild.lean}),
+\lean{zhuBijection_trophy} (\leanpath{ZhuVermaAnArchPhase4Trophy.lean}), \lean{zhuBijection_phase4} (\leanpath{ZhuVermaAnArchPhase4Final.lean}),
+\lean{clean_route_zhuBijection} (\leanpath{ZhuVermaAnArchStage7Audit.lean}), \lean{zhuBijection_trophy_of_HARDmem}
+(\leanpath{ZhuVermaAnArchSkewHardMem.lean}), \lean{zhuBijection_trophy_of_ARDVecResidue}
+(\leanpath{ZhuVermaAnArchVecResidueCapstone.lean}) and \lean{zhuBijection_trophy_of_crossCirc0}
+(\leanpath{ZhuVermaAnArchHardMemCFirst2.lean}). Each takes a hypothesis \lean{F : VHat.CarrierBridgeFamily W} or
+\lean{F : VHat.CarrierBridgeDataFamily W}. The first is, in File \leanpath{VOA/\allowbreak Modules/\allowbreak ZhuVermaAnArchCarrierBridge.lean}
+(field docstrings omitted; \lean{CarrierBridgeDataFamily} in \leanpath{ZhuVermaAnArchCarrierBridgeBuild.lean} has the same fields with
+\lean{data} in place of \lean{bridge}):
+\begin{leancode}
+structure CarrierBridgeFamily (W : VertexOperatorAlgebra 𝒱) where
+  hU : AMod W → ℂ
+  YMU : ∀ U : AMod W, 𝒱 → ℤ → End ℂ (MU W U)
+  bridge : ∀ U : AMod W, CarrierBridge W U.carrier (MU W U) (YMU U)
+  htr : ∀ U : AMod W, VHatRep.ActModeTruncated (freeRep W U.carrier)
+  hvac : ∀ (U : AMod W) (m : ℤ),
+    YMU U W.vacuum m = if m = -1 then (1 : End ℂ (MU W U)) else 0
+  hL0 : ∀ (U : AMod W) (n : ℕ) (x : MU W U), x ∈ MU.deg W U n →
+    YMU U W.conformalVector 1 x = ((hU U : ℂ) + n) • x
+  hfin : ∀ (U : AMod W) (n : ℕ), FiniteDimensional ℂ (MU.deg W U n)
+  hbot : ∀ U : AMod W, MU.deg W U 0 ≠ ⊥
+\end{leancode}
+where a \lean{CarrierBridge W M MUcar YMU} is a linear isomorphism from $\overline M(U)=(U(\hat V)\otimes_\C U)/D$ (the free
+Construction-A carrier modulo its defect submodule) onto \lean{MUcar} carrying the abstract mode action to \lean{YMU}. \textbf{Both
+structures are empty, for every $V$.} File \leanpath{VOA/\allowbreak Modules/\allowbreak ZhuVermaAnArchCarrierBridgeVacuity.lean}
+(namespace \lean{VOA.VHat}):
+\begin{leancode}
+theorem CarrierBridge.subsingleton_of_vacuum (B : CarrierBridge W M MUcar YMU)
+    (hvac : YMU W.vacuum (-1) = 1) : Subsingleton M := by
+
+theorem CarrierBridgeFamily.false (F : CarrierBridgeFamily W) : False := by
+
+theorem CarrierBridgeDataFamily.false (F : CarrierBridgeDataFamily W) : False :=
+\end{leancode}
+(with \lean{IsEmpty} instances for both types). Proved; axioms standard (\texttt{\#print axioms}: \lean{[propext, Classical.choice,
+Quot.sound]}). \emph{The reason.} $\overline M(U)$ carries no vacuum normalisation: in $U(\hat V)$ the vacuum mode
+$\mathbf 1_{(-1)}$ is a free generator, not the unit. The augmentation $\varepsilon:U(\hat V)\to\C$ (killing every mode) gives
+$\varepsilon\otimes\mathrm{id}:U(\hat V)\otimes U\to U$, whose kernel contains every defect vector and is stable under the modes; so it
+descends to a map $\overline\varepsilon:\overline M(U)\to U$ that kills the image of every mode and sends $[1\otimes u]$ to $u$. An
+equivariant bridge to a target satisfying \lean{hvac} forces $\mathbf 1_{(-1)}=\mathrm{id}$ on $\overline M(U)$, so
+$u=\overline\varepsilon[1\otimes u]=\overline\varepsilon(\mathbf 1_{(-1)}[1\otimes u])=0$ for every $u$: $U=0$, hence $\overline M(U)=0$,
+hence \lean{MU W U}$\,=0$, contradicting \lean{hbot}. Since \lean{AMod W} always contains the zero module (\lean{AMod.zero}), no
+family over all of \lean{AMod W} can exist. \textbf{Consequently the eight theorems listed above are vacuous; they must not be cited},
+neither as the Zhu bijection nor as a conditional form of it. Their docstrings now say so (``VACUOUS --- do not cite''), and the
+structures' docstrings say ``EMPTY TYPE''. The critical-path theorem \lean{zhuBijective} (Section~\ref{l13:sec:files}) uses none of
+these declarations and is unaffected. The finding is due to an external reviewer.
+\end{warning}
+
 %======================================================================
 \section{Recorded traps and dead ends}\label{l13:sec:traps}
 %======================================================================
@@ -2254,6 +2308,11 @@ only (docstrings and notes):
 \item \leanpath{ZhuVermaAnArchCritPath.lean}: misnamed, off the critical path, headline vacuous (serious; documentation only; checked in Lean). Same vacuity for the
   \lean{InducedAssignment}-based theorems of \leanpath{ZhuVermaAnArchFaithfulBijection.lean} and the other scorecard files (serious, already
   proved by the library; docstrings stale, documentation only).
+\item The MU-track structures \lean{VHat.CarrierBridgeFamily} and \lean{VHat.CarrierBridgeDataFamily} are empty for every $V$
+  (\lean{VHat.CarrierBridgeFamily.false}, \lean{VHat.CarrierBridgeDataFamily.false}, in the library); hence
+  \lean{headline_zhuBijection_of_bridge}, \lean{zhuBijection_of_bridgeData}, \lean{zhuBijection_trophy}, \lean{zhuBijection_phase4},
+  \lean{clean_route_zhuBijection} and the three \lean{zhuBijection_trophy_of_*} theorems are vacuous (serious; found by an external
+  reviewer; Warning~\ref{l13:warn:carrierbridge}).
 \item \lean{pHL0} had an unused hypothesis \lean{Pr} (moderate; checked in Lean); removed in the library since.
 \item Stale trust-boundary docstrings in \leanpath{ZhuVermaAnArchDLM3Survival.lean} and \leanpath{ZhuVermaAnArchDLM3Zero.lean} (``\lean{pbw}
   does not cover this'', ``level independence is the PBW step'') (documentation only; Section~\ref{l13:sec:vhat}).
@@ -2308,6 +2367,7 @@ Lean declaration & intended meaning & hypotheses; status & check \\
 \lean{djLUFunctorLWIso'}, \lean{pH_eq} & $U_1\cong U_2\Rightarrow L(U_1)\cong L(U_2)$ & \lean{Pr} & Thm.~\ref{l13:thm:functorial}\\
 \lean{DJRealizationFamily.}\allowbreak\lean{bijective}, \lean{zhuBijective_}\allowbreak\lean{of_}\allowbreak\lean{hHL0} & assembly & bundle / \lean{Pr}, \lean{hHL0} & Thm.~\ref{l13:thm:assembly}\\
 \lean{zhuBijection_}\allowbreak\lean{critpath} & (claims) the bijection & \textbf{vacuous} (checked in Lean) & §\ref{l13:sec:files}\\
+\lean{zhuBijection_}\allowbreak\lean{trophy} and the other MU-track headlines & (claim) the bijection from a carrier-bridge family & \textbf{vacuous}: \lean{CarrierBridgeFamily.false} & Warning~\ref{l13:warn:carrierbridge}\\
 \bottomrule
 \end{longtable}
 \endgroup

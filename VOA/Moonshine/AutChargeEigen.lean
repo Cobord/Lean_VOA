@@ -149,7 +149,7 @@ theorem coordEα_of_eigen (hEven : L.Even) (hPos : L.PosDef)
     (h : ∀ a b, (latticeVOAGen L hEven hPos).smul (quadState L a b) 1 v
       = (chargeCoord L β a * chargeCoord L β b) • v)
     (γ : L.carrier) (hne : coordEα L γ v ≠ 0) :
-    (γ = β ∨ γ = -β) ∧ coordEα L γ v = MvPolynomial.C (coeff 0 (coordEα L γ v)) := by
+    (γ = β ∨ γ = -β) ∧ coordEα L γ v = MvPolynomial.C ((coordEα L γ v).coeff 0) := by
   set p := coordEα L γ v with hp
   obtain ⟨K, hK⟩ := exists_levelBoundN p
   have heig : ∀ a b, quadOp (fun k => (k : ℂ) + 1) K a b p
@@ -179,9 +179,9 @@ theorem eigen_quadState_span (hEven : L.Even) (hPos : L.PosDef)
     ∃ c₁ c₂ : ℂ, v = c₁ • latChargeGen L β + c₂ • latChargeGen L (-β) := by
   classical
   -- every component is a constant polynomial
-  have hcomp : ∀ γ, coordEα L γ v = MvPolynomial.C (coeff 0 (coordEα L γ v)) := fun γ => by
+  have hcomp : ∀ γ, coordEα L γ v = MvPolynomial.C ((coordEα L γ v).coeff 0) := fun γ => by
     by_cases h0 : coordEα L γ v = 0
-    · rw [h0, coeff_zero, MvPolynomial.C_0]
+    · rw [h0]; simp
     · exact (coordEα_of_eigen L hEven hPos hr β v h γ h0).2
   -- components off `±β` vanish
   have hoff : ∀ γ, γ ≠ β → γ ≠ -β → coordEα L γ v = 0 := fun γ h1 h2 => by
@@ -195,7 +195,7 @@ theorem eigen_quadState_span (hEven : L.Even) (hPos : L.PosDef)
     fun γ δ => coordEα_latStateGen L γ δ _
   by_cases hβ0 : β = 0
   · subst hβ0
-    refine ⟨coeff 0 (coordEα L 0 v), 0, ?_⟩
+    refine ⟨(coordEα L 0 v).coeff 0, 0, ?_⟩
     rw [zero_smul, add_zero, ← sub_eq_zero]
     refine eq_zero_of_coordEα' L fun γ => ?_
     rw [map_sub, map_smul, hcharge]
@@ -211,7 +211,7 @@ theorem eigen_quadState_span (hEven : L.Even) (hPos : L.PosDef)
       by_contra hne
       have := hPos β hne
       omega
-    refine ⟨coeff 0 (coordEα L β v), coeff 0 (coordEα L (-β) v), ?_⟩
+    refine ⟨(coordEα L β v).coeff 0, (coordEα L (-β) v).coeff 0, ?_⟩
     rw [← sub_eq_zero]
     refine eq_zero_of_coordEα' L fun γ => ?_
     rw [map_sub, map_add, map_smul, map_smul, hcharge, hcharge]

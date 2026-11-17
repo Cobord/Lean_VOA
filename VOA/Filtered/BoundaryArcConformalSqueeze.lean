@@ -36,7 +36,7 @@ theorem bidegree_component_conformal (p N : ℕ) (f : JetPoly ℂ) :
   · have hc : Finsupp.weight conformalWeight d = N := by
       have h := congrArg Prod.snd hd
       simpa [Finsupp.weight_apply, Finsupp.sum, Prod.snd_sum,
-        InfiniteJet.jetLiBidegree, conformalWeight, Nat.add_comm] using h
+        InfiniteJet.jetLiBidegree, conformalWeight, Nat.add_comm] using! h
     simp only [if_pos hd, if_pos hc]
   · simp only [if_neg hd]
 

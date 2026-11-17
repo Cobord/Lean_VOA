@@ -21,7 +21,7 @@ theorem selectedAlphabet_map_perm {B D : ℕ} (Y : Finset (Fin B))
       ((Finset.nodup_toList _).map e.injective)).mpr
     intro a
     simp
-  simpa only [List.map_map, Function.comp_def] using hp.map x
+  simpa only [List.map_map, Function.comp_def] using! hp.map x
 
 /-- The stratum relations give the refined dimension recursion in any generated algebra. -/
 theorem stratumRootPowerFiltration_finrank_le [FiniteDimensional ℂ A] {B : ℕ}

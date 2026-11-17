@@ -83,6 +83,7 @@ theorem nprod_currentN_neg_two (a b : Fin r) (q : FockN r) (K : ℕ)
     simp only [Finset.mem_map, Finset.mem_range, eP, eN, Function.Embedding.coeFn_mk] at hm hm'
     obtain ⟨x, -, rfl⟩ := hm
     obtain ⟨y, -, hy⟩ := hm'
+    change -(y : ℤ) - 2 = (x : ℤ) at hy
     omega
   have hsupp : Function.support f ⊆ ↑((Finset.range K).map eP ∪ (Finset.range K).map eN) := by
     intro m hm
@@ -90,13 +91,13 @@ theorem nprod_currentN_neg_two (a b : Fin r) (q : FockN r) (K : ℕ)
     simp only [Finset.coe_union, Finset.coe_map, Set.mem_union, Set.mem_image, Finset.mem_coe,
       Finset.mem_range, eP, eN, Function.Embedding.coeFn_mk]
     rcases lt_trichotomy m (-1) with hlt | heq | hgt
-    · refine Or.inr ⟨(-m - 2).toNat, ?_, by omega⟩
+    · refine Or.inr ⟨(-m - 2).toNat, ?_, show -(((-m - 2).toNat : ℕ) : ℤ) - 2 = m by omega⟩
       by_contra hk
       apply hm
       have hm' : m = -(((-m - 2).toNat : ℕ) : ℤ) - 2 := by omega
       rw [hm', hneg, hpd _ _ (by omega), mul_zero, smul_zero]
     · exact absurd (heq ▸ hm1) hm
-    · refine Or.inl ⟨m.toNat, ?_, by omega⟩
+    · refine Or.inl ⟨m.toNat, ?_, show ((m.toNat : ℕ) : ℤ) = m by omega⟩
       by_contra hk
       apply hm
       have hm' : m = ((m.toNat : ℕ) : ℤ) := by omega
@@ -104,7 +105,7 @@ theorem nprod_currentN_neg_two (a b : Fin r) (q : FockN r) (K : ℕ)
   rw [finsum_eq_sum_of_support_subset f hsupp, Finset.sum_union hdisj, Finset.sum_map,
     Finset.sum_map, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [eP, eN, Function.Embedding.coeFn_mk]
+  show f (k : ℤ) + f (-(k : ℤ) - 2) = _
   rw [hpos, hneg, smul_add]
 
 /-! ## Coefficients of `X_u ∂_v p` -/
@@ -115,7 +116,7 @@ variable {σ : Type*} [DecidableEq σ]
 
 /-- `coeff_s (∂_i p) = (s_i + 1) · coeff_{s + e_i} p`. -/
 theorem coeff_pderiv (i : σ) (s : σ →₀ ℕ) (p : MvPolynomial σ ℂ) :
-    coeff s (pderiv i p) = ((s i : ℂ) + 1) * coeff (s + Finsupp.single i 1) p := by
+    (pderiv i p).coeff s = ((s i : ℂ) + 1) * p.coeff (s + Finsupp.single i 1) := by
   induction p using MvPolynomial.induction_on' with
   | monomial t a =>
     rw [pderiv_monomial, coeff_monomial, coeff_monomial]
@@ -147,13 +148,13 @@ theorem coeff_pderiv (i : σ) (s : σ →₀ ℕ) (p : MvPolynomial σ ℂ) :
         ring
       · rw [if_neg (fun h => hs (hiff.1 h)), if_neg hs, mul_zero]
   | add p q hp hq =>
-    rw [map_add, coeff_add, coeff_add, hp, hq, mul_add]
+    rw [map_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
 
 /-- `coeff_s (X_u · ∂_v p)` for `u ≠ v`: a transfer of one quantum from `v` to `u`. -/
 theorem coeff_X_mul_pderiv_ne {u v : σ} (huv : u ≠ v) (s : σ →₀ ℕ) (p : MvPolynomial σ ℂ) :
-    coeff s (X u * pderiv v p)
+    (X u * pderiv v p).coeff s
       = if s u = 0 then 0
-        else ((s v : ℂ) + 1) * coeff (s - Finsupp.single u 1 + Finsupp.single v 1) p := by
+        else ((s v : ℂ) + 1) * p.coeff (s - Finsupp.single u 1 + Finsupp.single v 1) := by
   rw [coeff_X_mul', coeff_pderiv]
   by_cases hs : s u = 0
   · rw [if_neg (by simpa [Finsupp.mem_support_iff] using hs), if_pos hs]
@@ -162,7 +163,7 @@ theorem coeff_X_mul_pderiv_ne {u v : σ} (huv : u ≠ v) (s : σ →₀ ℕ) (p 
 
 /-- `coeff_s (X_v · ∂_v p) = s_v · coeff_s p` (the Euler identity in one variable). -/
 theorem coeff_X_mul_pderiv_self (v : σ) (s : σ →₀ ℕ) (p : MvPolynomial σ ℂ) :
-    coeff s (X v * pderiv v p) = (s v : ℂ) * coeff s p := by
+    (X v * pderiv v p).coeff s = (s v : ℂ) * p.coeff s := by
   rw [coeff_X_mul', coeff_pderiv]
   by_cases hs : s v = 0
   · rw [if_neg (by simpa [Finsupp.mem_support_iff] using hs), hs, Nat.cast_zero, zero_mul]
@@ -240,27 +241,27 @@ theorem lvlWt_shift (μ : ℕ → ℂ) (K : ℕ) (a : Fin r) (s : (ℕ × Fin r)
 /-- The diagonal operator scales each monomial by twice its level weight. -/
 theorem coeff_quadOp_self (μ : ℕ → ℂ) (K : ℕ) (a : Fin r) (q : FockN r)
     (s : (ℕ × Fin r) →₀ ℕ) :
-    coeff s (quadOp μ K a a q) = 2 * lvlWt μ K a s * coeff s q := by
+    (quadOp μ K a a q).coeff s = 2 * lvlWt μ K a s * q.coeff s := by
   unfold quadOp lvlWt
   rw [coeff_sum, Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun k _ => ?_
-  rw [coeff_smul, coeff_add, coeff_X_mul_pderiv_self, smul_eq_mul]
+  rw [coeff_smul, MvPolynomial.coeff_add, coeff_X_mul_pderiv_self, smul_eq_mul]
   ring
 
 /-- The off-diagonal operator in coefficients (`a ≠ b`). -/
 theorem coeff_quadOp_ne (μ : ℕ → ℂ) (K : ℕ) {a b : Fin r} (hab : a ≠ b) (q : FockN r)
     (s : (ℕ × Fin r) →₀ ℕ) :
-    coeff s (quadOp μ K a b q)
+    (quadOp μ K a b q).coeff s
       = ∑ k ∈ Finset.range K, μ k *
           ((if s (k, a) = 0 then 0
-            else ((s (k, b) : ℂ) + 1) * coeff (s - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1) q)
+            else ((s (k, b) : ℂ) + 1) * q.coeff (s - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1))
           + (if s (k, b) = 0 then 0
-            else ((s (k, a) : ℂ) + 1) * coeff (s - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1) q)) := by
+            else ((s (k, a) : ℂ) + 1) * q.coeff (s - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1))) := by
   unfold quadOp
   rw [coeff_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   have h1 : ((k, a) : ℕ × Fin r) ≠ (k, b) := fun h => hab (Prod.mk.inj h).2
-  rw [coeff_smul, coeff_add, coeff_X_mul_pderiv_ne h1, coeff_X_mul_pderiv_ne h1.symm,
+  rw [coeff_smul, MvPolynomial.coeff_add, coeff_X_mul_pderiv_ne h1, coeff_X_mul_pderiv_ne h1.symm,
     smul_eq_mul]
 
 /-- ⭐ **The joint-eigenvector lemma.**  If `q ≠ 0` is an eigenvector of every `quadOp μ K a b`
@@ -270,40 +271,40 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
     (hinj : ∀ k k', μ k = μ k' → k = k') (hr : ∀ b : Fin r, ∃ a, a ≠ b) (K : ℕ)
     (q : FockN r) (hK : ∀ v ∈ q.vars, v.1 < K) (c : Fin r → Fin r → ℂ)
     (h : ∀ a b, quadOp μ K a b q = c a b • q) (hq : q ≠ 0) :
-    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (coeff 0 q) := by
+    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (q.coeff 0) := by
   classical
   have hμ0 : ∀ k, μ k ≠ 0 := fun k h0 => hsum k k (by rw [h0, add_zero])
   -- diagonal: every monomial of `q` has `2·lvlWt a = c a a`
-  have hD : ∀ a s, coeff s q ≠ 0 → 2 * lvlWt μ K a s = c a a := by
+  have hD : ∀ a s, q.coeff s ≠ 0 → 2 * lvlWt μ K a s = c a a := by
     intro a s hs
-    have := congrArg (coeff s) (h a a)
+    have := congrArg (fun p : FockN r => p.coeff s) (h a a)
     rw [coeff_quadOp_self, coeff_smul, smul_eq_mul] at this
     exact mul_right_cancel₀ hs this
   -- monomials of `q` share the level weight of any fixed monomial of `q`
-  have hsame : ∀ a s t, coeff s q ≠ 0 → lvlWt μ K a t ≠ lvlWt μ K a s → coeff t q = 0 := by
+  have hsame : ∀ a s t, q.coeff s ≠ 0 → lvlWt μ K a t ≠ lvlWt μ K a s → q.coeff t = 0 := by
     intro a s t hs hne
     by_contra ht
     exact hne (by have h1 := hD a t ht; have h2 := hD a s hs
                   exact mul_left_cancel₀ two_ne_zero (h1.trans h2.symm))
   -- levels of monomials of `q` are below `K`
-  have hlev : ∀ s, coeff s q ≠ 0 → ∀ v, s v ≠ 0 → v.1 < K := by
+  have hlev : ∀ s, q.coeff s ≠ 0 → ∀ v, s v ≠ 0 → v.1 < K := by
     intro s hs v hv
     exact hK v ((mem_vars v).2 ⟨s, MvPolynomial.mem_support_iff.2 hs, Finsupp.mem_support_iff.2 hv⟩)
   obtain ⟨s₀, hs₀⟩ := ne_zero_iff.1 hq
   -- off-diagonal eigenvalues vanish
   have hO : ∀ a b, a ≠ b → c a b = 0 := by
     intro a b hab
-    have hc := congrArg (coeff s₀) (h a b)
+    have hc := congrArg (fun p : FockN r => p.coeff s₀) (h a b)
     rw [coeff_quadOp_ne μ K hab, coeff_smul, smul_eq_mul] at hc
     have hz : ∀ k ∈ Finset.range K, μ k *
         ((if s₀ (k, a) = 0 then 0
-          else ((s₀ (k, b) : ℂ) + 1) * coeff (s₀ - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1) q)
+          else ((s₀ (k, b) : ℂ) + 1) * q.coeff (s₀ - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1))
         + (if s₀ (k, b) = 0 then 0
-          else ((s₀ (k, a) : ℂ) + 1) * coeff (s₀ - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1) q)) = 0 := by
+          else ((s₀ (k, a) : ℂ) + 1) * q.coeff (s₀ - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1))) = 0 := by
       intro k hk
       rw [Finset.mem_range] at hk
       have hA : (if s₀ (k, a) = 0 then 0
-          else ((s₀ (k, b) : ℂ) + 1) * coeff (s₀ - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1) q) = 0 := by
+          else ((s₀ (k, b) : ℂ) + 1) * q.coeff (s₀ - Finsupp.single (k, a) 1 + Finsupp.single (k, b) 1)) = 0 := by
         split_ifs with h0
         · rfl
         · rw [hsame a s₀ _ hs₀ ?_, mul_zero]
@@ -311,7 +312,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
           intro he
           exact hμ0 k (by linear_combination -he)
       have hB : (if s₀ (k, b) = 0 then 0
-          else ((s₀ (k, a) : ℂ) + 1) * coeff (s₀ - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1) q) = 0 := by
+          else ((s₀ (k, a) : ℂ) + 1) * q.coeff (s₀ - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1)) = 0 := by
         split_ifs with h0
         · rfl
         · rw [hsame a s₀ _ hs₀ ?_, mul_zero]
@@ -324,7 +325,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
   have hZ : ∀ a b, a ≠ b → quadOp μ K a b q = 0 := fun a b hab => by
     rw [h a b, hO a b hab, zero_smul]
   -- no monomial of `q` contains a variable
-  have hV : ∀ s, coeff s q ≠ 0 → s = 0 := by
+  have hV : ∀ s, q.coeff s ≠ 0 → s = 0 := by
     intro s hs
     by_contra hne
     obtain ⟨⟨k, b⟩, hkb⟩ : ∃ v, s v ≠ 0 := by
@@ -356,13 +357,13 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
         by_cases h2 : (k, a) = w
         · subst h2; rw [if_pos rfl]; omega
         · rw [if_neg h2]; omega
-    have hc := congrArg (coeff t) (hZ a b hab)
-    rw [coeff_quadOp_ne μ K hab, coeff_zero] at hc
+    have hc := congrArg (fun p : FockN r => p.coeff t) (hZ a b hab)
+    rw [coeff_quadOp_ne μ K hab, show (0 : FockN r).coeff t = 0 by simp] at hc
     rw [Finset.sum_eq_single_of_mem k (Finset.mem_range.2 hk)] at hc
     · -- the `k`-term equals `μ_k · s(k,b) · coeff_s q ≠ 0`
       rw [if_neg hta, hback, htb] at hc
       have hB : (if t (k, b) = 0 then 0
-          else ((t (k, a) : ℂ) + 1) * coeff (t - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1) q) = 0 := by
+          else ((t (k, a) : ℂ) + 1) * q.coeff (t - Finsupp.single (k, b) 1 + Finsupp.single (k, a) 1)) = 0 := by
         split_ifs with h0
         · rfl
         · rw [hsame a s _ hs ?_, mul_zero]
@@ -376,7 +377,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
       intro k' hk' hkk'
       rw [Finset.mem_range] at hk'
       have hA : (if t (k', a) = 0 then 0
-          else ((t (k', b) : ℂ) + 1) * coeff (t - Finsupp.single (k', a) 1 + Finsupp.single (k', b) 1) q) = 0 := by
+          else ((t (k', b) : ℂ) + 1) * q.coeff (t - Finsupp.single (k', a) 1 + Finsupp.single (k', b) 1)) = 0 := by
         split_ifs with h0
         · rfl
         · rw [hsame a s _ hs ?_, mul_zero]
@@ -384,7 +385,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
           intro he
           exact hkk' (hinj _ _ (by linear_combination he)).symm
       have hB : (if t (k', b) = 0 then 0
-          else ((t (k', a) : ℂ) + 1) * coeff (t - Finsupp.single (k', b) 1 + Finsupp.single (k', a) 1) q) = 0 := by
+          else ((t (k', a) : ℂ) + 1) * q.coeff (t - Finsupp.single (k', b) 1 + Finsupp.single (k', a) 1)) = 0 := by
         split_ifs with h0
         · rfl
         · rw [hsame a s _ hs ?_, mul_zero]
@@ -393,7 +394,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
           exact hsum k k' (by linear_combination he)
       rw [hA, hB, add_zero, mul_zero]
   -- conclusion
-  have hconst : q = MvPolynomial.C (coeff 0 q) := by
+  have hconst : q = MvPolynomial.C (q.coeff 0) := by
     ext s
     rw [coeff_C]
     by_cases hs : s = 0
@@ -404,7 +405,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
   refine ⟨fun a b => ?_, hconst⟩
   by_cases hab : a = b
   · subst hab
-    have h0 : coeff 0 q ≠ 0 := by
+    have h0 : q.coeff 0 ≠ 0 := by
       intro h0; apply hq; rw [hconst, h0, MvPolynomial.C_0]
     have := hD a 0 h0
     rw [← this]

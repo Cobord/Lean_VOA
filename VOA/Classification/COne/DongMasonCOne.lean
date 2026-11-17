@@ -288,8 +288,9 @@ theorem conformal_smul_heis (hW : StronglyRational W) {h : 𝒲} (hh : IsHeisVec
   rcases eq_or_lt_of_le (show 1 ≤ i by omega) with rfl | hi
   · rw [if_neg (by norm_num), if_pos rfl]
     have := W.L_zero_grading h hh.mem
-    rw [W.L_def] at this
-    simpa using this
+    rw [W.L_def, zero_add] at this
+    change mode (W.Y W.conformalVector) 1 h = h
+    rw [this]; simp
   · rw [if_neg (by omega), if_neg (by omega)]
     rcases eq_or_lt_of_le (show 2 ≤ i by omega) with rfl | hi2
     · have := hW.L_one_grading_one_eq_zero hh.mem

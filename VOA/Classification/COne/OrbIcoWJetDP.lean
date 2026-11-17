@@ -13,13 +13,13 @@ open OrbOdd Polynomial Filter Topology
 
 theorem JetApproxPL.zero (P : ℕ) : JetApproxPL (P+1) (fun _ => 0) (jetZero P) := by
   rw [JetApproxPL,zp_jetZero]
-  simpa using JetApprox.polynomial (P+1) (0 : ℂ[X])
+  simpa using! JetApprox.polynomial (P+1) (0 : ℂ[X])
 
 theorem JetApproxPL.constant (P : ℕ) (c : ℚ) :
     JetApproxPL (P+1) (fun _ => (c : ℂ)) (jetCut P [c]) := by
   apply JetApproxPL.cut
   change JetApprox (P+1) (fun _ => (c : ℂ)) (zp [c])
-  simpa [zp] using JetApprox.polynomial (P+1) (Polynomial.C (c : ℂ))
+  simpa [zp] using! JetApprox.polynomial (P+1) (Polynomial.C (c : ℂ))
 
 theorem JetApproxPL.scale {P : ℕ} {f : ℂ → ℂ} {J : Jet}
     (c : ℚ) (h : JetApproxPL (P+1) f J) :
@@ -36,20 +36,20 @@ theorem JetApproxPL.foldl {α : Type*} (P : ℕ) (xs : List α)
     JetApproxPL (P+1) (fun t => v t+(xs.map (fun i => f i t)).sum)
       ((xs.map J).foldl (jetAdd P) a) := by
   induction xs generalizing a v with
-  | nil => simpa using hv
+  | nil => simpa using! hv
   | cons i xs ih =>
     have hi := h i (by simp)
     have hx : ∀ j ∈ xs, JetApproxPL (P+1) (f j) (J j) := by
       intro j hj
       exact h j (by simp [hj])
-    simpa only [List.map_cons,List.foldl_cons,List.sum_cons,add_assoc] using
+    simpa only [List.map_cons,List.foldl_cons,List.sum_cons,add_assoc] using!
       ih (hv.add hi) hx
 
 theorem JetApproxPL.sum {α : Type*} (P : ℕ) (xs : List α)
     (f : α → ℂ → ℂ) (J : α → Jet)
     (h : ∀ i ∈ xs, JetApproxPL (P+1) (f i) (J i)) :
     JetApproxPL (P+1) (fun t => (xs.map (fun i => f i t)).sum) (jetSum P (xs.map J)) := by
-  simpa only [zero_add,jetSum] using JetApproxPL.foldl P xs f J (JetApproxPL.zero P) h
+  simpa only [zero_add,jetSum] using! JetApproxPL.foldl P xs f J (JetApproxPL.zero P) h
 
 theorem identity_jetApprox (P : ℕ) : JetApproxPL (P+1) (fun t : ℂ => t) [1,1] := by
   have h := JetApprox.polynomial (P+1) (zp [1,1])
@@ -70,10 +70,11 @@ theorem scalarBracket_jetApprox (P : ℕ) (self : Bool) (n q r j : ℕ) :
   have hs := ((widthH_jetApprox P).scale ((r-j : ℕ)+1)).add (hK.scale (-1))
   have h := hs.add hc
   convert h using 1
-  funext t
-  simp only [scalarBracket]
-  push_cast
-  ring
+  · funext t
+    simp only [scalarBracket]
+    push_cast
+    ring
+  · rfl
 
 @[simp] theorem jetSource_length (P : ℕ) (self : Bool) (n r : ℕ) (A : List (List Jet)) :
     (jetSource P self n r A).length=7 := by simp [jetSource]
@@ -116,7 +117,7 @@ theorem scalarSource_jetApprox (P : ℕ) (self : Bool) (n r q : ℕ) (hq : q<7)
       exact h j hjr (q-1) (by omega)
     · simp only [he,if_false]
       exact JetApproxPL.zero P
-  simpa only [Rat.cast_pow,Rat.cast_neg,Rat.cast_one,mul_assoc] using hfirst.add hsecond
+  simpa only [Rat.cast_pow,Rat.cast_neg,Rat.cast_one,mul_assoc] using! hfirst.add hsecond
 
 /-- One divided BSA stage preserves the full certified precision. -/
 theorem scalarStep_jetApprox (P : ℕ) (self : Bool) (n r q : ℕ) (hq : q<7)
@@ -129,8 +130,8 @@ theorem scalarStep_jetApprox (P : ℕ) (self : Bool) (n r q : ℕ) (hq : q<7)
       (((jetStep P self n r B)[q]?).getD []) := by
   have hs := scalarSource_jetApprox P self n r q hq A B h
   have hf := ((identity_jetApprox P).mul hs).scale (-1/((r : ℚ)*(13-(r : ℚ))))
-  have hca (t : ℂ) : q<(scalarSource (widthH t) (if self then widthH t else 0) n r (A t)).length := by simpa using hq
-  have hcb : q<(jetSource P self n r B).length := by simpa using hq
+  have hca (t : ℂ) : q<(scalarSource (widthH t) (if self then widthH t else 0) n r (A t)).length := by simpa using! hq
+  have hcb : q<(jetSource P self n r B).length := by simpa using! hq
   simp only [scalarStep,jetStep,List.getElem?_map,
     List.getElem?_eq_getElem (hca _),List.getElem?_eq_getElem hcb,
     Option.map_some,Option.getD_some] at hs hf ⊢
@@ -151,7 +152,7 @@ theorem scalarRows_jetApprox (P : ℕ) (self : Bool) (n r j q : ℕ) (hj : j≤r
     simp only [scalarRows_zero _ _ _ _ _ hq,jetRows,List.getElem?_cons_zero,Option.getD_some,
       List.getElem?_map,List.getElem?_range hq,Option.map_some,Option.getD_some]
     split_ifs
-    · simpa only [Rat.cast_one] using JetApproxPL.constant P 1
+    · simpa only [Rat.cast_one] using! JetApproxPL.constant P 1
     · exact JetApproxPL.zero P
   | succ r ih =>
     by_cases hjr : j≤r

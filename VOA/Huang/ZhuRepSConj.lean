@@ -198,7 +198,7 @@ theorem exists_charge_star (hW : Nice W) (D : VOA.Classification.COne.ModularDat
   have ht0 : t D.vac = 1 := by simp [htdef, twistOf, hD.h_vac]
   have hstar : ∀ x, star (t x) = (t x)⁻¹ := fun x => by
     have := star_twistOf ((D.h x : ℚ) : ℝ)
-    simpa [htdef] using this
+    simpa [htdef] using! this
   have hTST : ∀ a b, t a * (∑ c, D.S a c * t c * D.S c b) * t b = (κ ^ 3)⁻¹ * D.S a b := by
     intro a b
     have h := hrel a b

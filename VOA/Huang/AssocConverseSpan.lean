@@ -155,7 +155,7 @@ theorem productSpan_le_iterateSpan (h : AssociativityInput W)
   refine (mem_iterateSpan_iff _).mpr ⟨r,
     fun j => ⟨Qs j, iQs j, ⟨Y₃ j, hY₃ j⟩, ⟨Y₄ j, hY₄ j⟩⟩, ?_⟩
   funext d
-  simpa [ProductChannel.eval, IterateChannel.eval] using
+  simpa [ProductChannel.eval, IterateChannel.eval] using!
     heq d.α₁ d.α₂ d.α₃ d.h₄ d.w₁ d.w₂ d.w₃ d.f d.hw₁ d.hw₂ d.hw₃ d.hf
       (1 + d.x) 1 (by linarith [d.xpos]) (by linarith [d.xlt])
 
@@ -178,7 +178,7 @@ theorem associativityConverse_of_span_le (h : ReverseSpanInclusion W) :
     fun j => (c j).left.property, fun j => (c j).right.property, ?_⟩
   intro α₁ α₂ α₃ h₄ w₁ w₂ w₃ f h₁ h₂ h₃ hf x hx0 hx1
   have := congrFun heq ⟨α₁, α₂, α₃, h₄, w₁, w₂, w₃, f, h₁, h₂, h₃, hf, x, hx0, hx1⟩
-  simpa [C, ProductChannel.eval, IterateChannel.eval] using this
+  simpa [C, ProductChannel.eval, IterateChannel.eval] using! this
 
 theorem span_le_of_associativityConverse (h : AssociativityConverse W) :
     ReverseSpanInclusion W := by
@@ -191,7 +191,7 @@ theorem span_le_of_associativityConverse (h : AssociativityConverse W) :
   refine (mem_productSpan_iff _).mpr ⟨r,
     fun j => ⟨Qs j, iQs j, ⟨Y₁ j, hY₁ j⟩, ⟨Y₂ j, hY₂ j⟩⟩, ?_⟩
   funext d
-  simpa [ProductChannel.eval, IterateChannel.eval] using
+  simpa [ProductChannel.eval, IterateChannel.eval] using!
     heq d.α₁ d.α₂ d.α₃ d.h₄ d.w₁ d.w₂ d.w₃ d.f d.hw₁ d.hw₂ d.hw₃ d.hf
       (1 + d.x) 1 (by linarith [d.xpos]) (by linarith [d.xlt])
 

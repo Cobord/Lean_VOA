@@ -102,7 +102,7 @@ theorem twistedL0_mem_parity (T : SuperTwistedModule W g N M)
     {q : ZMod 2} {x : M} (hx : x ∈ T.parity q) :
     T.YM W.conformalVector N x ∈ T.parity q := by
   have hx' := T.parity_mode W.conformalVector W.conformal_parity x hx N
-  simpa using hx'
+  simpa using! hx'
 
 /-- The module parity projection. -/
 noncomputable def twistedParityProj (T : SuperTwistedModule W g N M)
@@ -137,7 +137,7 @@ theorem twistedWeightParity_isInternal (T : SuperTwistedModule W g N M) (α : �
     DirectSum.IsInternal (T.twistedWeightParity α) := by
   letI := DirectSum.IsInternal.chooseDecomposition T.parity T.parity_isInternal
   exact isInternal_comap T.parity (T.weight α)
-    (fun p x hx => by simpa [twistedParityProj] using T.twistedParityProj_mem_weight p hx)
+    (fun p x hx => by simpa [twistedParityProj] using! T.twistedParityProj_mem_weight p hx)
 
 /-- Basis-independent parity grading on a finite twisted weight block. -/
 def twistedWeightParityGrading (T : SuperTwistedModule W g N M) (α : ℂ) :
@@ -178,7 +178,7 @@ noncomputable def inverseWeightBlock (φ : SuperTwistedIntertwiner T h) (α : �
     End ℂ (T.weight α) where
   toFun x := ⟨φ.toLinearEquiv.symm x, by
     apply (φ.map_weight' α ( φ.toLinearEquiv.symm x)).mp
-    simpa using x.2⟩
+    simpa using! x.2⟩
   map_add' x y := Subtype.ext (φ.toLinearEquiv.symm.map_add x y)
   map_smul' c x := Subtype.ext (φ.toLinearEquiv.symm.map_smul c x)
 
@@ -198,7 +198,7 @@ theorem inverseWeightBlock_isParityHomogeneous (φ : SuperTwistedIntertwiner T h
   have hcancel : φ.parityDegree + (φ.parityDegree + q) = q := by
     rcases zmod2_cases φ.parityDegree with hr | hr <;>
       rcases zmod2_cases q with hq | hq <;> rw [hr, hq] <;> decide
-  simpa only [LinearEquiv.apply_symm_apply, hcancel] using hx
+  simpa only [LinearEquiv.apply_symm_apply, hcancel] using! hx
 
 @[simp] theorem inverseWeightBlock_mul_weightBlock
     (φ : SuperTwistedIntertwiner T h) (α : ℂ) :
@@ -300,7 +300,7 @@ theorem twistedSuperOnePoint_eq_zero_of_total_odd
   apply supertrace_eq_zero_of_odd
   have hφ := φ.weightBlock_isParityHomogeneous α
   have hu := T.twistedZeroModeAction_isParityHomogeneous hW huWeight huParity α
-  simpa only [hodd] using hφ.mul hu
+  simpa only [hodd] using! hφ.mul hu
 
 /-- For an even implementer, odd state insertions vanish. -/
 theorem twistedSuperOnePoint_eq_zero_of_odd_homogeneous
@@ -351,7 +351,7 @@ noncomputable def twistedPlainOnePoint (T : SuperTwistedModule W g N M)
 /-- The vacuum zero-mode block is the identity. -/
 theorem twistedZeroModeBlock_vacuum (T : SuperTwistedModule W g N M) (α : ℂ) :
     T.twistedZeroModeBlock W.vacuum 0 (by
-      simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using W.vacuum_mem) α = 1 := by
+      simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using! W.vacuum_mem) α = 1 := by
   apply LinearMap.ext
   intro x
   apply Subtype.ext
@@ -368,7 +368,7 @@ theorem twistedSuperOnePoint_vacuum (T : SuperTwistedModule W g N M)
   let α := e + W.centralCharge / 24
   haveI := T.weight_finite α
   have hv : W.vacuum ∈ W.toSuperNearVOA.gradingZ 0 := by
-    simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using W.vacuum_mem
+    simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using! W.vacuum_mem
   change supertrace (T.twistedWeightParityGrading α)
       (T.insertedZeroModeBlock φ hW W.vacuum α) =
     supertrace (T.twistedWeightParityGrading α) (φ.weightBlock α)
@@ -494,7 +494,7 @@ theorem inverseInsertedSupertrace_cyclic
   let ψ := φ.inverseWeightBlock α
   haveI := T.weight_finite α
   have hψ : IsParityHomogeneousEnd P 0 ψ := by
-    simpa only [hφEven] using φ.inverseWeightBlock_isParityHomogeneous α
+    simpa only [hφEven] using! φ.inverseWeightBlock_isParityHomogeneous α
   have hψAB : ψ * (A * B) = (lam * mu)⁻¹ • ((A * B) * ψ) := by
     rw [← mul_assoc, hψA, Algebra.smul_mul_assoc, mul_assoc, hψB,
       mul_smul_comm, smul_smul]
@@ -523,7 +523,7 @@ theorem inverseInsertedSupertrace_cyclic
       _ = twistedSuperCyclicCoeff p q lam mu * supertrace P (ψ * (B * A)) := by
         rw [twistedSuperCyclicCoeff, if_pos hp]
   · have hcyc : supertrace P (ψ * (A * B)) = supertrace P ((A * B) * ψ) := by
-      simpa using supertrace_mul_comm P hψ (hA.mul hB)
+      simpa using! supertrace_mul_comm P hψ (hA.mul hB)
     have hzero : supertrace P (ψ * (A * B)) = 0 := by
       have heq : supertrace P (ψ * (A * B)) =
           (lam * mu)⁻¹ * supertrace P (ψ * (A * B)) := by
@@ -627,7 +627,7 @@ theorem twistedSuperOnePoint_apply_eq_zero_of_weight_eq_bot
     have hxbot : (x : M) ∈ (⊥ : Submodule ℂ M) := by
       rw [← hz]
       exact x.2
-    have hx : (x : M) = 0 := by simpa using hxbot
+    have hx : (x : M) = 0 := by simpa using! hxbot
     have hxsub : x = 0 := Subtype.ext hx
     rw [hxsub, map_zero]
     rfl
@@ -716,12 +716,9 @@ theorem toIdentityTwist_twistedWeightParityGrading (A : SuperOrdVModule W M) (α
     | mk q hq =>
       have hpq : p = q := by
         funext r
-        calc
-          p r = (A.toIdentityTwist.twistedWeightParityGrading α).parity r :=
-            (congrArg (fun P => P.parity r) hP).symm
-          _ = (A.weightParityGrading α).parity r :=
-            A.toIdentityTwist_twistedWeightParity α r
-          _ = q r := congrArg (fun P => P.parity r) hQ
+        exact ((congrArg (fun P => P.parity r) hP).symm.trans
+          (A.toIdentityTwist_twistedWeightParity α r)).trans
+            (congrArg (fun P => P.parity r) hQ)
       subst q
       rfl
 
@@ -767,9 +764,9 @@ theorem toIdentityTwist_twistedZeroModeAction (A : SuperOrdVModule W M)
   · simp only [map_zero]
     rfl
   · intro x y _ _ hx hy
-    simpa using congrArg₂ (· + ·) hx hy
+    simpa using! congrArg₂ (· + ·) hx hy
   · intro c x _ hx
-    simpa using congrArg (fun z => c • z) hx
+    simpa using! congrArg (fun z => c • z) hx
 
 /-- The identity-twist, identity-insertion construction is exactly the
 ordinary-sector formal torus one-point supertrace. -/

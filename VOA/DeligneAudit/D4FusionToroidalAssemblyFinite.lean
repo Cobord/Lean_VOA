@@ -67,7 +67,7 @@ theorem finite_TU [FiniteDimensional ℂ (UModG f R)]
       have hmul : B + 1 ≤ FusionToroidal.tmWeight m l * m := by
         have hmul1 : (B + 1) * 1 ≤ FusionToroidal.tmWeight m l * m :=
           Nat.mul_le_mul hl hm
-        simpa using hmul1
+        simpa using! hmul1
       omega
     have hbot : cycDeg (univRepG f R) (wUG f R)
         (SectorGraded.wordDeg l) = ⊥ := by
@@ -80,7 +80,7 @@ theorem finite_TU [FiniteDimensional ℂ (UModG f R)]
     rw [hbot] at hword
     change wordOp (univRepG f R) l (wUG f R) = 0 at hword
     change (Jrel f R).mkQ (sw l) = 0
-    simpa only [wordOp_univG] using hword
+    simpa only [wordOp_univG] using! hword
   · exact bot_le
 
 end

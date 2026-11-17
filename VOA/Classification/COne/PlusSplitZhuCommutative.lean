@@ -46,7 +46,7 @@ theorem hasC_bracketState : HasC m hm (bracketState m hm) bracketY := by
   intro i
   have h := hasC_smul m hm (hasC_smul_left m hm (WP_coe m hm)
     (hasC_stP m hm Y0) (i : ℤ)) (Nat.choose 3 i : ℚ)
-  simpa using h
+  simpa using! h
 
 theorem bracketState_mem_O (hm2 : 2 ≤ m) : bracketState m hm ∈ O (V2mPlus m hm) := by
   obtain ⟨y, hy, hyC⟩ := certC_mem m hm bracketCertificate bracketCertificate_even
@@ -56,7 +56,7 @@ theorem bracketState_mem_O (hm2 : 2 ≤ m) : bracketState m hm ∈ O (V2mPlus m 
     convert ht.trans he.symm using 1
     simp [scalarC, prefC, sub_eq_add_neg]
   have h := (O (V2mPlus m hm)).smul_mem ((cα m ^ 3 - 2 * cα m)⁻¹) (heq.symm ▸ hy)
-  simpa only [smul_smul, inv_mul_cancel₀ (cα_poly_ne_zero m hm hm2), one_smul] using h
+  simpa only [smul_smul, inv_mul_cancel₀ (cα_poly_ne_zero m hm hm2), one_smul] using! h
 
 /-- Rewrite the finite commutator residue; no module/top evaluation is used. -/
 theorem resFull_three (u v : VP m hm) :
@@ -72,7 +72,7 @@ theorem resFull_three (u v : VP m hm) :
   have hn := finsum_nat_to_int
     (fun i : ℕ => cbz 3 (i : ℤ) • (V2mPlus m hm).smul u (i : ℤ) v)
     (fun i : ℤ => cbz 3 i • (V2mPlus m hm).smul u i v)
-    (fun i hi => by dsimp only; rw [cbz_apply_neg _ hi, zero_smul]) (fun _ => rfl)
+    (fun i hi => by rw [cbz_apply_neg _ hi, zero_smul]) (fun _ => rfl)
   rw [resFull]
   simp only [add_zero]
   rw [← hn, finsum_eq_sum_of_support_subset _ hsub]
@@ -97,7 +97,7 @@ theorem W_commute_E (hm2 : 2 ≤ m) : Commute (generator m hm 1) (generator m hm
   have hc := zhu_comm_mod_O (V2mPlus m hm) (WP_mem_grading m hm) (EP_mem_grading m hm)
   have hd : zhuMul (V2mPlus m hm) (WP m hm) (EP m hm) -
       zhuMul (V2mPlus m hm) (EP m hm) (WP m hm) ∈ O (V2mPlus m hm) := by
-    simpa using (O _).add_mem hc hb
+    simpa using! (O _).add_mem hc hb
   have hq := (Submodule.Quotient.mk_eq_zero _).mpr hd
   change VOA.mk (V2mPlus m hm) _ = 0 at hq
   rw [map_sub, mk_zhuMul, mk_zhuMul, sub_eq_zero] at hq

@@ -162,7 +162,7 @@ theorem inverseTwoBlockTrace_one_one (F : SphericalFusion C) (A : Center C) (V :
         (F.compositionDual (F.simpleHomBasis V i) α),
       F.basis_comp_compositionDual]
     simp only [ite_true, Category.id_comp]
-    simpa only [Category.assoc] using
+    simpa only [Category.assoc] using!
       (F.scalarTrace_comp_comm (F.simpleHomBasis A.1 i β)
         (centralDrinfeldMorphism A ≫ (F.j A.1).inv ≫
           F.compositionDual (F.simpleHomBasis A.1 i) β)).symm

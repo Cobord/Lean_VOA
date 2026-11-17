@@ -14,6 +14,8 @@ the actual level-`L` complex, proved from explicit representatives.  Level-indep
 declarations (`HarmonicMetricGeneric`, the ghost-side lemmas) are reused directly.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.TwoSeries
 
 open VOA.ConcreteHodge Sl2CosetConcrete Sl2SemiInfinite AffineSl2GeneralRigidity

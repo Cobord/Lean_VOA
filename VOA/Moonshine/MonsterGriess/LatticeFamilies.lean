@@ -44,6 +44,11 @@ import VOA.Moonshine.MonsterGriess.GriessTrilinear
 * Omitted: the summary theorem `mog_lattice_short_vectors`.
 -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option linter.style.show false
 

@@ -224,7 +224,7 @@ theorem eeMaster_P (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : �
             ) (fun i _ => (eeVec_p_finite L α β c d (i : ℤ) q x).subset
               (fun p hp => by
                 rw [Function.mem_support] at hp ⊢
-                simp only [] at hp ⊢
+                (try simp only [] at hp ⊢)
                 exact fun h => hp (by rw [h, smul_zero])))]
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [smul_finsum' (wC P i) (eeVec_p_finite L α β c d (i : ℤ) q x)]]
@@ -234,7 +234,7 @@ theorem eeMaster_P (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : �
         ) (fun i _ => (eeVec_q_finite L α β c d (i : ℤ) x).subset
           (fun q hq => by
             rw [Function.mem_support] at hq ⊢
-            simp only [] at hq ⊢
+            (try simp only [] at hq ⊢)
             exact fun h => hq (by rw [h, smul_zero])))]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [← smul_finsum' (wC P i) (eeVec_q_finite L α β c d (i : ℤ) x), termX_i]
@@ -258,8 +258,8 @@ theorem shift_comm_P (hPos : L.PosDef) (α β : L.carrier) (P : ℕ) (hP : (P : 
       (Finset.sum_nbij' (i := fun i => P - i) (j := fun i => P - i)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
         (fun i hi => by simp only [Finset.mem_range] at hi ⊢; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
-        (fun i hi => by simp only [Finset.mem_range] at hi; simp only []; omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
+        (fun i hi => by simp only [Finset.mem_range] at hi; (try simp only []); omega)
         (fun i _ => rfl)).symm]
   refine Finset.sum_congr rfl fun i hi => ?_
   simp only [Finset.mem_range] at hi

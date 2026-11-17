@@ -52,7 +52,7 @@ theorem wordOp_map (d : Fin 8) : ∀ (l : List ℕ) (v : V),
 theorem opc (x y : Fin 8) (r s : ℕ) :
     ρ.op x r * ρ.op y s = ρ.op y s * ρ.op x r + ∑ e, bracketTable x y e • ρ.op e (r + s) := by
   ext v
-  simp only [Module.End.mul_apply, LinearMap.add_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+  simp only [Module.End.mul_apply, LinearMap.add_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
   rw [comm_apply x y r s v]
 
@@ -61,15 +61,15 @@ theorem push (d : Fin 8) (D : Module.End ℂ V) (C : ℕ → Module.End ℂ V)
     (h : ∀ s, D * ρ.op d s = ρ.op d s * D + C s) :
     ∀ (l : List ℕ) (v : V) (M : Submodule ℂ V), Fx ρ d l (D v) ∈ M →
       (∀ l1 s l2, l = l1 ++ s :: l2 → Fx ρ d l1 (C s (Fx ρ d l2 v)) ∈ M) → D (Fx ρ d l v) ∈ M
-  | [], v, M, hD, _ => by simpa using hD
+  | [], v, M, hD, _ => by simpa using! hD
   | (s :: l), v, M, hD, hC => by
       have e1 : D (Fx ρ d (s :: l) v) = ρ.op d s (D (Fx ρ d l v)) + C s (Fx ρ d l v) := by
         rw [Fx_cons, Module.End.mul_apply, ← Module.End.mul_apply D, h]; rfl
       rw [e1]
-      refine M.add_mem ?_ (by simpa using hC [] s l rfl)
-      have := push d D C h l v (M.comap (ρ.op d s)) (by simpa using hD) (fun l1 s' l2 hl => by
+      refine M.add_mem ?_ (by simpa using! hC [] s l rfl)
+      have := push d D C h l v (M.comap (ρ.op d s)) (by simpa using! hD) (fun l1 s' l2 hl => by
         have := hC (s :: l1) s' l2 (by rw [hl]; rfl)
-        simpa using this)
+        simpa using! this)
       exact this
 
 /-- A commuting operator passes through a block. -/
@@ -273,7 +273,7 @@ include hR
 theorem cartan_w (hh : Fin 8) (hh6 : 6 ≤ hh.val) (k : ℕ) :
     ρ.op hh k w = (if k = 0 then (N : ℂ) else 0) • w := by
   split_ifs with hk
-  · subst hk; simpa using hR.cartan_zero hh hh6
+  · subst hk; simpa using! hR.cartan_zero hh hh6
   · rw [zero_smul]; exact hR.cartan_pos hh hh6 k (by omega)
 
 theorem h1_nw (k : ℕ) (a b c : List ℕ) : ρ.op 6 k (nw ρ w a b c) ∈ NW ρ w (ShiftRel k a b c) :=

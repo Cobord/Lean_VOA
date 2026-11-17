@@ -19,10 +19,10 @@ noncomputable def liAssociatedGradedDerivation (W : VertexOperatorAlgebra V) :
     have h := liAssociatedGradedTranslation_leibniz W 1 1
     simp only [mul_one, one_mul] at h
     have heq : liAssociatedGradedTranslation W 1 + liAssociatedGradedTranslation W 1 =
-        liAssociatedGradedTranslation W 1 + 0 := by simpa only [add_zero] using h.symm
+        liAssociatedGradedTranslation W 1 + 0 := by simpa only [add_zero] using! h.symm
     exact add_left_cancel heq
   leibniz' x y := by
-    simpa only [smul_eq_mul, mul_comm, add_comm] using liAssociatedGradedTranslation_leibniz W x y
+    simpa only [smul_eq_mul, mul_comm, add_comm] using! liAssociatedGradedTranslation_leibniz W x y
 
 /-- Rewrite the coefficient sign from the field-index convention into mode convention. -/
 theorem sgn_negative_mode_index (n j : ℕ) :
@@ -48,7 +48,7 @@ noncomputable def liPoissonVertexAlgebra (W : VertexOperatorAlgebra V) :
   leibniz := liAssociatedGradedMode_leibniz W
   skew n x y := by
     have h := liAssociatedGradedMode_skew W n x y
-    simpa only [liSkewTerm, sgn_negative_mode_index] using h
+    simpa only [liSkewTerm, sgn_negative_mode_index] using! h
   jacobi := liAssociatedGradedMode_jacobi W
 
 end VOA

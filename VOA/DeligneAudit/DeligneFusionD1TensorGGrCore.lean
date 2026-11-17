@@ -94,7 +94,7 @@ def grRep : CurrentModule f ((ℕ →₀ T) ⧸ Lsub R w) where
     intro a b r s v
     obtain ⟨u, rfl⟩ := Submodule.mkQ_surjective (Lsub R w) v
     have hh := congrArg (Lsub R w).mkQ ((gRep R).comm a b r s u)
-    simpa only [Submodule.mapQ_apply, map_sub, map_sum, map_smul] using hh
+    simpa only [Submodule.mapQ_apply, map_sub, map_sum, map_smul] using! hh
 
 abbrev wg : (ℕ →₀ T) ⧸ Lsub R w := (Lsub R w).mkQ (Finsupp.single 0 w)
 
@@ -130,7 +130,7 @@ theorem gr_sat {spec : RelSpec n} (h : FiltSat R w spec) :
     have hop : (grRep R w).op p.1 0 (wg R w) =
         (Lsub R w).mkQ (Finsupp.single 0 (R.op p.1 0 w)) := by
       simpa only [degree, SectorGraded.wordDeg, List.map_cons, List.map_nil,
-        List.sum_cons, List.sum_nil, Nat.add_zero] using grRep_word R w [(p.1, 0)]
+        List.sum_cons, List.sum_nil, Nat.add_zero] using! grRep_word R w [(p.1, 0)]
     rw [hop, h.eig p hp, ← Finsupp.smul_single, map_smul]
 
 end

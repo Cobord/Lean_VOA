@@ -252,7 +252,7 @@ theorem trunc_upG {w : V} {x : Fin S.n} (hx : S.fusion x ∨ S.lowering x) {N0 :
   intro N hN
   obtain ⟨j, rfl⟩ : ∃ j, N = N0 + j := ⟨N - N0, by omega⟩
   rcases Nat.eq_zero_or_pos j with rfl | hj
-  · simpa using h0
+  · simpa using! h0
   obtain ⟨h, hh, hne, hz⟩ := T.truncUp x hx
   have hcomm := ρ.comm h x j N0 w
   rw [h0, map_zero, hc h hh j hj, map_zero, sub_zero,
@@ -283,7 +283,7 @@ include T in
 /-- The `θ`-Garland identity for a module with `ravSpec S (K+1) (D+2)`. -/
 theorem theta_garlandG (hN : ThetaNilG S) (h : Sat S.f ρ w (ravSpec S (K + 1) (D + 2))) (s : ℕ)
     (hs : 2 * (K + 1) + 1 ≤ s + 2) :
-    ∑ x ∈ Finset.antidiagonal s, ρ.op S.c₀ x.1 (ρ.op S.c₀ x.2 w) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, ρ.op S.c₀ x.1 (ρ.op S.c₀ x.2 w) = 0 := by
   have hFF : ∀ j k, ρ.op S.c₀ j * ρ.op S.c₀ k = ρ.op S.c₀ k * ρ.op S.c₀ j := by
     intro j k
     rw [← sub_eq_zero, op_comm_endG]
@@ -425,7 +425,7 @@ theorem kernel_sat (hN : ThetaNilG S) (hKD : K ≤ D) (h : Sat S.f ρ w (ravSpec
         have hHy : ∀ y, H y = ∑ c, (sE * S.f e i c) • ρ.op c 0 y := by
           intro y; simp [hHdef]
         have hin : ∀ c y, ρ.op c 0 (ρ.op i 0 y) - ρ.op i 0 (ρ.op c 0 y) =
-            ∑ d, S.f c i d • ρ.op d 0 y := fun c y => by simpa using ρ.comm c i 0 0 y
+            ∑ d, S.f c i d • ρ.op d 0 y := fun c y => by simpa using! ρ.comm c i 0 0 y
         have hEF : ∀ y, (sE • ρ.op e 0) (ρ.op i 0 y) - ρ.op i 0 ((sE • ρ.op e 0) y) = H y := by
           intro y
           have := ρ.comm e i 0 0 y
@@ -488,12 +488,12 @@ theorem kernel_sat (hN : ThetaNilG S) (hKD : K ≤ D) (h : Sat S.f ρ w (ravSpec
         rw [if_pos rfl]
         have hG := theta_garlandG T hN h (2 * D + 1) (by omega)
         rw [Finset.sum_eq_add_of_mem (D, D + 1) (D + 1, D)
-          (Finset.mem_antidiagonal.mpr (by simp; omega))
-          (Finset.mem_antidiagonal.mpr (by simp; omega)) (by simp) ?_] at hG
+          (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega))
+          (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega)) (by simp) ?_] at hG
         · rw [comm_c0 T (Or.inl T.c0_fusion) (D + 1) D] at hG
           exact two_eq_zeroG hG
         · rintro ⟨i, j⟩ hx ⟨h1, h2⟩
-          rw [Finset.mem_antidiagonal] at hx
+          rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
           simp only [ne_eq, Prod.mk.injEq] at h1 h2 hx
           by_cases hj : D + 2 ≤ j
           · rw [hFθ j hj, map_zero]
@@ -520,12 +520,12 @@ theorem kernel_sat (hN : ThetaNilG S) (hKD : K ≤ D) (h : Sat S.f ρ w (ravSpec
           rw [Finset.sum_eq_single (K, D + 1)] at hS
           · rw [comm_c0 T (Or.inl hx)]; exact hS
           · rintro ⟨i, j⟩ hij hne
-            rw [Finset.mem_antidiagonal] at hij
+            rw [Finset.HasAntidiagonal.mem_antidiagonal] at hij
             simp only [ne_eq, Prod.mk.injEq] at hne hij
             by_cases hi : K + 1 ≤ i
             · rw [hFx x hx hx0 i hi, map_zero]
             · rw [← comm_c0 T (Or.inl hx), hFθ j (by omega), map_zero]
-          · intro hn; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) hn
+          · intro hn; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) hn
         · rw [comm_c0 T (Or.inl hx), hK0 x hxl, map_zero]
     · exact hCp c (Or.inr hc) r hr
   · simp only [ravSpec, Set.mem_setOf_eq]

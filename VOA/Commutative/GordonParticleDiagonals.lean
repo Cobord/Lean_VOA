@@ -22,15 +22,15 @@ theorem sumToIter_monomial_sumElim_aux (r : α →₀ ℕ) (s : β →₀ ℕ) (
     have hh : (sumToIter K α β).comp (rename Sum.inl).toRingHom =
         (map MvPolynomial.C : MvPolynomial α K →+* MvPolynomial α (MvPolynomial β K)) := by
       apply MvPolynomial.ringHom_ext
-      · intro c; simp
-      · intro i; simp
+      · intro c; simp [sumToIter_C]
+      · intro i; simp [sumToIter_Xl]
     exact DFunLike.congr_fun hh p
   have hr (p : MvPolynomial β K) : sumToIter K α β (rename Sum.inr p) = MvPolynomial.C p := by
     have hh : (sumToIter K α β).comp (rename Sum.inr).toRingHom =
         (MvPolynomial.C : MvPolynomial β K →+* MvPolynomial α (MvPolynomial β K)) := by
       apply MvPolynomial.ringHom_ext
-      · intro c; simp
-      · intro i; simp
+      · intro c; simp [sumToIter_C]
+      · intro i; simp [sumToIter_Xr]
     exact DFunLike.congr_fun hh p
   have hm : monomial (r.mapDomain Sum.inl + s.mapDomain Sum.inr) c =
       rename Sum.inl (monomial r (1 : K)) * rename Sum.inr (monomial s c) := by
@@ -42,7 +42,7 @@ theorem sumToIter_monomial_sumElim_aux (r : α →₀ ℕ) (s : β →₀ ℕ) (
   simp
 
 theorem coeff_coeff_sumToIter (p : MvPolynomial (α ⊕ β) K) (r : α →₀ ℕ) (s : β →₀ ℕ) :
-    coeff s (coeff r (sumToIter K α β p)) = coeff (r.sumElim s) p := by
+    ((sumToIter K α β p).coeff r).coeff s = p.coeff (r.sumElim s) := by
   classical
   have heq (r₁ r₂ : α →₀ ℕ) (s₁ s₂ : β →₀ ℕ) :
       r₁.sumElim s₁ = r₂.sumElim s₂ ↔ r₁ = r₂ ∧ s₁ = s₂ := by
@@ -77,7 +77,7 @@ particles, at exactly the residual derivative degree. -/
 theorem particlePolynomial_coefficientSlice (D : ℕ)
     (L : VOA.BoundaryAuxiliary.JetPoly K →ₗ[K] K)
     (a : α → Fin 3) (b : β → Fin 3) (r : α →₀ ℕ) :
-    coeff r (sumToIter K α β (particlePolynomial D L (Sum.elim a b))) =
+    (sumToIter K α β (particlePolynomial D L (Sum.elim a b))).coeff r =
       if r.degree ≤ D then
         particlePolynomial (D - r.degree)
           (spectatorFunctional L (∏ i, X (a i, r i))) b else 0 := by
@@ -93,9 +93,9 @@ theorem particlePolynomial_coefficientSlice (D : ℕ)
   · rw [if_pos hr, coeff_particlePolynomial]
     have heq : r.degree + s.degree = D ↔ s.degree = D - r.degree := by omega
     simp only [heq, spectatorFunctional, LinearMap.coe_mk, AddHom.coe_mk]
-  · rw [if_neg hr, coeff_zero]
+  · rw [if_neg hr]
     have hn : r.degree + s.degree ≠ D := by omega
-    rw [if_neg hn]
+    simp [hn]
 
 /-- Literal partial diagonal: relation variables coincide, while every spectator remains
 an independent variable. -/
@@ -113,7 +113,7 @@ theorem particlePolynomial_relationDiagonal_eq_zero (m D : ℕ)
     relationDiagonalEval (α := α) m
       (particlePolynomial D L (Sum.elim a (relationColor m i))) = 0 := by
   ext r
-  simp only [relationDiagonalEval, RingHom.comp_apply, coeff_map, coeff_zero]
+  simp only [relationDiagonalEval, RingHom.comp_apply, coeff_map]
   rw [particlePolynomial_coefficientSlice]
   split_ifs with hr
   · rw [particlePolynomial_fullDiagonal]
@@ -125,6 +125,7 @@ theorem particlePolynomial_relationDiagonal_eq_zero (m D : ℕ)
       apply hL
       exact Ideal.mul_mem_left _ _ hp
     rw [hzero, map_zero, zero_mul]
+    simp
   · simp
 
 /-- The partial-diagonal vanishing statement for the actual quotient dual. -/
@@ -149,9 +150,9 @@ theorem eval_eq_zero_of_relationDiagonal {A : Type*} [CommRing A] [Algebra K A]
       E.comp (relationDiagonalEval (α := α) m) := by
     apply MvPolynomial.ringHom_ext
     · intro c
-      simp [E, relationDiagonalEval]
+      simp [E, relationDiagonalEval, sumToIter_C]
     · intro j
-      cases j <;> simp [E, relationDiagonalEval]
+      cases j <;> simp [E, relationDiagonalEval, sumToIter_Xl, sumToIter_Xr]
   change (aeval (Sum.elim a (fun _ : RelationSlots m ↦ t))).toRingHom F = 0
   rw [hhom, RingHom.comp_apply, hF, map_zero]
 

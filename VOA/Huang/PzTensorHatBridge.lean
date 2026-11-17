@@ -73,7 +73,7 @@ theorem bil_ext_homog {β β' : P₁.carrier →ₗ[ℂ] P₂.carrier →ₗ[ℂ
   have := eq_zero_of_homog (fun y z => β y z - β' y z)
     (fun y y' z => by simp only [map_add, LinearMap.add_apply]; ring)
     (fun y z z' => by simp only [map_add]; ring)
-    (fun α₁ α₂ y z hy hz => by dsimp only; rw [h α₁ α₂ y z hy hz, sub_self])
+    (fun α₁ α₂ y z hy hz => by rw [h α₁ α₂ y z hy hz, sub_self])
   ext y z
   exact sub_eq_zero.mp (this y z)
 
@@ -164,8 +164,8 @@ theorem hat_copT {G : HomPair P₁ P₂ → ℂ} (hG : IsBilin G) {γ : ℤ} {a 
     (ha : a ∈ W.grading γ) (p : ℤ) :
     hatG (copT ha p G) (copT_mem_bilin hG ha p) = rhoL (A₁ P₁) (A₁ P₂) a p (hatG G hG) := by
   refine bil_ext_homog fun α₁ α₂ y z hy hz => ?_
-  rw [hatG_homog _ _ hy hz]
-  exact copT_eq_rho hG ha p ⟨y, α₁, z, α₂, hy, hz⟩
+  exact (hatG_homog _ (copT_mem_bilin hG ha p) hy hz).trans
+    (copT_eq_rho hG ha p ⟨y, α₁, z, α₂, hy, hz⟩)
 
 theorem tauHom_eq_tauHat {G : HomPair P₁ P₂ → ℂ} (hG : IsBilin G) {β : ℤ} {u : 𝒱}
     (hu : u ∈ W.grading β) (m : ℤ) (x : HomPair P₁ P₂) :
@@ -182,8 +182,8 @@ theorem hat_tauHom {G : HomPair P₁ P₂ → ℂ} (hG : IsBilin G) {β : ℤ} {
     hatG (tauHom hu m G) (tauHom_mem_bilin hG hu m)
       = tauHat (A₁ P₁) (A₁ P₂) β u m (hatG G hG) := by
   refine bil_ext_homog fun α₁ α₂ y z hy hz => ?_
-  rw [hatG_homog _ _ hy hz]
-  exact tauHom_eq_tauHat hG hu m ⟨y, α₁, z, α₂, hy, hz⟩
+  exact (hatG_homog _ (tauHom_mem_bilin hG hu m) hy hz).trans
+    (tauHom_eq_tauHat hG hu m ⟨y, α₁, z, α₂, hy, hz⟩)
 
 /-! ## Truncation and compatibility under the extension -/
 
@@ -200,7 +200,7 @@ theorem truncAt_hat {G : HomPair P₁ P₂ → ℂ} (hG : IsBilin G) {γ : ℤ} 
   refine ⟨P, fun p hp => ?_⟩
   rw [← hat_copT hG ha p]
   have h0 : IsBilin (0 : HomPair P₁ P₂ → ℂ) := (bilin P₁ P₂).zero_mem
-  rw [hatG_congr (hP p hp) _ h0, hatG_zero]
+  exact (hatG_congr (hP p hp) _ h0).trans (hatG_zero h0)
 
 /-- Additivity of the slice defect in the first vector. -/
 theorem Dsl_add_left {β : P₁.carrier →ₗ[ℂ] P₂.carrier →ₗ[ℂ] ℂ} {a : 𝒱}

@@ -24,9 +24,9 @@ theorem two_step_nil (X Y Z : Module.End ℂ V) (w : V) (N : ℕ)
     intro b hb
     have hb0 : b = 0 := by omega
     subst b
-    simpa using hY
-  have ht := top_nil X Y 1 1 N w hXXY (by simpa using hX) hY'
-  simpa only [Function.iterate_one, hXY] using ht
+    simpa using! hY
+  have ht := top_nil X Y 1 1 N w hXXY (by simpa using! hX) hY'
+  simpa only [Function.iterate_one, hXY] using! ht
 
 /-- Source letters of the transfers: f1, f3, f4, f4, f4, f3, f1. -/
 def stepA : Fin 7 → Fin 28 := ![19, 17, 16, 16, 16, 17, 19]

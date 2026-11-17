@@ -61,7 +61,7 @@ theorem normalized_row_mem (I : Ideal (MvPolynomial ι ℂ)) (r : Fin 2)
   apply row_mem_of_identity (I.restrictScalars ℂ) (basis f) (raw r) (normal r) (earlier r)
     (scale r) (factor r) (normalization_nonzero r)
   · funext j
-    simpa only [Pi.smul_apply, smul_eq_mul, Pi.add_apply] using row_identity r j
+    simpa only [Pi.smul_apply, smul_eq_mul, Pi.add_apply] using! row_identity r j
   · rw [raw_poly_eq]
     exact Ideal.mul_mem_right _ I hparent
   · exact hearlier

@@ -82,7 +82,18 @@ theorem conjMap_modeSymbol (h : Aut V1) (H : Subgroup (Aut V1)) (x : (orbifold H
     (m : ℤ) (p q : ℕ) (a b : ℂ) :
     conjMap h H (modeSymbol (orbifoldVOA H) x m p q a b) =
       modeSymbol (orbifoldVOA (H.map (MulAut.conj h).toMonoidHom)) (conjMap h H x) m p q a b := by
-  simp only [modeSymbol, map_sub, map_smul, conjMap_smul, conjMap_L_pow, conjMap_vacuum]
+  have hsub : ∀ y z : (orbifold H).carrier,
+      conjMap h H (y - z) = conjMap h H y - conjMap h H z :=
+    fun y z => (conjMap h H).toLinearMap.map_sub y z
+  have hsmul : ∀ (c : ℂ) (y : (orbifold H).carrier), conjMap h H (c • y) = c • conjMap h H y :=
+    fun c y => LinearEquiv.map_smul (conjMap h H) c y
+  simp only [modeSymbol]
+  rw [hsub, hsub, hsmul, hsmul, conjMap_smul h H x m x]
+  exact congrArg₂ (fun u v : (orbifold (H.map (MulAut.conj h).toMonoidHom)).carrier =>
+      (orbifoldVOA (H.map (MulAut.conj h).toMonoidHom)).smul (conjMap h H x) m (conjMap h H x) -
+        a • u - b • v)
+    ((conjMap_L_pow h H (-2) p _).trans (congrArg _ (conjMap_vacuum h H)))
+    (conjMap_L_pow h H (-2) q x)
 
 /-- **B4 reduced to the two explicit symbol relations.** -/
 theorem xuIcosahedralPrimaryAndSymbols_of_symbols (hS : IcoSymbolRelations) :

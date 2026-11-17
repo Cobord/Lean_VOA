@@ -116,7 +116,8 @@ theorem liGradedClass_translation_mode (W : VertexOperatorAlgebra V)
           trivial
         have hh := liFiltration_L_neg_one_mem W hzero
         have hp : p + q + 1 - n = 0 := by omega
-        simpa only [hp] using hh
+        simp only [hp] at hh ⊢
+        exact hh
     · rw [liGradedClass_mode_eq_zero W p q N M n (Or.inr (by omega)), map_zero,
         liGradedClass_mode_eq_zero W (p + 1) q (N + 1) M n (Or.inr (by omega)),
         liGradedClass_mode_eq_zero W p (q + 1) N (M + 1) n (Or.inr (by omega)), add_zero]
@@ -149,8 +150,9 @@ theorem liAssociatedGradedTranslation_mode (W : VertexOperatorAlgebra V)
 /-- Coefficientwise Li translation of a polynomial, keeping its formal variable fixed. -/
 noncomputable def liPolynomialTranslation (W : VertexOperatorAlgebra V)
     (p : Polynomial (liAssociatedGraded W)) : Polynomial (liAssociatedGraded W) :=
-  Polynomial.ofFinsupp (p.toFinsupp.mapRange (liAssociatedGradedTranslation W)
-    (map_zero (liAssociatedGradedTranslation W)))
+  Polynomial.ofFinsupp (AddMonoidAlgebra.ofCoeff
+    (p.toFinsupp.coeff.mapRange (liAssociatedGradedTranslation W)
+      (map_zero (liAssociatedGradedTranslation W))))
 
 @[simp] theorem coeff_liPolynomialTranslation (W : VertexOperatorAlgebra V)
     (p : Polynomial (liAssociatedGraded W)) (n : ℕ) :

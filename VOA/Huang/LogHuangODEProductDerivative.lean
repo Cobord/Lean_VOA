@@ -55,7 +55,7 @@ theorem Lm1_iterate_mem_weight {h : ℂ} {n : ℕ} {x : M₂}
     (hx : x ∈ A₂.weight (h+n)) (j : ℕ) :
     (⇑(Lm1 A₂.toWeakModule))^[j] x ∈ A₂.weight (h+((n+j : ℕ) : ℂ)) := by
   induction j with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ j ih =>
     rw [Function.iterate_succ_apply']
     exact Lm1_mem_weight ih

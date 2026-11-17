@@ -107,7 +107,7 @@ theorem F_F0pow_mem (k m : ℕ) : F k ((F 0 ^ m) y) ∈ EW E F y (m + 1) k := by
         (-(((m + 2) * (m + 2 - 1) : ℕ) : ℂ))⁻¹ • E k ((F 0 ^ (m + 2)) y) := by
       rw [h2, smul_smul, inv_mul_cancel₀ hc, one_smul]
     rw [this]
-    refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨[k], by simpa using hk, by simp, ?_⟩)
+    refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨[k], by simpa using! hk, by simp, ?_⟩)
     simp [Ew, show m + 1 + 1 = m + 2 by ring]
 
 include hEF hHF hHE hFF hE hH in
@@ -121,7 +121,7 @@ theorem H_EW {p : ℕ} (hp : 1 ≤ p) : ∀ (l : List ℕ), (∀ s ∈ l, 1 ≤ 
       · simp
       · refine Submodule.smul_mem _ _ ?_
         have := F_F0pow_mem hEF hHF hFF hE hH p ℓ
-        simpa using this
+        simpa using! this
   | (s :: l), hl, ℓ => by
       have hs := hl s List.mem_cons_self
       have hl' : ∀ t ∈ l, 1 ≤ t := fun t ht => hl t (List.mem_cons_of_mem _ ht)
@@ -145,7 +145,7 @@ include hEF hHF hHE hFF hE hH in
 theorem F_EW (k : ℕ) : ∀ (l : List ℕ), (∀ s ∈ l, 1 ≤ s) → ∀ ℓ,
     F k (Ew E l ((F 0 ^ (ℓ + l.length)) y)) ∈ EW E F y (ℓ + 1) (l.sum + k)
   | [], _, ℓ => by
-      simpa [Ew] using F_F0pow_mem hEF hHF hFF hE hH k ℓ
+      simpa [Ew] using! F_F0pow_mem hEF hHF hFF hE hH k ℓ
   | (s :: l), hl, ℓ => by
       have hs := hl s List.mem_cons_self
       have hl' : ∀ t ∈ l, 1 ≤ t := fun t ht => hl t (List.mem_cons_of_mem _ ht)

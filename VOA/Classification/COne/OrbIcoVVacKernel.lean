@@ -107,6 +107,6 @@ theorem vacFamilyMap_one_kernel_level (m : ℕ) :
   · intro v hv
     exact chargedFockMap_kernel_radical _ _ v hv
   · simpa only [vermaBSASource, Fin.sum_univ_one, Fin.val_zero, Nat.cast_zero, Nat.cast_one,
-      zero_sub, vermaBSAState_zero] using vacuum_fock_translation_zero (familyBackground 1)
+      zero_sub, vermaBSAState_zero] using! vacuum_fock_translation_zero (familyBackground 1)
 
 end VOA.Classification.COne.OrbIcoV

@@ -30,7 +30,8 @@ def average (G : Subgroup (Aut W)) [Fintype G] : V →ₗ[ℂ] (orbifold G).carr
 @[simp] theorem average_val (G : Subgroup (Aut W)) [Fintype G] (x : V) :
     (average G x : V) = (Fintype.card G : ℂ)⁻¹ • ∑ g : G, g.1 x := by
   classical
-  simp [average]
+  show (((Fintype.card G : ℂ)⁻¹ • ∑ g : G, g.1.toLinearEquiv.toLinearMap) x) = _
+  simp
 
 @[simp] theorem average_fixed (G : Subgroup (Aut W)) [Fintype G]
     (x : (orbifold G).carrier) : average G x.val = x := by

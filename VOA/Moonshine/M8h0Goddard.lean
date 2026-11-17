@@ -180,9 +180,12 @@ theorem map12 (Φ : ℤ → 𝒲 →ₗ[ℂ] 𝒲') (M : ℕ) (G : FormalDist₂
   induction M with
   | zero => rfl
   | succ M ih =>
-    rw [mulBySub₁₂Pow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ]
+    rw [mulBySub₁₂Pow_succ]
+    change mulBySub₁₂ (mulBySub₁₂Pow M ((fun p m n => Φ n (G p m)) : FormalDist₃ 𝒲')) = _
+    rw [ih, mulBySubPow_succ]
     ext p m n
     simp only [mulBySub₁₂_apply, LinearMap.comp_apply, mulBySub_apply, map_sub]
+    try exact mulBySub₁₂_apply _ p m n
 
 theorem map13 (Φ : ℤ → 𝒲 →ₗ[ℂ] 𝒲') (M : ℕ) (G : FormalDist₂ 𝒲) :
     mulBySub₁₃Pow M ((fun p m n => Φ m (G p n)) : FormalDist₃ 𝒲')
@@ -190,9 +193,12 @@ theorem map13 (Φ : ℤ → 𝒲 →ₗ[ℂ] 𝒲') (M : ℕ) (G : FormalDist₂
   induction M with
   | zero => rfl
   | succ M ih =>
-    rw [mulBySub₁₃Pow_succ, LinearMap.comp_apply, ih, mulBySubPow_succ]
+    rw [mulBySub₁₃Pow_succ]
+    change mulBySub₁₃ (mulBySub₁₃Pow M ((fun p m n => Φ m (G p n)) : FormalDist₃ 𝒲')) = _
+    rw [ih, mulBySubPow_succ]
     ext p m n
     simp only [mulBySub₁₃_apply, LinearMap.comp_apply, mulBySub_apply, map_sub]
+    try exact mulBySub₁₃_apply _ p m n
 
 /-- Evaluation of a three-variable distribution through a linear map. -/
 def map3 (f : 𝒲 →ₗ[ℂ] 𝒲') (D : FormalDist₃ 𝒲) : FormalDist₃ 𝒲' := fun p m n => f (D p m n)

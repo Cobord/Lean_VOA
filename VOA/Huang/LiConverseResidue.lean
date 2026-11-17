@@ -40,10 +40,11 @@ variable (A : WeakModule W M)
 
 /-- `res A a w φ = Res_z φ(z) Y_M(a,z) w = ∑ₙ φₙ a₍ₙ₎ w`. -/
 noncomputable def res (a : V) (w : M) : ℂ[T;T⁻¹] →ₗ[ℂ] M :=
-  Finsupp.linearCombination ℂ (fun n : ℤ => mode (A.YM a) n w)
+  Finsupp.linearCombination ℂ (fun n : ℤ => mode (A.YM a) n w) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem res_single (a : V) (w : M) (n : ℤ) (c : ℂ) :
-    res A a w (Finsupp.single n c) = c • mode (A.YM a) n w :=
+    res A a w (AddMonoidAlgebra.single n c) = c • mode (A.YM a) n w :=
   Finsupp.linearCombination_single ℂ _ _
 
 theorem res_CT (a : V) (w : M) (n : ℤ) (c : ℂ) :
@@ -124,10 +125,11 @@ section DD
 
 /-- The divided derivative `T m ↦ C(m,i) T^(m-i)` (zero for `i < 0`). -/
 noncomputable def dd (i : ℤ) : ℂ[T;T⁻¹] →ₗ[ℂ] ℂ[T;T⁻¹] :=
-  Finsupp.linearCombination ℂ (fun m : ℤ => cbz m i • (T (m - i) : ℂ[T;T⁻¹]))
+  Finsupp.linearCombination ℂ (fun m : ℤ => cbz m i • (T (m - i) : ℂ[T;T⁻¹])) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem dd_single (i m : ℤ) (c : ℂ) :
-    dd i (Finsupp.single m c) = c • cbz m i • (T (m - i) : ℂ[T;T⁻¹]) :=
+    dd i (AddMonoidAlgebra.single m c) = c • cbz m i • (T (m - i) : ℂ[T;T⁻¹]) :=
   Finsupp.linearCombination_single ℂ _ _
 
 theorem dd_CT (i m : ℤ) (c : ℂ) :

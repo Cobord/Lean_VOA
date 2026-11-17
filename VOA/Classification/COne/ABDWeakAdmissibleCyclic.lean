@@ -23,7 +23,7 @@ theorem wordL_mem_maxGenEigenspace (D : GenData W) (A : WeakModule W M)
     {α : ℂ} {x : M} (hx : x ∈ (L0 A).maxGenEigenspace α) (l : List (Ltr D)) :
     wordL D A l x ∈ (L0 A).maxGenEigenspace (α + (degree D l : ℂ)) := by
   induction l with
-  | nil => simpa using hx
+  | nil => simpa using! hx
   | cons a l ih =>
     have hh := mode_mem_maxGenEigenspace A (D.gen_mem a.1) a.2 ih
     rw [wordL_cons, degree_cons]

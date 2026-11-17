@@ -60,7 +60,7 @@ theorem schurTrivial_quatThree : SchurTrivial quatThree := by
         g = qs ^ i.val * qt ^ j.val := by decide +kernel
     intro q
     obtain ⟨i, j, hij⟩ := key q.1 q.2
-    exact ⟨i.val, j.val, Subtype.ext (by simpa using hij)⟩
+    exact ⟨i.val, j.val, Subtype.ext (by simpa using! hij)⟩
 
 private def qu : SLThree := ⟨!![1, 1; 0, 1], by decide⟩
 

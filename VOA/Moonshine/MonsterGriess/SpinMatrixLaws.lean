@@ -95,7 +95,7 @@ theorem spm_eq_one {σ : ι → ι} {ε : ι → ZMod 2} (hσ : ∀ i, σ i = i)
 theorem sgnR_smul_spm (s : ZMod 2) (σ : ι → ι) (ε : ι → ZMod 2) :
     sgnR R s • spm R σ ε = spm R σ (fun i => s + ε i) := by
   ext i j
-  simp only [smul_apply, spm_apply, smul_eq_mul, mul_ite, mul_zero, sgnR_add]
+  simp only [Matrix.smul_apply, spm_apply, smul_eq_mul, mul_ite, mul_zero, sgnR_add]
 
 theorem spm_transpose_of_involutive {σ : ι → ι} (hσ : Function.Involutive σ)
     (ε : ι → ZMod 2) : (spm R σ ε)ᵀ = spm R σ (fun i => ε (σ i)) := by

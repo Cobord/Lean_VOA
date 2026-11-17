@@ -73,7 +73,6 @@ theorem tensorLeftUnit_vacuum_modes (n : ℂ) (k : ℕ) (x : R) :
   have he := congrArg (fun Y : LogIntertwiningOperator (adjointModule W).toWeakModule
       N.toWeakModule N.toWeakModule => Y.1 n k W.vacuum x)
     (tensorLeftUnit_intertwiner hC2 N hN)
-  dsimp only at he
   rw [postcompose_apply, logModuleIntertwiner_vacuum_modes] at he
   change (tensorLeftUnitHom hC2 N hN).toLinearMap _ = _
   rw [he]
@@ -88,7 +87,6 @@ private theorem tensorRightUnit_vacuum_realization (n : ℂ) (k : ℕ) (x : R) :
   have he := congrArg (fun Y : LogIntertwiningOperator N.toWeakModule
       (adjointModule W).toWeakModule N.toWeakModule => Y.1 n k x W.vacuum)
     (tensorRightUnit_intertwiner hC2 N hN)
-  dsimp only at he
   rw [postcompose_apply] at he
   exact he
 
@@ -136,6 +134,6 @@ theorem tensorRightUnit_vacuum_creation_tensor (j : ℕ) (x : R) :
 theorem tensorRightUnit_vacuum_constant (x : R) :
     (tensorIntertwiner hC2 N (adjointModule W).toLog hN finGen_adjoint).1
       (-1) 0 x W.vacuum = (tensorRightUnitInvHom hC2 N hN).toLinearMap x := by
-  simpa using tensorRightUnit_vacuum_creation hC2 N hN 0 x
+  simpa using! tensorRightUnit_vacuum_creation hC2 N hN 0 x
 
 end VOA.C2Rigid.LocalInjective

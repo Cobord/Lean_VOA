@@ -116,7 +116,7 @@ theorem IsInsertionAnalyticBlock.eq_zero_of_eq_zero_at (hF : IsInsertionAnalytic
   have hloc : ∀ᶠ z in nhds z₀, F v z = 0 := by
     refine eventuallyEq_zero_of_iteratedDeriv_eq_zero (hF.analyticAt hz₀ v) (fun k => ?_)
     have h := insertion_iteratedDeriv_coeff_eq_zero hF hz₀ hall k (fun _ => 1) analyticAt_const v
-    simpa using h
+    simpa using! h
   intro z hz
   have := eqOn_imGT_of_eventuallyEq (hF.holo v) (differentiableOn_const 0) hz₀
     (by filter_upwards [hloc] with w hw using hw) hz

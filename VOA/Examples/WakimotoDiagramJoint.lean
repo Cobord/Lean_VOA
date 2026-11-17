@@ -12,6 +12,8 @@ Swapping beta and gamma occupations sends (energy,charge) to
 (energy-charge,-charge). The transformed creation columns lie in precisely
 that finite actual Fock space, with an explicit bijection of its indices.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial
@@ -138,7 +140,6 @@ theorem diagramWord_grades (k lam : ℂ) (w : List (Fin 3×ℤ)) :
         (energy_diagramJ k lam an.1 an.2)
       have hc := congrArg (fun T : End ℂ WakFock => T (currentWord (diagramJ k lam) w 1))
         (charge_diagramJ k lam an.1 an.2)
-      dsimp only at he hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih.1,map_smul,LinearMap.smul_apply,sub_eq_iff_eq_add] at he
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,

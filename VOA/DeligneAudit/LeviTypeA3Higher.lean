@@ -55,7 +55,7 @@ theorem a3HigherLeviClosure_inv (b c : ℕ) (k : A3RadicalKey)
   a3LeviClosure_inv ρ _ a r
 
 /-- The standard `sl₃[t]` action on the quotient above a key. -/
-def a3KeyLeviQuotCurrent (b c : ℕ) (k : A3RadicalKey) :
+noncomputable def a3KeyLeviQuotCurrent (b c : ℕ) (k : A3RadicalKey) :
     CurrentModule VOA.AffineSl3.bracketTable
       (V ⧸ a3HigherLeviClosure ρ w b c k) :=
   a3LeviQuotCurrent ρ _ (fun a r => a3HigherLeviClosure_inv ρ w b c k a r)

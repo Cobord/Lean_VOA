@@ -176,7 +176,7 @@ theorem dj48BdryB_holds (W : VertexOperatorAlgebra 𝒱) : DJ48BdryB W := by
     · intro x y hx hy
       show -anmGen W N m p₂ (x + y) a
           - resExp W ((Kn : ℤ) - 1 + (m : ℤ) - (p₂ : ℤ)) a (x + y) ∈ Onm W N m
-      simp only at hx hy
+      try simp only at hx hy
       rw [anmGen_add_left, resExp_add_right]
       have hsplit : -(anmGen W N m p₂ x a + anmGen W N m p₂ y a)
             - (resExp W ((Kn : ℤ) - 1 + (m : ℤ) - (p₂ : ℤ)) a x

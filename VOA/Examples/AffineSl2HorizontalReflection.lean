@@ -7,6 +7,8 @@ import VOA.Examples.AffineSl2VermaDescendants
 import Mathlib.Algebra.Lie.Sl2
 
 /-! # The genuine horizontal reflection embedding between affine Verma modules -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open HighestNormalOrdering NormalOrdering
@@ -48,7 +50,7 @@ theorem horizontalState_eq_basis (k h : ℂ) (r : ℕ) :
     constructor
     · simp
     · intro x hx
-      exact (Multiset.mem_replicate.mp (by simpa using hx)).2
+      exact (Multiset.mem_replicate.mp (by simpa using! hx)).2
   simp [horizontalState,occupationBasis_apply,occupationWord,Finsupp.toMultiset_single,
     Multiset.nsmul_singleton,hl,lowerLetter]
 
@@ -79,11 +81,11 @@ theorem verma_horizontalTriple (k : ℂ) (d : ℕ) :
       linear_combination -he
     exact (smul_ne_zero hc (horizontalState_ne_zero k d (d+1))) hh.symm
   lie_e_f := by
-    simpa [Fin.sum_univ_succ,fabc] using mode_comm k d 0 1 0 0
+    simpa [Fin.sum_univ_succ,fabc] using! mode_comm k d 0 1 0 0
   lie_h_e_nsmul := by
     have h := mode_comm k d 2 0 0 0
     norm_num [Fin.sum_univ_succ,fabc] at h
-    simpa only [two_smul] using h
+    simpa only [two_smul] using! h
   lie_h_f_nsmul := by
     have h := mode_comm k d 2 1 0 0
     norm_num [Fin.sum_univ_succ,fabc] at h
@@ -96,10 +98,10 @@ theorem horizontalState_reflection_raising (k : ℂ) (d : ℕ) :
   have hp : (verma_horizontalTriple k d).HasPrimitiveVectorWith
       (highestVector k d) (d : ℂ) := {
     ne_zero := highestVector_ne_zero k d
-    lie_h := by simpa using mode_highest k d 2 0 (by simp [IsLower])
-    lie_e := by simpa using mode_highest k d 0 0 (by simp [IsLower]) }
+    lie_h := by simpa using! mode_highest k d 2 0 (by simp [IsLower])
+    lie_e := by simpa using! mode_highest k d 0 0 (by simp [IsLower]) }
   have h := hp.lie_e_pow_succ_toEnd_f d
-  simpa [horizontalState_eq_pow] using h
+  simpa [horizontalState_eq_pow] using! h
 
 /-- Positive affine currents kill every vector in the horizontal string. -/
 theorem horizontalState_positive (k h : ℂ) (r : ℕ) :
@@ -107,7 +109,7 @@ theorem horizontalState_positive (k h : ℂ) (r : ℕ) :
   induction r with
   | zero =>
     intro a n hn
-    simpa [horizontalState_zero,ne_of_gt hn] using mode_highest k h a n (by
+    simpa [horizontalState_zero,ne_of_gt hn] using! mode_highest k h a n (by
       simp only [IsLower]; omega)
   | succ r ih =>
     intro a n hn
@@ -118,7 +120,7 @@ theorem horizontalState_positive (k h : ℂ) (r : ℕ) :
       apply Finset.sum_eq_zero
       intro c hc
       rw [ih c n hn,smul_zero]
-    simpa only [add_zero,ih a n hn,map_zero,hs,zero_add,if_neg (ne_of_gt hn)] using hc
+    simpa only [add_zero,ih a n hn,map_zero,hs,zero_add,if_neg (ne_of_gt hn)] using! hc
 
 /-- The horizontal string has zero relative energy. -/
 theorem horizontalState_degree (k h : ℂ) (r : ℕ) :
@@ -138,11 +140,11 @@ theorem horizontalState_reflection_highest (k : ℂ) (d : ℕ) :
     by_cases hnz : n = 0
     · subst n
       fin_cases a
-      · simpa using horizontalState_reflection_raising k d
+      · simpa using! horizontalState_reflection_raising k d
       · simp [IsLower] at hn
       · simpa [Nat.cast_add,Nat.cast_one,show (d : ℂ)-2*((d : ℂ)+1)=-(d : ℂ)-2 by ring]
-          using horizontalState_charge k d (d+1)
-    · simpa [hnz] using horizontalState_positive k d (d+1) a n (by omega)
+          using! horizontalState_charge k d (d+1)
+    · simpa [hnz] using! horizontalState_positive k d (d+1) a n (by omega)
 
 /-- The actual injective simple-reflection map, whose cokernel is the
 finite-horizontal parabolic module. -/

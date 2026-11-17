@@ -28,7 +28,7 @@ theorem doubledSitePair_invalid_mem (q : MixedParams) (hq : MixedValid q)
       (mixedBProjection_surjective q hq _ hi) _ _
       (doubledSiteRemovedTop q (doubledPairIndices k).1 (doubledPairIndices k).2)
       (doubledSitePair_first_kernel q hq hA hB k hi) hb.2 1
-    apply (by simpa only [mul_one] using hm)
+    apply (by simpa only [mul_one] using! hm)
     erw [doubledSiteRemovedTop_map q hq (doubledPairIndices k).1
       (doubledPairIndices k).2 hi]
     erw [hz]
@@ -41,7 +41,7 @@ theorem doubledSitePair_invalid_mem (q : MixedParams) (hq : MixedValid q)
         Ideal.span {doubledSiteSignedTop q (doubledPairIndices k).1} := by
       rw [show Ideal.span {doubledSiteSignedTop q (doubledPairIndices k).1} = ⊤ from hz]
       trivial
-    simpa only [mul_one] using principalBoundary_mul_mem _ _ _ hb.1 1 hone
+    simpa only [mul_one] using! principalBoundary_mul_mem _ _ _ hb.1 1 hone
 
 /-- A surviving pair transports its inner mixed chain, with empty invalid reductions. -/
 theorem doubledSitePair_spanningChain (q : MixedParams) (hq : MixedValid q)
@@ -73,7 +73,7 @@ theorem doubledSitePair_spanningChain (q : MixedParams) (hq : MixedValid q)
       (doubledPairLevelShift k) (doubledSitePairProjection_kernel q hq hA hB k hi hj)
       hp.1 hp.2
     rw [doubledSitePairProjection_polynomial]
-    simpa only [mixedTruncationIdeal, hn] using hs
+    simpa only [mixedTruncationIdeal, hn] using! hs
   · rw [mixedCellLevels_invalid _ _ hj, List.map_nil]
     have ht := doubledSitePair_invalid_mem q hq hA hB k hj
     have hle : Ideal.span {doubledPairTop (doubledSiteSignedTop q) k} ≤
@@ -90,10 +90,10 @@ theorem SpanningChain.join_finRange {R : Type*} [CommRing R] [Algebra ℂ R]
     (h : ∀ i, SpanningChain A (J i.val) (J (i.val + 1)) (ns i)) :
     SpanningChain A (J 0) (J n) ((List.finRange n).flatMap ns) := by
   induction n with
-  | zero => simpa using SpanningChain.nil (A := A) (J 0)
+  | zero => simpa using! SpanningChain.nil (A := A) (J 0)
   | succ n ih =>
       rw [List.finRange_succ_last, List.flatMap_append, List.flatMap_map]
-      simpa using (ih (fun i => ns i.castSucc) (fun i => h i.castSucc)).append (h (Fin.last n))
+      simpa using! (ih (fun i => ns i.castSucc) (fun i => h i.castSucc)).append (h (Fin.last n))
 
 /-- The ten surviving inner chains span from the tail ideal to the whole mixed ring. -/
 theorem doubledSite_spanningChain_before_quotient (q : MixedParams) (hq : MixedValid q)
@@ -112,7 +112,7 @@ theorem doubledSite_spanningChain_before_quotient (q : MixedParams) (hq : MixedV
   have hend : principalIdealPrefix (doubledPairTop (doubledSiteSignedTop q)) 10 = ⊤ :=
     principalIdealPrefix_top_of_unit _ 9 rfl
   simpa only [doubledPairPrefix, principalIdealPrefix_zero, sup_bot_eq, hend, sup_top_eq,
-    relationIdeal] using h
+    relationIdeal] using! h
 
 /-- Every valid middle-weight block has the doubled-site quotient spanning filtration. -/
 theorem doubledSiteSpanningFiltration (B : ℕ) (hB : 2 ≤ B) (q : MixedParams)
@@ -129,9 +129,11 @@ theorem doubledSiteSpanningFiltration (B : ℕ) (hB : 2 ≤ B) (q : MixedParams)
     apply Ideal.map_le_iff_le_comap.mpr
     intro x hx
     exact Ideal.Quotient.eq_zero_iff_mem.mpr hx
-  simpa only [Ideal.map_sup, Ideal.map_span, Set.image_singleton,
+  simp only [Ideal.map_sup, Ideal.map_span, Set.image_singleton,
     Polynomial.coe_mapRingHom, Polynomial.map_pow, Polynomial.map_X,
-    Ideal.map_top, hz] using hm
+    Ideal.map_top, hz] at hm
+  rw [Ideal.Quotient.mkₐ_toRingHom] at hm
+  exact hm
 
 end
 

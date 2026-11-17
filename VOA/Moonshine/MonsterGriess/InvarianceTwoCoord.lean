@@ -53,6 +53,11 @@ noncomputable section
 
 /-! ### From `CFSG/Monster/Spin/Pairing.lean` -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess.Spin
 
 open VOA.Moonshine.MonsterGriess.Code

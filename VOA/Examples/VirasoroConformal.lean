@@ -16,6 +16,8 @@ from the abstract relation `Lop_bracket`.  `sorry`-free, axiom-clean, `pbw`-free
 
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirModule
 
 open VOA

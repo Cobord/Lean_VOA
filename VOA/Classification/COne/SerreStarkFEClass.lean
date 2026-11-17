@@ -37,7 +37,7 @@ theorem even_inv {ψ : DirichletCharacter ℂ S.r} (hev : ψ.Even) : ψ⁻¹.Eve
   rw [MulChar.inv_apply]
   have : Ring.inverse (-1 : ZMod S.r) = -1 := by
     have h := Ring.inverse_unit (-1 : (ZMod S.r)ˣ)
-    simpa using h
+    simpa using! h
   rw [this, hev]
 
 /-- The prefactor of the Fricke functional equation. -/

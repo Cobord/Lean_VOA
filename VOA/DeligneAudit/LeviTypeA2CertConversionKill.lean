@@ -21,19 +21,19 @@ theorem a2_node2_conversion_kill (p q : ℕ)
   have hS : VOA.DeligneAudit.CVsl2.SL2 E H F := a2_node2_sl2 ρ
   have hEF : ∀ k, E 1 * F k - F k * E 1 = H (k + 1) := by
     intro k
-    simpa [E, H, F, Nat.add_comm] using hS.hEF 1 k
+    simpa [E, H, F, Nat.add_comm] using! hS.hEF 1 k
   have hHF : ∀ m k, H (m + 1) * F k - F k * H (m + 1) =
       (-2 : ℂ) • F (m + 1 + k) := by
     intro m k
     exact hS.hHF (m + 1) k
   have hN : (F 0 ^ (q + 1)) w = 0 := by
-    simpa [F, Module.End.pow_apply] using h.lowering_second
+    simpa [F, Module.End.pow_apply] using! h.lowering_second
   have hkill := VOA.DeligneAudit.Garland.garland hEF hHF hS.hFF
     (h.raising 1 (by decide) 1)
     (fun m => h.cartan_pos 7 (by decide) (m + 1) (by omega))
     r hr hN s hrs
   simpa [VOA.DeligneAudit.LeviConversion.fCurrent,
-    VOA.DeligneAudit.Garland.Fs, F] using hkill
+    VOA.DeligneAudit.Garland.Fs, F] using! hkill
 
 end VOA.DeligneAudit.A3Sector
 

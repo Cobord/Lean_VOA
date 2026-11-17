@@ -178,7 +178,8 @@ theorem latE_vac (k n t : ℤ) :
       if 0 ≤ t - 2 * m * k * n - j * k then
         kap m j k n • latStateGen (latP m) (vSchur (latP m) k (t - 2 * m * k * n - j * k).toNat) (k + n)
       else 0 := by
-  rw [latticeModule_latChargeGen, EEVec_vacuum]
+  rw [latticeModule_latChargeGen]
+  erw [EEVec_vacuum]
   split_ifs
   · rfl
   · simp [latStateGen]
@@ -207,7 +208,8 @@ theorem oMod_E_lat_m_vac :
     latE_vac, latE_vac, if_neg, if_pos, zero_add]
   · congr 2
     · rw [show (-(m : ℤ) - 2 * (m : ℤ) * (-1) * 0 - (m : ℤ) * (-1)) = 0 by ring]
-      simp [vSchur_zero, vacuumN]
+      simp [vacuumN]
+      exact vSchur_zero (latP m) _
   · ring_nf; rfl
   · have : (1 : ℤ) ≤ m := by exact_mod_cast hm
     nlinarith
@@ -221,8 +223,8 @@ theorem oMod_E_lat_m_neg :
   · rw [latVacuumGen]
     congr 1
     rw [show (-(m : ℤ) - 2 * (m : ℤ) * 1 * (-1) - (m : ℤ) * 1) = 0 by ring]
-    simp [vSchur_zero, vacuumN]
-    rfl
+    simp [vacuumN]
+    exact congrArg (fun q => latStateGen (latP m) q _) (vSchur_zero (latP m) _)
   · have : (1 : ℤ) ≤ m := by exact_mod_cast hm
     nlinarith
   · ring_nf; rfl
@@ -234,8 +236,10 @@ end LatticeTops
 theorem chargeProd_mem_sec0 (n : ℤ) (hn : -1 ≤ n) (a b : ℤ) (ha : a = 1 ∨ a = -1) (hb : b = 1 ∨ b = -1) :
     (V2m m hm).smul (latChargeGen (latP m) a) n (latChargeGen (latP m) b) ∈ sec0Sub m := by
   unfold V2m
-  rw [show latChargeGen (latP m) b = latStateGen (latP m) (vacuumN _) b from rfl,
-    latVOA_smul_latChargeGen_state, latP_form, EEVec_vacuum]
+  rw [show latChargeGen (latP m) b = latStateGen (latP m) (vacuumN _) b from rfl]
+  erw [latVOA_smul_latChargeGen_state]
+  rw [latP_form]
+  erw [EEVec_vacuum]
   have hm1 : (1 : ℤ) ≤ m := by exact_mod_cast hm
   by_cases hab : a + b = 0
   · split_ifs
@@ -431,7 +435,7 @@ theorem plusEESquare_holds : PlusEESquare m hm := by
       oMod_resN m hm _ (EP_mem_grading m hm) (latVacuumGen _), oMod_E_lat_vac m hm k hk', map_zero] at h1
     exact (smul_eq_zero.mp h1.symm).resolve_right hv0
   have hz' : ∀ k : ℕ, k < m → (Kp m Φ).eval ((k : ℂ) ^ 2) = 0 := fun k hk => by
-    simpa using hz k hk
+    simpa using! hz k hk
   have hnz : (Kp m Φ).eval ((m : ℂ) ^ 2) ≠ 0 := by
     have hmm : |(m : ℤ)| ≤ m := by rw [abs_of_nonneg (by positivity)]
     have h1 := lat_EE m hm Φ hΦ m hmm
@@ -445,7 +449,7 @@ theorem plusEESquare_holds : PlusEESquare m hm := by
     have h4 : (Kp m Φ).eval (((m : ℤ) : ℂ) ^ 2) ≠ 0 := by
       rw [← sub_eq_zero.mp h3]
       exact mul_ne_zero (kap_ne_zero m m _ _) (kap_ne_zero m m _ _)
-    simpa using h4
+    simpa using! h4
   have hroot : (Kp m Φ).eval (4 * m * h) = 0 := by
     have hm0 : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
     have h1 := hΦ M N h hcw x hx ![h, 2 * h] (by

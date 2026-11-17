@@ -21,32 +21,32 @@ noncomputable section
 /-- Extend an actual oscillator derivation to each auxiliary coefficient. -/
 def coefficientDerivative (r : ℕ) (D : Derivation ℂ WakFock WakFock) :
     Auxiliary r →ₗ[ℂ] Auxiliary r :=
-  Finsupp.lsum ℂ (fun g => (Finsupp.lsingle g).comp D.toLinearMap)
+  (AddMonoidAlgebra.coeffLinearEquiv ℂ).symm.toLinearMap ∘ₗ
+    Finsupp.lsum ℂ (fun g => (Finsupp.lsingle g).comp D.toLinearMap) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- A single auxiliary monomial keeps its exponent while its oscillator
 coefficient is differentiated. -/
 theorem coefficientDerivative_single (r : ℕ) (D : Derivation ℂ WakFock WakFock)
     (g : Fin r → ℤ) (p : WakFock) :
     coefficientDerivative r D (single g p)=single g (D p) := by
-  change (Finsupp.lsum ℂ (fun g : Fin r → ℤ =>
-    (Finsupp.lsingle g).comp D.toLinearMap)) (Finsupp.single g p)=_
+  change (AddMonoidAlgebra.coeffLinearEquiv ℂ).symm ((Finsupp.lsum ℂ (fun g : Fin r → ℤ =>
+    (Finsupp.lsingle g).comp D.toLinearMap)) (Finsupp.single g p))=_
   rw [Finsupp.lsum_single]
   rfl
 
 /-- Coefficient extraction commutes exactly with oscillator differentiation. -/
 theorem coefficientDerivative_apply (r : ℕ) (D : Derivation ℂ WakFock WakFock)
-    (P : Auxiliary r) (g : Fin r → ℤ) : coefficientDerivative r D P g=D (P g) := by
+    (P : Auxiliary r) (g : Fin r → ℤ) :
+    (coefficientDerivative r D P).coeff g=D (P.coeff g) := by
   induction P using AddMonoidAlgebra.induction_linear with
   | zero => rw [map_zero]; change (0 : WakFock)=D 0; rw [map_zero]
   | add P Q hP hQ =>
-      rw [map_add]
-      change coefficientDerivative r D P g+coefficientDerivative r D Q g=D (P g+Q g)
-      rw [map_add,hP,hQ]
+      rw [map_add,coeff_add,Finsupp.add_apply,hP,hQ,coeff_add,Finsupp.add_apply,map_add]
   | single a p =>
-      rw [coefficientDerivative_single]
-      by_cases h : a=g
-      · subst a; simp
-      · simp [AddMonoidAlgebra.single_apply,h]
+      rw [coefficientDerivative_single,coeff_single,coeff_single,Finsupp.single_apply,
+        Finsupp.single_apply]
+      split_ifs <;> simp
 
 /-- The lifted oscillator derivative obeys the actual finite Laurent
 Leibniz rule. -/
@@ -81,7 +81,8 @@ def auxiliaryDerivative (r : ℕ) (D : Derivation ℂ WakFock WakFock) :
 /-- Applying the auxiliary derivation and selecting a coefficient gives
 exactly the original oscillator derivation of that coefficient. -/
 theorem auxiliaryDerivative_apply (r : ℕ) (D : Derivation ℂ WakFock WakFock)
-    (P : Auxiliary r) (g : Fin r → ℤ) : auxiliaryDerivative r D P g=D (P g) :=
+    (P : Auxiliary r) (g : Fin r → ℤ) :
+    (auxiliaryDerivative r D P).coeff g=D (P.coeff g) :=
   coefficientDerivative_apply r D P g
 
 /-- A scalar constant times an auxiliary expression is ordinary complex
@@ -89,9 +90,8 @@ scalar multiplication, with the repository's polynomial normalization. -/
 theorem constant_mul_auxiliary (r : ℕ) (c : ℂ) (P : Auxiliary r) :
     single 0 (MvPolynomial.C c)*P=c • P := by
   ext g : 1
-  rw [AddMonoidAlgebra.single_zero_mul_apply]
-  change MvPolynomial.C c * P g = c • P g
-  rw [MvPolynomial.smul_eq_C_mul]
+  ext g
+  rw [coeff_single_zero_mul,coeff_smul_apply,MvPolynomial.smul_eq_C_mul]
 
 /-- The nth factorial-normalized term of a finite exponential. -/
 def exponentialTerm (r : ℕ) (c : ℂ) (X : Auxiliary r) (n : ℕ) : Auxiliary r :=

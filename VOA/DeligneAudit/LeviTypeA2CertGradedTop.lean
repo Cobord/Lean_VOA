@@ -78,8 +78,8 @@ theorem box_top_decomposition_graded (a b : ℕ → A)
             (Finset.univ : Finset (Fin L.length)) \ T := by
           ext i
           simp [ps]
-        have h := List.sum_toFinset L.get hnd
-        simpa only [splitAt, ps, hset] using h.symm
+        rw [← hset, List.sum_toFinset L.get hnd]
+        rfl
       rw [hsum]
       exact hdegree
     have hsplit := splitAt_mode_length_sum L T

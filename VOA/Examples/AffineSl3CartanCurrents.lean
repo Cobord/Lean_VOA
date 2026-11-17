@@ -18,6 +18,8 @@ namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Shifting the integer summation index preserves local finiteness. -/
 theorem LocFin.shift (c : ℤ) {T : ℤ → Module.End ℂ Fock} (hT : LocFin T) :
     LocFin (fun p => T (c+p)) := by

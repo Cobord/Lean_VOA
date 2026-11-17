@@ -179,7 +179,8 @@ theorem iterExpCoeff_Y3_Y4 (hlog : LogFree (Y₁ := Y₁) (Y₂ := Y₂)) {R : L
   change _ = F (μ + α₁ + α₂)
   by_cases hm : ∃ m : ℕ, -ν - 1 + m = μ
   · obtain ⟨m, rfl⟩ := hm
-    rw [iterExpCoeff_eq, if_pos rfl]
+    refine (iterExpCoeff_eq _ _ _ _ _ _ _ _ m 0).trans ?_
+    rw [if_pos rfl]
     unfold MatrixCoeff.iterCoeff
     have hξ : Y4 hE (ν - m) w₁ w₂ ∈ (contraLW R).isMod.weight (α₁ + α₂ - (ν - m) - 1) := by
       rw [Y4_homog hE (ν - m) h₁ h₂]
@@ -189,7 +190,7 @@ theorem iterExpCoeff_Y3_Y4 (hlog : LogFree (Y₁ := Y₁) (Y₂ := Y₂)) {R : L
       pair_Y4 hE (ν - m) (chi_B_mem hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ hlog hP h₃ hf _) h₁ h₂, if_pos rfl]
     exact hFc _ _ (by ring)
   · push Not at hm
-    rw [iterExpCoeff_eq_zero _ _ _ _ _ _ _ _ _ hm]
+    refine (iterExpCoeff_eq_zero _ _ _ _ _ _ _ _ _ hm 0).trans ?_
     have hmem := chi_B_mem hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ hlog hP h₃ hf (μ + α₁ + α₂)
     have hbot : R.isMod.weight (μ + α₁ + α₂) = ⊥ := by
       by_contra hne

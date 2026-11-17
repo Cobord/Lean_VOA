@@ -144,9 +144,9 @@ theorem ψbar_comp_mk {n : ℕ} (hn : 2 ≤ n) {s : ℕ} (F : MvPolynomial (Fin 
 theorem LamB_push {n : ℕ} (hn : 2 ≤ n) {m s : ℕ} (i : BIdx m s) (g : Fin (m + s) → Fin 4)
     (a : Fin (m + s) → ℕ) :
     LamB n hn i (pushN n (pblk TPoly X (col m s) g a)) =
-      coeff (toF a) (rename (Fin.natAdd m) (fsF s i.2.2.2) *
+      (rename (Fin.natAdd m) (fsF s i.2.2.2) *
         (esymmPow (Fin.append i.2.2.1 (fun _ : Fin s => 0)) *
-          Apol (msOf i.2.1) (2 * (m + s) - i.1) g)) := by
+          Apol (msOf i.2.1) (2 * (m + s) - i.1) g)).coeff (toF a) := by
   rw [LamB, LinearMap.comp_apply, Φ_pushN, ψbar_comp_mk]
   exact lam_ψF_pblk (fsF_symm s _) _ _ (msOf_le i.2.1) _ g a
 
@@ -168,12 +168,12 @@ theorem LamB_push_lower {n : ℕ} (hn : 2 ≤ n) {m s m' s' : ℕ} (hs : s < s')
 theorem coeff_fs_mul_eq_zero {m s : ℕ} (β : Fin s → ℕ) (α : Fin (m + s) → ℕ) (ms : Multiset ℕ)
     (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l) (g : Fin (m + s) → Fin 4) (d : Fin (m + s) →₀ ℕ)
     (hd : ∑ i, d i + jcount g ≠ (s * s - s + awt β) + awt α + ms.sum) :
-    coeff d (rename (Fin.natAdd m) (fsF s β) * (esymmPow α * Apol ms l g)) = 0 := by
+    (rename (Fin.natAdd m) (fsF s β) * (esymmPow α * Apol ms l g)).coeff d = 0 := by
   classical
   rw [coeff_mul]
   apply Finset.sum_eq_zero
   intro p hp
-  rw [Finset.mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   by_contra hne
   have h1 : p.1.degree = s * s - s + awt β := by
     have := ((fsF_isHomogeneous s β).rename_isHomogeneous) (left_ne_zero_of_mul hne)
@@ -221,7 +221,7 @@ theorem bIndex_indep {n : ℕ} (hn : 2 ≤ n) {m s N : ℕ} (κ : BIdx m s → �
       ∑ ro, y ro * Apol (msOf ro) (2 * (m + s) - k0) w.1 = 0 := by
     intro w
     ext d
-    rw [coeff_zero, coeff_sum]
+    rw [MvPolynomial.coeff_zero, Finsupp.zero_apply, coeff_sum]
     simp only [y, Finset.sum_mul, coeff_sum, smul_mul_assoc, coeff_smul, smul_eq_mul, mul_assoc]
     by_cases hW : ∑ i, d i + jcount w.1 + (m + s) + 2 * s = N
     · have htot := h w.1 d hW
@@ -238,7 +238,7 @@ theorem bIndex_indep {n : ℕ} (hn : 2 ≤ n) {m s N : ℕ} (κ : BIdx m s → �
         apply Finset.sum_eq_zero
         intro p _
         rw [LamB_push, Apol_eq_zero _ _ (msOf_le ro) _ (vcount_ne_of_ne k0 k hk w), mul_zero,
-          mul_zero, coeff_zero, mul_zero]
+          mul_zero, MvPolynomial.coeff_zero, Finsupp.zero_apply, mul_zero]
       · intro hk; exact absurd (Finset.mem_univ _) hk
     · apply Finset.sum_eq_zero
       intro ro _
@@ -367,7 +367,7 @@ theorem card_tIndex_le_finrank {n : ℕ} (hn : 2 ≤ n) (r N : ℕ) :
       · intro j _ hj
         simp [c, hj]
     have := tIndex_indep hn r N c hc i.1 i.2
-    simpa [c, hi] using this
+    simpa [c, hi] using! this
   have := hli.fintype_card_le_finrank
   rwa [Fintype.card_coe, Subspace.dual_finrank_eq] at this
 
@@ -382,13 +382,13 @@ theorem card_pairs (m s e B : ℕ) (hB : e ≤ B) :
   set A := (Fintype.piFinset fun _ : Fin m => Finset.range (B + 1))
   set Bs := (Fintype.piFinset fun _ : Fin s => Finset.range (B + 1))
   rw [PowerSeries.coeff_mul]
-  have hc : ∀ x ∈ Finset.antidiagonal e,
+  have hc : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal e,
       PowerSeries.coeff x.1 (reciprocalQFactorial m : PowerSeries ℚ) *
         PowerSeries.coeff x.2 (reciprocalQFactorial s : PowerSeries ℚ) =
       ∑ γ ∈ A, ∑ β ∈ Bs, (if awt γ = x.1 then (1 : ℚ) else 0) *
         (if awt β = x.2 then (1 : ℚ) else 0) := by
     intro x hx
-    have hx' := Finset.mem_antidiagonal.mp hx
+    have hx' := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
     rw [coeff_reciprocalQFactorial_eq_card m x.1 B (by omega),
       coeff_reciprocalQFactorial_eq_card s x.2 B (by omega), Finset.card_filter,
       Finset.card_filter]
@@ -409,11 +409,11 @@ theorem card_pairs (m s e B : ℕ) (hB : e ≤ B) :
       split_ifs with h1 h2 <;> try simp
       exact absurd (Prod.ext h1.symm h2.symm) hne
     · intro hn
-      exact absurd (Finset.mem_antidiagonal.mpr he) hn
+      exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr he) hn
   · rw [if_neg he]
     apply Finset.sum_eq_zero
     intro x hx
-    have hx' := Finset.mem_antidiagonal.mp hx
+    have hx' := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
     split_ifs with h1 h2 <;> try simp
     exact absurd (by rw [h1, h2]; exact hx') he
 

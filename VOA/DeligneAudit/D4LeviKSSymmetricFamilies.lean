@@ -58,7 +58,7 @@ theorem xyzPowerSumAlgebra_prefix {σ : Type*} [Fintype σ]
       split_ifs <;> norm_num
     have hdiv := (keyPrefix ρ w m i).smul_mem
       (if j = 5 then (1 : ℂ) else 2)⁻¹ hh
-    simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using hdiv
+    simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using! hdiv
   have hsub : xyzPowerSumAlgebra shape ≤
       preservingShiftAlgebra (MvPolynomial σ ℂ)
         (symmetricShiftAction σ) N := by

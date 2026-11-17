@@ -347,13 +347,17 @@ theorem UwordL_reindex (W : VertexOperatorAlgebra 𝒱) (u v b : 𝒱) (co : ℕ
       (fun s : ℕ => co s • W.smul u (ℓ - s) (W.smul v (N + s) b))
       (fun s' : ℤ => (if 0 ≤ s' then co s'.toNat else 0)
           • W.smul u (ℓ - s') (W.smul v (N + s') b))
-      (fun p hp => by simp only []; rw [if_neg (by omega), zero_smul])
+      (fun p hp => by try simp only []
+                      rw [if_neg (by omega), zero_smul])
       (fun j => by simp only [Int.toNat_natCast]; rw [if_pos (by omega)])]
   rw [← finsum_comp_equiv (Equiv.addRight N)
       (f := fun γ : ℤ => (if N ≤ γ then co (γ - N).toNat else 0)
           • W.smul u (ℓ + N - γ) (W.smul v γ b))]
   refine finsum_congr fun s' => ?_
   simp only [Equiv.coe_addRight]
+  show (if 0 ≤ s' then co s'.toNat else 0) • W.smul u (ℓ - s') (W.smul v (N + s') b)
+      = (if N ≤ s' + N then co (s' + N - N).toNat else 0)
+          • W.smul u (ℓ + N - (s' + N)) (W.smul v (s' + N) b)
   rw [show ℓ + N - (s' + N) = ℓ - s' from by ring, show (s' + N) - N = s' from by ring]
   by_cases h : 0 ≤ s'
   · rw [if_pos h, if_pos (by omega), show N + s' = s' + N from by ring]
@@ -369,7 +373,8 @@ theorem VwordL_reindex (W : VertexOperatorAlgebra 𝒱) (u v b : 𝒱) (co : ℕ
       (fun s : ℕ => co s • W.smul v (M0 - s) (W.smul u (s : ℤ) b))
       (fun γ : ℤ => (if 0 ≤ γ then co γ.toNat else 0)
           • W.smul v (M0 - γ) (W.smul u γ b))
-      (fun p hp => by simp only []; rw [if_neg (by omega), zero_smul])
+      (fun p hp => by try simp only []
+                      rw [if_neg (by omega), zero_smul])
       (fun j => by simp only [Int.toNat_natCast]; rw [if_pos (by omega)])]
 
 /-- Finite support (in U-base-mode `γ`) of a per-`(i,j,p)` U-word γ-body. -/
@@ -584,7 +589,8 @@ theorem usingleL_eq_muFinsum (W : VertexOperatorAlgebra 𝒱) (u v b : 𝒱) (x 
     x • W.smul u μ0 (W.smul v γ b)
       = ∑ᶠ μ : ℤ, (if μ = μ0 then x else 0) • W.smul u μ (W.smul v γ b) := by
   rw [finsum_eq_single (fun μ : ℤ => (if μ = μ0 then x else 0) • W.smul u μ (W.smul v γ b)) μ0
-    (fun μ hμ => by simp only []; rw [if_neg hμ, zero_smul])]
+    (fun μ hμ => by try simp only []
+                    rw [if_neg hμ, zero_smul])]
   simp only [if_pos]
 
 /-- A single V-word `x • v₍μ₀₎(u₍γ₎b)` is the one-point mode-finsum. -/
@@ -592,7 +598,8 @@ theorem vsingleL_eq_muFinsum (W : VertexOperatorAlgebra 𝒱) (u v b : 𝒱) (x 
     x • W.smul v μ0 (W.smul u γ b)
       = ∑ᶠ μ : ℤ, (if μ = μ0 then x else 0) • W.smul v μ (W.smul u γ b) := by
   rw [finsum_eq_single (fun μ : ℤ => (if μ = μ0 then x else 0) • W.smul v μ (W.smul u γ b)) μ0
-    (fun μ hμ => by simp only []; rw [if_neg hμ, zero_smul])]
+    (fun μ hμ => by try simp only []
+                    rw [if_neg hμ, zero_smul])]
   simp only [if_pos]
 
 /-- The one-point U-mode indicator family has finite (singleton) support. -/

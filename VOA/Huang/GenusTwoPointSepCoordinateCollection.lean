@@ -65,36 +65,36 @@ theorem squareCoordinateIdentities_iff (P₁ P₂ : LWModule W) (t₁ t₂ s₁ 
     refine ⟨?_, ?_, ?_⟩
     · intro a x y
       obtain ⟨K, hK, he⟩ := hL a (huangU P₁ t₁ x) (huangU P₂ t₂ y)
-      refine ⟨K, by simpa using hK, ?_⟩
+      refine ⟨K, by simpa using! hK, ?_⟩
       simpa only [huangPairEquiv_apply, spatialSquareMode_conjugation,
-        LinearEquiv.symm_apply_apply] using he
+        LinearEquiv.symm_apply_apply] using! he
     · intro a x y
       obtain ⟨K, hK, he⟩ := hR a (huangU P₁ t₁ x) (huangU P₂ t₂ y)
-      refine ⟨K, by simpa using hK, ?_⟩
+      refine ⟨K, by simpa using! hK, ?_⟩
       simpa only [huangPairEquiv_apply, spatialSquareMode_conjugation,
-        LinearEquiv.symm_apply_apply] using he
+        LinearEquiv.symm_apply_apply] using! he
     · intro x y
       obtain ⟨K, hK, he⟩ := hE (huangU P₁ t₁ x) (huangU P₂ t₂ y)
-      refine ⟨K, by simpa using hK, ?_⟩
+      refine ⟨K, by simpa using! hK, ?_⟩
       simpa only [mixedEnergyCorrection, mixedEnergyDescendants, huangPairEquiv_apply,
-        spatialSquareMode_conjugation, LinearEquiv.symm_apply_apply] using he
+        spatialSquareMode_conjugation, LinearEquiv.symm_apply_apply] using! he
   · rintro ⟨hL, hR, hE⟩
     refine ⟨?_, ?_, ?_⟩
     · intro a x y
       obtain ⟨K, hK, he⟩ := hL a ((huangU P₁ t₁).symm x) ((huangU P₂ t₂).symm y)
       refine ⟨K, hK, ?_⟩
       simpa only [huangPairEquiv_apply, huangU_mode_spatialSquare,
-        LinearEquiv.apply_symm_apply] using he
+        LinearEquiv.apply_symm_apply] using! he
     · intro a x y
       obtain ⟨K, hK, he⟩ := hR a ((huangU P₁ t₁).symm x) ((huangU P₂ t₂).symm y)
       refine ⟨K, hK, ?_⟩
       simpa only [huangPairEquiv_apply, huangU_mode_spatialSquare,
-        LinearEquiv.apply_symm_apply] using he
+        LinearEquiv.apply_symm_apply] using! he
     · intro x y
       obtain ⟨K, hK, he⟩ := hE ((huangU P₁ t₁).symm x) ((huangU P₂ t₂).symm y)
       refine ⟨K, hK, ?_⟩
       simpa only [mixedEnergyCorrection, mixedEnergyDescendants, huangPairEquiv_apply,
-        huangU_mode_spatialSquare, LinearEquiv.apply_symm_apply] using he
+        huangU_mode_spatialSquare, LinearEquiv.apply_symm_apply] using! he
 
 variable {P₁ P₂ N Q : LWModule W}
 

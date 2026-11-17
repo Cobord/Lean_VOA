@@ -30,14 +30,14 @@ theorem ksProductCoefficient_mul (O P : ℕ → Submodule ℂ A)
               C * F, hP _ _ _ _ hC hF, by ring⟩
       | zero => simp
       | add V W hV hW ihV ihW =>
-          simpa only [mul_add] using Submodule.add_mem _ ihV ihW
+          simpa only [mul_add] using! Submodule.add_mem _ ihV ihW
       | smul t W hW ihW =>
-          simpa only [mul_smul_comm] using Submodule.smul_mem _ t ihW
+          simpa only [mul_smul_comm] using! Submodule.smul_mem _ t ihW
   | zero => simp
   | add U V hU hV ihU ihV =>
-      simpa only [add_mul] using Submodule.add_mem _ ihU ihV
+      simpa only [add_mul] using! Submodule.add_mem _ ihU ihV
   | smul t U hU ihU =>
-      simpa only [smul_mul_assoc] using Submodule.smul_mem _ t ihU
+      simpa only [smul_mul_assoc] using! Submodule.smul_mem _ t ihU
 
 noncomputable def ksFlagYZCoefficient (a b c d : ℕ) :
     Submodule ℂ (MvPolynomial (PairTarget a b c) ℂ) :=
@@ -74,12 +74,12 @@ theorem ksFlagYZCoefficient_hsymm (a b c d : ℕ) :
   intro p hp
   rw [ksTargetYAlphabet_coeff, ksTargetZAlphabet_coeff]
   exact Submodule.subset_span
-    ⟨p.1, p.2, Finset.mem_antidiagonal.mp hp, _, ksBlockCoefficient_hsymm b p.1 _,
+    ⟨p.1, p.2, Finset.HasAntidiagonal.mem_antidiagonal.mp hp, _, ksBlockCoefficient_hsymm b p.1 _,
       _, ksBlockCoefficient_hsymm c p.2 _, rfl⟩
 
 theorem ksFlagYZCoefficient_one (a b c : ℕ) :
     (1 : MvPolynomial (PairTarget a b c) ℂ) ∈ ksFlagYZCoefficient a b c 0 := by
-  simpa only [ryMixedTarget_zero, Subalgebra.coe_one] using
+  simpa only [ryMixedTarget_zero, Subalgebra.coe_one] using!
     ksFlagYZCoefficient_hsymm a b c 0
 
 end VOA.DeligneAudit.D4Levi

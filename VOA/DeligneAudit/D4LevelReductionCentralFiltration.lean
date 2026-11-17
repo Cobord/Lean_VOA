@@ -35,7 +35,7 @@ theorem centralOrbit_eq_bot_of_degree_gt (m a d : ℕ)
     keyOrbit ρ w (centralLetterKey a d) = ⊥ := by
   apply keyOrbit_eq_bot_of_keyLayer_bot
   apply keyLayer_eq_bot_of_degree_gt ρ w m h
-  simpa [keyDepth, centralLetterKey] using hd
+  simpa [keyDepth, centralLetterKey] using! hd
 
 /-- The higher-degree filtration is supported on the same finite mode box. -/
 theorem centralHigherDegree_le_finite (m a d : ℕ)
@@ -74,7 +74,7 @@ theorem centralOrbit_quotient_rank_le (b c d : ℕ)
       ∀ r, 0 < r → ρ.op (0 : Fin 28) r v ∈ N := by
     intro v hv r hr
     apply hdegree r hr
-    simpa [keyShift, centralLetterKey] using extra_pos_key ρ w (b + c) h r hr _ hv
+    simpa [keyShift, centralLetterKey] using! extra_pos_key ρ w (b + c) h r hr _ hv
   have hb := keyOrbit_quotient_rank_le ρ w (b + c) N hN h
     (centralLetterKey c d) (6 ^ b) hpos (by
       intro v hv
@@ -85,7 +85,7 @@ theorem centralOrbit_quotient_rank_le (b c d : ℕ)
         ρ.op (leviColour (A3Sector.simpleH i)) s v ∈ N
       apply N.smul_mem
       apply hdegree s hs
-      simpa [keyShift, centralLetterKey] using
+      simpa [keyShift, centralLetterKey] using!
         cartan_pos_maps_key ρ w (b + c) h i s hs _ hv)
   have hdim : Module.finrank ℂ
       (keyLayer ρ w (centralLetterKey c d) ⧸
@@ -114,7 +114,7 @@ theorem centralBoundary_rank_le (b c : ℕ)
   let H := fun d => (centralHigherDegree ρ w c d).map T.mkQ
   let degrees := Finset.range (2 * (b + c) * c + 1)
   have hedge : E = (⨆ d : ℕ, keyOrbit ρ w (centralLetterKey c d)) ⊔ T := by
-    simpa only [Nat.cast_add, add_sub_cancel_right] using
+    simpa only [Nat.cast_add, add_sub_cancel_right] using!
       centralBoundary_eq_orbits_sup_next ρ w (b + c) c h
   have hfinite : (⨆ d : ℕ, keyOrbit ρ w (centralLetterKey c d)) =
       ⨆ d ∈ degrees, keyOrbit ρ w (centralLetterKey c d) := by
@@ -124,7 +124,7 @@ theorem centralBoundary_rank_le (b c : ℕ)
       by_cases hd : d ∈ degrees
       · exact le_iSup_of_le d (le_iSup_of_le hd le_rfl)
       · rw [centralOrbit_eq_bot_of_degree_gt ρ w (b + c) c d h (by
-          simpa only [degrees, Finset.mem_range, not_lt, Nat.add_one_le_iff] using hd)]
+          simpa only [degrees, Finset.mem_range, not_lt, Nat.add_one_le_iff] using! hd)]
         exact bot_le
     · exact iSup_le fun d => iSup_le fun _ =>
         le_iSup (fun e : ℕ => keyOrbit ρ w (centralLetterKey c e)) d
@@ -158,7 +158,7 @@ theorem centralBoundary_rank_le (b c : ℕ)
     (centralGradedBox_sum_le (b + c) c (by omega) degrees))
   change Module.finrank ℂ (E ⧸ T.comap E.subtype) ≤ _
   rw [ksKey_quot_finrank_eq_image]
-  simpa only [Nat.mul_comm] using hbound
+  simpa only [Nat.mul_comm] using! hbound
 
 end VOA.DeligneAudit.D4LevelReduction
 

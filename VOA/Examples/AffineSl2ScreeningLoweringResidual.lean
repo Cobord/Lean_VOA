@@ -69,9 +69,8 @@ theorem gammaErase_F_one (k lam : ℂ) (P : WakFock) (hP : P∈gammaFree) :
   rw [F_one_gammaFree k lam P hP,map_add,map_add,map_neg,map_sum,map_smul,
     gammaErase_fixed _ (gammaFree_bD P hP 1)]
   unfold loweringResidual
-  congr 2
-  · congr 1
-    apply Finset.sum_congr rfl
+  refine congrArg₂ (· + ·) (congrArg₂ (· + ·) (congrArg Neg.neg ?_) ?_) rfl
+  · apply Finset.sum_congr rfl
     intro p hp
     have hp' := Finset.mem_Icc.mp hp
     rw [map_mul,gammaErase_bV,gammaErase_GG_positive P hP (1-p) (by omega)]

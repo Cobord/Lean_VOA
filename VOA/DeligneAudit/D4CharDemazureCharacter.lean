@@ -81,7 +81,6 @@ theorem rsCdem_eq_gt_sum (n : ℕ) :
           (gtMixedFourRow ((t 0 + t 1 : ℕ) : ℤ) (t 1)
             ((t 0 + t 2 : ℕ) : ℤ) (t 2)) := by
   have hh := congrArg (fun z : D4K.R => D4K.qpoch n • z) (rsCdem_convolution n)
-  dsimp only at hh
   rw [smul_smul, mul_inv_cancel₀ (D4K.qpoch_ne_zero n), one_smul] at hh
   simp only [Finset.smul_sum, smul_smul] at hh
   have hr := rsFour_sum n (fun t =>

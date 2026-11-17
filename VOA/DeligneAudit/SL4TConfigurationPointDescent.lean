@@ -30,7 +30,7 @@ theorem fullFlagStratumPoint_initial_finrank (B k j : ℕ) (Y : Finset (Fin B))
       pointInitialIdeal (fullFlagStratumPoint B k j Y ζ)) =
         Nat.card (FullFlagStratumConfiguration B k j Y) := by
   letI := Fintype.ofFinite (FullFlagStratumConfiguration B k j Y)
-  simpa only [Nat.card_eq_fintype_card] using
+  simpa only [Nat.card_eq_fintype_card] using!
     pointInitialQuotient_finrank _ (fullFlagStratumPoint_injective B k j Y ζ hζ)
 
 variable {G : Type*} [Group G]
@@ -98,7 +98,7 @@ def positionColourSubgroup {C : Type*} {B : ℕ} (colour : Fin B → C) :
   inv_mem' := by
     intro e he i
     have h := he (e⁻¹ i)
-    simpa only [Equiv.Perm.inv_def, Equiv.apply_symm_apply] using h.symm
+    simpa only [Equiv.Perm.inv_def, Equiv.apply_symm_apply] using! h.symm
 
 /-- A union of colour classes is preserved by the Young subgroup. -/
 theorem positionColourSubgroup_preserves_selected {C : Type*} [DecidableEq C]
@@ -153,7 +153,7 @@ theorem fullFlagStratumIdeal_eq_pointInitialIdeal_of_le (B k j : ℕ)
   letI := fullFlagStratum_finite B (B - k) j Y
   apply pointInitialIdeal_eq_of_rank_bound _
     (fullFlagStratumPoint_injective B k j Y ζ hζ) _ hI
-  simpa only [Nat.card_eq_fintype_card] using fullFlagStratum_finrank_le B k j Y hk
+  simpa only [Nat.card_eq_fintype_card] using! fullFlagStratum_finrank_le B k j Y hk
 
 end
 

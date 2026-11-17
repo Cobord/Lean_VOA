@@ -18,7 +18,7 @@ theorem pairXZSource_injective (a b c : ℕ) :
 theorem pairYSlot_injective (a b c : ℕ) :
     Function.Injective (pairYSlot a b c) := by
   intro x y h
-  simpa [pairYSlot] using h
+  simpa [pairYSlot] using! h
 
 theorem pairXZSource_ne_ySlot (a b c : ℕ)
     (x : PairXZ a b c) (y : Fin b) :
@@ -36,7 +36,7 @@ theorem pairSourceModes_xz (a b c : ℕ)
     rintro ⟨y, hy⟩
     exact pairXZSource_ne_ySlot a b c x y hy.symm
   rw [Finsupp.mapDomain_notin_range d _ hnot]
-  rw [Finsupp.mapDomain_apply (pairXZSource_injective a b c)]
+  rw [Finsupp.mapDomain_apply_of_injective (pairXZSource_injective a b c)]
   simp
 
 theorem pairSourceModes_y (a b c : ℕ)
@@ -46,7 +46,7 @@ theorem pairSourceModes_y (a b c : ℕ)
       e.mapDomain (pairXZSource a b c))
         (pairYSlot a b c y) = d y := by
   rw [Finsupp.add_apply]
-  rw [Finsupp.mapDomain_apply (pairYSlot_injective a b c)]
+  rw [Finsupp.mapDomain_apply_of_injective (pairYSlot_injective a b c)]
   have hnot : pairYSlot a b c y ∉ Set.range (pairXZSource a b c) := by
     rintro ⟨x, hx⟩
     exact pairXZSource_ne_ySlot a b c x y hx
@@ -68,10 +68,10 @@ theorem pairYModeWord_perm (b : ℕ) (d : Fin b →₀ ℕ) :
     apply List.ext_getElem
     · simp [yModeWord]
     · intro i hi
-      have hib : i < b := by simpa using hi
+      have hib : i < b := by simpa using! hi
       simp [yModeWord, pairYExponent, hib,
         List.getElem_finRange]
-  simpa only [heq] using hp.map (fun y => ((4 : Fin 6), d y))
+  simpa only [heq] using! hp.map (fun y => ((4 : Fin 6), d y))
 
 private theorem pairSource_slots_perm (a b c : ℕ) :
     ((Finset.univ.toList : List (PairXZ a b c)).map
@@ -86,7 +86,7 @@ private theorem pairSource_slots_perm (a b c : ℕ) :
           simp [pairXZSource] at h ⊢ <;> exact h)
     · exact (Finset.nodup_toList _).map (by
         intro x y h
-        simpa [pairYSlot] using h)
+        simpa [pairYSlot] using! h)
     · intro x hx hy
       rcases List.mem_map.mp hx with ⟨u, _, rfl⟩
       rcases List.mem_map.mp hy with ⟨v, _, heq⟩
@@ -134,7 +134,7 @@ theorem pairSourceModes_word_perm (a b c : ℕ)
             (Finset.univ.toList : List (Fin b)).map
               fun y => ((4 : Fin 6), d y)) := by
     simpa only [shapedModes, List.map_append, List.map_map,
-      Function.comp_def, hx, hy] using hp
+      Function.comp_def, hx, hy] using! hp
   exact hword.trans (List.Perm.append_left _ (pairYModeWord_perm b d))
 
 theorem pairY_xz_modeMonomial (a b c : ℕ)
@@ -199,7 +199,7 @@ theorem pairY_xz_evaluation
       exact congrArg (z • ·)
         (pairY_xz_modeMonomial_evaluation ρ w a b c d e)
   | add P Q ihP ihQ =>
-      simpa only [map_add, mul_add, LinearMap.add_apply] using
+      simpa only [map_add, mul_add, LinearMap.add_apply] using!
         congrArg₂ (· + ·) ihP ihQ
 
 theorem pairY_evaluation_bridge

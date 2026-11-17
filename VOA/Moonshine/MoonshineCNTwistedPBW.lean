@@ -25,6 +25,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open Finsupp Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- `Π (κ a • z a) = (Π κ a) • Π z a` in an algebra. -/
 theorem list_prod_map_smul {R : Type*} [Semiring R] [Algebra ℂ R] {X : Type*} (l : List X)
     (κ : X → ℂ) (z : X → R) :
@@ -213,9 +216,10 @@ theorem wordPBWEquiv_diag (φ : L →ₗ⁅ℂ⁆ L) (hφ : ∀ u ∈ S, φ u �
       LinearEquiv.apply_symm_apply]
     rfl
   simp only [wordPBWEquiv, LinearEquiv.trans_apply]
-  rw [h1, ← ht, LinearEquiv.ofBijective_apply, LinearEquiv.ofBijective_apply,
-    AlgHom.toLinearMap_apply, AlgHom.toLinearMap_apply,
-    tensorGeneratorToEnveloping_natural S S φ hφ t, pbwCoordinates_envelopingMap Y φ κ hY]
+  rw [h1, ← ht]
+  change pbwCoordinates Y (tensorGeneratorToEnveloping S (tensorGeneratorMap S h t)) =
+    finsuppDiag (fun m => (m.map κ).prod) (pbwCoordinates Y (tensorGeneratorToEnveloping S t))
+  rw [tensorGeneratorToEnveloping_natural S S φ hφ t, pbwCoordinates_envelopingMap Y φ κ hY]
 
 end WordPBW
 

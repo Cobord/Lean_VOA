@@ -22,7 +22,7 @@ theorem thetaResidueDouble_summable (N a : ℕ) {u q : ℂ} (hu : ‖u‖ = 1) (
     Summable (fun p : ℕ+ × ℕ+ =>
       if (p.1 : ℕ) % N = a then u ^ (p.2 : ℕ) * q ^ ((p.1 : ℕ) * p.2) else 0) := by
   have hs : Summable (fun p : ℕ+ × ℕ+ => ‖q‖ ^ ((p.1 : ℕ) * p.2)) := by
-    simpa using summable_prod_mul_pow (𝕜 := ℝ) 0 (r := ‖q‖) (by simpa using hq)
+    simpa using! summable_prod_mul_pow (𝕜 := ℝ) 0 (r := ‖q‖) (by simpa using! hq)
   apply hs.of_norm_bounded
   intro p
   split_ifs <;> simp [norm_pow, hu]
@@ -68,8 +68,11 @@ theorem thetaResidueLambert_eq_divisors (N a : ℕ) {u q : ℂ}
     _ = _ := by
       apply tsum_congr
       intro n
-      simp only [F, sigmaAntidiagonalEquivProd, Equiv.coe_fn_mk, divisorsAntidiagonalFactors,
-        thetaResidueDivisor, PNat.mk_coe, tsum_fintype, Finset.univ_eq_attach, Finset.sum_mul]
+      have h1 : ∀ d : (n : ℕ).divisorsAntidiagonal, F (sigmaAntidiagonalEquivProd ⟨n, d⟩) =
+          if (d : ℕ × ℕ).1 % N = a then
+            u ^ (d : ℕ × ℕ).2 * q ^ ((d : ℕ × ℕ).1 * (d : ℕ × ℕ).2) else 0 :=
+        fun d => rfl
+      simp only [h1, thetaResidueDivisor, tsum_fintype, Finset.univ_eq_attach, Finset.sum_mul]
       rw [(n : ℕ).divisorsAntidiagonal.sum_attach
         (fun p : ℕ × ℕ => if p.1 % N = a then u ^ p.2 * q ^ (p.1 * p.2) else 0)]
       rw [Nat.sum_divisorsAntidiagonal

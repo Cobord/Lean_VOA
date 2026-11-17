@@ -41,7 +41,11 @@ instance centerPreadditive : Preadditive (Center C) where
   comp_add _ _ _ f g h := Center.Hom.ext (Preadditive.comp_add _ _ _ f.f g.f h.f)
 
 instance centerLinear : Linear ℂ (Center C) where
-  homModule X Y := (homEquiv X Y).module ℂ
+  homModule X Y := by
+    first
+    | exact (homEquiv X Y).module ℂ
+    | exact (show (X ⟶ Y) ≃+ homSubmodule X Y from
+        { homEquiv X Y with map_add' := fun _ _ => rfl }).module ℂ
   smul_comp _ _ _ z f g := Center.Hom.ext (by exact Linear.smul_comp _ _ _ z f.f g.f)
   comp_smul _ _ _ f z g := Center.Hom.ext (by exact Linear.comp_smul _ _ _ f.f z g.f)
 
@@ -67,7 +71,9 @@ instance forgetLinear : (Center.forget C).Linear ℂ where
 
 /-- The central Hom space with its new module structure is the submodule above. -/
 def homLinearEquiv (X Y : Center C) : (X ⟶ Y) ≃ₗ[ℂ] homSubmodule X Y :=
-  (homEquiv X Y).linearEquiv ℂ
+  { homEquiv X Y with
+    map_add' := fun _ _ => rfl
+    map_smul' := fun _ _ => rfl }
 
 theorem hom_finiteDimensional (X Y : Center C) [FiniteDimensional ℂ (X.1 ⟶ Y.1)] :
     FiniteDimensional ℂ (X ⟶ Y) :=

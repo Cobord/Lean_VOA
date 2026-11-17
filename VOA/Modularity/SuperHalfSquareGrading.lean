@@ -81,7 +81,7 @@ theorem halfGrading_isInternal (W : SuperVertexOperatorAlgebra VType)
     DirectSum.IsInternal W.toSuperNearVOA.halfGrading := by
   classical
   exact isInternal_comp_of_bot halfWeight_injective W.isInternal
-    (fun h hh => hhalf h (by simpa only [not_exists] using hh))
+    (fun h hh => hhalf h (by simpa only [not_exists] using! hh))
 
 /-- The canonical decomposition attached to the doubled-weight grading. -/
 @[reducible] noncomputable def halfGradingDecomposition (W : SuperVertexOperatorAlgebra VType)
@@ -129,6 +129,12 @@ theorem superVSqC_smul_left (c : ℂ) (a : VType) (h : ℂ) (m : ℤ) :
 
 open PowerSeries
 
+/-- `coeff_derivativeFun` restated with `derivativeFun` (Mathlib's alias is stated with `d⁄dX`). -/
+private theorem coeff_derivativeFun_shsg (f : PowerSeries ℂ) (n : ℕ) :
+    PowerSeries.coeff (R := ℂ) n (derivativeFun f)
+      = PowerSeries.coeff (R := ℂ) (n + 1) f * (n + 1) :=
+  coeff_derivativeFun f n
+
 /-- The elementary recurrence for the generalized complex binomial coefficient. -/
 theorem cbinom_succ_mul (x : ℂ) (n : ℕ) :
     ((n + 1 : ℕ) : ℂ) * cbinom x (n + 1) =
@@ -146,7 +152,7 @@ theorem complexBinomialSeries_ode (x : ℂ) :
     (1 + X) * derivativeFun (complexBinomialSeries x) =
       PowerSeries.C x * complexBinomialSeries x := by
   ext n
-  rw [add_mul, one_mul, map_add, coeff_derivativeFun,
+  rw [add_mul, one_mul, map_add, coeff_derivativeFun_shsg,
     coeff_X_mul_derivativeFun, PowerSeries.coeff_C_mul,
     coeff_complexBinomialSeries, coeff_complexBinomialSeries]
   have hrec := cbinom_succ_mul x n
@@ -219,7 +225,7 @@ theorem sqBracketCoeffC_derivation (h : ℂ) (m i : ℤ) :
     have hcoeff := congrArg (coeff (d + 1)) (superSqGenC_ode h m)
     rw [map_sub, map_add] at hcoeff
     simp only [map_add, mul_assoc, mul_add, add_mul, one_mul,
-      PowerSeries.coeff_C_mul, coeff_succ_X_mul, coeff_derivativeFun,
+      PowerSeries.coeff_C_mul, coeff_succ_X_mul, coeff_derivativeFun_shsg,
       coeff_X_mul_derivativeFun] at hcoeff
     push_cast
     linear_combination -hcoeff
@@ -265,17 +271,17 @@ theorem sqBracketCoeffZ_two_zero_of_ne {i : ℤ} (hi0 : i ≠ 0) (hi1 : i ≠ 1)
     obtain ⟨r, rfl⟩ := Int.eq_ofNat_of_zero_le hneg
     calc
       sqBracketCoeffZ 2 0 (r : ℤ) = sqBracketCoeff 2 0 r := by
-        simpa only [Nat.cast_zero] using sqBracketCoeffZ_of_nonneg 2 0 r
+        simpa only [Nat.cast_zero] using! sqBracketCoeffZ_of_nonneg 2 0 r
       _ = ((1 : ℕ).choose r : ℂ) := sqBracketCoeff_zero 2 r (by norm_num)
       _ = 0 := by rw [Nat.choose_eq_zero_of_lt (by omega), Nat.cast_zero]
 
 theorem sqBracketCoeffZ_two_zero_zero : sqBracketCoeffZ 2 0 0 = 1 := by
-  simpa using sqBracketCoeffZ_diag (-1)
+  simpa using! sqBracketCoeffZ_diag (-1)
 
 theorem sqBracketCoeffZ_two_zero_one : sqBracketCoeffZ 2 0 1 = 1 := by
   calc
     sqBracketCoeffZ 2 0 1 = sqBracketCoeff 2 0 1 := by
-      simpa only [Nat.cast_zero, Nat.cast_one] using sqBracketCoeffZ_of_nonneg 2 0 1
+      simpa only [Nat.cast_zero, Nat.cast_one] using! sqBracketCoeffZ_of_nonneg 2 0 1
     _ = ((1 : ℕ).choose 1 : ℂ) := sqBracketCoeff_zero 2 1 (by norm_num)
     _ = 1 := by norm_num
 
@@ -819,9 +825,9 @@ theorem halfGradeLE_le_iSup_superSqWeightSpace (W : SuperVertexOperatorAlgebra V
       obtain ⟨y, hymem, hyeq⟩ :=
         superLsq_sub_halfWeight_surj W (m : ℤ) m
           (W.toSuperNearVOA.superLsq 0 x - ((m : ℂ) / 2) • x)
-          (by simpa only using hw) (by omega)
+          (by simpa only using! hw) (by omega)
       have hymem' : y ∈ halfGradeLE W ((m : ℤ) - 1) := by
-        simpa only using hymem
+        simpa only using! hymem
       have heig : x - y ∈ W.toSuperNearVOA.superSqWeightSpace ((m : ℂ) / 2) := by
         rw [W.toSuperNearVOA.mem_superSqWeightSpace_iff, map_sub, smul_sub]
         have hcast : (((m : ℤ) : ℂ) / 2) = ((m : ℂ) / 2) := by norm_num
@@ -871,7 +877,7 @@ the original grading. -/
 theorem superLsq_neg_one_mem_superSqWeightSpace {K : ℂ} {a : VType}
     (ha : a ∈ V.superSqWeightSpace K) :
     V.superLsq (-1) a ∈ V.superSqWeightSpace (K + 1) := by
-  simpa only [Int.cast_neg, Int.cast_one, sub_neg_eq_add] using
+  simpa only [Int.cast_neg, Int.cast_one, sub_neg_eq_add] using!
     V.superLsq_mem_superSqWeightSpace ha (-1)
 
 end SuperNearVOA

@@ -35,7 +35,7 @@ theorem lvl_sum {ι : Type*} (s : Finset ι) (T : ι → Module.End ℂ N.carrie
     lvl N (∑ i ∈ s, T i) m = ∑ i ∈ s, lvl N (T i) m := by
   simp only [lvl]
   have h := map_sum (gradedTraceAt N.isMod (N.h - W.centralCharge / 24 + m)) T s
-  simpa only [gradedTraceAt_apply] using h
+  simpa only [gradedTraceAt_apply] using! h
 
 theorem lvl_smul (a : ℂ) (T : Module.End ℂ N.carrier) (m : ℤ) :
     lvl N (a • T) m = a * lvl N T m := by

@@ -61,6 +61,6 @@ theorem vectorPartial9_sound {V : Type*} [AddCommGroup V] [Module ℂ V]
     vectorChunk9_sound W k a]
   have hh := equalRawCheck_sound W k a vectorPartial9_check
   rw [symMap_append, evalSym_append] at hh
-  simpa only [add_comm] using hh
+  simpa only [add_comm] using! hh
 
 end VOA.Classification.COne.OrbIcoZ

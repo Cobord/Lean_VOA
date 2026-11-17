@@ -142,7 +142,7 @@ theorem moveIC (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
       (N₁ + d) (fun j hj => mode_eq_zero_of_le hl₁ hu hw₁ (by push_cast at hj ⊢; omega))
     rw [eq_sub_iff_add_eq] at hc
     rw [← hc, cbz_neg_one_nat]
-    simp only [map_add, map_sum, map_smul, LinearMap.add_apply, LinearMap.coeFn_sum,
+    simp only [map_add, map_sum, map_smul, LinearMap.add_apply, LinearMap.coe_sum,
       Finset.sum_apply, LinearMap.smul_apply, smul_eq_mul, cbz_nat]
     rw [mul_add, Finset.mul_sum]
   rw [Finset.sum_congr rfl hsplit, Finset.sum_add_distrib]
@@ -214,7 +214,7 @@ theorem moveIB (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
   rw [negOneLeft_range hY₃.toIsJacobiFamily u _ w₃ _ (T.toNat + n + N₄ + N₃ + d + 1)
     (fun i hi => ⟨hT i (by push_cast at hi; omega),
       mode_eq_zero_of_le hl₃ hu hw₃ (by push_cast at hi ⊢; omega)⟩)]
-  simp only [map_add, map_sum, LinearMap.coeFn_sum, Finset.sum_apply, map_smul,
+  simp only [map_add, map_sum, LinearMap.coe_sum, Finset.sum_apply, map_smul,
     LinearMap.smul_apply, smul_eq_mul, Finset.sum_add_distrib]
   refine congrArg₂ (· - ·) (congrArg₂ (· + ·) ?_ ?_) ?_
   · rw [sum_range_trim (J := N₄ + 1 - d) (by omega) (fun i hi => by
@@ -310,7 +310,7 @@ theorem moveIA (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
   set I₂ := N₄ + N₃ + d + 1 with hI₂
   rw [negOneLeft_range hY₄.toIsJacobiFamily u w₁ w₂ Q I₁ (fun i hi => ⟨hT i (by push_cast at hi; omega),
     mode_eq_zero_of_le hl₂ hu hw₂ (by push_cast at hi ⊢; omega)⟩)]
-  simp only [map_sum, map_add, LinearMap.coeFn_sum, Finset.sum_apply, LinearMap.add_apply,
+  simp only [map_sum, map_add, LinearMap.coe_sum, Finset.sum_apply, LinearMap.add_apply,
     Finset.sum_add_distrib]
   rw [Finset.sum_congr rfl (fun (i : ℕ) _ => iter_neg_left_expand hY₃ u f
     (Y₄ (Q + (i : ℂ)) w₁ w₂) w₃ P i I₂
@@ -421,7 +421,7 @@ theorem moveID (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
       (fun j hj => mode_eq_zero_of_le hl₁ hu hw₁ (by push_cast at hj ⊢; omega))
     rw [eq_sub_iff_add_eq] at hc
     rw [← hc, cbz_nat]
-    simp only [map_add, map_sum, map_smul, LinearMap.add_apply, LinearMap.coeFn_sum,
+    simp only [map_add, map_sum, map_smul, LinearMap.add_apply, LinearMap.coe_sum,
       Finset.sum_apply, LinearMap.smul_apply, smul_eq_mul, cbz_nat]
     rw [mul_add, Finset.mul_sum]
     refine congrArg _ (Finset.sum_congr rfl fun j _ => by ring)
@@ -689,7 +689,7 @@ theorem qi_mem (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
       · refine NN.sum_mem fun i hi => ?_
         simp only [Finset.mem_range] at hi
         exact IH' _ _ _ _ (by omega) _ _ _ _ hw' (mode_mem_weight_nat hu hw₂ hi) hw₃
-    · simp only []; rw [QI_zero_w₁]; exact NN.zero_mem
+    · rw [QI_zero_w₁]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QI_add_w₁]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QI_smul_w₁]; exact smul_mem_of_ratRing NN a hx
   by_cases c2 : B₂ < N₂
@@ -709,7 +709,7 @@ theorem qi_mem (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
       · refine NN.sum_mem fun k hk => smul_mem_of_ratRing NN _ ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ (by omega) _ _ _ _ (mode_mem_weight_nat hu hw₁ hk) hw' hw₃
-    · simp only []; rw [QI_zero_w₂]; exact NN.zero_mem
+    · rw [QI_zero_w₂]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QI_add_w₂]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QI_smul_w₂]; exact smul_mem_of_ratRing NN a hx
   by_cases c3 : B₃ < N₃
@@ -732,7 +732,7 @@ theorem qi_mem (hY₃ : IsGradedJacobiFamily A₅ A₃ A₄ Y₃)
           (mul_mem_of_ratRing NN (X_mul_binom_mem' _ j) ?_)
         simp only [Finset.mem_range] at hj
         exact IH' _ _ _ _ (by omega) _ _ _ _ (mode_mem_weight_nat hu hw₁ hj) hw₂ hw'
-    · simp only []; rw [QI_zero_w₃]; exact NN.zero_mem
+    · rw [QI_zero_w₃]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [QI_add_w₃]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [QI_smul_w₃]; exact smul_mem_of_ratRing NN a hx
   by_cases c4 : B₄ < N₄

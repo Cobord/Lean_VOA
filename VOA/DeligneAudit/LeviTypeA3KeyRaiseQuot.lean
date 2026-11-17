@@ -21,11 +21,11 @@ theorem a3_raising_zero_no_source (a b c : ℕ)
       apply a3_raising_word_zero_no_source ρ w a b c h i r l
       fin_cases i
       · change l.countP (fun x => x.1 = (1 : Fin 3)) = 0
-        exact hd₂.trans (by simpa using hk)
+        exact hd₂.trans (by simpa using! hk)
       · change l.countP (fun x => x.1 = (2 : Fin 3)) = 0
-        exact hd₃.trans (by simpa using hk)
+        exact hd₃.trans (by simpa using! hk)
       · change l.countP (fun x => x.1 = (2 : Fin 3)) = 0
-        exact hd₃.trans (by simpa using hk)
+        exact hd₃.trans (by simpa using! hk)
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy]
   | smul d x _ hx => simp [map_smul, hx]

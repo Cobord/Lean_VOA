@@ -38,7 +38,7 @@ theorem seed_zeroBottom (hF : OctahedralVacuumFiber)
   obtain ⟨z, hz⟩ := hF i
   rw [← hz]
   have h := actA_omegaL_pow N hl 1 z
-  simpa using h
+  simpa using! h
 
 private abbrev adj := adjointModule W
 private theorem adj_low : IsLowestWeight adj 0 := isLowestWeight_adjoint W
@@ -52,8 +52,8 @@ theorem zeroBottom_scalar (hF : OctahedralVacuumFiber)
     (1 : Module.End ℂ (N.weight 0)) (1 : Module.End ℂ (adj.weight 0))
   have hs (i : Fin 5) : mk W (octaSeeds i) ∈ S := by
     refine Fin.cases ?_ (fun j => ?_) i
-    · exact ⟨1, by simpa only [one_smul] using actA_one N hl,
-        by simpa only [one_smul] using actA_one adj adj_low⟩
+    · exact ⟨1, by simpa only [one_smul] using! actA_one N hl,
+        by simpa only [one_smul] using! actA_one adj adj_low⟩
     · exact ⟨0, by rw [seed_zeroBottom hF N hl j, zero_smul],
         by rw [seed_zeroBottom hF adj adj_low j, zero_smul]⟩
   have hp (n : ℕ) {a : A W} (ha : a ∈ S) : (omegaL W ^ n) a ∈ S := by
@@ -107,7 +107,7 @@ theorem vacuumFiber_of_positive_annihilators
   have he := congrArg (fun P : ℂ[X] =>
     (aeval (omegaL W) P) (mk W (octaSeeds i.succ))) hab
   simpa only [map_add, map_mul, aeval_X, LinearMap.add_apply, Module.End.mul_apply,
-    h i, map_zero, add_zero, map_one, Module.End.one_apply] using he
+    h i, map_zero, add_zero, map_one, Module.End.one_apply] using! he
 
 /-- Given the conformal identity, the four degree-24 identities are equivalent
     to the four divisibilities, so this is a finite certificate target. -/
@@ -120,7 +120,7 @@ theorem vacuumFiber_iff_positive_annihilators (hP : OctahedralConformalZhuRelati
   rw [← hz]
   have he := congrArg (fun f : Module.End ℂ (A W) => f z) (candidate_annihilates hP)
   rw [candidatePolynomial, mul_comm X positivePolynomial] at he
-  simpa only [map_mul, aeval_X, Module.End.mul_apply, LinearMap.zero_apply] using he
+  simpa only [map_mul, aeval_X, Module.End.mul_apply, LinearMap.zero_apply] using! he
 
 /-- The same finite certificate improves the dimension bound to 121. -/
 theorem finrank_le_121_of_zhu_fiber
@@ -133,13 +133,13 @@ theorem finrank_le_121_of_zhu_fiber
     intro i a _
     refine Fin.cases ?_ (fun j => ?_) i
     · have h := pow_mem_towerSub_of_monic W (mk W W.vacuum) candidatePolynomial_monic hP a
-      simpa only [candidatePolynomial_natDegree] using h
+      simpa only [candidatePolynomial_natDegree] using! h
     · have h := pow_mem_towerSub_of_monic W (mk W (octaSeeds j.succ))
         positivePolynomial_monic (hs j) a
-      simpa only [positivePolynomial_natDegree] using h
+      simpa only [positivePolynomial_natDegree] using! h
   have hd := (finrank_A_le_of_towers W octaSeeds (fun i => (seedWeight i : ℤ))
     seeds_homogeneous (fun _ => 25) heights towers25 hm).2
-  simpa [heights, Fin.sum_univ_succ] using hd
+  simpa [heights, Fin.sum_univ_succ] using! hd
 
 /-- The complete direct Zhu route, with its two unproved inputs visible. -/
 theorem octa_pseudoUnitary_of_zhu_fiber

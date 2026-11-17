@@ -46,7 +46,7 @@ theorem diagonal_coset_centralCharge (n : ℕ) :
     Nat.cast_one]
   field_simp [hq, hq']
   ring_nf
-  have hq'' : (3 + (n : ℂ) * 2) ≠ 0 := by simpa [add_comm, mul_comm] using hq'
+  have hq'' : (3 + (n : ℂ) * 2) ≠ 0 := by simpa [add_comm, mul_comm] using! hq'
   field_simp [hq'']
   ring
 

@@ -15,13 +15,13 @@ namespace VOA.Classification.COne.OrbC2b
 open VOA
 
 instance cubicFinite : Finite (Subgroup.zpowers kleinCubic) :=
-  (isOfFinOrder_iff_pow_eq_one.mpr ⟨3, by norm_num, kleinCubic_cube⟩).finite_zpowers.to_subtype
+  (isOfFinOrder_iff_pow_eq_one.mpr ⟨3, by norm_num, kleinCubic_cube⟩).finite_zpowers
 
 instance cubicFintype : Fintype (Subgroup.zpowers kleinCubic) := Fintype.ofFinite _
 
 instance involutionFinite : Finite (Subgroup.zpowers tetraInvolution) :=
   (isOfFinOrder_iff_pow_eq_one.mpr
-    ⟨2, by norm_num, tetraInvolution_square⟩).finite_zpowers.to_subtype
+    ⟨2, by norm_num, tetraInvolution_square⟩).finite_zpowers
 
 instance involutionFintype : Fintype (Subgroup.zpowers tetraInvolution) := Fintype.ofFinite _
 

@@ -62,7 +62,7 @@ theorem lastPair_firstPow (m : ℕ) (u : V) :
 theorem flatKernelSpace_parabolicPow (B : ℕ) (c : Fin 15) (hc : flatParabolicColour c) (n : ℕ)
     (v : V) (hv : v ∈ flatKernelSpace ρ w B) : (ρ.op c 0 ^ n) v ∈ flatKernelSpace ρ w B := by
   induction n with
-  | zero => simpa using hv
+  | zero => simpa using! hv
   | succ n ih =>
     rw [pow_succ', Module.End.mul_apply]
     exact flatKernelSpace_parabolic ρ w B c hc ih
@@ -137,7 +137,7 @@ theorem flatNewton_expandedTopWord_mem (d e : ℕ) (he : e ≤ d + 1) :
       (d + 1 - e)
     have hc' : D ((ρ.op 8 0 ^ e) ((ρ.op 6 0 ^ (d - e)) u)) =
         (ρ.op 8 0 ^ e) (D ((ρ.op 6 0 ^ (d - e)) u)) := by
-      simpa only [Module.End.mul_apply] using
+      simpa only [Module.End.mul_apply] using!
         (LinearMap.congr_fun hcomm.eq ((ρ.op 6 0 ^ (d - e)) u)).symm
     have hx : D ((ρ.op 6 0 ^ (d - e)) u) = 0 :=
       newtonEnd_shift_pow_eq_zero (flatShiftCurrent ρ) (fun n => ρ.op 6 n)

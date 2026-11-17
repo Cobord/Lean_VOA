@@ -80,6 +80,9 @@ def ψn (n : ℕ) : Rn n →ₐ[ℂ] TestRing n :=
 theorem ψn_tn (n m : ℕ) :
     ψn n (tn n m) = tmk n (PowerSeries.coeff m jSer + PowerSeries.coeff (m + 1) xSer) := by
   simp [ψn, tn, testT, testSer]
+  first
+    | exact (Ideal.Quotient.lift_mk ..).trans (MvPolynomial.aeval_X ..)
+    | (rw [Ideal.Quotient.lift_mk]; simp)
 
 /-- The test homomorphism on the model ring: `ψn` on coefficients, `u_j, v_j ↦ u_j, v_j`. -/
 def testHomR (n : ℕ) : MPoly (Rn n) →+* TestRing n :=

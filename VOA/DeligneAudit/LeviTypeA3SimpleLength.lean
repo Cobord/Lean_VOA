@@ -31,12 +31,12 @@ private theorem zWord_hom : ∀ l : List ℕ,
   intro l
   induction l with
   | nil =>
-      simpa [zWord] using MvPolynomial.isWeightedHomogeneous_one ℂ om
+      simpa [zWord] using! MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s l ih =>
       have hz : MvPolynomial.IsWeightedHomogeneous om (z s) (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
       have hm := hz.mul ih
-      simpa [zWord, Nat.add_comm] using hm
+      simpa [zWord, Nat.add_comm] using! hm
 
 private theorem evAlg_zWord (F : ℕ → Module.End ℂ V)
     (hFF : ∀ i j, F i * F j = F j * F i) (l : List ℕ) :
@@ -65,7 +65,7 @@ theorem a3_box_word_length_zero (F : ℕ → Module.End ℂ V)
     rw [this]
     exact Submodule.zero_mem _
   have hz := (Submodule.mem_bot ℂ).mp (hle hspan)
-  simpa only [evAlg_zWord] using hz
+  simpa only [evAlg_zWord] using! hz
 
 variable (ρ : CurrentModule bracketTable V) (w : V)
 
@@ -107,7 +107,7 @@ theorem a3_simple_word_length_zero (a b c : ℕ)
     intro m
     exact h.cartan_pos i (m + 1) (by omega)
   have hN : (F 0 ^ ((weightABC a b c) i + 1)) w = 0 := by
-    simpa [F, Module.End.pow_apply] using h.lowering i
+    simpa [F, Module.End.pow_apply] using! h.lowering i
   have hk : ∀ r s, 1 ≤ r → (weightABC a b c) i + 1 ≤ r + s →
       (PowerSeries.coeff s (VOA.DeligneAudit.Garland.Fs F ^ r)) w = 0 := by
     intro r s hr hrs

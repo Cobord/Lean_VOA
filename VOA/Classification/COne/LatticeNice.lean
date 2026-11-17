@@ -50,6 +50,8 @@ No `sorry`, no new axioms.  Unconditional: the only hypothesis is `1 ≤ m` (and
 
 set_option linter.style.longLine false
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Classification.COne
 
 open VOA VOA.IntegralLattice VOA.LatGen VOA.LatGen.Triplet HeisenbergN MvPolynomial LatMod
@@ -433,7 +435,7 @@ noncomputable def moduleEquivOfPmCharge (A : OrdVModule (V2m m hm) M)
       have := hsm _ ha _ hc (-1 - 2 * m * a * c)
       rw [V2m_smul_charge_charge_top] at this
       have h2 := S.smul_mem (latticeCocycle (latP m) a c)⁻¹ this
-      rwa [smul_smul, inv_mul_cancel₀ (LatMod.latticeCocycle_ne_zero _ _ _), one_smul] at h2
+      rwa [smul_smul, latticeCocycle_inv_mulZ, one_smul] at h2
     have hall : ∀ k : ℤ, latChargeGen (latP m) k ∈ S := by
       intro k
       induction k using Int.induction_on with
@@ -469,7 +471,8 @@ theorem latticeModule_vacEig (j : ℤ) :
       = latStateGen (latP m) (oscN (rank (latP m)) 1 (a0 m) n (vacuumN _)
           + (if n = 0 then chi m j 0 • vacuumN _ else 0)) 0 := by
     intro n
-    rw [← hVec_eq_hb, latVacuumGen, latticeModule_hVec_mode]
+    rw [← hVec_eq_hb, show latVacuumGen (latP m) =
+      latStateGen (latP m) (vacuumN (rank (latP m))) (0 : ℤ) from rfl, latticeModule_hVec_mode]
     rfl
   refine ⟨(admissibleHeisRep _).mem_vac.mpr fun n hn => ?_, ?_⟩
   · change mode ((latticeModule m hm j).YM (hb m)) n (latVacuumGen (latP m)) = 0

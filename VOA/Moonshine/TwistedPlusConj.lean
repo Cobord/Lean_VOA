@@ -137,8 +137,9 @@ theorem thetaT_sM (v : Fin r → ℂ) (p : ℕ) : thetaT r (sM v p) = sM (-v) p 
   have h := nexp_map (thetaT r).toAlgHom (dM v) p
   rw [sM, sM]
   convert h using 2
-  funext k
-  exact (thetaT_dM v k).symm
+  all_goals first
+    | rfl
+    | (funext k; exact (thetaT_dM v k).symm)
 
 theorem thetaT_sMz (v : Fin r → ℂ) (p : ℤ) : thetaT r (sMz v p) = sMz (-v) p := by
   unfold sMz

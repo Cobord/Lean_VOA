@@ -15,7 +15,7 @@ variable {A : Type*} [Ring A]
 def shiftedWordCoeff (b : ℕ → A) : List ℕ → ℕ → A
   | [], s => if s = 0 then 1 else 0
   | x :: xs, s =>
-      ∑ q ∈ Finset.antidiagonal s,
+      ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         b (x + q.1) * shiftedWordCoeff b xs q.2
 
 /-- All ordered mode allocations with total added degree `s`. The list
@@ -23,7 +23,7 @@ def shiftedWordCoeff (b : ℕ → A) : List ℕ → ℕ → A
 def modeAllocations : List ℕ → ℕ → List (List ℕ)
   | [], s => if s = 0 then [[]] else []
   | x :: xs, s =>
-      (Finset.antidiagonal s).toList.flatMap fun q =>
+      (Finset.HasAntidiagonal.antidiagonal s).toList.flatMap fun q =>
         (modeAllocations xs q.2).map ((x + q.1) :: ·)
 
 theorem shiftedWordCoeff_eq_allocations (b : ℕ → A)
@@ -38,7 +38,7 @@ theorem shiftedWordCoeff_eq_allocations (b : ℕ → A)
         List.map_flatten, List.sum_flatten, List.map_map]
       conv =>
         lhs
-        rw [← (Finset.antidiagonal s).toList_toFinset,
+        rw [← (Finset.HasAntidiagonal.antidiagonal s).toList_toFinset,
           List.sum_toFinset _ (Finset.nodup_toList _)]
       congr 1
       apply List.map_congr_left
@@ -97,7 +97,7 @@ theorem mixedTop_eq_shiftedWordCoeff
     (a b t : ℕ → Module.End ℂ V)
     (k s : ℕ) (xs rs : List ℕ) :
     mixedTop a b k s xs (rs.map (transportCurrent t)).prod =
-      ∑ q ∈ Finset.antidiagonal s,
+      ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         ((choices xs).map fun p =>
           if p.2.length = k then
             aWord a p.1 * shiftedWordCoeff b p.2 q.1

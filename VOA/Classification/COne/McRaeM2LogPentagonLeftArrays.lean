@@ -131,7 +131,6 @@ theorem leftCoeff_summable (N P Q R : LogModuleCat W)
         (s : ℂ)^q.2*((r : ℂ)/(s : ℂ))^q.1))
       (fun j => ‖(omegaPhase 0 (h'+d-β-1))⁻¹‖*‖sc j‖) ?_ ?_ ?_
     · intro j q
-      simp only []
       rw [norm_mul]
       have he : h'+(q.2 : ℂ)+d-β-1=(h'+d-β-1)+(q.2 : ℂ) := by ring
       rw [he, rootSkew_phase_norm_add_nat]

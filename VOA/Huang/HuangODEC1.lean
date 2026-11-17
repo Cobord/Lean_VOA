@@ -81,7 +81,7 @@ theorem c2M_le_span_c1Gen (A : OrdVModule W M) {h : ℂ} (hl : IsLowestWeight A 
       rw [← hcov]
       refine Submodule.subset_span ⟨P + 1, N, W.L (-1) a, y, by omega, ?_, hy, rfl⟩
       have := VertexOperatorAlgebra.L_neg_one_raise W ha
-      simpa using this
+      simpa using! this
     · beta_reduce; rw [map_zero]; exact Submodule.zero_mem _
     · intro y z hy hz; beta_reduce at hy hz ⊢; rw [map_add]; exact Submodule.add_mem _ hy hz
 
@@ -132,7 +132,7 @@ theorem c1Graded_of_moduleC2Cofinite (A : OrdVModule W M) {h : ℂ} (hl : IsLowe
     obtain ⟨x, hx, rfl⟩ := Submodule.mem_map.mp hq
     have hq'' : C.mkQ x ∈ (⨆ (N' : ℕ) (_ : N' ≠ N), A.weight (h + N')).map C.mkQ := by
       rw [Submodule.map_iSup]
-      simpa only [Submodule.map_iSup, hE] using hq'
+      simpa only [Submodule.map_iSup, hE] using! hq'
     obtain ⟨y, hy, hxy⟩ := Submodule.mem_map.mp hq''
     have hdiff : y - x ∈ C := by
       rw [← Submodule.Quotient.mk_eq_zero, Submodule.mkQ_apply] at *
@@ -153,7 +153,7 @@ theorem c1Graded_of_moduleC2Cofinite (A : OrdVModule W M) {h : ℂ} (hl : IsLowe
     have hxC : x ∈ C := by
       have h1 := hpres (h + N) hdiff
       rw [map_sub, hy0, zero_sub, VOA.wProj_of_mem A hx] at h1
-      simpa using C.neg_mem h1
+      simpa using! C.neg_mem h1
     simp only [Submodule.mkQ_apply]
     exact (Submodule.Quotient.mk_eq_zero C).mpr hxC
   letI := hind.fintypeNeBotOfFiniteDimensional

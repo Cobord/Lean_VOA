@@ -27,7 +27,7 @@ def bilinearTsum {E F : Type*} [AddCommGroup E] [Module ℂ E]
         exact (hf x y).tsum_add (hf x z)
       map_smul' := fun c y => by
         simp only [map_smul, RingHom.id_apply]
-        simpa only [smul_eq_mul] using tsum_mul_left }
+        simpa only [smul_eq_mul] using! tsum_mul_left }
   map_add' := by
     intro x y
     ext z
@@ -37,7 +37,7 @@ def bilinearTsum {E F : Type*} [AddCommGroup E] [Module ℂ E]
     intro c x
     ext y
     simp only [map_smul, LinearMap.smul_apply, RingHom.id_apply]
-    simpa only [smul_eq_mul] using tsum_mul_left
+    simpa only [smul_eq_mul] using! tsum_mul_left
 
 /-- Coefficientwise assembly involves no q convergence assumption. -/
 def bilinearSeries {E F : Type*} [AddCommGroup E] [Module ℂ E]
@@ -79,7 +79,8 @@ theorem productWeightTermPair_apply
     productWeightTermPair Y₁ Y₂ α₁ α₂ β z₁ z₂ k x y =
       productTerm Y₁ Y₂ x.val y.val α₁ α₂ β z₁ z₂ k := by
   dsimp [productWeightTermPair, productTracePair, productTerm]
-  ring
+  ring_nf
+  rfl
 
 /-- The actual genus-zero-summed coefficient, extended using finite weight
 support. Only the inner spatial sums have been evaluated. -/

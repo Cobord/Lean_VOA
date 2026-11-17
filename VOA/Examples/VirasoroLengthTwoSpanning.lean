@@ -148,7 +148,7 @@ noncomputable def lengthLETwoTowerIndexEquivFin (N : ℕ) :
     LengthLETwoTowerIndex N ≃ Fin (N / 2) where
   toFun m := ⟨m.1 - 1, by
     have hmle : m.1 ≤ N / 2 :=
-      (Nat.le_div_iff_mul_le (by omega : 0 < 2)).2 (by simpa [mul_comm] using m.2.2)
+      (Nat.le_div_iff_mul_le (by omega : 0 < 2)).2 (by simpa [mul_comm] using! m.2.2)
     have hm1 := m.2.1
     omega⟩
   invFun i := ⟨i.1 + 1, by omega, by
@@ -386,17 +386,18 @@ theorem lengthLETwoTowerAt_hasEigenvector (N : ℕ) (m : LengthLETwoTowerIndex N
     have h := globalDescendant_hasEigenvector (virasoroVOA c)
       (m := (2 : ℤ)) (v := omegaVir c) (by omega)
       (omegaVir_mem_gradingVir_two c)
-      (by simpa using L1_conformal_zero (virasoroVOA c)) hbase (N - 2)
+      (by simpa using! L1_conformal_zero (virasoroVOA c)) hbase (N - 2)
     rw [← globalTowerEigenvalue_eq_lengthLETwoTowerEigenvalue N m]
-    simpa [hm] using h
+    simpa [hm] using! h
   · have hm1 : 1 ≤ m.1 := m.2.1
     have hm2 : 2 ≤ m.1 := by omega
-    rw [lengthLETwoTowerAt_of_two_le c m hm2, lengthTwoTowerAt,
-      ← globalTowerEigenvalue_eq_lengthLETwoTowerEigenvalue N m]
+    rw [lengthLETwoTowerAt_of_two_le c m hm2]
+    unfold lengthTwoTowerAt
+    rw [← globalTowerEigenvalue_eq_lengthLETwoTowerEigenvalue N m]
     exact globalDescendant_hasEigenvector (virasoroVOA c)
       (m := (2 * m.1 : ℕ)) (v := lengthTwoQ c m.1) (by omega)
       (lengthTwoQ_mem_grading c m.1 hm2)
-      (by simpa [virasoroVOA_L_eq_Lop] using lengthTwoQ_quasiPrimary c m.1 hm2)
+      (by simpa [virasoroVOA_L_eq_Lop] using! lengthTwoQ_quasiPrimary c m.1 hm2)
       (lengthTwoQ_ne_zero c m.1 hm2) (N - 2 * m.1)
 
 /-- The combined universal tower family is linearly independent, with no metric hypothesis. -/
@@ -430,12 +431,13 @@ theorem lengthLETwoTowerAt_mem_virFil (N : ℕ) (m : LengthLETwoTowerIndex N) :
     omega
   · have hm1 : 1 ≤ m.1 := m.2.1
     have hm2 : 2 ≤ m.1 := by omega
-    rw [lengthLETwoTowerAt_of_two_le c m hm2, lengthTwoTowerAt,
-      virasoroVOA_L_eq_Lop]
+    rw [lengthLETwoTowerAt_of_two_le c m hm2]
+    unfold lengthTwoTowerAt
+    rw [virasoroVOA_L_eq_Lop]
     have h := lengthTwoQ_tower_mem_virFil c m.1 hm2 (N - 2 * m.1)
     have hsum : 2 * m.1 + (N - 2 * m.1) = N :=
       Nat.add_sub_of_le m.2.2
-    simpa only [hsum] using h
+    simpa only [hsum] using! h
 
 /-- The universal word-length-at-most-two step is exactly the span of the global towers born in
 weights `2,4,…,2⌊N/2⌋`.  This is the metric-independent bridge needed by the `p ≤ 2`

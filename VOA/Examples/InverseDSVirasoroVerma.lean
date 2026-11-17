@@ -39,6 +39,8 @@ open Module (End)
 open VirModule
 open LeeYangWardClosure
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 /-! ## The general Verma quotient -/
@@ -304,7 +306,7 @@ theorem negWord_swap (c h : ℂ) (i j : ℕ) (rest : List ℕ) :
       push_cast; ring,
     show ((-(i : ℤ) - 1 : ℤ) : ℂ) - ((-(j : ℤ) - 1 : ℤ) : ℂ) =
         (j : ℂ) - (i : ℂ) by push_cast; ring] at hcomm
-  simpa only [negWord_cons] using hcomm
+  simpa only [negWord_cons] using! hcomm
 
 /-- Swapping adjacent creation modes, or replacing them by the commutator mode, preserves total conformal level. Thus straightening never mixes levels. -/
 theorem energyHW_swap (i j : ℕ) (rest : List ℕ) :

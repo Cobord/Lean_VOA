@@ -48,7 +48,7 @@ theorem channelMatrixEntry_eq_trace (F : SphericalFusion C) (X Y : C) (t : F.Lab
   have h := congrArg (F.scalarTrace (F.simple t))
     (F.comp_compositionDual (F.simpleHomBasis Y t) β (F.simpleHomBasis X t α ≫ f))
   simpa only [channelMatrixEntry, LinearMap.coe_mk, AddHom.coe_mk, map_smul,
-    F.scalarTrace_id, smul_eq_mul, Category.assoc] using h.symm
+    F.scalarTrace_id, smul_eq_mul, Category.assoc] using! h.symm
 
 /-- Semisimplicity makes the full set of matrix coefficients faithful. -/
 theorem hom_eq_iff_channelMatrixEntry (F : SphericalFusion C) (X Y : C)
@@ -90,6 +90,6 @@ theorem mixedMugerExchange_iff_matrixElements (F : SphericalFusion C) :
   · intro h a b i j
     apply (hom_eq_iff_channelMatrixEntry F _ _ _ _).mpr
     intro t α β
-    simpa using h a b i j t α β
+    simpa using! h a b i j t α β
 
 end VOA.Huang.NSCongruence

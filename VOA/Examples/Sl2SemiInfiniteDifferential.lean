@@ -47,7 +47,7 @@ theorem zeroModeCommutator_of_superNearVOA (V : SuperNearVOA M) :
     ZeroModeCommutator V.toSuperVertexAlgebra := by
   intro p q u v hu hv n
   have h := V.mode_iterate_nonneg_chooseε hu hv 0 n
-  simpa [Finset.sum_range_one, SuperVertexAlgebra.smul_def] using h.symm
+  simpa [Finset.sum_range_one, SuperVertexAlgebra.smul_def] using! h.symm
 
 /-- Translation covariance already suffices; a conformal vector is unnecessary. -/
 theorem zeroModeCommutator_of_translation {V : SuperVertexAlgebra M}

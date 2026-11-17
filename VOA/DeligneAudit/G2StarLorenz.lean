@@ -341,7 +341,7 @@ theorem map_infProd' {R S : Type*} [CommRing R] [CommRing S] (φ : R →+* S)
   have hdvd : ∀ K, (X : PowerSeries S) ^ K ∣ PowerSeries.map φ (X ^ K) := fun K => by
     rw [map_pow, PowerSeries.map_X]
   have hφu : ProdFactors fun k => PowerSeries.map φ (u k) := fun k => by
-    simpa using (hu k).map (PowerSeries.map φ) (hdvd (k + 1))
+    simpa using! (hu k).map (PowerSeries.map φ) (hdvd (k + 1))
   apply eq_infProd_of_agree hφu
   intro N
   rw [← map_prod]
@@ -482,7 +482,7 @@ theorem evx_P1P2 : evx (Pser (uW ω3 ω3_ne_zero) * Pser (uW ω3⁻¹ (inv_ne_ze
     have h1 := prodFactors_one_add (R := ℂ) (-a) (fun m => m + 1) (fun m => Nat.lt_succ_self m) m
     have h2 := prodFactors_one_add (R := ℂ) (-b) (fun m => m + 1) (fun m => Nat.lt_succ_self m) m
     have h3 := prodFactors_one_add (R := ℂ) (-1) (fun m => m + 1) (fun m => Nat.lt_succ_self m) m
-    simpa [sub_eq_add_neg] using (h1.mul h2).mul h3
+    simpa [sub_eq_add_neg] using! (h1.mul h2).mul h3
   rw [map_mul, evx_P, evx_P, inv_inv, infProd_mul (hf _ _) (hf _ _), expand3_euler_eq,
     infProd_pow (prodFactors_one_sub_X_pow _ fun k => by omega)]
   apply infProd_congr
@@ -548,12 +548,12 @@ theorem S_eq_wronskian :
   set w1 := uW ω3 ω3_ne_zero
   set w2 := uW ω3⁻¹ (inv_ne_zero ω3_ne_zero)
   set A := PowerSeries ℂ
-  have hw1 : PowerSeries.derivative ℂ (w1 : A) = w1 := dx_uW _ _
-  have hw2 : PowerSeries.derivative ℂ (w2 : A) = w2 := dx_uW _ _
+  have hw1 : PowerSeries.derivative (R := ℂ) (w1 : A) = w1 := dx_uW _ _
+  have hw2 : PowerSeries.derivative (R := ℂ) (w2 : A) = w2 := dx_uW _ _
   have hT1 := jacobiTriple w1
   have hT2 := jacobiTriple w2
   rw [← Pser] at hT1 hT2
-  have hD : ∀ (w : (PowerSeries ℂ)ˣ), PowerSeries.derivative ℂ (w : A) = w →
+  have hD : ∀ (w : (PowerSeries ℂ)ˣ), PowerSeries.derivative (R := ℂ) (w : A) = w →
       liftD ((1 - PowerSeries.C (w : A)) * Pser w) =
         -PowerSeries.C (w : A) * Pser w + (1 - PowerSeries.C (w : A)) * (Pser w * Rser w) := by
     intro w hw

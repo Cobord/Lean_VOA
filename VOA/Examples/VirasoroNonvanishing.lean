@@ -26,6 +26,8 @@ namespace VOA
 open Module (End)
 open LieAlgebra LieAlgebra.Extension UniversalEnvelopingAlgebra
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §A  The linear-dilaton Lie representation `𝔙𝔦𝔯 → End Fock`. -/
 
 /-- The Witt-level linear map `ℓₙ ↦ Lₙ^λ` (extended `ℂ`-linearly over `Witt = ℤ →₀ ℂ`). -/

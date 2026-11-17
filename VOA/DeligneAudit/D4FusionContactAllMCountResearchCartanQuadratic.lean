@@ -46,10 +46,10 @@ variable {m : ℕ} (b : BoundaryPair m)
 
 /-- Only two ordered pairs survive the positive Cartan shift. -/
 theorem shifted_quadratic_sum :
-    (∑ x ∈ Finset.antidiagonal (b.lower.val+b.top.val),
+    (∑ x ∈ Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val),
       modeX m 0 (b.top.val-b.lower.val-1+x.1) * modeX m 0 x.2) =
       2 • (modeX m 0 (b.top.val-1) * modeX m 0 b.top.val) := by
-  let S := Finset.antidiagonal (b.lower.val+b.top.val)
+  let S := Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)
   let f := fun x : ℕ × ℕ =>
     modeX m 0 (b.top.val-b.lower.val-1+x.1) * modeX m 0 x.2
   have hlt := b.lt
@@ -62,7 +62,7 @@ theorem shifted_quadratic_sum :
     · intro he
       have := congrArg Prod.fst he
       omega
-    · simp only [S,Finset.mem_antidiagonal]
+    · simp only [S,Finset.HasAntidiagonal.mem_antidiagonal]
       omega
   have hs0 := Finset.add_sum_erase S f h0
   have hs1 := Finset.add_sum_erase (S.erase (b.lower.val,b.top.val)) f h1
@@ -70,7 +70,7 @@ theorem shifted_quadratic_sum :
       (b.lower.val+1,b.top.val-1), f x = 0 := by
     apply Finset.sum_eq_zero
     intro x hx
-    simp only [Finset.mem_erase,S,Finset.mem_antidiagonal] at hx
+    simp only [Finset.mem_erase,S,Finset.HasAntidiagonal.mem_antidiagonal] at hx
     have hn0 : ¬ (x.1=b.lower.val ∧ x.2=b.top.val) := by
       intro he
       exact hx.2.1 (Prod.ext he.1 he.2)
@@ -94,13 +94,13 @@ theorem h0Deriv_groupedSeed :
     g0Deriv m 0 (b.top.val-b.lower.val-1) (groupedSeed b) =
       2 • (modeX m 0 (b.top.val-1) * modeX m 0 b.top.val) := by
   let k := b.top.val-b.lower.val-1
-  let S := Finset.antidiagonal (b.lower.val+b.top.val)
+  let S := Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)
   let f := fun x : ℕ × ℕ => modeX m 0 (k+x.1) * modeX m 0 x.2
   have hs : (∑ x ∈ S, modeX m 0 x.1 * modeX m 0 (k+x.2)) = ∑ x ∈ S, f x := by
     have he := (Finset.Nat.sum_antidiagonal_swap
       (f := fun x : ℕ × ℕ => modeX m 0 x.1 * modeX m 0 (k+x.2))
       (n := b.lower.val+b.top.val))
-    simpa only [S,f,Prod.swap,mul_comm] using he.symm
+    simpa only [S,f,Prod.swap,mul_comm] using! he.symm
   rw [groupedSeed_whole,Derivation.map_smul]
   simp only [pow_two,PowerSeries.coeff_mul,Polynomial.AllM.current,
     PowerSeries.coeff_mk,map_sum,Derivation.leibniz,h0Deriv_simple_modeX,smul_eq_mul]

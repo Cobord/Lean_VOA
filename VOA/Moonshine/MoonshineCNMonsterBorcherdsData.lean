@@ -21,6 +21,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open AutMonster
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] monsterPhysicalAddCommGroup
 
 /-- Repository momentum of the Borcherds root `(m, n)`. -/
@@ -137,7 +140,8 @@ theorem monsterLieBorcherdsWeight_support (γ : ℤ × ℤ) (hne : monsterLieBor
     have h := hbot.le (monsterLieBorcherdsRootEquiv γ hγ ⟨x, hx⟩).property
     rw [Submodule.mem_bot] at h
     have h0 : (⟨x, hx⟩ : monsterLieBorcherdsWeight γ) = 0 :=
-      (monsterLieBorcherdsRootEquiv γ hγ).injective (Subtype.ext (by simpa using h))
+      (monsterLieBorcherdsRootEquiv γ hγ).injective
+        (Subtype.ext (h.trans (by rw [LinearEquiv.map_zero]; rfl)))
     exact (Submodule.mem_bot ℂ).mpr (congrArg Subtype.val h0)
   have h1 : -1 ≤ γ.1 * γ.2 := by
     by_contra h

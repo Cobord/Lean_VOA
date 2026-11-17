@@ -59,9 +59,9 @@ theorem fullCurrentTail_le_highestRootClosure (m N : ℕ)
   | mem z hz =>
       obtain ⟨l, rfl⟩ := hz
       exact hword l c r hr
-  | zero => simpa using (highestRootTailClosure ρ w N).zero_mem
-  | add x y _ _ hx hy => simpa using (highestRootTailClosure ρ w N).add_mem hx hy
-  | smul a x _ hx => simpa using (highestRootTailClosure ρ w N).smul_mem a hx
+  | zero => simpa using! (highestRootTailClosure ρ w N).zero_mem
+  | add x y _ _ hx hy => simpa using! (highestRootTailClosure ρ w N).add_mem hx hy
+  | smul a x _ hx => simpa using! (highestRootTailClosure ρ w N).smul_mem a hx
 
 /-- Every word in the radical colours lifts to the existing six-letter alphabet. -/
 theorem radicalWord_lift (l : List (Fin 28 × ℕ))
@@ -87,9 +87,12 @@ theorem highestRootTailClosure_le_leviTail (m N : ℕ)
     cycSubG_eq_leviSpan ρ (ρ.op (27 : Fin 28) r.val w)
       (positive_radical_highestRoot_zero ρ w m hm h r.val (by omega))
   rw [hgen]
-  rw [leviSpan, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro z ⟨l, t, hl, ht, rfl⟩
-  rw [wordOp_append]
+  -- Lean 4.35: the unfolded `leviSpan` goal mixes `Fin 28`/`fD4` with `Fin D4sector.n`,
+  -- so `rw [wordOp_append]` finds no instance; transport along it by defeq instead.
+  refine (congrArg (· ∈ (leviCurrentTail ρ w N : Set V))
+    (wordOp_append ρ l t (ρ.op (27 : Fin 28) r.val w))).mpr ?_
   apply leviCurrentTail_word ρ w N l hl
   obtain ⟨u, rfl⟩ := radicalWord_lift t ht
   have heq : wordOp ρ (u.map fun p => (radicalColour p.1, p.2))

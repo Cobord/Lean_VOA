@@ -131,6 +131,9 @@ open Module (End)
 open scoped BigOperators TensorProduct DirectSum
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -317,7 +320,9 @@ noncomputable def BimodGenuineConstructionA.toCanonicalAssignmentData
     CanonicalAssignmentData W :=
   (G.toMURepFamily).toCanonicalAssignmentData ludata realizes Dfun
 
-/-- **HOLE A (genuine bimodule-composition ρ) — the lifting datum `A : InducedAssignment W`.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**HOLE A (genuine bimodule-composition ρ) — the lifting datum `A : InducedAssignment W`.**
 
 The assignment `U ↦ M̄(U)` of Theorem 5.3.4 (DJ §3, Construction A), on the **genuine
 BIMODULE-COMPOSITION** loop representation `levelShiftRho` (the `anmComposeBilin` / `MU.actAnm` loop

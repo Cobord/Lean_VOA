@@ -109,11 +109,14 @@ theorem e7_raisTheta (e : Fin 133) (he : E7sector.raising e) (c : Fin 133)
   · exact Or.inl h
   · exact Or.inr ⟨(fusion_iff c).mpr h1, h2⟩
 
-theorem e7_cartTheta (h : Fin 133) (hh : E7sector.cartan h) (c : Fin 133) :
+theorem e7_cartTheta (h : Fin 133) (hh : E7sector.cartan h) (c : Fin E7sector.n) :
     E7sector.f h E7sector.c₀ c = if c = E7sector.c₀ then -(E7sector.thetaH h : ℂ) else 0 := by
-  show ((fZ brK h 132 c : ℤ) : ℂ) = if c = 132 then -((thetaH h : ℕ) : ℂ) else 0
-  rw [e7_cartThetaZ h c hh]
-  split_ifs <;> simp
+  have key : ∀ c' : Fin 133,
+      ((fZ brK h 132 c' : ℤ) : ℂ) = if c' = 132 then -((thetaH h : ℕ) : ℂ) else 0 := by
+    intro c'
+    rw [e7_cartThetaZ h c' hh]
+    split_ifs <;> simp
+  exact key c
 
 theorem e7_lowComm (x : Fin 133) (hx : E7sector.fusion x ∨ E7sector.lowering x) (c : Fin 133) :
     E7sector.f x E7sector.c₀ c = 0 := by

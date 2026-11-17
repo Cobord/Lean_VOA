@@ -16,7 +16,7 @@ def det3PL (m : Fin 3 → Fin 3 → PL) : PL :=
 
 theorem zp_det3PL (m : Fin 3 → Fin 3 → PL) :
     zp (det3PL m) = Matrix.det (fun i j => zp (m i j)) := by
-  rw [Matrix.det_fin_three]
+  rw [Matrix.det_fin_three (fun i j => zp (m i j) : Matrix (Fin 3) (Fin 3) (Polynomial ℂ))]
   simp only [det3PL, zp_paddL, zp_pmulL, zp_pscaleL, zp]
   simp only [Rat.cast_neg, Rat.cast_one, Polynomial.C_neg, Polynomial.C_1]
   ring

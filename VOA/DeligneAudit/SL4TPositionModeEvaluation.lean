@@ -19,13 +19,17 @@ def positionModeProduct (F : σ → ℕ → Module.End ℂ V) (is : List σ)
 /-- Polynomial exponents specify modes, while coefficients are evaluated at the base. -/
 def positionModeEvaluation (F : σ → ℕ → Module.End ℂ V) (is : List σ)
     (β : B →ₗ[ℂ] V) : MvPolynomial σ B →ₗ[ℂ] V :=
-  Finsupp.lsum ℂ fun u : σ →₀ ℕ => (positionModeProduct F is u).comp β
+  -- through `coeff`: in Lean 4.35 Mathlib `AddMonoidAlgebra` is a structure, not `Finsupp`
+  (Finsupp.lsum ℂ fun u : σ →₀ ℕ => (positionModeProduct F is u).comp β).comp
+    (AddMonoidAlgebra.coeffLinearEquiv (S := B) (M := σ →₀ ℕ) ℂ).toLinearMap
 
 theorem positionModeEvaluation_monomial (F : σ → ℕ → Module.End ℂ V)
     (is : List σ) (β : B →ₗ[ℂ] V) (u : σ →₀ ℕ) (b : B) :
     positionModeEvaluation F is β (monomial u b) =
       positionModeProduct F is u (β b) := by
-  exact Finsupp.lsum_single _ _ _ _
+  change Finsupp.lsum ℂ (fun u : σ →₀ ℕ => (positionModeProduct F is u).comp β)
+    (Finsupp.single u b) = _
+  exact Finsupp.lsum_single ℂ _ u b
 
 /-- The Cartan commutator is the sum of the individual labelled mode shifts. -/
 theorem positionModeProduct_cartan

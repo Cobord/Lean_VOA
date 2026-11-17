@@ -101,7 +101,7 @@ theorem alphabetCharacteristic_evaluate_points {n : ℕ} (Y : Finset (Fin n)) (z
   classical
   simp only [fullFlagSubalphabet, List.map_map, Function.comp_def, MvPolynomial.aeval_X,
     alphabetCharacteristic_product, List.map_map]
-  simpa only [Finset.toList_toFinset] using
+  simpa only [Finset.toList_toFinset] using!
     (List.prod_toFinset (fun i => Polynomial.X - Polynomial.C (z i))
       (Finset.nodup_toList Y)).symm
 
@@ -315,7 +315,7 @@ theorem singlyMarked_markedRemainderMinor_mem (B k j N : ℕ) (hN : N = B - k)
       (V ∩ Y).card := by
     have h := IsHomogeneous.prod (V ∩ Y) (fun i => (X i : MvPolynomial (Fin (B + 1)) ℂ))
       (fun _ => 1) (fun i _ => isHomogeneous_X ℂ i)
-    simpa only [Finset.sum_const, smul_eq_mul, mul_one] using h
+    simpa only [Finset.sum_const, smul_eq_mul, mul_one] using! h
   exact mul_remainderRowMinor_mem_pointInitialIdeal _ _
     (fullFlagSubalphabet_integerHomogeneous Y) (B - k) j _ (sitePolynomial_coeff _ ζ)
     (fun a => (fullFlagSubalphabet Y).length - j + a.val) cols
@@ -367,7 +367,6 @@ theorem polynomialSubmoduleTopIdeal_power_eq {A : Type*} [CommRing A] (xs : List
       (fun b => Polynomial.X ^ (N + cols b))
       (fun b => by
         rw [Submodule.restrictScalars_mem]
-        dsimp only
         rw [pow_add]
         exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _))
 

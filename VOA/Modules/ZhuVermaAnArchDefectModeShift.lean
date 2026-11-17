@@ -519,9 +519,8 @@ theorem vandermonde_column (ρ : VHatRep W M) (A b : 𝒱) (x : M) (k N : ℤ) (
   rw [finsum_congr key, sumR]
   rw [← finsumZ_eq_finsumN (fun r : ℤ => cbz (k - (j : ℤ)) r •
       ρ.actMode (W.smul A (r - 1) b) (N + k - (j : ℤ) - r) x) (Z + 1).toNat
-    (fun r hr => by dsimp only; rw [cbz_apply_neg (k - (j : ℤ)) hr, zero_smul])
+    (fun r hr => by rw [cbz_apply_neg (k - (j : ℤ)) hr, zero_smul])
     (fun r hr => by
-      dsimp only
       rw [hZ (r - 1) (by omega), actMode_zero_left, LinearMap.zero_apply, smul_zero])]
   have hfinr : (Function.support fun r : ℤ => cbz (k - (j : ℤ)) r •
       ρ.actMode (W.smul A (r - 1) b) (N + k - (j : ℤ) - r) x).Finite :=

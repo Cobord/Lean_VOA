@@ -28,7 +28,7 @@ theorem homogeneousWord_mem_degreeFiltration (D : GenData W) (A : WeakModule W M
       have h := DegreeFiltration.act_mem_E p a.state (hp ▸ a.homogeneous)
         a.modeIndex G (homogeneousDegree l) _ hG
       refine ⟨G + p, ?_⟩
-      simpa [homogeneousWord, homogeneousDegree, hp, add_comm] using h
+      simpa [homogeneousWord, homogeneousDegree, hp, add_comm] using! h
 
 /-- Degree-preserving Buhl normalization, with no grading assumed on the weak module. -/
 theorem weakDegreeNormalForm : WeakDegreeNormalForm W := by

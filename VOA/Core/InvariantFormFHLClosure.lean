@@ -130,7 +130,7 @@ theorem factorial_le_norm_riseCoeff {p wt q : ℤ} (hp : 1 ≤ p + wt - q) (k : 
   rw [riseCoeff, norm_prod]
   rw [show (k.factorial : ℝ) = ∏ i ∈ Finset.range k, ((i : ℝ) + 1) from by
     rw [← Finset.prod_range_add_one_eq_factorial]; push_cast; rfl]
-  refine Finset.prod_le_prod (fun i _ => by positivity) (fun i _ => ?_)
+  gcongr with i _
   rw [Complex.norm_intCast]
   have : ((i : ℝ) + 1) ≤ ((p + (i : ℤ) + wt - q : ℤ) : ℝ) := by
     exact_mod_cast (by omega : ((i:ℤ)+1) ≤ p + (i:ℤ) + wt - q)

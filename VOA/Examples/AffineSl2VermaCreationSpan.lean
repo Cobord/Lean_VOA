@@ -13,6 +13,8 @@ currents. The degree operator preserves it as well. Cyclicity of the actual
 enveloping quotient therefore proves spanning, without any PBW assumption.
 Ordering the creation letters is a separate finite straightening step.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open UniversalEnvelopingAlgebra
@@ -96,12 +98,11 @@ theorem degree_word_mem (k h : ℂ) (w : List (Fin 3×ℤ)) :
     rho k h (AffineLie.ell0 kappaForm kappaForm_isInvariant)
       (currentWord (mode k h) w (highestVector k h))∈creationSpan k h := by
   induction w with
-  | nil => simpa only [currentWord,Module.End.one_apply,degree_highest] using
+  | nil => simpa only [currentWord,Module.End.one_apply,degree_highest] using!
       (creationSpan k h).zero_mem
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ (Verma k h) =>
         T (currentWord (mode k h) w (highestVector k h))) (degree_mode_comm k h an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         LinearMap.smul_apply,sub_eq_iff_eq_add] at hc
       change rho k h _ (mode k h an.1 an.2 _)∈_
@@ -158,7 +159,8 @@ theorem enveloping_creationSpan (k h : ℂ) (u : U)
     {v : Verma k h} (hv : v∈creationSpan k h) : u • v∈creationSpan k h := by
   suffices H : ∀ p : TensorAlgebra ℂ AffSl2,∀ v∈creationSpan k h,
       (mkAlgHom ℂ _ p) • v∈creationSpan k h by
-    obtain ⟨p,rfl⟩ := (RingQuot.mkAlgHom_surjective ℂ (Rel ℂ AffSl2)) u
+    obtain ⟨p,rfl⟩ : ∃ p,mkAlgHom ℂ AffSl2 p=u := by
+      exact RingCon.mkₐ_surjective _ u
     exact H p v hv
   intro p
   induction p using TensorAlgebra.induction with
@@ -178,10 +180,10 @@ theorem creationSpan_eq_top (k h : ℂ) : creationSpan k h=⊤ := by
   intro v hv
   obtain ⟨u,rfl⟩ := Submodule.Quotient.mk_surjective (highestIdeal k h) v
   have htop : highestVector k h∈creationSpan k h := by
-    simpa only [currentWord,Module.End.one_apply] using
+    simpa only [currentWord,Module.End.one_apply] using!
       creationWord_mem k h [] (by simp)
   have hu := enveloping_creationSpan k h u htop
-  simpa only [highestVector,← Submodule.Quotient.mk_smul,smul_eq_mul,mul_one] using hu
+  simpa only [highestVector,← Submodule.Quotient.mk_smul,smul_eq_mul,mul_one] using! hu
 
 end
 end VOA.AffineVOA.HighestModule

@@ -207,7 +207,9 @@ end InducedAssignment
 
 /-! ## The headline — the Zhu bijection on exactly `[…, MUGradedAction W, residue family]` -/
 
-/-- **`zhuBijection_of_G` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4,
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_of_G` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu Theorem 5.3.4,
 with the injective half resting on EXACTLY the single gate `MUGradedAction W`.**
 
 Given

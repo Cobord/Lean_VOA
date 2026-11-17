@@ -26,6 +26,8 @@ set_option linter.unusedSectionVars false
 namespace VOA.PBWTheorem
 
 open Finsupp Module
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {K : Type*} [Field K]
 variable {g : Type*} [LieRing g] [LieAlgebra K g]

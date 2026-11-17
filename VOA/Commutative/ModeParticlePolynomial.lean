@@ -71,7 +71,7 @@ def labelledParticlePolynomial {jetOrder n : ℕ}
 theorem coeff_labelledParticlePolynomial {jetOrder n : ℕ}
     (F : JetParticleSpace K jetOrder n)
     (r : Fin n → Fin (jetOrder + 1)) :
-    MvPolynomial.coeff (labelledExponent r) (labelledParticlePolynomial F) =
+    (labelledParticlePolynomial F).coeff (labelledExponent r) =
       F (unorderedModeBlock r) := by
   classical
   rw [labelledParticlePolynomial, MvPolynomial.coeff_sum]
@@ -109,7 +109,8 @@ theorem labelledParticlePolynomial_injective {jetOrder n : ℕ} :
   intro F G h
   funext b
   let r := orderedRepresentative b
-  have hc := congrArg (MvPolynomial.coeff (labelledExponent r)) h
+  have hc := congrArg (fun q : MvPolynomial _ _ => q.coeff (labelledExponent r)) h
+  beta_reduce at hc
   rw [coeff_labelledParticlePolynomial, coeff_labelledParticlePolynomial] at hc
   have hr : unorderedModeBlock r = b := unorderedModeBlock_orderedRepresentative b
   simpa only [hr] using hc
@@ -189,7 +190,7 @@ theorem labelledParticlePolynomial_rename {jetOrder n : ℕ}
 /-- A polynomial is supported in the finite jet box when every nonzero labelled exponent vector
 comes from a tuple of modes of order at most `jetOrder`. -/
 def IsSupportedOnJetTuples (jetOrder n : ℕ) (p : MvPolynomial (Fin n) K) : Prop :=
-  ∀ d, MvPolynomial.coeff d p ≠ 0 →
+  ∀ d, p.coeff d ≠ 0 →
     ∃ r : Fin n → Fin (jetOrder + 1), d = labelledExponent r
 
 /-- Coefficient symmetry says that labelled exponent tuples with the same unordered mode
@@ -198,8 +199,8 @@ particle symmetry. -/
 def IsCoefficientSymmetric {jetOrder n : ℕ} (p : MvPolynomial (Fin n) K) : Prop :=
   ∀ r s : Fin n → Fin (jetOrder + 1),
     unorderedModeBlock r = unorderedModeBlock s →
-      MvPolynomial.coeff (labelledExponent r) p =
-        MvPolynomial.coeff (labelledExponent s) p
+      p.coeff (labelledExponent r) =
+        p.coeff (labelledExponent s)
 
 /-- The concrete realization is supported in the finite jet box. -/
 theorem labelledParticlePolynomial_supported {jetOrder n : ℕ}
@@ -236,11 +237,11 @@ theorem mem_range_labelledParticlePolynomial_iff {jetOrder n : ℕ}
       labelledParticlePolynomial_coefficientSymmetric F⟩
   · rintro ⟨hsupport, hsymm⟩
     let F : JetParticleSpace K jetOrder n := fun b ↦
-      MvPolynomial.coeff (labelledExponent (orderedRepresentative b)) p
+      p.coeff (labelledExponent (orderedRepresentative b))
     refine ⟨F, ?_⟩
     apply MvPolynomial.ext
     intro d
-    by_cases hd : MvPolynomial.coeff d p = 0
+    by_cases hd : p.coeff d = 0
     · rw [hd]
       classical
       rw [labelledParticlePolynomial, MvPolynomial.coeff_sum]
@@ -256,9 +257,9 @@ theorem mem_range_labelledParticlePolynomial_iff {jetOrder n : ℕ}
       · simp
     · obtain ⟨r, hr⟩ := hsupport d hd
       rw [hr, coeff_labelledParticlePolynomial]
-      change MvPolynomial.coeff
-          (labelledExponent (orderedRepresentative (unorderedModeBlock r))) p =
-        MvPolynomial.coeff (labelledExponent r) p
+      change p.coeff
+          (labelledExponent (orderedRepresentative (unorderedModeBlock r))) =
+        p.coeff (labelledExponent r)
       exact hsymm (orderedRepresentative (unorderedModeBlock r)) r
         (unorderedModeBlock_orderedRepresentative (unorderedModeBlock r))
 
@@ -330,7 +331,7 @@ def shiftedSParticlePolynomial {jetOrder n : ℕ}
 theorem coeff_shiftedSParticlePolynomial {jetOrder n : ℕ}
     (F : JetParticleSpace K jetOrder n)
     (r : Fin n → Fin (jetOrder + 1)) :
-    MvPolynomial.coeff (shiftedLabelledExponent r) (shiftedSParticlePolynomial F) =
+    (shiftedSParticlePolynomial F).coeff (shiftedLabelledExponent r) =
       F (unorderedModeBlock r) := by
   classical
   rw [shiftedSParticlePolynomial, MvPolynomial.coeff_sum]
@@ -393,10 +394,9 @@ def shiftedPolynomialDiagonalCoefficient {jetOrder arity spectatorCount : ℕ} (
     (F : JetParticleSpace K jetOrder (arity + spectatorCount)) : K :=
   ∑ r ∈ VOA.AuxiliaryIdealOrthogonal.shiftedCoefficientBlocks
       jetOrder arity q,
-    MvPolynomial.coeff
+    (shiftedSParticlePolynomial F).coeff
       (shiftedLabelledExponent
         (Fin.append r (orderedRepresentative spectator)))
-      (shiftedSParticlePolynomial F)
 
 /-- The coefficient-model diagonal is exactly the corresponding sum of coefficients of the
 concrete shifted labelled polynomial. -/

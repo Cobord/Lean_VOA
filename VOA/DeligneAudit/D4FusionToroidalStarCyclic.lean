@@ -18,7 +18,7 @@ private theorem weight_le_symbolDegree (hm : 1 ≤ m) : ∀ l : List (Ltr n),
       have ih := weight_le_symbolDegree hm l
       by_cases ha : m ≤ a.2
       · have hd : 1 ≤ a.2 / m :=
-          (Nat.le_div_iff_mul_le hm).mpr (by simpa using ha)
+          (Nat.le_div_iff_mul_le hm).mpr (by simpa using! ha)
         simp only [tmWeight, symbolDegree, if_pos ha]
         omega
       · simp only [tmWeight, symbolDegree, if_neg ha]
@@ -54,7 +54,7 @@ private theorem symbolMap_word (hm : 1 ≤ m) (j : ℕ) (l : List (Ltr n))
     exact Submodule.mem_map_of_mem (sw_mem_T m j l hj)
   have hw : wUG f R ∈ TU f R m 0 := by rw [TU_zero]; trivial
   have hd : x ∈ TU f R m (symbolDegree m l) := by
-    simpa only [Nat.zero_add] using
+    simpa only [Nat.zero_add] using!
       word_mem_shift f R m h hm l 0 (wUG f R) hw
   have hle : j ≤ symbolDegree m l :=
     hj.trans (weight_le_symbolDegree m hm l)
@@ -64,7 +64,7 @@ private theorem symbolMap_word (hm : 1 ≤ m) (j : ℕ) (l : List (Ltr n))
         (grGenerator f R m) =
         (grKernel f R m).mkQ
           (gradedSingle f R m (symbolDegree m l) x hd) := by
-      simpa only [grGenerator, Nat.zero_add] using hh
+      simpa only [grGenerator, Nat.zero_add] using! hh
     change (grKernel f R m).mkQ (gradedSingle f R m j x hxj) ∈ P
     subst j
     rw [← hh']

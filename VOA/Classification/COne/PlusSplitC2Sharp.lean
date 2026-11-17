@@ -31,20 +31,20 @@ theorem neutral_monomial_mem_boundary (m : ℕ) (o w : R) (ρ σ : ℂ)
         by_cases hi : i.val + 1 < m + 1
         · exact Submodule.subset_span ⟨.inl ⟨i.val + 1, hi⟩, rfl⟩
         · have he : i.val + 1 = m + 1 := by have := i.isLt; omega
-          simpa only [he] using hb
-      · simpa only [neutralList, ← mul_assoc, ← pow_succ'] using how (i.val + 1)
+          simpa only [he] using! hb
+      · simpa only [neutralList, ← mul_assoc, ← pow_succ'] using! how (i.val + 1)
     | zero => simp only [mul_zero]; exact S.zero_mem
     | add x y _ _ hx hy => rw [mul_add]; exact S.add_mem hx hy
     | smul c x _ hx => rw [mul_smul_comm]; exact S.smul_mem _ hx
   have ho (a : ℕ) : o ^ a ∈ S := by
     induction a with
     | zero => exact Submodule.subset_span ⟨.inl ⟨0, by omega⟩, rfl⟩
-    | succ a ih => simpa only [pow_succ'] using hs ih
+    | succ a ih => simpa only [pow_succ'] using! hs ih
   induction b using Nat.strong_induction_on generalizing a with
   | _ b ih =>
     rcases b with _ | _ | b
-    · simpa using ho a
-    · simpa using how a
+    · simpa using! ho a
+    · simpa using! how a
     · have heq : o ^ a * w ^ (b + 2) =
           ρ • (o ^ (a + 2) * w ^ (b + 1)) + σ • (o ^ (a + 4) * w ^ b) := by
         rw [pow_add w b 2, h8]
@@ -124,7 +124,7 @@ theorem c2_span_eq_top_all (hm2 : 2 ≤ m) : neutralSpan m hm ⊔ chargedSpan m 
     exact Submodule.mem_sup_right (Submodule.smul_mem _ _
       (E_mul_neutral_mem m hm hm2 (sec0_mem_neutralSpan_all m hm hm2 q)))
   have h1 : sectorP m hm (1 : ℤ) ≤ T := by
-    rw [sectorP, Submodule.span_le]
+    refine Submodule.span_le.mpr ?_
     rintro _ ⟨q, rfl⟩
     exact (sup_le hO hE) (sectorOneViaE_holds m hm hm2 q)
   apply top_unique
@@ -144,7 +144,7 @@ theorem finrank_c2_le_all (hm2 : 2 ≤ m) :
   have h := finrank_range_le_card (R := ℂ) (spanningList m hm)
   change Module.finrank ℂ (Submodule.span ℂ (Set.range (spanningList m hm))) ≤ _ at h
   rw [spanningList_span_all m hm hm2, finrank_top] at h
-  simpa only [Fintype.card_sum, Fintype.card_fin, Nat.add_assoc] using h
+  simpa only [Fintype.card_sum, Fintype.card_fin, Nat.add_assoc] using! h
 
 end VOA.Classification.COne.PlusC2Sharp
 

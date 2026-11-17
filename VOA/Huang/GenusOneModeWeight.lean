@@ -76,7 +76,7 @@ theorem dLNat_support_finite (A : OrdVModule W M) (v : M) :
       intro a b hab
       exact_mod_cast (add_right_cancel hab : (a : ℤ) = b) :
       Function.Injective fun r : ℕ => (r : ℤ) + 1).injOn
-  simpa only [Set.mem_preimage, Nat.cast_add, Nat.cast_one, roundL] using h
+  simpa only [Set.mem_preimage, Nat.cast_add, Nat.cast_one, roundL] using! h
 
 theorem sqNat_support_finite (A : OrdVModule W M) (a : V)
     (k : ℕ) (j : ℤ) (v : M) :
@@ -88,7 +88,7 @@ theorem sqNat_support_finite (A : OrdVModule W M) (a : V)
       have : (r : ℤ) = (s : ℤ) := add_left_cancel hrs
       exact_mod_cast this : Function.Injective fun n : ℕ ↦ j + (n : ℤ)).injOn
   refine h.subset fun n hn ↦ ?_
-  simpa only [Set.mem_preimage] using hn
+  simpa only [Set.mem_preimage] using! hn
 
 /-- The composite `L[0] ∘ a[j]` as a natural double sum. -/
 theorem Lsq_zero_vSqZ_comp (A : OrdVModule W M) (a : V)
@@ -199,7 +199,7 @@ theorem Lsq_zero_vSqZ_comm_double (A : OrdVModule W M) (a : V)
       intro hz
       apply hr
       have hz' := congrArg (fun x ↦ mode (A.YM a) (j + (n : ℤ)) x) hz
-      simpa only [map_smul, map_zero] using hz'
+      simpa only [map_smul, map_zero] using! hz'
     have heq : (∑ᶠ r : ℕ,
         (sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ)
           * sqBracketCoeffZ k j (j + (n : ℤ))) •
@@ -432,7 +432,7 @@ theorem sqLowCommTerm_support_finite (A : OrdVModule W M) (a : V)
   change g (Prod.swap p) ≠ 0
   rcases p with ⟨n, r⟩
   simpa only [g, sqLowCommTerm, Prod.swap_prod_mk, Prod.fst, Prod.snd,
-    Nat.add_comm] using hp
+    Nat.add_comm] using! hp
 
 theorem sqPositiveReindexedTerm_support_finite (A : OrdVModule W M) (a : V)
     (k : ℕ) (j : ℤ) (v : M) (Q : ℕ) :
@@ -460,7 +460,7 @@ theorem sqPositiveCommTerm_support_finite (A : OrdVModule W M) (a : V)
     change sqPositiveCommTerm A a k j v Q p ≠ 0 at hp
     simpa only [sqPositiveCommTerm, sqPositiveReindexedTerm, Prod.fst, Prod.snd,
       hs, Nat.add_sub_cancel_left, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc,
-      mul_assoc, mul_comm, mul_left_comm] using hp
+      mul_assoc, mul_comm, mul_left_comm] using! hp
   exact ⟨(s, p.1), hterm, by ext <;> simp [φ, hs]⟩
 
 /-- Reindex the full fixed-`Q` positive contribution by `r=Q+s`, then apply the positive scalar
@@ -530,7 +530,7 @@ theorem sqMode_L_nat_of_mem_grading (A : OrdVModule W M) {a : V} {k : ℕ}
     have hgrade : W.L (Q : ℤ) a ∈ W.grading ((k - Q : ℕ) : ℤ) := by
       convert hmem using 1
       rw [Nat.cast_sub hQk]
-    simpa using sqMode_of_mem_grading A hgrade j
+    simpa using! sqMode_of_mem_grading A hgrade j
   · have hzero := L_nat_eq_zero_of_lt W ha (by omega : k < Q)
     rw [hzero, map_zero, sqAct_zero_left]
 
@@ -675,11 +675,11 @@ theorem sqMode_Lsq_zero_of_mem_grading_explicit (A : OrdVModule W M)
         sqAct_zero_left, smul_zero])
     rw [finsum_eq_finsetSum_of_support_subset _ hsub, Finset.sum_range_succ']
     have hd0 : sqBracketCoeffZ 2 1 (1 : ℤ) = 1 := by
-      simpa using sqBracketCoeff_zero_diag
+      simpa using! sqBracketCoeff_zero_diag
     norm_num only [Nat.cast_zero, Nat.cast_one, Nat.zero_add, Nat.sub_zero]
     rw [hd0, one_smul, W.L_zero_grading a ha, sqAct_smul_left]
     abel
-  simpa only [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.sum_apply] using
+  simpa only [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.sum_apply] using!
     congrArg (fun T : Module.End ℂ M ↦ T v) hmap
 
 /-- The `L[0]` commutator for an ordinary-homogeneous first input. -/
@@ -688,7 +688,7 @@ theorem Lsq_zero_sqMode_comm_of_mem_grading (A : OrdVModule W M)
     sqL A 0 (sqMode A j a v) - sqMode A j a (sqL A 0 v) =
       sqMode A j (Lsq W 0 a) v - ((j : ℂ) + 1) • sqMode A j a v := by
   have hsq : sqMode A j a = sqAct A a k j := by
-    simpa using sqMode_of_mem_grading A ha j
+    simpa using! sqMode_of_mem_grading A ha j
   rw [hsq]
   rw [Lsq_zero_vSqZ_comm_collapsed A ha,
     sqMode_Lsq_zero_of_mem_grading_explicit A ha]

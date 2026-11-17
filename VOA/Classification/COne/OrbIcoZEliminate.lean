@@ -31,7 +31,7 @@ theorem constant_pivot (a : ℤ → A W) (f : ℤ → ModeRel)
   have hh := equalRelCheck_sound W a hcheck
   rw [evalRel_subst W a f hf r, hr, evalRel_append, evalRel_scalar] at hh
   have hz : (c : ℂ) • (a j - evalRel W a e) = 0 := by
-    simpa [evalRel, zp, smul_sub, sub_eq_add_neg] using hh.symm
+    simpa [evalRel, zp, smul_sub, sub_eq_add_neg] using! hh.symm
   have hcc : (c : ℂ) ≠ 0 := by exact_mod_cast hc
   exact sub_eq_zero.mp ((smul_eq_zero.mp hz).resolve_left hcc)
 

@@ -68,10 +68,18 @@ theorem moonshineMatterForm_currentGenerator_adjoint (a : Fin (rank lorentzianLa
         (mode (moonshineMatterNearVOA.Y
           (VnatVOA.vacuum ⊗ₜ[ℂ] frameWordState lorentzianLattice [(0, a)] 0)) (-n) y) := by
   rw [moonshineMatter_latticeGenerator_mode, moonshineMatter_latticeGenerator_mode]
-  simpa only [neg_one_mul] using
-    bilinearTensor_lTensor_adjoint natForm lorentzianBilinearForm _ _ (-1)
-      (fun b b' => by simpa only [neg_one_mul] using
-        latForm_frameStateField_current_adjoint lorentzianComplexFrame lorentzian_even a n b b') x y
+  have T := bilinearTensor_lTensor_adjoint natForm lorentzianBilinearForm _ _ (-1)
+      (fun b b' => by
+        first
+          | simpa only [neg_one_mul] using
+              latForm_frameStateField_current_adjoint lorentzianComplexFrame lorentzian_even a n b b'
+          | (simp only [neg_one_mul]
+             exact latForm_frameStateField_current_adjoint lorentzianComplexFrame lorentzian_even
+               a n b b')) x y
+  first
+    | simpa only [neg_one_mul] using T
+    | (simp only [neg_one_mul] at T
+       exact T)
 
 /-- Full FHL identity on the Vnat factor embedded as tensor generators. -/
 theorem moonshineMatterForm_vnatGenerator_fhl (wt : ℤ) (a : Vnat)

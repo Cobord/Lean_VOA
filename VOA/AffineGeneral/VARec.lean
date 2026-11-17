@@ -39,8 +39,10 @@ commutator of that coefficient with the supplied translation operator. -/
 the translation commutator, since translation acts on operator coefficients. -/
 theorem commLT_mulBySub (Tr : End ℂ 𝒱) (G : FormalDist₂ (End ℂ 𝒱)) :
     commLT Tr (mulBySub G) = mulBySub (commLT Tr G) := by
+  have hsub : ∀ (a b c : End ℂ 𝒱), ⁅a, b - c⁆ = ⁅a, b⁆ - ⁅a, c⁆ := fun a b c => by
+    simp only [LieRing.of_associative_ring_bracket]; noncomm_ring
   apply FormalDist₂.ext; intro s t
-  simp only [commLT_apply, mulBySub_apply, lie_sub]
+  simp only [commLT_apply, mulBySub_apply, hsub]
 
 /-- The same compatibility holds for every power of the variable difference.
 This allows extraction of higher OPE coefficients after taking translation. -/
@@ -57,8 +59,10 @@ theorem commLT_bracketDist (V : PreVertexAlgebra 𝒱) (Tr : End ℂ 𝒱)
     commLT Tr (bracketDist (V.Y u) (V.Y v)) = deriv2 (bracketDist (V.Y u) (V.Y v)) := by
   have leib : ∀ (a b c : End ℂ 𝒱), ⁅a, b * c⁆ = ⁅a, b⁆ * c + b * ⁅a, c⁆ := fun a b c => by
     simp only [LieRing.of_associative_ring_bracket]; noncomm_ring
+  have hsub : ∀ (a b c : End ℂ 𝒱), ⁅a, b - c⁆ = ⁅a, b⁆ - ⁅a, c⁆ := fun a b c => by
+    simp only [LieRing.of_associative_ring_bracket]; noncomm_ring
   apply FormalDist₂.ext; intro s t
-  simp only [commLT_apply, deriv2_apply, bracketDist_apply, lie_sub, leib, htr,
+  simp only [commLT_apply, deriv2_apply, bracketDist_apply, hsub, leib, htr,
     smul_mul_assoc, mul_smul_comm, smul_sub]
   abel
 

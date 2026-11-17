@@ -126,7 +126,7 @@ theorem lowering_map_zeroLowSpan (h : TwoRectRel R w k l) (q r : ℕ)
     (d : Fin 8) (hd : lowSl3 d) : zeroLowSpan R (thetaDesc R w q) ≤
       (zeroLowSpan R (thetaDesc R w (q + r))).comap (R.op d r) := by
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · simpa only [Nat.add_zero] using zeroLowSpan_inv R (thetaDesc R w q) d hd
+  · simpa only [Nat.add_zero] using! zeroLowSpan_inv R (thetaDesc R w q) d hd
   · exact positive_map_zeroLowSpan h q r hr d hd
 
 /-- Every lowering word is spanned by zero-mode lowering words on the exact
@@ -142,7 +142,7 @@ theorem lowering_word_mem (h : TwoRectRel R w k l) :
       have hi := ih (fun y hy => hg y (List.mem_cons_of_mem _ hy))
       have hv := lowering_map_zeroLowSpan h (SectorGraded.wordDeg g) x.2 x.1
         (hg x List.mem_cons_self) hi
-      simpa only [SectorGraded.wordDeg, List.map_cons, List.sum_cons, Nat.add_comm] using hv
+      simpa only [SectorGraded.wordDeg, List.map_cons, List.sum_cons, Nat.add_comm] using! hv
 
 /-- PBW transfers the exact lowering-word degree bridge to the whole piece. -/
 theorem cycDeg_le_zeroLowSpan (h : TwoRectRel R w k l) (d : ℕ) :

@@ -59,7 +59,10 @@ theorem presentedJetRetraction_orderZero (I : Ideal (MvPolynomial σ ℂ))
       (Ideal.Quotient.mkₐ ℂ I) := by
     apply MvPolynomial.algHom_ext
     intro i
-    simp [presentedJetOrderZero, presentedJetRetraction, derivationJetEval]
+    simp only [presentedJetOrderZero, presentedJetRetraction, AlgHom.comp_apply,
+      MvPolynomial.rename_X, Ideal.Quotient.mkₐ_eq_mk]
+    erw [presentedJetToDifferentialAlgebra_X]
+    try simp
   exact DFunLike.congr_fun h f
 
 /-- The canonical Li map restricted to order zero is evaluation at the degree-zero classes. -/

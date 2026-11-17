@@ -23,7 +23,7 @@ def a3ThreeBoxTarget (a b c : ℕ) (k : A3RadicalKey) : Submodule ℂ V :=
 theorem a3_mode_set_degree (m d : ℕ) (f : ℕ →₀ ℕ)
     (hf : f ∈ a2BoxModeSet m d) : Finsupp.degree f = d := by
   rw [a2BoxModeSet, Finset.mem_finsuppAntidiag'] at hf
-  simpa [Finsupp.degree_apply] using hf.1
+  simpa [Finsupp.degree_apply] using! hf.1
 
 theorem a3_three_box_triple_data (a b c : ℕ) (k : A3RadicalKey)
     (fg : ((ℕ →₀ ℕ) × (ℕ →₀ ℕ)) × (ℕ →₀ ℕ))
@@ -50,23 +50,23 @@ theorem a3ThreeBoxKeyVectors_le_layer (a b c : ℕ) (k : A3RadicalKey) :
     a3_three_box_triple_data a b c k fg hfg
   have hlen₁ : (VOA.DeligneAudit.CLAssembly.lst fg.1.1).length = k.d₁ := by
     simpa [a2_lst_length, Finsupp.weight_apply, om, Finsupp.degree_apply,
-      Finsupp.sum, Prod.fst_sum] using hfdeg
+      Finsupp.sum, Prod.fst_sum] using! hfdeg
   have hlen₂ : (VOA.DeligneAudit.CLAssembly.lst fg.1.2).length = k.d₂ := by
     simpa [a2_lst_length, Finsupp.weight_apply, om, Finsupp.degree_apply,
-      Finsupp.sum, Prod.fst_sum] using hgdeg
+      Finsupp.sum, Prod.fst_sum] using! hgdeg
   have hlen₃ : (VOA.DeligneAudit.CLAssembly.lst fg.2).length = k.d₃ := by
     simpa [a2_lst_length, Finsupp.weight_apply, om, Finsupp.degree_apply,
-      Finsupp.sum, Prod.fst_sum] using hhdeg
+      Finsupp.sum, Prod.fst_sum] using! hhdeg
   have hsum : (VOA.DeligneAudit.CLAssembly.lst fg.1.1).sum +
       (VOA.DeligneAudit.CLAssembly.lst fg.1.2).sum +
       (VOA.DeligneAudit.CLAssembly.lst fg.2).sum = k.degree := by
-    simpa [a3BoxDegree, a2_lst_sum] using hd
+    simpa [a3BoxDegree, a2_lst_sum] using! hd
   have hw := a3_three_mode_mem_key ρ w
     (VOA.DeligneAudit.CLAssembly.lst fg.1.1)
     (VOA.DeligneAudit.CLAssembly.lst fg.1.2)
     (VOA.DeligneAudit.CLAssembly.lst fg.2)
   simpa only [a3ThreeBoxKeyVectors, a3ThreeBoxValue,
-    hlen₁, hlen₂, hlen₃, hsum] using hw
+    hlen₁, hlen₂, hlen₃, hsum] using! hw
 
 theorem a3ThreeBoxTarget_le_layer_sup (a b c : ℕ) (k : A3RadicalKey) :
     a3ThreeBoxTarget ρ w a b c k ≤

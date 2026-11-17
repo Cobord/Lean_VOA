@@ -15,7 +15,7 @@ theorem certificate_current_identity (m : ℕ) (i : Fin 20) :
       ((certProducts i).map fun p => p.coeff • actualJetProduct m p).sum := by
   have h := congrArg (currentJetEvaluate m) (certificate_jet_identity i)
   simpa only [map_zsmul,map_list_sum,List.map_map,Function.comp_def,
-    currentJetEvaluate_jetTarget,currentJetEvaluate_jetProduct] using h
+    currentJetEvaluate_jetTarget,currentJetEvaluate_jetProduct] using! h
 
 theorem certificate_current_coefficient_identity (m N : ℕ) (i : Fin 20) :
     certMultiplier i •
@@ -23,7 +23,7 @@ theorem certificate_current_coefficient_identity (m N : ℕ) (i : Fin 20) :
       ((certProducts i).map fun p =>
         p.coeff • PowerSeries.coeff N (actualJetProduct m p)).sum := by
   have h := congrArg (PowerSeries.coeff N) (certificate_current_identity m i)
-  simpa only [map_zsmul,map_list_sum,List.map_map,Function.comp_def] using h
+  simpa only [map_zsmul,map_list_sum,List.map_map,Function.comp_def] using! h
 
 /-- The ordinary-jet convolution cutoff remains strict with Nat subtraction,
 for every m and derivative order; no artificial lower bound on m is needed. -/
@@ -42,7 +42,7 @@ theorem certificate_product_coeff_mem_polarIdeal (m : ℕ) (i : Fin 20)
 private theorem polar_zsmul_mem (m : ℕ) (z : ℤ) {p : MvPolynomial (Vars m) ℂ}
     (hp : p ∈ quadraticCubicPolarIdeal m) : z • p ∈ quadraticCubicPolarIdeal m := by
   have h := ((quadraticCubicPolarIdeal m).restrictScalars ℂ).smul_mem (z : ℂ) hp
-  simpa only [Int.cast_smul_eq_zsmul ℂ] using h
+  simpa only [Int.cast_smul_eq_zsmul ℂ] using! h
 
 /-- Cleared integer certificate multipliers are nonzero over Complex, so
 the target itself lies in the SMALL literal quadratic/cubic ideal. -/
@@ -69,7 +69,7 @@ theorem certificate_current_coeff_mem_polarIdeal (m : ℕ) (i : Fin 20) :
       PowerSeries.coeff (2 * m - 3 - certOrder i)
         (actualJetTarget m (certOrder i) (certChannel i)) ∈
       (quadraticCubicPolarIdeal m).restrictScalars ℂ := by
-    simpa only [Int.cast_smul_eq_zsmul ℂ] using hm
+    simpa only [Int.cast_smul_eq_zsmul ℂ] using! hm
   exact (Submodule.smul_mem_iff ((quadraticCubicPolarIdeal m).restrictScalars ℂ) hn).mp hc
 
 /-- Twenty concrete finite moment endpoints, in the proper lower ideal

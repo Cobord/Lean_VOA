@@ -43,8 +43,8 @@ theorem sumToIter_residualEval (f : σ → τ) (F : MvPolynomial (σ ⊕ δ) K) 
   have hhom : (sumToIter K τ δ).comp (residualEval f).toRingHom =
       (blockEval f).toRingHom.comp (sumToIter K σ δ) := by
     apply MvPolynomial.ringHom_ext
-    · intro c; simp [residualEval, blockEval]
-    · rintro (i | i) <;> simp [residualEval, blockEval]
+    · intro c; simp [residualEval, blockEval, sumToIter_C]
+    · rintro (i | i) <;> simp [residualEval, blockEval, sumToIter_Xl, sumToIter_Xr]
   exact DFunLike.congr_fun hhom F
 
 /-- Tau symmetry persists over the formal residual coefficient ring. -/
@@ -81,8 +81,15 @@ theorem cluster_factor_dvd [Algebra ℚ K] [IsDomain K] [CharZero K]
   have hd := difference_pow_two_min_dvd f u v huv ⊤ (sumToIter K σ δ F)
     (sumToIter_isSymmetric F hsym) (sumToIter_mem_filtration U (shape f) F hF)
   rw [← sumToIter_residualEval] at hd
+  have hinv : ∀ p : MvPolynomial (τ ⊕ δ) K, iterToSum K τ δ (sumToIter K τ δ p) = p := by
+    intro p
+    induction p using MvPolynomial.induction_on with
+    | C a => simp [sumToIter_C, iterToSum_C_C]
+    | add p q hp hq => simp only [map_add, hp, hq]
+    | mul_X p i hp =>
+      cases i <;> simp [hp, sumToIter_Xl, sumToIter_Xr, iterToSum_X, iterToSum_C_X]
   have h := map_dvd (iterToSum K τ δ) hd
-  simpa only [map_pow, map_sub, iterToSum_X, iterToSum_sumToIter] using h
+  simpa only [map_pow, map_sub, iterToSum_X, hinv] using h
 
 end
 end VOA.GordonResidualFiltration

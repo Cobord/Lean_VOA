@@ -61,7 +61,7 @@ theorem vSqZ_eq_sum {a x : 𝒱} {p q : ℤ} (ha : a ∈ W.grading p) (hx : x �
       exact hi (by
         rw [show mode (W.Y a) i x = W.smul a i x from rfl,
           smul_eq_zero_of_lt W ha hx (by omega), smul_zero])
-    exact ⟨(i - m).toNat, by omega, by simp only [e, Function.Embedding.coeFn_mk]; omega⟩
+    exact ⟨(i - m).toNat, by omega, by show m + (((i - m).toNat : ℕ) : ℤ) = i; omega⟩
 
 /-- A box sum equals an antidiagonal sum when the summand vanishes off the triangle. -/
 theorem sum_box_eq_antidiag {M : Type*} [AddCommMonoid M] (B : ℕ) (F : ℕ → ℕ → M)
@@ -211,7 +211,7 @@ theorem linearMap_ext_homog {f g : 𝒱 →ₗ[ℂ] 𝒱}
   have hx : x ∈ ⨆ i, W.grading i := by
     rw [W.isInternal.submodule_iSup_eq_top]; trivial
   exact Submodule.iSup_induction (fun i => W.grading i) (motive := fun x => f x = g x) hx
-    (fun q y hy => h q y hy) (by simp) (fun y z hy hz => by simp only at hy hz ⊢; rw [map_add, map_add, hy, hz])
+    (fun q y hy => h q y hy) (by simp) (fun y z hy hz => by rw [map_add, map_add, hy, hz])
 
 /-- **The square-bracket current commutator** (any VOA, `a, b ∈ V₁`, `a₍₁₎b = β|0⟩`):
 `[a[m], b[n]] = (a₍₀₎b)[m+n] + m·β·δ_{m+n,0}`. -/

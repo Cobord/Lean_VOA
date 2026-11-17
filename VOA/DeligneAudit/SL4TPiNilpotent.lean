@@ -25,7 +25,7 @@ theorem ideal_cell_nilpotent_mul (I K : Ideal R) (x p : R)
   have hy0 : q y = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hy
   have he : q p * q x = c • q x := by
     have he' := congrArg q heq
-    simpa only [map_add, map_smul, map_mul, hy0, zero_add] using he'.symm
+    simpa only [map_add, map_smul, map_mul, hy0, zero_add] using! he'.symm
   have hpow : ∀ n : ℕ, q p ^ n * q x = c ^ n • q x := by
     intro n
     induction n with

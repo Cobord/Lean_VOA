@@ -88,7 +88,7 @@ theorem word2_mem (a b : ι) :
     J D k a (-1) (J D k b (-1) (vacuumA D k)) ∈ gradingZA D k 2 := by
   have := J_mem_gradingZA D k hk a (-1)
     (J_mem_gradingZA D k hk b (-1) (vacuumA_mem_gradingZA_zero D k))
-  simpa using this
+  simpa using! this
 
 end
 

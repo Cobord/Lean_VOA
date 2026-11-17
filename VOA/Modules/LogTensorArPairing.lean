@@ -65,7 +65,7 @@ theorem twI_mem_weight_log {a b : ℂ} {x : M₁} {y : M₂}
   rw [twI_apply_eq_sum N₁.toGW _ a n hJ y]
   refine Submodule.smul_mem _ _ (Submodule.sum_mem _ (fun j _ => Submodule.smul_mem _ _ ?_))
   have hm := Y.2.mem_weight (L1_pow_mem_weight N₁.toGW hx j) hy (2*a-n-2-j) 0
-  convert hm using 2 <;> ring
+  convert hm using 2 <;> first | ring1 | rfl
 
 /-- The zeroth first-state term contains the genuine nilpotent half-turn. -/
 theorem firstTermEnd_zero {a : ℂ} {x : M₁} (hx : x ∈ N₁.weight a) (j : ℕ) :
@@ -146,12 +146,9 @@ theorem pair_modes_zero (n : ℂ) {a : ℂ} {x : M₁} (hx : x ∈ N₁.weight a
           (twI N₁.toGW (zeroFamily N₁ N₂ N₃ (prepared N₁ N₂ N₃ Y)) a n x 0)
       rw [map_zero,map_zero,map_zero]
     · intro y z hy hz
-      dsimp only at hy hz ⊢
       rw [C2Rigid.dualPairing_add_left,map_add,C2Rigid.dualPairing_add_left,hy,hz]
-  · dsimp only
-    rw [map_zero,map_zero,map_zero]
+  · rw [map_zero,map_zero,map_zero]
   · intro t s ht hs
-    dsimp only at ht hs ⊢
     rw [map_add,map_add,map_add,ht,hs]
 
 /-- Genuine contragredient module modes transpose the actual weak opposite modes,
@@ -174,7 +171,6 @@ theorem pair_contra_opposite (N : LogVModule W M₂) {d : ℤ} {u : V}
       C2Rigid.dualPairingFlip N.toGW t (oppB N.toWeakModule u p 0)
     rw [map_zero,map_zero,map_zero]
   · intro y z hy hz
-    dsimp only at hy hz ⊢
     rw [C2Rigid.dualPairing_add_left,map_add,C2Rigid.dualPairing_add_left,hy,hz]
 
 end VOA.LogTensor.Ar

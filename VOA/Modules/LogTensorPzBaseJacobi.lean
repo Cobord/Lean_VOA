@@ -67,7 +67,7 @@ theorem pair_mode_baseModes (hpsi : CompatibleMap N₁ N₂ N psi)
   split_ifs with h
   · have hd := congrArg (fun b : BilinearDual (M₁ := M₁) (M₂ := M₂) => b x y)
       (VOA.Huang.PzTensorY4.twist_twist N₁.toWeakModule N₂.toWeakModule hu p (psi r))
-    simpa only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, smul_eq_mul] using hd
+    simpa only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, smul_eq_mul] using! hd
   · simp
 
 /-- The zeroth modes have the full intertwiner Jacobi identity on homogeneous inputs.

@@ -62,7 +62,7 @@ theorem pow_index_eq_one_of_schurTrivial_subgroup {Q E : Type} [Group Q] [Group 
     change π (x ^ EH.index) = 1
     rw [map_pow, hπx, one_pow])
   have := congrArg Subtype.val h1
-  simpa [hidx] using this
+  simpa [hidx] using! this
 
 /-- **Coprime-index criterion.** Two Schur-trivial subgroups of coprime finite index make the
 ambient group Schur-trivial. -/
@@ -199,7 +199,7 @@ theorem schurTrivial_of_quaternion_normal_forms {Q : Type} [Group Q] (s t : Q)
   have hπc : π ⁅a, b⁆ = s ^ 2 := by
     rw [map_commutatorElement, ha, hb, commutatorElement_def]
     have : t * s⁻¹ * t⁻¹ = s := by
-      have := congrArg (·⁻¹) hconj; simpa [mul_assoc] using this
+      have := congrArg (·⁻¹) hconj; simpa [mul_assoc] using! this
     calc s * t * s⁻¹ * t⁻¹ = s * (t * s⁻¹ * t⁻¹) := by group
       _ = s ^ 2 := by rw [this, pow_two]
   obtain ⟨n, rfl⟩ := Subgroup.mem_zpowers_iff.mp

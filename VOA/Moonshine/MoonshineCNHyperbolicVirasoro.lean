@@ -12,6 +12,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open MvPolynomial
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 def hypSugawaraVirasoroDefect (κ ell : ℂ) (m n : ℤ) : Module.End ℂ hypFock :=
   ⁅hypSugawara κ ell m, hypSugawara κ ell n⁆ - ((m : ℂ) - n) • hypSugawara κ ell (m + n)
 
@@ -30,15 +33,16 @@ theorem hypSugawaraVirasoroDefect_commutes (κ ell : ℂ) (m n : ℤ) (a : Fin 2
 
 theorem hypSugawaraVirasoroDefect_scalar (κ ell : ℂ) (m n : ℤ) :
     hypSugawaraVirasoroDefect κ ell m n =
-      coeff 0 (hypSugawaraVirasoroDefect κ ell m n 1) • LinearMap.id := by
+      (hypSugawaraVirasoroDefect κ ell m n 1).coeff 0 • LinearMap.id := by
   apply hypCommutant_scalar _ (fun a => if a = 0 then κ else ell)
   intro a k _
   exact sub_eq_zero.mp (hypSugawaraVirasoroDefect_commutes κ ell m n a k)
 
 theorem hypSugawara_zero_constantCoeff (κ ell : ℂ) (p : hypFock) :
     constantCoeff (hypSugawara κ ell 0 p) = (κ * ell) * constantCoeff p := by
-  simpa only [hypSugawara_zero_vacuum, LinearMap.map_smul₂, hypForm_one, smul_eq_mul]
-    using (hypForm_sugawara_zero_adjoint κ ell 1 p).symm
+  have h := (hypForm_sugawara_zero_adjoint κ ell 1 p).symm
+  simp only [hypSugawara_zero_vacuum, LinearMap.map_smul₂, hypForm_one, smul_eq_mul] at h
+  exact h
 
 theorem hypSugawara_vacuum_constant (κ ell : ℂ) (n : ℤ) :
     constantCoeff (hypSugawara κ ell n 1) = if n = 0 then κ * ell else 0 := by

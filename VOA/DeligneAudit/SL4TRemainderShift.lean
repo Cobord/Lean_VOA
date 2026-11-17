@@ -33,7 +33,7 @@ theorem alphabetCharacteristic_delete_truncated (xs : List A) (z : A) (k : ℕ)
   symm
   apply Finset.sum_subset (Finset.range_mono (by omega))
   intro e he hnot
-  have hbound : k + 1 ≤ e := by simpa using hnot
+  have hbound : k + 1 ≤ e := by simpa using! hnot
   rw [pow_eq_zero_of_le hbound hz, map_zero, zero_mul]
 
 /-- The column relation follows directly by deleting one characteristic factor.
@@ -85,7 +85,7 @@ theorem alphabetRemainder_shift_mem (ys zs : List A) (z : A) (N k c l : ℕ)
   have hq : D4Levi.ksEPoly ((ys.map q ++ zs.map q) ++ [q z]) = 1 := by
     have h := congrArg (Polynomial.map q) he
     simpa only [alphabetElementary_map, List.map_append, List.map_cons,
-      List.map_nil, Polynomial.map_one] using h
+      List.map_nil, Polynomial.map_one] using! h
   have hz : q z ^ (k + 1) = 0 := by
     rw [← map_pow]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span rfl)
@@ -93,7 +93,7 @@ theorem alphabetRemainder_shift_mem (ys zs : List A) (z : A) (N k c l : ℕ)
   change q _ = 0
   simp only [map_add, map_sum, map_mul, map_pow, alphabetPowerRemainder_map]
   exact alphabetRemainder_shift_of_nilpotent (ys.map q) (zs.map q) (q z) N k c l hN
-    (by simpa only [List.length_append, List.length_map] using hlen) hq hz
+    (by simpa only [List.length_append, List.length_map] using! hlen) hq hz
 
 end
 

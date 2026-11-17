@@ -143,7 +143,7 @@ theorem h0_word (w : List (Generator × ℕ)) :
 theorem h0_e1_pow (r : ℕ) {z : WakModule k} {c : ℂ} (hz : J k 2 0 z = c • z) :
     J k 2 0 ((J k 0 1 ^ r) z) = (c + 2 * r) • (J k 0 1 ^ r) z := by
   induction r with
-  | zero => simpa using hz
+  | zero => simpa using! hz
   | succ r ih =>
     rw [pow_succ', Module.End.mul_apply, h0_J, ih, map_smul]
     simp only [curCharge, Matrix.cons_val_zero]
@@ -153,7 +153,7 @@ theorem h0_e1_pow (r : ℕ) {z : WakModule k} {c : ℂ} (hz : J k 2 0 z = c • 
 theorem e1_pow_mem_grading (r : ℕ) {n : ℤ} {z : WakModule k} (hz : z ∈ gradingZA k n) :
     (J k 0 1 ^ r) z ∈ gradingZA k (n - r) := by
   induction r with
-  | zero => simpa using hz
+  | zero => simpa using! hz
   | succ r ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := J_mem_gradingZA k 0 1 _ ih
@@ -280,7 +280,7 @@ theorem map_evalBase_colSer_one : PowerSeries.map evalBaseR (colSer 1) = 1 := by
   simp [evalBase, baseVal]
 
 theorem map_evalBase_dS (f : JetSer) :
-    PowerSeries.map evalBaseR (dS f) = PowerSeries.derivative ℂ (PowerSeries.map evalBaseR f) := by
+    PowerSeries.map evalBaseR (dS f) = PowerSeries.derivative (R := ℂ) (PowerSeries.map evalBaseR f) := by
   refine PowerSeries.ext fun n => ?_
   rw [PowerSeries.coeff_map, PowerSeries.coeff_derivative, PowerSeries.coeff_derivative,
     PowerSeries.coeff_map, map_mul]
@@ -387,7 +387,7 @@ theorem J_mem_ideal (hI : (affineSl2VOA_closed k hk).IsIdeal I) (a : Fin 3) (m :
 theorem e1_pow_mem_ideal (hI : (affineSl2VOA_closed k hk).IsIdeal I) (r : ℕ)
     {y : WakModule k} (hy : y ∈ I) : (J k 0 1 ^ r) y ∈ I := by
   induction r with
-  | zero => simpa using hy
+  | zero => simpa using! hy
   | succ r ih => rw [pow_succ', Module.End.mul_apply]; exact J_mem_ideal hI 0 1 ih
 
 /-- **Detection**: on `symMod r`, membership of `y` in an ideal avoiding weight zero forces
@@ -401,7 +401,7 @@ theorem evalBase_eq_zero_of_mem (hkN : ∀ i : ℕ, k ≠ i)
   rw [detect_apply] at h1
   have h3 : evalBase Q • (((-1) ^ r * cf k r) • vacuumA k) ∈ offZero k hk := by
     have := sub_mem h2 h1
-    simpa using this
+    simpa using! this
   have h4 : evalBase Q • (((-1) ^ r * cf k r) • vacuumA k) ∈
       (affineSl2VOA_closed k hk).grading 0 :=
     Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (affineSl2VOA_closed k hk).vacuum_mem)
@@ -447,15 +447,15 @@ theorem symMod_word (l : List (Fin 3 × ℕ)) (r : ℕ) {y : WakModule k} {Q : J
     (hyQ : (y, Q) ∈ symMod k hk r) :
     (jWord (k := k) l y, VOA.CyclicEval.word jetRho l Q) ∈ symMod k hk r := by
   induction l with
-  | nil => simpa [jWord, VOA.CyclicEval.word] using hyQ
+  | nil => simpa [jWord, VOA.CyclicEval.word] using! hyQ
   | cons q l ih =>
     have h := symMod_J (hk := hk) q.1 q.2 r ih
-    simpa [jWord, VOA.CyclicEval.word, Module.End.mul_apply] using h
+    simpa [jWord, VOA.CyclicEval.word, Module.End.mul_apply] using! h
 
 theorem jWord_mem (hI : (affineSl2VOA_closed k hk).IsIdeal I) (l : List (Fin 3 × ℕ))
     {y : WakModule k} (hy : y ∈ I) : jWord (k := k) l y ∈ I := by
   induction l with
-  | nil => simpa [jWord] using hy
+  | nil => simpa [jWord] using! hy
   | cons q l ih =>
     simp only [jWord, List.map_cons, List.prod_cons, Module.End.mul_apply] at ih ⊢
     exact J_mem_ideal hI q.1 q.2 ih
@@ -518,7 +518,7 @@ theorem graphL_apply_eq (r : ℕ) {x : ASpace} (hx : x ∈ (graphL r).map (Linea
   have h1 := Submodule.mem_graph_toLinearPMap (graphL_single r) ⟨x, hx⟩
   have h2 := sub_mem h1 hxQ
   have h3 := graphL_single r _ h2 (by simp)
-  simpa [sub_eq_zero] using h3
+  simpa [sub_eq_zero] using! h3
 
 /-- **`WordSymbolDescends r` for every `r`, proved outright.** -/
 def wordSymbolDescends (r : ℕ) : WordSymbolDescends r where

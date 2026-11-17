@@ -24,7 +24,7 @@ theorem skew_self_zero (a c : Fin S.n) : S.f a a c = 0 := by
 
 theorem theta_pair_ne_zero : S.f S.hθ S.c₀ S.c₀ ≠ 0 := by
   have he : S.f S.hθ S.c₀ S.c₀ = -(S.thetaH S.hθ : ℂ) := by
-    simpa only [if_pos rfl] using S.cartan_table S.hθ S.hθ_cartan S.c₀
+    simpa only [if_pos rfl] using! S.cartan_table S.hθ S.hθ_cartan S.c₀
   rw [he]
   exact neg_ne_zero.mpr (by exact_mod_cast S.hθ_ne)
 

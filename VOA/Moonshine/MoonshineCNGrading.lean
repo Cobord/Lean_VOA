@@ -59,9 +59,11 @@ theorem lorentzianChargeState_mem_weight (α : lorentzianLattice.carrier) :
     lorentzianChargeState α ∈ lorentzianWeightGrading (lorentzianEnergy α) := by
   have h := bigradα_le_gradingLatGen lorentzianLattice 0 α
     (show lorentzianChargeState α ∈ bigradα lorentzianLattice (0, α) from
-      ⟨vacuumN _, by simpa only [HeisenbergN.gradingZN_of_nonneg (le_refl 0)] using
-        vacuumN_mem_gradingWN (rank lorentzianLattice), rfl⟩)
-  simpa only [zero_add, lorentzian_halfNorm] using h
+      ⟨vacuumN _, by
+        rw [HeisenbergN.gradingZN_of_nonneg (le_refl 0)]
+        exact vacuumN_mem_gradingWN (rank lorentzianLattice), rfl⟩)
+  simp only [zero_add, lorentzian_halfNorm] at h
+  exact h
 
 theorem lorentzianWeightGrading_not_bounded_below :
     ¬ ∃ N : ℤ, ∀ n : ℤ, n < N → lorentzianWeightGrading n = ⊥ :=
@@ -82,7 +84,7 @@ theorem lorentzianIsotropicChargeStates_independent :
   have hval : ∀ j : ℤ, lorentzianChargeCoefficient ![i, 0]
       (lorentzianChargeState ![j, 0]) = if j = i then 1 else 0 := by
     intro j
-    rw [lorentzianChargeCoefficient_charge_eq]
+    refine (lorentzianChargeCoefficient_charge_eq ![i, 0] ![j, 0]).trans ?_
     split_ifs with hvec hji hji
     · rfl
     · exact (hji (congrFun hvec 0)).elim

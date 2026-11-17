@@ -39,7 +39,7 @@ theorem multiplier_eq_one {M : Type*} [Monoid M] (S T U G S' : M)
     exact hb'
   have hg : S = G * S := hU.mul_left_cancel (hU.mul_right_cancel he)
   apply hS.mul_right_cancel
-  simpa using hg.symm
+  simpa using! hg.symm
 
 variable {ι L : Type*} [Fintype ι] [DecidableEq ι] [Field L]
 
@@ -54,12 +54,12 @@ theorem map_S_eq_of_map_T_eq (S T U : Matrix ι ι L) (σ : L ≃+* L)
     (htwist : (T.map σ).map σ * G = G * T) : S.map σ = S := by
   have hb' : S.map σ * T * S.map σ = U * S.map σ * U := by
     have hh := congrArg (fun A : Matrix ι ι L => A.map σ) hb
-    simpa only [Matrix.map_mul, hT, hUi] using hh
+    simpa only [Matrix.map_mul, hT, hUi] using! hh
   have hsq : S.map σ * S.map σ = S * S := by
-    simpa only [Matrix.map_mul] using hC
-  have hc : G * T = T * G := by simpa only [hT] using htwist.symm
+    simpa only [Matrix.map_mul] using! hC
+  have hc : G * T = T * G := by simpa only [hT] using! htwist.symm
   have hg := multiplier_eq_one S T U G (S.map σ) hS hU hb hb' hsq hrow hc
-  simpa only [hg, one_mul] using hrow
+  simpa only [hg, one_mul] using! hrow
 
 variable [Algebra ℚ L]
 
@@ -110,10 +110,10 @@ theorem repS_entries_mem_of_twist [FiniteDimensional ℚ L] [IsGalois ℚ L]
     exact congrFun (congrFun ModularGroup.S_mul_S_eq i) j
   apply S_entries_mem_of_twist K (ρ ModularGroup.S) (ρ ModularGroup.T)
     (ρ ModularGroup.T⁻¹) ((Group.isUnit _).map ρ) ((Group.isUnit _).map ρ)
-  · simpa only [map_mul] using congrArg ρ hb
+  · simpa only [map_mul] using! congrArg ρ hb
   · exact hT
   · exact hTi
-  · simpa only [← map_mul, hSS] using hC
+  · simpa only [← map_mul, hSS] using! hC
   · exact htwist
 
 /-- An explicit conductor-field version: diagonal entries and inverse entries
@@ -133,12 +133,12 @@ theorem S_entries_mem_adjoin_of_twist [FiniteDimensional ℚ L] [IsGalois ℚ L]
   · intro i j
     rw [hT]
     by_cases h : i = j
-    · subst j; simpa using K.pow_mem hz (e i)
+    · subst j; simpa using! K.pow_mem hz (e i)
     · simp [h]
   · intro i j
     rw [hUi]
     by_cases h : i = j
-    · subst j; simpa using K.pow_mem hz (-e i)
+    · subst j; simpa using! K.pow_mem hz (-e i)
     · simp [h]
   · intro i j
     rw [hC]

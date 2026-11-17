@@ -65,13 +65,13 @@ theorem oH4_top (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :
     mode (A.YM (HP 6 hm 2)) 3 x = 0 := by
   have h := zero_mode_top hm A hxΩ hxL (HP_mem_grading 6 hm 2 (by norm_num) (by norm_num))
   rw [chiT_HP_zero 6 hm two_le_six 0 2 (Or.inl rfl), zero_smul] at h
-  simpa using h
+  simpa using! h
 
 theorem oH6_top (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :
     mode (A.YM (HP 6 hm 3)) 5 x = 0 := by
   have h := zero_mode_top hm A hxΩ hxL (HP_mem_grading 6 hm 3 (by norm_num) (by norm_num))
   rw [chiT_HP_zero 6 hm two_le_six 0 3 (Or.inr rfl), zero_smul] at h
-  simpa using h
+  simpa using! h
 
 theorem oE_top (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :
     mode (A.YM (EP 6 hm)) 5 x = 0 := by
@@ -80,7 +80,7 @@ theorem oE_top (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :
   change chiT 6 hm two_le_six (.inl 0) (VOA.mk (V2mPlus 6 hm) (EP 6 hm)) = _ at hv
   rw [hv] at h
   simp [values] at h
-  simpa using h
+  simpa using! h
 
 /-- `[o(H⁴), p₂] = p₁/15 - p₂ + 3p₃`. -/
 theorem comm_H4_p2 (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :
@@ -159,7 +159,7 @@ theorem L1_omega_zero : (V2mPlus 6 hm).L 1 (V2mPlus 6 hm).conformalVector = 0 :=
     have := (V2mPlus 6 hm).toPreVertexAlgebra.smul_mem_grading (V2mPlus 6 hm).conformal_mem
       (V2mPlus 6 hm).conformal_mem 2
     rw [VertexOperatorAlgebra.L_def]
-    simpa using this
+    simpa using! this
   rw [grading_one_eq_bot 6 hm two_le_six, Submodule.mem_bot] at hg
   exact hg
 
@@ -219,6 +219,7 @@ theorem LE_mem_grading : (V2mPlus 6 hm).L (-1) (EP 6 hm) ∈ (V2mPlus 6 hm).grad
   have := (V2mPlus 6 hm).toPreVertexAlgebra.smul_mem_grading (V2mPlus 6 hm).conformal_mem
     (EP_mem_grading 6 hm) 0
   convert this using 2
+  all_goals first | rfl | norm_num
 
 /-- `E₍₅₎L(-1)x = 5 v`. -/
 theorem E5_Lx (hxΩ : x ∈ Omega A) (hxL : L0 A x = (1 / 24 : ℂ) • x) :

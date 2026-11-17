@@ -31,8 +31,8 @@ theorem cosetToComplex_mem_weight (n : ℤ) (x : CosetSpace)
   · change x.val ⊗ₜ[ℂ] USVA.vacuum ∈ TensorVA.tenGrading abSVA USVA (n : ℂ)
     apply TensorVA.tmul_mem_tenGrading abSVA USVA (h₁ := (n : ℂ))
     · exact hx
-    · simpa only [sub_self] using USVA.vacuum_mem
-  · simpa only [sub_self] using sl2GhostSVA.vacuum_mem
+    · simpa only [sub_self] using! USVA.vacuum_mem
+  · simpa only [sub_self] using! sl2GhostSVA.vacuum_mem
 
 /-- The concrete representative of a Lee--Yang weight-space vector in the finite
 relative complex. -/
@@ -103,9 +103,9 @@ theorem cosetWeightClass_injective (ident : CosetIdentification) (n : ℤ) :
       have ha := weightBoundary_toAbsolute n (cosetWeightCycles ident n x) hb
       rw [cosetWeightCycles_toAbsolute] at ha
       have hz : leeYangCosetToH0 (ident.equiv.symm x) = 0 := Subtype.ext ha
-      have hi : ident.equiv.symm x = 0 := ident.cosetToH0_injective (by simpa using hz)
+      have hi : ident.equiv.symm x = 0 := ident.cosetToH0_injective (by simpa using! hz)
       apply Subtype.ext
-      exact ident.equiv.symm.injective (by simpa using hi))
+      exact ident.equiv.symm.injective (by simpa using! hi))
   exact result
 
 end

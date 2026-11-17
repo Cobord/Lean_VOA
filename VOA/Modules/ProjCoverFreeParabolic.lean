@@ -33,6 +33,8 @@ open scoped BigOperators
 
 universe u
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱] {W : VertexOperatorAlgebra 𝒱}
 
 namespace VHat
@@ -48,7 +50,12 @@ theorem uea_induction {L : Type u} [LieRing L] [LieAlgebra ℂ L]
     (h_ι : ∀ x : L, C (UniversalEnvelopingAlgebra.ι ℂ x))
     (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : UniversalEnvelopingAlgebra ℂ L) : C a := by
-  obtain ⟨t, rfl⟩ := RingQuot.mkAlgHom_surjective ℂ (UniversalEnvelopingAlgebra.Rel ℂ L) a
+  -- Lean 4.35 port: the enveloping algebra is now a `RingCon` quotient rather than a `RingQuot`;
+  -- the first branch is the 4.35 proof of surjectivity, the second the 4.30 one.
+  obtain ⟨t, rfl⟩ : ∃ t, UniversalEnvelopingAlgebra.mkAlgHom ℂ L t = a := by
+    first
+      | exact RingCon.mkₐ_surjective _ a
+      | exact RingQuot.mkAlgHom_surjective ℂ _ a
   induction t using TensorAlgebra.induction with
   | algebraMap r => rw [AlgHom.commutes]; exact h_alg r
   | ι x => exact h_ι x
@@ -145,6 +152,12 @@ theorem mul_mem_freeIdeal (x : PEnv W n) : ∀ s ∈ freeIdeal W n, s * x ∈ fr
     rw [mul_add]
     exact (freeIdeal W n).add_mem (ha s hs) (hb s hs)
 
+/-- Left multiplication by `r` preserves the defining ideal (as a `ℂ`-submodule). -/
+theorem freeIdeal_le_comap_mulLeft (r : PEnv W n) :
+    (freeIdeal W n).restrictScalars ℂ
+      ≤ ((freeIdeal W n).restrictScalars ℂ).comap (LinearMap.mulLeft ℂ r) :=
+  fun _ hx => (freeIdeal W n).smul_mem r hx
+
 variable (W n)
 
 /-- The free parabolic module `U(P_n)/freeIdeal`, as a `ℂ`-module. -/
@@ -153,7 +166,7 @@ abbrev FreeParabolic : Type u := PEnv W n ⧸ (freeIdeal W n).restrictScalars �
 /-- Left multiplication on the free parabolic module. -/
 noncomputable def lmulQ : PEnv W n →ₐ[ℂ] End ℂ (FreeParabolic W n) where
   toFun r := ((freeIdeal W n).restrictScalars ℂ).mapQ ((freeIdeal W n).restrictScalars ℂ)
-    (LinearMap.mulLeft ℂ r) (fun x hx => (freeIdeal W n).smul_mem r hx)
+    (LinearMap.mulLeft ℂ r) (freeIdeal_le_comap_mulLeft r)
   map_one' := by
     apply Submodule.linearMap_qext
     ext x
@@ -249,7 +262,8 @@ theorem exists_freeParabolic_lift {M : Type u} [AddCommGroup M] [Module ℂ M] (
       rw [map_sub, map_one, LinearMap.sub_apply, hΦι, Module.End.one_apply]
       change ρ (gen W W.vacuum (-1)) w - w = 0
       rw [hvac, sub_self]
-  refine ⟨((freeIdeal W n).restrictScalars ℂ).liftQ φ0 (fun x hx => hle hx), ?_, ?_⟩
+  have hle' : (freeIdeal W n).restrictScalars ℂ ≤ LinearMap.ker φ0 := fun _ hx => hle hx
+  refine ⟨((freeIdeal W n).restrictScalars ℂ).liftQ φ0 hle', ?_, ?_⟩
   · change φ0 1 = w
     change Φ 1 w = w
     rw [map_one, Module.End.one_apply]
@@ -287,7 +301,7 @@ theorem exists_universal_omegaN_vector (W : VertexOperatorAlgebra 𝒱) (n : ℕ
     intro x
     rw [weakRep_gen]
     have := A.act_vacuum (-1) x
-    simpa only [WeakModule.act_def, if_pos rfl] using this
+    simpa only [WeakModule.act_def, if_pos rfl, ↓reduceIte] using this
   obtain ⟨φ, hφ0, hφ⟩ := exists_freeParabolic_lift (weakRep A) hvac hw
   refine ⟨indBarHom (freeParabolicRep W n) A φ hφ, ?_⟩
   change indBarLift (freeParabolicRep W n) (weakRep A) (weakRep_moduleIterate A) φ hφ

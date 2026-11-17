@@ -172,7 +172,7 @@ example : sqrt2Lattice.Even := by
 /-- `ℤⁿ` is positive-definite: `⟨v,v⟩ = ∑ vᵢ² > 0` for `v ≠ 0`. -/
 example (n : ℕ) : (stdLattice n).PosDef := by
   intro v hv
-  change 0 < Matrix.toBilin' (1 : Matrix (Fin n) (Fin n) ℤ) v v
+  change 0 < Matrix.toBilin' (1 : Matrix (Fin n) (Fin n) ℤ) (show Fin n → ℤ from v) (show Fin n → ℤ from v)
   rw [Matrix.toBilin'_apply', Matrix.one_mulVec]
   change 0 < ∑ i, v i * v i
   refine Finset.sum_pos' (fun i _ => mul_self_nonneg (v i)) ?_

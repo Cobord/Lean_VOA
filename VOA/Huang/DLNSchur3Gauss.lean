@@ -19,13 +19,13 @@ theorem gauss_of_unit_top_left (g : Matrix.SpecialLinearGroup (Fin 2) R)
     g = lowerRoot (g 1 0 * (↑u⁻¹ : R)) * torus u *
       upperRoot (g 0 1 * (↑u⁻¹ : R)) := by
   have hd : (u : R) * g 1 1 - g 0 1 * g 1 0 = 1 := by
-    simpa only [Matrix.det_fin_two, hu] using g.2
+    simpa only [Matrix.det_fin_two, hu] using! g.2
   have he : g 1 1 = g 1 0 * g 0 1 * (↑u⁻¹ : R) + (↑u⁻¹ : R) := by
     calc
       g 1 1 = (↑u⁻¹ : R) * ((u : R) * g 1 1) := by simp [← mul_assoc]
       _ = g 1 0 * g 0 1 * (↑u⁻¹ : R) + (↑u⁻¹ : R) := by
         linear_combination (↑u⁻¹ : R) * hd
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, upperRoot, Matrix.mul_apply, Fin.sum_univ_two,
       hu, he, mul_assoc, mul_comm, mul_left_comm]
 
@@ -35,16 +35,16 @@ theorem gauss_of_unit_lower_left (g : Matrix.SpecialLinearGroup (Fin 2) R)
     g = upperRoot (g 0 0 * (↑u⁻¹ : R)) * weyl (-u⁻¹) *
       upperRoot (g 1 1 * (↑u⁻¹ : R)) := by
   have hd : g 0 0 * g 1 1 - g 0 1 * (u : R) = 1 := by
-    simpa only [Matrix.det_fin_two, hu] using g.2
+    simpa only [Matrix.det_fin_two, hu] using! g.2
   have he : g 0 1 = g 0 0 * g 1 1 * (↑u⁻¹ : R) - (↑u⁻¹ : R) := by
     calc
       g 0 1 = (↑u⁻¹ : R) * (g 0 1 * (u : R)) := by
         simp [mul_comm, mul_left_comm]
       _ = g 0 0 * g 1 1 * (↑u⁻¹ : R) - (↑u⁻¹ : R) := by
         linear_combination -(↑u⁻¹ : R) * hd
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two,
-      hu, he, mul_assoc, mul_comm, sub_eq_add_neg, add_comm]
+      hu, he, mul_assoc, mul_comm, sub_eq_add_neg, add_comm] <;> ring
 
 end Matrices
 
@@ -72,9 +72,13 @@ theorem first_column_unit_primePower {p k : ℕ} (hp : p.Prime) (hk : 0 < k)
     rw [← ZMod.natCast_zmod_val (g 1 0), map_natCast]
     exact (ZMod.natCast_eq_zero_iff _ _).mpr hc
   have hd : g 0 0 * g 1 1 - g 0 1 * g 1 0 = 1 := by
-    simpa only [Matrix.det_fin_two] using g.2
-  have := congrArg r hd
-  simp [hra, hrc] at this
+    simpa only [Matrix.det_fin_two] using! g.2
+  have h0 : r (g 0 0 * g 1 1 - g 0 1 * g 1 0) = 0 := by
+    refine ((RingHom.map_sub r _ _).trans
+      (congrArg₂ (· - ·) (RingHom.map_mul r _ _) (RingHom.map_mul r _ _))).trans ?_
+    rw [hra, hrc, zero_mul, mul_zero]
+    exact sub_self _
+  exact zero_ne_one (h0.symm.trans ((congrArg r hd).trans (map_one r)))
 
 /-- A concrete obstruction to using the two field Bruhat cells over a local ring. -/
 theorem lower_five_mod_twentyFive_nonzero_nonunit :
@@ -92,11 +96,12 @@ theorem lower_five_mod_twentyFive_not_bruhat :
   rintro (h | ⟨b, t, hb, he⟩)
   · exact lower_five_mod_twentyFive_nonzero_nonunit.1 h
   · have hd : b 0 0 * b 1 1 = 1 := by
-      simpa only [Matrix.det_fin_two, hb, mul_zero, sub_zero] using b.2
-    let u : (ZMod 25)ˣ := ⟨b 1 1, b 0 0, by simpa only [mul_comm] using hd, hd⟩
+      simpa only [Matrix.det_fin_two, hb, mul_zero, sub_zero] using! b.2
+    let u : (ZMod 25)ˣ := ⟨b 1 1, b 0 0, by simpa only [mul_comm] using! hd, hd⟩
     have hentry : (5 : ZMod 25) = -b 1 1 := by
       have := congrArg (fun g : Matrix.SpecialLinearGroup (Fin 2) (ZMod 25) => g 1 0) he
-      simpa [lowerRoot, weyl, upperRoot, Matrix.mul_apply, Fin.sum_univ_two, hb] using this
+      simp only [Matrix.SpecialLinearGroup.coe_mul] at this
+      simpa [lowerRoot, weyl, upperRoot, Matrix.mul_apply, Fin.sum_univ_two, hb] using! this
     apply lower_five_mod_twentyFive_nonzero_nonunit.2
     change IsUnit (5 : ZMod 25)
     rw [hentry]

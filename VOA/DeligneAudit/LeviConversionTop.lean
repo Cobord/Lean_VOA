@@ -15,12 +15,12 @@ theorem conversionTerm_top (f a b : ℕ → A) (k s : ℕ)
         (aWord a p.1 * PowerSeries.coeff s (bWord b p.2)) := by
   rw [conversionTerm, ht, Nat.descFactorial_self, Nat.sub_self, pow_zero]
   have hsum :
-      (∑ q ∈ Finset.antidiagonal s,
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         (PowerSeries.coeff q.1 (1 : PowerSeries A) * aWord a p.1) *
           PowerSeries.coeff q.2 (bWord b p.2)) =
         aWord a p.1 * PowerSeries.coeff s (bWord b p.2) := by
     calc
-      _ = ∑ q ∈ Finset.antidiagonal s,
+      _ = ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
           PowerSeries.coeff q.1 (1 * PowerSeries.C (aWord a p.1)) *
             PowerSeries.coeff q.2 (bWord b p.2) := by
               apply Finset.sum_congr rfl

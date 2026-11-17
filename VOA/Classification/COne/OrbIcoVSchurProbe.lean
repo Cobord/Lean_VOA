@@ -18,7 +18,7 @@ theorem firstProbe_vVar (a : (latP 1).carrier) (j : ℕ) :
   rw [vVar, map_sum]
   have hu : ∀ i : Fin (rank (latP 1)), i = LatMod.a0 1 := by
     intro i
-    have hi : i.val < 1 := by simpa [rank_latP] using i.isLt
+    have hi : i.val < 1 := by simpa [rank_latP] using! i.isLt
     apply Fin.ext
     simp only [LatMod.a0, Fin.val_mk]
     omega
@@ -56,7 +56,7 @@ theorem firstProbe_shWord (w : List ℕ) :
   induction w with
   | nil => simp [shWord_nil, schurWeight]
   | cons i w ih =>
-    rw [shWord_cons, map_mul, firstProbe_vSchur, ih]
+    rw [shWord_cons, map_mul, firstProbe_vSchur ((-1 : ℤ) : (latP 1).carrier) i, ih]
     simp only [List.sum_cons, schurWeight, List.map_cons, List.prod_cons,
       Rat.cast_mul, Rat.cast_inv, Rat.cast_natCast, pow_add, div_eq_mul_inv]
     ring

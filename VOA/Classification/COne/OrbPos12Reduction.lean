@@ -55,7 +55,7 @@ theorem actionJacobiAt_fixed (G : Subgroup (Aut (V2m 1 le_rfl)))
       rw [monodromy_phase]
       simp only [Int.cast_zero, zero_div, zero_add, mul_one, Complex.exp_neg,
         Complex.exp_two_pi_mul_I, inv_one, hc])
-    simpa only [zero_add] using he
+    simpa only [zero_add] using! he
   have hk0 : k % (N : ℤ) = 0 := by
     rw [Int.add_emod, hj, add_zero, Int.emod_emod] at hk
     exact hk

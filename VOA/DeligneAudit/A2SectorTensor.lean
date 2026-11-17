@@ -86,7 +86,7 @@ theorem sum_toExp : ∀ d b (i : Idx d b), ∑ k, toExp d b i k = b
 /-- Every monotone exponent vector is some `toExp`. -/
 theorem exists_toExp : ∀ d (γ : Fin d → ℕ), Monotone γ → ∀ b, ∑ k, γ k = b →
     ∃ i : Idx d b, toExp d b i = γ
-  | 0, γ, _, b, hb => ⟨⟨(), by simpa using hb.symm⟩, funext fun i => i.elim0⟩
+  | 0, γ, _, b, hb => ⟨⟨(), by simpa using! hb.symm⟩, funext fun i => i.elim0⟩
   | d + 1, γ, hγ, b, hb => by
       set j := γ 0 with hj
       let γ' : Fin d → ℕ := fun k => γ k.succ - j
@@ -161,12 +161,12 @@ theorem split_monomial (m d : ℕ) (e : Fin (m + d) →₀ ℕ) (c : K) :
 degree, and vanish when the auxiliary degree exceeds the total degree. -/
 theorem coeff_split_homogeneous {m d r : ℕ} (p : MvPolynomial (Fin (m + d)) K)
     (hp : p.IsWeightedHomogeneous (fun _ => 1) r) (α : Fin d →₀ ℕ) :
-    (MvPolynomial.coeff α (split m d p)).IsWeightedHomogeneous (fun _ => 1)
+    ((split m d p).coeff α).IsWeightedHomogeneous (fun _ => 1)
         (r - Finsupp.weight (fun _ => (1 : ℕ)) α) ∧
-      (r < Finsupp.weight (fun _ => (1 : ℕ)) α → MvPolynomial.coeff α (split m d p) = 0) := by
+      (r < Finsupp.weight (fun _ => (1 : ℕ)) α → (split m d p).coeff α = 0) := by
   classical
-  have hsum : MvPolynomial.coeff α (split m d p) = ∑ e ∈ p.support,
-      if auxPart e = α then MvPolynomial.monomial (curPart e) (MvPolynomial.coeff e p) else 0 := by
+  have hsum : (split m d p).coeff α = ∑ e ∈ p.support,
+      if auxPart e = α then MvPolynomial.monomial (curPart e) (p.coeff e) else 0 := by
     conv_lhs => rw [p.as_sum]
     rw [map_sum, MvPolynomial.coeff_sum]
     refine Finset.sum_congr rfl fun e _ => ?_

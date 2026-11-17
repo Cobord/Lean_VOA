@@ -227,7 +227,7 @@ theorem finite_of_indep (hΦ : Finite (Φ W)) (hB : BoundedMult A)
     have hs : ∑ j, cf j • ψ j v = 0 := by
       have := congrArg (fun F : (lwOf A hOrd m₀.1 h₀).carrier →ₗ[ℂ] M => F v) hsum
       simpa only [LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply,
-        LinearMap.zero_apply] using this
+        LinearMap.zero_apply] using! this
     have hindg : iSupIndep fun j => (g j).1 := ((sSupIndep_iff s).mp hind).comp hg
     have hz := eq_zero_of_sum_indep hindg (w := fun j => cf j • ψ j v)
       (fun j => ((g j).1.restrictScalars ℂ).smul_mem (cf j) ((e j).toLinearEquiv v).2) hs k
@@ -348,7 +348,7 @@ theorem boundedMult_wΛ : BoundedMult (wΛ hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂
     intro cf hc0
     have hc : ∑ k, cf k • Y4 (tauEmb_of_coefSpan hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂ (ψ k) (hψ' k)) = 0 := by
       have := congrArg Subtype.val hc0
-      simpa only [Submodule.coe_sum, Submodule.coe_smul, ZeroMemClass.coe_zero] using this
+      simpa only [Submodule.coe_sum, Submodule.coe_smul, ZeroMemClass.coe_zero] using! this
     have hzero : ∑ k, cf k • ψ k = 0 := by
       ext1 v
       simp only [LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply, LinearMap.zero_apply]
@@ -362,7 +362,7 @@ theorem boundedMult_wΛ : BoundedMult (wΛ hV i₁ i₂ i₃ i₄ iQ hY₁ hY₂
         simp only [map_add, smul_add, Finset.sum_add_distrib, hx, hy, add_zero]
     exact Fintype.linearIndependent_iff.mp hli cf hzero
   have := hliF.fintype_card_le_finrank
-  simpa only [Fintype.card_fin] using this
+  simpa only [Fintype.card_fin] using! this
 
 end Lambda
 

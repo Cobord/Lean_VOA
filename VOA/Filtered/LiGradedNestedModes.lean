@@ -40,7 +40,7 @@ theorem liWeightPiece_mode_mode_mem (W : VertexOperatorAlgebra V)
       rw [Nat.cast_sub hN]
       push_cast
       ring
-    simpa only [heq] using hgr
+    simpa only [heq, SetLike.mem_coe] using hgr
 
 /-- A left-nested pair of descended modes agrees with its total-bidegree state class. -/
 theorem liGradedClass_mode_mode (W : VertexOperatorAlgebra V)
@@ -125,7 +125,7 @@ theorem liWeightPiece_mode_nested_mem (W : VertexOperatorAlgebra V)
       rw [Nat.cast_sub hN]
       push_cast
       ring
-    simpa only [heq] using hgr
+    simpa only [heq, SetLike.mem_coe] using hgr
 
 /-- A right-nested pair of descended modes agrees with its total-bidegree state class. -/
 theorem liGradedClass_mode_nested (W : VertexOperatorAlgebra V)

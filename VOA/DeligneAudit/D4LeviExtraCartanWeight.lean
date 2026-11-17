@@ -15,27 +15,26 @@ theorem extra_comm (j : Fin 6) (r s : ℕ) (v : V) :
     ρ.op (0 : Fin 28) r (ρ.op (radicalColour j) s v) -
       ρ.op (radicalColour j) s (ρ.op (0 : Fin 28) r v) =
         (extraWeight j : ℂ) • ρ.op (radicalColour j) (r + s) v := by
-  rw [ρ.comm]
+  refine (ρ.comm _ _ _ _ _).trans ?_
   have hc : ∀ z : Fin 28,
       D4sector.f (0 : Fin 28) (radicalColour j) z =
         if z = radicalColour j then (extraWeight j : ℂ) else 0 :=
     extra_coefficient j
-  simp_rw [hc]
-  simp only [ite_smul, zero_smul]
-  change (Finset.univ : Finset (Fin 28)).sum
-    (fun z => if z = radicalColour j then
-      (extraWeight j : ℂ) • ρ.op z (r + s) v else 0) = _
-  rw [Finset.sum_ite_eq']
-  simp
+  -- 4.35: `D4sector.f` takes `Fin D4sector.n`, an alias of `Fin 28`; avoid rewriting the ill-typed target.
+  refine (Finset.sum_eq_single (radicalColour j) (fun z _ hz => ?_)
+    (fun h => absurd (Finset.mem_univ _) h)).trans ?_
+  · exact (congrArg (· • ρ.op z (r + s) v) (hc z)).trans
+      ((congrArg (· • ρ.op z (r + s) v) (if_neg hz)).trans (zero_smul ℂ _))
+  · exact congrArg (· • ρ.op (radicalColour j) (r + s) v) ((hc _).trans (if_pos rfl))
 
 theorem source_extra_zero
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0)) :
     ρ.op (0 : Fin 28) 0 w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   have hh := rs_cartan_zero hs
     (by change (0 : Fin 28).val < 4; decide : D4sector.cartan (0 : Fin 28))
-  simpa [D4sector, thetaD4] using hh
+  simpa [D4sector, thetaD4] using! hh
 
 theorem extra_weight_word
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
@@ -44,7 +43,7 @@ theorem extra_weight_word
       (extraLabel (wordKey l) : ℂ) • radicalWord ρ w l := by
   induction l with
   | nil =>
-      simpa [radicalWord, wordKey, extraLabel] using source_extra_zero ρ w m h
+      simpa [radicalWord, wordKey, extraLabel] using! source_extra_zero ρ w m h
   | cons p l ih =>
       rcases p with ⟨j, s⟩
       have hc := extra_comm ρ j 0 s (radicalWord ρ w l)
@@ -61,7 +60,7 @@ theorem extra_weight_key
   induction hv using Submodule.span_induction with
   | mem z hz =>
       obtain ⟨l, hkey, rfl⟩ := hz
-      simpa [← hkey] using extra_weight_word ρ w m h l
+      simpa [← hkey] using! extra_weight_word ρ w m h l
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy, smul_add]
   | smul c x _ hx =>

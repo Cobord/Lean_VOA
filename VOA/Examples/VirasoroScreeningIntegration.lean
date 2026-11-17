@@ -21,7 +21,7 @@ open AddMonoidAlgebra
 /-- Reading one Laurent coefficient is a rational linear functional. -/
 noncomputable def laurentCoefficient {r : ℕ} (e : Fin r → ℤ) :
     Laurent (Fin r → ℤ) →ₗ[ℚ] ℚ where
-  toFun P := P e
+  toFun P := P.coeff e
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
@@ -35,13 +35,13 @@ theorem screening_coefficient_integration (r : ℕ) (n D : ℤ)
     (P : Laurent (Fin r → ℤ)) :
     laurentCoefficient (fun _ => D) (screeningVectorField r n P) =
       ((D-n:ℤ):ℚ) * laurentCoefficient (fun _ => D) (laurentPowerSum r n * P) := by
-  change screeningVectorField r n P (fun _ => D) = _
+  change (screeningVectorField r n P).coeff (fun _ => D) = _
   rw [screeningVectorField_apply]
   simp only [laurentPowerSum, Finset.sum_mul, map_sum, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro i hi
-  change _ = ((D-n:ℤ):ℚ) * ((single (n • unitExponent r i) 1 * P : Laurent (Fin r → ℤ)) (fun _ => D))
-  rw [single_mul_apply, one_mul]
+  change _ = ((D-n:ℤ):ℚ) * ((single (n • unitExponent r i) 1 * P : Laurent (Fin r → ℤ)).coeff (fun _ => D))
+  rw [coeff_single_mul_apply, one_mul]
   simp only [sub_eq_add_neg, add_comm]
 
 /-- A polynomial logarithmic derivative of a weight yields a finite residue

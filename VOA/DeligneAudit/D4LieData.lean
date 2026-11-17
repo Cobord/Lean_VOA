@@ -56,10 +56,10 @@ theorem root_eq_wt (β : d4.carrier) (hβ : β ∈ normEq d4 d4_posDef 2) :
   have hsub : S ⊆ normEq d4 d4_posDef 2 := by
     intro v hv
     obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hv
-    rw [mem_normEq, d4_form_eq]
+    erw [mem_normEq, d4_form_eq]
     exact wt_norm a (Finset.mem_filter.mp ha).2
   have hcard : S.card = 24 := by
-    rw [Finset.card_image_of_injOn, card_rootIdx]
+    erw [Finset.card_image_of_injOn, card_rootIdx]
     intro a ha b hb h
     exact wt_inj a b (Finset.mem_filter.mp ha).2 (Finset.mem_filter.mp hb).2 h
   have heq : S = normEq d4 d4_posDef 2 :=
@@ -97,7 +97,7 @@ theorem span_xs : ⊤ ≤ Submodule.span ℂ (Set.range xs) := by
     rw [SetLike.mem_coe, he]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
   · have hh : hV d4 d4_even d4_posDef β = hst β.1 := rfl
-    rw [SetLike.mem_coe, hh, hst_decomp, hst_single_eq, hst_single_eq, hst_single_eq,
+    erw [SetLike.mem_coe, hh, hst_decomp, hst_single_eq, hst_single_eq, hst_single_eq,
       hst_single_eq]
     refine add_mem (add_mem (add_mem ?_ ?_) ?_) ?_ <;>
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, rfl⟩)

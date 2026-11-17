@@ -39,7 +39,7 @@ theorem fallingEuler_leading (e : ℕ → ℕ → ℂ) (f : BiSeries) (s : ℕ) 
   rw [polynomialEuler_eq_sum _ e f (by simp [descPochhammer_natDegree] :
       (descPochhammer ℂ s).natDegree < s + 1), Finset.sum_range_succ]
   have hc : (descPochhammer ℂ s).coeff s = 1 := by
-    simpa only [descPochhammer_natDegree] using (monic_descPochhammer ℂ s).coeff_natDegree
+    simpa only [descPochhammer_natDegree] using! (monic_descPochhammer ℂ s).coeff_natDegree
   rw [hc, one_smul, add_comm]
 
 /-- Monicity survives the translation-to-Euler conversion over any coefficient
@@ -59,7 +59,7 @@ theorem monicEquation_of_fallingRelation (R : Subalgebra ℂ BiSeries)
       polynomialEuler (descPochhammer ℂ k) e f =
         ∑ l ∈ Finset.range s, (descPochhammer ℂ k).coeff l • (euler e)^[l] f := by
     intro k hk
-    exact polynomialEuler_eq_sum _ _ _ (by simpa using hk)
+    exact polynomialEuler_eq_sum _ _ _ (by simpa using! hk)
   have hsum : (∑ l ∈ Finset.range s, (b l).val * (euler e)^[l] f) =
       (∑ k ∈ Finset.range s, (a k).val * polynomialEuler (descPochhammer ℂ k) e f) -
         ∑ l ∈ Finset.range s, (descPochhammer ℂ s).coeff l • (euler e)^[l] f := by

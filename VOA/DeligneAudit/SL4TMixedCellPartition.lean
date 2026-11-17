@@ -46,7 +46,7 @@ theorem mixedACellCatalog_fiber (A : ℕ) (q : MixedParams) (hA : q.A = A) (hB :
               (mixedATripleCount (mixedAOrder ⟨i, hi⟩)))
             (fun x => mixedAPrevious_next x _) (fun x => mixedANext_previous x _)]
           rw [ih _ (by simp [mixedANext, hA, Nat.cast_add, Nat.cast_one])
-            (by simpa [mixedANext] using hB)]
+            (by simpa [mixedANext] using! hB)]
         · rfl
       · rw [mixedCellData_invalid _ _ hq]
         exact mixedCatalogFiber_nil_of_invalid q hq _
@@ -56,7 +56,7 @@ theorem mixedACellCatalog_fiber (A : ℕ) (q : MixedParams) (hA : q.A = A) (hB :
 theorem mixedCellCatalog_fiber (A B : ℕ) (q : MixedParams) (hA : q.A = A) (hB : q.B = B) :
     mixedCatalogFiber q (mixedCellCatalog A B) = mixedCellData (A + B) q := by
   induction B generalizing q with
-  | zero => simpa [mixedCellCatalog] using mixedACellCatalog_fiber A q hA hB
+  | zero => simpa [mixedCellCatalog] using! mixedACellCatalog_fiber A q hA hB
   | succ B ih =>
       by_cases hq : MixedValid q
       · have hB' : 1 ≤ q.B := by omega
@@ -74,7 +74,7 @@ theorem mixedCellCatalog_fiber (A B : ℕ) (q : MixedParams) (hA : q.A = A) (hB 
             (fun x => mixedBNext x (mixedBOrder ⟨i, hi⟩))
             (mixedCellShift (mixedBZeroRoots (mixedBOrder ⟨i, hi⟩)) 0)
             (fun x => mixedBPrevious_next x _) (fun x => mixedBNext_previous x _)]
-          rw [ih _ (by cases mixedBOrder ⟨i, hi⟩ <;> simpa [mixedBNext] using hA)
+          rw [ih _ (by cases mixedBOrder ⟨i, hi⟩ <;> simpa [mixedBNext] using! hA)
             (by cases mixedBOrder ⟨i, hi⟩ <;>
               simp [mixedBNext, hB, Nat.cast_add, Nat.cast_one])]
         · rfl
@@ -90,7 +90,7 @@ theorem mixedRepresentedBlocks_valid (A B : ℕ) (q : MixedParams)
     (hq : q ∈ mixedRepresentedBlocks A B) : MixedValid q ∧ q.A = A ∧ q.B = B := by
   simp only [mixedRepresentedBlocks, List.mem_toFinset, List.mem_map] at hq
   obtain ⟨c, hc, he⟩ := hq
-  simpa only [he] using mixedCellCatalog_valid A B c hc
+  simpa only [he] using! mixedCellCatalog_valid A B c hc
 
 /-- A block omitted from the word catalog contributes no cells. -/
 theorem mixedBlockBound_zero_of_unrepresented (A B : ℕ) (q : MixedParams)

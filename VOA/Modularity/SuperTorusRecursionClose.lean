@@ -145,7 +145,7 @@ theorem superGradedTraceOp_compensating_supercommutator
   have hmap := map_finsum (N.superGradedTraceAt e)
     (N.superCompensatingSupportFinite hW a b i)
   simpa only [superGradedTraceAt_apply, map_smul, smul_eq_mul,
-    N.superGradedTraceOp_superOMod hW] using hmap
+    N.superGradedTraceOp_superOMod hW] using! hmap
 
 /-! ## Signed geometric solutions for the two orientations -/
 
@@ -363,7 +363,7 @@ theorem superOMod_smul_neg_one_eq_finsum_superPairOp
   have hsplit := finsum_int_split_two
     (fun r => N.superPairOp a b ka l r p q x) hfinR
     (fun j : ℕ => (j : ℤ)) (fun j : ℕ => -1 - j)
-    Nat.cast_injective (fun c d h => by simpa using h) ?_ ?_
+    Nat.cast_injective (fun c d h => by simpa using! h) ?_ ?_
   · rw [hsplit, add_comm]
     congr 1
     · refine finsum_congr (fun j => ?_)
@@ -637,7 +637,7 @@ theorem superTorusOnePoint_superVSqZ_expand (N : SuperOrdVModule W M)
     map_smul' := fun c u => congrFun (map_smul (N.superTorusOnePoint hW) c u) e }
   have hmap := map_finsum F
     (W.toSuperNearVOA.superSqModeZ_support_finite a k m b)
-  simpa only [F, W.toSuperNearVOA.superVSqZ_apply, map_smul, smul_eq_mul] using hmap
+  simpa only [F, W.toSuperNearVOA.superVSqZ_apply, map_smul, smul_eq_mul] using! hmap
 
 /-- Closed recursion for a pair which is homogeneous for both weight and parity. -/
 theorem superZhuRecursionPinned_of_bihomogeneous
@@ -926,7 +926,7 @@ theorem superZhuRecursionPinned_holds
       N.SuperZhuRecursionPinned hW (∑ p ∈ t, V.parProj p a) b ka := by
     intro t
     induction t using Finset.induction_on with
-    | empty => simpa using N.superZhuRecursionPinned_zero_left hW b ka
+    | empty => simpa using! N.superZhuRecursionPinned_zero_left hW b ka
     | @insert p t hp ih =>
         rw [Finset.sum_insert hp]
         exact N.superZhuRecursionPinned_add_left hW _ _ _ ka (hcomp p) ih
@@ -960,7 +960,7 @@ theorem superOMod_L_translation_all
         push_cast
         ring
       rw [hidx]
-      simpa only [Int.cast_zero, sub_zero] using h
+      simpa only [Int.cast_zero, sub_zero] using! h
     rw [hL0, map_add, N.superOMod_of_mem_gradingZ hW hT,
       map_smul, N.superOMod_of_mem_gradingZ hW hx]
     apply LinearMap.ext
@@ -1291,7 +1291,7 @@ theorem identityTwistedInverseOddOnePoint_superVSqZ_zero_eq_zero_bihomogeneous
     rw [Θ.represents, Θ.represents, Θ.represents,
       N.identityTwistedIntertwiner_inverseWeightBlock, one_mul,
       N.toIdentityTwist_twistedZeroModeAction]
-    simpa only [one_mul] using
+    simpa only [one_mul] using!
       N.ordinaryZeroModeAction_superVSqZ_zero_bihomogeneous
         hW hk hak hbl hap hbq α
   change Queer.oddTrace C = 0

@@ -29,9 +29,9 @@ theorem localWeyl_currentWord_cutoff (h : LocalWeylRelG D4sector R w m)
   have hlen := current_normal_form_length hperm
   have hsize : a.length + n + c.length = 2 * m + 1 := by omega
   have hN := localWeyl_currentNormal_cutoff h a n c hp hsize
-  rw [currentNormal_eq_word] at hN
+  erw [currentNormal_eq_word] at hN
   have hperm' : l.Perm (currentNormalList a n c) := by
-    simpa only [currentNormalList, List.append_assoc] using hperm
+    simpa only [currentNormalList, List.append_assoc] using! hperm
   have hdiff := currentRadicalWord_perm_sub R w hperm'
   have hdiff' : currentRadicalWord R l w -
       currentRadicalWord R (currentNormalList a n c) w ∈ currentPiece R w (2 * m) :=
@@ -41,7 +41,7 @@ theorem localWeyl_currentWord_cutoff (h : LocalWeylRelG D4sector R w m)
 
 theorem localWeyl_currentPiece_step (h : LocalWeylRelG D4sector R w m) :
     currentPiece R w (2 * m + 1) ≤ currentPiece R w (2 * m) := by
-  rw [currentPiece, Submodule.span_le]
+  unfold currentPiece; rw [Submodule.span_le]
   rintro _ ⟨l,hl,rfl⟩
   by_cases hs : l.length ≤ 2 * m
   · exact currentRadicalWord_mem R w l hs
@@ -62,7 +62,7 @@ theorem localWeyl_currentWord_bound (h : LocalWeylRelG D4sector R w m)
 
 theorem localWeyl_currentPiece_bound (h : LocalWeylRelG D4sector R w m) (d : ℕ) :
     currentPiece R w d ≤ currentPiece R w (2 * m) := by
-  rw [currentPiece, Submodule.span_le]
+  unfold currentPiece; rw [Submodule.span_le]
   rintro _ ⟨l,_,rfl⟩
   exact localWeyl_currentWord_bound h l
 

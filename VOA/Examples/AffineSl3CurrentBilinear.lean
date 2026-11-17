@@ -12,6 +12,8 @@ Bilinearity extends the checked basis table to every pair of actual
 trace-zero matrices. This is the loop-current part of the representation;
 the degree derivation still requires a separate energy-covariance proof.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical
@@ -27,10 +29,9 @@ theorem currentAction_bracket (k : ℂ) (m n : ℤ) (x y : Sl3) :
       toFun := fun v => ⁅currentAction k m u,currentAction k n v⁆
       map_add' := by intro v w; simp only [map_add,lie_add]
       map_smul' := by intro a v; simp only [map_smul,comm_smul_right,RingHom.id_apply] }
-    map_add' := by intro u v; ext w : 1; dsimp only; simp only [LinearMap.coe_mk,AddHom.coe_mk,LinearMap.add_apply,map_add,add_lie]
+    map_add' := by intro u v; ext w : 1; simp only [LinearMap.coe_mk,AddHom.coe_mk,LinearMap.add_apply,map_add,add_lie]
     map_smul' := by
       intro a u; ext v : 1
-      dsimp only
       simp only [LinearMap.coe_mk,AddHom.coe_mk,LinearMap.smul_apply,map_smul,comm_smul_left,RingHom.id_apply] }
   let B : Sl3 →ₗ[ℂ] Sl3 →ₗ[ℂ] Module.End ℂ Fock := {
     toFun := fun u => {
@@ -45,12 +46,10 @@ theorem currentAction_bracket (k : ℂ) (m n : ℤ) (x y : Sl3) :
         module }
     map_add' := by
       intro u v; ext w : 1
-      dsimp only
       simp only [LinearMap.coe_mk,AddHom.coe_mk,LinearMap.add_apply,add_lie,map_add,LinearMap.map_add₂,add_smul,smul_add]
       module
     map_smul' := by
       intro a u; ext v : 1
-      dsimp only
       simp only [LinearMap.coe_mk,AddHom.coe_mk,LinearMap.smul_apply,smul_lie,map_smul,LinearMap.map_smul₂,
         RingHom.id_apply,smul_smul,smul_add]
       module }

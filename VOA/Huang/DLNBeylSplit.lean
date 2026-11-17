@@ -172,7 +172,7 @@ theorem piece_commute (hπ : Function.Surjective π)
     rwa [Nat.Coprime.gcd_eq_one hn, pow_one] at this
   have hsnd := piece_snd_commutator π r pB₁ pB₂ hB.1 h₁ h₂
   have := commutatorElement_eq_one_iff_commute.mp (show ⁅q₁, q₂⁆ = 1 from
-    Prod.ext (by simpa using hfst) (by simpa using hsnd))
+    Prod.ext (by simpa using! hfst) (by simpa using! hsnd))
   exact this
 
 /-- Every element of the pullback is a product of complementary pieces. -/
@@ -259,6 +259,7 @@ theorem piece_inflation (hπ : Function.Surjective π) (hc : π.ker ≤ Subgroup
     ext q
     simp only [π₁, α₁, β₁, MonoidHom.comp_apply, Subgroup.coe_subtype,
       MonoidHom.codRestrict_apply, MonoidHom.coe_fst, MonoidHom.coe_snd]
+    change pA₁ (π (q : E × B).1) = r₁ (pB₁ (q : E × B).2)
     rw [(mem_piece.mp q.2).1, ← MonoidHom.comp_apply pA₁ r, ← h₁, MonoidHom.comp_apply]
   rw [← Subgroup.map_subtype_commutator] at hg
   obtain ⟨y, hy, rfl⟩ := hg
@@ -277,7 +278,7 @@ theorem inflationTrivial_of_split
   let φ : F →* E × B := α.prod β
   have hrange : φ.range ≤ pullback π r := by
     rintro _ ⟨f, rfl⟩
-    exact mem_pullback.mpr (by simpa [φ] using congrArg (fun h => h f) hαβ)
+    exact mem_pullback.mpr (by simpa [φ] using! congrArg (fun h => h f) hαβ)
   have hφx : φ x ∈ ⁅pullback π r, pullback π r⁆ := by
     have : (commutator F).map φ ≤ ⁅pullback π r, pullback π r⁆ := by
       rw [map_commutator_eq]; exact Subgroup.commutator_mono hrange hrange
@@ -286,7 +287,7 @@ theorem inflationTrivial_of_split
     pullback_commutator_decomp π r pB₁ pB₂ hπ hc hB hn he₁ he₂ hφx
   have hsnd : a.2 * c.2 = 1 := by
     have := congrArg Prod.snd hac
-    simpa [φ, hβx] using this.symm
+    simpa [φ, hβx] using! this.symm
   have ha2 : pB₂ a.2 = 1 := (mem_piece.mp ((piece π r pB₂).commutator_le_self ha)).2
   have hc2 : pB₁ c.2 = 1 := (mem_piece.mp ((piece π r pB₁).commutator_le_self hc')).2
   have hca : c.2 = a.2⁻¹ := eq_inv_of_mul_eq_one_right hsnd

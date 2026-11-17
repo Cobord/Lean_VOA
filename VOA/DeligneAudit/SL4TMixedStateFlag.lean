@@ -45,7 +45,7 @@ theorem mixedBState_flag (q : MixedParams) (hq : MixedValid q) (hB : 1 ≤ q.B)
       fin_cases i <;> simp [s, mixedBOrder, mixedBZeroRoots] at hz
       · exact (show mixedTruncationIdeal q ≤ _ from le_sup_right)
           (mixedBThom_first_truncation q hq hB)
-      · simpa only [sup_comm] using mixedBThom_second_truncation q hq hB
+      · simpa only [sup_comm] using! mixedBThom_second_truncation q hq hB
     simp only [hz, pow_zero, one_mul] at hp
     simp only [hz, Nat.add_zero, List.map_id']
     exact
@@ -84,14 +84,14 @@ theorem mixedAState_doubleRoot_lift (q : MixedParams) (hq : MixedValid q)
     simp only [mixedFirstPolynomial, descendingPoly_map, map_mul, map_pow, map_neg,
       map_one, AlgHom.toRingHom_eq_coe, RingHom.coe_coe]
     simp only [ψ, mixedAStateSurjection_evaluation]
-    simpa only [s, Prod.fst, if_true, pow_one] using
+    simpa only [s, Prod.fst, if_true, pow_one] using!
       mixedAState_first_characteristic q hq s hs
   have hsecond : (mixedSecondPolynomial q).map ρ.toRingHom =
       X * (mixedSecondPolynomial (mixedANext q s)).map ψ.toRingHom := by
     simp only [mixedSecondPolynomial, descendingPoly_map, map_mul, map_pow, map_neg,
       map_one, AlgHom.toRingHom_eq_coe, RingHom.coe_coe]
     simp only [ψ, mixedAStateSurjection_evaluation]
-    simpa only [s, Prod.snd, if_true, pow_one] using
+    simpa only [s, Prod.snd, if_true, pow_one] using!
       mixedAState_second_characteristic q hq s hs
   rw [Polynomial.map_mul, mixedCharacteristic_factors, Polynomial.map_mul]
   exact congrArg₂ (· * ·) (polynomial_map_divX_of_zero_root ρ _ _ hfirst)
@@ -154,7 +154,7 @@ theorem mixedAState_flag (q : MixedParams) (hq : MixedValid q) (hA : 1 ≤ q.A)
         ((mixedFirstPolynomial q).divX * (mixedSecondPolynomial q).divX)
         ((mixedANext q s).A + (mixedANext q s).B).toNat 1 hk
         (mixedAState_doubleRoot_lift q hq hA hB hs) _ _ h
-      · simpa only [pow_one, mul_assoc, sup_comm] using
+      · simpa only [pow_one, mul_assoc, sup_comm] using!
           mixedAThom_doubleRoot_truncation q hq hA hB
       · rw [hexp]
         exact (show mixedTruncationIdeal q ≤ _ from le_sup_right)

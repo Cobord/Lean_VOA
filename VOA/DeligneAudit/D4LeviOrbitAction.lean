@@ -35,7 +35,7 @@ theorem unsigned_levi_mem (k : RadicalKey) (v : V)
   have hs := levi_sign_sq a
   have hh := (cycSubG (keyQuotCurrent ρ w m k)
     ((higherOrbit ρ w m k).mkQ v)).smul_mem (leviSign a : ℂ) hq
-  simpa only [smul_smul, hs, one_smul] using hh
+  simpa only [smul_smul, hs, one_smul] using! hh
 
 private theorem extra_comm_sum_mem (k : RadicalKey) (v u : V)
     (a : Fin 15) (r s : ℕ)

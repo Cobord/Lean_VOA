@@ -36,7 +36,7 @@ theorem a3_effective_span_of_words (a b c : ℕ)
   rw [a3KeyLayer_eq_sorted, a3SortedKeySpan, Submodule.span_le]
   intro v hv
   obtain ⟨xs, ys, zs, hx, hy, hz, hd, rfl⟩ := hv
-  simpa only [hx, hy, hz, hd] using hword xs ys zs
+  simpa only [hx, hy, hz, hd] using! hword xs ys zs
 
 theorem a3_fixedKeyKS_of_word_effective (hword : a3WordEffectiveKS) :
     a3FixedKeyKS := by

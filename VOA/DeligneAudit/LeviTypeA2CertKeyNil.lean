@@ -21,8 +21,8 @@ private theorem radicalWord_as_wordOp (l : List (Fin 2 × ℕ)) :
   | cons x xs ih =>
       rcases x with ⟨i, s⟩
       fin_cases i
-      · simpa [wordOp, radicalWord, a2RadicalOp] using congrArg (ρ.op 3 s) ih
-      · simpa [wordOp, radicalWord, a2RadicalOp] using congrArg (ρ.op 5 s) ih
+      · simpa [wordOp, radicalWord, a2RadicalOp] using! congrArg (ρ.op 3 s) ih
+      · simpa [wordOp, radicalWord, a2RadicalOp] using! congrArg (ρ.op 5 s) ih
 
 /-- The node-two lowering operator kills every vector of a fixed radical key
 after a common power. The bound comes from the generic current-word lemma. -/
@@ -36,7 +36,7 @@ theorem a2_key_lowering_nilpotent (p q : ℕ)
       let l' : List (Fin 8 × ℕ) :=
         l.map fun x => ((if x.1 = 0 then 3 else 5 : Fin 8), x.2)
       have hw : (ρ.op 4 0 ^ (q + 1)) w = 0 := by
-        simpa [Module.End.pow_apply] using h.lowering_second
+        simpa [Module.End.pow_apply] using! h.lowering_second
       have hwt : A2sector.wt (4 : Fin 8) ≠ 0 := by
         decide
       have hpow := pow_kill_word (S := A2sector) ρ
@@ -46,7 +46,7 @@ theorem a2_key_lowering_nilpotent (p q : ℕ)
       change (ρ.op 4 0 ^ (q + 1 + adK A2sector * l'.length))
         (wordOp ρ l' w) = 0 at hpow
       rw [hword] at hpow
-      simpa only [l', List.length_map, hlen] using hpow
+      simpa only [l', List.length_map, hlen] using! hpow
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy]
   | smul c x _ hx => simp [map_smul, hx]

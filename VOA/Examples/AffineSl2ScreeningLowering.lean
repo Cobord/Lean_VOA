@@ -70,37 +70,35 @@ theorem state_quadratic_sum_unordered (r q M : ℕ) :
     (∑ d∈Finset.range (r*(q-1)+1),X (0,d)*
       ∑ a∈Finset.range (d+1),pderiv (0,d-a) (pderiv (0,a) (state r q M)))=
     (2 : ℂ) • (∑ ij∈variablePairs r,
-      (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2)
+      (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
   rw [state_quadratic_sum_selected]
   have h := ordered_pair_sum r (fun i j =>
-    (betaDivided r (r*(q-1)) i j*pairOmittedIntegrand r q M i j)
+    (betaDivided r (r*(q-1)) i j*pairOmittedIntegrand r q M i j).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) (fun i j => by
-        dsimp only
         rw [betaDivided_swap r _ i j,pairOmittedIntegrand_swap r q M i j])
-  simpa only [two_smul] using h
+  simpa only [two_smul] using! h
 
 /-- After extraction, the divided and companion pair sums count every
 single omission r-1 times, with the same complex scalar convention as IBP. -/
 theorem selected_pair_cancellation (r q M : ℕ) :
     (∑ ij∈variablePairs r,
-      (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2)
+      (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) +
     (∑ ij∈variablePairs r,
-      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2)
+      (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff
         (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)))=
     ((r-1 : ℕ) : ℂ) • (∑ i : Fin r,
-      omittedIntegrand r q M i (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
-  have h := congrArg (fun P : Auxiliary r => P
+      (omittedIntegrand r q M i).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) := by
+  have h := congrArg (fun P : Auxiliary r => P.coeff
     (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) (pair_divided_companion_sum r q M)
-  dsimp only at h
   rw [auxiliary_sum_apply] at h
-  have happ (P Q : Auxiliary r) (g : Fin r→ℤ) : (P+Q) g=P g+Q g := rfl
+  have happ (P Q : Auxiliary r) (g : Fin r→ℤ) : (P+Q).coeff g=P.coeff g+Q.coeff g := rfl
   simp_rw [add_mul,happ,Finset.sum_add_distrib] at h
-  change _=(r-1) • ((∑ i : Fin r,omittedIntegrand r q M i)
+  change _=(r-1) • ((∑ i : Fin r,omittedIntegrand r q M i).coeff
     (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) at h
   rw [auxiliary_sum_apply] at h
-  simpa only [Nat.cast_smul_eq_nsmul] using h
+  simpa only [Nat.cast_smul_eq_nsmul] using! h
 
 /-- The ACTUAL charged lowering mode kills the finite screening vector at
 the screening charge. All beta, boson and finite-boundary terms are included. -/
@@ -108,12 +106,12 @@ theorem state_lowering (r q M : ℕ) (hr : 0<r) (hq : 0<q)
     (k : ℂ) (hMk : (M : ℂ)*(k+2)=1) :
     Charged.F k ((q : ℂ)*(k+2)-(r : ℂ)-1) 1 (state r q M)=0 := by
   let g : Fin r→ℤ := fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)
-  let O := ∑ i : Fin r,omittedIntegrand r q M i g
-  let B := ∑ i : Fin r,(bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i) g
+  let O := ∑ i : Fin r,(omittedIntegrand r q M i).coeff g
+  let B := ∑ i : Fin r,(bosonAuxiliarySeries r (r*(q-1)) i*omittedIntegrand r q M i).coeff g
   let K := ∑ ij∈variablePairs r,
-    (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2) g
+    (betaDivided r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff g
   let V := ∑ ij∈variablePairs r,
-    (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2) g
+    (betaCompanion r (r*(q-1)) ij.1 ij.2*pairOmittedIntegrand r q M ij.1 ij.2).coeff g
   have hi : (M : ℂ) • B=(2*M : ℂ) • V-(((r-1)*M+q-1 : ℕ) : ℂ) • O :=
     summed_omitted_ibp r q M hq
   have hp : K+V=((r-1 : ℕ) : ℂ) • O := selected_pair_cancellation r q M
@@ -130,7 +128,7 @@ theorem state_lowering (r q M : ℕ) (hr : 0<r) (hq : 0<q)
       (((r : ℂ)-1)*M+q-1)-2*M*((r : ℂ)-1)=0 := by
     linear_combination (1-(q : ℂ))*hMk
   have hp' : K+V=((r : ℂ)-1) • O := by
-    simpa only [Nat.cast_sub (by omega : 1≤r),Nat.cast_one] using hp
+    simpa only [Nat.cast_sub (by omega : 1≤r),Nat.cast_one] using! hp
   calc
     (M : ℂ) • (-((2 : ℂ) • K)-B+(k-((q : ℂ)*(k+2)-(r : ℂ)-1)) • O)=
       (-(2*M : ℂ)) • (K+V)+

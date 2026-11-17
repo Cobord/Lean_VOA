@@ -30,7 +30,7 @@ theorem a3_pair_word_one_step (a b c : ℕ)
           a3HigherLeviClosure ρ w b c K) := by
   have hstep := a3_pair_box_fixed_key ρ w a b c h j xs zs
     ys.length ys.sum (a2_mono_hom ys)
-  simpa only [VOA.DeligneAudit.CLAssembly.evAlg_mono] using hstep
+  simpa only [VOA.DeligneAudit.CLAssembly.evAlg_mono] using! hstep
 
 end VOA.DeligneAudit.A3Sector
 

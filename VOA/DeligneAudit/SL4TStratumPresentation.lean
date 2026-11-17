@@ -54,14 +54,14 @@ def fullFlagStratumLift (B N j : ℕ) (Y : Finset (Fin B)) (x : Fin B → A)
       apply Ideal.span_le.mpr
       rintro p ⟨i, rfl⟩
       change MvPolynomial.aeval x (MvPolynomial.X i ^ N : MvPolynomial (Fin B) ℂ) = 0
-      simpa only [map_pow, MvPolynomial.aeval_X] using hx i
+      simpa only [map_pow, MvPolynomial.aeval_X] using! hx i
     · apply Ideal.span_le.mpr
       rintro p ⟨cols, rfl⟩
       change (MvPolynomial.aeval x).toRingHom
         (remainderTopMinor (fullFlagSubalphabet Y) N j cols) = 0
       rw [remainderTopMinor_map]
       simpa only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
-        fullFlagSubalphabet_aeval] using hm cols)
+        fullFlagSubalphabet_aeval] using! hm cols)
 
 theorem fullFlagStratumLift_surjective (B N j : ℕ) (Y : Finset (Fin B)) (x : Fin B → A)
     (he : D4Levi.ksEPoly (List.ofFn x) = 1) (hx : ∀ i, x i ^ N = 0)
@@ -103,7 +103,7 @@ theorem fullFlagStratum_elementary (B N j : ℕ) (Y : Finset (Fin B)) :
       fullFlagTruncationIdeal B N ⊔ remainderTopIdeal (fullFlagSubalphabet Y) N j from
         le_sup_left)
   have h := congrArg (Polynomial.map q.toRingHom) (fullFlag_elementaryPolynomial B N)
-  simpa only [alphabetElementary_map, List.map_ofFn, Polynomial.map_one] using h
+  simpa only [alphabetElementary_map, List.map_ofFn, Polynomial.map_one] using! h
 
 theorem fullFlagStratumRoot_pow (B N j : ℕ) (Y : Finset (Fin B)) (i : Fin B) :
     fullFlagStratumRoot B N j Y i ^ N = 0 := by

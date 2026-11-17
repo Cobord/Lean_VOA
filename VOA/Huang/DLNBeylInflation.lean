@@ -59,8 +59,9 @@ theorem centralToSL_surjective (N : ℕ) [NeZero N] : Function.Surjective (centr
 
 theorem centralToSL_ker (N : ℕ) :
     (centralToSL N).ker = (Gamma N).map (QuotientGroup.mk' (relativeCommutator N)) := by
-  rw [centralToSL, QuotientGroup.ker_lift]
-  rfl
+  rw [centralToSL]
+  exact QuotientGroup.ker_lift (N := relativeCommutator N) (reduction N)
+    (relativeCommutator_le_gamma N)
 
 theorem centralToSL_ker_le_center (N : ℕ) :
     (centralToSL N).ker ≤ Subgroup.center (CentralQuotient N) := by
@@ -75,7 +76,7 @@ theorem gamma_inf_commutator_le_of_inflation {L N : ℕ} (hN : 0 < N) (h : N ∣
   have hα := hinf (CentralQuotient N) (centralToSL N) (centralToSL_surjective N)
     (centralToSL_ker_le_center N) SL2Z (QuotientGroup.mk' (relativeCommutator N)) (reduction L)
     (by rw [reductionMod_comp_reduction]; rfl) x hx.2 hx.1
-  simpa using hα
+  simpa using! hα
 
 /-- **Beyl inflation implies the exact relative-commutator congruence**
 `Γ(12N) ≤ [SL₂(ℤ), Γ(N)]`. -/

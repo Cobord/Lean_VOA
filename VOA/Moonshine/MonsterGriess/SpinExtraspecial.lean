@@ -44,10 +44,10 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 ## Port notes
 * Namespaces `CFSG.Monster`, `CFSG.Monster.Spin`, `CFSG.Monster.SpinLattice` ↦
-  `VOA.Moonshine.MonsterGriess`, `….Spin`, `….SpinLattice`.  Module-system syntax and the source's
-  `attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent …` (instances of Axiom's own
-  library, absent here) dropped.  The source's `public noncomputable section` becomes
-  `noncomputable section`.  Bodies verbatim except as listed.
+  `VOA.Moonshine.MonsterGriess`, `….Spin`, `….SpinLattice`.  Module-system syntax dropped.  The
+  source's `attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent …` is kept (the Lean 4.35
+  port restores it; these Mathlib instances do not exist in v4.30). The source's `public noncomputable section` becomes `noncomputable section`.  Bodies verbatim
+  except as listed.
 * **`CFSG.Foundations.Basic` is not imported** (it pulls a Feit–Thompson prelude):
   the statements using `IsExtraspecialPGroup`/`IsElementaryAbelian` (`SpinCoord.isExtraspecialPGroup`,
   `isExtraspecialPGroup_Q`, `isElementaryAbelian_quot`, `TransQ`) are not reached from the target
@@ -63,6 +63,11 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 set_option linter.style.longLine false
 set_option linter.style.show false
+
+-- As in the Axiom source: newer Mathlib's instances deriving `CommGroup`/`AddCommGroup` from simplicity
+-- and nilpotency fire on `ZMod 2` and break instance unification for `C`, `C₀`, `Cocode`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
 
 namespace VOA.Moonshine.MonsterGriess.Spin
 

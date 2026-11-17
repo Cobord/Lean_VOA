@@ -32,7 +32,7 @@ theorem translationPairPolynomial_eval (c h : ℂ) (u w : List ℕ) :
   simp only [evaluatePolynomialForm_single, map_one, one_smul] at he
   dsimp +instances only [Polynomial.aeval_def] at he
   rw [Polynomial.eval₂_C, Polynomial.eval₂_X] at he
-  simpa only [Algebra.algebraMap_self, RingHom.id_apply] using he
+  simpa only [Algebra.algebraMap_self, RingHom.id_apply] using! he
 
 /-- Every translated pairing has zero constant coefficient, since the
 actual translation embedding is in the canonical radical at weight zero. -/
@@ -84,7 +84,7 @@ theorem translationTangentRow_word (c : ℂ) (u w : List ℕ) :
   have hj (j : {w : List ℕ // SortedWord w}) :=
     translationTangentRow_sorted c u j.val j.property
   simp_rw [hj] at he
-  simpa only [coeff_C_mul] using he.symm
+  simpa only [coeff_C_mul] using! he.symm
 
 /-- The universal pairing is additive in its polynomial right expression. -/
 theorem vermaPairPolynomial_add_right (c : ℂ) (u : List ℕ)
@@ -131,7 +131,7 @@ theorem vermaWeightEvaluate_mode (c h : ℂ) (m : ℤ) (f : VermaPolynomialForm 
   have he := evaluate_polynomialModeAction (Polynomial.C c) X (Polynomial.aeval h) m f
   dsimp +instances only [evaluatePolynomialForm, Polynomial.aeval_def] at he
   rw [Polynomial.eval₂_C, Polynomial.eval₂_X] at he
-  simpa only [Algebra.algebraMap_self, RingHom.id_apply] using he
+  simpa only [Algebra.algebraMap_self, RingHom.id_apply] using! he
 
 /-- The first-order pairing with a translated left word depends only on
 the actual value of a polynomial right expression at weight zero. Its
@@ -145,7 +145,7 @@ theorem translationTangentRow_evaluate (c : ℂ) (u : List ℕ)
   | zero =>
     have he : vermaPairPolynomial (Polynomial.C c) X (u ++ [0]) 0 = 0 := by
       have hh := vermaPairPolynomial_smul_right c (u ++ [0]) 0 0
-      simpa using hh
+      simpa using! hh
     simp [he, vermaWeightEvaluate]
   | add f g hf hg =>
     rw [vermaPairPolynomial_add_right, coeff_add, vermaWeightEvaluate_add, map_add, hf, hg]

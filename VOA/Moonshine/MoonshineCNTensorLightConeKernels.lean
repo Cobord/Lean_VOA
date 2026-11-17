@@ -115,7 +115,8 @@ theorem hypTensor_lightConeSplit_swapped (D : ℕ → Module.End ℂ V)
     have hK : hypTensorSwap x ∈ hypTensorOneFamily 0 := hypTensorSwap_oneFamily 1 x hx.2
     have hz : hypTensorSwap x = 0 := hbase.disjoint.le_bot ⟨hS, hK⟩
     have he := congrArg hypTensorSwap hz
-    simpa only [hypTensorSwap_involutive, map_zero] using he
+    exact (Submodule.mem_bot ℂ).mpr
+      (by simpa only [hypTensorSwap_involutive, map_zero] using he)
   · rw [codisjoint_iff, eq_top_iff]
     intro x _
     have hx : hypTensorSwap x ∈ hypTensorNegativeSpurious D ell κ ⊔ hypTensorOneFamily 0 := by

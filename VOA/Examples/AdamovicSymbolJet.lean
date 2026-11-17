@@ -193,7 +193,7 @@ theorem serWH_mul {F G : JetSer} {δ ε : ℤ} (hF : SerWH F δ) (hG : SerWH G �
     SerWH (F * G) (δ + ε) := fun i => by
   rw [PowerSeries.coeff_mul]
   refine Submodule.sum_mem _ fun p hp => ?_
-  rw [Finset.mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   have h := (hF p.1).mul (hG p.2)
   rw [mem_weightedHomogeneousSubmodule]
   convert h using 1
@@ -210,11 +210,11 @@ theorem serWH_dS {F : JetSer} {δ : ℤ} (hF : SerWH F δ) : SerWH (dS F) (δ + 
 
 theorem serWH_curSer (a : Fin 3) : SerWH (curSer a) 0 := by
   have hX : SerWH xSer 0 := by
-    simpa using serWH_mul (serWH_colSer 0) (serWH_colSer 0)
+    simpa using! serWH_mul (serWH_colSer 0) (serWH_colSer 0)
   have hY : SerWH ySer 0 := by
-    simpa using serWH_mul (serWH_colSer 0) (serWH_colSer 1)
+    simpa using! serWH_mul (serWH_colSer 0) (serWH_colSer 1)
   have hZ : SerWH zSer 0 := by
-    simpa using serWH_mul (serWH_colSer 1) (serWH_colSer 1)
+    simpa using! serWH_mul (serWH_colSer 1) (serWH_colSer 1)
   match a with
   | 0 => exact hX
   | 1 => exact serWH_neg hZ
@@ -222,8 +222,8 @@ theorem serWH_curSer (a : Fin 3) : SerWH (curSer a) 0 := by
 
 theorem serWH_negJ : SerWH (-jSer) 1 := by
   refine serWH_neg (serWH_sub ?_ ?_)
-  · simpa using serWH_mul (serWH_dS (serWH_colSer 0)) (serWH_colSer 1)
-  · simpa using serWH_mul (serWH_colSer 0) (serWH_dS (serWH_colSer 1))
+  · simpa using! serWH_mul (serWH_dS (serWH_colSer 0)) (serWH_colSer 1)
+  · simpa using! serWH_mul (serWH_colSer 0) (serWH_dS (serWH_colSer 1))
 
 /-- The jet weight of a corrected letter: `n` for a current, `n + 1` for the stress tensor. -/
 def letterJetWt : Generator × ℕ → ℤ
@@ -237,7 +237,7 @@ theorem letterSym_mem_weighted (l : Generator × ℕ) :
     letterSym l ∈ weightedHomogeneousSubmodule ℂ jetWt (letterJetWt l) := by
   obtain ⟨g, n⟩ := l
   cases g with
-  | current a => simpa [letterJetWt] using serWH_curSer a n
+  | current a => simpa [letterJetWt] using! serWH_curSer a n
   | sugawara => exact serWH_negJ n
 
 /-- A word symbol is weighted homogeneous of the word's jet weight. -/
@@ -250,7 +250,7 @@ theorem wordSym_mem_weighted (w : List (Generator × ℕ)) :
   | cons l w ih =>
     rw [wordSym_cons, mem_weightedHomogeneousSubmodule]
     have h := (letterSym_mem_weighted l).mul ih
-    simpa [wordJetWt] using h
+    simpa [wordJetWt] using! h
 
 /-! ### The polynomial image -/
 

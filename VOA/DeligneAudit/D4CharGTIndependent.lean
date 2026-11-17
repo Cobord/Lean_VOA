@@ -17,7 +17,7 @@ def gtDominanceHeight {N : ℕ} (lam : Fin N → ℤ) : ℤ :=
 /-- At equal or smaller dominance height, a different top row cannot contribute. -/
 theorem gtPoly_coeff_zero_of_height (q : R) (N : ℕ) (lam ν : Fin N → ℤ)
     (hne : lam ≠ ν) (hh : gtDominanceHeight ν ≤ gtDominanceHeight lam) :
-    gtPoly q N ν (gtExponent lam) = 0 := by
+    (gtPoly q N ν).coeff (gtExponent lam) = 0 := by
   by_contra h
   have hd := (gtPoly_support_bounds q N ν (gtExponent lam) h).2.2
   have hs : gtDominanceHeight lam ≤ gtDominanceHeight ν := by
@@ -55,12 +55,12 @@ theorem gtPoly_linearIndependent (q : R) (N : ℕ) :
     AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at he
   have hsum : (∑ ν ∈ s, g ν * (gtPoly q N ν.val).coeff (gtExponent lam.val)) = g lam := by
     rw [Finset.sum_eq_single lam]
-    · change g lam * gtPoly q N lam.val (gtExponent lam.val) = g lam
+    · change g lam * (gtPoly q N lam.val).coeff (gtExponent lam.val) = g lam
       rw [gtPoly_leading_coeff q N lam.val lam.property, mul_one]
     · intro ν hν hne
       by_cases hgv : g ν = 0
       · rw [hgv, zero_mul]
-      · change g ν * gtPoly q N ν.val (gtExponent lam.val) = 0
+      · change g ν * (gtPoly q N ν.val).coeff (gtExponent lam.val) = 0
         rw [gtPoly_coeff_zero_of_height q N lam.val ν.val
           (fun h => hne (Subtype.ext h.symm))
           (hmax ν (Finset.mem_filter.mpr ⟨hν, hgv⟩)), mul_zero]
@@ -71,14 +71,14 @@ theorem gtPoly_linearIndependent (q : R) (N : ℕ) :
 theorem gtP_linearIndependent (N : ℕ) :
     LinearIndependent (Polynomial ℤ)
       (fun lam : {lam : Fin N → ℤ // Antitone lam} => gtP N lam.val) := by
-  simpa only [gtPoly_X_eq_gtP] using
+  simpa only [gtPoly_X_eq_gtP] using!
     gtPoly_linearIndependent (Polynomial.X : Polynomial ℤ) N
 
 /-- The same coefficient comparison remains available after arbitrary specialization of q. -/
 theorem gtEval_formal_linearIndependent (q : R) (N : ℕ) :
     LinearIndependent R (fun lam : {lam : Fin N → ℤ // Antitone lam} =>
       gtEval (AddMonoidAlgebra.single 0 q) (gtLaurentVariable R) N lam.val) := by
-  simpa only [gtPoly_eq_gtEval] using gtPoly_linearIndependent q N
+  simpa only [gtPoly_eq_gtEval] using! gtPoly_linearIndependent q N
 
 end
 

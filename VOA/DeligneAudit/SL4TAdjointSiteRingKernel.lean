@@ -72,7 +72,7 @@ theorem leviMiddle_middle_commute (r s : ℕ) : Commute (Q.op 3 r) (Q.op 3 s) :=
   apply LinearMap.ext
   intro X
   have h : Q.op 3 r (Q.op 3 s X) - Q.op 3 s (Q.op 3 r X) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 3 3 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 3 3 r s X
   exact sub_eq_zero.mp h
 
 /-- `[g(r), q(s)] = 0` in the rank-two Levi. -/
@@ -80,7 +80,7 @@ theorem leviMiddle_compound_commute (r s : ℕ) : Commute (Q.op 3 r) (Q.op 5 s) 
   apply LinearMap.ext
   intro X
   have h : Q.op 3 r (Q.op 5 s X) - Q.op 5 s (Q.op 3 r X) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 3 5 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 3 5 r s X
   exact sub_eq_zero.mp h
 
 end Levi

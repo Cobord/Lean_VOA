@@ -1230,7 +1230,7 @@ theorem ravinderKernelRel_of_trunc (hT : RavinderKernelTrunc) : RavinderKernelRe
 theorem ftheta_pow (h : MabRel ρ w a b) : ((ρ.op 5 0) ^ (2 * (a + b) + 1)) w = 0 := by
 
 theorem theta_garland (h : MabRel ρ w a b) (s : ℕ) (hs : 2 * (a + b) ≤ s + 1) :
-    ∑ x ∈ Finset.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
 
 theorem ravinderKernelTrunc : RavinderKernelTrunc := by
 

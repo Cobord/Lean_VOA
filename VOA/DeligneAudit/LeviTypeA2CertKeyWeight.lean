@@ -35,7 +35,7 @@ theorem a2_node2_weight_word (q : ℕ)
     ρ.op 7 0 (radicalWord (a2RadicalOp ρ) l • w) =
       radicalWeight q l • (radicalWord (a2RadicalOp ρ) l • w) := by
   induction l with
-  | nil => simpa [radicalWord, radicalWeight] using h
+  | nil => simpa [radicalWord, radicalWeight] using! h
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       have hc := node2_radical_comm ρ i s
@@ -59,7 +59,7 @@ theorem a2_node2_weight_key_generator (q : ℕ) (k : A2RadicalKey)
     ρ.op 7 0 (radicalWord (a2RadicalOp ρ) l • w) =
       ((q : ℂ) + (k.d₁ : ℂ) - (k.d₂ : ℂ)) •
         (radicalWord (a2RadicalOp ρ) l • w) := by
-  simpa only [radicalWeight, hd₁, hd₂] using
+  simpa only [radicalWeight, hd₁, hd₂] using!
     a2_node2_weight_word ρ w q h l
 
 /-- The whole key layer is a node-two Cartan eigenspace. -/

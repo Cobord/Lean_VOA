@@ -113,7 +113,7 @@ theorem coreGrassmannianToBottom_cartanSymbol (a b c : ℕ) (i : Fin 3) (s : ℕ
     rw [coreAdjointPowerSum, powerSumOfCoeff_map]
     simp only [map_mul, map_pow, map_neg, map_one, coreGrassmannianToBottom_rightElementary]
     simp only [elementaryPowerSum, powerSumOfCoeff_map, map_mul, map_pow, map_neg, map_one]
-    simpa only [map_mul, map_pow, map_neg, map_one] using
+    simpa only [map_mul, map_pow, map_neg, map_one] using!
       (powerSumOfCoeff_map (Ideal.Quotient.mkₐ ℂ (biGrassIdeal c (a + b) a (b + c)))
         a (fun n => (-1) ^ n * alphabetIn true (elementary n)) s).symm
   have hz := coreGrassmannianToBottom_complementPowerSum a b c s hs
@@ -122,7 +122,7 @@ theorem coreGrassmannianToBottom_cartanSymbol (a b c : ℕ) (i : Fin 3) (s : ℕ
     rw [hz]
     simp only [elementaryPowerSum, powerSumOfCoeff_map, map_mul, map_pow, map_neg, map_one]
     congr 1
-    simpa only [map_mul, map_pow, map_neg, map_one] using
+    simpa only [map_mul, map_pow, map_neg, map_one] using!
       (powerSumOfCoeff_map (Ideal.Quotient.mkₐ ℂ (biGrassIdeal c (a + b) a (b + c)))
         c (fun n => (-1) ^ n * alphabetIn false (elementary n)) s).symm
   unfold coreCartanSymbol bottomCartanSymbol
@@ -157,7 +157,7 @@ theorem bottomGrassmannianEvaluation_cartan (a b c : ℕ)
               (bottomElementaryModes a c (bottomCartanSymbol a c i s * P))))
       congr 1
       apply Subtype.ext
-      simpa only [map_mul, Subalgebra.coe_mul] using bottomMode_cartan_evaluation
+      simpa only [map_mul, Subalgebra.coe_mul] using! bottomMode_cartan_evaluation
         ρ w (a + b + c) a c h i s hs (bottomElementaryModes a c P)
 
 /-- The honest Grassmannian evaluation has exactly the Cartan action specified by the core. -/

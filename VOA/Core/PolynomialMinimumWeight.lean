@@ -39,7 +39,7 @@ theorem mono {w : σ → ℤ} {d e : ℤ} (h : d ≤ e) : AtLeast w e ≤ AtLeas
 /-- The span definition is equivalent to a bound on every nonzero
 coefficient; no finiteness of the variable set is required. -/
 theorem mem_iff {w : σ → ℤ} {d : ℤ} (P : MvPolynomial σ ℂ) :
-    P ∈ AtLeast w d ↔ ∀ e, coeff e P ≠ 0 → d ≤ Finsupp.weight w e := by
+    P ∈ AtLeast w d ↔ ∀ e, P.coeff e ≠ 0 → d ≤ Finsupp.weight w e := by
   constructor
   · intro hp
     induction hp using Submodule.span_induction with
@@ -52,8 +52,8 @@ theorem mem_iff {w : σ → ℤ} {d : ℤ} (P : MvPolynomial σ ℂ) :
     | zero => simp
     | add P Q _ _ hp hq =>
       intro e he
-      by_cases h : coeff e P=0
-      · exact hq e (by simpa [coeff_add,h] using he)
+      by_cases h : P.coeff e=0
+      · exact hq e (by simpa [MvPolynomial.coeff_add,h] using he)
       · exact hp e h
     | smul c P _ hp =>
       intro e he
@@ -62,7 +62,7 @@ theorem mem_iff {w : σ → ℤ} {d : ℤ} (P : MvPolynomial σ ℂ) :
     rw [MvPolynomial.as_sum P]
     apply Submodule.sum_mem
     intro e he
-    have hm := (AtLeast w d).smul_mem (coeff e P)
+    have hm := (AtLeast w d).smul_mem (P.coeff e)
       (monomial_mem e (hp e (mem_support_iff.mp he)))
     simpa [smul_monomial] using hm
 
@@ -111,7 +111,7 @@ theorem homogeneous_mem {w : σ → ℤ} {d : ℤ} {P : MvPolynomial σ ℂ}
 theorem component_below {w : σ → ℤ} {d e : ℤ} {P : MvPolynomial σ ℂ}
     (hp : P ∈ AtLeast w d) (he : e<d) : weightedHomogeneousComponent w e P=0 := by
   ext u
-  simp only [coeff_weightedHomogeneousComponent,coeff_zero]
+  simp only [coeff_weightedHomogeneousComponent,MvPolynomial.coeff_zero, Pi.zero_apply]
   split_ifs with hu
   · by_contra hc
     exact (not_le_of_gt he) (hu ▸ (mem_iff P).mp hp u hc)

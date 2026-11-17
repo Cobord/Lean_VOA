@@ -40,13 +40,13 @@ theorem zetaSeparates (hm2 : 2 ≤ m) : ZetaSeparates m hm := by
       exact mul_ne_zero two_ne_zero (pow_ne_zero 2 (cc_ne_zero m hm))
     · have hv : HasValues m hm (.inr 2) χ := hχ
       simp only [HasValues, values, exceptional] at hv
-      rw [half_zetaE m hm hm2 1 (by norm_num) χ (by simpa using hv.1) (by simpa using hv.2.1)
-        (by simpa using hv.2.2)]
+      rw [half_zetaE m hm hm2 1 (by norm_num) χ (by simpa using! hv.1) (by simpa using! hv.2.1)
+        (by simpa using! hv.2.2)]
       exact_mod_cast (show m ≠ 0 by omega)
     · have hv : HasValues m hm (.inr 3) χ := hχ
       simp only [HasValues, values, exceptional] at hv
-      rw [half_zetaE m hm hm2 (-1) (by norm_num) χ (by simpa using hv.1) (by simpa using hv.2.1)
-        (by simpa using hv.2.2)]
+      rw [half_zetaE m hm hm2 (-1) (by norm_num) χ (by simpa using! hv.1) (by simpa using! hv.2.1)
+        (by simpa using! hv.2.2)]
       exact_mod_cast (show m ≠ 0 by omega)
     all_goals (exfalso; simp [weight] at hw <;> norm_num at hw)
 
@@ -82,7 +82,7 @@ theorem translation_zero_of_onlySign_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m h
       exact ((V2mPlus m hm).creation _).2 0 le_rfl
     · apply Module.End.eigenspace_le_maxGenEigenspace
       apply Module.End.mem_eigenspace_iff.mpr
-      simpa only [one_smul] using ht
+      simpa only [one_smul] using! ht
   apply weightOne_top_eq_zero_sep m hm hm2 hs A hyΩ ht
   rw [← telescopeE_eq m hm A hyΩ]
   exact translation_telescope A π 1 hb (by norm_num) hx he (EP_mem_grading m hm)
@@ -121,7 +121,7 @@ theorem translation_zero_of_kernel_zero_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates 
   have hzg : z ∈ (L0 A).maxGenEigenspace 0 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   have hzΩ : z ∈ Omega A := kernel_bottom_mem_Omega A P 0 hbP hzP hzg
   have hyL : L0 A (translation A z) = translation A z := by
     have hc := L0_commutator_weak A (V2mPlus m hm).conformal_mem z 0
@@ -168,7 +168,7 @@ theorem kernel_weightOne_eq_zero_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm)
   obtain ⟨v, hv, hv0⟩ := SetLike.not_le_iff_exists.mp hbP.1
   have hv0' : v ≠ 0 := fun h => hv0 (by rw [h]; exact Submodule.zero_mem _)
   obtain ⟨z, hzP, hz0, hzL⟩ := exists_eigen_in m hm A P 0 hv.1 hv.2 hv0'
-  have hzL' : L0 A z = 0 := by simpa using hzL
+  have hzL' : L0 A z = 0 := by simpa using! hzL
   have hT := translation_zero_of_kernel_zero_sep m hm A P hm2 hs hbP hzP hzL'
   have hcyc : cyclic A z = P := by
     have hle : cyclic A z ≤ P := Submodule.span_le.mpr (Set.singleton_subset_iff.mpr hzP)
@@ -181,14 +181,14 @@ theorem kernel_weightOne_eq_zero_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm)
   have hzg : z ∈ (L0 A).maxGenEigenspace 0 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hzL'
+    simpa using! hzL'
   have hdeg := cyclic_inf_gen_eq_degreeSpan (V2mPlus_c2Cofinite m hm) A hzg 1
   have hw' : w ∈ homogeneousDegreeSpan A z 1 := by
     rw [← hdeg]
     refine ⟨?_, ?_⟩
     · change w ∈ cyclic A z
       rw [hcyc]; exact hwP
-    · simpa using hw
+    · simpa using! hw
   have hzero : homogeneousDegreeSpan A z 1 = ⊥ := by
     rw [eq_bot_iff]
     apply Submodule.span_le.mpr
@@ -251,7 +251,7 @@ theorem L1_kill_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm) (hP : IsAtom P)
   have hwg : w ∈ (L0 A).maxGenEigenspace 1 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   obtain ⟨ξ₁, ξ₂, hunit⟩ := exists_unit_combination_sep m hm hm2 hs
   obtain ⟨s₁, hs₁⟩ := VOA.mk_surjective (V2mPlus m hm) ξ₁
   obtain ⟨s₂, hs₂⟩ := VOA.mk_surjective (V2mPlus m hm) ξ₂
@@ -356,7 +356,7 @@ theorem eigen_one_mem_Omega_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm) (hP : 
   have hwg : w ∈ (L0 A).maxGenEigenspace 1 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   intro β v hv n hn
   by_cases hβ : β < 0
   · rw [(V2mPlus m hm).positivity β hβ, Submodule.mem_bot] at hv
@@ -372,7 +372,7 @@ theorem eigen_one_mem_Omega_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm) (hP : 
       have : ((β - n - 1 : ℤ) : ℝ) < -1 := by exact_mod_cast (show β - n - 1 < -1 by omega)
       linarith
     have hP' := low_mem_P m hm A P hbQ hg (by linarith)
-    exact kernel_generalized_below_bottom_eq_zero A P 0 hbP hP' hg (by simpa using hre)
+    exact kernel_generalized_below_bottom_eq_zero A P 0 hbP hP' hg (by simpa using! hre)
 
 end Extension
 
@@ -380,8 +380,8 @@ end Extension
 theorem pairSplitting_vacuum_sign_sep (hm2 : 2 ≤ m) (hs : ZetaSeparates m hm) :
     PairSplitting m hm (.inr 0) (.inr 1) := by
   intro M _ _ A P hP hQ hb ht
-  have hbP : FactorBottom A ⊥ P 0 := by simpa [weight] using hb
-  have hbQ : FactorBottom A P ⊤ 1 := by simpa [weight] using ht
+  have hbP : FactorBottom A ⊥ P 0 := by simpa [weight] using! hb
+  have hbQ : FactorBottom A P ⊤ 1 := by simpa [weight] using! ht
   apply (exists_cyclic_lift_iff_complement A P hQ 1 hbQ).mp
   obtain ⟨x, hx, hxP⟩ := exists_generalized_lift_of_factorBottom A P 1 hbQ
   -- an honest eigenvector lift

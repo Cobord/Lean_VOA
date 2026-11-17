@@ -44,7 +44,7 @@ theorem fullAction_parts (caseAt : ℕ → ActionCase) (i : ℕ)
         (applyColumns (pairColumn 28 (rawColumn (actionColor i))
           (actionColor i) (actionMode i)) (wordNode (actionSource i)).vector) ++
         scale (-1) (wordCombination (caseAt i).terms)) = true := by
-  simpa only [fullActionCheck, Bool.and_eq_true, decide_eq_true_eq, and_assoc] using h
+  simpa only [fullActionCheck, Bool.and_eq_true, decide_eq_true_eq, and_assoc] using! h
 
 theorem fullAction_target_bound (caseAt : ℕ → ActionCase) (i : ℕ)
     (h : fullActionCheck caseAt i = true) (p : ℕ × ℤ) (hp : p ∈ (caseAt i).terms) :
@@ -75,7 +75,7 @@ theorem fullAction_vector (caseAt : ℕ → ActionCase) (i : ℕ)
   rw [columnsEnd_vec _ _ _ (wordNode_range _ hs)]
   have he := vec_eq_of_sortedZero 841 (caseAt i).denominator _ _
     (fullAction_parts caseAt i h).2.2
-  simpa only [wordCombination, vec_flatMap, vec_scale] using he
+  simpa only [wordCombination, vec_flatMap, vec_scale] using! he
 
 end
 end VOA.DeligneAudit.D4Two.Certificate

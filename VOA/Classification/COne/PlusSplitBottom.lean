@@ -32,7 +32,7 @@ theorem exists_min_re_of_finite_rays (s : Finset ℂ) (P : ℂ → Prop)
   induction s using Finset.induction_on generalizing P with
   | empty =>
     obtain ⟨h, hh⟩ := hne
-    simpa using hs h hh
+    simpa using! hs h hh
   | @insert μ s hμ ih =>
     by_cases hr : ∃ n : ℕ, P (μ + n)
     · let n := Nat.find hr

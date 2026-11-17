@@ -369,7 +369,7 @@ end TwoPower
 /-- **`|H₂(SL₂(ℤ/4))| ≤ 2`**, homology-free. -/
 theorem twoBaseMult_holds : TwoBaseMult := by
   have hS : SchurTrivial (Matrix.SpecialLinearGroup (Fin 2) (ZMod (2 ^ 1))) := by
-    simpa using schurTrivial_SL_two
+    simpa using! schurTrivial_SL_two
   have h := multAtMostTwo_of_inflation_layer (rhoTwo 1) (rhoTwo_surjective 1)
     (inflationTrivial_of_schurTrivial_target _ hS) (layerAtMostTwo_rhoTwo le_rfl)
   exact h

@@ -62,9 +62,9 @@ theorem radical_op_raiseWordSpan (i : Fin 3) (r : ℕ)
       exact ⟨(j, s) :: q, RaiseReplaces.tail hq, rfl⟩
   | zero => simp
   | add x y _ _ hx hy =>
-      simpa using (raiseWordSpan ρ w i r ((j, s) :: l)).add_mem hx hy
+      simpa using! (raiseWordSpan ρ w i r ((j, s) :: l)).add_mem hx hy
   | smul c x _ hx =>
-      simpa using (raiseWordSpan ρ w i r ((j, s) :: l)).smul_mem c hx
+      simpa using! (raiseWordSpan ρ w i r ((j, s) :: l)).smul_mem c hx
 
 theorem simple_raise_word_span
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
@@ -74,7 +74,7 @@ theorem simple_raise_word_span
   induction l with
   | nil =>
       have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-        simpa [ravFam] using h
+        simpa [ravFam] using! h
       have he : D4sector.raising
           (leviColour (VOA.DeligneAudit.A3Sector.simpleE i)) := by
         change 4 ≤ (leviColour (VOA.DeligneAudit.A3Sector.simpleE i)).val ∧

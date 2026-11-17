@@ -110,12 +110,13 @@ theorem vSqZ_zero_eq_sum_range {ka : ℕ} (hka : 1 ≤ ka) (a v : 𝒱) :
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
     constructor
     · rintro ⟨h0, hn⟩
-      exact ⟨i.toNat, by omega, by omega⟩
+      exact ⟨i.toNat, by omega, by show ((i.toNat : ℕ) : ℤ) = i; omega⟩
     · rintro ⟨j, hj, rfl⟩
-      exact ⟨by positivity, by exact_mod_cast hj⟩
+      exact ⟨by show (0 : ℤ) ≤ (j : ℤ); positivity, by show (j : ℤ) < (ka : ℤ); exact_mod_cast hj⟩
   rw [hset, Finset.sum_map]
   refine Finset.sum_congr rfl (fun i _ => ?_)
-  simp only [Function.Embedding.coeFn_mk, Int.toNat_natCast]
+  show (((ka - 1).choose ((i : ℕ) : ℤ).toNat : ℕ) : ℂ) • W.smul a ((i : ℕ) : ℤ) v = _
+  simp only [Int.toNat_natCast]
 
 end Expansion
 

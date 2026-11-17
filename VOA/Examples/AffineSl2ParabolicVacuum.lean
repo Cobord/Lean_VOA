@@ -29,7 +29,7 @@ theorem parabolicIdeal_zero (k : ℂ) :
     have hh : (Submodule.Quotient.mk (a*ι ℂ (modeElement 1 0)) : Verma k 0)=
         Submodule.Quotient.mk u := by
       simpa only [horizontalVector,mode,highestVector,rho_mk,mul_one,
-        ← Submodule.Quotient.mk_smul,smul_eq_mul] using hv
+        ← Submodule.Quotient.mk_smul,smul_eq_mul] using! hv
     rw [Submodule.Quotient.eq] at hh
     let P : Submodule U U := highestIdeal k 0 ⊔ Submodule.span U {ι ℂ (modeElement 1 0)}
     have hleft : a*ι ℂ (modeElement 1 0) ∈ P :=

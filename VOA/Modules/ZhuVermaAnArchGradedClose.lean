@@ -64,6 +64,9 @@ namespace VOA
 open VertexOperatorAlgebra
 open scoped BigOperators
 
+-- Lean 4.35 port: Mathlib `b63f6e8a` makes `LieRing.ofAssociativeRing` a def; on v4.30 this is a no-op.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]

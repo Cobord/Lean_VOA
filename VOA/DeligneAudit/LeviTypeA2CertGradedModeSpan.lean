@@ -72,7 +72,7 @@ theorem a2_f2_defect_reduces_mode (p q : ℕ)
   have hlen : ys.length + k = b := by
     dsimp [ys]
     rw [a2_lst_length]
-    simpa using congrArg Prod.fst hw
+    simpa using! congrArg Prod.fst hw
   have h := a2_f2_explicit_defect_reduces ρ w p q h xs f k s b d₂
     hk hks hw
   have hle :

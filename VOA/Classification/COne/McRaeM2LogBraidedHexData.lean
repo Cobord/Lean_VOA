@@ -214,7 +214,7 @@ theorem hexRight_iterate (r : ℤ)
   rw [completedLogIterate_omega_inner hC2 N₁ N₂ N₃ (leftTripleModule hC2 N₂ N₁ h₂ h₁ N₃ h₃)
     (tensorModule hC2 N₂ N₁ h₂ h₁) h₁ h₂ h₃
     (tensorModule_finGen hC2 _ N₃ (tensorModule_finGen hC2 N₂ N₁ h₂ h₁) h₃)
-    (tensorModule_finGen hC2 N₂ N₁ h₂ h₁) _ _ r hx hy hz _ β (by simpa using ht2)]
+    (tensorModule_finGen hC2 N₂ N₁ h₂ h₁) _ _ r hx hy hz _ β (by simpa using! ht2)]
   unfold hexFD
   rw [log_exp_of_overlap ht]
   simp only [sub_zero, zero_add]

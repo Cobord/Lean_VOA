@@ -54,7 +54,7 @@ def rhoPT : ToroidalModule f m (PT' f m S) where
           rw [hk]
           simp only [Submodule.Quotient.mk_smul, map_smul, opPT_mk]
           have hz := mk_highBaseT f m S l (c, i, s) hs
-          simpa [highBaseT] using congrArg (k • ·) hz
+          simpa [highBaseT] using! congrArg (k • ·) hz
   comm a b i j r s v := by
     induction v using Submodule.Quotient.induction_on with
     | H z =>

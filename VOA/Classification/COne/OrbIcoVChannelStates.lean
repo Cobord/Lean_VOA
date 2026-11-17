@@ -57,7 +57,7 @@ def sixthState (N : ℕ) (hN : N < 100) : TwoSeed := sixthProjection (productSta
 theorem productState_grading (N : ℕ) (hN : N < 100) :
     (productState N hN).val ∈ Wi.grading (N : ℤ) := by
   have h := Wi.smul_mem_grading Xico_grading Xico_grading (71-(N : ℤ))
-  convert h using 1 <;> ring_nf
+  convert h using 1 <;> first | rfl | ring_nf
 
 theorem vacuumState_grading (N : ℕ) (hN : N < 100) :
     (vacuumState N hN).val ∈ Wi.grading (N : ℤ) :=

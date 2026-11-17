@@ -18,26 +18,26 @@ theorem oppositePower_eq (m r s : ℕ) : oppositePower m r s =
     (r.factorial ^ 3 : ℕ) • PowerSeries.coeff s (AllM.current m 7 ^ r) := by
   have h0 (i : ℕ) : g0Deriv m 7 0 (modeX m 0 i) = modeX m 1 i := by
     simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-      AllMWheels.actionCoeff] using action_mode m i 0
+      AllMWheels.actionCoeff] using! action_mode m i 0
   have h4 (i : ℕ) : g0Deriv m 7 0 (modeX m 1 i) = 0 := by
     simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-      AllMWheels.actionCoeff] using action_mode m i 4
+      AllMWheels.actionCoeff] using! action_mode m i 4
   have h3 (i : ℕ) : (-g0Deriv m 8 0) (modeX m 1 i) = modeX m 4 i := by
     have hh : g0Deriv m 8 0 (modeX m 1 i) = -modeX m 4 i := by
       simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-        AllMWheels.actionCoeff] using action_mode m i 3
+        AllMWheels.actionCoeff] using! action_mode m i 3
     rw [Derivation.neg_apply, hh, neg_neg]
   have h5 (i : ℕ) : (-g0Deriv m 8 0) (modeX m 4 i) = 0 := by
     have hh : g0Deriv m 8 0 (modeX m 4 i) = 0 := by
       simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-        AllMWheels.actionCoeff] using action_mode m i 5
+        AllMWheels.actionCoeff] using! action_mode m i 5
     rw [Derivation.neg_apply, hh, neg_zero]
   have h6 (i : ℕ) : g0Deriv m 9 0 (modeX m 4 i) = modeX m 7 i := by
     simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-      AllMWheels.actionCoeff] using action_mode m i 6
+      AllMWheels.actionCoeff] using! action_mode m i 6
   have h7 (i : ℕ) : g0Deriv m 9 0 (modeX m 7 i) = 0 := by
     simpa [AllMWheels.direction, AllMWheels.sourceColor, AllMWheels.targetColor,
-      AllMWheels.actionCoeff] using action_mode m i 7
+      AllMWheels.actionCoeff] using! action_mode m i 7
   have hfirst := iterate_deriv_powerCoeff (g0Deriv m 7 0) _ _ h0 h4 r s
   have hsecond := iterate_deriv_powerCoeff (-g0Deriv m 8 0) _ _ h3 h5 r s
   have hthird := iterate_deriv_powerCoeff (g0Deriv m 9 0) _ _ h6 h7 r s
@@ -68,7 +68,7 @@ theorem opposite_power_coeff_mem (m r s : ℕ) (hr : 1 ≤ r) (hs : m < r + s) :
   rw [oppositePower_eq] at hh
   apply AllMWheels.cancel_nat_factor (AllM.candidateIdeal m) (r.factorial ^ 3)
     (pow_ne_zero 3 (Nat.factorial_ne_zero r))
-  simpa only [nsmul_eq_mul] using hh
+  simpa only [nsmul_eq_mul] using! hh
 
 end
 end VOA.DeligneAudit.D4FusionContact.Polynomial.AllMNormal

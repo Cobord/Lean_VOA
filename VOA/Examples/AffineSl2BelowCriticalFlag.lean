@@ -62,7 +62,7 @@ theorem J_mem_ordinaryPiece_succ_of_neg (a : Fin 3) {m : ℤ} (hm : m < 0) {p : 
         (p := p + 1) (by simp [hw])
       rw [wordStateA_cons] at h
       have hm' : -(((-m - 1).toNat : ℕ) : ℤ) - 1 = m := by omega
-      simpa only [hm'] using h
+      simpa only [hm'] using! h
   | zero => rw [map_zero]; exact Submodule.zero_mem _
   | add x y _ _ hx hy => rw [map_add]; exact Submodule.add_mem _ hx hy
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
@@ -200,7 +200,7 @@ theorem J_mem_ordinaryFlag_of_neg (a : Fin 3) {m : ℤ} (hm : 0 < m) {p : ℕ} {
     J k a (-m) x ∈ (ordinaryFlag k hk).piece (p + 1) (n + m) := by
   refine ⟨J_mem_ordinaryPiece_succ_of_neg a (by omega) hx.1, ?_⟩
   have h := J_mem_grading hk a (-m) hx.2
-  simpa only [sub_neg_eq_add] using h
+  simpa only [sub_neg_eq_add] using! h
 
 /-- Every creation word is homogeneous of its total depth. -/
 theorem wordStateA_mem_grading (w : List (Fin 3 × ℕ)) :
@@ -213,7 +213,7 @@ theorem grading_le_span_creation {n : ℤ} (hn : 0 < n) :
       {x | ∃ (a : Fin 3) (m : ℕ) (y : WakModule k), 0 < m ∧
         y ∈ (universal k hk).grading (n - m) ∧ x = J k a (-(m : ℤ)) y} := by
   intro x hx
-  have hx' : x ∈ gradingZA k n := by simpa only [closed_grading] using hx
+  have hx' : x ∈ gradingZA k n := by simpa only [closed_grading] using! hx
   have hH := gradingZA_le_hspan k n hx'
   refine (Submodule.span_le.mpr ?_) hH
   rintro _ ⟨l, hl, rfl⟩

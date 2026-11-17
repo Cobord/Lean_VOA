@@ -25,6 +25,8 @@ All `sorry`-free, axiom-clean, `pbw`-free.
 
 namespace VOA
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open LieAlgebra LieAlgebra.Extension
 
 /-! ## §A  `C` is central in the Virasoro algebra. -/
@@ -55,7 +57,7 @@ abbrev UVir : Type := UniversalEnvelopingAlgebra ℂ Virasoro
 /-- `ι C` commutes with everything in `U(𝔙𝔦𝔯)` (since `C` is central in `𝔙𝔦𝔯`). -/
 theorem commute_ι_C (a : UVir) : Commute (ι ℂ C) a := by
   have hsurj : Function.Surjective (mkAlgHom ℂ Virasoro) :=
-    RingQuot.mkAlgHom_surjective ℂ (Rel ℂ Virasoro)
+    RingCon.mkₐ_surjective _
   obtain ⟨p, rfl⟩ := hsurj a
   induction p using TensorAlgebra.induction with
   | algebraMap r => rw [AlgHom.commutes]; exact Algebra.commute_algebraMap_right r _

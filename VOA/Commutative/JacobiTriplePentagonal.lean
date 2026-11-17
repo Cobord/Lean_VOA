@@ -250,7 +250,6 @@ theorem euler_eq_pentagonal : (euler : PowerSeries R) = pentSeries := by
       expand 3 (by norm_num) euler = 1 := by
     rw [← map_mul, mul_comm, euler_mul_reciprocal, map_one]
   have key := congrArg (· * expand 3 (by norm_num) (euler : PowerSeries R)) hfin
-  simp only at key
   rw [mul_assoc pentSeries, hinv, mul_one, he3,
     infProd_mul prodFactors_three_two prodFactors_three_one,
     infProd_mul (prodFactors_three_two.mul prodFactors_three_one)

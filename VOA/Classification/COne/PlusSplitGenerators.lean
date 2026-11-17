@@ -51,10 +51,10 @@ theorem modesPreserve_of_mem_iterProdSpan (A : WeakModule W M) (S : Submodule �
   | zero => intro n x _; simp [WeakModule.act_def]
   | add a b _ _ ha hb =>
     intro n x hx
-    simpa [WeakModule.act_def] using S.add_mem (ha n x hx) (hb n x hx)
+    simpa [WeakModule.act_def] using! S.add_mem (ha n x hx) (hb n x hx)
   | smul c a _ ha =>
     intro n x hx
-    simpa [WeakModule.act_def] using S.smul_mem c (ha n x hx)
+    simpa [WeakModule.act_def] using! S.smul_mem c (ha n x hx)
 
 /-- For the plus family, stability under all modes of the three certified
 generators is equivalent to full weak-module stability. -/
@@ -107,8 +107,8 @@ theorem resonantBottomSplitting_iff_generatorComplements :
   · intro hs m hm hm2 M _ _ N a b c h k hab hbc hh hk hz
     obtain ⟨d, had, hdc, hi, hu⟩ := hs m hm hm2 N a b c h k hab hbc hh hk hz
     refine ⟨d.restrictScalars ℂ, had, hdc, ?_, ?_, ?_⟩
-    · simpa using congrArg (Submodule.restrictScalars ℂ) hi
-    · simpa using congrArg (Submodule.restrictScalars ℂ) hu
+    · simpa using! congrArg (Submodule.restrictScalars ℂ) hi
+    · simpa using! congrArg (Submodule.restrictScalars ℂ) hu
     · intro i n x hx
       exact (ofR N.toWeakModule d).act_mem _ _ hx
   · intro hs m hm hm2 M _ _ N a b c h k hab hbc hh hk hz
@@ -121,7 +121,7 @@ theorem resonantBottomSplitting_iff_generatorComplements :
     · ext x
       exact Iff.of_eq (congrArg (fun T : Submodule ℂ M => x ∈ T) hi)
     · apply (Submodule.restrictScalars_injective ℂ)
-      simpa only [Submodule.restrictScalars_sup] using hu
+      simpa only [Submodule.restrictScalars_sup] using! hu
 
 /-- Assembly with explicit Zhu dimension/character inputs and the exact
 three-generator resonant input. The equal-bottom bridge remains explicit. -/

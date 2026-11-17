@@ -51,7 +51,7 @@ theorem isSemisimpleRing_of_charTable (hC2 : C2Cofinite W) {n : ℕ} {wt : Fin n
   letI := instAlgebraA W
   letI := finiteDimensional_A_of_C2Cofinite W hC2
   obtain ⟨χ, hχ, -⟩ := ht
-  exact isSemisimpleRing_of_characters χ hχ (by simpa using hdim)
+  exact isSemisimpleRing_of_characters χ hχ (by simpa using! hdim)
 
 /-- Every nonzero lowest-weight space of an ordinary module has a table weight. -/
 theorem exists_eq_wt_of_charTable (hC2 : C2Cofinite W) {n : ℕ} {wt : Fin n → ℂ}
@@ -62,7 +62,7 @@ theorem exists_eq_wt_of_charTable (hC2 : C2Cofinite W) {n : ℕ} {wt : Fin n →
   letI := instAlgebraA W
   letI := finiteDimensional_A_of_C2Cofinite W hC2
   obtain ⟨χ, hχ, hω⟩ := ht
-  let e := characterAlgEquiv χ hχ (by simpa using hdim)
+  let e := characterAlgEquiv χ hχ (by simpa using! hdim)
   let ρ := ZhuPolynomialSimplicity.actAAlgHom W N hlow
   let ε : Fin n → VOA.A W := fun i => e.symm (Pi.single i 1)
   have hsum : ∑ i, ε i = 1 := by

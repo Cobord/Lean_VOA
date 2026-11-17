@@ -153,7 +153,7 @@ theorem adR_iterate_adK (x y : Fin S.n) (hx : S.wt x ≠ 0) (r : ℕ) :
 theorem pow_kill_word (x : Fin S.n) (hx : S.wt x ≠ 0) {w : V} {N : ℕ}
     (hw : (ρ.op x 0 ^ N) w = 0) :
     ∀ l : List (Fin S.n × ℕ), (ρ.op x 0 ^ (N + adK S * l.length)) (wordOp ρ l w) = 0
-  | [] => by simpa using hw
+  | [] => by simpa using! hw
   | (a :: l) => by
       have ih := pow_kill_word x hx hw l
       have := pow_kill_of_ad (ρ.op x 0) (ρ.op a.1 a.2) (adK S) _ (wordOp ρ l w)

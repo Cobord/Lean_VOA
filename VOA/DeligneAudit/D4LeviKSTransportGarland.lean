@@ -25,7 +25,7 @@ theorem iteratedETransport_source_zero
     (G : Module.End ℂ V) (hG : G w = 0) (rs : List ℕ) :
     iteratedETransport ρ rs G w = 0 := by
   induction rs with
-  | nil => simpa [iteratedETransport] using hG
+  | nil => simpa [iteratedETransport] using! hG
   | cons r rs ih =>
       simp only [iteratedETransport, LinearMap.sub_apply, Module.End.mul_apply,
         ih, map_zero, eTransport_source_zero ρ w m h r, sub_self]

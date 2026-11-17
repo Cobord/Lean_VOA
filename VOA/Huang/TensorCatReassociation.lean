@@ -73,7 +73,7 @@ def Reassociation.associator (R : Reassociation F X Y Z) :
 theorem Reassociation.homEquiv_eq_precompose (R : Reassociation F X Y Z)
     (T : Ordinary W) (f : tensorObj F (tensorObj F X Y) Z ⟶ T) :
     R.homEquiv T f = R.associator.inv ≫ f := by
-  simpa only [Category.id_comp] using R.homEquiv_natural (𝟙 _) f
+  simpa only [Category.id_comp] using! R.homEquiv_natural (𝟙 _) f
 
 /-- Proved implication from the named comparison target to actual associator isomorphisms.
 This is conditional: it does not prove ReassociationInput from strong rationality. -/

@@ -68,14 +68,14 @@ theorem eGr_comm (h : HighestRel R w m) (i : Fin 8) (j : Fin 9) (k r : ℕ) :
     eGr h i k * grOp R w j r - grOp R w j r * eGr h i k =
       if j = 8 then grOp R w i.castSucc (k + r) else 0 := by
   refine Fin.lastCases ?_ (fun j => ?_) j
-  · simpa only [if_pos rfl] using eGr_center_comm h i k r
+  · simpa only [if_pos rfl] using! eGr_center_comm h i k r
   · have hj : j.castSucc ≠ (8 : Fin 9) := by
       intro he
       have hv := congrArg Fin.val he
       have hj := j.isLt
       change j.val = 8 at hv
       omega
-    simpa only [if_neg hj] using eGr_radical_comm h i j k r
+    simpa only [if_neg hj] using! eGr_radical_comm h i j k r
 
 end
 end VOA.DeligneAudit.D4FusionContact.Polynomial

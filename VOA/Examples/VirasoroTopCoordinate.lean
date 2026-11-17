@@ -45,7 +45,7 @@ theorem verma_length_eq_energy_iff (w : List ℕ) :
       exact congrArg (List.cons 0) (ih.mp hl)
     · intro he
       have hh := congrArg List.length he
-      simpa using hh
+      simpa using! hh
 
 /-- The PBW coordinate corresponding to n copies of L-1, as a linear map
 on actual Verma states. It does not require the state to be singular. -/
@@ -67,24 +67,25 @@ theorem vermaTopCoordinate_eq_symbol (ell p : ℂ) (n : ℕ)
     (v : Verma (3-24*ell^2) (p^2-2*ell*p))
     (hv : v∈sortedSpan (3-24*ell^2) (p^2-2*ell*p) n) :
     vermaTopCoordinate _ _ n v=
-      MvPolynomial.coeff (vermaWordExponent (List.replicate n 0))
-        (vermaSymbolProjection (vermaPolynomialLift ell p v n)) := by
+      (vermaSymbolProjection ((vermaPolynomialLift ell p v).coeff n)).coeff
+        (vermaWordExponent (List.replicate n 0)) := by
   induction hv using Submodule.span_induction with
   | mem v hv =>
     obtain ⟨w,hw,he,rfl⟩ := hv
     rw [vermaTopCoordinate_sorted _ _ n w hw,
       vermaPolynomialLift_sorted ell p ⟨w,hw⟩]
     exact (vermaWordPolynomial_top_selector ell p n w (List.replicate n 0)
-      hw (sortedWord_replicate_zero n) (by simpa [he] using verma_length_le_energy w) (by simp)).symm
+      hw (sortedWord_replicate_zero n) (by simpa [he] using! verma_length_le_energy w) (by simp)).symm
   | zero =>
     rw [map_zero,map_zero]
-    change 0=MvPolynomial.coeff _ (vermaSymbolProjection 0)
+    change 0=(vermaSymbolProjection 0).coeff _
     simp
-  | add v w _ _ hv hw => simp only [map_add,PolynomialModule.add_apply,MvPolynomial.coeff_add,hv,hw]
+  | add v w _ _ hv hw => simp only [map_add,PolynomialModule.coeff_add,Finsupp.add_apply,AddMonoidAlgebra.coeff_add,
+    Finsupp.add_apply,hv,hw]
   | smul z v _ hv =>
     rw [map_smul,map_smul]
-    change z • vermaTopCoordinate _ _ n v=MvPolynomial.coeff _
-      (vermaSymbolProjection (z • (vermaPolynomialLift ell p v n)))
+    change z • vermaTopCoordinate _ _ n v=
+      (vermaSymbolProjection (z • ((vermaPolynomialLift ell p v).coeff n))).coeff _
     rw [map_smul,MvPolynomial.coeff_smul,hv]
 
 /-- Any negative word has all-L-minus-one coordinate one exactly when the
@@ -158,7 +159,7 @@ theorem vermaTopCoordinate_wardSource (c h : ℂ) (f : ℕ → Verma c h)
     have hh := vermaTopCoordinate_creation c h j (r-j) (f j) (hf j)
     rw [hn] at hh
     have he : r-j.val=0 ↔ j.val=r := by omega
-    simpa only [he] using hh
+    simpa only [he] using! hh
   simp only [hj]
   rw [Finset.sum_eq_single (⟨r,by omega⟩ : Fin (r+1))]
   · simp

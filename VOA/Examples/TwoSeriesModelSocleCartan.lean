@@ -304,9 +304,9 @@ theorem mem_sing_model {r : ℕ} {d : ℤ} {c : ℂ} {s : modelImage R t r}
     MSing R c (s : MPoly R) ∧ (s : MPoly R) ∈ modelDeg R t r d := by
   obtain ⟨hsd, hpos, hf, hh⟩ := hs
   refine ⟨⟨fun a j => ?_, ?_, ?_⟩, hsd⟩
-  · have := congrArg Subtype.val (hpos a j); simpa using this
-  · have := congrArg Subtype.val hf; simpa using this
-  · have := congrArg Subtype.val hh; simpa using this
+  · have := congrArg Subtype.val (hpos a j); simpa using! this
+  · have := congrArg Subtype.val hf; simpa using! this
+  · have := congrArg Subtype.val hh; simpa using! this
 
 /-- **Transversality of the model socle**, for every coefficient ring with a scaling
 automorphism. -/
@@ -323,7 +323,7 @@ theorem model_transverse (ht : ∀ n, θ (t n) = (2 : ℂ) ^ (n + 1) • t n) (r
   have hind : iSupIndep E :=
     (Module.End.eigenspaces_iSupIndep (θ.toLinearMap)).comp
       (f := fun d' : ℤ => (2 : ℂ) ^ (d' - r))
-      (fun a b hab => by simpa using two_zpow_injective hab)
+      (fun a b hab => by simpa using! two_zpow_injective hab)
   have hE : ∀ d' : ℤ, ∀ Q ∈ modelDeg R t r d', lam R (2 * N) Q ∈ E d' := by
     intro d' Q hQ
     have h1 := Module.End.mem_eigenspace_iff.mp (Θ_modelDeg R t θ ht r d' hQ)

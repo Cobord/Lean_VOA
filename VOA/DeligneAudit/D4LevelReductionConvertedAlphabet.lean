@@ -38,7 +38,7 @@ theorem selectedAlphabet_complete_cancellation {A : Type*} [CommRing A] [Algebra
   have hc := congrArg (PowerSeries.coeff n) hs
   rw [PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] at hc
   simpa only [Polynomial.coeff_coe, ksHSeries_coeff_aeval,
-    ksEPoly_coeff_eq_zero ws n hlen] using hc
+    ksEPoly_coeff_eq_zero ws n hlen] using! hc
 
 /-- The signed elementary product commutes with coefficient specialization. -/
 theorem centralElementaryProduct_map {A B : Type*} [CommRing A] [CommRing B]
@@ -78,9 +78,8 @@ theorem coreBottomModePolynomial_complete (a c n : ℕ) :
     congr 1
     funext i
     exact rename_X _ _
-  dsimp only at he
   rw [hmap, Polynomial.coeff_map, elementaryProduct_coeff] at he
-  simpa only [map_mul, map_pow, map_neg, map_one] using he
+  simpa only [map_mul, map_pow, map_neg, map_one] using! he
 
 /-- A polynomial representative of the converted complete function before the core quotient. -/
 def coreRaisingCompleteRepresentative (j n : ℕ) : MvPolynomial (Fin j) BiSymPoly :=
@@ -122,7 +121,7 @@ theorem coreRaisingSubstitution_complete_zero (a c j n : ℕ)
   unfold coreRaisingCompleteRepresentative
   simp only [map_sum, map_mul, coreRaisingSubstitution_hsymm]
   simp only [coreRaisingSubstitution, aevalTower_C, coreBottomModePolynomial_complete]
-  exact selectedAlphabet_complete_cancellation _ j n _ hm (by simpa using hn)
+  exact selectedAlphabet_complete_cancellation _ j n _ hm (by simpa using! hn)
 
 /-- The cancellation kills arbitrary polynomial multiples, without a key-prefix assumption. -/
 theorem coreRaisingSubstitution_complete_mul_zero (a c j n : ℕ)

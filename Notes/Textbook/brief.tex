@@ -71,9 +71,9 @@
 \newcommand{\tr}{\operatorname{tr}}
 
 % Edition
-\newcommand{\bookrelease}{release v1.06}
+\newcommand{\bookrelease}{release v1.1}
 \newcommand{\bookcommit}{(recorded at release)}
-\newcommand{\bookdate}{2026-11-14}
+\newcommand{\bookdate}{2026-11-17}
 
 % Brief statement environments carry the book's own number: \begin{btheorem}{5.4}[title] ... \end{btheorem}
 \newtheoremstyle{briefplain}{6pt}{3pt}{\itshape}{}{\bfseries}{.}{0.5em}{\thmname{#1}~\thmnote{#3}}
@@ -113,13 +113,14 @@ commit above. The qualified names are computed from the \texttt{namespace} block
 
 A clean \texttt{\#print axioms} does not make a theorem unconditional: explicit hypotheses are
 listed in the status line. The library has no project axiom (\texttt{VOA.pbw} is a theorem)
-(book Chapter~3). In the Lean~v4.30 library, Part~VIII (monstrous moonshine) has exactly one named hypothesis,
+(book Chapter~3). In the library, Part~VIII (monstrous moonshine) has exactly one named hypothesis,
 \texttt{GmatEqAutO}: AxiomMath's generation theorem for their model of the Monster. It enters only the
 identification of $\operatorname{Aut}V^\natural$ with the whole Monster (\texttt{monstrousMoonshine}). The
 Conway--Norton theorem for every automorphism of $V^\natural$, and the isomorphism of $\operatorname{Aut}V^\natural$
-with the subgroup of the Monster that acts on $V^\natural$, do not use it. Release v1.06 discharges it: the Lean~v4.35
-companion \texttt{moonshine-lean4.35/} imports AxiomMath's theorem and proves
-\texttt{monstrousMoonshine\_unconditional} with no hypotheses (book Section~49.14, Theorem~49.36).
+with the subgroup of the Monster that acts on $V^\natural$, do not use it. The separate package
+\texttt{MoonshineCFSG/} of the repository discharges it: it imports AxiomMath's theorem and proves
+\texttt{monstrousMoonshine\_unconditional} with no hypotheses (book Section~49.14, Theorem~49.36). Since release v1.1
+the whole library is on Lean~v4.35.0-rc3.
 \tableofcontents
 \mainmatter
 \pagestyle{plain}% chapter titles are too long for running heads
@@ -1380,7 +1381,7 @@ For every $t\in\C\setminus\{0\}$, every $n\in\N$ and every $h\in\C$,
 \end{equation*}
 Since every $c\in\C$ is some $c(t)$, this is the Kac determinant for all Virasoro Verma modules.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~344.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~345.)}\par
 \noindent\textbf{Hypotheses / status.} $t\ne0$; unconditional\ (check not in this release)\par
 \medskip
 \endgroup
@@ -1888,7 +1889,7 @@ theorem negative_admissible_graded_rigidity (p q : ℕ) (hp : 2≤p) (hq : 0<q)
 \providecommand{\lelevenTR}{T(R)}
 \providecommand{\lelevenF}{F}
 \providecommand{\lelevenJ}{J}
-\noindent{\small 8 of the chapter's 58 numbered statements: its headline results and every definition they use.}\par\medskip
+\noindent{\small 8 of the chapter's 59 numbered statements: its headline results and every definition they use.}\par\medskip
 \begin{btheorem}{11.8}[Li's multiplicativity estimates]
 Let $x\in F^pV$, $y\in F^qV$. Then
 \begin{enumerate}
@@ -2939,7 +2940,7 @@ Every $f\in\lfourteenE$ of weight $k$ is a linear combination of monomials $E_4^
 \lean{E46HasWeightedPolynomialReps} holds.
 \end{btheorem}
 {\raggedright\noindent File \leanpath{VOA/\allowbreak Modularity/\allowbreak EisensteinSerreClosure.lean}.\par}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~688.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~691.)}\par
 \medskip
 \begin{btheorem}{14.23}[Holomorphy and term-by-term differentiation]
 Let $\chi$ be a formal $q$-series with $\|\chi(h+n)\|$ subexponential. Then $z\mapsto\chi^{\C}_h(z)$ is holomorphic on
@@ -3009,7 +3010,7 @@ theorem subexponential_of_majorant_recursion {χ a b p : ℕ → ℝ}
 For every super character system $S$: $\mathtt{CompleteRationalFamily}\,S\,P\iff P$; $\mathtt{Conjecture\_HalfWeight}\,S\,
 \mathrm{False}$ holds; and the zero family satisfies \lean{SuperRealisesLawOn} for every $\Gamma$, $J$, $\rho$.
 \end{bproposition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~723.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~726.)}\par
 \medskip
 \endgroup
 \setcounter{chapter}{14}
@@ -3035,7 +3036,7 @@ Let $V$ be rational and $C_2$-cofinite, with irreducible modules $M_1,\dots,M_r$
   unique.
 \end{enumerate}
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~735.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~738.)}\par
 \medskip
 \begin{btheorem}{15.16}[Convergence of one-point functions; Zhu 1996 \S4.4, Dong--Li--Mason 2000 \S\S6--7]
 Let $V$ be $C_2$-cofinite and $M$ an ordinary module with conformal weight $h$. Then for every $v\in V$ the coefficients
@@ -3337,7 +3338,7 @@ theorem V2m_stronglyRational (m : ℕ) (hm : 1 ≤ m) : StronglyRational (V2m m 
 If $R$ is a finitely generated Poisson algebra whose variety $\operatorname{Specm}R$ has finitely many
 symplectic leaves, then $\dim\lsixteenHP(R)<\infty$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~801.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~804.)}\par
 \medskip
 \begin{bdefinition}{16.9}[Etingof-finite]
 $V$ is \emph{Etingof-finite} if $\dim_\C\lsixteenHP(R_V)<\infty$.
@@ -3624,13 +3625,13 @@ theorem strictEtingofFinite_simpleSl2QL :
 \providecommand{\lseventeenstr}{\operatorname{str}}
 \renewcommand{\arraystretch}{1.3}
 \renewcommand{\arraystretch}{1.25}
-\noindent{\small 9 of the chapter's 58 numbered statements: its headline results and every definition they use.}\par\medskip
+\noindent{\small 9 of the chapter's 59 numbered statements: its headline results and every definition they use.}\par\medskip
 \begin{btheorem}{17.4}[No translation covariance]
 There is a three-dimensional super vertex algebra in the library's sense (purely even, weights $0$
 and $2$) on which the super Jacobi identity fails at $(u,v,x,\ell,m,n)=(x_1,\lseventeenvac,\lseventeenvac,-2,0,-2)$
 and on which $Y(Tu,z)\neq\partial_zY(u,z)$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~851.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~854.)}\par
 \medskip
 \begin{btheorem}{17.14}[Super Borcherds / Jacobi identity]
 Let $V$ be a super near-VOA, $u\in V_{\bar p}$, $v\in V_{\bar q}$, $x\in V$. For all $\ell,m,n\in\Z$,
@@ -3672,15 +3673,34 @@ Let $W$ be any super VOA, $g$ any even automorphism, $N\ge2$, and $T$ any
 subsingleton, every weight space of $T$ is zero, and every parity-twisted (Ramond) carrier
 \lean{W.ParityTwistedModule M} is zero.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~865.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~868.)}\par
 \medskip
 \begin{btheorem}{17.27}[$\psi$ is not a field]
 $\neg\,\mathrm{IsField}(\psi)$: there is no $B$ with $\psi(n)\lseventeenvac=0$ for all $n<B$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~868.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~871.)}\par
 \medskip
-\begin{btheorem}{17.38}[The super Zhu ring of symplectic fermions is not semisimple]
-The super Zhu algebra $A(SF)$ (Definition~17.42) is an associative ring of dimension
+\begin{btheorem}{17.36}[The symplectic-fermion super VOA]
+There is a super VOA \lean{sympFermSVOA} on $\mathrm{Fock}_{SF}$, with $Y(\chi^a_{-1}\lseventeenvac,z)=\chi^a(z)$,
+integer weights in both parities, conformal vector $\omega_{SF}=-\chi^0_{-1}\chi^1_{-1}\lseventeenvac$, and
+central charge $-2$.
+\end{btheorem}
+{\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{SympFerm.}\allowbreak\lean{sympFermSNVOA},\allowbreak\ \lean{VOA.}\allowbreak\lean{SympFerm.}\allowbreak\lean{sympFermSVOA},\allowbreak\ \lean{VOA.}\allowbreak\lean{SympFerm.}\allowbreak\lean{sympFermSVOA_centralCharge}\par}
+{\raggedright\noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak SymplecticFermionVOA.lean}.\par}
+\begin{leancode}
+noncomputable def sympFermSNVOA : SuperNearVOA FockSF where
+  __ := sympFermSVA
+  conformalVector := ωSF
+...
+noncomputable def sympFermSVOA : SuperVertexOperatorAlgebra FockSF :=
+  sympFermSNVOA.toSVOA sympFermSNVOA_vacuum_grade sympFermSNVOA_positivity
+...
+@[simp] theorem sympFermSVOA_centralCharge : sympFermSVOA.centralCharge = -2 := rfl
+\end{leancode}
+\noindent\textbf{Hypotheses / status.} Unconditional\par
+\medskip
+\begin{btheorem}{17.39}[The super Zhu ring of symplectic fermions is not semisimple]
+The super Zhu algebra $A(SF)$ (Definition~17.43) is an associative ring of dimension
 at most $4$, $[\chi^a]\neq0$, and the two-sided ideal generated by $[\chi^0]$ is nonzero and
 square-zero; hence $A(SF)$ is not a semisimple ring.
 \end{btheorem}
@@ -3697,7 +3717,7 @@ theorem ASF_not_isSemisimpleRing :
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} Unconditional\par
 \medskip
-\begin{bdefinition}{17.42}[Super Zhu algebra]
+\begin{bdefinition}{17.43}[Super Zhu algebra]
 Let $V$ be a super near-VOA with integer weights. For $u\in V_k$ put
 $u\ast v=\sum_{m=0}^{k}\binom km u_{(m-1)}v$, extended linearly; $O(V)=\operatorname{span}\{(L_{-1}u+L_0u)\ast v\}$;
 $A(V)=V/O(V)$.
@@ -3714,7 +3734,7 @@ def superO (hV : V.IntegralWeights) : Submodule ℂ 𝒱 :=
 abbrev superA (hV : V.IntegralWeights) : Type u := 𝒱 ⧸ V.superO hV
 \end{leancode}
 \medskip
-\begin{btheorem}{17.45}[Twisted Zhu finiteness]
+\begin{btheorem}{17.46}[Twisted Zhu finiteness]
 If $W$ is integrally graded and super $C_2$-cofinite, $g^N=1$ with $N>0$, and the eigenspace
 decomposition of $g$ is internal and compatible with weight and parity, then $A_g(W)$ is
 finite-dimensional.
@@ -3727,29 +3747,6 @@ theorem finiteDimensional_twistedA_of_superC2Cofinite
     (g : SuperAut W) {N : ℕ} (hN : 0 < N) (_hpow : g ^ N = 1)
     (hE : TwistEigenspaceDecomposition W g N) (hC2 : SuperC2Cofinite W) :
     FiniteDimensional ℂ (W.twistedA hW g N) := by
-\end{leancode}
-\medskip
-\begin{btheorem}{17.58}[Finite square-spin cusp quotient]
-Let $W$ be a half-integrally graded super VOA ($W_h=0$ unless $h\in\frac12\Z$), super $C_2$-cofinite, and
-$(g,h)$ a commuting pair of involutive even automorphisms. Then the quotient of $W$ by the
-square-spin cusp relation span of the $(+,+)$ inner eigensector of $(g,h)$ is finite-dimensional.
-\end{btheorem}
-{\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{SuperNearVOA.}\allowbreak\lean{BoundaryPair.}\allowbreak\lean{finiteDimensional_superSpinSqCuspQuotient_of_superC2},\allowbreak\ \lean{VOA.}\allowbreak\lean{BoundaryPair}\par}
-{\raggedright\noindent File \leanpath{VOA/\allowbreak Modularity/\allowbreak SuperSpinDescentSqFinite.lean}.\par}
-\begin{leancode}
-theorem BoundaryPair.finiteDimensional_superSpinSqCuspQuotient_of_superC2
-    (b : BoundaryPair W) (hhalf : IsHalfIntegerGraded W)
-    (hspatial : b.spatial ^ 2 = 1) (htemporal : b.temporal ^ 2 = 1)
-    (hC2 : SuperC2Cofinite W) :
-    FiniteDimensional Complex
-      (VType ⧸ superSpinSqCuspRelSpan W hhalf b.spinEigenspace) :=
-\end{leancode}
-{\raggedright\noindent File \leanpath{VOA/\allowbreak Modularity/\allowbreak SuperSectorSystem.lean}.\par}
-\begin{leancode}
-structure BoundaryPair (W : SuperVertexOperatorAlgebra VType) where
-  spatial : SuperAut W
-  temporal : SuperAut W
-  commute : Commute spatial temporal
 \end{leancode}
 \medskip
 \endgroup
@@ -3790,7 +3787,7 @@ theorem tripletW_centralCharge_eq_tripletW2 (hp : 1 ≤ 2) :
 \begin{btheorem}{18.7}[$E\ne0$ and $W(2)\ne V_{L_2}$; Lean check outside the library]
 At $p=2$, $E\ne0$, and $e^\alpha\notin W(2)$; hence $W(2)$ is a proper subalgebra of $V_{L_2}$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~913.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~916.)}\par
 \noindent\textbf{Hypotheses / status.} None\par
 \medskip
 \begin{btheorem}{18.10}[Adamovi\'c--Milas relations]
@@ -6412,7 +6409,7 @@ theorem ramanujanIdentities : RamanujanIdentities := by
 theorem ramanujan : C 12 * (P1 * P1) = C 5 * P3 + P1 - C 6 * eulerOp P1 := by
 
 theorem eight_sq (n : ℕ) :
-    ∑ p ∈ Finset.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} Unconditional (Mathlib Sturm)\par
 \medskip
@@ -6565,7 +6562,9 @@ abbrev ctTheta : R →ₗ[Kq] R := ctFun thK
 
 def Ikernel : S := smap ctTheta kernelM
 
-def ev1 : R →ₗ[Kq] Kq := Finsupp.linearCombination Kq fun _ => (1 : Kq)
+def ev1 : R →ₗ[Kq] Kq :=
+  (Finsupp.linearCombination Kq fun _ : V => (1 : Kq)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv Kq).toLinearMap
 
 def d4SchurQ (N : ℕ) : ℚ :=
   ∑ m ∈ Finset.range (N + 1), ((2 : Kq)⁻¹ * ev1 (coeff (2 * m) Ikernel)).coeff (2 * ((N : ℤ) - m))
@@ -6623,7 +6622,7 @@ V_1*\dots*V_m=\bigoplus_{d\ge0}\Phi_{\le d}/\Phi_{<d},
 on which $x(r)$ acts by the map $\Phi_{\le d}/\Phi_{<d}\to\Phi_{\le d+r}/\Phi_{<d+r}$ that it induces. We write $V^{*m}$ for
 $m$ factors equal to $V$.
 \end{bdefinition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1394.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1398.)}\par
 \medskip
 \begin{bdefinition}{26.6}[The $A_2$ relations and two named statements]
 Let $\rho$ be a current module and $w\in V$.
@@ -6949,7 +6948,7 @@ theorem ravinderKernelRel_of_trunc (hT : RavinderKernelTrunc) : RavinderKernelRe
 theorem ftheta_pow (h : MabRel ρ w a b) : ((ρ.op 5 0) ^ (2 * (a + b) + 1)) w = 0 := by
 
 theorem theta_garland (h : MabRel ρ w a b) (s : ℕ) (hs : 2 * (a + b) ≤ s + 1) :
-    ∑ x ∈ Finset.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
 
 theorem ravinderKernelTrunc : RavinderKernelTrunc := by
 
@@ -7221,7 +7220,7 @@ $\ltwentysevenF_m=M_{0,m}$, is the \emph{truncated Weyl module} $W(m\theta,m)$ o
 quotient of $W_{\mathrm{loc}}(m\theta)$ on which $\ltwentyseveng\otimes t^m\C[t]$ acts by zero. In particular $M_{0,m}$ does not
 depend on the choice of $\mathcal S$ within these bounds.
 \end{blemma}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1464.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1468.)}\par
 \noindent\textbf{Hypotheses / status.} On paper; no Lean statement\par
 \medskip
 \begin{bdefinition}{27.7}[Input R]
@@ -7397,7 +7396,7 @@ structure G2FermionicKW : Prop where
 \providecommand{\ltwentyeightLY}{L(-\tfrac{22}{5},0)}
 \providecommand{\ltwentyeightA}{L_{-4/3}}
 \providecommand{\ltwentyeightinv}{\operatorname{inv}}
-\noindent{\small 17 of the chapter's 47 numbered statements: its headline results and every definition they use.}\par\medskip
+\noindent{\small 17 of the chapter's 48 numbered statements: its headline results and every definition they use.}\par\medskip
 \begin{bdefinition}{28.4}[The corrected filtration]
 A \emph{corrected word} is a finite list of letters $(g,m)$, where $g$ is a current $e,f,h$ or the Sugawara vector $\omega$,
 and $m\in\N$ is a mode depth. The letter $(g,m)$ acts by $g_{(-m-1)}$: for a current this is $J^g_{-m-1}$, for $\omega$ it is
@@ -7743,7 +7742,7 @@ def LeadingInvariantSymbolBound (S : ConcreteKahlerGeometry) : Prop :=
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} Definitions\par
 \medskip
-\begin{btheorem}{28.48}[The fermionic jet identity, and strictness]
+\begin{btheorem}{28.49}[The fermionic jet identity, and strictness]
 (1) $\sum_{r\ge0}q^r\sum_{k=0}^{2r}\left[\begin{smallmatrix}2r\\k\end{smallmatrix}\right]_q/(q)_r=\bigl((q^3;q^3)_\infty/(q;q)_\infty\bigr)^3$.
 (2) $[q^N]$ of the fermionic series is at most $\sum_{r\le N}\dim A_{r,N}$; hence the jet character bound holds. (3) Given leading-symbol maps in every degree
 $r\ge1$ and the jet character bound, strictness holds in every degree $r\ge1$; with Theorem~28.45 this gives strictness outright.
@@ -7764,7 +7763,7 @@ def grJetStrict_of_leadingSymbol_product (sym : ∀ r, JetLeadingSymbol (r + 1))
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} \textbf{unconditional}; (3) from inputs\par
 \medskip
-\begin{btheorem}{28.50}[Gap-two spanning and the upper bound]
+\begin{btheorem}{28.51}[Gap-two spanning and the upper bound]
 In $L$, the length-$\le p$ step of the PBW flag at weight $N$ is spanned by the gap-two words of length $\le p$ (words $L_{-n_1}\cdots L_{-n_q}\ltwentyeightvac$ with
 $n_1\ge n_2+2\ge\dots$ and $n_q\ge2$). Hence $\dim F_pL_N\le\sum_{j=0}^{2p}\mathrm{lc}(N,j)$.
 \end{btheorem}
@@ -7786,7 +7785,7 @@ theorem finrank_pieceIn_le (n : ℤ) (p : ℕ) :
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} Unconditional\par
 \medskip
-\begin{btheorem}{28.53}[The Lee--Yang vacuum character]
+\begin{btheorem}{28.54}[The Lee--Yang vacuum character]
 $\mathrm{rc}(N)\le\operatorname{rank}G_N\le\dim L_N$ for every $N$; hence $\dim L_N=\mathrm{rc}(N)=\sum_rG_r(N)$, and the Rogers--Ramanujan lower bound holds.
 \end{btheorem}
 {\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{RRLower.}\allowbreak\lean{gramRank_le_finrank},\allowbreak\ \lean{VOA.}\allowbreak\lean{RRLower.}\allowbreak\lean{leeYangGramRankBound_holds},\allowbreak\ \lean{VOA.}\allowbreak\lean{RRLower.}\allowbreak\lean{leeYangRochaCaridiCharacter_holds},\allowbreak\ \lean{VOA.}\allowbreak\lean{RRLower.}\allowbreak\lean{leeYangRRLowerBound_holds}\par}
@@ -7805,7 +7804,7 @@ theorem leeYangRRLowerBound_holds : LeeYangCharacter.LeeYangRRLowerBound :=
 \end{leancode}
 \noindent\textbf{Hypotheses / status.} \textbf{unconditional}\par
 \medskip
-\begin{btheorem}{28.54}[The Lee--Yang PBW character, filtration level by filtration level]
+\begin{btheorem}{28.55}[The Lee--Yang PBW character, filtration level by filtration level]
 For every weight $N$ and every $p$, $\dim F_pL_N=\sum_{s\le p}G_s(N)$; that is, the statement \lean{LeeYangPBWCharacter} of
 Definition~28.39 holds. It is equivalent to the Rogers--Ramanujan lower bound.
 \end{btheorem}
@@ -8242,7 +8241,7 @@ theorem twoSeries_gradedUnitary_of_affine_final (m : ℕ)
 \providecommand{\chtwoF}{\mathbb{F}_2}
 \providecommand{\chtwowt}{\operatorname{wt}}
 \providecommand{\chtworank}{\operatorname{rank}}
-\noindent{\small 6 of the chapter's 42 numbered statements: its headline results and every definition they use.}\par\medskip
+\noindent{\small 6 of the chapter's 44 numbered statements: its headline results and every definition they use.}\par\medskip
 \begin{btheorem}{30.17}[Index--determinant relation]
 Let $f:M\to L$ be an injective isometric map of integral lattices whose image has the same rank
 as $L$, and let $k=[L:f(M)]$.  Then $\det M=k^2\det L$.
@@ -8337,7 +8336,7 @@ theorem latticeOfCode_isUnimodular (C : Code 2 n) (hC : C ≤ C.dual) :
 \noindent File \leanpath{VOA/\allowbreak LatticesAndCodes/\allowbreak Construction/\allowbreak CodeToLattice.lean}.
 \noindent\textbf{Hypotheses / status.} $C\subseteq C^\perp$\par
 \medskip
-\begin{btheorem}{30.42}[Rank divisible by $8$; Ebeling, Thm.~2.1]
+\begin{btheorem}{30.44}[Rank divisible by $8$; Ebeling, Thm.~2.1]
 If $L$ is even, unimodular and positive definite, then $8\mid\operatorname{rank}L$, and
 $\vartheta_L$ is a modular form of weight $\operatorname{rank}L/2$ for $SL_2(\Z)$.
 \end{btheorem}
@@ -8699,7 +8698,7 @@ Every $\chfiveSL$-invariant holomorphic function on $\chfiveH$ with at most a po
 cusp is a polynomial of degree $\le m$ in $j$. In particular $J$ is the unique invariant function
 of the form $q^{-1} + O(q)$.
 \end{btheorem}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1744.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~1751.)}\par
 \medskip
 \begin{bdefinition}{33.9}[Formal $\Delta$]
 $\Delta = (E_4^3 - E_6^2)/1728\in\C[[q]]$.
@@ -9214,7 +9213,7 @@ noncomputable def YTmon (m : (ℕ × Fin r) →₀ ℕ) : ℤ → End ℂ (FockT
   else 0
 
 noncomputable def YT : FockN r →ₗ[ℂ] (ℤ → End ℂ (FockT r)) :=
-  Finsupp.linearCombination ℂ (YTmon r)
+  (Finsupp.linearCombination ℂ (YTmon r)).comp (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 \end{leancode}
 \medskip
 \begin{btheorem}{35.23}
@@ -10451,7 +10450,7 @@ Let $\Gamma\le\chsixteenSLR$ be commensurable with $\chsixteenSL$ and contain $\
   ??--??.
 \end{enumerate}
 \end{bproposition}
-\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~2225.)}\par
+\noindent\emph{(The chapter quotes no Lean declaration for this statement; see book p.~2232.)}\par
 \medskip
 \begin{bdefinition}{43.16}[The Conway--Norton property and the Conway--Norton conjecture]
 $g\in\Aut(\Vnat)$ has the \emph{Conway--Norton property} if there are a subgroup $\Gamma\le\chsixteenGLR$ and
@@ -10754,9 +10753,10 @@ theorem hypSugawara_negative_leading_filtered (κ ell : ℂ) (j d w : ℕ)
       hypBFiltered (d + 1) (w + j + 1) := by
 
 def hypPBWMap (κ ell : ℂ) : Module.End ℂ hypFock :=
-  Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
+  (Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
     (stringNegativeWord (fun j => hypSugawara κ ell (-(j + 1 : ℤ)))
-      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))
+      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 /-- The sorted-word map is triangular with diagonal `κ` to the b-count. -/
 theorem hypPBWMap_leading (κ ell : ℂ) (e : (ℕ × Fin 2) →₀ ℕ) :
@@ -11107,10 +11107,10 @@ Let $L,L_1,L_2\in K[[p]]$ have constant term $0$.
 {\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{M8.}\allowbreak\lean{odeSol_spec},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{M8.}\allowbreak\lean{eq_of_ode},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{M8.}\allowbreak\lean{odeSol_add}\par}
 \begin{leancode}
 theorem odeSol_spec (L : PowerSeries K) (hL : PowerSeries.constantCoeff L = 0) :
-    PowerSeries.X * PowerSeries.derivative K (odeSol L) = odeSol L * L
+    PowerSeries.X * PowerSeries.derivative (R := K) (odeSol L) = odeSol L * L
 theorem eq_of_ode {A B L : PowerSeries K} (hL : PowerSeries.constantCoeff L = 0)
-    (hA : PowerSeries.X * PowerSeries.derivative K A = A * L)
-    (hB : PowerSeries.X * PowerSeries.derivative K B = B * L)
+    (hA : PowerSeries.X * PowerSeries.derivative (R := K) A = A * L)
+    (hB : PowerSeries.X * PowerSeries.derivative (R := K) B = B * L)
     (h0 : PowerSeries.constantCoeff A = PowerSeries.constantCoeff B) : A = B
 theorem odeSol_add (L₁ L₂ : PowerSeries K) (h₁ : PowerSeries.constantCoeff L₁ = 0)
     (h₂ : PowerSeries.constantCoeff L₂ = 0) :
@@ -11427,7 +11427,7 @@ theorem quadOp_joint_eigen (μ : ℕ → ℂ) (hsum : ∀ k k', μ k + μ k' ≠
     (hinj : ∀ k k', μ k = μ k' → k = k') (hr : ∀ b : Fin r, ∃ a, a ≠ b) (K : ℕ)
     (q : FockN r) (hK : ∀ v ∈ q.vars, v.1 < K) (c : Fin r → Fin r → ℂ)
     (h : ∀ a b, quadOp μ K a b q = c a b • q) (hq : q ≠ 0) :
-    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (coeff 0 q) := by
+    (∀ a b, c a b = 0) ∧ q = MvPolynomial.C (q.coeff 0) := by
 \end{leancode}
 \begin{leancode}
 theorem eigen_quadState_span (hEven : L.Even) (hPos : L.PosDef)
@@ -12171,11 +12171,11 @@ generated by the visible group and $\tau_B$ is the full group of $\Q$-linear aut
 algebra preserving its product and its form.  It is the same mathematics as AxiomMath's theorem \lean{gmat_eq_griess}
 (Lean~4.35); the literature milestones on its proof path that were
 inspected (\lean{cl_lit_stroth_leon_sims_baby_monster_recognition}, its \lean{_models} variant, and
-\lean{cl_lit_goldschmidt_strongly_closed_abelian}) are theorems there, not axioms.  In v1.05 it was not the same Lean
-proposition, because the port had redeclared AxiomMath's structures, which are nominal types; in the Lean~4.35 companion of
-release v1.06 the definitions are built on AxiomMath's own structures, the two propositions are definitionally equal, and
-\lean{GmatEqAutO} is proved (\lean{gmatEqAutO}, \S49.14).  Its axiom footprint, and hence that of
-\lean{gmat_eq_griess}, is \lean{[propext, Classical.choice, Quot.sound]}.
+\lean{cl_lit_goldschmidt_strongly_closed_abelian}) are theorems there, not axioms.  In the library it is not the same Lean
+proposition, because the port redeclares AxiomMath's structures, which are nominal types; in the package
+\leanpath{MoonshineCFSG/} the copies of the definitions are built on AxiomMath's own structures, the two propositions are
+definitionally equal, and the package's \lean{GmatEqAutO} is proved (\lean{gmatEqAutO}, \S49.14).  Its
+axiom footprint, like that of \lean{gmat_eq_griess}, is \lean{[propext, Classical.choice, Quot.sound]}.
 \end{bdefinition}
 {\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{GmatEqAutO}\par}
 \begin{leancode}
@@ -12238,7 +12238,7 @@ $\varphi(g)$ acts on $\Vnat_2\cong\C\otimes_\Q\chtwentytwoB$ as $1\otimes g$, an
 is the normalised Hauptmodul of a group $\Gamma\le\mathrm{SL}_2(\mathbb R)$ containing some $\Gamma_0(N)$ and commensurable
 with $\mathrm{SL}_2(\Z)$ (the conclusion of Theorem~49.35).
 \end{btheorem}
-{\raggedright\noindent\textbf{Lean.} \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monsterEquivAutVnat'},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monsterEquivAutVnat'_restrict},\allowbreak\ \lean{VOA.}\allowbreak\lean{Moonshine.}\allowbreak\lean{ConwayNorton.}\allowbreak\lean{monstrousMoonshine_unconditional}\par}
+{\raggedright\noindent\textbf{Lean.} \lean{monsterEquivAutVnat'},\allowbreak\ \lean{monsterEquivAutVnat'_restrict},\allowbreak\ \lean{monstrousMoonshine_unconditional}\par}
 \begin{leancode}
 noncomputable def monsterEquivAutVnat' : AutO ≃* AutVnat :=
   monsterEquivAutVnat gmatEqAutO
@@ -12254,8 +12254,7 @@ theorem monstrousMoonshine_unconditional :
         ConwayNortonVia (φ : AutO →* AutVnat) :=
   monstrousMoonshine gmatEqAutO
 \end{leancode}
-\noindent File \leanpath{VOA/\allowbreak zz435/\allowbreak Moonshine\_MoonshineLRCFSGBridge.lean}.
-\noindent\textbf{Hypotheses / status.} None (v4.35 companion)\par
+\noindent\textbf{Hypotheses / status.} None (\leanpath{MoonshineCFSG/})\par
 \medskip
 \endgroup
 \part{Verification}

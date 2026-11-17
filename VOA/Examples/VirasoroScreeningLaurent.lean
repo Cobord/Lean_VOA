@@ -29,35 +29,48 @@ abbrev Laurent (G : Type*) [AddCommGroup G] := AddMonoidAlgebra ℚ G
 noncomputable def reverse {G : Type*} [AddCommGroup G] : Laurent G ≃+* Laurent G :=
   AddMonoidAlgebra.mapDomainRingEquiv ℚ (AddEquiv.neg G)
 
-/-- Reversal sends the coefficient at g to the original coefficient at -g. -/
+/-- Reversal sends the coefficient at g to the original coefficient at -g.
+(Coefficients are read through `AddMonoidAlgebra.coeff` throughout this file, so that the
+statements also typecheck where `AddMonoidAlgebra` is a structure rather than a `Finsupp`.) -/
 theorem reverse_apply {G : Type*} [AddCommGroup G] (P : Laurent G) (g : G) :
-    reverse P g = P (-g) := by
-  exact AddMonoidAlgebra.mapDomainRingEquiv_apply _ _ _
+    (reverse P).coeff g = P.coeff (-g) := by
+  first
+  | exact AddMonoidAlgebra.mapDomainRingEquiv_apply _ _ _
+  | (rw [reverse, AddMonoidAlgebra.coeff_mapDomainRingEquiv, Finsupp.equivMapDomain_apply]; rfl)
 
 /-- A single Laurent monomial reverses its exponent. -/
 theorem reverse_single {G : Type*} [AddCommGroup G] (g : G) (q : ℚ) :
     reverse (single g q : Laurent G) = single (-g) q := by
   classical
+  apply AddMonoidAlgebra.coeff_injective
   ext h
-  simp [reverse_apply, single_apply, neg_eq_iff_eq_neg]
+  rw [reverse_apply]
+  show Finsupp.single g q (-h) = Finsupp.single (-g) q h
+  simp [Finsupp.single_apply, neg_eq_iff_eq_neg]
 
 /-- The constant coefficient of P times its reversal is a sum of squares
 of all nonzero coefficients of P. This is an exact finite identity. -/
 theorem constant_mul_reverse {G : Type*} [AddCommGroup G] (P : Laurent G) :
-    (P * reverse P) 0 = ∑ g ∈ P.support, (P g)^2 := by
+    (P * reverse P).coeff 0 = ∑ g ∈ P.coeff.support, (P.coeff g)^2 := by
   classical
-  simp [AddMonoidAlgebra.mul_apply_left, reverse_apply, Finsupp.sum, pow_two]
+  first
+  | simp [AddMonoidAlgebra.coeff_mul_apply_left, reverse_apply, Finsupp.sum, pow_two]
+  | (show (P * reverse P) 0 = ∑ g ∈ P.support, (P g)^2
+     simp [AddMonoidAlgebra.mul_apply_left, reverse, AddMonoidAlgebra.mapDomainRingEquiv_apply,
+       Finsupp.sum, pow_two])
 
 /-- A nonzero rational Laurent expression has strictly positive squared
 coefficient norm. No positivity of the individual coefficients is needed. -/
 theorem constant_mul_reverse_pos {G : Type*} [AddCommGroup G]
-    (P : Laurent G) (hP : P ≠ 0) : 0 < (P * reverse P) 0 := by
+    (P : Laurent G) (hP : P ≠ 0) : 0 < (P * reverse P).coeff 0 := by
   classical
   rw [constant_mul_reverse]
   apply Finset.sum_pos'
   · intro g hg
     exact sq_nonneg _
-  · obtain ⟨g,hg⟩ := Finsupp.support_nonempty_iff.mpr hP
+  · have hP' : P.coeff ≠ 0 := fun h =>
+      hP (AddMonoidAlgebra.coeff_injective (h.trans AddMonoidAlgebra.coeff_zero.symm))
+    obtain ⟨g,hg⟩ := Finsupp.support_nonempty_iff.mpr hP'
     exact ⟨g,hg,sq_pos_of_ne_zero (Finsupp.mem_support_iff.mp hg)⟩
 
 /-- Reversing z^a-z^b multiplies it by -z^(-a-b). This elementary
@@ -104,9 +117,9 @@ theorem binomial_ne_zero {G : Type*} [AddCommGroup G] {a b : G} (hab : a ≠ b) 
     (single a 1 - single b 1 : Laurent G) ≠ 0 := by
   classical
   intro h
-  have hh := congrArg (fun P : Laurent G => P a) h
-  change (single a (1:ℚ)) a - (single b (1:ℚ)) a = 0 at hh
-  simp [AddMonoidAlgebra.single_apply, hab, Ne.symm hab] at hh
+  have hh := congrArg (fun P : Laurent G => P.coeff a) h
+  change (Finsupp.single a (1:ℚ)) a - (Finsupp.single b (1:ℚ)) a = 0 at hh
+  simp [Finsupp.single_apply, hab, Ne.symm hab] at hh
 
 /-- Every product of nonzero Laurent binomials is nonzero when the exponent
 group has unique sums; finite products of integer exponent groups do. -/
@@ -121,13 +134,18 @@ theorem binomial_product_ne_zero {G I : Type*} [AddCommGroup G] [UniqueSums G]
 theorem reciprocal_even_coefficient_ne_zero {G : Type*} [AddCommGroup G] [UniqueSums G]
     (P : Laurent G) (B : G) (e : ℚ) (hP : P ≠ 0)
     (hrev : reverse P = single (-B) e * P) (t : ℕ) :
-    (P^(2*t)) (t • B) ≠ 0 := by
+    (P^(2*t)).coeff (t • B) ≠ 0 := by
   have hpos := constant_mul_reverse_pos (P^t) (pow_ne_zero t hP)
   have hid : P^t * reverse (P^t) = single (-(t • B)) (e^t) * P^(2*t) := by
     rw [map_pow,hrev,mul_pow,single_pow]
     rw [smul_neg,show 2*t=t+t by omega,pow_add]
     ring
-  rw [hid,single_mul_apply] at hpos
+  rw [hid] at hpos
+  first
+  | rw [AddMonoidAlgebra.coeff_single_mul_apply] at hpos
+  | (change 0 < (single (-(t • B)) (e^t) * P^(2*t)) 0 at hpos
+     rw [single_mul_apply] at hpos
+     change 0 < e^t * (P^(2*t)).coeff (-(-(t • B)) + 0) at hpos)
   simp only [neg_neg,add_zero] at hpos
   intro hz
   rw [hz,mul_zero] at hpos
@@ -137,8 +155,8 @@ theorem reciprocal_even_coefficient_ne_zero {G : Type*} [AddCommGroup G] [Unique
 has a nonzero coefficient. This includes all integer Vandermonde powers. -/
 theorem binomial_product_central_ne_zero {G I : Type*} [AddCommGroup G] [UniqueSums G]
     (S : Finset I) (a b : I → G) (hab : ∀ i ∈ S, a i ≠ b i) (t : ℕ) :
-    ((∏ i ∈ S, (single (a i) 1-single (b i) 1 : Laurent G))^(2*t))
-      (t • ∑ i ∈ S, (a i+b i)) ≠ 0 := by
+    (((∏ i ∈ S, (single (a i) 1-single (b i) 1 : Laurent G))^(2*t)).coeff
+      (t • ∑ i ∈ S, (a i+b i))) ≠ 0 := by
   exact reciprocal_even_coefficient_ne_zero _ _ _
     (binomial_product_ne_zero S a b hab) (reverse_binomial_product S a b) t
 

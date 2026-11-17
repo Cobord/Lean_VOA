@@ -14,7 +14,7 @@ theorem fullFlag_empty_rank_le (N : ℕ) : Module.finrank ℂ (FullFlagRing 0 N)
     (f := (Ideal.Quotient.mkₐ ℂ (fullFlagTruncationIdeal 0 N)).toLinearMap)
     (Ideal.Quotient.mkₐ_surjective ℂ _)
   rw [e.toLinearEquiv.finrank_eq] at h
-  simpa using h
+  simpa using! h
 
 /-- The root-deletion recursion gives the factorial bound with all powers of two cleared. -/
 theorem fullFlag_finrank_mul_pow_two_le (B k : ℕ) (hk : 2 * k ≤ B) :
@@ -23,7 +23,7 @@ theorem fullFlag_finrank_mul_pow_two_le (B k : ℕ) (hk : 2 * k ≤ B) :
   | zero =>
       have hk0 : k = 0 := by omega
       subst k
-      simpa using fullFlag_empty_rank_le 0
+      simpa using! fullFlag_empty_rank_le 0
   | succ B ih =>
       cases k with
       | zero =>
@@ -31,7 +31,7 @@ theorem fullFlag_finrank_mul_pow_two_le (B k : ℕ) (hk : 2 * k ≤ B) :
           have hsmall := ih 0 (by omega)
           simp only [Nat.sub_zero, pow_zero, one_mul] at hsmall ⊢
           simp only [zero_mul, Nat.sub_zero, zero_add] at h
-          exact h.trans (by simpa only [Nat.factorial_succ] using
+          exact h.trans (by simpa only [Nat.factorial_succ] using!
             Nat.mul_le_mul_left (B + 1) hsmall)
       | succ k =>
           let N := B - k
@@ -42,7 +42,7 @@ theorem fullFlag_finrank_mul_pow_two_le (B k : ℕ) (hk : 2 * k ≤ B) :
           have hfirst := ih k (by omega)
           have hfirst' : 2 ^ (k + 1) * Module.finrank ℂ (FullFlagRing B N) ≤
               2 * B.factorial := by
-            simpa only [pow_succ, N, mul_assoc, mul_left_comm, mul_comm] using
+            simpa only [pow_succ, N, mul_assoc, mul_left_comm, mul_comm] using!
               Nat.mul_le_mul_left 2 hfirst
           have hsecond : (N - (k + 1)) *
               (2 ^ (k + 1) * Module.finrank ℂ (FullFlagRing B (N - 1))) ≤
@@ -74,7 +74,7 @@ theorem fullFlag_finrank_mul_pow_two_le (B k : ℕ) (hk : 2 * k ≤ B) :
 theorem fullFlag_finrank_le (B k : ℕ) (hk : 2 * k ≤ B) :
     Module.finrank ℂ (FullFlagRing B (B - k)) ≤ B.factorial / 2 ^ k := by
   apply (Nat.le_div_iff_mul_le (by positivity : 0 < 2 ^ k)).mpr
-  simpa only [mul_comm] using fullFlag_finrank_mul_pow_two_le B k hk
+  simpa only [mul_comm] using! fullFlag_finrank_mul_pow_two_le B k hk
 
 end
 

@@ -41,7 +41,7 @@ theorem coreCellCutoff_of_subset (a b c i : ℕ)
     coreCellCutoff a b c i = a + b := by
   have hv := SL4T.cellCatalog_valid (a + b + c) (a + b) a
     ((coreCellCatalog a b c)[i]) (List.getElem_mem hi)
-  rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map]
+  rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map]
   change ((coreCellCatalog a b c)[i].1 ∪ (coreCellCatalog a b c)[i].2).card = _
   rw [Finset.union_eq_left.mpr hsubset]
   exact hv.2.1
@@ -67,7 +67,7 @@ theorem coreCell_singleAdjoint_localWeyl (i : ℕ)
     by_cases heq : e = 3
     · subst e
       by_cases hs : s = 0
-      · simpa only [hs] using hzero
+      · simpa only [hs] using! hzero
       · exact coreCellGenerator_middle_raising_truncation 1 b c Q π h F i hi s (by omega)
     · rw [h.parabolic e he heq]
       exact Submodule.zero_mem _
@@ -97,7 +97,7 @@ theorem coreCell_subset_rank_of_middle_zero
     rwa [coreCellCutoff_of_subset 1 b c i hi hsubset]
   have hb := (SL4T.mixedLabelTruncatedRank_iff_cyclic.mp SL4T.mixedLabelTruncatedRank)
     1 b _ _ _ hrel ht
-  simpa only [pow_one] using hb.2
+  simpa only [pow_one] using! hb.2
 
 end
 

@@ -92,8 +92,8 @@ theorem sum_filter_ne_zero (L : List ℕ) : (L.filter (· ≠ 0)).sum = L.sum :=
   | cons a L ih =>
       by_cases ha : a = 0
       · subst ha
-        simpa [List.filter_cons] using ih
-      · simpa [List.filter_cons,ha] using ih
+        simpa [List.filter_cons] using! ih
+      · simpa [List.filter_cons,ha] using! ih
 
 theorem all_zero_of_sum_zero (l : List (Fin 8 × ℕ)) (h : (l.map Prod.snd).sum = 0) :
     ∀ x ∈ l, x.2 = 0 := by
@@ -119,7 +119,7 @@ theorem center_row_mem_polarIdeal (m : ℕ) (hm : 2 ≤ m)
   have hlen := (matching_c_contacts_exact m 5 (2 * m - 3) i e hb hmatch hne).1
   have hbud := matching_center_quintic_mode_budget m hm i e hb hmatch
   have hth : 2 * m < i.seed.val.2.1 + i.seed.val.2.2 := by
-    simpa only [AllM.seedThreshold,hb,if_true] using i.seed.property.2
+    simpa only [AllM.seedThreshold,hb,if_true] using! i.seed.property.2
   have h0 := congrFun hmatch 0
   have h1 := congrFun hmatch 1
   change Finsupp.weight (componentWeight m) e 0 + (i.seed.val.2.1 : ℤ) = 5 at h0
@@ -130,7 +130,7 @@ theorem center_row_mem_polarIdeal (m : ℕ) (hm : 2 ≤ m)
   -- the outer word consists of contacts
   have hcat : ∀ x ∈ i.outer, category x.1 = 0 := by
     intro x hx
-    simpa only [branchCategory,hb,if_true] using i.branch x hx
+    simpa only [branchCategory,hb,if_true] using! i.branch x hx
   set l := i.outer.map toContact with hl
   have houter : i.outer = l.map contactOp := (outer_eq_contacts i.outer hcat).symm
   have hlenl : l.length = i.seed.val.2.1 := by rw [hl,List.length_map,hlen]
@@ -166,7 +166,7 @@ theorem center_row_mem_polarIdeal (m : ℕ) (hm : 2 ≤ m)
   rw [hsrc]
   apply Submodule.smul_of_tower_mem
   have hF := list_nonzero_sum_le_one (i.shifts.filter (· ≠ 0))
-    (fun k hk => by simpa using (List.mem_filter.mp hk).2)
+    (fun k hk => by simpa using! (List.mem_filter.mp hk).2)
     (by rw [sum_filter_ne_zero]; omega)
   rcases hr with hr | hr
   · -- r = 4: static seed, static contacts, one A multiplier
@@ -255,7 +255,7 @@ theorem center_row_mem_polarIdeal (m : ℕ) (hm : 2 ≤ m)
       have hshift : i.shifts.sum = 1 := by
         have := sum_filter_ne_zero i.shifts
         rw [hF] at this
-        simpa using this.symm
+        simpa using! this.symm
       have hz0 : (l.map Prod.snd).sum = 0 := by omega
       have hs : i.seed.val.2.2 = 2 * m - 3 - 1 := by omega
       rw [hF]

@@ -248,11 +248,11 @@ theorem wardV_mem_span_pairs {lam : ℂ} (hS : WardBilinearV S lam)
   refine induction_lev A (motive := fun x => ∀ y, S x y ∈ T) x ?_ ?_ ?_ y
   · intro y; simp only [map_zero, LinearMap.zero_apply]; exact T.zero_mem
   · intro x x' hx hx' y
-    simpa only [map_add, LinearMap.add_apply] using T.add_mem (hx y) (hx' y)
+    simpa only [map_add, LinearMap.add_apply] using! T.add_mem (hx y) (hx' y)
   · intro n x hx y
     refine induction_lev B (motive := fun y => S x y ∈ T) y ?_ ?_ ?_
-    · simpa only [map_zero] using T.zero_mem
-    · intro y y' hy hy'; simpa only [map_add] using T.add_mem hy hy'
+    · simpa only [map_zero] using! T.zero_mem
+    · intro y y' hy hy'; simpa only [map_add] using! T.add_mem hy hy'
     · intro m y hy; exact hall n m x hx y hy
 
 include hRe hRp in

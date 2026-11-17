@@ -26,7 +26,7 @@ theorem pairSource_symmetric_X_mem (a b c : ℕ)
   apply rename_symmetric_mem_of_psum _ _ Sum.inl _ ?_ P hP
   intro r
   have h := pairSourcePower_mem a b c 0 r
-  simpa [pairSourcePower, pairSourceXPsum, psum] using h
+  simpa [pairSourcePower, pairSourceXPsum, psum] using! h
 
 theorem pairSource_symmetric_Y_mem (a b c : ℕ)
     (P : MvPolynomial (Fin b) ℂ)
@@ -37,7 +37,7 @@ theorem pairSource_symmetric_Y_mem (a b c : ℕ)
     (fun y : Fin b => (Sum.inr (Sum.inl y) : PairSource a b c)) _ ?_ P hP
   intro r
   have h := pairSourcePower_mem a b c 1 r
-  simpa [pairSourcePower, sourceYPsum, psum] using h
+  simpa [pairSourcePower, sourceYPsum, psum] using! h
 
 theorem pairSource_symmetric_Z_mem (a b c : ℕ)
     (P : MvPolynomial (Fin c) ℂ)
@@ -48,7 +48,7 @@ theorem pairSource_symmetric_Z_mem (a b c : ℕ)
     (fun z : Fin c => (Sum.inr (Sum.inr z) : PairSource a b c)) _ ?_ P hP
   intro r
   have h := pairSourcePower_mem a b c 2 r
-  simpa [pairSourcePower, pairSourceZPsum, psum] using h
+  simpa [pairSourcePower, pairSourceZPsum, psum] using! h
 
 /-- Products of arbitrary symmetric polynomials in the three independent
     source alphabets lie in the domain of `pairSymmetricRestriction`. -/

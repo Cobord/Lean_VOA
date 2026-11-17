@@ -114,12 +114,12 @@ theorem fockCount_eq_even_add_odd (w : ℕ) :
 
 /-- The span of the monomials with exponent in `s`. -/
 noncomputable abbrev fockSupp (s : Set ((ℕ × Fin r) →₀ ℕ)) : Submodule ℂ (FockN r) :=
-  Finsupp.supported ℂ ℂ s
+  AddMonoidAlgebra.supported ℂ ℂ s
 
 theorem finrank_fockSupp (s : Set ((ℕ × Fin r) →₀ ℕ)) (hs : s.Finite) :
     finrank ℂ (fockSupp r s) = s.ncard := by
   haveI := hs.fintype
-  refine ((Finsupp.supportedEquivFinsupp (M := ℂ) (R := ℂ) s).finrank_eq).trans ?_
+  refine ((AddMonoidAlgebra.supportedEquivFinsupp (R := ℂ) (S := ℂ) s).finrank_eq).trans ?_
   rw [Module.finrank_finsupp_self, ← Nat.card_eq_fintype_card, Nat.card_coe_set_eq]
 
 theorem gradingWN_eq_fockSupp (w : ℕ) : gradingWN r w = fockSupp r (weightDegSetN r w) :=
@@ -133,7 +133,7 @@ theorem finrank_gradingWN (w : ℕ) : finrank ℂ (gradingWN r w) = fockCount r 
 theorem sigmaN_of_mem_fockSupp {s : Set ((ℕ × Fin r) →₀ ℕ)} {c : ℂ}
     (hs : ∀ d ∈ s, (-1 : ℂ) ^ d.degree = c) {p : FockN r} (hp : p ∈ fockSupp r s) :
     sigmaN r p = c • p := by
-  rw [fockSupp, Finsupp.supported_eq_span_single] at hp
+  rw [fockSupp, AddMonoidAlgebra.supported_eq_span_single] at hp
   induction hp using Submodule.span_induction with
   | mem x hx =>
       obtain ⟨d, hd, rfl⟩ := hx
@@ -156,10 +156,10 @@ theorem finrank_oddFock (w : ℕ) : finrank ℂ (oddFock r w) = fockCountOdd r w
   finrank_fockSupp r _ ((weightDegSetN_finite r w).subset (fockSetOdd_subset r w))
 
 theorem evenFock_le (w : ℕ) : evenFock r w ≤ gradingWN r w := by
-  rw [gradingWN_eq_fockSupp]; exact Finsupp.supported_mono (fockSetEven_subset r w)
+  rw [gradingWN_eq_fockSupp]; exact AddMonoidAlgebra.supported_mono (fockSetEven_subset r w)
 
 theorem oddFock_le (w : ℕ) : oddFock r w ≤ gradingWN r w := by
-  rw [gradingWN_eq_fockSupp]; exact Finsupp.supported_mono (fockSetOdd_subset r w)
+  rw [gradingWN_eq_fockSupp]; exact AddMonoidAlgebra.supported_mono (fockSetOdd_subset r w)
 
 theorem sigmaN_of_mem_evenFock {w : ℕ} {p : FockN r} (hp : p ∈ evenFock r w) :
     sigmaN r p = p := by
@@ -727,7 +727,9 @@ theorem fockCountEven_three : fockCountEven r 3 = r * r := by
       rcases weight_eq_three r d h with ⟨a, rfl⟩ | ⟨a, b, rfl⟩ | ⟨a, b, c, rfl⟩
       · rw [Finsupp.degree_single] at he; exact absurd he (by decide)
       · exact ⟨(a, b), rfl⟩
-      · rw [← cubExp_mk, degree_cubExp] at he; exact absurd he (by decide)
+      · have h3 := degree_cubExp r ⟨{a, b, c}, by simp⟩
+        rw [cubExp_mk] at h3
+        rw [h3] at he; exact absurd he (by decide)
     · rintro ⟨p, rfl⟩
       exact ⟨weight_even3Exp r p, by rw [degree_even3Exp]; exact even_two⟩
   rw [fockCountEven, hS, Set.ncard_range_of_injective (even3Exp_injective r),

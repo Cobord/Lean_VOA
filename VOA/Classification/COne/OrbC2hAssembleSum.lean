@@ -21,6 +21,6 @@ theorem iterateS_sum_value (n : ℤ) (i : ℕ) (S A B C D E F G H T : SectorVect
   simp only [evaluate_scaleVector, evaluate_zipMany, List.map_cons, List.map_nil,
     List.sum_cons, List.sum_nil, add_zero] at h
   simpa only [iterateS, evaluate_compact, evaluate_scaleVector, evaluate_append,
-    evaluate_neutralS, evaluate_eS, hA, hB, hC, hD, hE, hF, hG, hH, add_assoc] using h
+    evaluate_neutralS, evaluate_eS, hA, hB, hC, hD, hE, hF, hG, hH, add_assoc] using! h
 
 end VOA.Classification.COne.OrbC2h

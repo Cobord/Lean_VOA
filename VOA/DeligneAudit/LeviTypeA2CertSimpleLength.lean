@@ -37,7 +37,7 @@ theorem a2_simple_word_length_zero (p q : ℕ)
     intro m
     exact h.cartan_pos 6 (by decide) _ (by omega)
   have hN : (F 0 ^ (p + 1)) w = 0 := by
-    simpa [F, Module.End.pow_apply] using h.lowering_first
+    simpa [F, Module.End.pow_apply] using! h.lowering_first
   have hk : ∀ r s, 1 ≤ r → p + 1 ≤ r + s →
       (PowerSeries.coeff s (Garland.Fs F ^ r)) w = 0 := by
     intro r s hr hrs

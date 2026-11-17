@@ -110,7 +110,7 @@ theorem LogGood.sum {ι : Type*} (S : Finset ι) {p : ι → ℕ → ℂ[X]} (hp
     LogGood (∑ i ∈ S, p i) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using LogGood.zero
+  | empty => rw [Finset.sum_empty]; exact LogGood.zero
   | insert i S hi ih =>
     rw [Finset.sum_insert hi]
     exact (hp i (Finset.mem_insert_self _ _)).add
@@ -291,7 +291,7 @@ theorem logFun_sum {ι : Type*} (S : Finset ι) {p : ι → ℕ → ℂ[X]} (hp 
     logFun lam (∑ i ∈ S, p i) t = ∑ i ∈ S, logFun lam (p i) t := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using logFun_zero lam t
+  | empty => rw [Finset.sum_empty, Finset.sum_empty]; exact logFun_zero' lam t
   | insert i S hi ih =>
     rw [Finset.sum_insert hi, Finset.sum_insert hi,
       logFun_add (hp i (Finset.mem_insert_self _ _))

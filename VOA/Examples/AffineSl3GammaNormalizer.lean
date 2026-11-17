@@ -13,6 +13,8 @@ It detects the negative Serre operators after their commutators with
 those two beta colours vanish. Stability of the gamma commutant supplies
 the remaining hypotheses without constructing quartic gamma products.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

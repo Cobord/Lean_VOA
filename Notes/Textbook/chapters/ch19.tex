@@ -207,8 +207,9 @@ $P\in\C[X]$ and an element $x$ of a $\C$-algebra, \lean{aeval x P} is $P(x)$.  T
 (Definition~\ref{ch19:def:twistedTD}); it multiplies the coefficient of $p^n$ by $n$.
 
 \begin{remark}[Why logarithmic derivatives instead of logarithms]\label{ch19:rem:logfree}
-Classically one writes the denominator identity as $\log(\text{product})=-\sum_{k}\frac1k\sum\cdots$.  Mathlib v4.30
-has no formal logarithm or exponential on these rings, and in characteristic $0$ none is needed: for a series $A$ with
+Classically one writes the denominator identity as $\log(\text{product})=-\sum_{k}\frac1k\sum\cdots$.  Mathlib has a
+formal exponential and logarithm of power series, but no rule for the logarithm of a product on these rings, and in
+characteristic $0$ no logarithm is needed: for a series $A$ with
 constant term $1$ (in $p$), the \emph{logarithmic derivative} $DA/A$ determines $A$ (Theorem~\ref{ch19:thm:ode}).
 Every identity of the form ``$\log A=L$'' is therefore stated as ``$DA=A\cdot DL$''.  This is a reformulation, not a
 weakening: two series with constant term $1$ and the same logarithmic derivative are equal.
@@ -324,7 +325,8 @@ noncomputable def faberGen (c : ℕ → ℂ) : PowerSeries ℂ[X] :=
 noncomputable def faberSeries (c : ℕ → ℂ) : PowerSeries ℂ[X] :=
   PowerSeries.mk fun m => if m = 0 then 0 else faberPoly c m
 theorem faberGen_generating (c : ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative ℂ[X] (faberGen c) = -(faberGen c * faberSeries c)
+    PowerSeries.X * PowerSeries.derivative (R := ℂ[X]) (faberGen c) =
+      -(faberGen c * faberSeries c)
 theorem faberPoly_recursion (c : ℕ → ℂ) (n : ℕ) :
     faberPoly c (n + 2) =
       X * faberPoly c (n + 1) - ∑ j ∈ Finset.range n, C (c (j + 1)) * faberPoly c (n - j) -
@@ -372,8 +374,8 @@ No hypotheses; standard axioms (\leanpath{VOA/Moonshine/MoonshineLRFaberAudit.le
 \lean{coeff_algebraMap_mul}, \lean{coeff_aeval_qSeriesLaurent_of_le}, \lean{eq_zero_of_coeff_aeval_qSeriesLaurent}
 (file \leanpath{MoonshineLRFaber.lean}); \lean{coeff_mul_eq_zero_of_lt}, \lean{coeff_qSeriesUnit},
 \lean{coeff_qSeriesLaurent_natCast}, \lean{coeff_qSeriesLaurent_of_lt_one}, the explicit formal derivative
-\lean{qSeriesLaurentDeriv} ($f'=-q^{-2}u+q^{-1}u'$, written out because Mathlib v4.30 has no product rule for derivatives
-of Laurent series), \lean{coeff_qSeriesLaurentDeriv_natCast}, \lean{coeff_qSeriesLaurentDeriv_sub_of_neg}, the residue
+\lean{qSeriesLaurentDeriv} ($f'=-q^{-2}u+q^{-1}u'$, written out because Mathlib v4.30, like the current Mathlib commit \texttt{b63f6e8a}, has no product rule
+for derivatives of Laurent series), \lean{coeff_qSeriesLaurentDeriv_natCast}, \lean{coeff_qSeriesLaurentDeriv_sub_of_neg}, the residue
 lemmas \lean{coeff_neg_one_pow_mul_deriv} and \lean{coeff_neg_one_aeval_mul_deriv}, and
 \lean{coeff_aeval_faberPoly_sub_of_lt_one} (file \leanpath{MoonshineLRFaberGenerating.lean}).  All are coefficient
 bookkeeping in $\C((q))$ and are printed in \leanpath{MoonshineLRFaberAudit.lean}.
@@ -723,10 +725,10 @@ theorem faberGen_map_eq_mul (c : ℕ → ℂ) :
     PowerSeries.map (evalAtQSeries c) (faberGen c) =
       (1 - PowerSeries.C qInv * PowerSeries.X) * knzSeries c
 theorem knz_log (c : ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ) (knzSeries c) =
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ) (knzSeries c) =
       -(knzSeries c * knzLogSeries c)
 theorem knz_log_J :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ) (knzSeries cJ) =
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ) (knzSeries cJ) =
       -(knzSeries cJ * PowerSeries.mk fun M => if M = 0 then 0 else
         HahnSeries.ofPowerSeries ℤ ℂ
           (PowerSeries.mk fun r => if r = 0 then 0 else qHeckeCoeff cJ M r))
@@ -763,7 +765,8 @@ $(m,n)$, summed over their $k$-fold multiples (the Bose--Einstein sum $\sum_kx^k
 
 \subsection{Products defined by their logarithmic derivative}
 
-Mathlib v4.30 has no infinite products with complex exponents in $\C((q))[[p]]$.  The library defines the product
+Mathlib v4.30, against which this part was written, has no infinite products with complex exponents in
+$\C((q))[[p]]$.  The library defines the product
 $\prod_{m,n\ge1}(1-p^mq^n)^{e(m,n)}$ as the unique series with constant term $1$ whose logarithmic derivative is the
 expected one.
 
@@ -798,10 +801,10 @@ Let $L,L_1,L_2\in K[[p]]$ have constant term $0$.
 \end{theorem}
 \begin{leancode}
 theorem odeSol_spec (L : PowerSeries K) (hL : PowerSeries.constantCoeff L = 0) :
-    PowerSeries.X * PowerSeries.derivative K (odeSol L) = odeSol L * L
+    PowerSeries.X * PowerSeries.derivative (R := K) (odeSol L) = odeSol L * L
 theorem eq_of_ode {A B L : PowerSeries K} (hL : PowerSeries.constantCoeff L = 0)
-    (hA : PowerSeries.X * PowerSeries.derivative K A = A * L)
-    (hB : PowerSeries.X * PowerSeries.derivative K B = B * L)
+    (hA : PowerSeries.X * PowerSeries.derivative (R := K) A = A * L)
+    (hB : PowerSeries.X * PowerSeries.derivative (R := K) B = B * L)
     (h0 : PowerSeries.constantCoeff A = PowerSeries.constantCoeff B) : A = B
 theorem odeSol_add (L₁ L₂ : PowerSeries K) (h₁ : PowerSeries.constantCoeff L₁ = 0)
     (h₂ : PowerSeries.constantCoeff L₂ = 0) :
@@ -2228,7 +2231,7 @@ $f\circ\alpha=f$.  The goal of this section is: \emph{every local symmetry with 
 $G(f)$}.  Classically (Cummins--Gannon, \S\S3--4) one continues $\alpha$ analytically along paths to a maximal domain, shows the
 maximal domain is invariant under a dense group of affine maps, hence is $\chnineteenH$ or a sector, excludes sectors, and
 concludes with $\Aut(\chnineteenH)=\mathrm{PSL}_2(\chnineteenR)$.  None of path continuation, maximal domains, the density lemma or
-$\Aut(\chnineteenH)=\mathrm{PSL}_2(\chnineteenR)$ is in Mathlib v4.30.  The library replaces this by a different argument
+$\Aut(\chnineteenH)=\mathrm{PSL}_2(\chnineteenR)$ is in Mathlib v4.30, against which this part was written.  The library replaces this by a different argument
 : \emph{one} intertwining sequence on a fixed disc yields a real linear ODE, whose solutions are
 explicit.
 

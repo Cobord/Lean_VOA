@@ -56,9 +56,9 @@ theorem neutralProbe_L_pow (n : ℕ) (p : (orbifold ico).carrier) :
 theorem neutralProbe_errors :
     virError Wi Wi.vacuum ⊔ virError Wi Xico ≤ neutralProbe.ker := by
   have h1 (v : (orbifold ico).carrier) : neutralProbe (Wi.L (-1) v) = 0 := by
-    simpa using neutralProbe_L 0 v
+    simpa using! neutralProbe_L 0 v
   have h3 (v : (orbifold ico).carrier) : neutralProbe (Wi.L (-3) v) = 0 := by
-    simpa using neutralProbe_L 2 v
+    simpa using! neutralProbe_L 2 v
   exact sup_le (OrbOctaR.virError_le_ker_of_two_modes Wi _ h1 h3 _)
     (OrbOctaR.virError_le_ker_of_two_modes Wi _ h1 h3 _)
 
@@ -67,6 +67,7 @@ theorem Xico_ambient_primary :
   change (TavI J6).val ∈ _
   rw [TavI_coe icoInv_J6]
   convert OrbPrim.T2_prim J6_hom using 1
+  all_goals first | rfl | (norm_num; done) | (congr 1; norm_num)
 
 /-- Ward evaluation at any shared descendant level; the residual mode is explicit. -/
 theorem charged_mode_combo (q : LatModuleGen (latP 1)) (n : ℤ) (N : ℕ)
@@ -89,7 +90,7 @@ theorem mode_remainder_of_measurements (r : ℕ) (hr : 18 ≤ r) (hmax : r < 50)
       a * g (((Wi.L (-2)) ^ r) Wi.vacuum) + b * g (((Wi.L (-2)) ^ (r - 18)) Xico)) :
     modeSymbol Wi Xico (71 - 2 * r) r (r - 18) a b ∈
       virError Wi Wi.vacuum ⊔ virError Wi Xico := by
-  simpa only [modeSymbol, sub_sub] using
+  simpa only [modeSymbol, sub_sub] using!
     OrbOctaR.remainder_of_measurements _ _ _ _ a b f g hf hg hdet
       (mode_remainder_exists r hr hmax) hyf hyg
 

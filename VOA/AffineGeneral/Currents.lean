@@ -33,6 +33,8 @@ variable (D : LieData κ ι)
 /-- The vacuum module `V^k(𝔤)`. -/
 abbrev Vacuum (k : ℂ) := vacuumSpace κ D.invariant k
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 set_option maxHeartbeats 4000000
 set_option maxRecDepth 2048
 /-- The affine current **mode** `J^a_m` on the *single* module `𝒱(𝔰𝔩₃, k)`: the action of the

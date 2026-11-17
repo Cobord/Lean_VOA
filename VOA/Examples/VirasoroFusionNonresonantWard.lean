@@ -60,12 +60,11 @@ theorem nonresonant_second_below : ∀ r<R-2,
   · intro r hr
     have hh := wardSourceAt_second_defect h b t N ht hN f
     have he := congrArg (fun g : wardSequenceSpace (vermaBSACharge t) h => g.val r) hh
-    dsimp only at he
     simp only [Submodule.coe_add,Pi.add_apply] at he
     change vermaMode _ _ 2 _-(_ : ℂ) • _-(3:ℂ) • (vermaMode _ _ 1 _-(_ : ℂ) • _)=_ at he
     rw [hf (r+2) (by omega),hf (r+1) (by omega),hf r (by omega),
       nonresonant_error_below h b t N R ht hN f hf hd r (by omega)] at he
-    simpa only [map_zero,smul_zero,sub_zero,add_zero] using he.symm
+    simpa only [map_zero,smul_zero,sub_zero,add_zero] using! he.symm
 
 /-- A terminal diagonal zero gives the actual L1 equation for any
 preterminal sequence at any parameter meeting ordinary nonresonance. -/
@@ -75,13 +74,12 @@ theorem nonresonant_terminal_L1 (hR : 0<R)
       ((wardSourceAt (vermaBSACharge t) h b t (vermaBSAWeight N t) N f).val R)=0 := by
   have hh := wardSourceAt_first_defect (vermaBSACharge t) h b t N ht (by omega) f
   have he := congrArg (fun g : wardSequenceSpace (vermaBSACharge t) h => g.val (R-1)) hh
-  dsimp only at he
   rw [wardSourceAt_diagonal _ _ _ _ _ _ _ _
     (nonresonant_first_below h b t N R ht hN f hf hd),wardSourceDiagonal_shift_one,
     show R-1+1=R by omega,hz,zero_smul] at he
   change vermaMode _ _ 1 _-(_ : ℂ) • _=0 at he
   rw [hf (R-1) (by omega),smul_zero,sub_zero] at he
-  simpa only [show R-1+1=R by omega] using he
+  simpa only [show R-1+1=R by omega] using! he
 
 /-- The analogous actual L2 equation includes and discharges the complete
 second-defect correction. No primary-seed assumption enters. -/
@@ -91,7 +89,6 @@ theorem nonresonant_terminal_L2 (hR : 2≤R)
       ((wardSourceAt (vermaBSACharge t) h b t (vermaBSAWeight N t) N f).val R)=0 := by
   have hh := wardSourceAt_second_defect h b t N ht hN f
   have he := congrArg (fun g : wardSequenceSpace (vermaBSACharge t) h => g.val (R-2)) hh
-  dsimp only at he
   simp only [Submodule.coe_add,Pi.add_apply] at he
   rw [wardSourceAt_diagonal _ _ _ _ _ _ _ _
     (nonresonant_second_below h b t N R ht hN f hf hd),wardSourceDiagonal_shift_two,
@@ -99,6 +96,6 @@ theorem nonresonant_terminal_L2 (hR : 2≤R)
   change vermaMode _ _ 2 _-(_ : ℂ) • _-(3:ℂ) • (vermaMode _ _ 1 _-(_ : ℂ) • _)=_ at he
   rw [hf (R-2) (by omega),hf (R-2+1) (by omega),
     nonresonant_error_below h b t N R ht hN f hf hd (R-2) (by omega)] at he
-  simpa only [show R-2+2=R by omega,smul_zero,map_zero,sub_zero,add_zero] using he
+  simpa only [show R-2+2=R by omega,smul_zero,map_zero,sub_zero,add_zero] using! he
 end
 end VOA.InverseDS.VirasoroVerma

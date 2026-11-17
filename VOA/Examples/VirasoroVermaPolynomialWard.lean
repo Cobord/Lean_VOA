@@ -176,7 +176,7 @@ theorem vermaUniversalWardMatrix_eval (c h : ℂ) (n : ℕ) :
     (vermaUniversalWardMatrix n).map
       (MvPolynomial.aeval (fun i : Fin 2 => if i=0 then c else h)).toRingHom=
       vermaWardMatrix c h n := by
-  simpa [vermaUniversalWardMatrix] using vermaAlgebraWardMatrix_eval
+  simpa [vermaUniversalWardMatrix] using! vermaAlgebraWardMatrix_eval
     (MvPolynomial.X (0 : Fin 2)) (MvPolynomial.X (1 : Fin 2))
     (MvPolynomial.aeval (fun i : Fin 2 => if i=0 then c else h)) n
 
@@ -190,6 +190,6 @@ theorem verma_highest_of_polynomial_ward (C H : Polynomial ℂ) (n : ℕ)
     ∃ w : Verma (C.eval t) (H.eval t), w≠0 ∧ w∈sortedSpan (C.eval t) (H.eval t) n ∧
       IsHighestWeightVector (vermaRep (C.eval t) (H.eval t)) w (C.eval t) (H.eval t+n) := by
   apply verma_highest_of_generic_ward _ _ n (vermaAlgebraWardMatrix C H n) v hv hAv t
-  simpa using vermaAlgebraWardMatrix_eval C H (Polynomial.aeval t) n
+  simpa using! vermaAlgebraWardMatrix_eval C H (Polynomial.aeval t) n
 
 end VOA.InverseDS.VirasoroVerma

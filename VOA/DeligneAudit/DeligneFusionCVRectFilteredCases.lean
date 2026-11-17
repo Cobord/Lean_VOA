@@ -45,7 +45,7 @@ theorem graded_saturated (h : CV3Rel R w ε ν ϱ 0) (p q r s : ℕ)
     omega
   have hCV : CVRel (R.op 5)
       (parts (ϱ.1 + ϱ.2) (ν.1 + ν.2) (ε.1 + ε.2)) w := by
-    simpa only [Nat.add_zero] using h.highest
+    simpa only [Nat.add_zero] using! h.highest
   apply CVRectPBWPolarization.threeCoeff_zero_of_actual_Q R w h p q r s
   exact part_Q_zero_of_clipped (R.op 5) hCV (p + q + r) s (by rwa [hclip])
 
@@ -65,28 +65,28 @@ theorem graded_all_of_two_theta (h : CV3Rel R w ε ν ϱ 0)
     gradedOrderedCoeff R w p q r s = 0 := by
   rcases (show q = 0 ∨ q = 1 ∨ q = 2 ∨ 3 ≤ q by omega) with rfl | rfl | rfl | hq
   · exact (orderedCoeff_mem_iff_zero R w p 0 r s).mp
-      (orderedCoeff_zero_theta_mem h p r s (by simpa only [Nat.add_zero, Nat.zero_add] using hs))
+      (orderedCoeff_zero_theta_mem h p r s (by simpa only [Nat.add_zero, Nat.zero_add] using! hs))
   · by_cases hp0 : p = 0
     · subst p
       exact theta_second_one_graded h r s
-        (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hs)
+        (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using! hs)
     by_cases hp1 : p = 1
     · subst p
       exact first_theta_second h r s
-        (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hs)
+        (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using! hs)
     by_cases hr0 : r = 0
     · subst r
-      exact first_theta_one_graded h p s (by simpa only [Nat.add_zero, Nat.add_assoc] using hs)
+      exact first_theta_one_graded h p s (by simpa only [Nat.add_zero, Nat.add_assoc] using! hs)
     by_cases hr1 : r = 1
     · subst r
-      exact first_theta_second_mirror h p s (by simpa only [Nat.add_assoc] using hs)
+      exact first_theta_second_mirror h p s (by simpa only [Nat.add_assoc] using! hs)
     exact graded_saturated h p 1 r s (by omega) (by omega) hs
   · by_cases hp0 : p = 0
     · subst p
-      exact hleft r s (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hs)
+      exact hleft r s (by simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using! hs)
     by_cases hr0 : r = 0
     · subst r
-      exact hright p s (by simpa only [Nat.add_zero, Nat.add_assoc] using hs)
+      exact hright p s (by simpa only [Nat.add_zero, Nat.add_assoc] using! hs)
     exact graded_saturated h p 2 r s (by omega) (by omega) hs
   · exact graded_saturated h p q r s (by omega) (by omega) hs
 

@@ -89,7 +89,7 @@ theorem negativeTripleRight_support_finite (α β : L.carrier) (C D : ℤ) (x : 
   intro qpm hqpm
   obtain ⟨q, p, m⟩ := qpm
   rw [Function.mem_support, negativeTripleRight] at hqpm
-  simp only at hqpm
+  try simp only at hqpm
   have hqS : q ∈ Sq := by
     rw [hSq, Function.mem_support]; intro h
     exact hqpm (by rw [h, map_zero, map_zero, map_zero, smul_zero])
@@ -245,7 +245,7 @@ theorem negativeTriple_left_support_finite (α β : L.carrier) (C D : ℤ) (x : 
   intro pqm hpqm
   obtain ⟨p, q, m⟩ := pqm
   rw [Function.mem_support, negativeTripleLeftOrdered] at hpqm
-  simp only at hpqm
+  try simp only at hpqm
   have hpS : p ∈ Sp := by
     rw [hSp, Function.mem_support]; intro h
     exact hpqm (by rw [h, map_zero, map_zero, map_zero, smul_zero])

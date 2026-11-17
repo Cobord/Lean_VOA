@@ -60,8 +60,8 @@ theorem secondLeviPositionProduct_mem (e₁ e₂ : ℕ)
   have h₂ := a2CountSpan_second_word Q (β φ) (List.ofFn fun i : Fin e₂ => u (.inr i))
     0 0 (a2CountSpan_zero Q (β φ))
   have h₁ := a2CountSpan_first_word Q (β φ) (List.ofFn fun i : Fin e₁ => u (.inl i))
-    0 e₂ (by simpa using h₂)
-  simpa using h₁
+    0 e₂ (by simpa using! h₂)
+  simpa using! h₁
 
 /-- The evaluator has exactly the span of all words with the two prescribed counts. -/
 theorem secondLeviModeEvaluation_range (e₁ e₂ : ℕ) :
@@ -74,7 +74,7 @@ theorem secondLeviModeEvaluation_range (e₁ e₂ : ℕ) :
     | monomial u φ =>
       rw [secondLeviModeEvaluation, positionModeEvaluation_monomial]
       exact secondLeviPositionProduct_mem Q β e₁ e₂ u φ
-    | add P R hP hR => simpa only [map_add] using Submodule.add_mem _ hP hR
+    | add P R hP hR => simpa only [map_add] using! Submodule.add_mem _ hP hR
   · apply iSup_le
     intro φ
     apply iSup_le
@@ -82,9 +82,9 @@ theorem secondLeviModeEvaluation_range (e₁ e₂ : ℕ) :
     rw [a2KeyLayer, Submodule.span_le]
     rintro v ⟨l, h₁, h₂, hd, hl, rfl⟩
     have hx : (firstModes l).length = e₁ := by
-      simpa [firstModes, List.countP_eq_length_filter] using h₁
+      simpa [firstModes, List.countP_eq_length_filter] using! h₁
     have hy : (secondModes l).length = e₂ := by
-      simpa [secondModes, List.countP_eq_length_filter] using h₂
+      simpa [secondModes, List.countP_eq_length_filter] using! h₂
     let u : SecondLeviModeSlot e₁ e₂ → ℕ := Sum.elim
       (fun i => (firstModes l).get (Fin.cast hx.symm i))
       (fun i => (secondModes l).get (Fin.cast hy.symm i))

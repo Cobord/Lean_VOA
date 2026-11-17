@@ -36,7 +36,7 @@ theorem bgPG_gvac : bgPG gvac gvac = 1 := by
 
 theorem ghostB_gvac : ghostB gvac gvac = 1 := by
   rw [ghostB_apply, ghostConj_gvac, ghostIR_eigen gvac_mem]
-  simpa using bgPG_gvac
+  simpa using! bgPG_gvac
 
 theorem cosetVacuum_val : ((cosetVOA.vacuum : CosetSpace) : ASpace ⊗[ℂ] BSpace) =
     ASVA.vacuum ⊗ₜ[ℂ] BSVA.vacuum := rfl

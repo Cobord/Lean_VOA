@@ -33,7 +33,7 @@ theorem bottomMultiplicitySpan_rawCartan (m a c : ℕ)
       rw [cartan_weight_key ρ w m h j (bottomRadicalKey a c d) hv]
       exact Submodule.smul_mem _ _ (Submodule.mem_iSup_of_mem d hv)
     · apply Submodule.mem_iSup_of_mem (d + r)
-      simpa [keyShift, bottomRadicalKey] using
+      simpa [keyShift, bottomRadicalKey] using!
         cartan_pos_maps_key ρ w m h j r (Nat.pos_of_ne_zero hr) _ hv
   fin_cases i
   · change ρ.op (0 : Fin 28) r v ∈ _
@@ -42,7 +42,7 @@ theorem bottomMultiplicitySpan_rawCartan (m a c : ℕ)
       rw [extra_weight_key ρ w m h (bottomRadicalKey a c d) hv]
       exact Submodule.smul_mem _ _ (Submodule.mem_iSup_of_mem d hv)
     · apply Submodule.mem_iSup_of_mem (d + r)
-      simpa [keyShift, bottomRadicalKey] using extra_pos_key ρ w m h r
+      simpa [keyShift, bottomRadicalKey] using! extra_pos_key ρ w m h r
         (Nat.pos_of_ne_zero hr) _ hv
   · exact hsimple 1
   · exact hsimple 0
@@ -57,7 +57,7 @@ theorem bottomCartanSpan_le_bottomMultiplicity (m a c : ℕ)
   induction l with
   | nil =>
       apply Submodule.mem_iSup_of_mem 0
-      simpa [bottomVector, bottomRadicalWord_key, reductiveCartanWord, wordOp] using
+      simpa [bottomVector, bottomRadicalWord_key, reductiveCartanWord, wordOp] using!
         radicalWord_mem_key ρ w (bottomRadicalWord a c)
   | cons q l ih => exact bottomMultiplicitySpan_rawCartan ρ w m a c h q.1 q.2 ih
 

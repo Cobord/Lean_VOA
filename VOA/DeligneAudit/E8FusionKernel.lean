@@ -52,11 +52,14 @@ theorem e8_raisTheta (e : Fin 248) (he : E8sector.raising e) (c : Fin 248)
   · exact Or.inl h
   · exact Or.inr ⟨(fusion_iff c).mpr h1, h2⟩
 
-theorem e8_cartTheta (h : Fin 248) (hh : E8sector.cartan h) (c : Fin 248) :
+theorem e8_cartTheta (h : Fin 248) (hh : E8sector.cartan h) (c : Fin E8sector.n) :
     E8sector.f h E8sector.c₀ c = if c = E8sector.c₀ then -(E8sector.thetaH h : ℂ) else 0 := by
-  show ((fZ brK h 247 c : ℤ) : ℂ) = if c = 247 then -((thetaH h : ℕ) : ℂ) else 0
-  rw [e8_cartThetaZ h c hh]
-  split_ifs <;> simp
+  have key : ∀ c' : Fin 248,
+      ((fZ brK h 247 c' : ℤ) : ℂ) = if c' = 247 then -((thetaH h : ℕ) : ℂ) else 0 := by
+    intro c'
+    rw [e8_cartThetaZ h c' hh]
+    split_ifs <;> simp
+  exact key c
 
 theorem e8_lowComm (x : Fin 248) (hx : E8sector.fusion x ∨ E8sector.lowering x) (c : Fin 248) :
     E8sector.f x E8sector.c₀ c = 0 := by

@@ -100,7 +100,7 @@ theorem tau_ode {lam : ℂ} {s b : ℕ} {c : ℕ → PowerSeries ℂ} {p : ℕ �
   have hτ : τ.re < -chartM q := hτ
   have hM : 0 ≤ chartM q := Real.log_nonneg (by linarith [norm_nonneg q])
   have hc : ∀ i < s, c i ∈ SubexpPS := fun i hi =>
-    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using hcp i hi)
+    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using! hcp i hi)
   have hGsub : G ∈ SubexpPS := mem_subexpPS.2 (subexponential_of_fuchsianEq hc hG)
   have hGood := VOA.Huang.FrobeniusLog.logGood_const hGsub
   have hLF := VOA.Huang.AssocExpansion.logFuchsianEq_const_of_fuchsianEq hG
@@ -196,11 +196,11 @@ theorem chart_continuation {lam : ℂ} {s b : ℕ} {c : ℕ → PowerSeries ℂ}
     ∃ Gh : ℂ → ℂ, DifferentiableOn ℂ Gh halfPlane ∧
       ∀ τ : ℂ, τ.re < -chartM q → Gh τ = psEval G (chartX q (Complex.exp τ)) := by
   rcases Nat.eq_zero_or_pos s with rfl | hs
-  · have hG0 : G = 0 := by simpa [FuchsianEq] using hG
+  · have hG0 : G = 0 := by simpa [FuchsianEq] using! hG
     refine ⟨fun _ => 0, differentiableOn_const 0, fun τ _ => ?_⟩
     rw [hG0]; simp [VOA.Huang.FrobeniusLog.psEval]
   have hc : ∀ i < s, c i ∈ SubexpPS := fun i hi =>
-    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using hcp i hi)
+    mem_subexpPS_of_mul_eq' (a := 1) (by simp) (by simpa using! hcp i hi)
   have hGsub : G ∈ SubexpPS := mem_subexpPS.2 (subexponential_of_fuchsianEq hc hG)
   have hGood := VOA.Huang.FrobeniusLog.logGood_const hGsub
   have hM : 0 ≤ chartM q := Real.log_nonneg (by linarith [norm_nonneg q])
@@ -235,7 +235,6 @@ theorem chart_continuation {lam : ℂ} {s b : ℕ} {c : ℕ → PowerSeries ℂ}
       exact (VOA.Huang.FrobeniusLog.differentiableOn_logFun (hgood' j) _).differentiableAt
         (VOA.Huang.FrobeniusLog.isOpen_halfPlane.mem_nhds hτ)
   · have h := hrep τ hτ
-    simp only at h
     dsimp only
     rw [← h, hg, logFun_const_eq, ← mul_assoc, ← Complex.exp_add, neg_mul, neg_add_cancel,
       Complex.exp_zero, one_mul, exp_sigmaQ hq0 (hUneg τ hτ), chartX]

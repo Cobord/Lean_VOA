@@ -39,11 +39,11 @@ theorem gtGapInt_nonneg {N : ℕ} (lam : Fin N → ℤ) (hlam : Antitone lam)
   | zero => exact Fin.elim0 i
   | succ N =>
       refine Fin.lastCases ?_ (fun j => ?_) i
-      · simpa [gtGapInt] using hpos (Fin.last N)
+      · simpa [gtGapInt] using! hpos (Fin.last N)
       · have hj := hlam (show j.castSucc ≤ j.succ by
           change j.val ≤ j.val + 1
           omega)
-        simpa [gtGapInt, ← Fin.castSucc_succ] using sub_nonneg.mpr hj
+        simpa [gtGapInt, ← Fin.castSucc_succ] using! sub_nonneg.mpr hj
 
 theorem gtPad_pieriWeight {N : ℕ} (lam : Fin N → ℤ) (S : Finset (Fin N))
     (i : Fin (N + 1)) :

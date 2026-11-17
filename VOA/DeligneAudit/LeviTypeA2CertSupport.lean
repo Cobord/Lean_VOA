@@ -48,9 +48,9 @@ private theorem radicalWord_high_zero (p q : ℕ)
         rw [radicalWord_comm, mul_smul]
         have hzero : a2RadicalOp ρ i s • w = 0 := by
           fin_cases i
-          · simpa [a2RadicalOp] using
+          · simpa [a2RadicalOp] using!
               a2_simple_mode_zero ρ w p q h 0 s (by change p ≤ s; omega)
-          · simpa [a2RadicalOp] using
+          · simpa [a2RadicalOp] using!
               a2_compound_mode_zero ρ w p q h s hys
         rw [hzero, smul_zero]
       · change (a2RadicalOp ρ i s * radicalWord (a2RadicalOp ρ) l) • w = 0
@@ -88,7 +88,7 @@ theorem a2KeyLayer_eq_bot_of_degree_gt (p q : ℕ) (k : A2RadicalKey)
       omega
     have hs := sum_modes_le (p + q) l hall
     have hs' : k.degree ≤ (p + q) * (k.d₁ + k.d₂) := by
-      simpa only [hlen, hdegree, Nat.mul_comm] using hs
+      simpa only [hlen, hdegree, Nat.mul_comm] using! hs
     omega
   rw [radicalWord_high_zero ρ w p q h l hbad]
   exact Submodule.zero_mem _

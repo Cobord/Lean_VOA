@@ -48,7 +48,7 @@ private theorem W0_smul_omega_eq_LSecBg (hp : 1 ≤ 2) (m : ℤ)
         exact BgA.LBg_mkEα Ltwo (latP_posDef 2 hp) (lamP 2) m Q 0] at hL
   have hc := congrArg (fun z => coordEα Ltwo 0 z) hL
   change mode (YN (rank Ltwo) 1 (evalZhuSparseQ omegaSparseQ)) (m + 1) Q = _
-  simpa only [latStateGen, coordEα_apply, if_pos rfl] using hc
+  simpa only [latStateGen, coordEα_apply, if_pos rfl] using! hc
 
 theorem eval_omegaMode_eq_virAct (hp : 1 ≤ 2)
     (mode : ℕ) (hmode : 1 ≤ mode) (rightWeight : ℕ)
@@ -166,7 +166,7 @@ theorem omegaPartFast_rel (hp : 1 ≤ 2)
           (tripletWVOA 2 hp).smul (tripletWVOA 2 hp).conformalVector 1 x =
             (w : ℂ) • x := by
         change (tripletWVOA 2 hp).L 0 x = (w : ℂ) • x
-        simpa using hLzero
+        simpa using! hLzero
       rw [hsmul, Submodule.coe_smul, hx,
         evalZhuSparseQ_scaleQ, latStateGen_smul_boson]
       norm_num

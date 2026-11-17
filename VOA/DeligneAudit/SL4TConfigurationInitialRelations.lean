@@ -51,7 +51,17 @@ theorem affineRootProduct_top (i : σ) (zs : List ℂ) :
   induction zs with
   | nil => simp
   | cons z zs ih =>
-      dsimp only [List.map_cons, List.prod_cons, List.length_cons] at ih ⊢
+      have ih' : (zs.map fun z => (X i : MvPolynomial σ ℂ) - MvPolynomial.C z).prod.totalDegree ≤
+            zs.length ∧
+          homogeneousComponent zs.length
+            (zs.map fun z => (X i : MvPolynomial σ ℂ) - MvPolynomial.C z).prod = X i ^ zs.length :=
+        ih
+      show ((X i - MvPolynomial.C z) *
+            (zs.map fun z => (X i : MvPolynomial σ ℂ) - MvPolynomial.C z).prod).totalDegree ≤
+            zs.length + 1 ∧
+          homogeneousComponent (zs.length + 1) ((X i - MvPolynomial.C z) *
+            (zs.map fun z => (X i : MvPolynomial σ ℂ) - MvPolynomial.C z).prod) =
+            X i ^ (zs.length + 1)
       have ha : (X i - MvPolynomial.C z : MvPolynomial σ ℂ).totalDegree ≤ 1 := by
         exact (totalDegree_sub _ _).trans (by simp)
       have hc : homogeneousComponent 1 (X i - MvPolynomial.C z : MvPolynomial σ ℂ) = X i := by
@@ -59,7 +69,7 @@ theorem affineRootProduct_top (i : σ) (zs : List ℂ) :
           if_pos rfl, homogeneousComponent_eq_zero 1 (MvPolynomial.C z) (by simp), sub_zero]
       refine ⟨(totalDegree_mul _ _).trans (by omega), ?_⟩
       rw [show zs.length + 1 = 1 + zs.length by omega,
-        homogeneousComponent_mul_top _ _ 1 zs.length ha ih.1, hc, ih.2]
+        homogeneousComponent_mul_top _ _ 1 zs.length ha ih'.1, hc, ih'.2]
       rw [pow_add, pow_one]
 
 /-- If a coordinate takes values at finitely many sites, its cutoff power is a leading relation. -/
@@ -86,7 +96,7 @@ theorem pointInitialIdeal_of_constant (x : ι → σ → ℂ) (p : MvPolynomial 
     (hc : finitePointEvaluation x p = fun _ => c) : p ∈ pointInitialIdeal x := by
   apply (pointInitialSubmodule_homogeneous x p n hp).mpr
   rw [hc]
-  exact Submodule.subset_span ⟨MvPolynomial.C c, by simpa using hn, by
+  exact Submodule.subset_span ⟨MvPolynomial.C c, by simpa using! hn, by
     ext a
     simp [finitePointEvaluation]⟩
 
@@ -96,7 +106,7 @@ theorem fullFlagConfiguration_positionEquiv (B k : ℕ) (f g : FullFlagConfigura
   classical
   have hc (a : Fin (B - k)) :
       Fintype.card {i : Fin B // f.val i = a} = Fintype.card {i : Fin B // g.val i = a} := by
-    simpa only [Fintype.card_subtype] using (f.property a).trans (g.property a).symm
+    simpa only [Fintype.card_subtype] using! (f.property a).trans (g.property a).symm
   let e := fun a => Classical.choice (Fintype.card_eq.mp (hc a))
   exact ⟨Equiv.ofFiberEquiv e, Equiv.ofFiberEquiv_map e⟩
 
@@ -127,7 +137,7 @@ theorem elementarySymmetric_homogeneous {σ : Type*} [Fintype σ] (n : ℕ) :
   have he := (Finset.mem_powersetCard.mp hs).2
   have h := IsHomogeneous.prod s (fun i => (X i : MvPolynomial σ ℂ))
     (fun _ => 1) (fun i _ => isHomogeneous_X ℂ i)
-  simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, he] using h
+  simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, he] using! h
 
 /-- All elementary and root-power relations lie in the initial ideal of the stratum points. -/
 theorem fullFlagTruncationIdeal_le_pointInitialIdeal (B k j : ℕ) (Y : Finset (Fin B))

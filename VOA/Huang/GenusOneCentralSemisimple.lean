@@ -46,7 +46,7 @@ theorem central_square_elimination
     simp [e]
   have hx (x : E) : x = ∑ i, B.left (e i) x := by
     have hv := congrArg (fun b => B.left b x) he
-    simpa only [map_sum, LinearMap.sum_apply, B.left_one] using hv.symm
+    simpa only [map_sum, LinearMap.sum_apply, B.left_one] using! hv.symm
   intro x
   change f (B.left a x) = 0
   conv_lhs => rw [hx x]

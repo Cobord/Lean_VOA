@@ -42,7 +42,7 @@ theorem excess_cv_region (r n e m j : ℕ)
     ∃ k, 1 + m * k + T k (parts r n e) ≤ (r + n + e - 1) * m - j + m := by
   have hm := multiplicity_pos hj
   have hN : 1 ≤ r + n + e := by
-    simpa only [parts_length] using length_pos hj
+    simpa only [parts_length] using! length_pos hj
   obtain ⟨k, hk⟩ := parts_region_optimizer r n e m hm
   have he := excess_add_clipped (parts r n e) m
   rw [parts_length] at he

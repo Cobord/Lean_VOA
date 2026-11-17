@@ -60,23 +60,23 @@ theorem FKilled.f_neg (μ : ℤ) {v : WakModule k} (hv : FKilled v) : FKilled (J
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]; exact FKilled.zero
   | succ r ih =>
       apply FKilled.of_apply
       rw [f_f_comm]
-      exact ih (by simpa only [pow_succ, Module.End.mul_apply] using hr)
+      exact ih (by simpa only [pow_succ, Module.End.mul_apply] using! hr)
 
 theorem FKilled.h_neg (μ : ℤ) {v : WakModule k} (hv : FKilled v) : FKilled (J k 2 μ v) := by
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]; exact FKilled.zero
   | succ r ih =>
       apply FKilled.of_apply
       rw [f_h_comm, zero_add]
-      exact FKilled.add (ih (by simpa only [pow_succ, Module.End.mul_apply] using hr))
+      exact FKilled.add (ih (by simpa only [pow_succ, Module.End.mul_apply] using! hr))
         (FKilled.smul (FKilled.f_neg μ ⟨r + 1, hr⟩) _)
 
 theorem FKilled.e_neg (μ : ℤ) (hμ : μ ≠ 0) {v : WakModule k} (hv : FKilled v) :
@@ -84,19 +84,19 @@ theorem FKilled.e_neg (μ : ℤ) (hμ : μ ≠ 0) {v : WakModule k} (hv : FKille
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]; exact FKilled.zero
   | succ r ih =>
       apply FKilled.of_apply
       rw [f0_e_comm k μ hμ]
-      exact FKilled.add (ih (by simpa only [pow_succ, Module.End.mul_apply] using hr))
+      exact FKilled.add (ih (by simpa only [pow_succ, Module.End.mul_apply] using! hr))
         (FKilled.smul (FKilled.h_neg μ ⟨r + 1, hr⟩) _)
 
 theorem fin3_cases' (a : Fin 3) : a = 0 ∨ a = 1 ∨ a = 2 := by
   fin_cases a <;> simp
 
 theorem FKilled.wordStateA : ∀ l : List (Fin 3 × ℕ), FKilled (wordStateA k l)
-  | [] => ⟨1, by simpa using J_vacuum_nonneg k 1 (le_refl (0 : ℤ))⟩
+  | [] => ⟨1, by simpa using! J_vacuum_nonneg k 1 (le_refl (0 : ℤ))⟩
   | (a, n) :: l => by
       rw [wordStateA_cons]
       have ih := FKilled.wordStateA l
@@ -122,7 +122,7 @@ theorem horizontalLowering_locallyNilpotent (v : WakModule k) : FKilled v := by
 theorem h0_fpow (u : WakModule k) (μ : ℂ) (hh : J k 2 0 u = μ • u) (j : ℕ) :
     J k 2 0 ((J k 1 0 ^ j) u) = (μ - 2 * j) • (J k 1 0 ^ j) u := by
   induction j with
-  | zero => simpa using hh
+  | zero => simpa using! hh
   | succ j ih =>
       rw [pow_succ', Module.End.mul_apply, h_f_comm, zero_add, ih, map_smul]
       push_cast
@@ -153,12 +153,12 @@ theorem eq_zero_of_highest (u : WakModule k) (μ : ℂ) (he : J k 0 0 u = 0)
   have : ∀ j ≤ N, (J k 1 0 ^ (N - j)) u = 0 := by
     intro j hj
     induction j with
-    | zero => simpa using hN
+    | zero => simpa using! hN
     | succ j ih =>
         apply key
         rw [show N - (j + 1) + 1 = N - j by omega]
         exact ih (by omega)
-  simpa using this N le_rfl
+  simpa using! this N le_rfl
 
 /-- **A weight-two horizontal highest vector spans a triplet:** `f₀³ s = 0`. -/
 theorem f0_cube_eq_zero (s : WakModule k) (he : J k 0 0 s = 0) (hh : J k 2 0 s = (2 : ℂ) • s) :

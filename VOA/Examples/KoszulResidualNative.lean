@@ -125,12 +125,12 @@ theorem mDer_mLead_apply (q q' : LexLetter) (x : MatterSpace) :
 theorem mLead_comm_apply (q q' : LexLetter) (x : MatterSpace) :
     mLead hA q (mLead hA q' x) = mLead hA q' (mLead hA q x) := by
   have h := LinearMap.congr_fun (mLead_comm hA q q') x
-  simpa using h
+  simpa using! h
 
 theorem mDer_comm_apply (q q' : LexLetter) (x : MatterSpace) :
     mDer q (mDer q' x) = mDer q' (mDer q x) := by
   have h := LinearMap.congr_fun (mDer_comm q q') x
-  simpa using h
+  simpa using! h
 
 theorem mL_apply (s : Finset LexLetter) (x : MatterSpace) :
     mL hA s x = ∑ q ∈ s, mLead hA q (mDer q x) := by

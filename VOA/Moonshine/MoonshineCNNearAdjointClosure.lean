@@ -43,7 +43,7 @@ theorem oppositeIterate_terms_finite
   simp only [Finset.mem_coe, Finset.mem_range]
   by_contra h
   apply hi
-  dsimp only
+  try dsimp only
   rw [hK _ (by omega), hJ _ (by omega), map_zero, map_zero,
     smul_zero, sub_zero, smul_zero]
 

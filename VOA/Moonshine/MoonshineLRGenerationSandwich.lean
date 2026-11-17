@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- The product depends only on the exponents with `m, n ≥ 1`. -/
 theorem coneProd_congr {e₁ e₂ : ℕ → ℕ → ℂ} (h : ∀ m n, 0 < m → 0 < n → e₁ m n = e₂ m n) :
     coneProd e₁ = coneProd e₂ := by

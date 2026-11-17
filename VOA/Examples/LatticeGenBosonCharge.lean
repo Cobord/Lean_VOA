@@ -331,7 +331,12 @@ theorem chargeCoord_add (α β : L.carrier) (a : Fin (rank L)) :
     chargeCoord L (α + β) a = chargeCoord L α a + chargeCoord L β a := by
   have hcoord : coordR L (α + β) = coordR L α + coordR L β := by
     funext i
-    simp only [coordR, coord, map_add, Finsupp.add_apply, Int.cast_add, Pi.add_apply]
+    -- `latticeBasis L` is indexed by `Fin (Fintype.card _)`, which is only definitionally
+    -- `Fin (latRank L)`; spell the coordinates out so no simp lemma has to see through it.
+    show ((((latticeBasis L).repr (α + β)) i : ℤ) : ℝ)
+        = (((latticeBasis L).repr α i : ℤ) : ℝ) + (((latticeBasis L).repr β i : ℤ) : ℝ)
+    rw [map_add]
+    exact Int.cast_add ((latticeBasis L).repr α i) ((latticeBasis L).repr β i)
   simp only [chargeCoord, orthCoord, hcoord, Matrix.mulVec_add, Pi.add_apply, Complex.ofReal_add]
 
 /-- The boson current on a basis state: `α^a(j)(p ⊗ e^δ) = (currentN a j p) ⊗ e^δ` plus the

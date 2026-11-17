@@ -90,7 +90,7 @@ theorem reflectionTangentRow_indexed (k : ℂ) (d : ℕ) (u w : List (Fin 3×ℕ
     ((occupationBasis k d).linearCombination_repr (indexedWord k d w))
   simp only [Finsupp.linearCombination_apply,Finsupp.sum,map_sum,map_smul,
     reflectionTangentRow_basis,smul_eq_mul] at he
-  simpa only [coeff_C_mul] using he.symm
+  simpa only [coeff_C_mul] using! he.symm
 
 /-- The tangent rule also holds for literal creation letters, including
 F_0, without choosing or changing their order. -/

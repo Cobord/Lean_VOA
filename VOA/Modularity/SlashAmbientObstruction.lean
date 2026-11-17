@@ -290,11 +290,14 @@ theorem linearIndependent_sqRestrict_traceBlock (hind : TraceIndependent Mfam h)
         Finset.filter_mem_eq_inter, Finset.univ_inter]
     rw [hcs]
     have hvz : v ∈ sqWeightSpace W (((n : ℤ) : ℂ)) := by exact_mod_cast hv
-    have hval := congrFun (congrFun hc (⟨(n : ℤ), ⟨v, hvz⟩⟩ : SqPt W)) (τ : ℂ)
+    -- Lean 4.35 port: name the point, so that `SqPt W` (a `def`) is its syntactic type.
+    let p : SqPt W := ⟨(n : ℤ), ⟨v, hvz⟩⟩
+    have hval := congrFun (congrFun hc p) (τ : ℂ)
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at hval
     refine Eq.trans ?_ hval
     refine Finset.sum_congr rfl (fun j _ => ?_)
     rw [sqRestrict_apply W _ _ (coe_mem_imGT_zero τ), traceBlock_coe]
+    try rfl
   have hzz := hind (fun j => if j ∈ s then c j else 0) hzero
   have hi2 := congrFun hzz i
   simp only [Pi.zero_apply, if_pos hi] at hi2
@@ -316,11 +319,14 @@ theorem slashSpannedAtS_of_sqRank_le (𝔄 : Submodule ℂ (SqPt W → ℂ → �
   obtain ⟨c, hc⟩ := exists_coeff_of_rank_le htr
     (linearIndependent_sqRestrict_traceBlock Mfam h hind) hrank _ (hsl i)
   refine ⟨c, fun n v hv z hz => ?_⟩
-  have hval := congrFun (congrFun hc (⟨n, ⟨v, hv⟩⟩ : SqPt W)) z
+  -- Lean 4.35 port: name the point, so that `SqPt W` (a `def`) is its syntactic type.
+  let p : SqPt W := ⟨n, ⟨v, hv⟩⟩
+  have hval := congrFun (congrFun hc p) z
   simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at hval
   rw [sqRestrict_apply W _ _ hz] at hval
-  rw [hval]
-  exact Finset.sum_congr rfl (fun j _ => by rw [sqRestrict_apply W _ _ hz])
+  exact hval.trans (Finset.sum_congr rfl (fun j _ => by
+    rw [sqRestrict_apply W _ _ hz]
+    try rfl))
 
 /-- **Zhu's modularity theorem from the repaired rank bound**, for every `A ∈ SL₂(ℤ)`. -/
 theorem zhu_modularity_of_sqRank_le (𝔄 : Submodule ℂ (SqPt W → ℂ → ℂ))

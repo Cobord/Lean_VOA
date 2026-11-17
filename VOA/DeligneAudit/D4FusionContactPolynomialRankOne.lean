@@ -27,7 +27,7 @@ include hFF in
 theorem F2_F1_F0_zero (hF2 : F 2 w = 0) : F 2 (F 1 (F 0 w)) = 0 := by
   rw [← Module.End.mul_apply (F 2) (F 1), hFF 2 1, Module.End.mul_apply]
   have hz := F2_F0pow_zero hFF hF2 1
-  simpa only [pow_one, hz, map_zero] using congrArg (F 1) hz
+  simpa only [pow_one, hz, map_zero] using! congrArg (F 1) hz
 
 include hEF hHF hFF hE hH in
 theorem first_derivative_of_nil (N : ℕ) (hN : 2 ≤ N) (hnil : (F 0 ^ N) w = 0) :
@@ -42,13 +42,13 @@ include hHF hH in
 theorem H1_F0 : H 1 (F 0 w) = (-2 : ℂ) • F 1 w := by
   have hh := congrArg (fun T : Module.End ℂ V => T w) (hHF 1 0)
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.smul_apply,
-    Nat.add_zero, hH 1 (by omega), map_zero, sub_zero] using hh
+    Nat.add_zero, hH 1 (by omega), map_zero, sub_zero] using! hh
 
 include hHF hFF hH in
 theorem H1_F1_F0 (hF2 : F 2 w = 0) :
     H 1 (F 1 (F 0 w)) = (-2 : ℂ) • F 1 (F 1 w) := by
   have hh := congrArg (fun T : Module.End ℂ V => T (F 0 w)) (hHF 1 1)
-  have hz : F 2 (F 0 w) = 0 := by simpa only [pow_one] using F2_F0pow_zero hFF hF2 1
+  have hz : F 2 (F 0 w) = 0 := by simpa only [pow_one] using! F2_F0pow_zero hFF hF2 1
   simp only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.smul_apply,
     H1_F0 hHF hH, map_smul, Nat.reduceAdd, hz, smul_zero] at hh
   exact sub_eq_zero.mp hh
@@ -67,7 +67,7 @@ theorem second_derivative_of_five (hF2 : F 2 w = 0)
     rw [ECalc.H_F0pow hHF hFF hH 2 (by omega) 3,
       F2_F0pow_zero hFF hF2, smul_zero]
   have hE3 : E 1 ((F 0 ^ 3) w) = (-6 : ℂ) • F 1 (F 0 w) := by
-    simpa using ECalc.E_F0pow hEF hHF hFF hE hH 1 (by omega) 3
+    simpa using! ECalc.E_F0pow hEF hHF hFF hE hH 1 (by omega) 3
   have hh := congrArg (fun T : Module.End ℂ V => T ((F 0 ^ 3) w)) (hEF 1 1)
   simp only [Module.End.mul_apply, LinearMap.sub_apply, Nat.reduceAdd] at hh
   rw [h31, map_zero, hH2, hE3, map_smul, zero_sub, neg_eq_zero] at hh

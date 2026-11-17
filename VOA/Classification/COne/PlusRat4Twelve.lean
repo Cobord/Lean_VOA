@@ -84,7 +84,7 @@ theorem pairSplitting_half_sign_twelve (i : Fin 8) (hi : i = 2 ∨ i = 3) :
     change chiT 12 hm two_le_twelve (.inr 1) (VOA.mk (V2mPlus 12 hm) (EP 12 hm)) = _ at hv
     rw [hv] at h1
     simp [values, exceptional] at h1
-    simpa using h1
+    simpa using! h1
   -- the sign model
   have heTD := sign_topData 12 hm two_le_twelve (by norm_num) uniq_twelve_one
   have he0 := signVector_ne_zero 12 hm

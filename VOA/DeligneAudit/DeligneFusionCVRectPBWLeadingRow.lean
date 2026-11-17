@@ -20,7 +20,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (R : CurrentModule bracketTable V) (w : V)
 
 def leadingRow (S r T : ℕ) : V :=
-  ∑ ij ∈ Finset.antidiagonal S,
+  ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S,
     R.op 3 ij.1 ((PowerSeries.coeff T (thetaShift R ij.2 * Garland.Fs (R.op 4) ^ r)) w)
 
 /-- The actual single-contraction row lies in strictly shorter PBW words. -/
@@ -31,9 +31,9 @@ theorem leadingRow_below (S r T : ℕ)
   let π := P.mkQ
   let B := Q (R.op 4) (r + 1) T
   have hAop : Q (R.op 3) 2 S =
-      ∑ ij ∈ Finset.antidiagonal S, R.op 3 ij.1 * R.op 3 ij.2 := by
+      ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S, R.op 3 ij.1 * R.op 3 ij.2 := by
     simp only [Q, pow_two, PowerSeries.coeff_mul, Garland.Fs, PowerSeries.coeff_mk]
-  have hcomm : (∑ ij ∈ Finset.antidiagonal S,
+  have hcomm : (∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S,
       (B * (R.op 3 ij.1 * R.op 3 ij.2) - (R.op 3 ij.1 * R.op 3 ij.2) * B) w) = 0 := by
     calc
       _ = (B * Q (R.op 3) 2 S - Q (R.op 3) 2 S * B) w := by
@@ -58,11 +58,11 @@ theorem leadingRow_below (S r T : ℕ)
     rw [quadratic_commutator_coefficient]
     simp only [LinearMap.add_apply, LinearMap.smul_apply, Module.End.mul_apply,
       map_add, map_nsmul, hz, add_zero]
-  have hswap : (∑ ij ∈ Finset.antidiagonal S, π (R.op 3 ij.2
+  have hswap : (∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S, π (R.op 3 ij.2
       ((PowerSeries.coeff T (thetaShift R ij.1 * Garland.Fs (R.op 4) ^ r)) w))) =
-      ∑ ij ∈ Finset.antidiagonal S, π (R.op 3 ij.1
+      ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S, π (R.op 3 ij.1
         ((PowerSeries.coeff T (thetaShift R ij.2 * Garland.Fs (R.op 4) ^ r)) w)) := by
-    simpa only [Prod.swap] using
+    simpa only [Prod.swap] using!
       (Finset.Nat.sum_antidiagonal_swap (n := S)
         (f := fun ij : ℕ × ℕ => π (R.op 3 ij.1
           ((PowerSeries.coeff T (thetaShift R ij.2 * Garland.Fs (R.op 4) ^ r)) w))))
@@ -72,7 +72,7 @@ theorem leadingRow_below (S r T : ℕ)
     simp only [← Nat.cast_smul_eq_nsmul ℂ] at hsum
     rw [← Finset.smul_sum, ← Finset.smul_sum, hswap] at hsum
     rw [← Nat.cast_smul_eq_nsmul ℂ, Nat.cast_add, add_smul]
-    simpa only [leadingRow, map_sum] using hsum
+    simpa only [leadingRow, map_sum] using! hsum
   have hπ : π (leadingRow R w S r T) = 0 := by
     rw [← Nat.cast_smul_eq_nsmul ℂ, smul_eq_zero] at hs
     exact hs.resolve_left (by exact_mod_cast (show (r + 1) + (r + 1) ≠ 0 by omega))
@@ -80,7 +80,7 @@ theorem leadingRow_below (S r T : ℕ)
 
 /-- The same row in the actually commuting graded cyclic representation. -/
 def gradedLeadingRow (S r T : ℕ) : Gr R w :=
-  ∑ ij ∈ Finset.antidiagonal S,
+  ∑ ij ∈ Finset.HasAntidiagonal.antidiagonal S,
     grOp R w 0 ij.1
       ((PowerSeries.coeff T ((PowerSeries.mk fun k => grOp R w 1 (ij.2 + k)) *
         Garland.Fs (grOp R w 2) ^ r)) (grGenerator R w))

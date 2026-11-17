@@ -41,9 +41,9 @@ theorem orbifold_zpowers_conj_iso (φ g : Aut W) :
     constructor
     · intro hy
       refine ⟨φ⁻¹ y, (mem_orbifold_zpowers_iff g _).mpr ?_, hinv y⟩
-      have h1 : φ (g (φ⁻¹ y)) = y := by simpa only [Aut.mul_apply] using hy
+      have h1 : φ (g (φ⁻¹ y)) = y := by simpa only [Aut.mul_apply] using! hy
       have := congrArg (fun z => φ⁻¹ z) h1
-      simpa only [hinv'] using this
+      simpa only [hinv'] using! this
     · rintro ⟨x, hx, rfl⟩
       have hx' : g x = x := (mem_orbifold_zpowers_iff g x).mp hx
       change (φ * g * φ⁻¹) (φ x) = φ x
@@ -107,7 +107,7 @@ theorem V1_cyclic_admissiblyRational (g : Aut V1) (hg : IsOfFinOrder g) :
     · intro h; rw [h]; group
     · intro h
       have := congrArg (fun y => φ⁻¹ * y * φ) h
-      simpa [mul_assoc] using this
+      simpa [mul_assoc] using! this
   have hu : IsPrimitiveRoot u (orderOf g) :=
     ⟨(key _).mp (pow_orderOf_eq_one g), fun l hl => orderOf_dvd_of_pow_eq_one ((key l).mpr hl)⟩
   have h1 : VOAIsomorphic (orbifoldVOA (Subgroup.zpowers g))

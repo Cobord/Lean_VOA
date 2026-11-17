@@ -295,7 +295,7 @@ theorem channelIndependence_of_separation (hV : StronglyRational W) (hv : W.vacu
       · rfl
     simp only [hgen, mul_zero, Finset.sum_const_zero]
     refine Finset.sum_eq_zero fun z _ => ?_
-    rw [hzA]
+    rw [hzA (vacuumLW W hv) (epsInt F c) n]
     erw [traceFun_zero]
     rw [mul_zero]
   -- alignment, enlarged
@@ -410,11 +410,11 @@ theorem channelIndependence_of_separation (hV : StronglyRational W) (hv : W.vacu
     intro z
     simp only [γ, Sum.elim_inl]
     rw [tsum_eq_single svac]
-    · rw [if_pos rfl]
+    · refine (if_pos rfl).trans ?_
       simp only [A, Sum.elim_inl]
       rw [hn]
     · intro s hs
-      rw [if_neg]
+      refine if_neg ?_
       intro h
       exact hs (by exact_mod_cast add_left_cancel h)
   have hgen_eval : ∀ l, ∑' s : ℕ, (if γ (Sum.inr l) + s = (0 - ins.κ - N1) + svac then
@@ -435,10 +435,10 @@ theorem channelIndependence_of_separation (hV : StronglyRational W) (hv : W.vacu
       rw [hμ, tsum_eq_single s1]
       swap
       · intro s hs
-        rw [if_neg]
+        refine if_neg ?_
         intro h
         exact hs (by exact_mod_cast add_left_cancel h)
-      rw [if_pos rfl]
+      refine (if_pos rfl).trans ?_
       simp only [A, Sum.elim_inr]
       unfold genTerm
       rw [if_pos ⟨k, hk'⟩]

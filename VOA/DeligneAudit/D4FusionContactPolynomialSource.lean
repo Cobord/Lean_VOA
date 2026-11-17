@@ -33,7 +33,7 @@ private theorem comm_end (a b : Fin 28) (r s : ℕ) :
       ∑ c : Fin 28, contactF a b c • R.op c (r+s) := by
   ext v
   simpa only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.sum_apply,
-    LinearMap.smul_apply] using R.comm a b r s v
+    LinearMap.smul_apply] using! R.comm a b r s v
 
 theorem simple_EF (r s : ℕ) : simpleE R r * simpleF R s - simpleF R s * simpleE R r =
     simpleH R (r+s) := by
@@ -82,19 +82,19 @@ theorem source_seedRel (h : LocalWeylRelG D4sector R w 2) : SeedRel R w := by
       change 16 ≤ (18 : Fin 28).val ∧ (18 : Fin 28).val < 20
       decide
     have he : D4sector.lowExp (18 : Fin 28) = 1 := rfl
-    simpa only [he, Nat.mul_one, Module.End.pow_apply] using h.lowering (18 : Fin 28) hi
+    simpa only [he, Nat.mul_one, Module.End.pow_apply] using! h.lowering (18 : Fin 28) hi
   have hA2 : simpleF R 2 w = 0 := by
     exact h.fusion (18 : Fin 28) (by change 16 ≤ (18 : Fin 28).val; decide)
   have hA10 : simpleF R 1 (simpleF R 0 w) = 0 := by
-    simpa using first_derivative_of_nil (simple_EF R) (simple_HF R) (simple_FF R)
+    simpa using! first_derivative_of_nil (simple_EF R) (simple_HF R) (simple_FF R)
       (simple_E_kills hw) (simple_H_pos hw) 3 (by omega) hA3
   have hA11 := square_one_of_pair (simple_HF R) (simple_FF R) (simple_H_pos hw) hA2 hA10
   have hC5 : (currentCenter R 0 ^ 5) w = 0 := by
-    simpa using localWeyl_current_center_pow h
+    simpa using! localWeyl_current_center_pow h
   have hC2 : currentCenter R 2 w = 0 := by
     exact h.fusion (27 : Fin 28) (by change 16 ≤ (27 : Fin 28).val; decide)
   have hC31 : currentCenter R 1 ((currentCenter R 0 ^ 3) w) = 0 := by
-    simpa using first_derivative_of_nil (current_highest_EF R) (current_highest_HF R)
+    simpa using! first_derivative_of_nil (current_highest_EF R) (current_highest_HF R)
       (current_center_comm R) (current_highest_E_kills hw) (current_highest_H_pos hw)
       5 (by omega) hC5
   have hC21 := second_derivative_of_five (current_highest_EF R) (current_highest_HF R)
@@ -110,7 +110,7 @@ theorem source_seedRel (h : LocalWeylRelG D4sector R w 2) : SeedRel R w := by
   · have he : currentCenter R 0 * currentCenter R 1 * currentCenter R 1 =
         currentCenter R 1 * currentCenter R 1 * currentCenter R 0 := by
       rw [current_center_comm R 0 1, mul_assoc, current_center_comm R 0 1, ← mul_assoc]
-    simpa only [← Module.End.mul_apply, ← mul_assoc, he] using hC21
+    simpa only [← Module.End.mul_apply, ← mul_assoc, he] using! hC21
 
 end
 end VOA.DeligneAudit.D4FusionContact.PolynomialSource

@@ -132,7 +132,7 @@ theorem sum_shift {V : Type*} [AddCommMonoid V] (N : ℤ) (H : ℤ → V)
     constructor
     · rintro ⟨s, ⟨h1, h2⟩, rfl⟩; omega
     · intro h; exact ⟨σ - 1, by omega, by ring⟩
-  rw [← Finset.sum_image (f := H) (fun x _ y _ h => by simpa using h), himg]
+  rw [← Finset.sum_image (f := H) (fun x _ y _ h => by simpa using! h), himg]
   exact (Finset.sum_subset (fun σ hσ => by simp only [Finset.mem_Icc] at hσ ⊢; omega)
     (fun σ _ hσ => hH σ hσ)).symm
 
@@ -160,7 +160,7 @@ theorem conjCE_canon (a : Fin 3) {k N W : ℕ} (hk : 1 ≤ k) (hWN : W + k ≤ N
       have hσ' : σ ∉ Finset.Icc (-(N : ℤ)) (N - k) := by
         simp only [Finset.mem_Icc] at hσ ⊢; omega
       simp only [VB_out hWN hy p q hσ', smul_zero])
-    simpa only [add_sub_cancel_right] using this
+    simpa only [add_sub_cancel_right] using! this
   simp only [hsh, Finset.smul_sum, smul_smul, smul_add, Finset.sum_add_distrib]
   have h : (∑ p : Fin 3, ∑ q : Fin 3, ∑ σ ∈ Finset.Icc (-(N : ℤ)) N,
       (fabc p q a * CBs k p q (σ - 1)) • VB k y p q σ) =

@@ -31,7 +31,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 theorem sl2_H_Fpow (F H : V →ₗ[ℂ] V) (hHF : ∀ x, H (F x) - F (H x) = (-2 : ℂ) • F x)
     (u0 : V) (lam : ℂ) (hH : H u0 = lam • u0) :
     ∀ n : ℕ, H (F^[n] u0) = (lam - 2 * n) • F^[n] u0
-  | 0 => by simpa using hH
+  | 0 => by simpa using! hH
   | n + 1 => by
       rw [Function.iterate_succ_apply']
       have h := hHF (F^[n] u0)
@@ -81,7 +81,7 @@ theorem f_trunc_up {w : V} {fα : Fin 8} (h3 : 3 ≤ fα.val) (h6 : fα.val < 6)
     ∀ j, ρ.op fα (N + j) w = 0 := by
   intro j
   rcases Nat.eq_zero_or_pos j with rfl | hj
-  · simpa using hN
+  · simpa using! hN
   obtain ⟨c, hc, hce⟩ := bracket_h1_f fα h3 h6
   have hcomm := ρ.comm 6 fα j N w
   rw [hN, map_zero, hcart j hj, map_zero, sub_zero] at hcomm

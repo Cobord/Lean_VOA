@@ -38,7 +38,9 @@ theorem moonshineMatterSector_physical_radical (x y : ℤ) (u : moonshineMatterS
     rw [← hqv]
     change moonshineMatterForm (moonshineMatterReversal (moonshineMatterSectorEquiv ![x, y] p))
       (moonshineMatterSectorEquiv ![x, y] q) = 0
-    rw [moonshineMatterSector_form, hz, mul_zero]
+    first
+    | rw [moonshineMatterSector_form, hz, mul_zero]
+    | rw [moonshineMatterSector_form ![x, y] p q, hz, mul_zero]
   · intro hr
     apply (vnatPhysicalRadical_mem_iff x y 0 pu).mp
     apply ((vnatStringModule x y 0).mem_weightRadical_iff _ _ pu).mpr
@@ -48,7 +50,9 @@ theorem moonshineMatterSector_physical_radical (x y : ℤ) (u : moonshineMatterS
       (moonshineMatterSectorMap_mem _ _)
     change moonshineMatterForm (moonshineMatterReversal (moonshineMatterSectorEquiv ![x, y] p))
       (moonshineMatterSectorEquiv ![x, y] q.val.val) = 0 at hz
-    rw [moonshineMatterSector_form] at hz
+    first
+    | rw [moonshineMatterSector_form] at hz
+    | rw [moonshineMatterSector_form ![x, y] p q.val.val] at hz
     exact (mul_eq_zero.mp hz).resolve_left (chSign_ne_zero _ _)
 
 end VOA.Moonshine.ConwayNorton

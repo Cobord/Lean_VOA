@@ -187,7 +187,8 @@ theorem vSchur_mul_mem_H (g : ℤ) (hg : 2 ≤ g)
   rw [add_sub_cancel_right, V2m, latVOA_smul_latChargeGen_state,
     show -n - 1 - (latP m).form a c = (d : ℤ) by omega,
     show (a + c : (latP m).carrier) = (g : ℤ) by rw [ha, hc]; show (1 + (g - 1) : ℤ) = g; ring,
-    EEVec_expand (latP m) a hq d, latStateGen_finsum, Finset.sum_range_succ', aExpVec_zero,
+    EEVec_expand (latP m) a hq d, latStateGen_finsum (L := latP m) (γ := (g : ℤ)),
+    Finset.sum_range_succ', aExpVec_zero,
     LinearMap.id_apply, add_zero, smul_add] at h3
   have hrest : latticeCocycle (latP m) a c • ∑ r ∈ Finset.range k,
       latStateGen (latP m) (vSchur (latP m) a (d + (r + 1)) * aExpVec (latP m) a (r + 1) q)
@@ -210,7 +211,7 @@ theorem sector_mem_H_of (g : ℤ) (hg : 2 ≤ g)
     (k : ℕ) (q : FockN (rank (latP m))) (hq : q ∈ gradingWN (rank (latP m)) k) :
     latStateGen (latP m) q (g : ℤ) ∈ H m hm := by
   have := vSchur_mul_mem_H m hm g hg IH k 0 q hq
-  rwa [vSchur_zero, one_mul] at this
+  rwa [vSchur_zero (latP m) (1 : ℤ), one_mul] at this
 
 /-- The sector map `q ↦ q ⊗ e^g` is linear; membership of all homogeneous states gives all. -/
 theorem sector_mem_H_of_homog (g : (latP m).carrier)
@@ -252,7 +253,7 @@ theorem sector_mem_H (c : (latP m).carrier) (q : FockN (rank (latP m))) :
   · have := sector_nat_mem_H m hm g q
     exact (show c = ((g : ℤ) : (latP m).carrier) from hg) ▸ this
   · have := sector_nat_mem_H m hm g (sigmaN (rank (latP m)) q)
-    rw [← sector_neg_mem_H_iff] at this
+    rw [← sector_neg_mem_H_iff (g := ((g : ℤ) : (latP m).carrier))] at this
     exact (show c = (-((g : ℤ) : (latP m).carrier) : (latP m).carrier) from hg) ▸ this
 
 theorem H_eq_top : H m hm = ⊤ := by

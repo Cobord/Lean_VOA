@@ -84,7 +84,7 @@ theorem singularQuotientFreeFieldFaithful_iff_kernel
           LinearMap.mem_ker.mp hx]
       have hmk : (idealGen (W hk) s).mkQ x = 0 := by
         apply hinj'
-        simpa using hzero
+        simpa using! hzero
       exact (Submodule.Quotient.mk_eq_zero _).mp hmk
   · intro hker
     exact Submodule.ker_liftQ_eq_bot _ _ _ (le_of_eq hker.symm)
@@ -123,7 +123,7 @@ private theorem finrank_imageGrade_add_finrank_kernel_inf
   let f : (W hk).grading n →ₗ[ℂ] E := R.eval.domRestrict ((W hk).grading n)
   have hrank := LinearMap.finrank_range_add_finrank_ker f
   have hrange : LinearMap.range f = FreeFieldImageGrade hk R n := by
-    simpa [f, FreeFieldImageGrade] using LinearMap.range_domRestrict R.eval ((W hk).grading n)
+    simpa [f, FreeFieldImageGrade] using! LinearMap.range_domRestrict R.eval ((W hk).grading n)
   have hker : (LinearMap.ker f).map ((W hk).grading n).subtype =
       LinearMap.ker R.eval ⊓ (W hk).grading n := by
     simp only [f, LinearMap.ker_domRestrict, Submodule.map_comap_subtype, inf_comm]
@@ -146,7 +146,7 @@ private theorem finrank_quotientGrade_add_finrank_inf
     P.mkQ.domRestrict ((W hk).grading n)
   have hrank := LinearMap.finrank_range_add_finrank_ker f
   have hrange : LinearMap.range f = ((W hk).grading n).map P.mkQ := by
-    simpa [f] using LinearMap.range_domRestrict P.mkQ ((W hk).grading n)
+    simpa [f] using! LinearMap.range_domRestrict P.mkQ ((W hk).grading n)
   have hker : (LinearMap.ker f).map ((W hk).grading n).subtype =
       P ⊓ (W hk).grading n := by
     simp only [f, LinearMap.ker_domRestrict, Submodule.ker_mkQ,
@@ -177,7 +177,7 @@ theorem singularIdeal_inf_grading_eq_evalKernel_inf_grading_of_finrank
     Module.finrank ℂ (SingularQuotientGrade hk s n) +
           Module.finrank ℂ ↑(P ⊓ (W hk).grading n) =
         Module.finrank ℂ ((W hk).grading n) := by
-    simpa [P, SingularQuotientGrade] using
+    simpa [P, SingularQuotientGrade] using!
       finrank_quotientGrade_add_finrank_inf hk (idealGen (W hk) s) n
   have hQnull := finrank_imageGrade_add_finrank_kernel_inf hk R n
   have hinter : Module.finrank ℂ ↑(P ⊓ (W hk).grading n) =
@@ -271,7 +271,7 @@ theorem freeFieldAffinePrimitive_of_source
     intro hzero
     apply hv.1
     apply hfaith
-    simpa [f] using hzero
+    simpa [f] using! hzero
   refine ⟨hnonzero, ?_, ?_⟩
   · intro a m hm
     rw [← evalQuotientBySingular_current hk R hs a m v, hv.2.1 a m hm, map_zero]
@@ -479,7 +479,7 @@ theorem finrank_screeningKernelAffineGrade_eq_simpleQuotientGrade
           (affineSl2VOA_closed (-8 / 5 : ℂ) Sl2Symbol85.level85_noncritical).grading n) =
         Module.finrank ℂ
           ((affineSl2VOA_closed (-8 / 5 : ℂ) Sl2Symbol85.level85_noncritical).grading n) := by
-    simpa only [ScreeningKernelAffineGrade, W] using himage
+    simpa only [ScreeningKernelAffineGrade, W] using! himage
   have hquot' : Module.finrank ℂ
         (((affineSl2VOA_closed (-8 / 5 : ℂ) Sl2Symbol85.level85_noncritical).grading n).map
           (QuotVOA.maxGradedIdeal
@@ -489,7 +489,7 @@ theorem finrank_screeningKernelAffineGrade_eq_simpleQuotientGrade
           (affineSl2VOA_closed (-8 / 5 : ℂ) Sl2Symbol85.level85_noncritical).grading n) =
         Module.finrank ℂ
           ((affineSl2VOA_closed (-8 / 5 : ℂ) Sl2Symbol85.level85_noncritical).grading n) := by
-    simpa only [W] using hquot
+    simpa only [W] using! hquot
   omega
 
 /-- At `k=-8/5`, the displayed singular quotient has the simple affine character exactly when

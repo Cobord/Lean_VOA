@@ -42,7 +42,7 @@ theorem fullCoset_add_functional (f g : M₄ →ₗ[ℂ] ℂ)
   have hsum (f : M₄ →ₗ[ℂ] ℂ) : Summable
       (prodTermZ (fun n => Y₁.1 n k) (fun n => Y₂.1 n 0) f x y z (a+b) b (1+Complex.exp t) 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ f x y z (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using one_lt_norm ht)
+      Y₁ Y₂ f x y z (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using! one_lt_norm ht)
   rw [← (hsum f).tsum_add (hsum g)]
   apply tsum_congr
   intro n
@@ -77,7 +77,7 @@ theorem fullCoset_add_third (f : M₄ →ₗ[ℂ] ℂ)
   have hh := fullCoset_sum_inputs hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
     Y₁ Y₂ f a b (Finset.univ : Finset Unit) (Finset.univ : Finset Unit)
     (Finset.univ : Finset (Fin 2)) (fun _ => x) (fun _ => y) ![z,z'] ht
-  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using hh.symm
+  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using! hh.symm
 
 private theorem spectrum_add_functional (f g : M₄ →ₗ[ℂ] ℂ)
     (x : M₁) (y : M₂) (z : M₃) (a b c β : ℂ) {t : ℂ} (ht : t∈overlapDomain) :

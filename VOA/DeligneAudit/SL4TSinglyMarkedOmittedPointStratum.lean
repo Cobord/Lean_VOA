@@ -49,10 +49,10 @@ theorem coeff_mul_top_sub_one (P Q : Polynomial A) (a b : ℕ) (ha : 1 ≤ a) (h
     (hP : P.natDegree ≤ a) (hQ : Q.natDegree ≤ b) :
     (P * Q).coeff (a + b - 1) = P.coeff a * Q.coeff (b - 1) + P.coeff (a - 1) * Q.coeff b := by
   rw [Polynomial.coeff_mul, Finset.sum_eq_add_of_mem (a, b - 1) (a - 1, b)
-    (Finset.mem_antidiagonal.mpr (by simp; omega)) (Finset.mem_antidiagonal.mpr (by simp; omega))
+    (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega)) (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega))
     (by simp; omega)]
   rintro ⟨i, j⟩ hij hne
-  rw [Finset.mem_antidiagonal] at hij
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hij
   simp only at hij
   rcases Nat.lt_or_ge a i with h | h
   · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (hP.trans_lt h), zero_mul]

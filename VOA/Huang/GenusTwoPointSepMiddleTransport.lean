@@ -137,7 +137,7 @@ theorem wardTraceSeries_slots_zero_shift
       rightWardTraceSeries Y₁ Y₂ a x y (k - 1) n₁ n₂ J = 0 := by
   rw [← wardTraceSeries_eq_slots]
   ext n
-  simpa only [wardTraceSeries, PowerSeries.coeff_mk, map_zero] using
+  simpa only [wardTraceSeries, PowerSeries.coeff_mk, map_zero] using!
     wardTrace_zero_shift Y₁ Y₂ ha hx hy n₁ n₂ hn J hJ
       (N.h - W.centralCharge / 24 + n)
 

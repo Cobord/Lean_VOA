@@ -152,7 +152,7 @@ theorem coeff_reciprocalQFactorial_eq_card (r e B : ℕ) (hB : e ≤ B) :
       omega
     refine ⟨fun i => ⟨α i, hle i⟩, ?_, rfl⟩
     rw [Finset.mem_filter]
-    exact ⟨Finset.mem_univ _, by simpa [awt] using hα.2⟩
+    exact ⟨Finset.mem_univ _, by simpa [awt] using! hα.2⟩
 
 /-! ### The fermionic jet series -/
 

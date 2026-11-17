@@ -37,7 +37,7 @@ theorem current_orbit_coeff_mem_powerBounded (m R r a b c s : ℕ)
   let j : AllM.SeedIndex m := ⟨(false,r,s),⟨hr,hs⟩⟩
   let i : LeviRules.OrbitSourceIndex m :=
     ⟨j,[],polarLowerWord a b c,by
-      simpa only [LeviRules.branchCategory,j,Bool.false_eq_true,if_false] using
+      simpa only [LeviRules.branchCategory,j,Bool.false_eq_true,if_false] using!
         polarLowerWord_branch a b c⟩
   let k : LeviRules.PowerBoundedSourceIndex m R := ⟨i,hR⟩
   have he : PowerSeries.coeff s (currentMap m (orbit ℂ r a b c)) =

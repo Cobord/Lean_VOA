@@ -174,7 +174,7 @@ theorem weightOneQSeries_S_of_thetaFourier {N : ℕ} (hN : 0 < N)
   have hS : ((ModularGroup.S • τ : ℍ) : ℂ) = -1 / (τ : ℂ) := by
     rw [UpperHalfPlane.modular_S_smul]
     simp only [inv_neg, neg_div, one_div]
-  rw [hS, weightOneThetaValue_S _ _ _ τ.ne_zero (by simpa [sub_eq_add_neg] using hz)]
+  rw [hS, weightOneThetaValue_S _ _ _ τ.ne_zero (by simpa [sub_eq_add_neg] using! hz)]
   field_simp
 
 end VOA.Classification.COne.SSHecke

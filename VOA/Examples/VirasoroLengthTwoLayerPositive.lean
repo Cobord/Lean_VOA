@@ -62,7 +62,7 @@ theorem isPosOn_top_of_orthogonal_basis {ι : Type*} [Fintype ι] [DecidableEq �
     apply hx
     apply e.repr.injective
     ext i
-    simpa [a] using hzero i
+    simpa [a] using! hzero i
   let q : ι → ℝ := fun i => Complex.normSq (a i) * r i
   have hq_nonneg : ∀ i, 0 ≤ q i := fun i => mul_nonneg (Complex.normSq_nonneg _) (le_of_lt (hrpos i))
   have hq_pos : ∃ i, 0 < q i := by
@@ -129,7 +129,7 @@ theorem isPosOn_span_of_orthogonal_family {ι : Type*} [Fintype ι] [DecidableEq
       exact hdiag i
   intro x hx hne
   let xS : S := ⟨x, hx⟩
-  have hxSne : xS ≠ 0 := fun hz => hne (by simpa [xS] using congrArg Subtype.val hz)
+  have hxSne : xS ≠ 0 := fun hz => hne (by simpa [xS] using! congrArg Subtype.val hz)
   obtain ⟨r, hr, hval⟩ := htop xS Submodule.mem_top hxSne
   exact ⟨r, hr, hval⟩
 
@@ -144,9 +144,9 @@ theorem restrict_span_nondegenerate_of_orthogonal_family {ι : Type*}
   apply LinearMap.IsOrthoᵢ.nondegenerate_of_not_isOrtho_basis_self e
   · rw [LinearMap.isOrthoᵢ_def]
     intro i j hij
-    simpa [e, LinearMap.IsOrtho] using horth i j hij
+    simpa [e, LinearMap.IsOrtho] using! horth i j hij
   · intro i
-    simpa [e, LinearMap.IsOrtho] using hdiag i
+    simpa [e, LinearMap.IsOrtho] using! hdiag i
 
 end OrthogonalPositivity
 
@@ -214,7 +214,7 @@ noncomputable def boundaryTowerIn (n N : ℕ) (hn : 2 ≤ n) (hN : 2 ≤ N)
 /-- The unique retained index of filtration degree one. -/
 def boundaryStressIndex (n N : ℕ) (hN : 2 ≤ N) :
     BoundaryLengthLETwoTowerIndex n N :=
-  ⟨⟨1, ⟨by omega, by simpa using hN⟩⟩, Or.inr (by norm_num)⟩
+  ⟨⟨1, ⟨by omega, by simpa using! hN⟩⟩, Or.inr (by norm_num)⟩
 
 @[simp] theorem boundaryStressIndex_val (n N : ℕ) (hN : 2 ≤ N) :
     (boundaryStressIndex n N hN).1.1 = 1 := rfl
@@ -262,7 +262,7 @@ theorem pieceIn_one_eq_span_stress (n N : ℕ) (hn : 2 ≤ n) (hN : 2 ≤ N) :
     rw [Submodule.mem_span_singleton]
     refine ⟨a, ?_⟩
     apply Subtype.ext
-    simpa [boundaryTowerIn, boundaryLengthLETwoTowerAt] using ha
+    simpa [boundaryTowerIn, boundaryLengthLETwoTowerAt] using! ha
   · intro hx
     rw [Submodule.mem_span_singleton] at hx
     obtain ⟨a, rfl⟩ := hx
@@ -289,7 +289,7 @@ theorem pieceIn_two_eq_span_boundaryTowerIn (n N : ℕ) (hn : 2 ≤ n) (hN : 2 �
     apply (Submodule.mem_span_range_iff_exists_fun ℂ).mpr
     refine ⟨a, ?_⟩
     apply Subtype.ext
-    simpa using ha
+    simpa using! ha
   · intro hx
     obtain ⟨a, ha⟩ :=
       (Submodule.mem_span_range_iff_exists_fun ℂ).mp hx
@@ -298,14 +298,14 @@ theorem pieceIn_two_eq_span_boundaryTowerIn (n N : ℕ) (hn : 2 ≤ n) (hN : 2 �
     rw [goodFil_two_eq_span_boundaryTowers n N hn hN]
     apply (Submodule.mem_span_range_iff_exists_fun ℂ).mpr
     refine ⟨a, ?_⟩
-    simpa using congrArg Subtype.val ha
+    simpa using! congrArg Subtype.val ha
 
 /-- The retained tower family remains linearly independent inside the weight-space subtype. -/
 theorem boundaryTowerIn_linearIndependent (n N : ℕ) (hn : 2 ≤ n) (hN : 2 ≤ N) :
     LinearIndependent ℂ (boundaryTowerIn n N hn hN) := by
   apply LinearIndependent.of_comp
     ((virasoroSimple (boundaryCharge n)).grading (N : ℤ)).subtype
-  simpa [Function.comp_def] using boundaryLengthLETwoTowerAt_linearIndependent n N hn
+  simpa [Function.comp_def] using! boundaryLengthLETwoTowerAt_linearIndependent n N hn
 
 /-- The retained towers as a basis of the official degree-two flag step. -/
 noncomputable def boundaryPieceInTwoTowerBasis (n N : ℕ) (hn : 2 ≤ n) (hN : 2 ≤ N) :
@@ -445,7 +445,7 @@ private theorem boundaryStressFamily_linearIndependent (n N : ℕ)
   have hsne : boundaryTowerIn n N hn hN (boundaryStressIndex n N hN) ≠ 0 := by
     intro h
     have h' : boundaryLengthLETwoTowerAt n N (boundaryStressIndex n N hN) = 0 := by
-      simpa using congrArg Subtype.val h
+      simpa using! congrArg Subtype.val h
     exact boundaryLengthLETwoTowerAt_ne_zero n N hn _ h'
   fin_cases i
   simp only [Fin.sum_univ_one, boundaryStressFamily] at hsum

@@ -92,7 +92,7 @@ theorem gradedEuler_finite_jet_determines (b : ℝ) (a : ℕ → ℝ)
   obtain ⟨K, hK⟩ := uniform_gradedEuler_cutoff (E := E) b a ha0 ha (by norm_num : (1 : ℝ) < 2)
   refine ⟨K, fun B A f hB hA heq hz n => norm_eq_zero.mp ?_⟩
   have hb := hK B A f 0 hB hA heq le_rfl (fun j hj => by simp [hz j hj]) n
-  exact le_antisymm (by simpa only [zero_mul] using hb) (norm_nonneg _)
+  exact le_antisymm (by simpa only [zero_mul] using! hb) (norm_nonneg _)
 
 end Graded
 
@@ -103,7 +103,7 @@ noncomputable def degreeBlock (d : ℕ → ℕ → ℂ) (n : ℕ) : Fin (n + 1) 
 theorem norm_le_degreeBlock (d : ℕ → ℕ → ℂ) (n k : ℕ) :
     ‖d n k‖ ≤ ‖degreeBlock d (n + k)‖ := by
   have h := norm_le_pi_norm (degreeBlock d (n + k)) (⟨n, by omega⟩ : Fin (n + k + 1))
-  simpa only [degreeBlock, Nat.add_sub_cancel_left] using h
+  simpa only [degreeBlock, Nat.add_sub_cancel_left] using! h
 
 /-- A precise sufficient coupled-system condition on the actual two-index
 array. Establishing this condition from Ward equations is a separate task. -/
@@ -126,7 +126,7 @@ theorem twoLevelGrowth_of_radialEuler {d : ℕ → ℕ → ℂ} (h : RadialEuler
   refine ⟨∑ j ∈ Finset.range K, ‖degreeBlock d j‖,
     Finset.sum_nonneg (fun _ _ => norm_nonneg _), fun n k => ?_⟩
   have hb := (norm_le_degreeBlock d n k).trans (hK B A (degreeBlock d) hB hA heq (n + k))
-  simpa only [pow_add, mul_assoc] using hb
+  simpa only [pow_add, mul_assoc] using! hb
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra V}
   {P₁ P₂ N Q : LWModule W}

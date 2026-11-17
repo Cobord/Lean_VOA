@@ -47,7 +47,7 @@ theorem analytic_collision_equation {H : PowerSeries ℂ} (hH : H∈SubexpPS)
       (∀ k,r' k∈ratRing 0) ∧ 1 ≤ m' ∧
       (DOp κ σ)^[m'] H=∑ k∈Finset.range m',r' k*(DOp κ σ)^[k] H := by
     rcases Nat.eq_zero_or_pos m with rfl | hpos
-    · have h0 : H=0 := by simpa using hm
+    · have h0 : H=0 := by simpa using! hm
       exact ⟨1,fun _ => 0,fun _ => Subalgebra.zero_mem _,le_rfl,by simp [h0]⟩
     · exact ⟨m,r,hr,hpos,hm⟩
   choose c hc hcev using fun k => exists_subexp_of_mem_ratRing_zero (hr' k)

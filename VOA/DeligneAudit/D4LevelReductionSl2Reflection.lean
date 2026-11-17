@@ -6,6 +6,9 @@ import Mathlib.LinearAlgebra.Dimension.Finrank
 
 namespace VOA.DeligneAudit.D4LevelReduction
 
+-- Lean 4.35 port: Mathlib `b63f6e8a` makes `LieRing.ofAssociativeRing` a def; on v4.30 this is a no-op.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable local instance rationalModuleForReflection
     (X : Type*) [AddCommGroup X] [Module ℂ X] :
     Module ℚ X := Module.restrictScalars ℚ ℂ X

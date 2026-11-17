@@ -21,6 +21,8 @@ namespace VOA.AffineVOA
 open Module (End)
 open VOA.AffineLie
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 universe u

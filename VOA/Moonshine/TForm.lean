@@ -126,17 +126,32 @@ noncomputable def leechLagrangian : Lagrangian leech where
   γ := γL
   g := gL
   form_even i hi j hj := by
-    rw [γL, γL, dif_pos hi, dif_pos hj, leech_form_eq, Int.even_iff]
-    exact gam_gam_even ⟨i, hi⟩ ⟨j, hj⟩
+    have h1 : γL i = (⟨gamVec ⟨i, hi⟩, gamVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold γL; exact dif_pos hi
+    have h2 : γL j = (⟨gamVec ⟨j, hj⟩, gamVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold γL; exact dif_pos hj
+    rw [h1, h2]
+    exact Int.even_iff.2 (gam_gam_even ⟨i, hi⟩ ⟨j, hj⟩)
   halfNorm_even i hi := by
-    rw [halfNorm, γL, dif_pos hi, leech_form_eq, Int.even_iff]
-    exact gam_halfNorm_even ⟨i, hi⟩
+    have h1 : γL i = (⟨gamVec ⟨i, hi⟩, gamVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold γL; exact dif_pos hi
+    rw [halfNorm, h1]
+    exact Int.even_iff.2 (gam_halfNorm_even ⟨i, hi⟩)
   partner_even i hi j hj := by
-    rw [gL, γL, dif_pos hi, dif_pos (by omega : j < 12), leech_form_eq, Int.even_iff]
-    exact g_gam_even ⟨i, hi⟩ ⟨j, by omega⟩ (by simpa [Fin.lt_def] using hj)
+    have hj' : j < 12 := by omega
+    have h1 : gL i = (⟨gVec ⟨i, hi⟩, gVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold gL; exact dif_pos hi
+    have h2 : γL j = (⟨gamVec ⟨j, hj'⟩, gamVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold γL; exact dif_pos hj'
+    rw [h1, h2]
+    exact Int.even_iff.2 (g_gam_even ⟨i, hi⟩ ⟨j, hj'⟩ (by simpa [Fin.lt_def] using hj))
   partner_odd i hi := by
-    rw [gL, γL, dif_pos hi, dif_pos hi, leech_form_eq, Int.odd_iff]
-    exact g_gam_odd ⟨i, hi⟩
+    have h1 : gL i = (⟨gVec ⟨i, hi⟩, gVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold gL; exact dif_pos hi
+    have h2 : γL i = (⟨gamVec ⟨i, hi⟩, gamVec_mem _⟩ : ↥Leech.carrier) := by
+      unfold γL; exact dif_pos hi
+    rw [h1, h2]
+    exact Int.odd_iff.2 (g_gam_odd ⟨i, hi⟩)
   two_mul_m := by rw [bRank_eq_rank, leech_rank]
 
 /-! ### The form -/

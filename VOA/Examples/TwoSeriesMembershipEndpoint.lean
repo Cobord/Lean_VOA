@@ -127,7 +127,8 @@ theorem clusterAtLeast_singleWord {n : ℕ} (hn : 2 ≤ n) (N : ℕ) (p : Fin N)
     rw [Finset.card_eq_one]
     refine ⟨p, ?_⟩
     ext j
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton, singleWord]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
+    simp only [singleWord]
     split_ifs with hj <;> simp [hj]
   · rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro j _
@@ -142,12 +143,13 @@ theorem inversions_singleWord {n : ℕ} (hn : 2 ≤ n) (N : ℕ) (p : Fin N) :
       (Finset.Ioi p).map ⟨fun j => (p, j), fun a b h => (Prod.mk.inj h).2⟩ := by
     ext ⟨i, j⟩
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map,
-      Finset.mem_Ioi, Function.Embedding.coeFn_mk, Prod.mk.injEq, singleWord]
+      Finset.mem_Ioi, Function.Embedding.coeFn_mk, Prod.mk.injEq]
+    simp only [singleWord]
     constructor
     · rintro ⟨hij, h⟩
       by_cases hi : i = p
       · subst hi
-        exact ⟨j, hij, rfl, rfl⟩
+        exact ⟨j, hij, rfl⟩
       · rw [if_neg hi] at h
         split_ifs at h <;> simp [Fin.lt_def] at h
     · rintro ⟨k, hk, rfl, rfl⟩

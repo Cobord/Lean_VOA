@@ -95,7 +95,7 @@ theorem fixedEval_mem_grading (hD : D.IsGraded) {n : ℤ} {v : VirUniv c}
       rw [he]
       exact h
   induction hv using Submodule.span_induction with
-  | mem x hx => obtain ⟨l, he, rfl⟩ := hx; simpa only [← he] using hw l
+  | mem x hx => obtain ⟨l, he, rfl⟩ := hx; simpa only [← he] using! hw l
   | zero =>
       simp only [map_zero, Prod.fst_zero, Prod.snd_zero]
       exact ⟨Submodule.zero_mem _, Submodule.zero_mem _⟩
@@ -202,7 +202,7 @@ theorem fixedEval_modeClosed : ModeClosed D (LinearMap.range (fixedEval c D β A
       have h := modePreservers_product D S
         (fixedEval_generator_preserves c D β A hA hK) ih (-(i : ℤ)-1)
       rw [corrected_conformal_product] at h
-      simpa only [show -(i : ℤ)-1-1 = -(i : ℤ)-2 by omega] using h
+      simpa only [show -(i : ℤ)-1-1 = -(i : ℤ)-2 by omega] using! h
   have hpre : (modePreservers D S).comap F = ⊤ := by
     apply top_unique
     rw [← negSpanVir_eq_top c, negSpanVir]

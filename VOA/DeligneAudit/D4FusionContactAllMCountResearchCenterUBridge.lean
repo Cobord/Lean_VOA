@@ -60,7 +60,7 @@ theorem monoSeed_eq_top (m : ℕ) (j : AllM.SeedIndex m) :
 theorem u_outer_negative (m : ℕ) (i : OrbitSourceIndex m) (hb : i.seed.val.1 = false) :
     ∀ x ∈ i.outer, category x.1 = 1 := by
   intro x hx
-  simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using i.branch x hx
+  simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using! i.branch x hx
 
 /-- BRIDGE: every original U source is a Cube negative word on a top shift word. -/
 theorem u_orbitSourcePoly_eq (m : ℕ) (i : OrbitSourceIndex m) (hb : i.seed.val.1 = false) :
@@ -73,7 +73,7 @@ theorem u_orbitSourcePoly_eq (m : ℕ) (i : OrbitSourceIndex m) (hb : i.seed.val
 
 theorem u_seed_threshold (m : ℕ) (i : OrbitSourceIndex m) (hb : i.seed.val.1 = false) :
     m < i.seed.val.2.1 + i.seed.val.2.2 := by
-  simpa only [AllM.seedThreshold,hb,Bool.false_eq_true,if_false] using i.seed.property.2
+  simpa only [AllM.seedThreshold,hb,Bool.false_eq_true,if_false] using! i.seed.property.2
 
 /-- Every U source of power at most three lies in J (power one vanishes). -/
 theorem u_low_source_mem_polarIdeal (m : ℕ) (i : OrbitSourceIndex m)

@@ -93,6 +93,8 @@ Dong–Jiang math/0601626 §4 (Lemmas 4.6–4.9, Thm 4.13); Gannon Def. 5.3.1a�
 `ZhuVermaAnArchAModScope` (why `Nontrivial U.carrier` is a genuine scope, not a free fact).
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open VertexOperatorAlgebra

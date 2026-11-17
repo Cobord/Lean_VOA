@@ -32,13 +32,13 @@ theorem a2_mono_hom (xs : List ℕ) :
       (xs.length, xs.sum) := by
   induction xs with
   | nil =>
-      simpa [VOA.DeligneAudit.CLAssembly.mono] using
+      simpa [VOA.DeligneAudit.CLAssembly.mono] using!
         MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s xs ih =>
       have hz : (z s).IsWeightedHomogeneous om (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
       have hm := hz.mul ih
-      simpa [VOA.DeligneAudit.CLAssembly.mono, Nat.add_comm] using hm
+      simpa [VOA.DeligneAudit.CLAssembly.mono, Nat.add_comm] using! hm
 
 /-- The F₁ box acts exactly on an F₂ box word. -/
 theorem a2_f2_boxSpan_le_twoBox (p q : ℕ)
@@ -70,7 +70,7 @@ theorem a2_f2_boxSpan_le_twoBox (p q : ℕ)
           (MvPolynomial.monomial f 1) ((ys.map F₂).prod w)} := by
     rw [hword]
     simpa [F₁, F₂, aWord, Module.End.mul_apply,
-      VOA.DeligneAudit.CLAssembly.evAlg_mono] using hbox
+      VOA.DeligneAudit.CLAssembly.evAlg_mono] using! hbox
   have hle : Submodule.span ℂ {v | ∃ f, BoxP p f ∧
         Finsupp.weight om f = (xs.length, xs.sum) ∧
         v = Sl2Weyl.evAlg F₁

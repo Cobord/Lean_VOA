@@ -22,7 +22,7 @@ open VirModule LeeYangFockExponential LeeYangFockVirasoro LeeYangWardClosure
 one index. We use this explicit rule to track maximal momentum degree. -/
 theorem polynomialModule_X_coeff {V : Type*} [AddCommGroup V] [Module ℂ V]
     (q : PolynomialModule ℂ V) (n : ℕ) :
-    ((Polynomial.X : Polynomial ℂ) • q) n=if 0<n then q (n-1) else 0 := by
+    ((Polynomial.X : Polynomial ℂ) • q).coeff n=if 0<n then q.coeff (n-1) else 0 := by
   rw [← Polynomial.monomial_one_one_eq_X,PolynomialModule.monomial_smul_apply]
   simp only [one_smul,Nat.one_le_iff_ne_zero,Nat.pos_iff_ne_zero]
 
@@ -30,15 +30,16 @@ theorem polynomialModule_X_coeff {V : Type*} [AddCommGroup V] [Module ℂ V]
 coefficient; it does not change the momentum degree. -/
 theorem polynomialModule_map_coeff {V W : Type*} [AddCommGroup V] [Module ℂ V]
     [AddCommGroup W] [Module ℂ W] (f : V →ₗ[ℂ] W) (q : PolynomialModule ℂ V) (n : ℕ) :
-    (PolynomialModule.map ℂ f q) n=f (q n) := rfl
+    (PolynomialModule.map ℂ f q).coeff n=f (q.coeff n) := rfl
 
 /-- A vector polynomial vanishing at every complex number has all coefficients
 zero. Scalar functionals reduce the claim to ordinary polynomial identity. -/
 theorem polynomialModule_eq_zero_of_eval {V : Type*} [AddCommGroup V] [Module ℂ V]
     (q : PolynomialModule ℂ V) (hq : ∀ z : ℂ, PolynomialModule.eval z q=0) : q=0 := by
+  apply PolynomialModule.ext
   apply Finsupp.ext
   intro n
-  apply (Module.forall_dual_apply_eq_zero_iff ℂ (q n)).mp
+  apply (Module.forall_dual_apply_eq_zero_iff ℂ (q.coeff n)).mp
   intro f
   let p : Polynomial ℂ := PolynomialModule.equivPolynomial (PolynomialModule.map ℂ f q)
   have hp : p=0 := by
@@ -47,7 +48,7 @@ theorem polynomialModule_eq_zero_of_eval {V : Type*} [AddCommGroup V] [Module �
     have he := PolynomialModule.aeval_equivPolynomial (PolynomialModule.map ℂ f q) z
     simp only [Polynomial.aeval_def,Polynomial.eval₂_id] at he
     have he' : p.eval z=PolynomialModule.eval z (PolynomialModule.map ℂ f q) := by
-      simpa [p] using he
+      simpa [p] using! he
     rw [he']
     have hm := PolynomialModule.eval_map ℂ f q z
     change PolynomialModule.eval z (PolynomialModule.map ℂ f q)=f (PolynomialModule.eval z q) at hm
@@ -87,11 +88,11 @@ theorem vermaWordPolynomial_eval (ell p z : ℂ) (w : List ℕ) :
 /-- A word of length k has momentum degree at most k. The statement uses
 coefficients directly, including the zero-polynomial case. -/
 theorem vermaWordPolynomial_coeff_above (ell p : ℂ) (w : List ℕ) (n : ℕ)
-    (hn : w.length<n) : vermaWordPolynomial ell p w n=0 := by
+    (hn : w.length<n) : (vermaWordPolynomial ell p w).coeff n=0 := by
   induction w generalizing n with
-  | nil => simp [vermaWordPolynomial,PolynomialModule.single_apply,show 0≠n by simpa using Nat.ne_of_lt hn]
+  | nil => simp [vermaWordPolynomial,PolynomialModule.coeff_single,Finsupp.single_apply,show 0≠n by simpa using! Nat.ne_of_lt hn]
   | cons i w ih =>
-    rw [vermaWordPolynomial,PolynomialModule.add_apply,polynomialModule_X_coeff,
+    rw [vermaWordPolynomial.eq_2,PolynomialModule.coeff_add,Finsupp.add_apply,polynomialModule_X_coeff,
       polynomialModule_map_coeff,if_pos (by simp only [List.length_cons] at hn; omega),
       polynomialModule_map_coeff,ih n (by simp only [List.length_cons] at hn; omega),
       ih (n-1) (by simp only [List.length_cons] at hn; omega)]
@@ -106,13 +107,13 @@ noncomputable def vermaWordExponent : List ℕ → ((ℕ × Fin 1) →₀ ℕ)
 /-- After symbol projection, the maximal momentum coefficient of any word
 is exactly its oscillator monomial with coefficient one. -/
 theorem vermaWordPolynomial_top (ell p : ℂ) (w : List ℕ) :
-    vermaSymbolProjection (vermaWordPolynomial ell p w w.length) =
+    vermaSymbolProjection ((vermaWordPolynomial ell p w).coeff w.length) =
       MvPolynomial.monomial (vermaWordExponent w) 1 := by
   induction w with
-  | nil => simp [vermaWordPolynomial,PolynomialModule.single_apply,vermaWordExponent,
+  | nil => simp [vermaWordPolynomial,PolynomialModule.coeff_single,Finsupp.single_apply,vermaWordExponent,
       vermaSymbolProjection_vacuum]
   | cons i w ih =>
-    rw [vermaWordPolynomial,List.length_cons,PolynomialModule.add_apply,
+    rw [vermaWordPolynomial.eq_2,List.length_cons,PolynomialModule.coeff_add,Finsupp.add_apply,
       polynomialModule_map_coeff,vermaWordPolynomial_coeff_above ell p w _ (by omega),
       map_zero,zero_add,polynomialModule_X_coeff,if_pos (by omega),
       Nat.add_sub_cancel,polynomialModule_map_coeff,vermaSymbolProjection_momentum,ih]
@@ -137,14 +138,14 @@ theorem vermaWordExponent_injective_sorted {u w : List ℕ}
   apply List.perm_iff_count.mpr
   intro i
   have hh := congrArg (fun x => x (i,0)) he
-  simpa only [vermaWordExponent_count] using hh
+  simpa only [vermaWordExponent_count] using! hh
 
 /-- At the maximal allowed word length, extracting a chosen oscillator
 monomial selects exactly its sorted word. Shorter words contribute zero. -/
 theorem vermaWordPolynomial_top_selector (ell p : ℂ) (K : ℕ) (u w : List ℕ)
     (hu : SortedWord u) (hw : SortedWord w) (huK : u.length≤K) (hwK : w.length=K) :
-    MvPolynomial.coeff (vermaWordExponent w)
-      (vermaSymbolProjection (vermaWordPolynomial ell p u K)) = if u=w then 1 else 0 := by
+    (vermaSymbolProjection ((vermaWordPolynomial ell p u).coeff K)).coeff (vermaWordExponent w) =
+      if u=w then 1 else 0 := by
   classical
   by_cases he : u=w
   · subst u
@@ -166,16 +167,16 @@ theorem vermaWordPolynomial_max_coeff (ell p : ℂ) (K : ℕ)
     (w : List ℕ) (hw : w∈s) (hwK : w.length=K) : coef w=0 := by
   classical
   let C : PolynomialModule ℂ VermaFockFamily →ₗ[ℂ] VermaFockFamily :=
-    { toFun := fun q => q K
+    { toFun := fun q => q.coeff K
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
   let E := (MvPolynomial.lcoeff ℂ (vermaWordExponent w)).comp (vermaSymbolProjection.comp C)
   have hh := congrArg E he
   simp only [map_sum,map_smul,map_zero,smul_eq_mul] at hh
-  change (∑ u ∈ s, coef u * MvPolynomial.coeff (vermaWordExponent w)
-    (vermaSymbolProjection (vermaWordPolynomial ell p u K)))=0 at hh
-  have heq : (∑ u ∈ s, coef u * MvPolynomial.coeff (vermaWordExponent w)
-      (vermaSymbolProjection (vermaWordPolynomial ell p u K)))=coef w := by
+  change (∑ u ∈ s, coef u * (vermaSymbolProjection ((vermaWordPolynomial ell p u).coeff K)).coeff
+    (vermaWordExponent w))=0 at hh
+  have heq : (∑ u ∈ s, coef u * (vermaSymbolProjection ((vermaWordPolynomial ell p u).coeff K)).coeff
+      (vermaWordExponent w))=coef w := by
     rw [Finset.sum_eq_single w]
     · rw [vermaWordPolynomial_top_selector ell p K w w (hs w hw) (hs w hw) (hl w hw) hwK]
       simp
@@ -225,7 +226,7 @@ theorem verma_relation_polynomial (ell p : ℂ) (s : Finset (List ℕ)) (coef : 
   apply polynomialModule_eq_zero_of_eval
   intro z
   have hh := congrArg (vermaFockFamilyMap ell p z) he
-  simpa only [map_sum,map_smul,map_zero,vermaWordPolynomial_eval] using hh
+  simpa only [map_sum,map_smul,map_zero,vermaWordPolynomial_eval] using! hh
 
 /-- ALL ordered negative-mode words, including L₋₁, are independent in
 M(c,h) for EVERY complex charge and highest weight. The free-momentum
@@ -253,13 +254,13 @@ theorem verma_negWord_coef_zero_indexed {ι : Type*} (v : ι → List ℕ)
   have hc : ∀ i, Function.extend v coef 0 (v i)=coef i := fun i => hinj.extend_apply coef 0 i
   have he' : ∑ w ∈ s.image v, Function.extend v coef 0 w • negWord c h w=0 := by
     rw [Finset.sum_image (fun i _ j _ hij => hinj hij)]
-    simpa only [hc] using he
+    simpa only [hc] using! he
   have hs : ∀ w ∈ s.image v, SortedWord w := by
     intro w hw
     obtain ⟨i,_,rfl⟩ := Finset.mem_image.mp hw
     exact hv i
   intro i hi
-  simpa only [hc] using verma_negWord_coef_zero c h (s.image v)
+  simpa only [hc] using! verma_negWord_coef_zero c h (s.image v)
     (Function.extend v coef 0) hs he' (v i) (Finset.mem_image_of_mem v hi)
 
 /-- Global PBW independence for the general Verma module at every (c,h),

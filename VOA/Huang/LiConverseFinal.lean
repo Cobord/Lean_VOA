@@ -38,7 +38,7 @@ theorem expOp_comm {E : Type*} [AddCommGroup E] [Module ℂ E] {A : Module.End �
 
 theorem expOp_fix {E : Type*} [AddCommGroup E] [Module ℂ E] {A : Module.End ℂ E}
     (hA : LocNil A) (c : ℂ) {x : E} (hx : A x = 0) : expOp hA c x = x := by
-  rw [expOp_eq_sum hA c (J := 1) (by simpa using hx)]
+  rw [expOp_eq_sum hA c (J := 1) (by simpa using! hx)]
   simp
 
 theorem OppBase.ext' {E : Type*} [AddCommGroup E] [Module ℂ E] {B₁ B₂ : OppBase W E}
@@ -131,19 +131,24 @@ theorem numeric_jacobi (a : V) (l m : ℤ) (x : M) (y : P₂.carrier) (g : (Q₃
     rw [LinearMap.dualMap_apply, (Ts P₃).mixOp_eq_sum zT a l m g' (K₀ := J)
       (fun k hk => hK₀ k (le_trans hJ0 hk)), map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
-    rw [OppBase.mixTerm, map_smul, smul_eq_mul, Ts_B, expOp_cancel_neg, Gt]
+    rw [OppBase.mixTerm, map_smul, smul_eq_mul, Ts_B, expOp_cancel_neg]
+    unfold Gt
     norm_num
     exact Or.inl rfl
   have hR : ∀ i : ℕ, (Ts P₃).rModes zT_ne_zero a α (m + i) g'
       = Gt A T Pr hrat hP₃ hP₂ x (mode (P₂.isMod.YM a) (m + i) y) g := by
     intro i
-    rw [OppBase.rModes, Gt, PhiT_equiv, Lt_mode_coe]
+    rw [OppBase.rModes]
+    unfold Gt
+    rw [PhiT_equiv, Lt_mode_coe]
   have hL : ∀ i : ℕ, (Ts P₃).lModes (TsShift P₃) zT_ne_zero a α (l + i) g'
       = Gt A T Pr hrat hP₃ hP₂ (mode (A.YM a) (l + i) x) y g := by
     intro i
     rw [OppBase.lModes, Ts_back, OppBase.yR_congr _ (show -zT = (-1 : ℂ) by norm_num) _
-      neg_one_ne_zero', hαdef, Gt, ← PhiT_M, regularRepR_mode]
-  rw [LinearMap.sub_apply, hmix, LinearMap.coeFn_sum, Finset.sum_apply, LinearMap.coeFn_sum,
+      neg_one_ne_zero', hαdef]
+    unfold Gt
+    rw [← PhiT_M, regularRepR_mode]
+  rw [LinearMap.sub_apply, hmix, LinearMap.coe_sum, Finset.sum_apply, LinearMap.coe_sum,
     Finset.sum_apply] at h3g
   simp only [LinearMap.smul_apply, smul_eq_mul, hR, hL] at h3g
   have e1 : (-zT) = (-1 : ℂ) := by norm_num

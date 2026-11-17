@@ -43,16 +43,16 @@ theorem largePrimeGaussBoundaryRelations_of_generator_and_higher
   · have hk1 : k = 1 := by omega
     subst k
     have h2 : Nat.Coprime 2 p := by
-      simpa only [pow_one] using (primePower_coprime_two_three (k := 1) hp hp5).1
+      simpa only [pow_one] using! (primePower_coprime_two_three (k := 1) hp hp5).1
     have h3 : Nat.Coprime 3 p := by
-      simpa only [pow_one] using (primePower_coprime_two_three (k := 1) hp hp5).2
+      simpa only [pow_one] using! (primePower_coprime_two_three (k := 1) hp hp5).2
     have htp : TorusGeneratorRelations p h2 := by
-      simpa only [pow_one] using ht p 1 hp hp5 (by omega)
+      simpa only [pow_one] using! ht p 1 hp hp5 (by omega)
     have hl := gaussLowerRelations_prime_of_torusGeneratorRelations hp h2 h3 htp
     have hbp : GaussBoundaryRelations p h2 := by
       intro E _ π hs hc X Y hX hY hgen hn g _
       exact hl E π hs hc X Y hX hY hgen hn g
-    simpa only [pow_one] using hbp
+    simpa only [pow_one] using! hbp
 
 /-- Exact remaining work: the complementary generator family and higher-power boundaries. -/
 theorem largePrimeRootRelations_iff_mod_four_three_and_higher_boundary :

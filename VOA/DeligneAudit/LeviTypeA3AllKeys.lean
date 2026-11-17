@@ -17,16 +17,16 @@ private theorem radicalWord_mem_cyc (l : List (Fin 3 × ℕ)) :
       VOA.DeligneAudit.UnivG.cycSubG ρ w := by
   induction l with
   | nil =>
-      simpa [radicalWord] using
+      simpa [radicalWord] using!
         (VOA.DeligneAudit.UnivG.wordOp_mem_cycSubG ρ w [])
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       fin_cases i
-      · simpa [radicalWord, radicalOp, F] using
+      · simpa [radicalWord, radicalOp, F] using!
           VOA.DeligneAudit.UnivG.cycSubG_inv ρ w 6 s ih
-      · simpa [radicalWord, radicalOp, F] using
+      · simpa [radicalWord, radicalOp, F] using!
           VOA.DeligneAudit.UnivG.cycSubG_inv ρ w 7 s ih
-      · simpa [radicalWord, radicalOp, F] using
+      · simpa [radicalWord, radicalOp, F] using!
           VOA.DeligneAudit.UnivG.cycSubG_inv ρ w 8 s ih
 
 private theorem keyLayer_le_cyc (k : A3RadicalKey) :
@@ -57,7 +57,7 @@ private theorem radical_list_mem_key : ∀ (l : List (Fin 15 × ℕ)),
   | nil =>
       intro _
       exact ⟨a3WordKey [], by
-        simpa [wordOp, radicalWord] using
+        simpa [wordOp, radicalWord] using!
           (a3_radicalWord_mem_own_key ρ w ([] : List (Fin 3 × ℕ)))⟩
   | cons x l ih =>
       intro hl
@@ -67,15 +67,15 @@ private theorem radical_list_mem_key : ∀ (l : List (Fin 15 × ℕ)),
       rcases hl.1 with hcol | hcol | hcol
       · subst col
         exact ⟨a3KeyInsert 0 r k, by
-          simpa [wordOp, radicalOp, F] using
+          simpa [wordOp, radicalOp, F] using!
             a3RadicalOp_maps_key ρ w 0 r k hk⟩
       · subst col
         exact ⟨a3KeyInsert 1 r k, by
-          simpa [wordOp, radicalOp, F] using
+          simpa [wordOp, radicalOp, F] using!
             a3RadicalOp_maps_key ρ w 1 r k hk⟩
       · subst col
         exact ⟨a3KeyInsert 2 r k, by
-          simpa [wordOp, radicalOp, F] using
+          simpa [wordOp, radicalOp, F] using!
             a3RadicalOp_maps_key ρ w 2 r k hk⟩
 
 private theorem levi_colour_range (col : Fin 15)
@@ -115,17 +115,17 @@ theorem a3_cycSubG_eq_leviClosure_allKeys (a b c : ℕ)
       ((le_iSup (fun j => a3KeyLayer ρ w j) k) hk)
   clear hr
   induction l with
-  | nil => simpa [wordOp] using hr'
+  | nil => simpa [wordOp] using! hr'
   | cons x l ih =>
       rcases x with ⟨col, s⟩
       simp only [List.forall_cons] at hl
       by_cases hc : col = 12
       · subst col
-        simpa [wordOp, C] using
+        simpa [wordOp, C] using!
           a3LeviClosure_extra_inv ρ _
             (fun t => a3AllKeySpan_extra_inv ρ w a b c h t) s (ih hl.2)
       · obtain ⟨i, rfl⟩ := levi_colour_range col hl.1 hc
-        simpa [wordOp, C] using a3LeviClosure_inv ρ _ i s (ih hl.2)
+        simpa [wordOp, C] using! a3LeviClosure_inv ρ _ i s (ih hl.2)
 
 end VOA.DeligneAudit.A3Sector
 

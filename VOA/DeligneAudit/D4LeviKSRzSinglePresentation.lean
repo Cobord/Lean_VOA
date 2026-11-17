@@ -52,8 +52,8 @@ theorem rz_single_shift_family_prefix
     (by intro t; exact Or.inr (Or.inr rfl)) P hP
   rw [rz_single_presentation]
   have hr := rz_top_prefix ρ w m h [] [] [] 1 s i
-    (by omega) hks hi (by simpa using hkey)
-  simpa using hr
+    (by omega) hks hi (by simpa using! hkey)
+  simpa using! hr
 
 end VOA.DeligneAudit.D4Levi
 

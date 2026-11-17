@@ -34,7 +34,7 @@ theorem ofPS_coeff_nat (F : S) (n : ℕ) : (ofPS F).coeff (n : ℤ) = coeff n F 
 theorem ofPS_coeff_neg (F : S) (g : ℤ) (hg : g < 0) : (ofPS F).coeff g = 0 := by
   rw [ofPS, HahnSeries.ofPowerSeries_apply, HahnSeries.embDomain_notin_range]
   rintro ⟨n, hn⟩
-  simp only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at hn
+  have hn' : ((n : ℕ) : ℤ) = g := hn
   omega
 
 /-- A linear map of `R`, coefficientwise on `H`. -/
@@ -268,8 +268,7 @@ theorem prod_flatMap' (l : List V) (f : V → List S) :
 
 theorem PthetaS_eq_list : PthetaS = (D4F.factorsPtheta.map linOf).prod := by
   rw [prod_linOf, factorsPtheta_tri, PthetaS, List.map_flatMap, prod_flatMap']
-  congr 1
-  apply List.map_congr_left
+  refine congrArg List.prod (List.map_congr_left ?_)
   intro v _
   exact pThetaFactor_eq v
 

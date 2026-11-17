@@ -30,6 +30,11 @@ blocks of 2048 vectors `x_n`, matching `(T_s⁺)₂ = ⊕_j h_{w_j}(−½) ⊗ T
 Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -205,7 +210,10 @@ theorem hvec_single (a : Fin (rank leech)) : hvec (Pi.single a 1) = X (0, cc a) 
 theorem hvec_mem_gradingT (v : Fin (rank leech) → ℂ) : hvec v ∈ gradingT 24 1 := by
   refine Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ ?_
   have := MvPolynomial.isWeightedHomogeneous_X ℂ (wT (r := 24)) (0, cc a)
-  simpa using this
+  first
+    | simpa using this
+    | exact TwistedHeisenberg.mem_gradingT.mpr (by simpa using this)
+    | exact this
 
 /-- `h_v(−½) ⊗ t`. -/
 noncomputable def hT (v : Fin (rank leech) → ℂ) (t : TLeechT) : Tw := hvec v ⊗ₜ t

@@ -32,7 +32,7 @@ theorem coeK_thP (i : ℤ) : coeK (thP i) = D4K.thK i := by
   · rw [map_zero]
 
 /-- `f ↦ ∑_v f(v) θ(-v₀)`. -/
-def ctP (f : R') : P := f.sum fun v c => c * thP (-(v 0))
+def ctP (f : R') : P := f.coeff.sum fun v c => c * thP (-(v 0))
 
 theorem ctP_add (f g : R') : ctP (f + g) = ctP f + ctP g :=
   Finsupp.sum_add_index' (fun _ => zero_mul _) (fun _ _ _ => add_mul _ _ _)
@@ -72,21 +72,21 @@ theorem ThX_eq : ThX = (1 - PowerSeries.C (mono (-2))) * E2Psi := by
   ring
 
 theorem L_sum_apply {ι : Type*} (s : Finset ι) (f : ι → L) (i : ℤ) :
-    (∑ x ∈ s, f x) i = ∑ x ∈ s, (f x) i := by
+    (∑ x ∈ s, f x).coeff i = ∑ x ∈ s, (f x).coeff i := by
   classical
   induction s using Finset.induction_on with
   | empty => rfl
   | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, L_add_apply, ih]
 
 theorem negSign_mul_apply (j : ℤ) (f : L) (i : ℤ) :
-    ((negSign j : L) * f) i = (negSign j : ℚ) * f i := by
+    ((negSign j : L) * f).coeff i = (negSign j : ℚ) * f.coeff i := by
   rw [negSign_eq, negSign_eq]
   split_ifs
   · rw [one_mul, one_mul]
   · rw [neg_one_mul, neg_one_mul]; rfl
 
 theorem coeff_map_dbl_Psi (b : ℕ) (i : ℤ) :
-    (coeff b (PowerSeries.map (embL dbl) Psi)) i =
+    (coeff b (PowerSeries.map (embL dbl) Psi)).coeff i =
       if Even i ∧ pentExp (i / 2) = b then (negSign (i / 2) : ℚ) else 0 := by
   rw [coeff_map, Psi, coeff_lat, map_sum, L_sum_apply]
   simp only [map_mul, embL_negSign, embL_mono, negSign_mul_apply, mono_apply]
@@ -105,17 +105,10 @@ theorem coeff_map_dbl_Psi (b : ℕ) (i : ℤ) :
     rw [mem_fib hbox_pent] at hj
     rw [show i / 2 = j by omega]; exact hj
 
-theorem mono_mul_apply (k : ℤ) (f : L) (i : ℤ) : (mono k * f) i = f (i - k) := by
-  induction f using AddMonoidAlgebra.induction_linear with
-  | zero => rw [mul_zero]; rfl
-  | add f g hf hg => rw [mul_add, L_add_apply, hf, hg, L_add_apply]
-  | single j c =>
-      rw [mono, AddMonoidAlgebra.single_mul_single, one_mul]
-      show (Finsupp.single (k + j) c) i = (Finsupp.single j c) (i - k)
-      rw [Finsupp.single_apply, Finsupp.single_apply]
-      split_ifs <;> first | rfl | (exfalso; omega)
+theorem mono_mul_apply (k : ℤ) (f : L) (i : ℤ) : (mono k * f).coeff i = f.coeff (i - k) := by
+  rw [mono, AddMonoidAlgebra.coeff_single_mul_apply, one_mul, neg_add_eq_sub]
 
-theorem coeff_E2Psi (a : ℕ) (i : ℤ) : (coeff a E2Psi) i =
+theorem coeff_E2Psi (a : ℕ) (i : ℤ) : (coeff a E2Psi).coeff i =
     if Even i ∧ 2 * pentExp (i / 2) = a then (negSign (i / 2) : ℚ) else 0 := by
   rw [E2Psi, coeff_expand]
   split_ifs with h1 h2 h2
@@ -128,7 +121,7 @@ theorem coeff_X_sq_pow (t a : ℕ) : coeff a (((X : P) ^ 2) ^ t) = if a = 2 * t 
   rw [← pow_mul, coeff_X_pow]
 
 /-- **The `x^i`-coefficient of `Θ` is `θ_i`.** -/
-theorem coeff_ThX (a : ℕ) (i : ℤ) : (coeff a ThX) i = coeff a (thP i) := by
+theorem coeff_ThX (a : ℕ) (i : ℤ) : (coeff a ThX).coeff i = coeff a (thP i) := by
   rw [ThX_eq, sub_mul, one_mul, map_sub, coeff_C_mul, L_sub_apply, mono_mul_apply, coeff_E2Psi, coeff_E2Psi,
     thP]
   by_cases hi : Even i
@@ -137,15 +130,16 @@ theorem coeff_ThX (a : ℕ) (i : ℤ) : (coeff a ThX) i = coeff a (thP i) := by
     have e2 : (j + j - -2) / 2 = j + 1 := by omega
     have ev2 : Even (j + j - -2) := ⟨j + 1, by ring⟩
     have ev1 : Even (j + j) := ⟨j, rfl⟩
-    simp only [e1, e2, ev1, ev2, true_and, if_true]
+    rw [ite_and, ite_and]
+    simp only [if_pos ev1, if_pos ev2]
+    rw [e1, e2]
     have hc : ((-1 : P)) ^ j.natAbs = PowerSeries.C ((-1 : ℚ) ^ j.natAbs) := by
       rw [map_pow, map_neg, map_one]
     rw [hc, coeff_C_mul, map_add, coeff_X_sq_pow, coeff_X_sq_pow]
     have hn : (negSign (j + 1) : ℚ) = -negSign j := by rw [negSign_add]; simp [negSign]
     rw [hn, show (negSign j : ℚ) = (-1) ^ j.natAbs from rfl]
-    simp only [triC, pentExp]
-    simp only [@eq_comm ℕ a]
-    split_ifs <;> ring
+    rw [show triC j = pentExp j from rfl, show triC (j + 1) = pentExp (j + 1) from rfl]
+    split_ifs <;> first | (exfalso; omega) | ring
   · have hi2 : ¬ Even (i - -2) := by
       intro h; apply hi; obtain ⟨t, ht⟩ := h; exact ⟨t - 1, by omega⟩
     rw [if_neg (fun h => hi h.1), if_neg (fun h => hi2 h.1), if_neg hi, map_zero, sub_zero]
@@ -224,12 +218,12 @@ theorem rhs_monomial (v : D4K.V) (p : P) (k : ℕ) :
 
 /-- Truncation of an `R'`-series as a finite sum of monomials. -/
 def trR (K : ℕ) (F : PowerSeries R') : PowerSeries R' :=
-  ∑ x ∈ (Finset.range K).sigma (fun n => (coeff n F).support),
-    PowerSeries.C (AddMonoidAlgebra.single x.2 ((coeff x.1 F) x.2)) * X ^ x.1
+  ∑ x ∈ (Finset.range K).sigma (fun n => (coeff n F).coeff.support),
+    PowerSeries.C (AddMonoidAlgebra.single x.2 ((coeff x.1 F).coeff x.2)) * X ^ x.1
 
-theorem R'_sum_single (f : R') : ∑ v ∈ f.support, AddMonoidAlgebra.single v (f v) = f := by
-  show (Finsupp.sum (f : D4K.V →₀ P) Finsupp.single) = f
-  exact Finsupp.sum_single f
+theorem R'_sum_single (f : R') :
+    ∑ v ∈ f.coeff.support, AddMonoidAlgebra.single v (f.coeff v) = f :=
+  AddMonoidAlgebra.sum_coeff_single f
 
 theorem agree_trR (K : ℕ) (F : PowerSeries R') : AgreeTo K F (trR K F) := by
   apply AgreeTo.of_coeff

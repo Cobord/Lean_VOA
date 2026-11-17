@@ -59,10 +59,10 @@ theorem simple_mode_zero (w : V) (weight : Fin 3 → ℕ)
   have hH : ∀ m, Hm (m + 1) w = 0 :=
     fun m => h.cartan_pos i (m + 1) (by omega)
   have hN : (Fm 0 ^ (weight i + 1)) w = 0 := by
-    simpa only [Module.End.pow_apply] using h.lowering i
+    simpa only [Module.End.pow_apply] using! h.lowering i
   have hg := VOA.DeligneAudit.Garland.garland hEF hHF hFF hE hH
     1 (by omega) hN s (by omega)
-  simpa [VOA.DeligneAudit.Garland.Fs, Fm] using hg
+  simpa [VOA.DeligneAudit.Garland.Fs, Fm] using! hg
 
 /-- Every fixed node-1 radical depth is finite for an arbitrary local Weyl
 weight `(a,b,c)`. -/

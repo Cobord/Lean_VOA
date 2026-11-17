@@ -54,7 +54,8 @@ theorem vacuumChannelBracketSharp_of_inner (F : FusionChoice W) {D : VOA.Modular
   have hn0 : ∀ m, β m = (n m : ℂ) := fun m => by
     rw [hn m]; change (0 : ℂ) + _ = _; rw [zero_add]
   refine ⟨coef, v, n, fun m => ?_, fun τ => ?_⟩
-  · rw [mem_sqWeightSpace_iff, ← sqL_adjoint_zero, ← hn0 m]
+  · refine (mem_sqWeightSpace_iff W (n m : ℂ) (v m)).mpr ?_
+    rw [← sqL_adjoint_zero W (v m), ← hn0 m]
     exact hsq m
   · choose δx hδx hx using fun x : ι => hE x (moduleIntertwiner (lwOf D x).isMod) τ
     obtain ⟨δ, hδ, hle⟩ := exists_pos_le_fintype δx hδx

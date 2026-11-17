@@ -19,7 +19,7 @@ theorem binomial_alternating_sum (c : ℂ) (N : ℕ) :
       mul_neg_one, neg_mul, Finset.sum_neg_distrib]
     rw [ih]
     have hp : cbinom c (N + 1) = cbinom (c - 1) N + cbinom (c - 1) (N + 1) := by
-      simpa only [sub_add_cancel] using
+      simpa only [sub_add_cancel] using!
         (show cbinom ((c - 1) + 1) (N + 1) = cbinom (c - 1) N + cbinom (c - 1) (N + 1) by
           simp only [cbinom_eq_ringChoose, Ring.choose_succ_succ])
     rw [hp]
@@ -49,9 +49,9 @@ theorem vSchur_eq_nexp (β : ℤ) (N : ℕ) :
   induction N using Nat.strong_induction_on with
   | _ N ih =>
     cases N with
-    | zero => rw [vSchur_zero, nexp_zero]
+    | zero => rw [vSchur_zero (latP 1) β, nexp_zero]
     | succ N =>
-      rw [vSchur_succ, nexp_succ]
+      rw [vSchur_succ (latP 1) β N, nexp_succ]
       simp only [Nat.add_sub_cancel]
       congr 1
       apply Finset.sum_congr rfl
@@ -96,7 +96,7 @@ Equivalently, applying Δ to `E⁻(β,z₀)` multiplies its generating series
 by `(1+z₀ w)^(-2tβ)`. This keeps both formal variables. -/
 theorem delta_vSchur (t : ℂ) (β : ℤ) (N : ℕ) :
     delta t (vSchur (latP 1) β N) =
-      ∑ p ∈ Finset.antidiagonal N,
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
         Polynomial.C (vSchur (latP 1) β p.1) *
           (Polynomial.C (MvPolynomial.C (cbinom (-2 * t * β) p.2)) *
             Polynomial.X ^ p.2) := by
@@ -134,7 +134,7 @@ theorem deltaCoeffs_vSchur (t : ℂ) (β : ℤ) (N : ℕ) :
     deltaCoeffs t (vSchur (latP 1) β N) =
       ∑ q ∈ Finset.range (N + 1), Finsupp.single q
         (cbinom (-2 * t * β) q • vSchur (latP 1) β (N - q)) := by
-  change (delta t (vSchur (latP 1) β N)).toFinsupp = _
+  change (delta t (vSchur (latP 1) β N)).toFinsupp.coeff = _
   rw [delta_vSchur, Finset.Nat.sum_antidiagonal_eq_sum_range_succ
     (fun i k => Polynomial.C (vSchur (latP 1) β i) *
       (Polynomial.C (MvPolynomial.C (cbinom (-2 * t * β) k)) * Polynomial.X ^ k)),
@@ -153,7 +153,8 @@ theorem deltaCoeffs_vSchur (t : ℂ) (β : ℤ) (N : ℕ) :
     rw [← Polynomial.C_mul_X_pow_eq_monomial, MvPolynomial.smul_eq_C_mul]
     simp only [map_mul]
     ring
-  rw [hpoly]
-  exact map_sum (Polynomial.toFinsuppIsoLinear Osc) _ _
+  rw [hpoly, Polynomial.toFinsupp_sum, AddMonoidAlgebra.coeff_sum]
+  refine Finset.sum_congr rfl fun q _ => ?_
+  rw [Polynomial.toFinsupp_monomial, AddMonoidAlgebra.coeff_single]
 
 end VOA.Classification.COne.OrbPos6

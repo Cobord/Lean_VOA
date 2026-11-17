@@ -47,14 +47,14 @@ private theorem pairTargetPureSpan_mul (a b c : ℕ)
           exact Submodule.subset_span ⟨F * G, rfl⟩
       | zero => simp
       | add Q R _ _ hQ hR =>
-          simpa only [mul_add] using S.add_mem hQ hR
+          simpa only [mul_add] using! S.add_mem hQ hR
       | smul t Q _ hQ =>
-          simpa only [mul_smul_comm] using S.smul_mem t hQ
+          simpa only [mul_smul_comm] using! S.smul_mem t hQ
   | zero => simp
   | add P R _ _ hP hR =>
-      simpa only [add_mul] using S.add_mem hP hR
+      simpa only [add_mul] using! S.add_mem hP hR
   | smul t P _ hP =>
-      simpa only [smul_mul_assoc] using S.smul_mem t hP
+      simpa only [smul_mul_assoc] using! S.smul_mem t hP
 
 private theorem pairTargetPureSpan_one (a b c : ℕ) :
     (1 : MvPolynomial (PairTarget a b c) ℂ) ∈ pairTargetPureSpan a b c := by
@@ -75,21 +75,21 @@ private theorem pairTargetPureSpan_targetPower (a b c : ℕ)
       (⟨psum (Fin a) ℂ r, psum_isSymmetric (Fin a) ℂ r⟩, 1, 1)
     have h : pairTargetPure a b c F = pairTargetPower a b c 0 r := by
       simp [F, pairTargetPure, pairTargetPower, pairTargetXPsum, psum]
-    simpa only [h] using
+    simpa only [h] using!
       (Submodule.subset_span ⟨F, rfl⟩ :
         pairTargetPure a b c F ∈ pairTargetPureSpan a b c)
   · let F : PairTargetFactors a b c :=
       (1, ⟨psum (Fin b) ℂ r, psum_isSymmetric (Fin b) ℂ r⟩, 1)
     have h : pairTargetPure a b c F = pairTargetPower a b c 1 r := by
       simp [F, pairTargetPure, pairTargetPower, targetYPsum, psum]
-    simpa only [h] using
+    simpa only [h] using!
       (Submodule.subset_span ⟨F, rfl⟩ :
         pairTargetPure a b c F ∈ pairTargetPureSpan a b c)
   · let F : PairTargetFactors a b c :=
       (1, 1, ⟨psum (Fin c) ℂ r, psum_isSymmetric (Fin c) ℂ r⟩)
     have h : pairTargetPure a b c F = pairTargetPower a b c 2 r := by
       simp [F, pairTargetPure, pairTargetPower, pairTargetZPsum, psum]
-    simpa only [h] using
+    simpa only [h] using!
       (Submodule.subset_span ⟨F, rfl⟩ :
         pairTargetPure a b c F ∈ pairTargetPureSpan a b c)
 

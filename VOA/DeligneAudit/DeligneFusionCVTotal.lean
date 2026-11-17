@@ -217,11 +217,11 @@ private theorem fusion_zero_total {V : Type} [AddCommGroup V] [Module ℂ V]
     rcases (show c.val < 3 ∨ (3 ≤ c.val ∧ c.val < 6) ∨ 6 ≤ c.val by omega) with
       hc | hc | hc
     · exact hW.raising c hc r
-    · simpa only [Nat.zero_add] using
+    · simpa only [Nat.zero_add] using!
         f_trunc_up hc.1 hc.2 (hW.fusion c hc.1 hc.2)
           (fun k hk => hW.cartan_pos 6 (by decide) k hk) r
     · rcases Nat.eq_zero_or_pos r with rfl | hr
-      · simpa using hW.cartan_zero c hc
+      · simpa using! hW.cartan_zero c hc
       · exact hW.cartan_pos c hc r hr
   have hword : ∀ l : List (UnivG.Ltr 8), wordOp R l w = if l = [] then w else 0 := by
     intro l
@@ -259,7 +259,7 @@ private theorem fusion_zero_total {V : Type} [AddCommGroup V] [Module ℂ V]
       haveI : FiniteDimensional ℂ (cycDeg R w 0) :=
         Submodule.finiteDimensional_of_le hspan
       exact (Submodule.finrank_mono hspan).trans (by
-        simpa using finrank_span_le_card ({w} : Set V))
+        simpa using! finrank_span_le_card ({w} : Set V))
     · rw [if_neg hd, hpos d hd]
       simp
   calc
@@ -292,7 +292,7 @@ private theorem fusionTotalDim_of_cvZero_bounds
           exact Submodule.finrank_map_le _ _
       _ ≤ Module.finrank ℂ (CVMod (0, 0) (0, 0) (0, 0) m) :=
         sum_finrank_cycDeg_le (0, 0) (0, 0) (0, 0) m (Finset.range B)
-      _ ≤ 8 ^ m := by simpa only [cvCount, Nat.zero_add, pow_zero, one_mul] using hdim
+      _ ≤ 8 ^ m := by simpa only [cvCount, Nat.zero_add, pow_zero, one_mul] using! hdim
 
 /-- The headline total-dimension input follows from precisely the two explicit
 unproved base families, via actual universal recurrences and separated degrees.

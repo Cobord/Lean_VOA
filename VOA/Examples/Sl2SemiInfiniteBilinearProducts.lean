@@ -132,8 +132,9 @@ end TensorCoefficients
 /-- A level-zero word has its length parity. -/
 theorem ghostZeroWord_parity (l : List (Fin 2)) :
     ghostZeroWord l ∈ bcGhostSVA.parity (l.length : ZMod 2) := by
-  simpa only [List.length_map] using stWordSF_mem_evenOdd
-    (l.map fun a => ((0, a) : ℕ × Fin 2))
+  have h := stWordSF_mem_evenOdd (l.map fun a => ((0, a) : ℕ × Fin 2))
+  rw [List.length_map] at h
+  exact h
 
 /-- A singleton word has the basic ghost field. -/
 theorem ghostZeroWord_single_field (a : Fin 2) :
@@ -211,8 +212,9 @@ theorem tenY_last_unit_word (a : Fin 2) (l m n : List (Fin 2)) (s : ℤ) :
   have h := tenY_right_unit_homogeneous ghostPairSVA bcGhostSVA
     (ghostZeroWord l ⊗ₜ[ℂ] ghostZeroWord m) (ghostZeroWord [a]) (ghostZeroWord n)
     (ghostZeroWord_parity [a]) hp s
-  simpa only [ghostZeroWord_single_field, List.length_cons, List.length_nil,
-    Nat.cast_one, zero_add] using h
+  simp only [ghostZeroWord_single_field, List.length_cons, List.length_nil,
+    Nat.cast_one, zero_add] at h
+  exact h
 
 /-- A singleton unit field in the right factor, including the parity sign. -/
 theorem tenY_right_unit_word (a : Fin 2) (l m : List (Fin 2)) (s : ℤ) :
@@ -224,8 +226,9 @@ theorem tenY_right_unit_word (a : Fin 2) (l m : List (Fin 2)) (s : ℤ) :
   have h := tenY_right_unit_homogeneous bcGhostSVA bcGhostSVA
     (ghostZeroWord l) (ghostZeroWord [a]) (ghostZeroWord m)
     (ghostZeroWord_parity [a]) (ghostZeroWord_parity l) s
-  simpa only [ghostZeroWord_single_field, List.length_cons, List.length_nil,
-    Nat.cast_one, zero_add] using h
+  simp only [ghostZeroWord_single_field, List.length_cons, List.length_nil,
+    Nat.cast_one, zero_add] at h
+  exact h
 
 set_option maxHeartbeats 800000 in
 /-- Explicit exterior tensor representative of every quadratic ghost state. -/

@@ -82,7 +82,7 @@ theorem thetaRef_eq_charTheta (τ : ℂ) : thetaRef τ = charTheta 1 1 1 τ := b
 
 theorem isThetaTypeForm_thetaRef {N : ℕ} (h24 : 24 ∣ N) : IsThetaTypeForm N thetaRef := by
   have h4 : 4 ∣ N := (show 4 ∣ 24 by norm_num).trans h24
-  have := isThetaTypeForm_rankOneTheta h24 0 (r := 1) (t := 1) one_pos one_pos (by simpa using h4)
+  have := isThetaTypeForm_rankOneTheta h24 0 (r := 1) (t := 1) one_pos one_pos (by simpa using! h4)
   exact this.congr fun τ _ => (thetaRef_eq_rankOneTheta_nat τ).symm
 
 theorem thetaTypeCoeff_thetaRef {N : ℕ} (h24 : 24 ∣ N) (k : ℕ) :
@@ -206,12 +206,12 @@ theorem boundedCoeff24_of_qExpPrinciple24 (j : ℕ) (hQ : QExpPrinciple24 (1 + j
 /-- Weight one (`g ↦ g θ`). -/
 theorem boundedCoeff24_of_qExpPrinciple24_one (hQ : QExpPrinciple24 1) :
     SerreStarkBoundedCoeff24 :=
-  boundedCoeff24_of_qExpPrinciple24 0 (by simpa using hQ)
+  boundedCoeff24_of_qExpPrinciple24 0 (by simpa using! hQ)
 
 /-- Weight two (`g ↦ g θ³`). -/
 theorem boundedCoeff24_of_qExpPrinciple24_two (hQ : QExpPrinciple24 2) :
     SerreStarkBoundedCoeff24 :=
-  boundedCoeff24_of_qExpPrinciple24 1 (by simpa using hQ)
+  boundedCoeff24_of_qExpPrinciple24 1 (by simpa using! hQ)
 
 end SSHecke
 

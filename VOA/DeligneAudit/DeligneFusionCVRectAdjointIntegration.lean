@@ -84,7 +84,9 @@ theorem primitive_preserves_of_orders (X Y Z : PowerSeries (Polynomial A))
         change (ℓ.comp primitive) (M * (c * Q)) = 0
         rw [← mul_assoc]
         exact ih (M * c)
-  simpa only [one_mul] using hstrong P hP 1
+  have h1 := hstrong P hP 1
+  rw [one_mul] at h1
+  exact LinearMap.mem_ker.mpr h1
 
 /-- The special adjoint x-site has actual primitive image in the source
 ideal plus the zero-mode-free linear subspace. Its other x-sites have

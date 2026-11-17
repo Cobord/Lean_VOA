@@ -51,7 +51,7 @@ theorem pairXZ_split_adjoint_prefix_monomial
     rw [keyPrefix_eq_higher ρ w m h i hi, hkey]
     exact keyOrbit_le_higher ρ w m _ _
       (pairXZ_uZero_split_higher m a b c deg d xs us.reverse
-        (by simpa using hn) hx hu)
+        (by simpa using! hn) hx hu)
       (keyLayer_le_orbit ρ w _ (radicalWord_mem_key ρ w _))
   rw [pairModeWord_spectator_adjoint _ w
     (fThree_source_mode_zero ρ w m h)]
@@ -68,7 +68,7 @@ theorem pairXZ_split_adjoint_prefix_monomial
   simp only [List.map_map, Function.comp_def]
   apply list_sum_mem N
   intro qu hqu
-  exact hterm qx qu (by simpa using hqx) (by simpa using hqu)
+  exact hterm qx qu (by simpa using! hqx) (by simpa using! hqu)
 
 /-- The higher-prefix source statement extends linearly to every XZ
     mode polynomial. -/
@@ -100,7 +100,7 @@ theorem pairXZ_split_adjoint_prefix
       exact pairXZ_split_adjoint_prefix_monomial ρ w m i a b c deg
         h hi hkey d xs us hn
   | add P Q ihP ihQ =>
-      simpa only [map_add, pairAdjoint_add, LinearMap.add_apply] using
+      simpa only [map_add, pairAdjoint_add, LinearMap.add_apply] using!
         (keyPrefix ρ w m i).add_mem ihP ihQ
 
 end VOA.DeligneAudit.D4Levi

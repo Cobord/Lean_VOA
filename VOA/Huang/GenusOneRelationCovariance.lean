@@ -55,7 +55,7 @@ theorem insertionNegTwoVector_eq {a : V} {k : ℕ} (ha : a ∈ W.grading (k : �
   have hp := finsum_nat_peel_module (K := K) (f := fun m : ℕ =>
     (((2 * (m + 1) - 1 : ℕ) : ℂ) * zhuGC (m + 1) z) •
       sqAct A a k (2 * (m + 1) - 2 : ℤ) w)
-    (fun m hm => by dsimp only; rw [hK m hm, smul_zero])
+    (fun m hm => by rw [hK m hm, smul_zero])
   rw [insertionNegTwoVector, hp]
   change _ = sqMode A (-2) a w + _ + _
   simp only [sqMode_of_mem_grading A ha, Int.toNat_natCast]
@@ -86,7 +86,7 @@ theorem sqMode_zero_mem_relation (A : OrdVModule W M) (z : ℂ) (a : V) (w : M) 
         sqMode_of_mem_grading A W.vacuum_mem_grading_zero]
       simp [sqAct_vacuum]
     · have hx' : x ∈ W.grading (k.toNat : ℤ) := by
-        simpa [Int.toNat_of_nonneg (le_of_lt hk)] using hx
+        simpa [Int.toNat_of_nonneg (le_of_lt hk)] using! hx
       rw [sqMode_of_mem_grading A hx]
       exact Submodule.subset_span ⟨k.toNat, by omega, x, hx', w, Or.inl rfl⟩
   · simp
@@ -116,7 +116,7 @@ theorem negVector_mem_relation (A : OrdVModule W M) (z : ℂ) (a : V) (w : M) :
       simp only [ht, smul_zero, finsum_zero, add_zero]
       exact Submodule.zero_mem _
     · have hx' : x ∈ W.grading (k.toNat : ℤ) := by
-        simpa [Int.toNat_of_nonneg (le_of_lt hk)] using hx
+        simpa [Int.toNat_of_nonneg (le_of_lt hk)] using! hx
       have hneg : insertionNegTwoVector A x k.toNat z w ∈ insertionRelationSpace A z :=
         Submodule.subset_span ⟨k.toNat, by omega, x, hx', w, Or.inr rfl⟩
       have h0 := sqMode_zero_mem_relation A z x w

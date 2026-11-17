@@ -31,13 +31,11 @@ noncomputable def compatibleSpaceInclusionHom {A₁ : WeakModule W M₁} {A₂ :
       rw [CompatibleSpace.mode_field,CompatibleSpace.mode_field,
         CompatibleSpace.action_homogeneous _ p hu,CompatibleSpace.action_homogeneous _ p hu]
       rfl
-    · dsimp only
-      have hS : mode (S.field (0 : V)) p=0 := by rw [map_zero]; rfl
+    · have hS : mode (S.field (0 : V)) p=0 := by rw [map_zero]; rfl
       have hT : mode (T.field (0 : V)) p=0 := by rw [map_zero]; rfl
       rw [hS,hT]
       rfl
     · intro u v hu hv
-      dsimp only at hu hv ⊢
       rw [map_add,map_add,mode_add,mode_add,LinearMap.add_apply,LinearMap.add_apply,
         Submodule.coe_add,Submodule.coe_add,hu,hv]
 

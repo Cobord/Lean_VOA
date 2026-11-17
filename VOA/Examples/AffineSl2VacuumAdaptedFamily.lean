@@ -103,7 +103,7 @@ theorem joint_vacuum_dimension (n : ℕ) (c : ℤ) :
         Fintype.card (Wak.Charged.JointIndex n (c+1)) := by
   have h := Module.finrank_eq_card_basis (vacuumAdaptedFamilyBasis 1 0 n c)
   rw [jointSpace_finrank] at h
-  simpa only [Fintype.card_sum] using h
+  simpa only [Fintype.card_sum] using! h
 
 end
 end VOA.AffineVOA.HighestModule

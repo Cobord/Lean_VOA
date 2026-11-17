@@ -249,7 +249,9 @@ theorem mkQ_H0E : LQ43.L43.smul ((QuotVOA.maxGradedIdeal voaSl2Adm).mkQ (current
       QuotVOA.quotientVOA_mkQ_smul hI hgr _ _ _,
     LQ43.smul_currentState_adm, currentState_def, H0E1, map_smul, ← currentState_def]
 
-/-- **`GradedImpliesRegular L43` is FALSE.**  Hence the earlier form of
+/-- **VACUOUS — do not cite.** The signature involves `GradedImpliesRegular LQ43.L43`, a type the library proves EMPTY (`oldHeadline_hypothesis_unsatisfiable`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`GradedImpliesRegular L43` is FALSE.**  Hence the earlier form of
 `LQ43.L43_isRigidGraded`, which took it as a hypothesis, was **vacuous**. -/
 theorem not_gradedImpliesRegular_L43 : ¬ GradedImpliesRegular LQ43.L43 := by
   intro h
@@ -283,7 +285,9 @@ theorem mkQ_F1E : LQ43.L43.smul ((QuotVOA.maxGradedIdeal voaSl2Adm).mkQ (current
     LQ43.smul_currentState_adm, currentState_def, F1E1, map_smul]
   rfl
 
-/-- **The weakening `GradedImpliesPoleZero L43` is FALSE too.**  So one cannot rescue the
+/-- **VACUOUS — do not cite.** The signature involves `GradedImpliesPoleZero LQ43.L43`, a type the library proves EMPTY (`oldHeadline_weakened_hypothesis_unsatisfiable`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The weakening `GradedImpliesPoleZero L43` is FALSE too.**  So one cannot rescue the
 refuted statement by asking only for the paper's constant `c` to vanish: `δ(L₀)` moves `c` by
 `2k`, and `k = -4/3 ≠ 0`.  This is precisely the failure of gauge-invariance of `c` *before* the
 [KQ] §6.2 normalisation. -/
@@ -420,8 +424,8 @@ theorem heis_X0_mem_gradingOne (k : ℂ) (hk : k ≠ 0) :
   have h : (MvPolynomial.X 0 : Fock) ∈ gradingW 1 := by
     have hX := MvPolynomial.isWeightedHomogeneous_X ℂ weightFn (0 : ℕ)
     rw [weightFn_apply] at hX
-    simpa using hX
-  simpa using mem_gradingZ_of_gradingW h
+    exact mem_gradingW.mpr (by simpa using hX)
+  exact mem_gradingZ_of_gradingW h
 
 /-- `α₍₀₎ = 0` on the free boson: the zero mode of the current annihilates everything. -/
 theorem heis_X0_smul_zero (k : ℂ) (hk : k ≠ 0) (v : Fock) :

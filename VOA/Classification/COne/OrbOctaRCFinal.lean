@@ -25,7 +25,7 @@ theorem candidate_remainder32 :
   · rw [hz, hx, octaProbe_L_pow, octaProbe_vacuum]
     norm_num
   · rw [octaProbe_L_pow, octaProbe_L_pow, octaProbe_vacuum, octaProbe_X, mul_one]
-    simpa only [mul_assoc] using neutral_mode32
+    simpa only [mul_assoc] using! neutral_mode32
   · rw [hz, hx, mul_zero, zero_add]
     exact charged_mode32.trans (mul_comm _ _)
 
@@ -44,7 +44,7 @@ theorem candidate_remainder34 :
   · rw [hz, hx, octaProbe_L_pow, octaProbe_vacuum]
     norm_num
   · rw [octaProbe_L_pow, octaProbe_L_pow, octaProbe_vacuum, octaProbe_X, mul_one]
-    simpa only [mul_assoc] using neutral_mode34
+    simpa only [mul_assoc] using! neutral_mode34
   · rw [hz, hx, mul_zero, zero_add]
     exact charged_mode34.trans (mul_comm _ _)
 

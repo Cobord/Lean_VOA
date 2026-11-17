@@ -38,7 +38,7 @@ open BraidRibbon
 theorem Lm1_pow_mem_weight {M : Type u} [AddCommGroup M] [Module ℂ M] (A : OrdVModule W M)
     {α : ℂ} {v : M} (hv : v ∈ A.weight α) (j : ℕ) : (A.Lm1 ^ j) v ∈ A.weight (α + j) := by
   induction j with
-  | zero => simpa using hv
+  | zero => simpa using! hv
   | succ j ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h := mode_mem_weight A W.conformalVector_mem_grading_two ih 0
@@ -272,7 +272,7 @@ theorem productEvaluation_skewP (p : Phase) {κ : ℂ} (hκ : ∀ n, p.c n = Com
       ∑ j ∈ Finset.range N, E * (sc j * (iterCoef F K (d.lowerK j) w *
         Complex.exp ((w - (d.lowerK j).α - (d.lowerK j).β) * (κ - Real.log (1 + r))))) := by
     intro w
-    rw [productWeightTerm_eq, prodCoef_skewP F p K d hN w, hκ]
+    rw [productWeightTerm_eq F (skewP p (tensorObj F Y Z) X T K) d w, prodCoef_skewP F p K d hN w, hκ]
     have hc : (1 + (r : ℂ)) ^ (d.δ - d.α - w) =
         Complex.exp ((Real.log (1 + r) : ℂ) * (d.δ - d.α - w)) := by
       rw [Complex.cpow_def_of_ne_zero (by exact_mod_cast hr0.ne'), show (1 + (r : ℂ)) =

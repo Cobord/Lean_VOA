@@ -13,6 +13,8 @@ highest vector of weight minus two. Its universal map embeds the full
 Verma module M(k,-2). The actual projection to the universal vacuum module
 kills this embedded module. No determinant or character premise is used.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open HighestNormalOrdering
@@ -28,7 +30,7 @@ uses actual creation independence, not a presumed singular-vector formula. -/
 theorem horizontalVector_ne_zero (k : ℂ) : horizontalVector k≠0 := by
   have hi := descendants_independent k 0 (highestVector k 0) (highestVector_ne_zero k 0)
   have he := hi.ne_zero (Finsupp.single (1,0) 1)
-  simpa [occupationWord,Wak.Charged.lowerLetter,currentWord,horizontalVector] using he
+  simpa [occupationWord,Wak.Charged.lowerLetter,currentWord,horizontalVector] using! he
 
 /-- Every noncreation current acts on the horizontal singular vector by
 the highest equations of weight minus two. -/
@@ -39,7 +41,6 @@ theorem horizontalVector_mode (k : ℂ) (a : Fin 3) (n : ℤ) (hn : ¬IsLower a 
   simp only [zero_smul,ite_self] at hh
   have hc := congrArg (fun T : End ℂ (Verma k 0) => T (highestVector k 0))
     (mode_comm k 0 a 1 n 0)
-  dsimp only at hc
   rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
     hh,map_zero,sub_zero] at hc
   change mode k 0 a n (horizontalVector k)=_ at hc
@@ -70,7 +71,7 @@ theorem horizontalVector_isHighest (k : ℂ) :
   degree := by
     have hc := congrArg (fun T : End ℂ (Verma k 0) => T (highestVector k 0))
       (degree_mode_comm k 0 1 0)
-    simpa [Ring.lie_def,degree_highest,horizontalVector] using hc
+    simpa [Ring.lie_def,degree_highest,horizontalVector] using! hc
   modes := horizontalVector_mode k
 
 /-- The actual affine-module map from weight minus two to weight zero,

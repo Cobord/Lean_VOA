@@ -96,7 +96,7 @@ theorem pairSeries_mem
           (mul_mem_of_sub NN (pair_monomial_mem _ _) ?_)
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ _ (by omega) _ _ _ _ _ hw' (mode_mem_weight_nat hu hw₂ hk) hw₃ hw₄
-    · simp only []; rw [ns_zero_w₁]; exact NN.zero_mem
+    · rw [ns_zero_w₁]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [ns_add_w₁]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [ns_smul_w₁]; exact smul_mem_of_sub NN a hx
   -- slot `z`
@@ -126,7 +126,7 @@ theorem pairSeries_mem
             (mul_mem_of_sub NN (pair_ιm'_geom_pow_mem _) ?_))
         simp only [Finset.mem_range] at hl
         exact IH' _ _ _ _ _ (by omega) _ _ _ _ _ hw₁ hw' (mode_mem_weight_nat hu hw₃ hl) hw₄
-    · simp only []; rw [ns_zero_w₂]; exact NN.zero_mem
+    · rw [ns_zero_w₂]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [ns_add_w₂]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [ns_smul_w₂]; exact smul_mem_of_sub NN a hx
   -- slot `x`
@@ -154,7 +154,7 @@ theorem pairSeries_mem
       · refine NN.sum_mem fun i hi => ?_
         simp only [Finset.mem_range] at hi
         exact IH' _ _ _ _ _ (by omega) _ _ _ _ _ hw₁ hw₂ hw' (mode_mem_weight_nat hu hw₄ hi)
-    · simp only []; rw [ns_zero_w₃]; exact NN.zero_mem
+    · rw [ns_zero_w₃]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [ns_add_w₃]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [ns_smul_w₃]; exact smul_mem_of_sub NN a hx
   -- slot `y`
@@ -181,7 +181,7 @@ theorem pairSeries_mem
       · refine NN.sum_mem fun k hk => smul_mem_of_sub NN _ ?_
         simp only [Finset.mem_range] at hk
         exact IH' _ _ _ _ _ (by omega) _ _ _ _ _ hw₁ hw₂ (mode_mem_weight_nat hu hw₃ hk) hw'
-    · simp only []; rw [ns_zero_w₄]; exact NN.zero_mem
+    · rw [ns_zero_w₄]; exact NN.zero_mem
     · intro x y _ _ hx hy; rw [ns_add_w₄]; exact NN.add_mem hx hy
     · intro a x _ hx; rw [ns_smul_w₄]; exact smul_mem_of_sub NN a hx
   -- output functional

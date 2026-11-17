@@ -59,7 +59,7 @@ theorem finiteActualSequence_first (self : Bool) (R : ℕ) (a : FiniteFockPBW se
         finiteBlockFock self R a 1 ⟨n-1,by omega⟩ v := by
     have he : n-1+1=n := by omega
     simpa only [finiteFirstDefect,LinearMap.sub_apply,LinearMap.comp_apply,
-      LinearMap.smul_apply,he] using sub_eq_zero.mp hd
+      LinearMap.smul_apply,he] using! sub_eq_zero.mp hd
   simp only [finiteActualSequence,dif_pos hn,dif_pos (by omega : n-1≤R)]
   exact actualFiberMap_positive_ward self n 1 (by omega) _ _ _
     (finiteBlockVerma_level self R a 1 ⟨n,by omega⟩ v)
@@ -79,7 +79,7 @@ theorem finiteActualSequence_second (self : Bool) (R : ℕ) (a : FiniteFockPBW s
           finiteBlockFock self R a 1 ⟨n-2,by omega⟩ v := by
       have he : n-2+2=n := by omega
       simpa only [finiteSecondDefect,LinearMap.sub_apply,LinearMap.comp_apply,
-        LinearMap.smul_apply,he,one_pow] using sub_eq_zero.mp hd
+        LinearMap.smul_apply,he,one_pow] using! sub_eq_zero.mp hd
     simp only [finiteActualSequence,dif_pos hn,dif_pos (by omega : n-2≤R),if_pos htwo]
     exact actualFiberMap_positive_ward self n 2 htwo _ _ _
       (finiteBlockVerma_level self R a 1 ⟨n,by omega⟩ v)
@@ -119,9 +119,9 @@ theorem finiteActualSequence_matches_vacuum (R : ℕ) (hR : R<100)
     exact vacuumProjection_spin (productState n (by omega))
   have hfg (n : ℕ) (hn : n≤R) : f n∈Wi.grading (n:ℤ) := by
     exact (Wi.grading _).smul_mem _ (by
-      simpa [actualChannelWeight] using finiteActualSequence_grading false R a v n hn)
+      simpa [actualChannelWeight] using! finiteActualSequence_grading false R a v n hn)
   have hgg (n : ℕ) (hn : n≤R) : g n∈Wi.grading (n:ℤ) := by
-    simpa only [g,dif_pos hn] using vacuumState_grading n (by omega)
+    simpa only [g,dif_pos hn] using! vacuumState_grading n (by omega)
   have hf1 (n : ℕ) (hp : 0<n) (hn : n≤R) : Wi.L 1 (f n)=c₁ n • f (n-1) := by
     change Wi.L 1 (vacuumCoefficient 0 • finiteActualSequence false R a v n)=_
     rw [map_smul,finiteActualSequence_first false R a v hrows n hp hn,smul_comm]
@@ -132,7 +132,7 @@ theorem finiteActualSequence_matches_vacuum (R : ℕ) (hR : R<100)
       rw [Nat.cast_sub (by omega : 1≤n)]
       norm_num
       ring
-    simpa only [Nat.cast_one,Nat.cast_ofNat,he] using vacuumState_positive n 1 (by omega) (by omega) (by omega)
+    simpa only [Nat.cast_one,Nat.cast_ofNat,he] using! vacuumState_positive n 1 (by omega) (by omega) (by omega)
   have hf2 (n : ℕ) (hp : 0<n) (hn : n≤R) :
       Wi.L 2 (f n)=if 2≤n then c₂ n • f (n-2) else 0 := by
     change Wi.L 2 (vacuumCoefficient 0 • finiteActualSequence false R a v n)=_
@@ -150,7 +150,7 @@ theorem finiteActualSequence_matches_vacuum (R : ℕ) (hR : R<100)
         rw [Nat.cast_sub htwo]
         norm_num
         ring
-      simpa only [Nat.cast_one,Nat.cast_ofNat,he] using vacuumState_positive n 2 (by omega) (by omega) htwo
+      simpa only [Nat.cast_one,Nat.cast_ofNat,he] using! vacuumState_positive n 2 (by omega) (by omega) htwo
     · rw [if_neg htwo]
       have hz := VOA.L_mem_grading Wi (vacuumState_grading n (by omega)) 2
       rw [Wi.positivity ((n:ℤ)-2) (by omega),Submodule.mem_bot] at hz
@@ -161,7 +161,7 @@ theorem finiteActualSequence_matches_vacuum (R : ℕ) (hR : R<100)
     exact vacuumState_ground.symm
   have hu := vacuum_ward_sequence_unique R hR c₁ c₂ f g hfC hgC hfg hgg hf1 hg1 hf2 hg2 hz
   intro n hn
-  simpa only [f,g,dif_pos hn] using (hu n hn).symm
+  simpa only [f,g,dif_pos hn] using! (hu n hn).symm
 
 -- The spin-six comparison retains the below-ground L₂ boundary equation.
 set_option maxHeartbeats 1000000 in
@@ -179,9 +179,9 @@ theorem finiteActualSequence_matches_sixth (R : ℕ) (hR : R<64)
     if hn : n≤R then (sixthState (36+n) (by omega)).val else 0
   have hfg (n : ℕ) (hn : n≤R) : f n∈Wi.grading ((36+n:ℕ):ℤ) := by
     exact (Wi.grading _).smul_mem _ (by
-      simpa [actualChannelWeight] using finiteActualSequence_grading true R a v n hn)
+      simpa [actualChannelWeight] using! finiteActualSequence_grading true R a v n hn)
   have hgg (n : ℕ) (hn : n≤R) : g n∈Wi.grading ((36+n:ℕ):ℤ) := by
-    simpa only [g,dif_pos hn] using sixthState_grading (36+n) (by omega)
+    simpa only [g,dif_pos hn] using! sixthState_grading (36+n) (by omega)
   have hf1 (n : ℕ) (hp : 0<n) (hn : n≤R) : Wi.L 1 (f n)=c₁ n • f (n-1) := by
     change Wi.L 1 (icoSixthCoupling • finiteActualSequence true R a v n)=_
     rw [map_smul,finiteActualSequence_first true R a v hrows n hp hn,smul_comm]
@@ -194,7 +194,7 @@ theorem finiteActualSequence_matches_sixth (R : ℕ) (hR : R<64)
       norm_num
       ring
     have hindex : 36+n-1=36+(n-1) := by omega
-    simpa only [Nat.cast_one,Nat.cast_ofNat,he,hindex] using sixthState_positive (36+n) 1 (by omega) (by omega) (by omega)
+    simpa only [Nat.cast_one,Nat.cast_ofNat,he,hindex] using! sixthState_positive (36+n) 1 (by omega) (by omega) (by omega)
   have hf2 (n : ℕ) (hp : 0<n) (hn : n≤R) :
       Wi.L 2 (f n)=if 2≤n then c₂ n • f (n-2) else 0 := by
     change Wi.L 2 (icoSixthCoupling • finiteActualSequence true R a v n)=_
@@ -215,7 +215,7 @@ theorem finiteActualSequence_matches_sixth (R : ℕ) (hR : R<64)
         norm_num
         ring
       have hindex : 36+n-2=36+(n-2) := by omega
-      simpa only [Nat.cast_one,Nat.cast_ofNat,he,hindex] using sixthState_positive (36+n) 2 (by omega) (by omega) (by omega)
+      simpa only [Nat.cast_one,Nat.cast_ofNat,he,hindex] using! sixthState_positive (36+n) 2 (by omega) (by omega) (by omega)
     · rw [if_neg htwo]
       have he := sixthState_positive (36+n) 2 (by omega) (by omega) (by omega)
       rw [sixthState_below (36+n-2) (by omega),smul_zero] at he
@@ -226,6 +226,6 @@ theorem finiteActualSequence_matches_sixth (R : ℕ) (hR : R<64)
     exact sixthState_ground.symm
   have hu := sixth_ward_sequence_unique R hR c₁ c₂ f g hfg hgg hf1 hg1 hf2 hg2 hz
   intro n hn
-  simpa only [f,g,dif_pos hn] using (hu n hn).symm
+  simpa only [f,g,dif_pos hn] using! (hu n hn).symm
 
 end VOA.Classification.COne.OrbIcoV

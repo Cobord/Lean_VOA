@@ -65,7 +65,7 @@ theorem op_comm_end6 (a b : Fin 78) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 /-- One Heisenberg step. -/
 theorem heis_step6 {a b z : Fin 78} {c : ℤ} (hc : c ≠ 0)
@@ -118,12 +118,12 @@ theorem root_sharpen6 {e γ : Fin 78} (hs : RootSl2E6 e γ) {w : V} {k : ℕ}
         rw [this]; simp
     rw [Finset.sum_congr rfl fun c _ => hpt c, ← Int.cast_sum, h3d]
     split_ifs <;> simp
-  have hin : ∀ c x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
-      ∑ d : Fin 78, E6sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using ρ.comm c γ 0 0 x
+  have hin : ∀ (c : Fin 78) x, ρ.op c 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op c 0 x) =
+      ∑ d : Fin 78, E6sector.f c γ d • ρ.op d 0 x := fun c x => by simpa using! ρ.comm c γ 0 0 x
   refine sl2_sharpen (-ρ.op e 0) (ρ.op γ 0) H ?_ ?_ w k ?_ ?_ hN
   · intro x
     have : ρ.op e 0 (ρ.op γ 0 x) - ρ.op γ 0 (ρ.op e 0 x) =
-        ∑ c : Fin 78, E6sector.f e γ c • ρ.op c 0 x := by simpa using ρ.comm e γ 0 0 x
+        ∑ c : Fin 78, E6sector.f e γ c • ρ.op c 0 x := by simpa using! ρ.comm e γ 0 0 x
     simp only [LinearMap.neg_apply, map_neg, hH, LinearMap.coe_sum, Finset.sum_apply,
       LinearMap.smul_apply]
     rw [← this]; abel
@@ -174,7 +174,7 @@ theorem e6_thetaNil : ThetaNilG E6sector := by
   have hL46 : (ρ.op (46 : Fin 78) 0)^[k + 1] w = 0 := by
     have := hL (46 : Fin 78) (show ((46 : Fin 78) : ℕ) ∈ [47, 46, 45, 44, 43, 42] by decide)
     change (ρ.op (46 : Fin 78) 0)^[k * lowExpE6 46 + 1] w = 0 at this
-    simpa [lowExpE6] using this
+    simpa [lowExpE6] using! this
   have hz : ∀ i : Fin 78, (42 ≤ i.val ∧ i.val < 48 ∧ i.val ≠ 46) → (ρ.op i 0)^[k + 1] w = 0 := by
     intro i hi
     have := hL i (show i.val ∈ [47, 46, 45, 44, 43, 42] by

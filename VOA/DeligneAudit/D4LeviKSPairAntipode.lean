@@ -127,7 +127,7 @@ theorem fThree_antipode_signed_higher
       (-1 : ℂ) ^ rs.length •
         pairAdjoint (ρ.op (17 : Fin 28)) rs A v ∈
           higherOrbit ρ w m k := by
-  simpa only [pairAntipode_eq_sign, LinearMap.smul_apply] using
+  simpa only [pairAntipode_eq_sign, LinearMap.smul_apply] using!
     fThree_antipode_iterated_higher ρ w m k rs A v hSources
 
 end VOA.DeligneAudit.D4Levi

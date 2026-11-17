@@ -241,11 +241,11 @@ theorem singlyMarkedFlag_oneDouble_stratum_finrank_ge (m : ℕ) (hm : 1 ≤ m)
         subst hU
         rw [singlyMarkedFlagIdeal_univ_eq_unmarked (B + 1 + 2) (B + 1) (by omega)]
         have hprod : (B + 1 + 2 - Yᶜ.card).choose 2 * (B + 1 + 2 - 2).factorial ≤
-            Module.finrank ℂ ((Ideal.span {∏ i ∈ Yᶜ,
-              quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i}).restrictScalars ℂ) :=
+            Module.finrank ℂ ((Ideal.span {(∏ i ∈ Yᶜ,
+              quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i)}).restrictScalars ℂ) :=
           unmarkedFlag_oneDouble_product_finrank_ge (B + 1 + 2) (by omega) Yᶜ
-        have hmono : (Ideal.span {∏ i ∈ Yᶜ,
-            quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i}).restrictScalars ℂ ≤
+        have hmono : (Ideal.span {(∏ i ∈ Yᶜ,
+            quotientRoot (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1)) i)}).restrictScalars ℂ ≤
             (omittedPointStratumIdeal (unmarkedFlagIdeal (B + 1 + 2) (B + 1 + 1))
               Finset.univ Y).restrictScalars ℂ := fun x hx =>
           Ideal.span_mono (Set.singleton_subset_iff.mpr (Set.mem_insert _ _)) hx

@@ -157,7 +157,7 @@ theorem p3BoundaryLabelPermutation_preserves_species (a b c d : ℕ)
           subst B
           simp [p3BoundaryLabelPermutation, p3BoundaryRootEquiv, hg]
   | S =>
-      simp [p3BoundaryLabelPermutation, p3BoundaryRootEquiv]
+      rfl
 
 theorem p3BoundaryLabelPermutation_fiber (a b c d : ℕ)
     (g : SourceRelabeling (S := Fin d) (currentSpecies (p3CurrentMultiplicity a b c)))

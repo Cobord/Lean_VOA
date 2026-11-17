@@ -43,7 +43,7 @@ theorem a2_ordered_key_count (p q : ℕ) :
         Finset.mem_image] at hmem
       obtain ⟨a, ha, b, _, d, _, hkey⟩ := hmem
       have heq : a = (key i).d₁ := by
-        simpa using congrArg A2RadicalKey.d₁ hkey
+        simpa using! congrArg A2RadicalKey.d₁ hkey
       have := Finset.mem_range.mp ha
       omega
     exact a2EffectiveMultiplicity_support p q (key i) ha hi

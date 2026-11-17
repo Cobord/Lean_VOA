@@ -12,7 +12,7 @@ theorem cellCatalog_lift_nodup (M a b : ℕ) (l r : Bool)
   intro c hc d hd heq
   have he := congrArg (cellRemove M) heq
   simpa only [cellRemove_lift (cellCatalog_valid M a b c hc),
-    cellRemove_lift (cellCatalog_valid M a b d hd)] using he
+    cellRemove_lift (cellCatalog_valid M a b d hd)] using! he
 
 theorem cellCatalog_nodup (M a b : ℕ) : (cellCatalog M a b).Nodup := by
   induction M generalizing a b with
@@ -107,7 +107,7 @@ theorem k1_spanning (M a b : ℕ) (ha : a ≤ M) (hb : b ≤ M) :
         Polynomial.C (σ i) * Polynomial.X ^
           (((cellCatalog M a b).map cellCutoff).getD i 0) ∈
             (F i).map Polynomial.C ⊔ S_relationIdeal M a b) := by
-  simpa only [List.length_map] using (k1_catalog M a b ha hb).prefix_export
+  simpa only [List.length_map] using! (k1_catalog M a b ha hb).prefix_export
 
 end VOA.DeligneAudit.SL4T
 

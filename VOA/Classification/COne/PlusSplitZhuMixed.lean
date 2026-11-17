@@ -26,7 +26,7 @@ theorem W_E_relation (hm2 : 2 ≤ m) :
     change VOA.mk (V2mPlus m hm) (EP m hm) = _
     rw [EP_eq_y0, map_smul]
   have hc2 : cα m ^ 2 = 2 * (m : ℂ) := by
-    simpa only [pow_two] using cα_sq m hm
+    simpa only [pow_two] using! cα_sq m hm
   have hc4 : cα m ^ 4 = 4 * (m : ℂ)^2 := by
     calc cα m ^ 4 = (cα m ^ 2)^2 := by ring
          _ = 4 * (m : ℂ)^2 := by rw [hc2]; ring

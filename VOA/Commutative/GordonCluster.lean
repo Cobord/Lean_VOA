@@ -91,17 +91,20 @@ theorem twoValueEval_partialEval (n v : ℕ) (rest : ρ → β)
     twoValueEval (initialVariables n v) (partialEval n rest F) =
       MvPolynomial.sumToIter K Bool β (blockEval (combinedMap n v rest) F) := by
   induction F using MvPolynomial.induction_on with
-  | C a => simp [partialEval, twoValueEval, blockEval]
+  | C a => simp [partialEval, twoValueEval, blockEval, MvPolynomial.sumToIter_C]
   | add p q hp hq => simp only [map_add, hp, hq]
   | mul_X p i hp =>
     simp only [map_mul, hp]
-    congr 1
+    refine congrArg (_ * ·) ?_
     cases i with
     | inl i =>
       by_cases hi : i.val < v
-      · simp [partialEval, twoValueEval, initialVariables, blockEval, combinedMap, twoBlockMap, hi]
-      · simp [partialEval, twoValueEval, initialVariables, blockEval, combinedMap, twoBlockMap, hi]
-    | inr i => simp [partialEval, twoValueEval, blockEval, combinedMap]
+      · simp [partialEval, twoValueEval, initialVariables, blockEval, combinedMap, twoBlockMap, hi,
+          MvPolynomial.sumToIter_Xl, MvPolynomial.sumToIter_Xr]
+      · simp [partialEval, twoValueEval, initialVariables, blockEval, combinedMap, twoBlockMap, hi,
+          MvPolynomial.sumToIter_Xl, MvPolynomial.sumToIter_Xr]
+    | inr i => simp [partialEval, twoValueEval, blockEval, combinedMap,
+        MvPolynomial.sumToIter_Xl, MvPolynomial.sumToIter_Xr]
 
 /-- The cluster difference factor for a chosen pair in an arbitrary block
 configuration, derived from the concrete Gordon kernel filtration. -/
@@ -129,10 +132,18 @@ theorem difference_pow_dvd_of_mem_filtration [Algebra ℚ K] [IsDomain K] [CharZ
     rw [twoValueEval_partialEval,
       eval_eq_zero_of_mem_filtration U _ F hmem _
         (shape_combinedMap_lexGreater (by omega) hab (by omega) (Or.inr (by omega)) rest), map_zero]
+  have hinv : ∀ p : MvPolynomial (Bool ⊕ β) K,
+      MvPolynomial.iterToSum K Bool β (MvPolynomial.sumToIter K Bool β p) = p := by
+    intro p
+    induction p using MvPolynomial.induction_on with
+    | C a => simp [MvPolynomial.sumToIter_C, MvPolynomial.iterToSum_C_C]
+    | add p q hp hq => simp only [map_add, hp, hq]
+    | mul_X p i hp =>
+      cases i <;> simp [hp, MvPolynomial.sumToIter_Xl, MvPolynomial.sumToIter_Xr,
+        MvPolynomial.iterToSum_X, MvPolynomial.iterToSum_C_X]
   have hm := map_dvd (MvPolynomial.iterToSum K Bool β) (hd hlow hhigh)
   rw [twoValueEval_partialEval] at hm
-  simpa only [map_pow, map_sub, MvPolynomial.iterToSum_X,
-    MvPolynomial.iterToSum_sumToIter] using hm
+  simpa only [map_pow, map_sub, MvPolynomial.iterToSum_X, hinv] using hm
 
 end
 end VOA.GordonCluster

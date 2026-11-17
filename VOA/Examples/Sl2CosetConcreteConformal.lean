@@ -16,6 +16,8 @@ commutator. This supplies the conformal-difference membership theorem for
 tensor factors without presupposing a conformal VOA on the commutant.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2CosetConcrete
 
 open Sl2SemiInfinite Sl2Coset AffineVOA
@@ -55,7 +57,7 @@ theorem sugawaraState_even (A : AffineSl2Action V k) :
   apply Submodule.sum_mem
   intro c hc
   apply Submodule.smul_mem
-  simpa using V.parity_mode _ (A.current_even b) _ (A.current_even c) (-1)
+  simpa using! V.parity_mode _ (A.current_even b) _ (A.current_even c) (-1)
 
 private theorem current_quadratic_term (A : AffineSl2Action V k)
     (a b c : Fin 3) (n : ℤ) :
@@ -72,10 +74,10 @@ private theorem current_quadratic_term (A : AffineSl2Action V k)
   · subst n
     simp only [Int.cast_one, one_mul, show (1 : ℤ) + -1 = 0 by norm_num,
       ite_true, LinearMap.smul_apply, LinearMap.id_apply] at h
-    simpa only [sub_self, ite_true] using h.trans (by abel)
+    simpa only [sub_self, ite_true] using! h.trans (by abel)
   · simp only [if_neg (show n + -1 ≠ 0 by omega), LinearMap.zero_apply,
       add_zero] at h
-    simpa only [if_neg hn, add_zero, sub_eq_add_neg] using h.trans (by abel)
+    simpa only [if_neg hn, add_zero, sub_eq_add_neg] using! h.trans (by abel)
 
 /-- The zero current modes kill the quadratic Casimir. -/
 theorem current_quadratic_zero (A : AffineSl2Action V k) (a : Fin 3) :
@@ -211,7 +213,7 @@ theorem sugawara_self_zero (A : AffineSl2Action V k)
   have hc (a : Fin 3) : H.T (A.current a) =
       mode (V.Y (A.current a)) (-2) V.vacuum := by
     have h := ht a V.vacuum
-    simpa only [(V.creation _).1, H.vacuum_zero, map_zero, zero_add] using h
+    simpa only [(V.creation _).1, H.vacuum_zero, map_zero, zero_add] using! h
   conv_lhs => arg 2; rw [sugawaraState]
   rw [map_smul, sugawara_quadratic A H hk 0 (by omega)]
   conv_rhs => rw [sugawaraState, map_smul, quadraticState]
@@ -457,9 +459,9 @@ theorem tensorCosetConformalState_weight (A : AffineSl2Action V k)
       (TensorVA.tensorSVA V W hV hW hg).grading 2 := by
   apply Submodule.sub_mem
   · apply Submodule.add_mem
-    · simpa only [add_zero] using tmul_mem_tenGrading_add V W
+    · simpa only [add_zero] using! tmul_mem_tenGrading_add V W
         (sugawaraState_weight A) W.vacuum_mem
-    · simpa only [zero_add] using tmul_mem_tenGrading_add V W
+    · simpa only [zero_add] using! tmul_mem_tenGrading_add V W
         V.vacuum_mem (sugawaraState_weight B)
   · exact sugawaraState_weight _
 

@@ -24,15 +24,23 @@ theorem moonshineMatterSectorRetract_leftInverse (x y : ℤ) (u : Vnat ⊗[ℂ] 
     moonshineMatterSectorRetract x y (moonshineMatterSectorMap ![x, y] u) = u := by
   change moonshineMatterSectorInverse ![x, y]
     (matterMomentumComponent ![x, y] (moonshineMatterSectorMap ![x, y] u)) = u
-  rw [matterMomentumComponent_of_mem _ _ (moonshineMatterSectorMap_mem _ _),
-    moonshineMatterSector_leftInverse]
+  first
+  | rw [matterMomentumComponent_of_mem _ _ (moonshineMatterSectorMap_mem _ _),
+      moonshineMatterSector_leftInverse]
+  | exact (congrArg (moonshineMatterSectorInverse ![x, y])
+      (matterMomentumComponent_of_mem ![x, y] _ (moonshineMatterSectorMap_mem ![x, y] u))).trans
+      (moonshineMatterSector_leftInverse ![x, y] u)
 
 theorem moonshineMatterSectorRetract_virasoro (x y n : ℤ) (u : moonshineMatterSpace) :
     moonshineMatterSectorRetract x y (moonshineMatterNearVOA.L n u) =
       vnatHypMode x y n (moonshineMatterSectorRetract x y u) := by
   apply moonshineMatterSectorMap_injective ![x, y]
-  rw [moonshineMatterSectorMap_virasoro, moonshineMatterSectorRetract_map,
-    moonshineMatterSectorRetract_map, matterMomentumComponent_virasoro]
+  first
+  | rw [moonshineMatterSectorMap_virasoro, moonshineMatterSectorRetract_map,
+      moonshineMatterSectorRetract_map, matterMomentumComponent_virasoro]
+  | (rw [moonshineMatterSectorMap_virasoro, moonshineMatterSectorRetract_map,
+      moonshineMatterSectorRetract_map]
+     exact matterMomentumComponent_virasoro ![x, y] n u)
 
 theorem moonshineMatterSectorMap_spurious (x y : ℤ) (a : Fin 2)
     (u : Vnat ⊗[ℂ] hypFock) (hu : u ∈ (vnatStringModule x y a).spurious) :

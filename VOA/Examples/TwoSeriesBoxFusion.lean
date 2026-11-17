@@ -101,7 +101,7 @@ theorem eProd_mul_mem_Tsym {k b : ℕ} {x : MvPolynomial (Fin k) ℂ} (hx : x �
 /-! ### Restriction and lifting of the truncation relations -/
 
 theorem coeff_rho_eq_cons {m : ℕ} (x : MvPolynomial (Fin (m + 1)) ℂ) (γ : Fin m →₀ ℕ) :
-    coeff γ (rho m x) = coeff (Finsupp.cons 0 γ) x := by
+    (rho m x).coeff γ = x.coeff (Finsupp.cons 0 γ) := by
   rw [← coeff_tail_rho x (Finsupp.cons 0 γ) (Finsupp.cons_zero _ _), Finsupp.tail_cons]
 
 theorem rho_mem_Tsym {m b : ℕ} (hb : 1 ≤ b) {x : MvPolynomial (Fin (m + 1)) ℂ}
@@ -268,8 +268,10 @@ theorem isHomogeneous_of_eProd_mul {k D : ℕ} {g' : MvPolynomial (Fin k) ℂ}
   have hdeg : ∀ d ∈ g'.support, Finsupp.degree d + k = D := by
     intro d hd
     by_contra hne
-    have h2 := congrArg (coeff d) (hz _ hne)
-    rw [coeff_homogeneousComponent, if_pos rfl, coeff_zero] at h2
+    have h2 : (homogeneousComponent (Finsupp.degree d) g').coeff d =
+        (0 : MvPolynomial (Fin k) ℂ).coeff d := by
+      rw [hz _ hne]
+    rw [coeff_homogeneousComponent, if_pos rfl, MvPolynomial.coeff_zero, Finsupp.zero_apply] at h2
     exact (mem_support_iff.mp hd) h2
   refine ⟨fun d hd => ?_, fun hD => ?_⟩
   · have := hdeg d (mem_support_iff.mpr hd)
@@ -277,7 +279,7 @@ theorem isHomogeneous_of_eProd_mul {k D : ℕ} {g' : MvPolynomial (Fin k) ℂ}
       rw [Finsupp.degree_eq_weight_one]; rfl
     omega
   · ext d
-    rw [coeff_zero]
+    rw [MvPolynomial.coeff_zero, Finsupp.zero_apply]
     by_contra hd
     have := hdeg d (mem_support_iff.mpr hd)
     omega
@@ -402,7 +404,7 @@ theorem e_mul_hh_mem_RelF {M a B q : ℕ}
     (Finset.univ \ T).card = PowerSeries.C ((-1) ^ (Finset.univ \ T).card) by
       rw [map_pow, map_neg, map_one], PowerSeries.coeff_mul_C]
   refine Ideal.mul_mem_right _ _ ?_
-  rcases hcond T.card (by simpa using Finset.card_le_univ T) with hA | hB
+  rcases hcond T.card (by simpa using! Finset.card_le_univ T) with hA | hB
   · -- the `h`-relations
     have hsplit : ∏ i ∈ T, G i =
         (∏ i, G i) * ∏ i ∈ Finset.univ \ T, facS (X i : MvPolynomial (Fin M) ℂ) := by
@@ -414,7 +416,7 @@ theorem e_mul_hh_mem_RelF {M a B q : ℕ}
         mul_comm (∏ i ∈ Finset.univ \ T, G i), h1, mul_one]
     rw [hsplit, PowerSeries.coeff_mul]
     refine Ideal.sum_mem _ fun p hp => ?_
-    rw [Finset.mem_antidiagonal] at hp
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
     by_cases hp2 : (Finset.univ \ T).card < p.2
     · rw [coeff_prod_facS_eq_zero _ _ hp2, mul_zero]; exact zero_mem _
     · push Not at hp2
@@ -529,7 +531,7 @@ theorem fusion_span_zero (B q r D : ℕ) :
       refine ⟨⟨fun j => Nat.zero_le _, by simp⟩, ?_⟩
       simp [statF, minS, invF]
     · refine Submodule.mem_sup_left ?_
-      have h1 : f = coeff 0 f • (1 : MvPolynomial (Fin 0) ℂ) := by
+      have h1 : f = f.coeff 0 • (1 : MvPolynomial (Fin 0) ℂ) := by
         conv_lhs => rw [eq_C_of_isEmpty f]
         rw [smul_eq_C_mul, mul_one]
       rw [h1]
@@ -539,7 +541,7 @@ theorem fusion_span_zero (B q r D : ℕ) :
       rw [mem_symDeg_iff] at hf
       rw [eq_C_of_isEmpty f]
       by_contra h
-      have hc : coeff 0 f ≠ 0 := by
+      have hc : f.coeff 0 ≠ 0 := by
         intro hc; apply h; rw [hc, map_zero]
       have := hf.2 hc
       simp at this
@@ -629,7 +631,7 @@ theorem fusion_span : ∀ (B m q r D : ℕ), r ≤ B - 1 →
     | zero => intro q r D _; exact fusion_span_zero (B + 1) q r D
     | succ m ihm =>
       intro q r D hr
-      have hr' : r ≤ B := by simpa using hr
+      have hr' : r ≤ B := by simpa using! hr
       by_cases hS : q * (B + 1) + r ≤ m
       · refine ⟨∅, by simp, by simp, fun f hf => Submodule.mem_sup_right
           (Submodule.mem_sup_left ?_)⟩

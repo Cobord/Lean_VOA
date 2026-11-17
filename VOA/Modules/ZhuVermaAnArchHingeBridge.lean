@@ -148,7 +148,9 @@ theorem mUGradedAction_of_dj28 (W : VertexOperatorAlgebra 𝒱)
 
 /-! ## The faithful Zhu bijection from DJ 2.8 + the collapse. -/
 
-/-- **`phase4_bijection_of_dj28` — the faithful, `hall`-free Theorem 5.3.4 bijection
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_bijection_of_dj28` — the faithful, `hall`-free Theorem 5.3.4 bijection
 `Φ(𝒱) ↔ Irr A(𝒱)` resting solely on the published Dong–Jiang Lemma 2.8.**
 
 Given
@@ -189,7 +191,9 @@ theorem phase4_bijection_of_dj28 {W : VertexOperatorAlgebra 𝒱}
   zhuBijectionIrr_scorecard A hirr F hiso
     (InducedAssignment.genFromBottomFinalFamily_of_G F (mUGradedAction_of_dj28 W hdj hcol) G)
 
-/-- **`phase4_bijection_of_dj28_finalFamily` — the same faithful headline taking an already-assembled
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_bijection_of_dj28_finalFamily` — the same faithful headline taking an already-assembled
 `GenFromBottomFinalFamily F`.**
 
 A convenience variant of `phase4_bijection_of_dj28` for callers that prefer to supply the per-`P`

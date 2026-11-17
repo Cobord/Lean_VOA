@@ -89,11 +89,11 @@ theorem primitiveCharge_of_sameSignSMove
         · have hn1 : (n : ℤ) = 1 := by
             rw [hz] at hr
             rcases Int.isUnit_iff.mp (isCoprime_zero_right.mp hr) with h | h <;> omega
-          simpa [hz, hn1] using hC
+          simpa [hz, hn1] using! hC
         · have hrpos : 0 < l % (n : ℤ) := by omega
           have hsmall : (l % (n : ℤ)).toNat < n := by omega
           have hi := ih (l % (n : ℤ)).toNat hsmall (-(n : ℤ)) (by omega)
-            (by simpa only [Int.toNat_of_nonneg hr0] using hr.symm.neg_right)
+            (by simpa only [Int.toNat_of_nonneg hr0] using! hr.symm.neg_right)
           intro w
           have hsneg := hS (-(n : ℤ)) (-(l % n)) (by nlinarith)
             hr.neg_left.neg_right (σ ModularGroup.S w)
@@ -106,11 +106,11 @@ theorem primitiveCharge_of_sameSignSMove
       rwa [Int.emod_add_ediv_mul] at he
   intro m l hm hcop z
   by_cases hp : 0 < m
-  · simpa only [Int.toNat_of_nonneg hp.le] using
-      hpos m.toNat l (by omega) (by simpa only [Int.toNat_of_nonneg hp.le] using hcop) z
+  · simpa only [Int.toNat_of_nonneg hp.le] using!
+      hpos m.toNat l (by omega) (by simpa only [Int.toNat_of_nonneg hp.le] using! hcop) z
   · have hn : 0 < -m := by omega
     have he := hpos (-m).toNat (-l) (by omega)
-      (by simpa only [Int.toNat_of_nonneg hn.le] using hcop.neg_left.neg_right)
+      (by simpa only [Int.toNat_of_nonneg hn.le] using! hcop.neg_left.neg_right)
       (σ (ModularGroup.S ^ 2) z)
     simpa only [Int.toNat_of_nonneg hn.le, neg_neg, hc, hcc, map_one, le_one_apply]
       using he.symm
@@ -146,14 +146,14 @@ theorem mixedNonzeroSMove_of_sameSign (F : SphericalFusion C) (M : Modular F)
     have hs := hS ρ hr a (-l) m (by
       have hne := mul_ne_zero hm hl
       have hneg : m * l < 0 := by omega
-      simpa only [neg_mul, mul_neg, mul_comm] using neg_pos.mpr hneg)
+      simpa only [neg_mul, mul_neg, mul_comm] using! neg_pos.mpr hneg)
       hcop.symm.neg_left (mixedRepresentation ρ ModularGroup.S⁻¹ z)
     simp only [← LinearEquiv.mul_apply, ← map_mul] at hs
     have he : (ModularGroup.S⁻¹ * ModularGroup.S⁻¹ : SL(2, ℤ)) =
         ModularGroup.S ^ 2 := by decide
     rw [he] at hs
     have hcharge := hc (-l) m (neg_ne_zero.mpr hl) hcop.symm.neg_left z
-    simpa only [neg_neg] using hcharge.trans hs.symm
+    simpa only [neg_neg] using! hcharge.trans hs.symm
 
 /-- Exact equivalence, with no independent charge-symmetry premise. -/
 theorem mixedNonzeroSMove_iff_sameSign (F : SphericalFusion C) (M : Modular F) :

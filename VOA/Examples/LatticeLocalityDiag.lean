@@ -88,11 +88,12 @@ theorem Yemα_self_bracket_zero (D : EEData) (m : ℤ) (hEE : D.EEop = EEC (m : 
   | zero => rw [map_zero]
   | add y1 y2 h1 h2 => rw [map_add, h1, h2, add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, h1, h2, add_zero]
       | single n a =>
-          rw [(Finsupp.smul_single_one n a).symm]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, Yemα_self_bracket_on_state D m hEE hm2,
             smul_zero]
 
@@ -101,13 +102,13 @@ theorem Yemα_self_bracket_zero (D : EEData) (m : ℤ) (hEE : D.EEop = EEC (m : 
 /-- **`Local (Yemα 1) (Yemα 1)`** — the charge-`1` lattice operator commutes with itself
 (bound `N = 0`), `pbw`-free. -/
 theorem Yemα_one_local : Local (Yemα 1) (Yemα 1) :=
-  local_of_bracketDist_eq_zero (Yemα_self_bracket_zero eeData1 1 (by norm_num [eeData1]) (by ring))
+  local_of_bracketDist_eq_zero (Yemα_self_bracket_zero eeData1 1 (by norm_num [eeData1] <;> rfl) (by ring))
 
 /-- **`Local (Yemα (-1)) (Yemα (-1))`** — the charge-`(-1)` lattice operator commutes with itself
 (bound `N = 0`), `pbw`-free.  The new charge-`(-1)` diagonal locality. -/
 theorem Yemα_negOne_local : Local (Yemα (-1)) (Yemα (-1)) :=
   local_of_bracketDist_eq_zero
-    (Yemα_self_bracket_zero eeDataM1 (-1) (by norm_num [eeDataM1]) (by ring))
+    (Yemα_self_bracket_zero eeDataM1 (-1) (by norm_num [eeDataM1] <;> rfl) (by ring))
 
 end LatExp
 end VOA

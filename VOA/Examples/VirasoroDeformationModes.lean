@@ -14,6 +14,8 @@ line. Thus the first and third self-products of the conformal vector have two
 scalar corrections. Jacobi and antisymmetry determine the zero-product field;
 no deformed translation law or deformed invariant form is assumed.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.VirDeformModes
 open VertexOperatorAlgebra Deform
 open Module (End)
@@ -213,7 +215,7 @@ theorem normalizedL_comm (D : FirstOrderDeformation W) (hD : D.IsGraded)
       if m+n=0 then (((m : ℂ)^3-m)/12*W.centralCharge) • z else 0 := by
     have h := LinearMap.congr_fun (W.L_virasoro m n) z
     by_cases hmn : m+n=0 <;>
-      simpa [hmn, LieRing.of_associative_ring_bracket, Module.End.mul_apply] using h
+      simpa [hmn, LieRing.of_associative_ring_bracket, Module.End.mul_apply] using! h
   by_cases hmn : m+n=0
   all_goals
     apply LinearMap.ext

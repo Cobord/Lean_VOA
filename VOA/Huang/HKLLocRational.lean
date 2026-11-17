@@ -413,7 +413,7 @@ theorem eq_of_glue {α β : ℤ → ℂ} {Φ : ℂ → ℂ} {n₁ m₀ : ℤ}
           · rw [Finset.mem_range, not_lt] at hk
             change β k * q ^ k = 0
             rw [hβpos k hk, zero_mul]
-          · dsimp only
+          · try dsimp only
             split_ifs with h
             · rfl
             · rw [hβpos k (by omega), zero_mul]

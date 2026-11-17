@@ -201,7 +201,7 @@ theorem sum_reflect {V : Type*} [AddCommMonoid V] (N k : ℤ) (hk : 0 ≤ k) (H 
     constructor
     · rintro ⟨j0, ⟨h1, h2⟩, rfl⟩; omega
     · intro h; exact ⟨-k - j, by omega, by ring⟩
-  rw [← Finset.sum_image (f := H) (fun x _ y _ h => by simpa using h), himg]
+  rw [← Finset.sum_image (f := H) (fun x _ y _ h => by simpa using! h), himg]
   have h1 : ∑ j ∈ Finset.Icc (-N) (N - k), H j = ∑ j ∈ Finset.Icc (-N - k) (N - k), H j :=
     Finset.sum_subset (fun j hj => by simp only [Finset.mem_Icc] at hj ⊢; omega)
       (fun j _ hj => hH j hj)
@@ -236,7 +236,7 @@ theorem conjJ_canon (a : Fin 3) {k N W : ℕ} (hk : 1 ≤ k) (hWN : W + k ≤ N)
           have hjW : (W : ℤ) < j := by omega
           simp only [Tc, bMode_kill b hy hjW, map_zero, smul_zero]
         · simp only [Tc_out hk hWN hy b c hj', smul_zero])
-    simpa only [show ∀ j0 : ℤ, -(k : ℤ) - (-(k : ℤ) - j0) = j0 from fun j0 => by ring] using this
+    simpa only [show ∀ j0 : ℤ, -(k : ℤ) - (-(k : ℤ) - j0) = j0 from fun j0 => by ring] using! this
   simp only [hrefl, Finset.smul_sum, smul_smul]
   rw [add_comm]
   congr 1

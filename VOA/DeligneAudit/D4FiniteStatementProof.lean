@@ -91,8 +91,8 @@ theorem demazurePi_eq (i : Fin 4) (f : L7) :
   apply Finset.sum_congr rfl
   intro v _
   rw [D4F.demazurePi]
-  change Finsupp.linearCombination ℤ (D4F.demazureString i) (Finsupp.single v (f v)) =
-    demazureG _ _ (AddMonoidAlgebra.single v (f v))
+  change Finsupp.linearCombination ℤ (D4F.demazureString i) (Finsupp.single v (f.coeff v)) =
+    demazureG _ _ (AddMonoidAlgebra.single v (f.coeff v))
   rw [Finsupp.linearCombination_single]
   rw [demazureG_single]
   unfold D4F.demazureString demMonoG
@@ -102,13 +102,13 @@ theorem demazurePi_eq (i : Fin 4) (f : L7) :
     apply Finset.sum_congr rfl
     intro j _
     simp only [D4F.mono, shZ, neg_smul, sub_eq_add_neg]
-    erw [Finsupp.smul_single, smul_eq_mul, mul_one]
+    rw [AddMonoidAlgebra.smul_single', mul_one]
   · erw [smul_neg, Finset.smul_sum]
     congr 1
     apply Finset.sum_congr rfl
     intro j _
     simp only [D4F.mono, shZ]
-    erw [Finsupp.smul_single, smul_eq_mul, mul_one]
+    rw [AddMonoidAlgebra.smul_single', mul_one]
 
 theorem demazureTheta_eq (f : L7) : D4F.demazureTheta f = piSTheta f := by
   simp only [D4F.demazureTheta, D4F.wordTheta, piSTheta, d4Word, List.foldl_cons, List.foldl_nil,

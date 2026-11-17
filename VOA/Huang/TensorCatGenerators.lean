@@ -37,11 +37,11 @@ def modeSpanSubmodule : WeakModule.Submodule' P.isMod.toWeakModule where
         (BottomRecovery.finsum_mem_submodule _ _ (fun i =>
           (modeSpan P).smul_mem _ (intertwiner_mem_modeSpan P _ _ _)))
         (intertwiner_mem_modeSpan P _ _ _)
-    · simpa only [map_zero] using (modeSpan P).zero_mem
+    · simpa only [map_zero] using! (modeSpan P).zero_mem
     · intro v w _ _ hv hw
-      simpa only [map_add] using (modeSpan P).add_mem hv hw
+      simpa only [map_add] using! (modeSpan P).add_mem hv hw
     · intro c v _ hv
-      simpa only [map_smul] using (modeSpan P).smul_mem c hv
+      simpa only [map_smul] using! (modeSpan P).smul_mem c hv
 
 private def spanModes : IntertwiningModes X.carrier Y.carrier (modeSpan P) :=
   fun n => LinearMap.mk₂ ℂ

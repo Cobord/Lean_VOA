@@ -9,6 +9,9 @@ namespace VOA.Moonshine.ConwayNorton
 open AutMonster TensorFieldLift
 open scoped TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 def vnatHypLongitudinal (a : Fin 2) (κ ell : ℂ) (n : ℤ) :
     Module.End ℂ (Vnat ⊗[ℂ] hypFock) :=
   (hypOscillator a (if a = 0 then κ else ell) n).lTensor Vnat

@@ -30,7 +30,7 @@ theorem topShift_current_tail (m ell : ℕ) :
 /-- The plain mode-zero shift is Euler on the whole highest current. -/
 theorem topShift_zero_current (m : ℕ) :
     seriesDerivation (topShift m 0) (topCurrent m) = topCurrent m := by
-  simpa only [tailSeries_zero] using topShift_current_tail m 0
+  simpa only [tailSeries_zero] using! topShift_current_tail m 0
 
 /-- Euler's scalar on each whole positive-power coefficient is its source power. -/
 theorem topShift_zero_power_coeff (m r s : ℕ) :

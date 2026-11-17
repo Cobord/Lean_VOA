@@ -90,7 +90,7 @@ theorem complement_iff_weightFour_obstruction (A : WeakModule (V2mPlus m hm) M)
         exact ((V2mPlus m hm).creation _).2 0 le_rfl
       · apply Module.End.eigenspace_le_maxGenEigenspace
         apply Module.End.mem_eigenspace_iff.mpr
-        simpa only [one_smul] using ht
+        simpa only [one_smul] using! ht
     · rw [weightFour_translation_defect A (WP m hm) x hz, h₂, smul_zero]
 
 end VOA.Classification.COne.PlusSplitting

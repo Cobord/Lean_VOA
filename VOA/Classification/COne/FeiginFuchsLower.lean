@@ -79,7 +79,7 @@ theorem lc_levelState (c h : ℂ) (n : ℕ) (a : VermaPartitions n → ℂ) :
     intro he
     apply hb
     have := congrArg (fun z : {w : List ℕ // SortedWord w} => z.val) he
-    exact Subtype.ext (by simpa using this)
+    exact Subtype.ext (by simpa using! this)
   · simp
 
 theorem levelState_lc (c h : ℂ) (n : ℕ) (v : Verma c h) (hv : v ∈ sortedSpan c h n) :
@@ -111,7 +111,7 @@ def levelStateLin (c h : ℂ) (n : ℕ) : (VermaPartitions n → ℂ) →ₗ[ℂ
 theorem levelStateLin_injective (c h : ℂ) (n : ℕ) : Function.Injective (levelStateLin c h n) := by
   intro a b hab
   have := congrArg (lc c h n) hab
-  simpa [levelStateLin, lc_levelState] using this
+  simpa [levelStateLin, lc_levelState] using! this
 
 /-- Coordinates of an arbitrary (unsorted) creation word, computed once at `(0,0)`. -/
 def wc (n : ℕ) (w : List ℕ) : VermaPartitions n → ℂ := lc 0 0 n (negWord 0 0 w)
@@ -334,7 +334,7 @@ theorem formDesc_eval {R : Type*} [CommRing R] [Algebra ℂ R] (C' H' : R) (ev :
 theorem posAct_mem (c h : ℂ) (w : List ℕ) (k : ℕ) (y : Verma c h)
     (hy : y ∈ sortedSpan c h (k + energyHW w)) : posAct c h w y ∈ sortedSpan c h k := by
   induction w generalizing y with
-  | nil => simpa using hy
+  | nil => simpa using! hy
   | cons i w ih =>
     apply ih
     apply verma_mode_mem_level c h _ _ y hy
@@ -473,7 +473,7 @@ theorem deriv_block (c h0 : ℂ) (N m : ℕ) (hN : 0 < N) (s : VermaPartitions N
     have := congrFun hker i
     rw [← vermaGramMatrix_symm, Matrix.mulVec, Matrix.transpose] at this
     simp only [IsRoot, hr, eval_finsetSum, eval_mul, eval_C, GX_eval]
-    simpa [dotProduct, Matrix.of_apply, mul_comm] using this
+    simpa [dotProduct, Matrix.of_apply, mul_comm] using! this
   -- `v(h₀) = g • s`
   have hv0 : ∀ i, IsRoot (v i - Polynomial.C (g * s i)) h0 := by
     intro i
@@ -494,14 +494,14 @@ theorem deriv_block (c h0 : ℂ) (N m : ℕ) (hN : 0 < N) (s : VermaPartitions N
     rw [hpv]
     have : ∑ i, r i * v i = q * (q * ∑ i, rh i * uh i) + Polynomial.C g * P := by
       rw [hP']
-      simp only [hu_f, hr_f, Finset.mul_sum, mul_add, Finset.sum_add_distrib, Polynomial.C_mul]
-      congr 1
-      · refine Finset.sum_congr rfl fun i _ => by ring
-      · refine Finset.sum_congr rfl fun i _ => by ring
+      simp only [Finset.mul_sum, ← Finset.sum_add_distrib]
+      refine Finset.sum_congr rfl fun i _ => ?_
+      rw [hu_f i, hr_f i, Polynomial.C_mul]
+      ring
     have hCP : Polynomial.C g * P = q * (Polynomial.C g * (P /ₘ q)) := by
       conv_lhs => rw [hP_f]
       ring
-    rw [this, hCP]; ring
+    rw [this, hCP, ← mul_add]
   rw [hpq, mul_divByMonic_cancel_left _ hqm]
   simp [hq]
   ring
@@ -968,6 +968,9 @@ theorem aSum_eq (μ m : ℕ) : aSum μ m = (if μ = 0 then 0 else 1) * pp m + bS
     simp only [labOne, eR]
     rw [show 2 * μ + 1 + m - (0 + 1) * (2 * μ + 1 - 1 + 1) = m by omega]
     congr 1
+    -- re-elaborate the conditions: `simp only [labOne]` left stale `Decidable` instances
+    show ((if 2 * μ + 1 - 1 + 1 = 0 + 1 + 2 * μ then 1 else 0) +
+      if 0 + 1 = 2 * μ + 1 - 1 + 1 + 2 * μ then 1 else 0) = if μ = 0 then 2 else 1
     split_ifs <;> omega
   have hb : bSum μ m = 2 * Phi (μ + 1) m := sum_eR (μ + 1) m
   rw [hlab, Phi_shift] at hfull
@@ -990,9 +993,9 @@ theorem linIndep_of_det {ι κ ρ : Type*} [Fintype ι] [Fintype κ] [Fintype ρ
     LinearIndependent ℂ b := by
   have h := Matrix.linearIndependent_cols_of_det_ne_zero hM
   have h' : LinearIndependent ℂ (fun k => b (e.symm k)) := by
-    convert h using 1
+    exact h
   have := h'.comp e e.injective
-  simpa [Function.comp_def] using this
+  simpa [Function.comp_def] using! this
 
 theorem D_mulVec {ι ρ : Type*} [Fintype ι] [Fintype ρ] (G0 : Matrix ι ι ℂ) (f : ρ → ι → ℂ)
     (a : ρ → ℂ) (j : ρ) :
@@ -1050,7 +1053,7 @@ theorem det_block_ne_zero {ι κ ρ : Type*} [Fintype ι] [Fintype κ] [Fintype 
   have hUle : U ≤ LinearMap.ker G0.mulVecLin := by
     rw [hU, Submodule.span_le]
     rintro _ ⟨k, rfl⟩
-    simpa [LinearMap.mem_ker, Matrix.mulVecLin_apply] using hk k
+    simpa [LinearMap.mem_ker, Matrix.mulVecLin_apply] using! hk k
   have hUeq : U = LinearMap.ker G0.mulVecLin :=
     Submodule.eq_of_le_of_finrank_le hUle (by rw [finrank_span_eq_card hl]; exact hker)
   intro hdet
@@ -1071,7 +1074,7 @@ theorem det_block_ne_zero {ι κ ρ : Type*} [Fintype ι] [Fintype κ] [Fintype 
       rw [D_mulVec, Pi.zero_apply, dotProduct_comm, ← hx] at this
       rw [← this]
       simp only [Matrix.of_apply, hk']
-  have hxU : x ∈ U := by rw [hUeq]; simpa [LinearMap.mem_ker, Matrix.mulVecLin_apply] using hGx
+  have hxU : x ∈ U := by rw [hUeq]; simpa [LinearMap.mem_ker, Matrix.mulVecLin_apply] using! hGx
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun _).mp hxU
   have hz := Fintype.linearIndependent_iff.mp hb (Sum.elim c (-a)) (by
     rw [Fintype.sum_sum_type]
@@ -1080,7 +1083,7 @@ theorem det_block_ne_zero {ι κ ρ : Type*} [Fintype ι] [Fintype κ] [Fintype 
   apply ha0
   funext j
   have := hz (Sum.inr j)
-  simpa using this
+  simpa using! this
 
 /-- Extending a linearly independent family to a basis, with a nonzero determinant. -/
 theorem exists_complement {ι κ : Type} [Fintype ι] [Finite κ] (v : κ → ι → ℂ)
@@ -1249,7 +1252,7 @@ theorem dc_linIndep (t : ℂ) (ht : t ≠ 0) (N m : ℕ) (hN : 0 < N) :
   obtain ⟨h1, h2⟩ := bsa_singular t ht N hN
   have hbasis := ((vermaSortedBasis c (h0 + N)).linearIndependent.comp
       (fun lam : VermaPartitions m => (⟨lam.val, lam.2.1⟩ : {w : List ℕ // SortedWord w}))
-      (fun a b hab => Subtype.ext (by simpa using congrArg Subtype.val hab))).map'
+      (fun a b hab => Subtype.ext (by simpa using! congrArg Subtype.val hab))).map'
     (vermaSingularMap c h0 N S hSmem h1 h2)
     (LinearMap.ker_eq_bot.mpr (vermaSingularMap_injective c h0 N S hSmem hne h1 h2))
   apply LinearIndependent.of_comp (levelStateLin c h0 (N + m))
@@ -1278,7 +1281,7 @@ theorem radical_bound (μ m : ℕ) :
     have := det_block_ne_zero e0 (vermaGramMatrix (vermaBSACharge 1)
       (vermaBSAWeight (2 * μ + 1) 1) (2 * μ + 1 + 0)) (vermaGramMatrix_symm _ _ _)
       (famB 1 (2 * μ + 1) 0 f0) hM0 ?_ ?_
-    · simpa [famB] using this
+    · simpa [famB] using! this
     · intro k
       rw [famB, Sum.elim_inl, vermaGramMatrix_kernel_iff_radical, levelState_dc]
       obtain ⟨h1, h2⟩ := bsa_singular 1 one_ne_zero _ hN
@@ -1338,7 +1341,6 @@ theorem radical_bound (μ m : ℕ) :
     (F2 := fun t => γ t ^ pp m * (Km * GBm μ m t) * DD t)
     ((((dT_cont _ _ e f).pow 2).mul continuousAt_const).mul (GRm_cont μ m))
     (((hγ_cont.pow _).mul (continuousAt_const.mul (GBm_cont μ m))).mul (detD_cont _ _ f)) hF
-  simp only at hlim
   have hL1 : dT 1 ^ 2 * K * GRm μ m 1 ≠ 0 :=
     mul_ne_zero (mul_ne_zero (pow_ne_zero _ hM) (diag_ne _)) (GRm_one_ne μ m)
   have hD1 : DD 1 ≠ 0 := by
@@ -1347,7 +1349,7 @@ theorem radical_bound (μ m : ℕ) :
     rw [hlim, h0, mul_zero]
   have hfin := finrank_ker_le_of_block e (vermaGramMatrix (vermaBSACharge 1)
     (vermaBSAWeight (2 * μ + 1) 1) (2 * μ + 1 + m)) (famB 1 (2 * μ + 1) m f) hM
-    (by simpa [famB] using hD1)
+    (by simpa [famB] using! hD1)
   rw [← finrank_radicalLevel_eq, hc1, hh1] at hfin
   exact hfin
 

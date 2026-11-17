@@ -29,7 +29,7 @@ def universalCreation (n : ℤ) (i : ℕ) :
     UniversalWeight n →ₗ[ℂ] UniversalWeight (n + i + 2) :=
   ((Lop leeYangC (-(i : ℤ) - 2)).comp (UniversalWeight n).subtype).codRestrict _
     (fun x => by
-      simpa only [add_assoc] using Lop_neg_maps_grading leeYangC i x.2)
+      simpa only [add_assoc] using! Lop_neg_maps_grading leeYangC i x.2)
 
 /-- The vacuum and creation tests imply all prefixes for a family of
 subspaces of the actual universal weight spaces. -/

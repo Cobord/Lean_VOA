@@ -55,7 +55,7 @@ theorem ftheta_pow (h : MabRel ρ w a b) : ((ρ.op 5 0) ^ (2 * (a + b) + 1)) w =
 
 /-- **The `θ`-Garland identity**: `∑_{i+j=s} f_θ(i) f_θ(j) w = 0` for `s + 1 ≥ 2(a+b)`. -/
 theorem theta_garland (h : MabRel ρ w a b) (s : ℕ) (hs : 2 * (a + b) ≤ s + 1) :
-    ∑ x ∈ Finset.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, ρ.op 5 x.1 (ρ.op 5 x.2 w) = 0 := by
   refine garland_two (E1 := ρ.op 2 1) (H := fun m => ρ.op 6 m + ρ.op 7 m) (F := fun k => ρ.op 5 k)
     ?_ ?_ ?_ ?_ ?_ (ftheta_pow h) s (by omega)
   · intro k
@@ -80,12 +80,12 @@ theorem kernel_trunc_theta (h : MabRel ρ w a b) (ha : 1 ≤ a) :
     ρ.op 5 (2 * (a - 1) + b) (ρ.op 5 (2 * a + b - 1) w) = 0 := by
   have hG := theta_garland h (2 * (2 * a + b) - 3) (by omega)
   rw [Finset.sum_eq_add_of_mem (2 * a + b - 2, 2 * a + b - 1) (2 * a + b - 1, 2 * a + b - 2)
-    (Finset.mem_antidiagonal.mpr (by simp; omega)) (Finset.mem_antidiagonal.mpr (by simp; omega))
+    (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega)) (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega))
     (by simp; omega) ?_, op5_comm (2 * a + b - 1)] at hG
   · rw [show 2 * (a - 1) + b = 2 * a + b - 2 by omega]
     exact two_eq_zero hG
   · rintro ⟨i, j⟩ hx ⟨h1, h2⟩
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     simp only [ne_eq, Prod.mk.injEq] at h1 h2 hx
     by_cases hj : 2 * a + b ≤ j
     · rw [mab_ftheta_trunc h j hj, map_zero]
@@ -94,7 +94,7 @@ theorem kernel_trunc_theta (h : MabRel ρ w a b) (ha : 1 ≤ a) :
 /-- Extraction for the `f_i`-truncations. -/
 theorem kernel_trunc_aux (h : MabRel ρ w a b) (ha : 1 ≤ a) (G : ℕ → V →ₗ[ℂ] V)
     (hGc : ∀ i j v, G i (ρ.op 5 j v) = ρ.op 5 j (G i v)) (hGw : ∀ i, a + b ≤ i → G i w = 0)
-    (hsum : ∑ x ∈ Finset.antidiagonal ((a + b - 1) + (2 * a + b - 1)),
+    (hsum : ∑ x ∈ Finset.HasAntidiagonal.antidiagonal ((a + b - 1) + (2 * a + b - 1)),
       (G x.1 (ρ.op 5 x.2 w) + ρ.op 5 x.1 (G x.2 w)) = 0) :
     G (a - 1 + b) (ρ.op 5 (2 * a + b - 1) w) = 0 := by
   simp only [← hGc] at hsum
@@ -105,12 +105,12 @@ theorem kernel_trunc_aux (h : MabRel ρ w a b) (ha : 1 ≤ a) (G : ℕ → V →
   rw [Finset.sum_eq_single (a + b - 1, 2 * a + b - 1)] at hS
   · rw [show a - 1 + b = a + b - 1 by omega]; exact hS
   · rintro ⟨i, j⟩ hx hne
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     simp only [ne_eq, Prod.mk.injEq] at hne hx
     by_cases hj : 2 * a + b ≤ j
     · rw [mab_ftheta_trunc h j hj, map_zero]
     · rw [hGc, hGw i (by omega), map_zero]
-  · intro hn; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) hn
+  · intro hn; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) hn
 
 theorem kernel_trunc_f1 (h : MabRel ρ w a b) (ha : 1 ≤ a) :
     ρ.op 3 (a - 1 + b) (ρ.op 5 (2 * a + b - 1) w) = 0 := by

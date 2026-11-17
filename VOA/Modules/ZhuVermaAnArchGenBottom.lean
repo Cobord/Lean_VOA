@@ -197,7 +197,9 @@ noncomputable def LUUniversalData.of_genFromBottom (F : LUFamily W)
 
 end InducedAssignment
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from generation-from-bottom.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from generation-from-bottom.**
 
 Packaging the end-to-end reduction with the injective half resting on the generation-from-bottom
 lifting family: given the existence `InducedAssignment W` `A` producing irreducible realizations

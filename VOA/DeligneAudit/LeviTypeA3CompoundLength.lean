@@ -27,7 +27,7 @@ theorem a3_compound_word_length_zero (a b c : ℕ)
   let E : Module.End ℂ V := ρ.op 1 1
   have hFF : ∀ r s, G r * G s = G s * G r := by
     intro r s
-    simpa [G, radicalOp] using radicalOp_comm ρ 1 r 1 s
+    simpa [G, radicalOp] using! radicalOp_comm ρ 1 r 1 s
   have hEF : ∀ k, E * G k - G k * E = H (k + 1) := by
     intro k
     rw [op_comm_end]
@@ -51,12 +51,12 @@ theorem a3_compound_word_length_zero (a b c : ℕ)
     intro m
     change ρ.op 12 (m + 1) w + ρ.op 13 (m + 1) w = 0
     rw [show ρ.op 12 (m + 1) w = 0 by
-      simpa [simpleH] using h.cartan_pos 0 (m + 1) (by omega)]
+      simpa [simpleH] using! h.cartan_pos 0 (m + 1) (by omega)]
     rw [show ρ.op 13 (m + 1) w = 0 by
-      simpa [simpleH] using h.cartan_pos 1 (m + 1) (by omega)]
+      simpa [simpleH] using! h.cartan_pos 1 (m + 1) (by omega)]
     simp
   have hN : (G 0 ^ (a + b + 1)) w = 0 := by
-    simpa [G, Module.End.pow_apply] using
+    simpa [G, Module.End.pow_apply] using!
       a3_compound_one_nilpotence ρ w a b c h
   have hk : ∀ r s, 1 ≤ r → a + b + 1 ≤ r + s →
       (PowerSeries.coeff s (VOA.DeligneAudit.Garland.Fs G ^ r)) w = 0 := by

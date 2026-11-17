@@ -123,7 +123,7 @@ theorem mode_ge_of_lt {Bm : ℤ} : ∀ (l : List (Ltr D)), (∀ e ∈ l, e.2 < B
         have := List.sum_le_card_nsmul (l.map (fun a => a.2)) Bm (fun x hx => by
           obtain ⟨y, hy, rfl⟩ := List.mem_map.mp hx
           exact le_of_lt (hlt y (List.mem_cons_of_mem _ hy)))
-        simpa [modeSum] using this
+        simpa [modeSum] using! this
       have ha := hlt a (List.mem_cons_self ..)
       have hcons : modeSum D (a :: l) = a.2 + modeSum D l := by simp [modeSum]
       rw [hcons, List.length_cons]
@@ -152,7 +152,7 @@ theorem phi_le_Kbd {Bm : ℤ} (hBm : 0 ≤ Bm) (l : List (Ltr D)) (hlt : ∀ e �
   have := List.sum_le_card_nsmul (l.map (fun a => a.2 ^ 2)) (Bm ^ 2 + lo ^ 2) (fun x hx => by
     obtain ⟨y, hy, rfl⟩ := List.mem_map.mp hx
     exact hb y hy)
-  simpa [phi, Kbd] using this
+  simpa [phi, Kbd] using! this
 
 end Combinatorics
 
@@ -327,7 +327,7 @@ theorem E_le_NS {N₀ : ℕ} (hN₀ : ∀ n : ℤ, (N₀ : ℤ) ≤ n → W.grad
         refine IHd _ ?_ s'' hsp (by rw [grade_perm D hps, hgl'']) b hb le_rfl
         rw [hlen_eq, hsum_eq]
         omega
-      have := Submodule.add_mem _ hs_mem (hlow hG1 (by simpa using hd2))
+      have := Submodule.add_mem _ hs_mem (hlow hG1 (by simpa using! hd2))
       rwa [add_sub_cancel] at this
     have hrest : wordL D A (List.replicate Q a ++ l') b ∈ NS D N Q := by
       have := (sup_le (hlow hG1) hspan) hblock

@@ -133,7 +133,7 @@ theorem mem_of_monomials {w : ℕ} {S : Submodule ℂ (FockN (rank (latP 4)))}
   rw [p.as_sum]
   refine Submodule.sum_mem _ fun d hd => ?_
   have hw : Finsupp.weight weightFnN d = w := hp (MvPolynomial.mem_support_iff.mp hd)
-  rw [show monomial d (coeff d p) = coeff d p • (monomial d (1 : ℂ) : FockN (rank (latP 4))) by
+  rw [show monomial d (p.coeff d) = p.coeff d • (monomial d (1 : ℂ) : FockN (rank (latP 4))) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   exact Submodule.smul_mem _ _ (hS d hw)
 

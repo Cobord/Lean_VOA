@@ -90,17 +90,19 @@ noncomputable abbrev Ls : WeakModule W ((oppBase A).Dsub (-1)) := regularRepL A 
 /-- The top functional `λ_{y₀,u}(w) = ⟨T(w)y₀, u⟩`. -/
 noncomputable def lamTop (y₀ : bot P₂) (u : (pBotAmMod (Q₃ P₃)).carrier) : Module.Dual ℂ M where
   toFun w := dualPairing P₃.isMod (T.val w y₀ : P₃.carrier) (pBotIncl (Q₃ P₃) u)
-  map_add' w w' := by simp only [map_add, LinearMap.add_apply, Submodule.coe_add,
-    dualPairing_add_x]
-  map_smul' c w := by simp only [map_smul, LinearMap.smul_apply, Submodule.coe_smul,
-    dualPairing_smul_x, RingHom.id_apply, smul_eq_mul]
+  map_add' w w' := by
+    simp only [map_add, LinearMap.add_apply, Submodule.coe_add]
+    exact dualPairing_add_x _ _ _ _
+  map_smul' c w := by
+    simp only [map_smul, LinearMap.smul_apply, Submodule.coe_smul, RingHom.id_apply, smul_eq_mul]
+    exact dualPairing_smul_x _ _ _ _
 
 theorem lamTop_perp (y₀ : bot P₂) (u : (pBotAmMod (Q₃ P₃)).carrier) :
     ∀ x ∈ fzO A.toWeakModule, lamTop A T y₀ u x = 0 := by
   intro x hx
   change dualPairing P₃.isMod (T.val x y₀ : P₃.carrier) _ = 0
   rw [T.2.1 x hx]
-  simp [dualPairing_zero_x]
+  exact dualPairing_zero_x _ _
 
 /-- The bottom map `u ↦ λ_{y₀,u}` into `D_{P(−1)}(M)`. -/
 noncomputable def phiTop (y₀ : bot P₂) : (pBotAmMod (Q₃ P₃)).carrier →ₗ[ℂ] (oppBase A).Dsub (-1) where
@@ -140,7 +142,7 @@ theorem phiTop_act (y₀ : bot P₂) (a : V) (u : (pBotAmMod (Q₃ P₃)).carrie
     rcases lt_or_ge k 0 with hk | hk
     · have : a = 0 := by
         have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W ha (j := 0) (by omega)
-        simpa using h
+        simpa using! h
       subst this
       simp only [map_zero, LinearMap.zero_apply]
     obtain ⟨w₀, rfl⟩ : ∃ w₀ : ℕ, k = w₀ := ⟨k.toNat, (Int.toNat_of_nonneg hk).symm⟩
@@ -148,7 +150,8 @@ theorem phiTop_act (y₀ : bot P₂) (a : V) (u : (pBotAmMod (Q₃ P₃)).carrie
     ext w
     rw [phiTop_coe, lamTop_apply, pBotIncl_act, oLevW_homogeneous _ 0 ha]
     change dualPairing _ _ (mode ((contragredientModule P₃.isMod).YM a) _ _) = _
-    rw [dualPairing_contra_mode, oLevW_homogeneous _ 0 ha]
+    refine (dualPairing_contra_mode P₃.isMod a _ _ _).trans ?_
+    rw [oLevW_homogeneous _ 0 ha]
     change _ = (((mode ((regularRepR A neg_one_ne_zero').YM a) ((w₀ : ℤ) - 1 + 0)
       (phiTop A T y₀ u)) : (oppBase A).Dsub (-1)) : Module.Dual ℂ M) w
     rw [regularRepR_mode, phiTop_coe, add_zero,
@@ -156,7 +159,7 @@ theorem phiTop_act (y₀ : bot P₂) (a : V) (u : (pBotAmMod (Q₃ P₃)).carrie
     change dpx P₃.isMod _ (((-1 : ℂ) ^ (w₀ : ℤ) • ∑ j ∈ Finset.range (w₀ + 1),
       ((j.factorial : ℂ)⁻¹) • mode (P₃.isMod.YM ((W.L 1 ^ j) a))
         (2 * (w₀ : ℤ) - ((w₀ : ℤ) - 1) - 2 - (j : ℤ))) (T.val w y₀ : P₃.carrier)) = _
-    simp only [LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply, map_smul, map_sum,
+    simp only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, map_smul, map_sum,
       smul_eq_mul]
     congr 1
     refine Finset.sum_congr rfl fun j hj => ?_
@@ -180,7 +183,7 @@ theorem phiTop_lowest (y₀ : bot P₂) :
   rcases lt_or_ge k 0 with hk | hk
   · have : a = 0 := by
       have h := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W ha (j := 0) (by omega)
-      simpa using h
+      simpa using! h
     subst this
     simp
   obtain ⟨w₀, rfl⟩ : ∃ w₀ : ℕ, k = w₀ := ⟨k.toNat, (Int.toNat_of_nonneg hk).symm⟩
@@ -206,12 +209,14 @@ theorem phiTop_add (y y' : bot P₂) : phiTop A T (y + y') = phiTop A T y + phiT
   ext u w
   change dualPairing _ ((T.val w (y + y') : P₃.carrier)) _
     = dualPairing _ (T.val w y : P₃.carrier) _ + dualPairing _ (T.val w y' : P₃.carrier) _
-  rw [map_add, Submodule.coe_add, dualPairing_add_x]
+  rw [map_add, Submodule.coe_add]
+  exact dualPairing_add_x _ _ _ _
 
 theorem phiTop_smul (c : ℂ) (y : bot P₂) : phiTop A T (c • y) = c • phiTop A T y := by
   ext u w
   change dualPairing _ ((T.val w (c • y) : P₃.carrier)) _ = c * dualPairing _ (T.val w y : P₃.carrier) _
-  rw [map_smul, Submodule.coe_smul, dualPairing_smul_x]
+  rw [map_smul, Submodule.coe_smul]
+  exact dualPairing_smul_x _ _ _ _
 
 /-- `Y^L` and `Y^R` commute on `D_{P(−1)}(M)`, as weak-module modes. -/
 theorem LR_comm (a b : V) (m n : ℤ) (x : (oppBase A).Dsub (-1)) :
@@ -364,7 +369,7 @@ theorem source_restricted (y₀ : bot P₂) :
         rw [show (((k + 1 : ℕ) : ℤ) - 1) = (k : ℤ) by push_cast; ring] at this
         exact this
       rw [hsum] at h3
-      simp only [hR, LinearMap.sub_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+      simp only [hR, LinearMap.sub_apply, LinearMap.coe_sum, Finset.sum_apply,
         LinearMap.smul_apply, LinearMap.dualMap_apply] at h3
       have hn : nres (Q₃ P₃).isMod.toWeakModule a
           (Polynomial.toLaurent ((Polynomial.X + 1 : ℂ[X]) ^ k) * LaurentPolynomial.T m)
@@ -372,8 +377,9 @@ theorem source_restricted (y₀ : bot P₂) :
               mode ((Q₃ P₃).isMod.YM a) (m + i) := by
         rw [toL_lz_pow_T, nres_sum]
         simp only [nres_smul, nres_T]
-      rw [sdiff, hn, Zs]
-      simp only [LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply, map_sum, map_smul,
+      rw [sdiff, hn]
+      unfold Zs
+      simp only [LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, map_sum, map_smul,
         LinearMap.sum_apply, smul_eq_mul] at h3 ⊢
       exact h3
     rw [show Polynomial.toLaurent ((Polynomial.X + 1 : ℂ[X]) ^ k)

@@ -154,7 +154,7 @@ theorem summable_trace_of_fg_closed (Y : IntertwiningOperator A N N) {h q : ℂ}
   have hs := summable_of_subexponential (fun n : ℕ => norm_nonneg
     (trace Y w (h - W.centralCharge / 24 + n)))
     (traceSubexponential_of_fg_closed Y hcw hfg hclosed w) (norm_nonneg q) hq
-  simpa only [norm_mul, norm_pow] using hs
+  simpa only [norm_mul, norm_pow] using! hs
 
 /-- The analytic one-point value, with the conformal prefactor specified on the upper half-plane.
 Use the HasSum theorem below to certify this total definition as a convergent trace. -/

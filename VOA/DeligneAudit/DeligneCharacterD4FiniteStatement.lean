@@ -72,7 +72,9 @@ def demazureString (i : Fin 4) (v : Fin 7 → ℤ) : LP7 :=
 
 /-- `π_i`, extended `ℤ`-linearly. -/
 def demazurePi (i : Fin 4) : LP7 →ₗ[ℤ] LP7 :=
-  Finsupp.linearCombination ℤ (demazureString i)
+  -- through `coeff`, so that it also typechecks where `AddMonoidAlgebra` is a structure
+  (Finsupp.linearCombination ℤ (demazureString i)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℤ).toLinearMap
 
 /-- The reduced word `2,1,3,2,4,2,3,1,2` for `s_θ`, 0-based. -/
 def wordTheta : List (Fin 4) := [1, 0, 2, 1, 3, 1, 2, 0, 1]

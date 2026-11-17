@@ -32,7 +32,7 @@ theorem single_mem_contractionFiltration (t : Label) (a : ℂ) {d : ℕ}
     (h : 2*t.1+t.2.length ≤ d) : Finsupp.single t a ∈ contractionFiltration d := by
   have ht : Finsupp.single t (1:ℂ) ∈ contractionFiltration d :=
     Submodule.subset_span ⟨t,h,rfl⟩
-  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using
+  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using!
     Submodule.smul_mem (contractionFiltration d) a ht
 
 /-- Prefixing one creation mode raises the weighted bound by one. -/
@@ -46,8 +46,8 @@ theorem prepend_mem_contractionFiltration (i : Fin 3 × ℕ) {d : ℕ} {f : Norm
     change 2*t.1+(i::t.2).length ≤ d+1
     simp only [List.length_cons]; omega
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Adding p central factors costs twice p in the weighted filtration. -/
 theorem centralShift_mem_contractionFiltration (p : ℕ) {d : ℕ} {f : NormalForm}
@@ -60,8 +60,8 @@ theorem centralShift_mem_contractionFiltration (p : ℕ) {d : ℕ} {f : NormalFo
     change 2*(p+t.1)+t.2.length ≤ 2*p+d
     omega
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Every actual mode raises the weighted bound of a creation word by at
 most one. This includes the noncentral commutator terms with changed indices. -/
@@ -144,8 +144,8 @@ theorem actNormal_mem_contractionFiltration (a : Fin 3) (m : ℤ) {d : ℕ} {f :
     exact contractionFiltration_mono (by omega)
       (centralShift_mem_contractionFiltration t.1 (modeNormal_mem_contractionFiltration a m t.2))
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- The central-contraction action also raises the bound by at most one. -/
 theorem actContraction_mem (a : Fin 3) (m : ℤ) {d : ℕ} {f : NormalForm}
@@ -157,8 +157,8 @@ theorem actContraction_mem (a : Fin 3) (m : ℤ) {d : ℕ} {f : NormalForm}
     exact contractionFiltration_mono (by omega)
       (centralShift_mem_contractionFiltration t.1 (contractionNormal_mem a m t.2))
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Replacing a vacuum-annihilating actual mode by central contractions loses
 one unit relative to the maximal degree. The error preserves the original bound. -/
@@ -174,8 +174,8 @@ theorem actNormal_sub_actContraction_mem (a : Fin 3) (m : ℤ) (hm : 0 ≤ m)
     exact contractionFiltration_mono ht (centralShift_mem_contractionFiltration t.1
       (modeNormal_sub_contractionNormal_mem a m hm t.2))
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [map_smul] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [map_smul] using! Submodule.smul_mem _ a hf
 
 /-- Apply a finite mode word to an arbitrary normal form by actual normal
 ordering. The list order is the operator composition order. -/
@@ -203,9 +203,9 @@ theorem applyContractions_mem (u : List (Fin 3 × ℤ)) {d : ℕ} {f : NormalFor
     (h : f ∈ contractionFiltration d) :
     applyContractions u f ∈ contractionFiltration (d+u.length) := by
   induction u with
-  | nil => simpa only [applyContractions, LinearMap.id_apply, List.length_nil, Nat.add_zero] using h
+  | nil => simpa only [applyContractions, LinearMap.id_apply, List.length_nil, Nat.add_zero] using! h
   | cons m u ih =>
-    simpa only [applyContractions, LinearMap.comp_apply, List.length_cons, Nat.add_assoc] using
+    simpa only [applyContractions, LinearMap.comp_apply, List.length_cons, Nat.add_assoc] using!
       actContraction_mem m.1 m.2 ih
 
 /-- In a word of vacuum-annihilating modes, replacing all actual actions by
@@ -227,10 +227,10 @@ theorem applyNormal_sub_applyContractions_mem (u : List (Fin 3 × ℤ))
       abel
     rw [he]
     apply Submodule.add_mem
-    · simpa only [List.length_cons, Nat.add_assoc] using
+    · simpa only [List.length_cons, Nat.add_assoc] using!
         actNormal_mem_contractionFiltration m.1 m.2 (ih ht)
     · have hh := actNormal_sub_actContraction_mem m.1 m.2 hm (applyContractions_mem u h)
-      simpa only [List.length_cons, Nat.add_assoc, Nat.add_comm 1 u.length] using hh
+      simpa only [List.length_cons, Nat.add_assoc, Nat.add_comm 1 u.length] using! hh
 
 /-- Vacuum pairing of weighted degree below 2k has zero coefficient at
 central degree k: an empty creation term K^a has weighted degree 2a. -/
@@ -261,7 +261,7 @@ theorem equal_length_pairing_top_contractions (u : List (Fin 3 × ℤ)) (v : Lis
   rw [← applyNormal_wordNormal, wordNormal_creation]
   cases v with
   | nil =>
-    have hu0 : u=[] := by simpa using hlen
+    have hu0 : u=[] := by simpa using! hlen
     subst u
     rfl
   | cons i v =>
@@ -270,7 +270,7 @@ theorem equal_length_pairing_top_contractions (u : List (Fin 3 × ℤ)) (v : Lis
     have hh := applyNormal_sub_applyContractions_mem u hu hf
     have hz := centralPolynomial_coeff_zero_of_weight hh (i::v).length (by
       simp only [List.length_cons] at hlen ⊢; omega)
-    simpa only [map_sub, coeff_sub, sub_eq_zero] using hz
+    simpa only [map_sub, coeff_sub, sub_eq_zero] using! hz
 
 
 end VOA.AffineVOA.NormalOrdering

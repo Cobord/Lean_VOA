@@ -29,14 +29,14 @@ theorem local_weyl_fspan_bound
     have hsum : n + 1 ≤ r + s := by omega
     have hEF : ∀ k, E 1 * F k - F k * E 1 = H (k + 1) := by
       intro k
-      simpa only [add_comm] using hS.hEF 1 k
+      simpa only [add_comm] using! hS.hEF 1 k
     exact VOA.DeligneAudit.Garland.garland hEF
       (fun m k => hS.hHF (m + 1) k) hS.hFF
       (hE 1) (fun m => hH (m + 1) (by omega)) r hr hF0 s hsum
   have hC := cv_bound (List.replicate n 1)
     (by simp) (by intro x hx; rw [List.eq_of_mem_replicate hx])
     V E H F hS y hE hH hH0 hR
-  simpa using hC
+  simpa using! hC
 
 end VOA.DeligneAudit.CVsl2
 

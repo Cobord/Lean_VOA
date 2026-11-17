@@ -158,10 +158,9 @@ theorem ghost_induction (Φ : Sl2GhostSpace → Prop) (h0 : Φ 0)
 
 theorem Ppar_Ppar (x : Sl2GhostSpace) : Ppar (Ppar x) = x := by
   refine ghost_induction (fun x => Ppar (Ppar x) = x) (by simp)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [map_add, map_add, hx, hy])
-    (fun c x hx => by simp only at hx ⊢; rw [map_smul, map_smul, hx])
+    (fun x y hx hy => by rw [map_add, map_add, hx, hy])
+    (fun c x hx => by rw [map_smul, map_smul, hx])
     (by beta_reduce; rw [Ppar_gvac, Ppar_gvac]) (fun a p x hx => ?_) x
-  simp only at hx ⊢
   rw [Ppar_gMode, map_neg, Ppar_gMode, neg_neg, hx]
 
 theorem ghostConj_gvac : ghostConj gvac = gvac := by
@@ -169,11 +168,10 @@ theorem ghostConj_gvac : ghostConj gvac = gvac := by
 
 theorem ghostConj_Ppar (x : Sl2GhostSpace) : ghostConj (Ppar x) = Ppar (ghostConj x) := by
   refine ghost_induction (fun x => ghostConj (Ppar x) = Ppar (ghostConj x)) (by simp)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [map_add, map_add, hx, hy, map_add, map_add])
+    (fun x y hx hy => by rw [map_add, map_add, hx, hy, map_add, map_add])
     (fun c x hx => by
-      simp only at hx ⊢; rw [map_smul, LinearMap.map_smulₛₗ, hx, LinearMap.map_smulₛₗ, map_smul])
+      rw [map_smul, LinearMap.map_smulₛₗ, hx, LinearMap.map_smulₛₗ, map_smul])
     (by beta_reduce; rw [Ppar_gvac, ghostConj_gvac, Ppar_gvac]) (fun a p x hx => ?_) x
-  simp only at hx ⊢
   rw [Ppar_gMode, map_neg, ghostConj_Cr, ghostConj_Cr, hx, map_smul, Ppar_gMode, smul_neg]
 
 /-! ### The conjugation of the annihilation operators -/
@@ -200,14 +198,12 @@ theorem ghostConj_An (a : Fin 3) (q : ℕ × Fin 2) (x : Sl2GhostSpace) :
   refine ghost_induction (fun x => ghostConj (An a q x) =
       ((anCoef a q : ℝ) : ℂ) • An a (swapMode q) (Ppar (ghostConj x))) (by simp)
     (fun x y hx hy => by
-      simp only at hx hy ⊢; rw [map_add, map_add, hx, hy, map_add, map_add, map_add, smul_add])
+      rw [map_add, map_add, hx, hy, map_add, map_add, map_add, smul_add])
     (fun c x hx => by
-      simp only at hx ⊢
       rw [map_smul, LinearMap.map_smulₛₗ, hx, LinearMap.map_smulₛₗ, map_smul, map_smul,
         smul_comm])
     (by beta_reduce; rw [An_gvac, map_zero, ghostConj_gvac, Ppar_gvac, An_gvac, smul_zero]) ?_ x
   intro b p x hx
-  simp only at hx ⊢
   have hcl : ((modeCoef b p : ℝ) : ℂ) * ((anCoef a q : ℝ) : ℂ) =
       -(((modeCoef b p : ℝ) : ℂ) * ((modeCoef a q : ℝ) : ℂ)⁻¹) := by
     simp only [anCoef]; push_cast; ring
@@ -291,7 +287,7 @@ theorem fockForm_Kf (w : Finset ModeIdx → ℝ) (x y : FockSF) :
     fockForm w (Kf x) y = fockForm w x (Kf y) := by
   have key := sesq_ext_basis fockBasis (sesqComp (fockForm w) 1 Kf LinearMap.id)
     (sesqComp (fockForm w) 1 LinearMap.id Kf) ?_ x y
-  · simpa using key
+  · simpa using! key
   intro s t
   change 1 * _ = 1 * _
   rw [LinearMap.id_apply, LinearMap.id_apply, Kf_fockBasis, Kf_fockBasis, (fockForm w).smul_left,
@@ -310,7 +306,9 @@ theorem Kpair_tmul (x y : FockSF) : Kpair (x ⊗ₜ[ℂ] y) = Kf x ⊗ₜ[ℂ] K
       Kpair (u ⊗ₜ[ℂ] v) = Kf u ⊗ₜ[ℂ] Kf v := by
     intro p q u v hu hv
     have huv : u ⊗ₜ[ℂ] v ∈ ghostPairSVA.parity (p + q) :=
-      TensorVA.tmul_mem_tenParity _ _ hu (by rw [add_sub_cancel_left]; exact hv)
+      TensorVA.tmul_mem_tenParity _ _ hu (by
+        have e : p + q - p = q := add_sub_cancel_left _ _
+        rw [e]; exact hv)
     rw [ParityGrading.koszulOp_homog _ 1 huv, ParityGrading.koszulOp_homog _ 1 hu,
       ParityGrading.koszulOp_homog _ 1 hv, TensorProduct.tmul_smul, ← TensorProduct.smul_tmul',
       smul_smul]
@@ -375,7 +373,7 @@ theorem bgPG_Cr_adj (a : Fin 3) (p : ℕ × Fin 2) (x y : Sl2GhostSpace) :
     bgPG (Cr a p x) y = (nrm a p : ℂ) * bgPG x (An a p y) := by
   have key := sesq_ext_tmul3 (sesqComp bgPG 1 (Cr a p) LinearMap.id)
     (sesqComp bgPG (nrm a p) LinearMap.id (An a p)) ?_ x y
-  · simpa using key
+  · simpa using! key
   intro x0 x1 x2 y0 y1 y2
   change 1 * _ = _ * _
   rw [one_mul, LinearMap.id_apply, LinearMap.id_apply]
@@ -402,7 +400,7 @@ theorem bgPG_An_adj (a : Fin 3) (q : ℕ × Fin 2) (x y : Sl2GhostSpace) :
     (nrm a q : ℂ) * bgPG (An a q x) y = bgPG x (Cr a q y) := by
   have key := sesq_ext_tmul3 (sesqComp bgPG (nrm a q) (An a q) LinearMap.id)
     (sesqComp bgPG 1 LinearMap.id (Cr a q)) ?_ x y
-  · simpa using key
+  · simpa using! key
   intro x0 x1 x2 y0 y1 y2
   change _ * _ = 1 * _
   rw [one_mul, LinearMap.id_apply, LinearMap.id_apply]

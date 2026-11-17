@@ -42,7 +42,7 @@ theorem threeMovingStateNorm_differentiable (t : ℂ) (ht : t≠0) (r : ℕ)
       (threeLevelReconstruct_eq r (threeMovingState 0 z r) (threeMovingState_level 0 z r))
     have hrec' : (∑ i, v i z • w i)=chargeWordExpression (threeMovingState 0 z r) := by
       simpa only [threeLevelReconstruct,LinearMap.sum_apply,LinearMap.smulRight_apply,
-        map_sum,map_smul,w,v] using hrec
+        map_sum,map_smul,w,v] using! hrec
     rw [hrec',chargeWordExpression_eval,chargeTransport_threeMovingState]
     rfl
   simp only [← he,← wordExpressionPair_eval,map_sum,map_smul,LinearMap.sum_apply,

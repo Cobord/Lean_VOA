@@ -32,7 +32,7 @@ vacuum, by the actual negative-mode formula. -/
 theorem vacuum_fock_translation_zero (ell : ℂ) :
     chargedFockMap ell 0 (vermaMode _ _ (-1) (highestVector _ _)) = 0 := by
   rw [chargedFockMap_mode, chargedFockMap, universalMap_highestVector]
-  simpa [vacuumN] using sector_negative_vacuum ell 0 1 (by norm_num)
+  simpa [vacuumN] using! sector_negative_vacuum ell 0 1 (by norm_num)
 
 /-- The vacuum Fock family has the vacuum partition bound at every
 background parameter. -/
@@ -43,9 +43,9 @@ theorem vacuum_fock_image_bound (ell : ℂ) (m : ℕ) :
   let h : ℂ := (0:ℂ)^2-2*ell*0
   let v : Verma c h := vermaMode c h (-1) (highestVector c h)
   have hlev : v ∈ sortedSpan c h 1 := by
-    simpa [v, vermaBSASource] using vermaBSASource_mem_level c h (1:ℂ) 1 1
+    simpa [v, vermaBSASource] using! vermaBSASource_mem_level c h (1:ℂ) 1 1
   have hne : v ≠ 0 := by
-    simpa [v, vermaBSASource] using vermaBSASource_ne_zero c h (1:ℂ) 1 one_ne_zero
+    simpa [v, vermaBSASource] using! vermaBSASource_ne_zero c h (1:ℂ) 1 one_ne_zero
       (by norm_num)
   have haux (a : ℂ) (ha : a=0) :
       vermaMode c a 1 (vermaMode c a (-1) (highestVector c a)) = 0 ∧

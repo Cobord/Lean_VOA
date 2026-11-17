@@ -30,7 +30,7 @@ theorem fTop_x_comm (r s : ℕ) :
     have hcoef (c : Fin 28) :
         fD4 (lowerColour 5) (radicalColour 1) c =
           if c = radicalColour 5 then (-1 : ℂ) else 0 := by
-      simpa [lowerAction] using lower_coefficient 5 1 c
+      simpa [lowerAction] using! lower_coefficient 5 1 c
     change (∑ c : Fin 28,
       fD4 (lowerColour 5) (radicalColour 1) c • ρ.op c (r + s) v) =
         -ρ.op (radicalColour 5) (r + s) v
@@ -81,9 +81,9 @@ theorem ry_wick_identity_spectator
     (fTop_x_comm ρ) (fTop_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [xOp, zOp] using radical_ops_comm ρ 1 5 i j v)
+      simpa [xOp, zOp] using! radical_ops_comm ρ 1 5 i j v)
     k s xs R w hR (fTop_garland_zero ρ w m h k s hk hks)
-  simpa only [Module.End.mul_apply, LinearMap.neg_apply] using hh
+  simpa only [Module.End.mul_apply, LinearMap.neg_apply] using! hh
 
 end VOA.DeligneAudit.D4Levi
 

@@ -51,7 +51,7 @@ theorem ordinary_witness_of_factorBottom
     simp only [Complex.add_re, Complex.natCast_re] at hre
     have : (n : ℝ) ≤ 0 := by linarith
     exact_mod_cast (le_antisymm this (Nat.cast_nonneg n))
-  have heq : h = μ := by simpa [hn] using he
+  have heq : h = μ := by simpa [hn] using! he
   exact ⟨P.carrier, inferInstance, inferInstance, O, heq ▸ hlow, hne⟩
 
 theorem lowestWeightValue_of_whole_factorBottom

@@ -29,7 +29,7 @@ theorem a2GradedKey_sum_le (p q N : ℕ) :
     intro k hk l hl heq
     obtain ⟨a, b, d⟩ := k
     obtain ⟨x, y, e⟩ := l
-    simpa [encode, Prod.mk.injEq, A2RadicalKey.mk.injEq, and_assoc] using heq
+    simpa [encode, Prod.mk.injEq, A2RadicalKey.mk.injEq, and_assoc] using! heq
   have hs : J.image encode ⊆ B := by
     intro t ht
     obtain ⟨k, hk, rfl⟩ := Finset.mem_image.mp ht
@@ -37,7 +37,7 @@ theorem a2GradedKey_sum_le (p q N : ℕ) :
     obtain ⟨i, rfl⟩ := a2KeyEnum_cover p q k hbox
     have ha := a2KeyEnum_first_le p q i
     simpa only [B, encode, Finset.mem_product, Finset.mem_range,
-      Nat.lt_succ_iff] using And.intro (And.intro ha hb) hd
+      Nat.lt_succ_iff] using! And.intro (And.intro ha hb) hd
   rw [he, ← Finset.sum_image (f := value) hi]
   calc
     (∑ t ∈ J.image encode, value t) ≤ ∑ t ∈ B, value t :=

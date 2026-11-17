@@ -76,7 +76,7 @@ theorem representedProduct_of_iterateChannel (hV : StronglyRational W)
   · intro d
     rw [productEvaluation_sum F J _ (fun j => hs j d), representedIterate_evaluation]
     simp only [J, representedProduct_evaluation]
-    simpa only [Finset.sum_apply] using (congrFun heq d).symm
+    simpa only [Finset.sum_apply] using! (congrFun heq d).symm
 
 /-- The channelwise transport using exactly the existing PBW-relative
 four-point theorem. No additional analytic input is present here. -/
@@ -122,6 +122,6 @@ theorem representedIterate_of_productChannel (hV : StronglyRational W)
   · intro d
     rw [iterateEvaluation_sum F J _ (fun j => hs j d), representedProduct_evaluation]
     simp only [J, representedIterate_evaluation]
-    simpa only [Finset.sum_apply] using (congrFun heq d).symm
+    simpa only [Finset.sum_apply] using! (congrFun heq d).symm
 
 end VOA.Huang.TensorCat

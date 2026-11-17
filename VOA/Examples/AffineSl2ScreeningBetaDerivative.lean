@@ -29,7 +29,7 @@ theorem oscillatorPartial_betaFactor (r D j : ℕ) (i : Fin r) :
   · rw [if_pos hj,Finset.sum_eq_single j]
     · rw [pderiv_X_self]
     · intro b hb hbj
-      rw [pderiv_X_of_ne (by simpa using hbj : ((0,b) : Fin 3 × ℕ)≠(0,j)),
+      rw [pderiv_X_of_ne (by simpa using! hbj : ((0,b) : Fin 3 × ℕ)≠(0,j)),
         AddMonoidAlgebra.single_zero]
     · intro h
       exact False.elim (h (Finset.mem_range.mpr (by omega)))
@@ -37,7 +37,7 @@ theorem oscillatorPartial_betaFactor (r D j : ℕ) (i : Fin r) :
     apply Finset.sum_eq_zero
     intro b hb
     have hbj : b≠j := by have := Finset.mem_range.mp hb; omega
-    rw [pderiv_X_of_ne (by simpa using hbj : ((0,b) : Fin 3 × ℕ)≠(0,j)),
+    rw [pderiv_X_of_ne (by simpa using! hbj : ((0,b) : Fin 3 × ℕ)≠(0,j)),
       AddMonoidAlgebra.single_zero]
 
 /-- Beta differentiation does not change a boson power. -/
@@ -57,7 +57,7 @@ theorem oscillatorPartial_exponentialFactor_beta (r D M m j : ℕ) :
   rw [exponentialFactor_eq_finiteExponential]
   have h := finiteExponential_derivative r (oscillatorPartial r (0,j))
     (-(M : ℂ)/m) (bosonPower r m) D
-  simpa only [oscillatorPartial_bosonPower_beta,zero_mul,smul_zero,add_zero] using h
+  simpa only [oscillatorPartial_bosonPower_beta,zero_mul,smul_zero,add_zero] using! h
 
 /-- The finite beta lowering shift on one factor. Each retained input
 oscillator has depth j+n and is replaced by the oscillator of depth j. -/
@@ -104,10 +104,10 @@ is exactly auxiliary multiplication, even with arbitrary other factors
 of nonnegative auxiliary degree. -/
 theorem selected_betaShiftFactor (r q M n : ℕ) (hq : 0<q)
     (i : Fin r) (Q : Auxiliary r) (hQ : LowerDegree 0 Q) :
-    (delta r^(2*M)*(betaShiftFactor r (r*(q-1)) n i*Q))
+    (delta r^(2*M)*(betaShiftFactor r (r*(q-1)) n i*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) =
     (delta r^(2*M)*(((single ((n : ℤ) • unitExponent r i) 1 : Auxiliary r)*
-      betaFactor r (r*(q-1)) i)*Q))
+      betaFactor r (r*(q-1)) i)*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   have herror := betaShiftFactor_error_lower r (r*(q-1)) n i
   have hcast : ((r*(q-1) : ℕ) : ℤ)+1=(r : ℤ)*(q-1)+1 := by
@@ -117,9 +117,9 @@ theorem selected_betaShiftFactor (r q M n : ℕ) (hq : 0<q)
   rw [sub_mul,mul_sub] at hz
   change
     (delta r^(2*M)*(((single ((n : ℤ) • unitExponent r i) 1 : Auxiliary r)*
-      betaFactor r (r*(q-1)) i)*Q))
+      betaFactor r (r*(q-1)) i)*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) -
-    (delta r^(2*M)*(betaShiftFactor r (r*(q-1)) n i*Q))
+    (delta r^(2*M)*(betaShiftFactor r (r*(q-1)) n i*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 at hz
   exact (sub_eq_zero.mp hz).symm
 

@@ -46,7 +46,7 @@ theorem diffForm_eq_zero : diffForm = 0 := by
     simp [PowerSeries.coeff_mul, -PowerSeries.coeff_zero_eq_constantCoeff,
       E_qExpansion_coeff_zero _ ⟨2, rfl⟩, E_qExpansion_coeff_zero (k := 8) (by norm_num) ⟨4, rfl⟩]
   have hne : (qExpansion 1 diffForm).order ≠ 0 :=
-    PowerSeries.order_ne_zero_iff_constCoeff_eq_zero.mpr (by simpa using h0)
+    PowerSeries.order_ne_zero_iff_constCoeff_eq_zero.mpr (by simpa using! h0)
   norm_num
   exact pos_iff_ne_zero.mpr hne
 
@@ -81,7 +81,7 @@ theorem coeff_E8 (n : ℕ) : (qExpansion 1 E₈).coeff n = ((e8 n : ℚ) : ℂ) 
 
 /-- **`E₄² = E₈`, coefficientwise over `ℚ`.** -/
 theorem eight_sq (n : ℕ) :
-    ∑ p ∈ Finset.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, e4 p.1 * e4 p.2 = e8 n := by
   have h := congrArg (fun F => PowerSeries.coeff n F) qExpansion_E4_sq
   simp only [PowerSeries.coeff_mul, coeff_E4, coeff_E8] at h
   exact_mod_cast h

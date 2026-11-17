@@ -78,7 +78,7 @@ theorem e6_kn : ∀ c : Fin 78, e6Kn c = true → E6sector.raising c ∨ E6secto
   change ∀ c : Fin 78, e6Kn c = true →
     (6 ≤ c.val ∧ c.val < 42) ∨ (c.val ∈ ([47, 46, 45, 44, 43, 42] : List ℕ))
   intro c h
-  simpa [e6Kn] using h
+  simpa [e6Kn] using! h
 
 /-- **The finiteness table facts for `E6`.** -/
 theorem e6_finiteTable : FiniteTableG E6sector :=

@@ -344,7 +344,7 @@ theorem pairSplitting_charged_gap_three (r r' : Fin (m - 1))
     change chiT m hm hm2 (.inl r) (VOA.mk (V2mPlus m hm) (EP m hm)) = _ at hv
     rw [hv] at h1
     simp [values] at h1
-    simpa using h1
+    simpa using! h1
   -- the model
   have heTD := lat_topData m hm hm2 r hs3
   have he0 := latVacuumGen_ne_zero' m hm

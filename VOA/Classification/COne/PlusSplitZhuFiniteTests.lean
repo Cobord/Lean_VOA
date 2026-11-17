@@ -131,13 +131,13 @@ theorem spanningClass_span (hm2 : 2 ≤ m) :
   have hstates : (⊤ : Submodule ℂ ↥(PlusC2.VP m hm)) =
       Submodule.span ℂ (Set.range (spanningState m hm)) ⊔ O₂ (V2mPlus m hm) := by
     have h := congrArg (Submodule.comap (O₂ (V2mPlus m hm)).mkQ) hc2
-    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using h.symm
+    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using! h.symm
   have hO := span_sup_O_eq_top (V2mPlus m hm) (Set.range (spanningState m hm))
     (by rintro _ ⟨i, rfl⟩; exact spanningState_homogeneous m hm i) hstates
   have hker : (O (V2mPlus m hm)).map (O (V2mPlus m hm)).mkQ = ⊥ := by
     exact Submodule.mkQ_map_self _
   have hmap := congrArg (Submodule.map (O (V2mPlus m hm)).mkQ) hO
   simpa only [Submodule.map_top, Submodule.range_mkQ, Submodule.map_sup,
-    Submodule.map_span, hker, sup_bot_eq, ← Set.range_comp'] using hmap.symm
+    Submodule.map_span, hker, sup_bot_eq, ← Set.range_comp'] using! hmap.symm
 
 end VOA.Classification.COne.PlusZhuFiniteTests

@@ -108,7 +108,7 @@ formalization target (U3 is proved: `X_mul_casimir_mem_I2ns`, `casimir_sq_mem_I2
 `mixed_jetRelation_mem`, `casimirSq_jetRelation_mem`). -/
 structure CasimirAuxiliaryBound : Prop where
   le : ∀ N, carrierDim N ≤
-    ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n, sectorDim N md.1 md.2
+    ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n, sectorDim N md.1 md.2
 
 /-- **Sector fusion bound (B2–B8 with U4, U5).**  The current carrier of the full `I₂` with `m`
 currents and `d` auxiliary spectators has Hilbert series bounded by `F_m / ((q)_m (q)_d)`.  The
@@ -154,9 +154,9 @@ theorem carrierDim_le_demazureCoeffOf (F Dem : ℕ → PowerSeries ℚ)
     (N : ℕ) : (carrierDim N : ℚ) ≤ demazureCoeffOf Dem N := by
   rw [← sectorCoeff_eq_of_mixed F Dem hU6.eq, sectorCoeff]
   calc (carrierDim N : ℚ)
-      ≤ ((∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n,
+      ≤ ((∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n,
           sectorDim N md.1 md.2 : ℕ) : ℚ) := by exact_mod_cast hB1.le N
-    _ = ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.antidiagonal n,
+    _ = ∑ n ∈ Finset.range (N + 1), ∑ md ∈ Finset.HasAntidiagonal.antidiagonal n,
           (sectorDim N md.1 md.2 : ℚ) := by push_cast; rfl
     _ ≤ _ := Finset.sum_le_sum fun n _ => Finset.sum_le_sum fun md _ =>
           sectorDim_le_coeff F hF N md.1 md.2

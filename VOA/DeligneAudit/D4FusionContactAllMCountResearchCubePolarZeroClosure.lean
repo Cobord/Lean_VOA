@@ -57,7 +57,7 @@ theorem consecutivePolarIdeal_zero_closed (m n : ℕ) (d : Fin 3)
 theorem quadraticCubicPolarIdeal_zero_closed (m : ℕ) (d : Fin 3)
     {p : MvPolynomial (Vars m) ℂ} (hp : p ∈ quadraticCubicPolarIdeal m) :
     g0Deriv m (cubeDirection d) 0 p ∈ quadraticCubicPolarIdeal m := by
-  simpa only [consecutivePolarIdeal_two] using consecutivePolarIdeal_zero_closed m 2 d hp
+  simpa only [consecutivePolarIdeal_two] using! consecutivePolarIdeal_zero_closed m 2 d hp
 
 /-- Naming alias for current-word assembly. -/
 theorem quadraticCubicPolarIdeal_zero_lower (m : ℕ) (d : Fin 3)

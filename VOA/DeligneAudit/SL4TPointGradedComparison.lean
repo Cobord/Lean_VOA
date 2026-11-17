@@ -83,7 +83,7 @@ theorem pointGradedEvaluation_surjective (x : ι → σ → ℂ) (d : ℕ) :
   change pointDegreeLayerMap x m.val _ = f m
   rw [map_sum]
   simp only [pointDegreeLayerMap_component, Fin.val_inj]
-  simpa using hp m
+  simpa using! hp m
 
 /-- Once the filtration stabilizes, its graded evaluation kernel is the leading relation ideal. -/
 theorem pointGradedEvaluation_kernel (x : ι → σ → ℂ) (d : ℕ)

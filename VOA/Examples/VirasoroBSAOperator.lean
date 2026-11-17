@@ -78,7 +78,7 @@ theorem wardBSAOperator_below (c h b t : ℂ) (N n : ℕ)
   induction n using Nat.strong_induction_on with
   | h n ih =>
     cases n with
-    | zero => simpa [wardBSAOperator] using hf
+    | zero => simpa [wardBSAOperator] using! hf
     | succ n =>
       intro a j hj
       simp only [wardBSAOperator,LinearMap.smul_apply,LinearMap.sum_apply,Module.End.mul_apply,

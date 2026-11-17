@@ -47,7 +47,7 @@ theorem a3_effective_aggregate (a b c n : ℕ)
       · simp [hi, a3EffectiveMultiplicity, a3ThreeBoxKeyTriples, h₁, h₂, h₃]
       · simp [hi]
     _ ≤ (a3ThreeBoxModeSet a b c d₁ d₂ d₃).card := by
-      simpa only [a3ThreeBoxKeyTriples] using hsum
+      simpa only [a3ThreeBoxKeyTriples] using! hsum
     _ = a.choose d₁ * b.choose d₂ * c.choose d₃ :=
       a3ThreeBoxModeSet_card a b c d₁ d₂ d₃ h₁ h₂ h₃
 

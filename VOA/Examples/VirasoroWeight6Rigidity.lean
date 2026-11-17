@@ -34,7 +34,11 @@ theorem weight6_relation_of_gram (c : ℂ) (r : Fin 4 → ℂ)
   have hb : ∀ j, ∑ i, r i * (VirGram4.canB c).form
       (basis6 c i : VirUniv c) (basis6 c j : VirUniv c) = 0 := by
     intro j
-    simpa only [← canGram_basis6, GramMat.canGram_apply, VirGram4.canB] using hr j
+    have h := hr j
+    rw [← canGram_basis6] at h
+    refine (Finset.sum_congr rfl fun i _ => ?_).trans h
+    exact congrArg (r i * ·)
+      (GramMat.canGram_apply (vacVec_ne_zero c) (virasoroVOA_qp c) 6 (basis6 c) i j).symm
   have hm := gram_row_relation_mem_maxIdeal (VirGram4.canB c)
     (VirGram4.canB_isFullyInvariant c) (VirGram4.canB_normalized c) (basis6 c) r hb
   have hz : (maxIdealVir c).mkQ (∑ i, r i • (basis6 c i : VirUniv c)) = 0 :=

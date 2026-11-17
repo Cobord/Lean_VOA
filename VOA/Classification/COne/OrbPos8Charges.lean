@@ -33,8 +33,8 @@ theorem fixed_current_comm (P : TwistedModule g n M) {h v : V}
     finsum_eq_single _ (0 : ℕ) (fun i hi => by
       rw [zero_add, hv i, if_neg hi, map_zero]
       simp)] at hJ
-  have hzero : W.smul h 0 v = c • v := by simpa using hv 0
-  simpa [hzero, cbinom, negOnePow] using hJ
+  have hzero : W.smul h 0 v = c • v := by simpa using! hv 0
+  simpa [hzero, cbinom, negOnePow] using! hJ
 
 end FixedCurrent
 
@@ -81,7 +81,7 @@ theorem torus_charge_comm (P : TwistedModule (charU 1 le_rfl u) n M)
       chargeCoord (latP 1) β (LatMod.a0 1) •
         P.YM (latChargeGen (latP 1) β) ((n : ℤ) * p + q) x :=
   fixed_current_comm P (charU_hb u) _ (fun i => by
-    simpa using hb_smul_charge 1 le_rfl β (Int.natCast_nonneg i)) p q x
+    simpa using! hb_smul_charge 1 le_rfl β (Int.natCast_nonneg i)) p q x
 
 /-- Every nonzero charged-mode image of a current eigenvector has the
 predicted shifted eigenvalue, without any classification assumption. -/
@@ -111,7 +111,7 @@ theorem torus_L0_on_vac (P : TwistedModule (charU 1 le_rfl u) n M) (hn : 0 < n)
   have hv := module_L0_on_vac (cyclicRestriction P hn).toWeakModule H hω
     (fun k hk => (torusHeisenberg P hn).mem_vac.mp hx k hk)
   simpa only [cyclicRestriction, restrictedOrdModule, restrictedWeakModule,
-    mode_restrictedFields, mul_one, mul_zero] using hv
+    mode_restrictedFields, mul_one, mul_zero] using! hv
 
 /-- The conformal weight of a Heisenberg vacuum eigenvector is fixed by its charge. -/
 theorem torus_vac_energy (P : TwistedModule (charU 1 le_rfl u) n M) (hn : 0 < n)

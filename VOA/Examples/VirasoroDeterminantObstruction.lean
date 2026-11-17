@@ -38,7 +38,7 @@ theorem det_pairing_of_corrections_mem_span
     rw [Finset.sum_add_distrib, hs, add_neg_cancel]
   apply det_eq_zero_of_lifted_kernel _ (fun j => inl (r j) + inr (s j))
     (pairingMatrix_mulVec_lifted_relation u u₁ a a₁ r s hr hc) i
-  simpa using hi
+  simpa using! hi
 
 /-- Quotient images of the universal partition basis span the entire simple
 homogeneous component. A homogeneous state lifts to the universal component,
@@ -66,7 +66,7 @@ theorem partition_tangent_mem_span (c : ℂ)
         virWord (virasoroSimple c).L (partitionWord n i) (virasoroSimple c).vacuum)) := by
   apply simple_partition_mem_span
   have h := (creationWord_grading D hD β j.val).2
-  simpa only [creationWord, j.property.2] using h
+  simpa only [creationWord, j.property.2] using! h
 
 /-- The first-order part of a lifted word, followed by ordinary vacuum pairing,
 is an ordinary complex linear functional on the input state. -/
@@ -136,7 +136,7 @@ theorem actual_partition_determinant_zero (c : ℂ)
       ∑ i, r i * (partitionGramPolynomial n i j).eval c = 0 := by
     have hh := congrFun hr j
     simpa only [Matrix.vecMul, dotProduct, RingHom.mapMatrix_apply,
-      Matrix.map_apply, Pi.zero_apply] using hh
+      Matrix.map_apply, Pi.zero_apply, Polynomial.coe_evalRingHom] using hh
   have hrel := quotient_relation_of_word_gram c (gradedBasis c n)
     (partitionWord n) r (partitionWord_basis c n) hrow
   obtain ⟨i, hi⟩ : ∃ i, r i ≠ 0 := by

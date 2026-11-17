@@ -46,7 +46,7 @@ theorem pow_mul_X : ∀ k : ℕ, Y ^ (k + 1) * X = X * Y ^ (k + 1) - (k + 1) •
 
 theorem Ypow_Xpow_apply {m : ℕ} {u : V} (hu : (Y ^ m) u = 0) :
     ∀ j : ℕ, (Y ^ (m + j)) ((X ^ j) u) = 0
-  | 0 => by simpa using hu
+  | 0 => by simpa using! hu
   | j + 1 => by
       have ih := Ypow_Xpow_apply hu j
       rw [pow_succ' X j, Module.End.mul_apply, ← Module.End.mul_apply (Y ^ (m + (j + 1))),
@@ -150,10 +150,10 @@ def Dop (P : PowerSeries (Module.End ℂ V)) : PowerSeries (Module.End ℂ V) :=
 theorem Dop_mul (P Q : PowerSeries (Module.End ℂ V)) : Dop (P * Q) = Dop P * Q + P * Dop Q := by
   refine PowerSeries.ext fun n => ?_
   simp only [Dop, coeff_mk, map_add, coeff_mul]
-  have h1 : ∀ x ∈ Finset.antidiagonal (n + 1), ((n + 1 : ℕ) : ℂ) • (coeff x.1 P * coeff x.2 Q) =
+  have h1 : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal (n + 1), ((n + 1 : ℕ) : ℂ) • (coeff x.1 P * coeff x.2 Q) =
       (x.1 : ℂ) • (coeff x.1 P * coeff x.2 Q) + (x.2 : ℂ) • (coeff x.1 P * coeff x.2 Q) := by
     intro x hx
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     rw [← add_smul, ← hx]; push_cast; ring_nf
   rw [Finset.smul_sum, Finset.sum_congr rfl h1, Finset.sum_add_distrib,
     Finset.Nat.sum_antidiagonal_succ, Finset.Nat.sum_antidiagonal_succ']
@@ -180,10 +180,10 @@ theorem rel_HF (hHF : ∀ m k, H (m + 1) * F k - F k * H (m + 1) = (-2 : ℂ) �
   rw [← Finset.Nat.sum_antidiagonal_swap (f := fun x : ℕ × ℕ => F x.1 * H (x.2 + 1))]
   simp only [Prod.fst_swap, Prod.snd_swap]
   rw [← sub_eq_iff_eq_add', ← Finset.sum_sub_distrib]
-  have : ∀ x ∈ Finset.antidiagonal n, H (x.1 + 1) * F x.2 - F x.2 * H (x.1 + 1) =
+  have : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal n, H (x.1 + 1) * F x.2 - F x.2 * H (x.1 + 1) =
       (-2 : ℂ) • F (n + 1) := by
     intro x hx
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     rw [hHF, show x.1 + 1 + x.2 = n + 1 by omega]
   rw [Finset.sum_congr rfl this, Finset.sum_const, Finset.Nat.card_antidiagonal, smul_comm,
     ← Nat.cast_smul_eq_nsmul ℂ]
@@ -307,10 +307,10 @@ include hEF hE in
 /-- **Quadratic Garland identity with `P(u) = 1`**: if `F₀^N w = 0` then
 `∑_{i+j=s} F_i F_j w = 0` for all `s ≥ N - 2`. -/
 theorem garland_two {N : ℕ} (hN : (F 0 ^ N) w = 0) (s : ℕ) (hs : N ≤ s + 2) :
-    ∑ x ∈ Finset.antidiagonal s, F x.1 (F x.2 w) = 0 := by
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, F x.1 (F x.2 w) = 0 := by
   have h2 := garland hEF hHF hFF hE hH 2 (by norm_num) hN s (by omega)
   rw [pow_two, coeff_mul, LinearMap.coe_sum, Finset.sum_apply] at h2
-  simpa [Fs, coeff_mk, Module.End.mul_apply] using h2
+  simpa [Fs, coeff_mk, Module.End.mul_apply] using! h2
 
 end Kill
 

@@ -122,7 +122,7 @@ theorem levOK_base : LevOK 0 0 (baseZ (S := S)) := by
   have e : castT (m := m) (baseZ (S := S)) = baseT := by
     funext c d; simp only [castT, baseZ, baseT]; split_ifs <;> simp
   rw [e]
-  simpa using h
+  simpa using! h
 
 section Ops
 

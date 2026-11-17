@@ -17,7 +17,7 @@ theorem sourceH_X (x : Vars 2) :
     g0Deriv 2 0 0 (MvPolynomial.X x) =
       (h0Weight x.1 : ℂ) • MvPolynomial.X x := by
   have hh := h0Deriv_modeX 2 0 x.2.val x.1
-  simpa only [modeX,dif_pos x.2.isLt,Nat.zero_add,Fin.eta] using hh
+  simpa only [modeX,dif_pos x.2.isLt,Nat.zero_add,Fin.eta] using! hh
 
 theorem lowerH_product (i j : Fin 9) :
     lowerH (MvPolynomial.X (i,0) * MvPolynomial.X (j,1)) =

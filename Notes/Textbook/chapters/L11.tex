@@ -3603,8 +3603,9 @@ This is Definition~3.4 verbatim (with $D$ ranging over the word basis, which suf
 (\lean{IsLinear}: every OPE value in \lean{linSub ι} $=\C1\oplus\operatorname{span}\{\text{letters}\}$) the full ideal is
 $M_{\mathrm{two}}$, for any interface term. \lean{vacU_ne_zero_MRfull} is the graded non-vacuity guard, with hypotheses
 \lean{IsConformal} and \lean{NPGraded NP}. The closure of $M(R)$ under $N$ and $P$ on both sides (De Sole--Kac Cor.~4.5, which
-uses the Jacobi identity) is only stated, as the \lean{Prop}-structure \lean{NPClosure}. The docstring notes that the composite
-$M_{\mathrm{full}} = \ker\Phi$ for Virasoro is not formalised (it would be one \lean{Eq.trans} in an \leanpath{Examples} file).
+uses the Jacobi identity) is only stated, as the \lean{Prop}-structure \lean{NPClosure}. The docstring of \lean{MRfull_virasoro}
+says that the composite $M_{\mathrm{full}} = \ker\Phi$ for Virasoro is not performed in Lean; that sentence is now out of date: the
+composite is the one \lean{Eq.trans} of Corollary~\ref{l11:cor:MRfullker} below, in an \leanpath{Examples} file.
 \end{dictionary}
 
 \textbf{Proof on paper.} For $X\in\C1\oplus R$, $N(X,B) = XB$ by the two unit/letter axioms, and for linear data
@@ -3620,6 +3621,36 @@ unconditional.
 For a Lie-type OPE nothing nonlinear happens, and the general construction must reduce to the universal enveloping algebra of the
 mode Lie algebra; that consistency check is what is proved, modulo the existence of the general construction.
 \end{physics}
+
+\begin{corollary}[$M_{\mathrm{full}}=\ker\Phi$ for Virasoro, over the interface]\label{l11:cor:MRfullker}
+For every $c\in\C$ and every interface term \lean{NP} for the Virasoro OPE, $M_{\mathrm{full}}=\ker\Phi_{\mathrm{Vir}}$, where
+$\Phi_{\mathrm{Vir}}:\mathcal T(R)\to V(c,0)$ is the map of Theorem~\ref{l11:thm:virpres}.
+\end{corollary}
+\noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak NonlinearMRVirasoro.lean}.
+\begin{leancode}
+theorem MRfullCar_virasoro_eq_ker_PhiVir (c : ℂ) (NP : NPExtension (virasoroOPE c)) :
+    MRfullCar NP = LinearMap.ker (PhiVir c) :=
+  (MRfull_virasoro c NP).trans (MRtwoCar_eq_ker_PhiVir c)
+\end{leancode}
+\begin{dictionary}
+\lean{MRfullCar NP} is Definition~\ref{l11:def:MRfull}, \lean{PhiVir c} the map of Theorem~\ref{l11:thm:virpres}, and
+\lean{MRtwoCar_eq_ker_PhiVir} (\leanpath{VOA/\allowbreak Examples/\allowbreak NonlinearVirasoroGenuine.lean}) restates
+\lean{MRtwo_eq_ker_PhiVir} for the carrier \lean{MRtwoCar}. The one-line proof term is shown because it is the whole content:
+\lean{MRfull_virasoro} followed by \lean{MRtwoCar_eq_ker_PhiVir}. The only hypothesis is the interface term
+\lean{NP : NPExtension (virasoroOPE c)}, and \textbf{no instance of \lean{NPExtension} exists in the library}
+(Definition~\ref{l11:def:npext}); so, exactly like \lean{MRfull_virasoro}, the corollary is a statement about every
+\lean{NP} that may one day be constructed, and today it is applied to none.
+\end{dictionary}
+\textbf{Proof on paper.} Compose the two equalities $M_{\mathrm{full}}=M_{\mathrm{two}}$ (the Virasoro OPE is linear) and
+$M_{\mathrm{two}}=\ker\Phi$ (Theorem~\ref{l11:thm:virpres}). \qed
+\begin{physics}
+Whatever normal-ordered product the general construction supplies, the relations it imposes on the Virasoro words are exactly the
+null states of the map to the vacuum module: the presented algebra is the universal Virasoro VOA $V(c,0)$, no more and no less.
+\end{physics}
+\begin{status}
+Proved; axioms standard (\lean{[propext, Classical.choice, Quot.sound]}). Conditional on an \lean{NPExtension} term, which does
+not exist in the library.
+\end{status}
 
 \begin{definition}[Presentations with strong relations]\label{l11:def:vapres}
 A \lean{VAPresentation} is an OPE datum together with a finite list of homogeneous elements of $\mathcal T(R)$ of positive weight, the
@@ -3934,6 +3965,7 @@ Lean declaration & Intended meaning & Hypotheses / status & Fidelity check\\
 \lean{ope_mem_zfilt}, \lean{rel_mem_gr} & gradings on $\mathcal T(R)$ & unconditional (\lean{IsConformal} for the latter) & Thm.~\ref{l11:thm:gradings}\\
 \lean{NPExtension} & De Sole--Kac Lemma 3.2 interface & \textbf{no instance exists} & Def.~\ref{l11:def:npext}\\
 \lean{MRfullCar_eq_MRtwoCar}, \lean{vacU_ne_zero_MPres}, \lean{one_}\allowbreak\lean{mem_}\allowbreak\lean{relIdeal_}\allowbreak\lean{omegaRel} & full $M(R)$, vacuum guard, $\omega$-counterexample & \textbf{vacuous today} (need \lean{NP}) & Def.~\ref{l11:def:MRfull}, Thm.~\ref{l11:thm:vapres}\\
+\lean{MRfullCar_}\allowbreak\lean{virasoro_}\allowbreak\lean{eq_}\allowbreak\lean{ker_}\allowbreak\lean{PhiVir} & $M_{\mathrm{full}}=\ker\Phi$ for Virasoro & \textbf{vacuous today} (need \lean{NP}) & Cor.~\ref{l11:cor:MRfullker}\\
 \lean{mem_}\allowbreak\lean{maxGradedIdeal_}\allowbreak\lean{of_}\allowbreak\lean{null} & null relations lie in the maximal ideal & fully invariant normalised form & Def.~\ref{l11:def:doctrine}\\
 \lean{TheVOA}, \lean{simple_}\allowbreak\lean{realization_}\allowbreak\lean{unique} & ``the'' VOA; uniqueness of simple realizations & \textbf{arbitrary input $W$; unproved \lean{Prop}} & warning in §\ref{l11:sec:doctrine}\\
 \lean{Heisenberg.deltaSub}, \lean{deltaSub₂_specialize} & Li's $\Delta$ (spectral flow) as substitution & unconditional; definitional layer & Thm.~\ref{l11:thm:lidelta}\\

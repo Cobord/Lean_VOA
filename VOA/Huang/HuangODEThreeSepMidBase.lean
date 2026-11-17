@@ -52,8 +52,7 @@ theorem mid_mem_weight (hY₁ : IsIntertwiningOperator A₁ A₆ A₀ Y₁)
     Y₁ p w₁ (swap2 YB q w₂ (Y₃ r w₃ w₄)) ∈
       A₀.weight (α₁ + α₂ + α₃ + α₄ - p - q - r - 3) := by
   convert mem_weight hY₁ h₁ (mem_weight hYB (mem_weight hY₃ h₃ h₄ r) h₂ q) p using 1
-  congr 1
-  ring
+  all_goals first | (congr 1; ring) | rfl
 
 /-- Boundedness below gives a uniform base for the flipped middle shape. -/
 theorem exists_midUniformBase (hYB : IsIntertwiningOperator A₅ A₂ A₆ YB)

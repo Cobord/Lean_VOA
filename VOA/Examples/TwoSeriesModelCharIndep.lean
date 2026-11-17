@@ -53,9 +53,9 @@ theorem splitE_natAdd (f : MvPolynomial (Fin s) ℂ) :
       (mapAlgHom (Algebra.ofId ℂ (MvPolynomial (Fin m) ℂ))) := by
     apply MvPolynomial.algHom_ext
     intro i
-    simp [splitE, sumAlgEquiv, sumRingEquiv, sumToIter_Xl]
+    simp [splitE]
   have h := AlgHom.congr_fun this f
-  simpa [mapAlgHom, Algebra.ofId] using h
+  simpa [mapAlgHom, Algebra.ofId] using! h
 
 theorem splitE_castAdd (g : MvPolynomial (Fin m) ℂ) :
     splitE m s (rename (Fin.castAdd s) g) = MvPolynomial.C g := by
@@ -64,14 +64,14 @@ theorem splitE_castAdd (g : MvPolynomial (Fin m) ℂ) :
         (MvPolynomial (Fin s) (MvPolynomial (Fin m) ℂ))) := by
     apply MvPolynomial.algHom_ext
     intro i
-    simp [splitE, sumAlgEquiv, sumRingEquiv, sumToIter_Xr]
+    simp [splitE]
   have h := AlgHom.congr_fun this g
-  simpa using h
+  simpa using! h
 
 theorem coeff_splitE_mul (f : MvPolynomial (Fin s) ℂ) (g : MvPolynomial (Fin m) ℂ)
     (μ : Fin s →₀ ℕ) :
-    coeff μ (splitE m s (rename (Fin.castAdd s) g * rename (Fin.natAdd m) f)) =
-      coeff μ f • g := by
+    (splitE m s (rename (Fin.castAdd s) g * rename (Fin.natAdd m) f)).coeff μ =
+      f.coeff μ • g := by
   rw [map_mul, splitE_natAdd, splitE_castAdd, coeff_C_mul, coeff_map, smul_eq_C_mul,
     mul_comm]
 
@@ -85,22 +85,22 @@ theorem linearIndependent_rename_mul {ι κ : Type*} {g : ι → MvPolynomial (F
   rw [linearIndependent_iff']
   intro S c hS p0 hp0
   -- coefficientwise in `t_A`
-  have hμ : ∀ μ : Fin s →₀ ℕ, ∑ p ∈ S, (c p * coeff μ (f p.2)) • g p.1 = 0 := by
+  have hμ : ∀ μ : Fin s →₀ ℕ, ∑ p ∈ S, (c p * (f p.2).coeff μ) • g p.1 = 0 := by
     intro μ
-    have h := congrArg (fun P => coeff μ (splitE m s P)) hS
+    have h := congrArg (fun P => (splitE m s P).coeff μ) hS
     simp only [map_sum, map_smul, coeff_sum, coeff_smul, coeff_splitE_mul, map_zero,
-      coeff_zero] at h
+      AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at h
     rw [← h]
     exact Finset.sum_congr rfl fun p _ => by rw [smul_smul]
   -- group by the `B`-index
   have hgrp : ∀ μ : Fin s →₀ ℕ, ∀ i ∈ S.image Prod.fst,
-      ∑ p ∈ S.filter (fun p => p.1 = i), c p * coeff μ (f p.2) = 0 := by
+      ∑ p ∈ S.filter (fun p => p.1 = i), c p * (f p.2).coeff μ = 0 := by
     intro μ
     have h := hμ μ
     rw [← Finset.sum_fiberwise_of_maps_to (g := Prod.fst) (t := S.image Prod.fst)
       (fun p hp => Finset.mem_image_of_mem _ hp)] at h
     have h2 : ∑ i ∈ S.image Prod.fst,
-        (∑ p ∈ S.filter (fun p => p.1 = i), c p * coeff μ (f p.2)) • g i = 0 := by
+        (∑ p ∈ S.filter (fun p => p.1 = i), c p * (f p.2).coeff μ) • g i = 0 := by
       rw [← h]
       apply Finset.sum_congr rfl
       intro i _
@@ -113,8 +113,9 @@ theorem linearIndependent_rename_mul {ι κ : Type*} {g : ι → MvPolynomial (F
   -- the fibre over `p0.1` gives a relation among the `f`
   have hrel : ∑ p ∈ S.filter (fun p => p.1 = p0.1), c p • f p.2 = 0 := by
     ext μ
-    rw [coeff_sum, coeff_zero]
-    simp only [coeff_smul, smul_eq_mul]
+    rw [coeff_sum]
+    simp only [coeff_smul, smul_eq_mul, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+      Pi.zero_apply]
     exact hgrp μ p0.1 hi0
   have hinj : Set.InjOn Prod.snd (S.filter (fun p => p.1 = p0.1) : Set (ι × κ)) := by
     intro p hp q hq hpq
@@ -129,7 +130,7 @@ theorem linearIndependent_rename_mul {ι κ : Type*} {g : ι → MvPolynomial (F
     rw [show (p0.1, p.2) = p from Prod.ext h1.symm rfl]
   have := (linearIndependent_iff'.mp hf) _ _ hrel' p0.2
     (Finset.mem_image_of_mem _ (Finset.mem_filter.mpr ⟨hp0, rfl⟩))
-  simpa using this
+  simpa using! this
 
 /-! ### Scaling the first `m` variables -/
 

@@ -629,6 +629,7 @@ theorem autVnat_mulEquiv_liftable_of_commutant_symm_apply (hcomm : GmatCommutant
     (autVnat_mulEquiv_liftable_of_commutant hcomm).symm g = monsterLift g := by
   simp only [autVnat_mulEquiv_liftable_of_commutant, MulEquiv.symm_symm,
     MulEquiv.ofBijective_apply]
+  try rfl
 
 /-- `Aut V♮ ≃* liftableSubgroup`, as a proposition, given the commutant input. -/
 theorem nonempty_autVnat_mulEquiv_liftable_of_commutant (hcomm : GmatCommutantScalar) :

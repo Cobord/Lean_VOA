@@ -83,7 +83,7 @@ end Generic
 
 theorem chargeGen_pos_grading : latChargeGen (latP 1) (a1 1) ∈ V2v.grading 1 := by
   have h := chargeGen_grading 1
-  simpa [a1] using h
+  simpa [a1] using! h
 
 theorem eo_eq_scr (x : Sp) : eo x = screening V2v (latChargeGen (latP 1) (a1 1)) x := by
   rw [eo_eq]; rfl
@@ -133,8 +133,9 @@ theorem ho_vn (n k : ℕ) : ho (vn n k) = (((2 * n : ℕ) : ℂ) - 2 * k) • vn
 
 theorem vn_eq_zero_of_gt (n k : ℕ) (hk : 2 * n < k) : vn n k = 0 := by
   have h := vn_bigrad n k
-  rw [bigradα_eq_bot_of_neg _ _ (by nlinarith), Submodule.mem_bot] at h
-  exact h
+  exact (Submodule.mem_bot ℂ).mp ((bigradα_eq_bot_of_neg (latP 1)
+    (w := (k : ℤ) * (2 * (n : ℤ) - (k : ℤ))) (((n : ℤ) - (k : ℤ) : ℤ) : (latP 1).carrier)
+    (by nlinarith)).le h)
 
 /-- A weight-`N²` vector of `h₀`-weight `2N - 2t` (`t ≥ 1`) whose `e₀`-image is a descendant
 is itself a descendant. -/
@@ -278,12 +279,12 @@ theorem smul_chargeGen_bottom (s m : ℤ) :
       latticeCocycle (latP 1) s m • latChargeGen (latP 1) (s + m) := by
   have hY : V2v.Y (latChargeGen (latP 1) s) = Yeαvec (latP 1) s := by
     have hw := YfullGen_word (latP 1) (latP_even 1) (latP_posDef 1 le_rfl) [] s
-    rw [YwordLatGen_nil] at hw
     exact hw
   rw [PreVertexAlgebra.smul_def, hY]
   simp only [mode_apply, latChargeGen]
-  rw [Yeαvec_tmul, show -(-(latP 1).form s m - 1) - 1 - (latP 1).form s m = (0 : ℤ) by ring,
-    EEVec_vacuum, if_pos (le_refl (0 : ℤ)), Int.toNat_zero, vSchur_zero]
+  rw [Yeαvec_tmul (latP 1) s m,
+    show -(-(latP 1).form s m - 1) - 1 - (latP 1).form s m = (0 : ℤ) by ring,
+    EEVec_vacuum (latP 1) s, if_pos (le_refl (0 : ℤ)), Int.toNat_zero, vSchur_zero (latP 1) s]
   rfl
 
 /-- The top-channel mode index `-2sm-1`. -/
@@ -317,7 +318,7 @@ theorem top_wv (s m : ℕ) : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → i ≤ 2 *
       have h := V2v.smul_mem_grading (wv_grading s i) (wv_grading m j) (topIdx s m)
       rw [topIdx] at h
       convert h using 2
-      push_cast; ring
+      all_goals first | rfl | (push_cast; ring)
     -- `h₀`-weight
     have hho : ho (Φ i j) = (((2 * (s + m) : ℕ) : ℂ) - 2 * t) • Φ i j := by
       subst hij

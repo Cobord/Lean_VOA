@@ -449,7 +449,7 @@ theorem slotA_vecC (x : Fin n) (v : SV) (hv : svRange n v = true) :
   funext y
   simp only [slotA, vecC]
   have hv' : ∀ p ∈ v, p.1 < n := by
-    simpa [svRange] using hv
+    simpa [svRange] using! hv
   have h1 : ∑ d : Fin n, fC n br x y d * ((sget v d : ℤ) : ℂ) =
       ∑ d : Fin n, ((sget v d : ℤ) : ℂ) * (fZ br x y d : ℂ) := by
     refine Finset.sum_congr rfl fun d _ => ?_
@@ -525,7 +525,7 @@ theorem single_mem_slotWords_of_check [NeZero n] (c₀ : Fin n) (L : ℕ) (c : F
     obtain ⟨p, hp, rfl⟩ := List.mem_map.mp hz'
     obtain ⟨hl, hx⟩ := hw p hp
     rw [vecC_smul]
-    refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨p.1.map (Fin.ofNat n), by simpa using hl, ?_⟩)
+    refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨p.1.map (Fin.ofNat n), by simpa using! hl, ?_⟩)
     rw [← vecC_single, wordA_vecC _ _ (svRange_single c₀.2), List.map_map]
     congr 2
     conv_lhs => rw [← List.map_id p.1]

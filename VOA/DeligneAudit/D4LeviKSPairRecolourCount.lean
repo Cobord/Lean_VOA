@@ -21,8 +21,8 @@ theorem pairRemainingPaired_card (b k : ℕ) :
       exact Fin.ext heq
     · intro n hn
       have hn' := Finset.mem_Ico.mp hn
-      exact ⟨⟨n, hn'.2⟩, by simpa using hn'.1, rfl⟩
-  simpa only [Nat.card_Ico] using h
+      exact ⟨⟨n, hn'.2⟩, by simpa using! hn'.1, rfl⟩
+  simpa only [Nat.card_Ico] using! h
 
 theorem pairRemainingX_card (a b c k : ℕ) :
     (Finset.univ.filter fun t : PairSource a b c =>

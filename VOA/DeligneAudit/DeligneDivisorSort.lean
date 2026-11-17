@@ -50,7 +50,7 @@ theorem gz_kget (k : ℕ) (s : ℤ) (l : List KTerm) (h : gz k s l = true) (k' :
     · simp only [Bool.and_eq_true, beq_iff_eq] at h
       have := ih t.2 t.1 h.2
       rw [kget_cons, h.1]
-      simpa using this
+      simpa using! this
 
 /-- Keys `256 a + b`. -/
 def keyQ (L : QV) : List KTerm := L.map fun t => (t.2.2, t.1 * 256 + t.2.1)
@@ -73,7 +73,7 @@ theorem kget_eq_zero_of_sorted {l : List KTerm}
   | t :: rest, h =>
     rw [kget_cons]
     have := gz_kget t.2 t.1 rest h k
-    simpa [eq_comm] using this
+    simpa [eq_comm] using! this
 
 theorem qget_eq_kget (L : QV) (hL : small256 L = true) {a b : ℕ} (ha : a < 256) (hb : b < 256) :
     qget L a b = kget (keyQ L) (a * 256 + b) := by

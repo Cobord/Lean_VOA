@@ -65,7 +65,8 @@ theorem ordinaryFourPointCompare_inputs {X Y Z X' Y' Z' T : Ordinary W}
       restrictInputs f (tensorHom F g h) (ordinaryFourPointCompare F H X' Y' Z' T I) := by
   apply (H.faithfulness X Y Z T).2
   funext d
-  rw [ordinaryFourPointCompare_spec]
+  refine (congrFun (ordinaryFourPointCompare_spec F H X Y Z T
+    (restrictInputs (tensorHom F f g) h I)) d).trans ?_
   rw [iterateEvaluation_inputs, productEvaluation_inputs]
   exact congrFun (ordinaryFourPointCompare_spec F H X' Y' Z' T I).symm (d.inputs f g h)
 
@@ -121,7 +122,8 @@ theorem NaturalReassociation.homEquiv_inputs {X Y Z X' Y' Z' T : Ordinary W}
     change k.val ((tensorHom F (tensorHom F f g) h).val _) = _
     rw [tensorHom_intertwiner]
     rfl
-  rw [hl, R.inputs]
+  rw [hl]
+  refine (R.inputs _ f g h).trans ?_
   rw [← Reassociation.homEquiv_spec]
   apply Subtype.ext
   funext n

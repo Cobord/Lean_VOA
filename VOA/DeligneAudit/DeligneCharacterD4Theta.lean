@@ -104,7 +104,7 @@ theorem thetaCoeff_eq_prime (j : ℤ) :
 /-- The constant-term functional `F ↦ CT_x Θ(x) F(x)` on Laurent polynomials in `x` with
 coefficients in any algebra over `ℤ⟦q⟧`. -/
 def thetaCT {A : Type*} [CommRing A] [Algebra (PowerSeries ℤ) A] (F : A[T;T⁻¹]) : A :=
-  F.sum fun j c => c * algebraMap (PowerSeries ℤ) A (thetaCoeff (-j))
+  F.coeff.sum fun j c => c * algebraMap (PowerSeries ℤ) A (thetaCoeff (-j))
 
 /-- `θ₀ = 2`, i.e. `½ CT_x Θ = 1`: the initial value of the D₄ recursion. -/
 theorem thetaCoeff_zero : thetaCoeff 0 = 2 := by
@@ -120,7 +120,7 @@ def jtpTrunc (M : ℕ) : (PowerSeries ℤ)[T;T⁻¹] :=
 /-- **The two-variable Jacobi triple product** (named input, proved as `VOA.QSeries.JTP.twoVariableJTP`): every
 `q`-degree below the truncation order is exact. -/
 structure TwoVariableJTP : Prop where
-  eq : ∀ (M : ℕ) (j : ℤ) (d : ℕ), d < M → coeff d (jtpTrunc M j) = coeff d (jtpCoeff j)
+  eq : ∀ (M : ℕ) (j : ℤ) (d : ℕ), d < M → coeff d ((jtpTrunc M).coeff j) = coeff d (jtpCoeff j)
 
 end
 

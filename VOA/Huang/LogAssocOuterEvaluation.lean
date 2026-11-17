@@ -36,14 +36,12 @@ noncomputable def outerEvaluationBlock (N : LogVModule W R) (N₃ : LogVModule W
         outsideDoubleDual N N₃ N₄ β c A ξ z+outsideDoubleDual N N₃ N₄ β c A η z := by
       ext g
       exact (C2Rigid.dualPairing N.toGW (A g z)).map_add ξ η
-    dsimp only
     rw [he,map_add]
   · intro s ξ z
     have he : outsideDoubleDual N N₃ N₄ β c A (s•ξ) z=
         s•outsideDoubleDual N N₃ N₄ β c A ξ z := by
       ext g
       exact (C2Rigid.dualPairing N.toGW (A g z)).map_smul s ξ
-    dsimp only
     rw [he,map_smul]
   · intro ξ z z'
     have he : outsideDoubleDual N N₃ N₄ β c A ξ (z+z')=
@@ -52,7 +50,6 @@ noncomputable def outerEvaluationBlock (N : LogVModule W R) (N₃ : LogVModule W
       change C2Rigid.dualPairingFlip N.toGW ξ (A g (z+z'))=_
       rw [map_add,map_add]
       rfl
-    dsimp only
     rw [he,map_add]
   · intro s ξ z
     have he : outsideDoubleDual N N₃ N₄ β c A ξ (s•z)=
@@ -61,7 +58,6 @@ noncomputable def outerEvaluationBlock (N : LogVModule W R) (N₃ : LogVModule W
       change C2Rigid.dualPairingFlip N.toGW ξ (A g (s•z))=_
       rw [map_smul,map_smul]
       rfl
-    dsimp only
     rw [he,map_smul]
 
 /-- The outer output vector represents exactly the original outside block. -/

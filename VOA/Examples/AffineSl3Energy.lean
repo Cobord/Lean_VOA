@@ -14,6 +14,8 @@ energy j+1 and gamma variables energy j. In particular gamma zero modes
 remain energy-zero creation operators. The affine degree derivation
 will act as the negative of this positive energy operator.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical MvPolynomial

@@ -12,7 +12,7 @@ open VOA VertexOperatorAlgebra OrbSpan OrbPrim OrbRat6 OrbIco
 
 theorem Wi_charge_one : Wi.centralCharge=1 := by
   change (V2m 1 le_rfl).centralCharge=1
-  simpa using V2m_centralCharge 1 le_rfl
+  simpa using! V2m_centralCharge 1 le_rfl
 
 theorem Xico_seedMap_kernel_level (m : ℕ) :
     sortedSpan Wi.centralCharge ((36:ℤ):ℂ) (13+m) ⊓
@@ -35,7 +35,7 @@ theorem familyMap_one_kernel_level (m : ℕ) :
     exact chargedFockMap_mode _ _ k u
   · intro v hv
     exact chargedFockMap_kernel_radical _ _ v hv
-  · simpa only [familyBSASource, one_pow] using family_fock_s13_zero 1 one_ne_zero
+  · simpa only [familyBSASource, one_pow] using! family_fock_s13_zero 1 one_ne_zero
 
 theorem Xico_seedMap_coefficient_kernel (m : ℕ) (a : VermaPartitions (13+m) → ℂ) :
     seedMap Wi 36 Xico OrbIcoZ.X_primary

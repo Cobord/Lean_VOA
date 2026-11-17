@@ -34,12 +34,12 @@ theorem ideal_component_mem_matching_span (w : σ → M)
   apply Submodule.sum_mem
   intro e _
   have hg := (MvPolynomial.isWeightedHomogeneous_monomial w e
-    (MvPolynomial.coeff e (c i)) rfl).mul (hf i)
+    ((c i).coeff e) rfl).mul (hf i)
   by_cases he : Finsupp.weight w e+d i=n
   · rw [he] at hg
     rw [hg.weightedHomogeneousComponent_same]
     have hs := (Submodule.span K (matchingGradeProducts w f d n)).smul_mem
-      (MvPolynomial.coeff e (c i))
+      ((c i).coeff e)
       (Submodule.subset_span (show MvPolynomial.monomial e 1*f i ∈
         matchingGradeProducts w f d n from ⟨i,e,he,rfl⟩))
     rw [← smul_mul_assoc,MvPolynomial.smul_monomial,smul_eq_mul,mul_one] at hs

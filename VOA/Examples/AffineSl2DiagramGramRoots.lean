@@ -26,10 +26,10 @@ local instance (n : ℕ) (c : ℤ) : DecidableEq (JointIndex n c) := Classical.d
 /-- Reindex the exact actual monomial expansion by the diagram bijection. -/
 theorem diagramFock_expansion (n n' : ℕ) (c : ℤ) (hn : (n' : ℤ)=(n : ℤ)-c)
     (P : WakFock) (hP : P∈jointFockSpace n' (-c)) :
-    P=∑ d : JointIndex n c,coeff (diagramJointEquiv n n' c hn d).val P •
+    P=∑ d : JointIndex n c,P.coeff (diagramJointEquiv n n' c hn d).val •
       monomial (diagramJointEquiv n n' c hn d).val (1 : ℂ) := by
   exact (jointFock_expansion n' (-c) P hP).trans ((Equiv.sum_comp (diagramJointEquiv n n' c hn)
-    (fun d : JointIndex n' (-c) => coeff d.val P • monomial d.val (1 : ℂ))).symm)
+    (fun d : JointIndex n' (-c) => P.coeff d.val • monomial d.val (1 : ℂ))).symm)
 
 /-- Actual highest projection after a diagram-transformed word. -/
 def diagramRow (k lam : ℂ) (w : List (Fin 3×ℤ)) : WakFock→ₗ[ℂ]ℂ :=
@@ -44,8 +44,8 @@ def diagramRowMatrix (k lam : ℂ) (n n' : ℕ) (c : ℤ) (hn : (n' : ℤ)=(n : 
 /-- Actual transformed creation coordinates in that same Fock basis. -/
 def diagramCreationMatrix (k lam : ℂ) (n n' : ℕ) (c : ℤ) (hn : (n' : ℤ)=(n : ℤ)-c) :
     Matrix (JointIndex n c) (JointIndex n c) ℂ := fun i j =>
-  coeff (diagramJointEquiv n n' c hn i).val
-    (currentWord (diagramJ k lam) (occupationWord j.val) (1 : WakFock))
+  (currentWord (diagramJ k lam) (occupationWord j.val) (1 : WakFock)).coeff
+    (diagramJointEquiv n n' c hn i).val
 
 /-- The ordinary highest-word polynomial Gram matrix factors through the
 ACTUAL diagram-transformed Fock joint space at weight k-lambda. -/
@@ -87,7 +87,7 @@ theorem diagram_adjoint_kills_screening (r q M : ℕ) (hr : 0<r)
       (adjointWord (occupationWord d.val)) (Screening.state r (q+1) M)=0 := by
   apply currentWord_kills_of_letters
   · intro he
-    have hw : occupationWord d.val=[] := by simpa [adjointWord] using he
+    have hw : occupationWord d.val=[] := by simpa [adjointWord] using! he
     have hd := occupationWord_charge d.val
     rw [hw,wordCharge,List.map_nil,List.sum_nil,d.property.2] at hd
     have hp : (0 : ℤ)<r := by exact_mod_cast hr
@@ -113,20 +113,20 @@ theorem highestDeterminant_opposite_screening_root (r q M : ℕ) (hr : 0<r)
   let lam : ℂ := ((q+1 : ℕ) : ℂ)*(k+2)-(r : ℂ)-1
   let e := diagramJointEquiv (r*q) (r*(q+1)) (-(r : ℤ)) (opposite_screening_labels r q)
   have hS : Screening.state r (q+1) M∈jointFockSpace (r*(q+1)) (-(-(r : ℤ))) := by
-    simpa only [neg_neg] using screening_mem_jointFockSpace r (q+1) M (by omega)
+    simpa only [neg_neg] using! screening_mem_jointFockSpace r (q+1) M (by omega)
   have hnon : (fun d : JointIndex (r*q) (-(r : ℤ)) =>
-      coeff (e d).val (Screening.state r (q+1) M))≠0 := by
+      (Screening.state r (q+1) M).coeff (e d).val)≠0 := by
     intro hz
     have he := diagramFock_expansion (r*q) (r*(q+1)) (-(r : ℤ))
       (opposite_screening_labels r q) _ hS
-    have hc (d : JointIndex (r*q) (-(r : ℤ))) : coeff (e d).val (Screening.state r (q+1) M)=0 := congrFun hz d
+    have hc (d : JointIndex (r*q) (-(r : ℤ))) : (Screening.state r (q+1) M).coeff (e d).val=0 := congrFun hz d
     change Screening.state r (q+1) M=∑ d : JointIndex (r*q) (-(r : ℤ)),
-      coeff (e d).val (Screening.state r (q+1) M) • monomial (e d).val 1 at he
+      (Screening.state r (q+1) M).coeff (e d).val • monomial (e d).val 1 at he
     simp only [hc,zero_smul,Finset.sum_const_zero] at he
     exact Screening.state_ne_zero r (q+1) M hr (by omega) he
   have hker : diagramRowMatrix k lam (r*q) (r*(q+1)) (-(r : ℤ))
       (opposite_screening_labels r q) *ᵥ
-      (fun d : JointIndex (r*q) (-(r : ℤ)) => coeff (e d).val (Screening.state r (q+1) M))=0 := by
+      (fun d : JointIndex (r*q) (-(r : ℤ)) => (Screening.state r (q+1) M).coeff (e d).val)=0 := by
     funext i
     have hz := congrArg constantCoeff (diagram_adjoint_kills_screening r q M hr k hMk i)
     change diagramRow k lam _ (Screening.state r (q+1) M)=0 at hz
@@ -187,7 +187,7 @@ theorem oppositeKacPolynomial_eq_zero (r q : ℕ) (hr : 0<r) :
   have hm : ((m+1 : ℕ) : ℂ)≠0 := by exact_mod_cast (Nat.succ_ne_zero m)
   have hk : (((m+1 : ℕ) : ℂ))*((((m+1 : ℕ) : ℂ)⁻¹-2)+2)=1 := by
     rw [sub_add_cancel,mul_inv_cancel₀ hm]
-  simpa only [sub_add_cancel] using highestDeterminant_opposite_screening_root
+  simpa only [sub_add_cancel] using! highestDeterminant_opposite_screening_root
     r q (m+1) hr ((((m+1 : ℕ) : ℂ)⁻¹)-2) hk
 
 /-- Ordinary actual highest-word determinant roots on EVERY opposite Kac

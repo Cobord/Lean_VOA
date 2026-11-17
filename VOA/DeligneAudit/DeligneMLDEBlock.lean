@@ -207,7 +207,7 @@ theorem formalMLDE_coeff {κ : ℂ} (hE : FormalMLDE W κ) (N : ℕ) :
   simp only [Nat.cast_zero, sub_zero, zhuG_one_zero', zhuG_two_zero] at hE'
   have hf0 : f e = (Module.finrank ℂ (W.grading ((N : ℕ) : ℤ)) : ℂ) := by
     have := hfe N 0
-    simpa [he] using this
+    simpa [he] using! this
   rw [← hf, hf0] at hE'
   exact hE'
 

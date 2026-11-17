@@ -202,7 +202,7 @@ theorem realizable_esymm (r : ℕ) : ∀ k, esymm (Fin r) ℂ k ∈ realizableSu
     rw [mul_esymm_eq_sum]
     refine Subalgebra.mul_mem _ (Subalgebra.pow_mem _ (Subalgebra.neg_mem _
       (Subalgebra.one_mem _)) _) (Subalgebra.sum_mem _ fun a ha => ?_)
-    rw [Finset.mem_filter, Finset.mem_antidiagonal] at ha
+    rw [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal] at ha
     refine Subalgebra.mul_mem _ (Subalgebra.mul_mem _ (Subalgebra.pow_mem _
       (Subalgebra.neg_mem _ (Subalgebra.one_mem _)) _) (ih a.1 ha.2)) ?_
     exact realizable_psum r a.2 (by omega)

@@ -33,14 +33,14 @@ theorem vermaDescendant_highest (c h : ℂ) (w : List ℕ) :
 regardless of whether the starting state is singular or homogeneous. -/
 theorem vermaDescendant_polynomial_above (ell p : ℂ) (w : List ℕ)
     (v : Verma (3-24*ell^2) (p^2-2*ell*p)) (d : ℕ)
-    (hv : ∀ k, d<k → vermaPolynomialLift ell p v k=0) :
+    (hv : ∀ k, d<k → (vermaPolynomialLift ell p v).coeff k=0) :
     ∀ k, d+w.length<k →
-      vermaPolynomialLift ell p (vermaDescendant _ _ w v) k=0 := by
+      (vermaPolynomialLift ell p (vermaDescendant _ _ w v)).coeff k=0 := by
   induction w with
   | nil => exact hv
   | cons i w ih =>
     intro k hk
-    change vermaPolynomialLift ell p (vermaMode _ _ _ _) k=0
+    change (vermaPolynomialLift ell p (vermaMode _ _ _ _)).coeff k=0
     rw [vermaPolynomialLift_negative]
     exact vermaPolynomialCreation_above ell p i (d+w.length) _ ih k (by
       simp only [List.length_cons] at hk; omega)
@@ -49,19 +49,19 @@ theorem vermaDescendant_polynomial_above (ell p : ℂ) (w : List ℕ)
 starting symbol by its oscillator monomial with coefficient one. -/
 theorem vermaDescendant_polynomial_top (ell p : ℂ) (w : List ℕ)
     (v : Verma (3-24*ell^2) (p^2-2*ell*p)) (d : ℕ)
-    (hv : ∀ k, d<k → vermaPolynomialLift ell p v k=0) :
+    (hv : ∀ k, d<k → (vermaPolynomialLift ell p v).coeff k=0) :
     vermaSymbolProjection
-      (vermaPolynomialLift ell p (vermaDescendant _ _ w v) (d+w.length))=
+      ((vermaPolynomialLift ell p (vermaDescendant _ _ w v)).coeff (d+w.length))=
       MvPolynomial.monomial (vermaWordExponent w) 1 *
-        vermaSymbolProjection (vermaPolynomialLift ell p v d) := by
+        vermaSymbolProjection ((vermaPolynomialLift ell p v).coeff d) := by
   induction w with
   | nil => simp [vermaDescendant,vermaWordExponent]
   | cons i w ih =>
-    change vermaSymbolProjection (vermaPolynomialLift ell p (vermaMode _ _ _ _)
+    change vermaSymbolProjection ((vermaPolynomialLift ell p (vermaMode _ _ _ _)).coeff
       (d+(w.length+1)))=_
     rw [vermaPolynomialLift_negative,← Nat.add_assoc]
-    change vermaSymbolProjection (vermaPolynomialCreation ell p i
-      (vermaPolynomialLift ell p (vermaDescendant _ _ w v)) (d+w.length+1))=_
+    change vermaSymbolProjection ((vermaPolynomialCreation ell p i
+      (vermaPolynomialLift ell p (vermaDescendant _ _ w v))).coeff (d+w.length+1))=_
     rw [vermaPolynomialCreation_top ell p i (d+w.length) _
         (vermaDescendant_polynomial_above ell p w v d hv),ih]
     simp [vermaWordExponent,MvPolynomial.monomial_single_add,mul_assoc]
@@ -77,7 +77,7 @@ theorem vermaDescendant_max_coeff (ell p : ℂ)
     (w : List ℕ) (hw : w∈s) (hwK : w.length=K) : coef w=0 := by
   classical
   obtain ⟨d,hd,hn⟩ := vermaPolynomialLift_top_exists ell p v hv
-  let P := vermaSymbolProjection (vermaPolynomialLift ell p v d)
+  let P := vermaSymbolProjection ((vermaPolynomialLift ell p v).coeff d)
   let E : Verma (3-24*ell^2) (p^2-2*ell*p) →ₗ[ℂ] LeeYangFock :=
     vermaSymbolProjection.comp
       ((vermaPolynomialCoefficient (d+K)).comp (vermaPolynomialLift ell p))
@@ -86,12 +86,12 @@ theorem vermaDescendant_max_coeff (ell p : ℂ)
     intro u hu
     by_cases huK : u.length=K
     · rw [if_pos huK]
-      simpa only [E,P,LinearMap.comp_apply,vermaPolynomialCoefficient,
-        LinearMap.coe_mk,AddHom.coe_mk,huK] using
-        vermaDescendant_polynomial_top ell p u v d hd
+      have htop := vermaDescendant_polynomial_top ell p u v d hd
+      rw [huK] at htop
+      exact htop
     · rw [if_neg huK,zero_mul]
-      change vermaSymbolProjection (vermaPolynomialLift ell p
-        (vermaDescendant _ _ u v) (d+K))=0
+      change vermaSymbolProjection ((vermaPolynomialLift ell p
+        (vermaDescendant _ _ u v)).coeff (d+K))=0
       rw [vermaDescendant_polynomial_above ell p u v d hd _ (by have := hl u hu; omega),map_zero]
   have hh := congrArg E he
   simp only [map_sum,map_smul,map_zero] at hh
@@ -108,11 +108,13 @@ theorem vermaDescendant_max_coeff (ell p : ℂ)
           Finset.sum_congr rfl (fun u hu => congrArg (fun x => coef u • x) (hp u hu).symm)
         _ = 0 := hh
     exact (mul_eq_zero.mp hm).resolve_right hn
-  have hc := congrArg (MvPolynomial.coeff (vermaWordExponent w)) hz
+  have hc := congrArg (fun q : MvPolynomial _ ℂ => q.coeff (vermaWordExponent w)) hz
+  beta_reduce at hc
   simp only [MvPolynomial.coeff_sum,MvPolynomial.coeff_smul,MvPolynomial.coeff_zero,
     smul_eq_mul] at hc
-  have hselect : ∀ u ∈ s, MvPolynomial.coeff (vermaWordExponent w)
-      (if u.length=K then MvPolynomial.monomial (vermaWordExponent u) (1:ℂ) else 0)=
+  have hselect : ∀ u ∈ s,
+      (if u.length=K then MvPolynomial.monomial (vermaWordExponent u) (1:ℂ) else 0).coeff
+        (vermaWordExponent w)=
       if u=w then 1 else 0 := by
     intro u hu
     by_cases heq : u=w
@@ -121,8 +123,9 @@ theorem vermaDescendant_max_coeff (ell p : ℂ)
       · rw [if_pos huK,if_neg heq,MvPolynomial.coeff_monomial]
         exact if_neg (fun h => heq (vermaWordExponent_injective_sorted (hs u hu) (hs w hw) h))
       · simp [huK,heq]
-  have hvalue : (∑ u ∈ s, coef u * MvPolynomial.coeff (vermaWordExponent w)
-      (if u.length=K then MvPolynomial.monomial (vermaWordExponent u) (1:ℂ) else 0))=coef w := by
+  have hvalue : (∑ u ∈ s, coef u *
+      (if u.length=K then MvPolynomial.monomial (vermaWordExponent u) (1:ℂ) else 0).coeff
+        (vermaWordExponent w))=coef w := by
     calc
       _ = ∑ u ∈ s, coef u * (if u=w then 1 else 0) :=
         Finset.sum_congr rfl (fun u hu => congrArg (fun x => coef u*x) (hselect u hu))
@@ -183,7 +186,7 @@ theorem vermaDescendant_linearIndependent (c h : ℂ) (v : Verma c h) (hv : v≠
   let t := s.image (fun w : {w : List ℕ // SortedWord w} => w.val)
   have ht : ∑ w ∈ t, coef w • vermaDescendant _ _ w v=0 := by
     rw [Finset.sum_image (fun x _ y _ hxy => hinj hxy)]
-    simpa only [hcv] using he
+    simpa only [hcv] using! he
   have hs : ∀ w ∈ t, SortedWord w := by
     intro w hw
     obtain ⟨j,_,rfl⟩ := Finset.mem_image.mp hw

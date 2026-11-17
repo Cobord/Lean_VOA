@@ -251,10 +251,10 @@ theorem symModM_word (l : List (Fin 3 × ℕ)) (r : ℕ) {y : WakModule k} {Q : 
     (hyQ : (y, Q) ∈ symModM R t k hk r) :
     (Desc.jWord (k := k) l y, VOA.CyclicEval.word (mρ R) l Q) ∈ symModM R t k hk r := by
   induction l with
-  | nil => simpa [Desc.jWord, VOA.CyclicEval.word] using hyQ
+  | nil => simpa [Desc.jWord, VOA.CyclicEval.word] using! hyQ
   | cons q l ih =>
     have h := symModM_J R t k hk q.1 q.2 r ih
-    simpa [Desc.jWord, VOA.CyclicEval.word, Module.End.mul_apply] using h
+    simpa [Desc.jWord, VOA.CyclicEval.word, Module.End.mul_apply] using! h
 
 /-- The model derivations preserve the model image. -/
 theorem mder_mem_modelImage (kk : Fin 3 × ℕ) (r : ℕ) {Q : MPoly R} (hQ : Q ∈ modelImage R t r) :

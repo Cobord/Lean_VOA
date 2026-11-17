@@ -77,7 +77,7 @@ theorem affineKacProduct_horizontal_factor (t : ℂ) (n : ℕ) (c : ℤ)
     (fun i => (X-Polynomial.C (realRootWeight t i))^affineKacMultiplicity n c i)
     (affineKacLabels_horizontal_mem n c hc)
   simpa [affineKacProduct,affineKacWithoutHorizontal,realRootWeight,realRootSlope,
-    realRootOffset,affineKacMultiplicity,oscillatorEnergy,oscillatorCharge] using he.symm
+    realRootOffset,affineKacMultiplicity,oscillatorEnergy,oscillatorCharge] using! he.symm
 
 /-- The reduced constant coefficient, expressed directly as a central-level
 polynomial; shifted level is X+2 throughout. -/

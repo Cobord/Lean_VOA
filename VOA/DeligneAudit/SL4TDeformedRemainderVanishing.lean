@@ -17,7 +17,7 @@ theorem coefficientMinor_eq_zero_of_common_divisor (r j : ℕ)
   let d := r - s.natDegree
   have he (b : Fin j) : s * (p b /ₘ s) = p b := by
     have hz := (Polynomial.modByMonic_eq_zero_iff_dvd hs).mpr (hdiv b)
-    simpa only [hz, zero_add] using Polynomial.modByMonic_add_div (p b) s
+    simpa only [hz, zero_add] using! Polynomial.modByMonic_add_div (p b) s
   have hd (b : Fin j) : (p b /ₘ s).degree < (d : WithBot ℕ) := by
     by_cases hz : p b /ₘ s = 0
     · simp [hz]
@@ -58,7 +58,7 @@ theorem scalarRemainderMinor_eq_zero (P q s : Polynomial ℂ) (j : ℕ)
     Matrix.det (fun a b => ((q * Polynomial.X ^ cols b) %ₘ P).coeff (rows a)) = 0 := by
   apply coefficientMinor_eq_zero_of_common_divisor P.natDegree j _ rows s hs
   · intro b
-    simpa only [Polynomial.degree_eq_natDegree hP.ne_zero] using
+    simpa only [Polynomial.degree_eq_natDegree hP.ne_zero] using!
       Polynomial.degree_modByMonic_lt (q * Polynomial.X ^ cols b) hP
   · intro b
     rw [Polynomial.modByMonic_eq_sub_mul_div]
@@ -92,8 +92,8 @@ theorem deformedRemainderMinor_evaluate {σ : Type*}
         alphabetCharacteristic (xs.map (MvPolynomial.aeval z))).coeff (rows a)) := by
   change (MvPolynomial.aeval z).toRingHom
     (deformedRemainderMinor xs N j q rows cols) = _
-  rw [deformedRemainderMinor, RingHom.map_det]
-  congr 1
+  rw [deformedRemainderMinor]
+  refine (RingHom.map_det _ _).trans (congrArg Matrix.det ?_)
   ext a b
   change MvPolynomial.aeval z (∑ l : Fin (N + 1),
     MvPolynomial.C (q.coeff l.val) *

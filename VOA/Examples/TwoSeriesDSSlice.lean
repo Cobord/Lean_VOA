@@ -229,7 +229,7 @@ theorem lam_f_one (S : DSSliceMap c L) (σ : ℕ → (VirUniv c →ₗ[ℂ] R)) 
     rw [Finsupp.mem_support_iff, S.f_one, neg_ne_zero] at ha
     rw [Finset.mem_image]
     exact ⟨a - 1, Finsupp.mem_support_iff.mpr ha, by ring⟩
-  rw [lam_eq_sum S σ _ _ hsupp, Finset.sum_image (fun x _ y _ h => by simpa using h),
+  rw [lam_eq_sum S σ _ _ hsupp, Finset.sum_image (fun x _ y _ h => by simpa using! h),
     lam_eq_sum S σ r y subset_rfl, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [S.f_one, map_neg, show r + 1 - (a + 1) = r - a by ring, show a + 1 - 1 = a by ring]
@@ -268,7 +268,7 @@ theorem evR_mletter_current_ne (b : Fin 3) (hb : b ≠ 1) (m : ℕ) :
   change evR R (ι R (letterSym (Generator.current b, m))) = 0
   rw [evR_ι, Desc.evalBase_letterSym, if_neg, map_zero]
   intro h
-  exact hb (by simpa using (Prod.mk.inj h).1)
+  exact hb (by simpa using! (Prod.mk.inj h).1)
 
 theorem evR_mletter_sugawara (m : ℕ) :
     evR R (mletter R t (Generator.sugawara, m)) = t m := by
@@ -290,7 +290,7 @@ theorem lam_word (S : DSSliceMap c L) {σ : ℕ → (VirUniv c →ₗ[ℂ] R)}
     simp only [List.length_nil, Nat.cast_zero, sub_zero, sigmaZ, le_refl, if_true,
       Int.toNat_zero, mword_nil, map_one]
     have := hword []
-    simpa using this
+    simpa using! this
   | cons l w ih =>
     obtain ⟨g, m⟩ := l
     cases g with

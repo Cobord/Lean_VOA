@@ -1,0 +1,32 @@
+# Unconditional monstrous moonshine for AxiomMath's Monster.
+#
+# This small library is separate from VOA so that VOA needs no part of the CFSG library. It contains the bridge
+# (`MoonshineCFSG.MoonshineLRCFSGBridge`) and the "Route A" versions of the 85 VOA Moonshine modules that the bridge
+# needs: there the Monster structures `Code.F4`, `Spin.SpinCoord`, `Code.Parker` are CFSG's own, so that CFSG's
+# `gmat_eq_griess` applies by unfolding. They are renamed `VOA.Moonshine.X` -> `MoonshineCFSG.X`; declaration names are
+# unchanged, and nothing here imports VOA's own copies of those modules. Everything else comes from VOA (`..`).
+name = "MoonshineCFSG"
+defaultTargets = ["MoonshineCFSG"]
+# Share the dependency checkouts (mathlib, ...) with the VOA workspace in the parent directory.
+packagesDir = "../.lake/packages"
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "cfsg"
+git = "https://github.com/AxiomMath/CFSG"
+rev = "5437cdc31389dd9aeaa5c2a9465a4e164f8dea33"
+
+[[require]]
+name = "VOA"
+path = ".."
+
+[[lean_lib]]
+name = "MoonshineCFSG"
+roots = ["MoonshineCFSG.MoonshineLRCFSGBridge"]
+# Every module under MoonshineCFSG/ belongs to the library (otherwise Lake does not build the bridge's imports).
+globs = ["MoonshineCFSG.+"]

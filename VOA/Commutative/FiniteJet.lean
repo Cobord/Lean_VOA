@@ -204,7 +204,7 @@ theorem jetOrderHom_relationCoeff (m : ℕ) (f : MvPolynomial σ R) :
 theorem jetOrderHom_jetCoeff (m : ℕ) (f : MvPolynomial σ R) (j : Fin (m + 1)) :
     jetOrderHom (R := R) m (jetCoeff (R := R) m j f) =
       jetCoeff (R := R) (m + 1) j.castSucc f := by
-  simpa only [jetCoeff_apply] using
+  simpa only [jetCoeff_apply, Fin.val_castSucc] using
     jetOrderHom_relationCoeff (R := R) m f j (Nat.lt_succ_iff.mp j.isLt)
 
 end JetOrder

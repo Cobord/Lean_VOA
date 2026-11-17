@@ -27,6 +27,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ### Eigenbases of finite-order endomorphisms -/
 
 universe u
@@ -109,7 +112,8 @@ def weightDecompose : g ≃ₗ[ℂ] DirectSum (ℤ × ℤ) fun γ => D.weightSpa
 
 theorem weightDecompose_of_mem {γ : ℤ × ℤ} {x : g} (hx : x ∈ D.weightSpace γ) :
     D.weightDecompose x = DFinsupp.single γ (⟨x, hx⟩ : D.weightSpace γ) := by
-  rw [weightDecompose, LinearEquiv.symm_apply_eq, LinearEquiv.ofBijective_apply]
+  rw [weightDecompose, LinearEquiv.symm_apply_eq]
+  change x = DirectSum.coeLinearMap D.weightSpace (DFinsupp.single γ (⟨x, hx⟩ : D.weightSpace γ))
   exact (DirectSum.coeLinearMap_of (fun γ => D.weightSpace γ) γ ⟨x, hx⟩).symm
 
 /-- Multiplication by `χ γ` on the root space `γ`. -/
@@ -236,7 +240,10 @@ def generatorBasis :
 theorem generatorBasis_coe (x : Σ s : borcherdsStringIndex, ι (borcherdsImaginaryRoot s.val.1)) :
     (((D.generatorBasis ι b e he f hf hef x : D.positiveGeneratorSpace e) : D.positivePart) : g) =
       (LieModule.toEnd ℂ g g e ^ x.1.val.2) (b _ x.2 : g) := by
-  simp [generatorBasis]
+  rw [generatorBasis]
+  erw [Basis.map_apply, DirectSum.IsInternal.collectedBasis_coe]
+  beta_reduce
+  erw [Basis.map_apply, Basis.map_apply]
   rfl
 
 theorem generatorBasis_mem (x : Σ s : borcherdsStringIndex, ι (borcherdsImaginaryRoot s.val.1)) :

@@ -23,7 +23,7 @@ theorem vacuum_highest (c : ℂ) :
     IsHighestWeightVector (virVacRep c) (vacVec c) c 0 where
   centralCharge := rfl
   pos_annihilate n hn := Lop_vacuum c (by omega)
-  zero_acts := by simpa using Lop_vacuum c (n:=0) (by omega)
+  zero_acts := by simpa using! Lop_vacuum c (n:=0) (by omega)
 
 /-- The canonical representation map M(c,0) to V(c,0), normalized on the
 highest vector. It imposes the additional translation-vacuum relation. -/

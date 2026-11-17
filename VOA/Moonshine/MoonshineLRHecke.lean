@@ -284,7 +284,7 @@ theorem ReplicableFamily_primeHeckeIdentity {N : ℕ} (F : ReplicableFamily N) (
         obtain ⟨ha, hpa⟩ := Finset.mem_filter.mp (Finset.mem_coe.mp ha)
         obtain ⟨q, rfl⟩ := hpa
         refine Finset.mem_coe.mpr (Nat.mem_divisors.mpr ⟨?_, hm0⟩)
-        dsimp only
+        try dsimp only
         rw [Nat.mul_div_cancel_left q hp0]
         have h1 : p * q ∣ m * p := Nat.dvd_of_mem_divisors ha
         rw [mul_comm m p] at h1
@@ -327,7 +327,7 @@ theorem ReplicableFamily_primeHeckeIdentity {N : ℕ} (F : ReplicableFamily N) (
         obtain ⟨ha, hpa⟩ := Finset.mem_filter.mp (Finset.mem_coe.mp ha)
         refine Finset.mem_coe.mpr (Nat.mem_divisors.mpr ⟨?_, ?_⟩)
         · obtain ⟨q, rfl⟩ := hpa
-          dsimp only
+          try dsimp only
           rw [Nat.mul_div_cancel_left q hp0]
           exact Nat.dvd_div_of_mul_dvd (Nat.dvd_of_mem_divisors ha)
         · exact (Nat.div_pos (Nat.le_of_dvd hm hpm) hp0).ne'

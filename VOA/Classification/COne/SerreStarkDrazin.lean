@@ -571,7 +571,7 @@ theorem DrazinData.pow_πI_mem_span {T : Module.End ℂ V} (D : DrazinData T) (k
     have hY' : D.TD * (Y : Module.End ℂ V) = D.TD := congrArg Subtype.val hY
     have : D.πI = (Y : Module.End ℂ V) := by
       have := congrArg (fun A => T * A) hY'
-      simp only at this
+      try simp only at this
       rw [← mul_assoc, D.TTD', hI Y Y.2] at this
       exact this.symm
     rw [this]; exact Y.2

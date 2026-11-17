@@ -22,7 +22,9 @@ theorem X_coe : (X : VOA.LatGen.LatModuleGen (VOA.LatGen.Triplet.latP 1)) =
 
 theorem X_grading : X ∈ W.grading 16 := by
   rw [orb_mem_grading, Tav_coe ⟨isA4Inv_I4, s3_I4⟩]
-  convert T2_grad I4_hom using 1
+  have h := T2_grad I4_hom
+  rw [show ((4 : ℕ) : ℤ) ^ 2 = 16 by norm_num] at h
+  exact h
 
 /-- All negative Virasoro descendants of the vacuum and the weight-16 primary. -/
 def twoSeedSpan : Submodule ℂ (orbifold octa).carrier :=
@@ -57,8 +59,8 @@ theorem Tav_genMon_low (t : ℕ × ℕ × ℕ × ℕ)
     have hc : c = 0 ∨ c = 1 := by omega
     subst d b
     rcases hc with rfl | rfl
-    · simpa [genMon, Tav_one] using vacuum_mem_twoSeedSpan
-    · simpa [genMon] using X_mem_twoSeedSpan
+    · simpa [genMon, Tav_one] using! vacuum_mem_twoSeedSpan
+    · simpa [genMon] using! X_mem_twoSeedSpan
   · have hz : Tav (genMon (a, b, c, d)) = 0 := by
       apply Subtype.ext
       rw [Tav_coe (isS4Inv_genMon hp), T2_apply]
@@ -114,6 +116,6 @@ theorem grading_lt_36 (N : ℤ) (hN : N < 36) : W.grading N ≤ twoSeedSpan := b
   by_cases hneg : N < 0
   · rw [W.positivity _ hneg]
     exact bot_le
-  · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using hnat N.toNat (by omega)
+  · simpa only [Int.toNat_of_nonneg (by omega : 0 ≤ N)] using! hnat N.toNat (by omega)
 
 end VOA.Classification.COne.OrbOctaR

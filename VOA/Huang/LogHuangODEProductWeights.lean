@@ -127,7 +127,7 @@ theorem exists_C1Graded (hC2 : C2Cofinite W) (N : LogVModule W M)
   · have hdnn : d.toNat≤n := by omega
     apply Submodule.subset_span
     refine ⟨d.toNat,v,y,by omega,hdnn,?_,?_,rfl⟩
-    · simpa only [hdc] using hv
+    · simpa only [hdc] using! hv
     · have hdi : (d.toNat : ℂ)=(d : ℂ) := by exact_mod_cast hdc
       change y∈N.weight (h+((n-d.toNat : ℕ) : ℂ))
       convert hy using 1

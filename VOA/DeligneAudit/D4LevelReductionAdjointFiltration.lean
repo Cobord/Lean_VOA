@@ -38,9 +38,9 @@ theorem currentTail_stable_of_leviInvariant (S : Submodule ℂ V) (n : ℕ)
         · rw [reductiveLevi_bracket_support a b c ha hb hc, zero_smul]
           exact Submodule.zero_mem _
       · exact currentTail_contains ρ S _ n hb hr (hS a s ha hu)
-  | zero => simpa using (currentTail ρ S {c | IsLevi c} n).zero_mem
-  | add x y _ _ hx hy => simpa using Submodule.add_mem _ hx hy
-  | smul c x _ hx => simpa using Submodule.smul_mem _ c hx
+  | zero => simpa using! (currentTail ρ S {c | IsLevi c} n).zero_mem
+  | add x y _ _ hx hy => simpa using! Submodule.add_mem _ hx hy
+  | smul c x _ hx => simpa using! Submodule.smul_mem _ c hx
 
 /-- The sum of two invariant subspaces is invariant. -/
 theorem leviInvariant_sup (S T : Submodule ℂ V)
@@ -72,7 +72,7 @@ theorem adjointOrbit_eq_bot_of_degree_gt (m a d : ℕ)
     keyOrbit ρ w (adjointLetterKey a d) = ⊥ := by
   apply keyOrbit_eq_bot_of_keyLayer_bot
   apply keyLayer_eq_bot_of_degree_gt ρ w m h
-  simpa [keyDepth, adjointLetterKey] using hd
+  simpa [keyDepth, adjointLetterKey] using! hd
 
 /-- The higher-degree filtration is supported on the same finite mode box. -/
 theorem adjointHigherDegree_le_finite (m a d : ℕ)

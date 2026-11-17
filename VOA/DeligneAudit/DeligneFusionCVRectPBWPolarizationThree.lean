@@ -57,17 +57,17 @@ theorem threeCoeff_commutator (E : Module.End ℂ V)
     apply PowerSeries.ext
     intro k
     simpa only [map_sub, PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C,
-      Fs, PowerSeries.coeff_mk] using hEY k
+      Fs, PowerSeries.coeff_mk] using! hEY k
   have hEXs : PowerSeries.C E * Fs X = Fs X * PowerSeries.C E := by
     apply PowerSeries.ext
     intro k
     simpa only [PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C,
-      Fs, PowerSeries.coeff_mk] using hEX k
+      Fs, PowerSeries.coeff_mk] using! hEX k
   have hEZs : PowerSeries.C E * Fs Z = Fs Z * PowerSeries.C E := by
     apply PowerSeries.ext
     intro k
     simpa only [PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C,
-      Fs, PowerSeries.coeff_mk] using hEZ k
+      Fs, PowerSeries.coeff_mk] using! hEZ k
   have hYZs : Fs Y * Fs Z = Fs Z * Fs Y := current_series_commute hYZ
   have hEP : PowerSeries.C E * Fs X ^ p = Fs X ^ p * PowerSeries.C E :=
     (show Commute (PowerSeries.C E) (Fs X) from hEXs).pow_right p
@@ -80,7 +80,7 @@ theorem threeCoeff_commutator (E : Module.End ℂ V)
   have hc := congrArg (PowerSeries.coeff s) h
   simp only [map_sub, map_nsmul, PowerSeries.coeff_C_mul,
     PowerSeries.coeff_mul_C] at hc
-  simpa only [threeCoeff, mul_assoc] using hc
+  simpa only [threeCoeff, mul_assoc] using! hc
 
 /-- A single highest-root current coefficient polarizes to every three-color
 coefficient of the same total power. The original currents need only satisfy
@@ -102,7 +102,7 @@ theorem threeCoeff_zero_of_Q (E₂ E₁ : Module.End ℂ V)
       intro hd
       have hm := CVPolarization.mixedCoeff_zero_of_Q Y X E₂ hE₂Y hE₂X hYX
         hE₂w hQ p q (by omega)
-      simpa only [threeCoeff, pow_zero, mul_one, CVPolarization.mixedCoeff] using hm
+      simpa only [threeCoeff, pow_zero, mul_one, CVPolarization.mixedCoeff] using! hm
   | succ r ih =>
       intro hd
       have hp := ih (q + 1) (by omega)

@@ -225,7 +225,7 @@ theorem scalar_step_of_neg (g : AutVnat) (hg : ∀ v ∈ VnatVOA.grading 2, g v 
     (hc' : g ((frameX0P (α + γ), 0) : Vnat) = c' • ((frameX0P (α + γ), 0) : Vnat)) : c = c' := by
   have hε : latticeCocycle leech α γ ≠ 0 := latticeCocycle_ne_zero leech α γ
   have key := congrArg (fun v => g v) (VnatVOA_smul_xN_of_neg α γ h)
-  simp only at key
+  try simp only at key
   rw [Aut.map_smul, hg _ (xN_mem_grading_two hα), hc, PreVertexAlgebra.smul_smul_right,
     VnatVOA_smul_xN_of_neg α γ h, map_smul, hc', smul_comm c] at key
   have key2 := smul_right_injective Vnat hε key

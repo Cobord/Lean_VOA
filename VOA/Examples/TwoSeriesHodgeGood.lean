@@ -187,7 +187,7 @@ theorem uZeroModesPreserveLayers : (UZeroModesPreserveLayers L) := by
   · intro x y
     rw [uZero_apply, uZero_apply]
     have h := universalForm_current_adj L.uNoncritical a 0 x y
-    simpa only [neg_zero] using h
+    simpa only [neg_zero] using! h
 
 end Auxiliary
 
@@ -287,7 +287,7 @@ theorem aZeroModesPreserveLayers : (AZeroModesPreserveLayers L) := by
     change (simpleForm L.kA L.aNoncritical).form _ _ = -(simpleForm L.kA L.aNoncritical).form _ _
     rw [simpleForm_mkQ, simpleForm_mkQ, aUnivZero_apply, aUnivZero_apply]
     have h := universalForm_current_adj L.aNoncritical a 0 x y
-    simpa only [neg_zero] using h
+    simpa only [neg_zero] using! h
 
 end Boundary
 
@@ -320,7 +320,7 @@ theorem brstVacuum_mem (w : Finset ModeIdx → ℝ) :
       (auxiliaryFlag L)
   have h := tmul_mem_tensorDeg (matterDeg L) (ghostRGrading w).deg
     (tmul_mem_tensorDeg _ _ (tmul_mem_tensorDeg _ _ hA hB) hU) ghostVacuum_mem_ghostDeg
-  simpa using h
+  simpa using! h
 
 /-! ### The vacuum generator test -/
 

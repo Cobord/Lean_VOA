@@ -20,7 +20,7 @@ theorem completePolynomial_modeVectors (k s : ℕ) :
       ∑ u : {u : Fin k → ℕ // ∑ i, u i = s}, ∏ i, X i ^ u.val i := by
   have he := congrArg (MvPolynomial.map (algebraMap ℂ B))
     (D4Levi.rz_hsymm_eq_sum_vectors k s)
-  simpa only [map_hsymm, map_sum, map_prod, map_pow, map_X] using he
+  simpa only [map_hsymm, map_sum, map_prod, map_pow, map_X] using! he
 
 /-- Evaluation of a full labelled monomial with a base coefficient. -/
 theorem positionModeEvaluation_prod_C {σ : Type} [Fintype σ]
@@ -69,7 +69,7 @@ theorem secondLeviModeEvaluation_firstComplete (e₁ e₂ s : ℕ) (φ : B) :
 /-- Relative complete functions use the Newton coefficients of the base power sums. -/
 def secondLeviRelativeComplete (e₁ e₂ : ℕ) (j : Fin 2) (p : ℕ → B) (s : ℕ) :
     MvPolynomial (SecondLeviModeSlot e₁ e₂) B :=
-  ∑ z ∈ Finset.antidiagonal s,
+  ∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
     (if j = 0 then rename Sum.inl (hsymm (Fin e₁) B z.1)
       else rename Sum.inr (hsymm (Fin e₂) B z.1)) * MvPolynomial.C (newtonCoeff p z.2)
 

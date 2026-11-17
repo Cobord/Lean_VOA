@@ -137,7 +137,6 @@ theorem binomSeries_mul (a : ℂ) (k : ℕ) :
 /-- `binomSeries a k = X^k · (1 − a x)^{−k−1} ∈ ratRing a`. -/
 theorem binomSeries_eq (a : ℂ) (k : ℕ) : binomSeries a k = X ^ k * geom a ^ (k + 1) := by
   have h := congrArg (· * geom a ^ (k + 1)) (binomSeries_mul a k)
-  simp only at h
   rw [← h, mul_comm, ← mul_assoc, ← mul_pow, mul_comm (geom a), one_sub_mul_geom, one_pow,
     one_mul]
 

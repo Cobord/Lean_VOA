@@ -59,7 +59,7 @@ theorem fTwo_one_transport_zero
   rw [oneTransportPower_eq_comm ρ (fOp ρ) (xOp ρ)
     (eTransport_fTwo_comm ρ) r k]
   have hg : (PowerSeries.coeff s (fCurrent (fOp ρ) ^ k)) w = 0 := by
-    simpa [fOp] using fTwo_garland_zero ρ w m h k s hk hks
+    simpa [fOp] using! fTwo_garland_zero ρ w m h k s hk hks
   simp only [map_sub, PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_C,
     LinearMap.sub_apply, Module.End.mul_apply,
     eTransport_source_zero ρ w m h r, map_zero]

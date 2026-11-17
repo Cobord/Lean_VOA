@@ -50,6 +50,8 @@ available in the library without proving a module Jacobi identity).
 
 namespace VOA
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open Module (End)
 open scoped ComplexConjugate
 

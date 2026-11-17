@@ -21,11 +21,11 @@ theorem mixed_wick_zero (f a b : ℕ → Module.End ℂ V)
     (hab : ∀ i j, a i * b j = b j * a i)
     (k s : ℕ) (xs : List ℕ) (B : PowerSeries (Module.End ℂ V))
     (hkill : (PowerSeries.coeff s (fCurrent f ^ k * B)) w = 0) :
-    (∑ q ∈ Finset.antidiagonal s,
+    (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
       ((choices xs).map (conversionTerm f a b k q.1)).sum *
         PowerSeries.coeff q.2 B) w = 0 := by
   have hw := wick_series f a b hfa hfb hab k xs
-  have hs : (∑ q ∈ Finset.antidiagonal s,
+  have hs : (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
       ((choices xs).map (conversionTerm f a b k q.1)).sum *
         PowerSeries.coeff q.2 B) =
       PowerSeries.coeff s
@@ -45,7 +45,7 @@ theorem x_mixed_wick_zero
     (rs ys : List ℕ) (c s : ℕ)
     (hK : 1 ≤ rs.length)
     (hks : m + 1 ≤ c + rs.length + s) :
-    (∑ q ∈ Finset.antidiagonal s,
+    (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
       ((choices (ys ++ List.replicate c 0)).map
         (conversionTerm (fOp ρ) (yOp ρ) (zOp ρ) c q.1)).sum *
         PowerSeries.coeff q.2
@@ -54,7 +54,7 @@ theorem x_mixed_wick_zero
     (fTwo_y_comm ρ) (fTwo_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [yOp, zOp] using radical_ops_comm ρ 4 5 i j v)
+      simpa [yOp, zOp] using! radical_ops_comm ρ 4 5 i j v)
   exact x_partial_garland_zero ρ w m h rs c s (by omega) hks
 
 /-- YZG Wick dressing: the corresponding partial f₂₃₄/Y transport, dressed
@@ -64,7 +64,7 @@ theorem y_mixed_wick_zero
     (rs xs : List ℕ) (c s : ℕ)
     (hK : 1 ≤ rs.length)
     (hks : m + 1 ≤ c + rs.length + s) :
-    (∑ q ∈ Finset.antidiagonal s,
+    (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
       ((choices (xs ++ List.replicate c 0)).map
         (conversionTerm (fTopOp ρ) (xOp ρ) (zOp ρ) c q.1)).sum *
         PowerSeries.coeff q.2
@@ -73,7 +73,7 @@ theorem y_mixed_wick_zero
     (fTop_x_comm ρ) (fTop_z_comm ρ)
     (fun i j => by
       ext v
-      simpa [xOp, zOp] using radical_ops_comm ρ 1 5 i j v)
+      simpa [xOp, zOp] using! radical_ops_comm ρ 1 5 i j v)
   exact y_partial_garland_zero ρ w m h rs c s (by omega) hks
 
 end VOA.DeligneAudit.D4Levi

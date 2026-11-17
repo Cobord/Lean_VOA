@@ -48,28 +48,30 @@ theorem polynomialCurrent_eval (k h : ℂ) (a : Fin 3) (n : ℤ)
   simp only [Polynomial.eval_X,PolynomialModule.eval_map',
     LinearMap.add_apply,LinearMap.smul_apply]
 
+/-- Coefficients of `PolynomialModule.map` are computed coefficientwise. -/
+private theorem coeff_map_apply (f : End ℂ WakFock) (P : FockPolynomial) (j : ℕ) :
+    (PolynomialModule.map ℂ f P).coeff j = f (P.coeff j) := rfl
+
 /-- The constant coefficient has no contribution from the linear charge term. -/
 theorem polynomialCurrent_zero (k : ℂ) (a : Fin 3) (n : ℤ)
     (P : FockPolynomial) :
-    polynomialCurrent k a n P 0=J k 0 a n (P 0) := by
-  simp only [polynomialCurrent,PolynomialModule.add_apply,Polynomial.X,
-    PolynomialModule.monomial_smul_apply]
-  simp [PolynomialModule.map]
-  rfl
+    (polynomialCurrent k a n P).coeff 0=J k 0 a n (P.coeff 0) := by
+  simp only [polynomialCurrent,PolynomialModule.coeff_add,Finsupp.add_apply,Polynomial.X,
+    PolynomialModule.monomial_smul_apply,coeff_map_apply]
+  simp
 
 /-- At a positive polynomial exponent the current has exactly two adjacent
 coefficient contributions. This includes horizontal modes and zero coefficients. -/
 theorem polynomialCurrent_succ (k : ℂ) (a : Fin 3) (n : ℤ)
     (P : FockPolynomial) (j : ℕ) :
-    polynomialCurrent k a n P (j+1)=
-      J k 0 a n (P (j+1))+chargeLinear a n (P j) := by
-  simp only [polynomialCurrent,PolynomialModule.add_apply,Polynomial.X,
-    PolynomialModule.monomial_smul_apply]
-  simp [PolynomialModule.map]
-  rfl
+    (polynomialCurrent k a n P).coeff (j+1)=
+      J k 0 a n (P.coeff (j+1))+chargeLinear a n (P.coeff j) := by
+  simp only [polynomialCurrent,PolynomialModule.coeff_add,Finsupp.add_apply,Polynomial.X,
+    PolynomialModule.monomial_smul_apply,coeff_map_apply]
+  simp
 
 /-- A coefficient bound without a degree convention for the zero polynomial. -/
-def FockDegreeLE (d : ℕ) (P : FockPolynomial) : Prop := ∀ j,d<j→P j=0
+def FockDegreeLE (d : ℕ) (P : FockPolynomial) : Prop := ∀ j,d<j→P.coeff j=0
 
 /-- A charged current raises polynomial degree by at most one. -/
 theorem polynomialCurrent_degree (k : ℂ) (a : Fin 3) (n : ℤ)
@@ -86,7 +88,7 @@ theorem polynomialCurrent_degree (k : ℂ) (a : Fin 3) (n : ℤ)
 operator applied to the old top coefficient; all constant-current terms vanish. -/
 theorem polynomialCurrent_top (k : ℂ) (a : Fin 3) (n : ℤ)
     {P : FockPolynomial} {d : ℕ} (hP : FockDegreeLE d P) :
-    polynomialCurrent k a n P (d+1)=chargeLinear a n (P d) := by
+    (polynomialCurrent k a n P).coeff (d+1)=chargeLinear a n (P.coeff d) := by
   rw [polynomialCurrent_succ,hP (d+1) (by omega),map_zero,zero_add]
 
 /-- If the current has no linear charge term, it preserves the old bound. -/
@@ -102,7 +104,7 @@ theorem polynomialCurrent_degree_constant (k : ℂ) (a : Fin 3) (n : ℤ)
 by the actual current at zero highest weight. -/
 theorem polynomialCurrent_top_constant (k : ℂ) (a : Fin 3) (n : ℤ)
     (hz : chargeLinear a n=0) (P : FockPolynomial) (d : ℕ) :
-    polynomialCurrent k a n P d=J k 0 a n (P d) := by
+    (polynomialCurrent k a n P).coeff d=J k 0 a n (P.coeff d) := by
   cases d with
   | zero => exact polynomialCurrent_zero k a n P
   | succ d => rw [polynomialCurrent_succ,hz]; simp

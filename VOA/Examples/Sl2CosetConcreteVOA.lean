@@ -10,6 +10,8 @@ import VOA.Examples.Sl2CosetConcreteCohomology
 
 /-! # Conformal structure on the actual diagonal coset -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Sl2CosetConcrete
 
 open Sl2SemiInfinite Sl2Coset
@@ -79,12 +81,12 @@ theorem cosetOmega_virasoro (m n : ℤ) :
     intro m n
     have hc := sugawara_mode_coset_mode_commute diagonalAction.toAffineSl2Action
       diagonalAction.translation cosetOmega_mem (m + 1) (n + 1)
-    simpa only [cosetOmega, map_sub, mode_sub] using hc
+    simpa only [cosetOmega, map_sub, mode_sub] using! hc
   have h := virasoro_difference_of_commute L D
     (AVOA.centralCharge + BVOA.centralCharge)
     (3 * ((-4 / 3 : ℂ) + 1) / (((-4 / 3 : ℂ) + 1) + 2)) hL hD hC m n
   rw [cosetCentralCharge] at h
-  simpa only [L, D, cosetOmega, map_sub, mode_sub] using h
+  simpa only [L, D, cosetOmega, map_sub, mode_sub] using! h
 
 /-- Weight two of the conformal state in the integer-graded coset vertex algebra. -/
 theorem cosetOmegaState_weight : cosetOmegaState ∈ cosetVertexAlgebra.grading 2 := by
@@ -110,9 +112,9 @@ def cosetVOA : VertexOperatorAlgebra CosetSpace where
       Submodule.coe_sub, Submodule.coe_add, Submodule.coe_smul] at h ⊢
     by_cases hmn : m + n = 0
     · simpa only [if_pos hmn, LinearMap.smul_apply, Module.End.one_apply,
-        Submodule.coe_smul, cosetY_mode_coe] using h
+        Submodule.coe_smul, cosetY_mode_coe] using! h
     · simpa only [if_neg hmn, LinearMap.zero_apply, Submodule.coe_zero,
-        cosetY_mode_coe] using h
+        cosetY_mode_coe] using! h
   L0_grading := by
     intro n x hx
     exact Subtype.ext (cosetOmega_L0 (n : ℂ) x hx x.property)

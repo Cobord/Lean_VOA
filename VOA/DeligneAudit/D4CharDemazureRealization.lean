@@ -24,12 +24,12 @@ theorem d4_supported_graded_keys : SupportedGradedKeyBound := by
   have hF : F = higherOrbit ρ w n k := keyPrefix_eq_higher ρ w n h i.val i.isLt
   have hFP : F.map P ≤ F := by
     change (keyPrefix ρ w n i.val).map (projUG D4sector.f R N) ≤ _
-    rw [projUG_keyPrefix]
-    exact inf_le_right
+    exact (projUG_keyPrefix R n N i.val).le.trans inf_le_right
   have hb : FiniteDimensional ℂ (((keyOrbit ρ w k).map P).map F.mkQ) ∧
       Module.finrank ℂ (((keyOrbit ρ w k).map P).map F.mkQ) ≤ L * r := by
     dsimp only [r, S, P]
-    rw [projUG_keyOrbit, hF]
+    rw [show (keyOrbit ρ w k).map (projUG D4sector.f R N) = gradedKeyOrbit ρ w k N from
+      projUG_keyOrbit R k N, hF]
     exact universal_key_orbit_graded_bound n N k hk hd
   have hT : T = F ⊔ ⨆ _ : Fin 1, keyOrbit ρ w k := by
     change keyPrefix ρ w n (i.val + 1) =

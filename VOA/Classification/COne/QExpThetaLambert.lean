@@ -34,9 +34,9 @@ theorem thetaEulerProduct_parameter_logDerivative {r u : ℂ} (hr : ‖r‖ < 1)
 
 theorem thetaExp_hasDerivAt (x : ℂ) :
     HasDerivAt thetaExp (2 * Real.pi * I * thetaExp x) x := by
-  convert ((Complex.hasDerivAt_exp (2 * Real.pi * I * x)).comp x
-    ((hasDerivAt_id x).const_mul (2 * Real.pi * I))) using 1
-  simp only [thetaExp, one_mul, mul_comm]
+  exact ((Complex.hasDerivAt_exp (2 * Real.pi * I * x)).comp x
+    ((hasDerivAt_id x).const_mul (2 * Real.pi * I))).congr_deriv (by
+      simp only [thetaExp]; ring)
 
 /-- Logarithmic derivative of the product, with no theta-series hypothesis. -/
 theorem thetaShiftedProduct_logDerivative (τ : ℍ) (x : ℂ)

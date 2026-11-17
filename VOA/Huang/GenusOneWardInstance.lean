@@ -193,7 +193,7 @@ theorem famF_neg_one_iterate (hx : x ∈ P₁.isMod.weight α₁) (hy : y ∈ P�
     have h := HuangODEModes.iterate_range Y₁.property c x (Y₂.val r y v) (-1) s₀ I
       (fun i hi => hI i hi v hv')
     simpa only [LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply,
-      LinearMap.sub_apply, Module.End.mul_apply] using h
+      LinearMap.sub_apply, Module.End.mul_apply] using! h
   rw [he, lvl_sum]
   apply Finset.sum_congr rfl
   intro i _

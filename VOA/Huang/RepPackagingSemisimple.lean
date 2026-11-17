@@ -30,7 +30,7 @@ theorem simple_of_irreducible (X : Ordinary W) (hX : X.isMod.IsIrreducible) : Si
   constructor
   · intro hi hzero
     letI := hi
-    have h : 𝟙 X = 0 := by simpa only [hzero, comp_zero] using (IsIso.inv_hom_id f).symm
+    have h : 𝟙 X = 0 := by simpa only [hzero, comp_zero] using! (IsIso.inv_hom_id f).symm
     obtain ⟨x, hx⟩ := exists_ne (0 : X.carrier)
     exact hx (congrArg (fun k : X ⟶ X => k.val x) h)
   · intro hne
@@ -67,23 +67,26 @@ theorem semisimple_lw (hW : StronglyRational W) (hΦ : Finite (Φ W)) (X : Ordin
   let f : B.pt ⟶ X :=
     ⟨∑ j : Fin n, ((S j).restrictScalars ℂ).subtype.comp (LinearMap.proj (ULift.up j)), by
       intro a m x
-      simp only [LinearMap.sum_apply, LinearMap.comp_apply]
+      refine (LinearMap.sum_apply _ _ _).trans ?_
+      refine Eq.trans ?_ (congrArg (fun y : X.carrier => mode (X.isMod.YM a) m y)
+        (LinearMap.sum_apply _ _ _).symm)
       change (∑ j, ((S j).restrictScalars ℂ).subtype (mode ((R j).isMod.YM a) m (x (ULift.up j)))) = _
       change (∑ j, ((mode ((ordOf A hOrd (S j) (hat j)).YM a) m (x (ULift.up j)) : (S j).restrictScalars ℂ) : X.carrier)) = _
-      simp_rw [ordOf_mode]
-      exact (map_sum (mode (X.isMod.YM a) m) _ _).symm⟩
+      exact (Finset.sum_congr rfl fun j _ =>
+        ordOf_mode A hOrd (S j) (hat j) a m (x (ULift.up j))).trans
+          (map_sum (mode (X.isMod.YM a) m) _ _).symm⟩
   have hf : Function.Bijective f.val := by
     constructor
     · rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
       intro x hx
       have hz : ∑ j : Fin n, ((S j).restrictScalars ℂ).subtype (x (ULift.up j)) = 0 := by
-        simpa only [f, LinearMap.sum_apply, LinearMap.comp_apply] using hx
+        simpa only [f, LinearMap.sum_apply, LinearMap.comp_apply] using! hx
       funext j
       apply Subtype.ext
       exact eq_zero_of_sum_indep hind (fun j => (x (ULift.up j)).property) hz j.down
     · intro x
       refine ⟨fun j => ⟨π j.down x, hmem j.down x⟩, ?_⟩
-      simpa only [f, LinearMap.sum_apply, LinearMap.comp_apply] using hsum x
+      exact (LinearMap.sum_apply _ _ _).trans (hsum x)
   exact ⟨n, R, fun j => lwOf_irr A hOrd (S j) (hat j),
     ⟨(isoOfBijective f hf).symm ≪≫ biproduct.uniqueUpToIso _ (sumBiconeIsBilimit _)⟩⟩
 

@@ -73,18 +73,18 @@ theorem canonicalCenter_T_pow_eq_one_iff (F : SphericalFusion C)
     (ρ ModularGroup.T) ^ n = 1 ↔ M.toRibbon.twistOrder ∣ n := by
   have hp (z : Z.Label → ℂ) (i : Z.Label) :
       ((ρ ModularGroup.T) ^ n) z i = M.twistScalar i ^ n * z i := by
-    simpa using canonicalCenter_T_zpow F Z M ρ hr (n : ℤ) z i
+    simpa using! canonicalCenter_T_zpow F Z M ρ hr (n : ℤ) z i
   rw [Ribbon.twistOrder, orderOf_dvd_iff_pow_eq_one]
   constructor
   · intro h
     funext i
     have hi := hp (fun _ => 1) i
-    simpa [h] using hi.symm
+    simpa [h] using! hi.symm
   · intro h
     ext z i
     rw [hp]
     have hi := congrFun h i
-    simpa using congrArg (fun a : ℂ => a * z i) hi
+    simpa using! congrArg (fun a : ℂ => a * z i) hi
 
 theorem canonicalCenter_T_orderOf (F : SphericalFusion C)
     (Z : SphericalFusion (Center C)) (M : Modular Z)

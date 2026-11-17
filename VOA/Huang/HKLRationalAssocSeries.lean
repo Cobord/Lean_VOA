@@ -376,7 +376,7 @@ theorem assoc_series_eq (P Q : ℤ → ℂ) (D : ℤ) (K : ℕ) (k1 r0 : ℤ)
     exact (le_max_left _ _).trans ht1.le
   have hφd : DifferentiableOn ℂ φ (Metric.ball 0 1) := fun z hz =>
     (VOA.Huang.HKLLoc.differentiableAt_powerSeries a ha
-      (by simpa using hz)).differentiableWithinAt
+      (by simpa using! hz)).differentiableWithinAt
   have hψd : DifferentiableOn ℂ ψ (Metric.ball 0 1) := by
     intro z hz
     have hz1 : 1 - z ≠ 0 := by

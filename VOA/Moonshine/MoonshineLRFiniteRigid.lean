@@ -179,7 +179,7 @@ private theorem lrFiniteRigid_coordinate_minimal {ι : Type*} [Fintype ι] [Deci
           (Ideal.subset_span (Set.mem_range_self i))
     have heq := Ideal.Quotient.eq_zero_iff_mem.mpr hmem
     rw [map_sub, sub_eq_zero] at heq
-    simpa [lrFiniteRigid_bilin, map_sum, d, x, f] using heq
+    simpa [lrFiniteRigid_bilin, map_sum, d, x, f, g, map_ofNat] using heq
   have hder : lrFiniteRigid_bilin d v z - z = 0 := by
     ext i
     have hvz := congrFun (lrFiniteRigid_bilin_comm d (fun i j k =>

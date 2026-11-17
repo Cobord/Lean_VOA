@@ -140,7 +140,8 @@ private theorem W0_smul_omega_eq_LSecBg (hp : 1 ≤ 2) (m : ℤ)
         exact BgA.LBg_mkEα Ltwo (latP_posDef 2 hp) (lamP 2) m Q 0] at hL
   have hc := congrArg (coordEα Ltwo 0) hL
   change mode (YN (rank Ltwo) 1 (evalZhuSparseQ omegaSparseQ)) (m + 1) Q = _
-  simpa only [latStateGen, coordEα_apply, if_pos rfl] using hc
+  simp only [latStateGen, coordEα_apply, if_pos rfl, ↓reduceIte] at hc
+  exact hc
 
 private theorem eval_reifyVir22_eq_normal (hp : 1 ≤ 2) :
     evalZhuSparseQ (reifyVirWordSparseQ [2, 2]) =

@@ -115,7 +115,7 @@ theorem vacuum_ideal_range (k : ℂ) (u : U)
     (Submodule.Quotient.mk u : Verma k 0)∈LinearMap.range (horizontalEmbedding k) := by
   induction hu using Submodule.span_induction with
   | mem u hu => exact vacuum_generator_range k u hu
-  | zero => simpa using (LinearMap.range (horizontalEmbedding k)).zero_mem
+  | zero => simpa using! (LinearMap.range (horizontalEmbedding k)).zero_mem
   | add u v hu hv ihu ihv =>
     change ((highestIdeal k 0).mkQ) (u+v)∈_
     rw [map_add]

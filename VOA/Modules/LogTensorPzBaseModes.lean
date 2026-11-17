@@ -54,24 +54,20 @@ noncomputable def baseModeBlock (n a b : ℂ) :
     DirectSum.lof ℂ ℂ (fun c => Dual ℂ (N.weight c)) (a+b-n-1)
       (baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y))
     (fun x x' y => by
-      dsimp only
       have h : baseFunctional N₁ N₂ N psi a b (a+b-n-1) (x+x') y =
         baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y +
         baseFunctional N₁ N₂ N psi a b (a+b-n-1) x' y := by ext r; simp [baseFunctional]
       rw [h, map_add]; rfl)
     (fun s x y => by
-      dsimp only
       have h : baseFunctional N₁ N₂ N psi a b (a+b-n-1) (s • x) y =
         s • baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y := by ext r; simp [baseFunctional]
       rw [h, map_smul]; rfl)
     (fun x y y' => by
-      dsimp only
       have h : baseFunctional N₁ N₂ N psi a b (a+b-n-1) x (y+y') =
         baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y +
         baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y' := by ext r; simp [baseFunctional]
       rw [h, map_add]; rfl)
     (fun s x y => by
-      dsimp only
       have h : baseFunctional N₁ N₂ N psi a b (a+b-n-1) x (s • y) =
         s • baseFunctional N₁ N₂ N psi a b (a+b-n-1) x y := by ext r; simp [baseFunctional]
       rw [h, map_smul]; rfl)
@@ -101,7 +97,8 @@ theorem pair_baseModes (n : ℂ) {a b c : ℂ} {x : M₁} {y : M₂} {r : R}
   · subst c
     change psi (internalProjTo N.toGW.isInternal (a+b-n-1) r : R) x y = psi r x y
     rw [C2Rigid.internalProjTo_coe_mem N.toGW hr]
-  · rw [C2Rigid.internalProjTo_eq_zero_of_ne N.toGW hr (Ne.symm h), map_zero]
+  · rw [C2Rigid.internalProjTo_eq_zero_of_ne N.toGW hr (Ne.symm h)]
+    exact map_zero _
 
 private theorem dual_eq_zero_of_bot {c : ℂ} (hc : N.weight c = ⊥)
     (f : Dual ℂ (N.weight c)) : f = 0 := by

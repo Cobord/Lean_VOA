@@ -43,19 +43,19 @@ theorem hst_ev (v w : Lat) (hw : formZ w w = 2) :
   apply Subtype.ext
   show (latticeVOAGen e8 e8_even e8_posDef).smul (hSt e8 v) 0
       (latStateGen e8 (vacuumN (rank e8)) w) = _
-  rw [smul_hSt_zero_latStateGen, e8_form_eq]
+  erw [smul_hSt_zero_latStateGen, e8_form_eq]
   rfl
 
 theorem hst_hst (v w : Lat) : ⁅hst v, hst w⁆ = 0 := by
   apply Subtype.ext
   show (latticeVOAGen e8 e8_even e8_posDef).smul (hSt e8 v) 0 (latStateGen e8 (vSchur e8 w 1) 0) = 0
-  rw [smul_hSt_zero_latStateGen, map_zero, Int.cast_zero, zero_smul]
+  erw [smul_hSt_zero_latStateGen, map_zero, Int.cast_zero, zero_smul]
 
 theorem ev_ev_of_nonneg (v w : Lat) (hv : formZ v v = 2) (hw : formZ w w = 2)
     (h : 0 ≤ formZ v w) : ⁅ev v hv, ev w hw⁆ = 0 := by
   apply Subtype.ext
   show mode (YfullGen e8 e8_even e8_posDef (latChargeGen e8 v)) 0 (latChargeGen e8 w) = 0
-  rw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef,
+  erw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef,
     Qscr_latChargeGen_of_nonneg e8 (by rw [e8_form_eq]; exact h)]
 
 theorem ev_ev_of_neg_one (v w : Lat) (hv : formZ v v = 2) (hw : formZ w w = 2)
@@ -64,16 +64,17 @@ theorem ev_ev_of_neg_one (v w : Lat) (hv : formZ v v = 2) (hw : formZ w w = 2)
   apply Subtype.ext
   show mode (YfullGen e8 e8_even e8_posDef (latChargeGen e8 v)) 0 (latChargeGen e8 w) =
     latticeCocycle e8 v w • latChargeGen e8 (v + w)
-  rw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef, Qscr_latChargeGen, EEVec_vacuum, e8_form_eq,
+  erw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef, Qscr_latChargeGen, EEVec_vacuum, e8_form_eq,
     h, if_pos (by norm_num)]
   norm_num [vSchur_zero]
+  erw [vSchur_zero]
   rfl
 
 theorem ev_ev_neg (v : Lat) (hv : formZ v v = 2) (hv' : formZ (-v) (-v) = 2) :
     ⁅ev v hv, ev (-v) hv'⁆ = latticeCocycle e8 v (-v) • hst v := by
   apply Subtype.ext
   show mode (YfullGen e8 e8_even e8_posDef (latChargeGen e8 v)) 0 (latChargeGen e8 (-v)) = _
-  rw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef]
+  erw [← Qscr_eq_mode_YfullGen e8 e8_even e8_posDef]
   exact Qscr_latChargeGen_neg e8 (by rw [e8_form_eq]; exact hv)
 
 /-- `v ↦ v(-1)𝟙` is additive. -/

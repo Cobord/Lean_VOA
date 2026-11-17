@@ -40,7 +40,7 @@ theorem exists_symbolFamily_finite_ward (self : Bool) (N : ℕ) (s : ℂ)
       change vermaMode _ _ 1 (f.val (r+1)) -
         (symbolTargetWeight self (s^2)-incomingWeight (s^2)+incomingWeight (s^2)+(r:ℂ)) •
           f.val r=0 at he
-      simpa only [sub_add_cancel] using sub_eq_zero.mp he
+      simpa only [sub_add_cancel] using! sub_eq_zero.mp he
     refine ⟨f,hf.1,fun r hr => h1 r (by omega),?_,?_⟩
     · intro r hr
       have he := hf.2.2.2 r (by omega)
@@ -104,15 +104,16 @@ theorem exists_finiteBlock_coordinates (self : Bool) (R : ℕ) (a : FiniteFockPB
         chargedFockMap_mem_level _ _ n.val _ (f.property n.val)⟩ := by
     rw [← hc n]
     funext d
-    change coeff d.val (finiteBlockFock self R a s n v) =
+    change (finiteBlockFock self R a s n v).coeff d.val =
       (∑ j : Fin (symbolBasisSize self n.val), c n j • symbolColumns self n.val (a n) s j) d
-    have hm := congrArg (coeff d.val)
+    have hm := congrArg (fun p : FF => p.coeff d.val)
       (map_finiteBlockVerma self R a s n v (symbolFamilyMap self s))
-    have hcol : coeff d.val (finiteBlockFock self R a s n v) =
+    have hcol : (finiteBlockFock self R a s n v).coeff d.val =
         ∑ j : Fin (symbolBasisSize self n.val), c n j *
-          coeff d.val (symbolFamilyMap self s
-            (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) n.val (a n j))) := by
-      simpa only [finiteBlockFock,LinearMap.comp_apply,coeff_sum,coeff_smul,smul_eq_mul,v] using hm
+          (symbolFamilyMap self s
+            (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) n.val
+              (a n j))).coeff d.val := by
+      simpa only [finiteBlockFock,LinearMap.comp_apply,coeff_sum,coeff_smul,smul_eq_mul,v] using! hm
     rw [hcol]
     simp only [Finset.sum_apply,Pi.smul_apply,smul_eq_mul]
     apply Finset.sum_congr rfl

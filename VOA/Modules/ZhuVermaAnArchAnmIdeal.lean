@@ -96,11 +96,11 @@ private theorem reindexZeroToIcc (P : ℕ) (s Lo Hi : ℤ) (g : ℤ → ℂ) (T 
       ?_ ?_ ?_ ?_ ?_
     · intro a ha; simp only [Finset.mem_range] at ha; simp only [Finset.mem_Icc]; omega
     · intro a ha; simp only [Finset.mem_Icc] at ha; simp only [Finset.mem_range]; omega
-    · intro a ha; simp only [Finset.mem_range] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_range] at ha; (try simp only [])
       rw [show ((a : ℤ) - s + s) = (a : ℤ) by ring, Int.toNat_natCast]
-    · intro a ha; simp only [Finset.mem_Icc] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_Icc] at ha; (try simp only [])
       rw [Int.toNat_of_nonneg (by omega)]; ring
-    · intro a ha; simp only [Finset.mem_range] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_range] at ha; (try simp only [])
       refine congr_arg₂ _ ?_ ?_
       · ring
       · ring

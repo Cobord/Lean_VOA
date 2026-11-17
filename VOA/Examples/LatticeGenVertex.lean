@@ -132,8 +132,8 @@ noncomputable def YeαvecFam (α : L.carrier) (t : ℤ) (β : L.carrier) :
 
 /-- The **charge-`α` lattice vertex operator** `Y(e^α,z)` as a `FormalDist (End (V_L))`, the
 vector-charge (and cocycle-twisted) generalization of A₁'s `Yemα`. -/
-noncomputable def Yeαvec (α : L.carrier) (t : ℤ) : LatModuleGen L →ₗ[ℂ] LatModuleGen L :=
-  TensorProduct.lift (Finsupp.lsum ℂ (YeαvecFam L α t)).flip
+noncomputable def Yeαvec (α : L.carrier) : FormalDist (Module.End ℂ (LatModuleGen L)) :=
+  fun t => TensorProduct.lift (Finsupp.lsum ℂ (YeαvecFam L α t)).flip
 
 /-- The defining action of `Y(e^α,z)` on a basis state `p ⊗ e^β`: the cocycle-twisted, boson-dressed
 sector shift. -/

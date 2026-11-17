@@ -39,7 +39,7 @@ theorem logarithmicEnergyCoefficients_holds : LogarithmicEnergyCoefficients := b
   have hc := sqBracketCoeffZ_two_eq_coeff_Pw 0 (n : ℤ)
   have he : sqBracketCoeffZ 2 1 ((n + 1 : ℕ) : ℤ) =
       PowerSeries.coeff n ((1 + PowerSeries.X) * uSeries) := by
-    simpa [Pw, uUnit_coe] using hc
+    simpa [Pw, uUnit_coe] using! hc
   exact h.trans he.symm
 
 universe u

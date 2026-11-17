@@ -209,8 +209,8 @@ theorem semiInfiniteQ_shifts (hA : GradedUnitary affineForm affineRealStructure 
   refine tensorDeg_induction matterF ghostDegF k
     (fun z => semiInfiniteQ leeYangMatterAction.toAffineSl2Action z ∈
       shiftTarget brstDegF GoodRp k)
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ z hz
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ z hz
   intro b x hx y hy
   rw [semiInfiniteQ_tmul, matter_even_invol]
   have hk : b + (k - b) = k := by abel
@@ -221,7 +221,7 @@ theorem semiInfiniteQ_shifts (hA : GradedUnitary affineForm affineRealStructure 
     have hc : mode (sl2GhostSVA.Y (cGhost a)) (-n - 1) y ∈
         shiftTarget ghostDegF (· = ghShiftF 1 n) (k - b) := by
       have h := ghostYCoeff_shifts a 1 n (k - b) y hy
-      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using h
+      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using! h
     have h := tmul_mem_tensor_shiftTarget matterF ghostDegF hJ hc
     rw [hk] at h
     exact shiftTarget_mono (current_term_good n) k h

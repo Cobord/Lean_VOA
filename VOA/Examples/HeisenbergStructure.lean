@@ -17,8 +17,8 @@ This file discharges, for the rank-1 Heisenberg (free-boson) Fock space, the str
 PreVertexAlgebra axioms that remained open after `HeisenbergGrading` (VA1, VA5):
 
 * **VA4-GENERAL** `Y_local (k u v) : Local (Y k u) (Y k v)` for ARBITRARY `u v : Fock`.
-  `Y k` is `ℂ`-linear (a `Finsupp.linearCombination` over monomials), so `Y k u` is a finite
-  sum `∑ a ∈ u.support, (u a) • Ymon k a`.  `Ymon_local` gives locality for each monomial
+  `Y k` is `ℂ`-linear (`Module.Basis.constr` on the monomial basis), so `Y k u` is a finite
+  sum `∑ a ∈ u.support, (u.coeff a) • Ymon k a` (`Y_eq_support_sum`).  `Ymon_local` gives locality for each monomial
   pair; `Local.add`/`Local.sum`/`Local.smul'`/`Local.smulR` (Core.Skew / HeisenbergVertex)
   extend it bilinearly.
 * **VA1 `isInternal`** `gradingZ_isInternal : DirectSum.IsInternal gradingZ`.  The Fock space
@@ -53,13 +53,6 @@ theorem smul_Ymon_local (k : ℂ) (ca cb : ℂ) (a b : ℕ →₀ ℕ) :
     Local (ca • Ymon k a) (cb • Ymon k b) :=
   Local.smulR cb (VertexOperatorAlgebra.Local.smul' ca (Ymon_local k a b))
 
-/-- `Y k u` as the explicit finite sum of its scaled monomial fields. -/
-theorem Y_eq_support_sum (k : ℂ) (u : Fock) :
-    Y k u = ∑ a ∈ u.support, (u a) • Ymon k a := by
-  rw [show Y k u = Finsupp.linearCombination ℂ (Ymon k) u from rfl,
-      Finsupp.linearCombination_apply]
-  rfl
-
 /-- A scaled monomial field is local with the full vertex operator `Y k v` (expand `Y k v` as a
 finite sum of scaled monomial fields; the sum sits on the right, so assemble via `Local.sum` and
 symmetry). -/
@@ -67,19 +60,19 @@ theorem smul_Ymon_local_Y (k : ℂ) (ca : ℂ) (a : ℕ →₀ ℕ) (v : Fock) :
     Local (ca • Ymon k a) (Y k v) := by
   classical
   rw [Y_eq_support_sum k v]
-  refine (VertexOperatorAlgebra.Local.sum v.support (fun b => (v b) • Ymon k b)
+  refine (VertexOperatorAlgebra.Local.sum v.support (fun b => (v.coeff b) • Ymon k b)
     (fun b _ => ?_)).symm
-  exact smul_Ymon_local k (v b) ca b a
+  exact smul_Ymon_local k (v.coeff b) ca b a
 
 /-- **VA4 (locality), general states.**  `Y(u,z)` and `Y(v,z)` are mutually local for ARBITRARY
-`u v : Fock`.  `Y k u` is the `ℂ`-linear combination `∑ a ∈ u.support, (u a) • Ymon k a`; each
+`u v : Fock`.  `Y k u` is the `ℂ`-linear combination `∑ a ∈ u.support, (u.coeff a) • Ymon k a`; each
 scaled monomial field is local with the whole `Y k v` (`smul_Ymon_local_Y`), and `Local.sum`
 assembles the finite sum. -/
 theorem Y_local (k : ℂ) (u v : Fock) : Local (Y k u) (Y k v) := by
   classical
   rw [Y_eq_support_sum k u]
-  exact VertexOperatorAlgebra.Local.sum u.support (fun a => (u a) • Ymon k a)
-    (fun a _ => smul_Ymon_local_Y k (u a) a v)
+  exact VertexOperatorAlgebra.Local.sum u.support (fun a => (u.coeff a) • Ymon k a)
+    (fun a _ => smul_Ymon_local_Y k (u.coeff a) a v)
 
 /-! ## §2  VA1 `isInternal` — the internal direct-sum decomposition of `Fock`
 
@@ -214,8 +207,8 @@ theorem gradingW_le_span (w : ℕ) :
   have hdw : Finsupp.weight weightFn d = w := hp (MvPolynomial.mem_support_iff.mp hd)
   have hmem : (monomial d 1 : Fock) ∈ weightMonSet w :=
     ⟨d, hdw, rfl⟩
-  have hscale : (monomial d (MvPolynomial.coeff d p) : Fock)
-      = (MvPolynomial.coeff d p) • monomial d 1 := by
+  have hscale : (monomial d (p.coeff d) : Fock)
+      = (p.coeff d) • monomial d 1 := by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
   rw [hscale]
   exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
@@ -244,7 +237,7 @@ theorem gradingW_zero_eq_span_one : gradingW 0 = ℂ ∙ (1 : Fock) := by
     intro p hp
     rw [mem_gradingW] at hp
     -- `p = C (coeff 0 p) = (coeff 0 p) • 1`
-    have hconst : p = MvPolynomial.C (MvPolynomial.coeff 0 p) := by
+    have hconst : p = MvPolynomial.C (p.coeff 0) := by
       apply MvPolynomial.ext
       intro d
       rw [MvPolynomial.coeff_C]
@@ -262,8 +255,8 @@ theorem gradingW_zero_eq_span_one : gradingW 0 = ℂ ∙ (1 : Fock) := by
           Finsupp.le_weight_of_ne_zero' weightFn hdi
         rw [hdw, weightFn_apply] at hle
         omega
-    rw [hconst, show (MvPolynomial.C (MvPolynomial.coeff 0 p) : Fock)
-        = (MvPolynomial.coeff 0 p) • 1 from by rw [smul_eq_C_mul, mul_one]]
+    rw [hconst, show (MvPolynomial.C (p.coeff 0) : Fock)
+        = (p.coeff 0) • 1 from by rw [smul_eq_C_mul, mul_one]]
     exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _)
   · -- `ℂ·1 ⊆ gradingW 0`: `1` is weighted-homogeneous of weight `0`
     rw [Submodule.span_singleton_le_iff_mem]

@@ -104,7 +104,7 @@ theorem Aser_succ (v : D4K.V) (m : ℕ) :
   rw [map_mul, map_sub, map_one, ← pow_one (X : PowerSeries R'), Sp'_C_mul_X_pow, map_cst_X_pow,
     ← pow_add, show 2 + 2 * m = 2 * (m + 1) by ring] at h
   rw [Aser, Aser, ← h]
-  congr 2; ring
+  exact congrArg₂ (· * ·) rfl (congrArg (1 - ·) (by ring))
 
 theorem Aser_agree (v : D4K.V) (m : ℕ) : AgreeTo (m + 1) (Aser v m) 1 := by
   apply diag_agree
@@ -144,7 +144,7 @@ theorem Bser_eq (v : D4K.V) (m : ℕ) :
   rw [map_mul, map_sub, map_one, Sp'_C_mul_X_pow, map_cst_X_pow, ← pow_add,
     show 2 + 2 * m = 2 * (m + 1) by ring] at h
   rw [Bser, Bser, h]
-  congr 2; ring
+  exact congrArg₂ (· * ·) (congrArg (1 - ·) (by ring)) rfl
 
 theorem Bser_agree (v : D4K.V) (m : ℕ) : AgreeTo (m + 1) (Bser v m) 1 := by
   apply diag_agree
@@ -188,8 +188,9 @@ theorem Sp'_tFactors' : Sp' tFactors' = Mnum := by
   have e2 : ((2 • D4K.xv : D4K.V) 0) = 2 := by decide
   have e2' : ((-2 • D4K.xv : D4K.V) 0) = -2 := by decide
   rw [e0, e2, e2', mono_zero, map_one, mul_assoc, infProd_mul (pfBv 2) (pfBv (-2))]
-  congr 1
-  all_goals first | exact infProd_congr fun k => by ring | exact infProd_congr fun k => by rw [uf]
+  refine congrArg₂ (· * ·) ?_ ?_
+  · exact infProd_congr fun k => by ring
+  · exact infProd_congr fun k => by unfold uf; ring
 
 theorem Sp'_hyperFactors' : Sp' hyperFactors' * Den ^ 8 = 1 := by
   rw [hyperFactors', map_list_prod, List.map_map, Den_eq]

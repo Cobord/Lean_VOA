@@ -119,8 +119,7 @@ theorem forwardMapIrr_surjective_uncond (W : VertexOperatorAlgebra 𝒱) :
   | _ U =>
     obtain ⟨P, hP, he⟩ := U.2
     refine ⟨Quotient.mk (IrrLWModule.setoid W) ⟨P, hP⟩, ?_⟩
-    rw [forwardMapIrr_mk]
-    exact Quotient.sound he
+    exact (forwardMapIrr_mk W ⟨P, hP⟩).trans (Quotient.sound he)
 
 /-! ## §2 Injectivity is *exactly* `IrredBottomRigidity` -/
 
@@ -146,8 +145,8 @@ theorem irredBottomRigidity_of_injective (hinj : Function.Injective (forwardMapI
   intro P Q hP hQ hbot
   refine Quotient.exact (hinj ?_ : (Quotient.mk (IrrLWModule.setoid W) ⟨P, hP⟩
     : IrrLWModuleIsoClass W) = Quotient.mk (IrrLWModule.setoid W) ⟨Q, hQ⟩)
-  rw [forwardMapIrr_mk, forwardMapIrr_mk]
-  exact Quotient.sound hbot
+  exact (forwardMapIrr_mk W ⟨P, hP⟩).trans
+    ((Quotient.sound hbot).trans (forwardMapIrr_mk W ⟨Q, hQ⟩).symm)
 
 /-- **Injectivity of `forwardMapIrr` *is* Zhu's irreducible uniqueness.** -/
 theorem forwardMapIrr_injective_iff_rigidity :
@@ -390,7 +389,8 @@ theorem rhoLW_homog_coe (N : GradedLWWeakModule W M hw) (hfin : N.FiniteWeights)
     {k : ℤ} {a : 𝒱} (ha : a ∈ W.grading k) (y : N.weight hw) :
     ((rhoLW (N.toOrdVModule hfin) hw a y : (N.toOrdVModule hfin).weight hw) : M)
       = N.toWeakModule.act a (k - 1) (y : M) := by
-  rw [rhoLW_apply_coe, oMod_homogeneous (N.toOrdVModule hfin) ha, WeakModule.act_def]
+  refine (rhoLW_apply_coe (N.toOrdVModule hfin) hw a y).trans ?_
+  rw [oMod_homogeneous (N.toOrdVModule hfin) ha, WeakModule.act_def]
   rfl
 
 /-- **From homogeneous equivariance to `A(𝒱)`-equivariance.**  If a linear equivalence `e` of the
@@ -535,7 +535,7 @@ noncomputable def djLU_bottomAModEquiv :
           ((djLU Pr U.toAmModZero hU hval hL0).toLWModule hfin).isLow
           (VOA.mk W v) x)
       = U.ρ (VOA.mk W v) (djLU_bottom_U Pr U.toAmModZero hU hval hL0 x)
-    rw [actA_mk]
+    erw [actA_mk]
     exact djLU_bottom_U_oMod Pr U hU hval hL0 hfin v x
 
 /-- **Dong–Jiang's `L(U)` packaged as an `IrrRealization W U`** — C5's existence direction wired

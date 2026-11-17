@@ -102,7 +102,7 @@ theorem rowEval_multiply (v : Fin 18) (l : WordRow) :
 theorem rowEval_scale_mem (I : Ideal (MvPolynomial ι ℂ)) (z : ℤ)
     (l : WordRow) (h : rowEval f l ∈ I) : rowEval f (scaleRow z l) ∈ I := by
   rw [rowEval_scale]
-  simpa only [Int.cast_smul_eq_zsmul] using
+  simpa only [Int.cast_smul_eq_zsmul] using!
     (I.restrictScalars ℂ).smul_mem (z:ℂ) h
 
 /-- A finite exact cancellation certificate transfers actual ideal membership. -/
@@ -118,10 +118,10 @@ theorem row_mem_of_collect (I : Ideal (MvPolynomial ι ℂ))
       linear_combination -he
     rw [hz]
     exact I.add_mem
-      (by simpa only [Int.cast_smul_eq_zsmul] using
+      (by simpa only [Int.cast_smul_eq_zsmul] using!
         (I.restrictScalars ℂ).smul_mem (scale:ℂ) hraw) hearlier
   have hc : (factor:ℂ) • rowEval f normal ∈ I := by
-    simpa only [Int.cast_smul_eq_zsmul] using hmem
+    simpa only [Int.cast_smul_eq_zsmul] using! hmem
   exact (Submodule.smul_mem_iff _ (by exact_mod_cast hfactor : (factor:ℂ) ≠ 0)).mp hc
 
 end

@@ -72,7 +72,8 @@ theorem eval_hMode0Part0OuterSparseQ_eq_blocks (m : ℤ) (hm : 0 ≤ m) :
   have hfull : evalZhuSparseQ l3hExpectedQ ∈ gradingWN (rank LtwoBlock) 6 := by
     have h := ZhuStateDesc.eval_mem_gradingWN
       (by omega) (.l3h) (by simp [ZhuStateDesc.Valid])
-    simpa only [ZhuStateDesc.eval, l3hSparseQ_eq_expected] using h
+    simp only [ZhuStateDesc.eval, l3hSparseQ_eq_expected] at h
+    exact h
   have hblock0 := evalZhuSparseQ_l3hBlockSparseQ_mem_gradingWN 0 (by omega)
   have hblock1 := evalZhuSparseQ_l3hBlockSparseQ_mem_gradingWN 1 (by omega)
   have hblock2 := evalZhuSparseQ_l3hBlockSparseQ_mem_gradingWN 2 (by omega)

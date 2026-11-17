@@ -25,11 +25,11 @@ private theorem centralModePolynomial_homogeneous (l : List ℕ) :
     MvPolynomial.IsWeightedHomogeneous om (centralModePolynomial l) (l.length, l.sum) := by
   induction l with
   | nil =>
-      simpa [centralModePolynomial] using MvPolynomial.isWeightedHomogeneous_one ℂ om
+      simpa [centralModePolynomial] using! MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s l ih =>
       have hz : MvPolynomial.IsWeightedHomogeneous om (z s) (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
-      simpa [centralModePolynomial, Nat.add_comm] using hz.mul ih
+      simpa [centralModePolynomial, Nat.add_comm] using! hz.mul ih
 
 private theorem centralModePolynomial_evaluation (l : List ℕ) :
     Sl2Weyl.evAlg (rootF ρ 5) (rootF_comm ρ 5) (centralModePolynomial l) =
@@ -54,7 +54,7 @@ theorem centralGradedDefect_le_next (m c d : ℕ)
   have hlen : (CLAssembly.lst f).length + r = c := by
     have hh := congrArg Prod.fst hw
     simpa [CLAssembly.length_lst, Finsupp.weight_apply, Finsupp.degree_apply,
-      Finsupp.sum, Prod.fst_sum, om] using hh
+      Finsupp.sum, Prod.fst_sum, om] using! hh
   rw [mul_comm (MvPolynomial.monomial f 1), map_mul, Sl2Weyl.evAlg_xx,
     A3Sector.a2_evAlg_monomial_word]
   have hh := centralGarland_spectator_mem_next ρ w m h (CLAssembly.lst f) r s hr hrs
@@ -69,13 +69,13 @@ theorem centralKey_le_gradedBox_sup_next (m a d : ℕ) (ha : a ≤ m)
       Submodule.span ℂ (centralBoxVector ρ w '' (centralGradedBox m a d : Set _)) ⊔
         levelFiltration ρ w m ((m : ℤ) - a) ((m : ℤ) - a + 1) := by
   classical
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hcol := centralKey_word_colours a d l hl
   have hlen : l.length = a := by
     have hd := wordKey_depth l
     rw [hl] at hd
-    simpa [keyDepth, centralLetterKey] using hd.symm
+    simpa [keyDepth, centralLetterKey] using! hd.symm
   have heval : radicalWord ρ w l = ((l.map Prod.snd).map (rootF ρ 5)).prod w := by
     clear hl hlen
     induction l with
@@ -104,7 +104,7 @@ theorem centralKey_le_gradedBox_sup_next (m a d : ℕ) (ha : a ≤ m)
   · refine (A3Sector.mem_a2BoxModeSet m a ha f).mpr ⟨?_, hf⟩
     have hfst := congrArg Prod.fst hw
     simpa [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum,
-      Prod.fst_sum, om, hlen] using hfst
+      Prod.fst_sum, om, hlen] using! hfst
   · have hd : (l.map Prod.snd).sum = d := congrArg RadicalKey.degree hl
     exact congrArg Prod.snd hw
 
@@ -123,7 +123,7 @@ theorem centralKey_quotient_finrank_le_gradedBox (m c d : ℕ) (hc : c ≤ m)
     have hh := Submodule.map_mono (f := N.mkQ)
       (centralKey_le_gradedBox_sup_next ρ w m c d hc h)
     rw [Submodule.map_sup, Submodule.map_span, Submodule.mkQ_map_self, sup_bot_eq] at hh
-    simpa only [B, Finset.coe_image, Set.image_image, Function.comp_def] using hh
+    simpa only [B, Finset.coe_image, Set.image_image, Function.comp_def] using! hh
   haveI : FiniteDimensional ℂ (Submodule.span ℂ (B : Set (V ⧸ N))) :=
     FiniteDimensional.span_of_finite ℂ B.finite_toSet
   dsimp only
@@ -142,13 +142,13 @@ theorem centralKey_le_next_of_overfull (m c d : ℕ) (hc : m < c)
     keyLayer ρ w (centralLetterKey c d) ≤
       levelFiltration ρ w m ((m : ℤ) - c) ((m : ℤ) - c + 1) := by
   classical
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hcol := centralKey_word_colours c d l hl
   have hlen : l.length = c := by
     have hd := wordKey_depth l
     rw [hl] at hd
-    simpa [keyDepth, centralLetterKey] using hd.symm
+    simpa [keyDepth, centralLetterKey] using! hd.symm
   have heval : radicalWord ρ w l = ((l.map Prod.snd).map (rootF ρ 5)).prod w := by
     clear hl hlen
     induction l with

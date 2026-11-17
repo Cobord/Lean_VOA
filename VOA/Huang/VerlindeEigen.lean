@@ -116,7 +116,7 @@ theorem inv_eigen (hE : FusionEigen N S) (T : Matrix ι ι ℂ) (hTS : T * Matri
       _ = Λ * T := by rw [hTS, Matrix.one_mul]
   have h := congrFun (congrFun key z) y
   rw [Matrix.mul_apply, Matrix.diagonal_mul] at h
-  simpa [hNa] using h
+  simpa [hNa] using! h
 
 /-- **Symmetry of the vacuum row** (the vacuum case of Huang Theorem 5.6, via (5.12)–(5.14)).
 Hypotheses: the right unit row; `N_{ax}^{v0} = δ_{x,σa}` for an injective `σ` fixing `v0`
@@ -187,7 +187,7 @@ def ChargeConjugationInput : Prop :=
 theorem modularS_mul_S : ModularGroup.S * ModularGroup.S = -1 := by
   ext i j
   have h := congrFun (congrFun ModularGroup.S_mul_S_eq i) j
-  simpa using h
+  simpa using! h
 
 /-- The right unit row of the family's fusion rules, `N_{a v0}^y = δ_ay` (from the left unit row
 `famFusion_vac` and skew-symmetry `fusionRule_swap`). -/

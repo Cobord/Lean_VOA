@@ -49,6 +49,9 @@ namespace VOA
 open PowerSeries
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## Scalar helpers -/
 
 /-- Coefficients of an integer-constant multiple. -/
@@ -118,7 +121,8 @@ theorem eulerStep_one (m : ℤ) :
 
 theorem derivativeFun_intCast (c : ℤ) : derivativeFun ((c : PowerSeries ℂ)) = 0 := by
   rw [show ((c : ℤ) : PowerSeries ℂ) = PowerSeries.C ((c : ℤ) : ℂ) from
-    (map_intCast (PowerSeries.C (R := ℂ)) c).symm, PowerSeries.derivativeFun_C]
+    (map_intCast (PowerSeries.C (R := ℂ)) c).symm]
+  exact PowerSeries.derivativeFun_C ..
 
 theorem derivativeFun_intCast_mul (c : ℤ) (F : PowerSeries ℂ) :
     derivativeFun ((c : PowerSeries ℂ) * F) = (c : PowerSeries ℂ) * derivativeFun F := by
@@ -325,12 +329,12 @@ theorem centralMoment_eq_coeff (m n : ℤ) (J : ℕ) (hJ : (J : ℤ) = -m - n) :
   · intro p hp
     rw [Finset.mem_antidiagonal] at hp
     obtain ⟨p1, p2⟩ := p
-    dsimp only
+    try dsimp only
     simp only [Prod.mk.injEq]
     refine ⟨?_, ?_⟩ <;> omega
   · intro a ha
     simp only [Finset.mem_Icc] at ha
-    dsimp only
+    try dsimp only
     rw [sqBracketCoeffZ_two_eq_coeff_Pw m a, if_pos (by omega),
       sqBracketCoeffZ_two_eq_coeff_Pw n (-a), if_pos (by omega), coeff_Am]
     have e1c : ((((a - m).toNat : ℕ) : ℂ) + ((m : ℤ) : ℂ)) = ((a : ℤ) : ℂ) := by

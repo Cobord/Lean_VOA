@@ -92,7 +92,7 @@ theorem S_vac_sigma {ι : Type} [Fintype ι] [DecidableEq ι] (S : ι → ι →
   have hiff : ∀ x, (σ b = σ x) ↔ (x = b) := fun x =>
     ⟨fun h' => by rw [← hσ x, ← h', hσ], fun h' => by rw [h']⟩
   simp_rw [hiff] at h
-  simpa using h.symm
+  simpa using! h.symm
 
 /-- **Huang's dimension theorem**: for the canonical model, any right duals, and the twist
 pivotal structure, `dim M_b = d_b`. -/

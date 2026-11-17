@@ -14,14 +14,14 @@ variable {σ : Type*}
 /-- Integer weight one records the usual total degree of a monomial. -/
 theorem monomial_integerWeight (a : σ →₀ ℕ) :
     Finsupp.weight (fun _ : σ => (1 : ℤ)) a = (a.degree : ℤ) := by
-  simp [Finsupp.weight_apply, Finsupp.degree, Finsupp.sum]
+  simp [Finsupp.weight_apply, Finsupp.degree_apply, Finsupp.sum]
 
 /-- An integer-homogeneous polynomial of negative degree vanishes. -/
 theorem integerHomogeneous_eq_zero (p : MvPolynomial σ ℂ) (d : ℤ)
     (hp : p.IsWeightedHomogeneous (fun _ => (1 : ℤ)) d) (hd : d < 0) : p = 0 := by
   apply MvPolynomial.ext
   intro a
-  rw [coeff_zero]
+  change _ = (0 : ℂ)
   by_contra h
   have ha := hp h
   rw [monomial_integerWeight] at ha
@@ -64,7 +64,7 @@ theorem determinant_column_sum {j n : ℕ} {A : Type*} [CommRing A]
     Matrix.det (fun a b => ∑ l, v b l a) =
       ∑ f : Fin j → Fin n, Matrix.det (fun a b => v b (f b) a) := by
   classical
-  rw [← Matrix.det_transpose]
+  rw [← Matrix.det_transpose (fun a b => ∑ l, v b l a : Matrix (Fin j) (Fin j) A)]
   have he : (fun b a => ∑ l, v b l a) = fun b => ∑ l, v b l := by
     ext b a
     simp
@@ -110,7 +110,7 @@ theorem deformedRemainderMinor_term_homogeneous (xs : List (MvPolynomial σ ℂ)
       (fun _ => (1 : ℤ)) 0 := by
     rw [← map_prod]
     exact isWeightedHomogeneous_C _ _
-  simpa only [zero_add] using hc.mul
+  simpa only [zero_add] using! hc.mul
     (determinant_homogeneous_row_column (fun _ => (1 : ℤ)) _
       (fun a => (rows a : ℤ)) (fun b => (((f b).val + cols b : ℕ) : ℤ))
       (fun a b => alphabetPowerRemainder_homogeneous _ xs hxs _ _))

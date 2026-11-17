@@ -121,7 +121,7 @@ theorem u_matching_equations (m : ℕ) (q : OrbitSourceIndex m × ((Fin 9 × Fin
   · have h2 := congrFun hmatch 2
     change Finsupp.weight (componentWeight m) q.2 2 +
       (if q.1.seed.val.1 then (q.1.seed.val.2.1 : ℤ) - q.1.outer.length else 0) = 0 at h2
-    simpa only [hb,Bool.false_eq_true,if_false,add_zero] using h2
+    simpa only [hb,Bool.false_eq_true,if_false,add_zero] using! h2
   · intro d
     have hc := congrFun hcolor (Fin.natAdd 3 d)
     rw [Pi.add_apply,weight_coord] at hc
@@ -135,7 +135,7 @@ theorem u_matching_equations (m : ℕ) (q : OrbitSourceIndex m × ((Fin 9 × Fin
       fin_cases d <;> rfl
     rw [hsrc,hcw,htg,orbitSourceBitDegree,hb,
       axis_wordGrade_eq q.1.outer (u_outer_negative m q.1 hb)] at hc
-    simpa only [Bool.false_eq_true,if_false] using hc
+    simpa only [Bool.false_eq_true,if_false] using! hc
 
 /-- Every matching static quartic row is one of the 8m intrinsic static rows. -/
 theorem quinticStaticQuarticRows_subset (m : ℕ) :
@@ -153,7 +153,7 @@ theorem quinticStaticQuarticRows_subset (m : ℕ) :
     rw [hx,Finsupp.weight_single,one_smul]
     simp [modeWeight]
   rw [hwx] at h1 h2
-  have hc : cWeight x.1 = 0 := by simpa [componentWeight,modeWeight] using h2
+  have hc : cWeight x.1 = 0 := by simpa [componentWeight,modeWeight] using! h2
   have hk : componentWeight m x 1 = x.2.val := by simp [componentWeight,modeWeight]
   rw [hk] at h1
   refine ⟨x,fun h8 => by simp [h8,cWeight] at hc,?_⟩

@@ -25,20 +25,20 @@ theorem coeff_mul_le {r α β : ℝ} (hr : 0 ≤ r) {K G : PowerSeries ℂ} (hK 
     ‖PowerSeries.coeff j (K * G)‖ * r ^ j ≤ α * β := by
   have hβ : 0 ≤ β := le_trans (by positivity) (hG 0)
   rw [PowerSeries.coeff_mul]
-  calc ‖∑ kl ∈ Finset.antidiagonal j, PowerSeries.coeff kl.1 K * PowerSeries.coeff kl.2 G‖ *
+  calc ‖∑ kl ∈ Finset.HasAntidiagonal.antidiagonal j, PowerSeries.coeff kl.1 K * PowerSeries.coeff kl.2 G‖ *
         r ^ j
-      ≤ (∑ kl ∈ Finset.antidiagonal j,
+      ≤ (∑ kl ∈ Finset.HasAntidiagonal.antidiagonal j,
           ‖PowerSeries.coeff kl.1 K‖ * ‖PowerSeries.coeff kl.2 G‖) * r ^ j := by
         refine mul_le_mul_of_nonneg_right ?_ (by positivity)
         refine (norm_sum_le _ _).trans (le_of_eq ?_)
         simp only [norm_mul]
-    _ = ∑ kl ∈ Finset.antidiagonal j, (‖PowerSeries.coeff kl.1 K‖ * r ^ kl.1) *
+    _ = ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal j, (‖PowerSeries.coeff kl.1 K‖ * r ^ kl.1) *
           (‖PowerSeries.coeff kl.2 G‖ * r ^ kl.2) := by
         rw [Finset.sum_mul]
         refine Finset.sum_congr rfl fun kl hkl => ?_
-        rw [Finset.mem_antidiagonal] at hkl
+        rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
         rw [← hkl, pow_add]; ring
-    _ ≤ ∑ kl ∈ Finset.antidiagonal j, (‖PowerSeries.coeff kl.1 K‖ * r ^ kl.1) * β :=
+    _ ≤ ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal j, (‖PowerSeries.coeff kl.1 K‖ * r ^ kl.1) * β :=
         Finset.sum_le_sum fun kl _ => mul_le_mul_of_nonneg_left (hG _) (by positivity)
     _ = (∑ k ∈ Finset.range (j + 1), ‖PowerSeries.coeff k K‖ * r ^ k) * β := by
         rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk, Finset.sum_mul]
@@ -112,7 +112,7 @@ theorem euler_laurent_bound {r A a₁ a : ℝ} (hr0 : 0 < r) (hr1 : r ≤ 1) (ha
     rw [not_isEmpty_iff] at hκ
     obtain ⟨f⟩ := hκ
     have := (hK f f 0).nonneg
-    simpa using this
+    simpa using! this
   set ρ := a₁ / a with hρ
   have hρ0 : 0 ≤ ρ := div_nonneg ha₁ ha0.le
   have hρ1 : ρ < 1 := (div_lt_one ha0).2 ha
@@ -242,7 +242,7 @@ theorem euler_laurent_bound {r A a₁ a : ℝ} (hr0 : 0 < r) (hr1 : r ≤ 1) (ha
           C * a ^ n + B' / 2 ^ j := by
         intro j
         induction j with
-        | zero => simpa using hcrude
+        | zero => simpa using! hcrude
         | succ j ihj =>
           intro g i
           have h := hstep (C * a ^ n + B' / 2 ^ j) (by positivity) ihj g i

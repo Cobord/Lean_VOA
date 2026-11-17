@@ -144,7 +144,6 @@ theorem L0exp_zero_apply {M : Type u} [AddCommGroup M] [Module ℂ M]
     exact VOA.Huang.LiRegular.expOp_zero (L0nil_locallyNilpotent N) x
   · exact map_zero _
   · intro x y hx hy
-    dsimp only at hx hy ⊢
     rw [map_add,hx,hy]
 
 /-- The actual negative branch turn cancels the actual conformal twist. -/

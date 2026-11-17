@@ -25,7 +25,7 @@ private theorem commutator_cube {E : Type*} [Group E] (a b : E)
     (Subgroup.mem_center_iff.mp hz b).symm
   have hab : Commute (a * b * a⁻¹) b := by
     have h := hzcomm.mul_left (Commute.refl b).inv_left
-    simpa only [mul_inv_cancel_right] using h
+    simpa only [mul_inv_cancel_right] using! h
   calc
     ⁅a, b⁆ ^ 3 = (a * b * a⁻¹) ^ 3 * (b⁻¹) ^ 3 := hab.inv_right.mul_pow 3
     _ = (a * b ^ 3 * a⁻¹) * (b ^ 3)⁻¹ := by
@@ -59,7 +59,7 @@ theorem schurTrivial_of_six_normal_forms {Q : Type} [Group Q] (s t : Q)
   have hb3 : b ^ 3 ∈ Subgroup.center E := hc (by
     rw [MonoidHom.mem_ker, map_pow, hb, ← ht, pow_orderOf_eq_one])
   have hz : a * b * a⁻¹ * b ∈ Subgroup.center E := hc (by
-    simpa [MonoidHom.mem_ker, ha, hb] using hst)
+    simpa [MonoidHom.mem_ker, ha, hb] using! hst)
   have hc3 : c ^ 3 = 1 := commutator_cube a b hb3 hz
   have hnfa : ∀ e : E, ∃ z ∈ Subgroup.center E, ∃ i j : ℕ,
       e = z * (c ^ j * a ^ i) := by
@@ -98,9 +98,9 @@ theorem schurTrivial_of_six_normal_forms {Q : Type} [Group Q] (s t : Q)
     rw [map_commutatorElement]
     exact (hfcomm e d).commutator_eq
   obtain ⟨n, rfl⟩ := Subgroup.mem_zpowers_iff.mp (hderived hx)
-  have htn : t ^ n = 1 := by simpa [hpc] using hxπ
+  have htn : t ^ n = 1 := by simpa [hpc] using! hxπ
   have hn : (3 : ℤ) ∣ n := by
-    simpa [ht] using (orderOf_dvd_iff_zpow_eq_one.mpr htn)
+    simpa [ht] using! (orderOf_dvd_iff_zpow_eq_one.mpr htn)
   obtain ⟨m, rfl⟩ := hn
   rw [zpow_mul, zpow_ofNat, hc3, one_zpow]
 

@@ -132,7 +132,7 @@ theorem GG_eq_HH : ∀ i ≤ n + 1, GG n i = HH n i := by
   intro i hi
   have : D i = 0 :=
     PowerSeries.ext fun m => PowerSeries.ext fun N => by rw [key N i hi m]; simp
-  exact sub_eq_zero.mp (by simpa only [hD] using this)
+  exact sub_eq_zero.mp (by simpa only [hD] using! this)
 
 /-! ## §4  The Andrews–Gordon identity -/
 
@@ -173,21 +173,21 @@ theorem coeff_term_one (E s N2 : ℕ) :
     coeff_X_pow, coeff_X_pow, mul_one]
 
 theorem sum_antidiagonal_indicator (f : ℕ → ℚ) (N e : ℕ) :
-    ∑ u ∈ Finset.antidiagonal N, f u.1 * (if u.2 = e then 1 else 0) =
+    ∑ u ∈ Finset.HasAntidiagonal.antidiagonal N, f u.1 * (if u.2 = e then 1 else 0) =
       if e ≤ N then f (N - e) else 0 := by
   simp only [mul_ite, mul_one, mul_zero]
   split_ifs with he
   · rw [Finset.sum_ite, Finset.sum_const_zero, add_zero]
-    have : (Finset.antidiagonal N).filter (fun u : ℕ × ℕ => u.2 = e) = {(N - e, e)} := by
+    have : (Finset.HasAntidiagonal.antidiagonal N).filter (fun u : ℕ × ℕ => u.2 = e) = {(N - e, e)} := by
       ext u
-      simp only [Finset.mem_filter, Finset.mem_antidiagonal, Finset.mem_singleton]
+      simp only [Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal, Finset.mem_singleton]
       constructor
       · rintro ⟨h1, h2⟩; ext <;> simp <;> omega
       · rintro rfl; simp; omega
     rw [this, Finset.sum_singleton]
   · refine Finset.sum_eq_zero fun u hu => ?_
     rw [if_neg]
-    have := Finset.mem_antidiagonal.mp hu
+    have := Finset.HasAntidiagonal.mem_antidiagonal.mp hu
     omega
 
 theorem pp_cast_shift (N e : ℕ) :
@@ -226,13 +226,16 @@ theorem rcq_eq_range (N : ℕ) :
   have h2 : Finset.Ico (-(N : ℤ) - 1) 0 = (Finset.range (N + 1)).map
       ⟨fun s : ℕ => -(s : ℤ) - 1, fun a b h => by simp only at h; omega⟩ := by
     ext x
-    simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
+    simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range]
+    show _ ↔ ∃ a, a < N + 1 ∧ -(a : ℤ) - 1 = x
     constructor
     · rintro ⟨h1, h2⟩; exact ⟨(-x - 1).toNat, by omega, by omega⟩
     · rintro ⟨a, ha, rfl⟩; omega
   rw [h1, h2, Finset.sum_map, Finset.sum_map, add_comm, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun s _ => ?_
-  simp only [Nat.castEmbedding_apply, Function.Embedding.coeFn_mk, sgn_nat, sgn_neg]
+  show _ + VOA.RRLower.sgn (-(s : ℤ) - 1) *
+      VOA.RRLower.pp ((N : ℤ) - KacGram.eeq n (-(s : ℤ) - 1)) = _
+  simp only [Nat.castEmbedding_apply, sgn_nat, sgn_neg]
   ring
 
 /-- **The Andrews–Gordon identity** (Rocha-Caridi form), coefficientwise. -/
@@ -250,14 +253,14 @@ theorem gordon_sum_eq_rcq (N : ℕ) :
     rw [GG_eq_HH n 1 (by omega), HH, ev_mul Adm_FF (Adm_AA _ 1)]
   rw [hE, coeff_mul] at hG
   -- expand `A_1(1)`
-  have hA : ∀ u ∈ Finset.antidiagonal N, coeff u.1 (ev FF) * coeff u.2 (ev (AA (n + 1) 1)) =
+  have hA : ∀ u ∈ Finset.HasAntidiagonal.antidiagonal N, coeff u.1 (ev FF) * coeff u.2 (ev (AA (n + 1) 1)) =
       ∑ s ∈ Finset.range (N + 1), (-1 : ℚ) ^ s *
         (((VOA.RRLower.pp (u.1 : ℤ) : ℤ) : ℚ) *
             (if u.2 = (n + 1) * s * s + (n + 1 - 1) * s + tri s then 1 else 0) -
           ((VOA.RRLower.pp (u.1 : ℤ) : ℤ) : ℚ) *
             (if u.2 = (n + 1) * s * s + (n + 1 - 1) * s + tri s + (2 * s + 1) then 1 else 0)) := by
     intro u hu
-    have hu' := Finset.mem_antidiagonal.mp hu
+    have hu' := Finset.HasAntidiagonal.mem_antidiagonal.mp hu
     rw [coeff_ev_FF, coeff_ev_AA _ hK 1 u.2]
     rw [Finset.mul_sum]
     -- extend the `s`-range from `u.2` to `N`
@@ -281,7 +284,7 @@ theorem gordon_sum_eq_rcq (N : ℕ) :
     ring
   rw [Finset.sum_congr rfl hA, Finset.sum_comm] at hG
   have hS : ∀ s ∈ Finset.range (N + 1),
-      ∑ u ∈ Finset.antidiagonal N, (-1 : ℚ) ^ s *
+      ∑ u ∈ Finset.HasAntidiagonal.antidiagonal N, (-1 : ℚ) ^ s *
         (((VOA.RRLower.pp (u.1 : ℤ) : ℤ) : ℚ) *
             (if u.2 = (n + 1) * s * s + (n + 1 - 1) * s + tri s then 1 else 0) -
           ((VOA.RRLower.pp (u.1 : ℤ) : ℤ) : ℚ) *

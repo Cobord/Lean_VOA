@@ -33,9 +33,15 @@ theorem blockEsymm_X_inl (a : ℕ) (rest : List ℕ) (i : Fin a) :
       rename Sum.inl (esymm (Fin a) K (i.val + 1)) := by
   simp [blockEsymmAlgEquiv, extendFixedPresentation, consFixedAlgEquiv,
     extendedToConsFixed, nestedFixedExtendedAlgEquiv, nestedFixedToExtended,
-    nestedFixedToExtendedRaw, nestedFixedVal, esymmAlgEquiv_apply, esymmAlgHom, sumAlgEquiv, sumRingEquiv, mvPolynomialEquivMvPolynomial]
+    nestedFixedToExtendedRaw, nestedFixedVal, esymmAlgEquiv_apply, esymmAlgHom]
   apply (sumAlgEquiv K (Fin a) (BlockSlots rest)).injective
-  rw [sumToIter_Xl]
+  -- The coercion is taken at the domain `MvPolynomial (BlockSlots (a :: rest)) K`, matching the
+  -- form produced by unfolding `blockEsymmAlgEquiv` (`BlockSlots` is not reducible).
+  have hx : @DFunLike.coe
+      (MvPolynomial (BlockSlots (a :: rest)) K ≃ₐ[K] MvPolynomial (Fin a) (MvPolynomial (BlockSlots rest) K))
+      _ _ _ (sumAlgEquiv K (Fin a) (BlockSlots rest)) (X (Sum.inl i)) = X i :=
+    sumAlgEquiv_X_inl _ _ _ _
+  simp only [hx]
   simp [map_esymm]
   have he := DFunLike.congr_fun
     (sumAlgEquiv_comp_rename_inl (R := K) (S₁ := Fin a) (S₂ := BlockSlots rest))
@@ -50,14 +56,21 @@ theorem blockEsymm_X_inr (a : ℕ) (rest : List ℕ) (i : BlockSlots rest) :
   simp [blockEsymmAlgEquiv, extendFixedPresentation, consFixedAlgEquiv,
     extendedToConsFixed, nestedFixedExtendedAlgEquiv, nestedFixedToExtended,
     nestedFixedToExtendedRaw, nestedFixedVal, tailFixedAlgEquiv,
-    esymmAlgEquiv_apply, esymmAlgHom, sumAlgEquiv, sumRingEquiv, mvPolynomialEquivMvPolynomial]
+    esymmAlgEquiv_apply, esymmAlgHom]
   apply (sumAlgEquiv K (Fin a) (BlockSlots rest)).injective
-  rw [sumToIter_Xr]
+  -- The coercion is taken at the domain `MvPolynomial (BlockSlots (a :: rest)) K`, matching the
+  -- form produced by unfolding `blockEsymmAlgEquiv` (`BlockSlots` is not reducible).
+  have hx : @DFunLike.coe
+      (MvPolynomial (BlockSlots (a :: rest)) K ≃ₐ[K] MvPolynomial (Fin a) (MvPolynomial (BlockSlots rest) K))
+      _ _ _ (sumAlgEquiv K (Fin a) (BlockSlots rest)) (X (Sum.inr i)) = C (X i) :=
+    sumAlgEquiv_X_inr _ _ _ _
+  simp only [hx]
   simp
   have he := DFunLike.congr_fun
     (sumAlgEquiv_comp_rename_inr (R := K) (S₁ := Fin a) (S₂ := BlockSlots rest))
     (blockEsymmAlgEquiv (K := K) rest (X i)).val
-  simpa using he.symm
+  simp at he
+  exact he.symm
 
 /-- Every actual generator image has its assigned ordinary degree. -/
 theorem blockEsymm_X_homogeneous (blocks : List ℕ) (i : BlockSlots blocks) :

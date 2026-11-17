@@ -21,7 +21,7 @@ noncomputable def rootCoord : ℂ := chargeCoord (latP 1) (1 : ℤ) (a0 1)
 theorem rootCoord_sq : rootCoord ^ 2 = 2 := by
   have h := sum_chargeCoord (latP 1) (latP_posDef 1 le_rfl) (1 : ℤ) (1 : ℤ)
   rw [sum_rankOne, latP_form] at h
-  simpa [rootCoord, pow_two] using h
+  simpa [rootCoord, pow_two] using! h
 
 /-- Li's finite oscillator substitution, with `w=z⁻¹`.
 The orthonormal oscillator `X_(i,b)` changes by
@@ -40,12 +40,13 @@ noncomputable def delta (t : ℂ) : Osc →ₐ[ℂ] Polynomial Osc :=
 
 /-- Polynomial coefficients of the substitution as a finitely supported linear map. -/
 noncomputable def deltaCoeffs (t : ℂ) : Osc →ₗ[ℂ] (ℕ →₀ Osc) :=
-  ((Polynomial.toFinsuppIsoLinear Osc).restrictScalars ℂ).toLinearMap.comp
+  ((AddMonoidAlgebra.coeffLinearEquiv (S := Osc) (M := ℕ) ℂ).toLinearMap.comp
+    ((Polynomial.toFinsuppIsoLinear Osc).restrictScalars ℂ).toLinearMap).comp
     (delta t).toLinearMap
 
 @[simp] theorem deltaCoeffs_one (t : ℂ) :
     deltaCoeffs t 1 = Finsupp.single 0 1 := by
-  change (delta t 1).toFinsupp = _
+  change (delta t 1).toFinsupp.coeff = _
   rw [map_one]
   rfl
 
@@ -57,7 +58,7 @@ theorem delta_zero (p : Osc) : delta 0 p = Polynomial.C p := by
   exact congrArg (fun f : Osc →ₐ[ℂ] Polynomial Osc => f p) h
 
 theorem deltaCoeffs_zero (p : Osc) : deltaCoeffs 0 p = Finsupp.single 0 p := by
-  change (delta 0 p).toFinsupp = _
+  change (delta 0 p).toFinsupp.coeff = _
   rw [delta_zero]
   rfl
 
@@ -87,7 +88,7 @@ theorem delta_comp (s t : ℂ) : (deltaExtend s).comp (delta t) = delta (s + t) 
 theorem delta_inverse (t : ℂ) (p : Osc) :
     deltaExtend (-t) (delta t p) = Polynomial.C p := by
   have h := congrArg (fun f : Osc →ₐ[ℂ] Polynomial Osc => f p) (delta_comp (-t) t)
-  simpa only [AlgHom.comp_apply, neg_add_cancel, delta_zero] using h
+  simpa only [AlgHom.comp_apply, neg_add_cancel, delta_zero] using! h
 
 theorem omega_osc :
     ωN (rank (latP 1)) 1 = (1/2 : ℂ) •
@@ -128,8 +129,9 @@ theorem deltaCoeffs_omega (t : ℂ) :
       Finsupp.single 0 (ωN (rank (latP 1)) 1) +
       Finsupp.single 1 ((-t * rootCoord) • (MvPolynomial.X (0, a0 1) : Osc)) +
       Finsupp.single 2 (t^2 • (1 : Osc)) := by
-  change (delta t _).toFinsupp = _
-  rw [delta_omega, Polynomial.toFinsupp_add, Polynomial.toFinsupp_add]
+  change (delta t _).toFinsupp.coeff = _
+  rw [delta_omega, Polynomial.toFinsupp_add, Polynomial.toFinsupp_add,
+    AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_add]
   rfl
 
 end VOA.Classification.COne.OrbPos5

@@ -122,7 +122,7 @@ theorem lattice_char (j : ℤ) (hj : |j| < 4) {b : ℂ} (hb : tetraEquiv wsF = b
       · change oMod N (V2mPlus 4 four_ge_one).conformalVector _ = h • _
         rw [oMod_conformalVector]; exact N.L0_weight _ _ hx
       · exact hW
-      · simpa using hE)
+      · simpa using! hE)
   refine ⟨ψ, hmul, h1, hω, char_value_tetraV hb hb0 N (latVacuumGen_ne_zero' 4 four_ge_one)
     ?_ ψ hval⟩
   rw [oMod_resN 4 four_ge_one _ wsP_mem, wsP_coe]
@@ -141,7 +141,7 @@ theorem sign_char {b : ℂ} (hb : tetraEquiv wsF = b • tetraV) (hb0 : b ≠ 0)
         rw [oMod_conformalVector]
         exact (signModule 4 four_ge_one).L0_weight _ _ (signVector_mem 4 four_ge_one)
       · exact signVector_W 4 four_ge_one
-      · simpa using signVector_E 4 four_ge_one (by norm_num))
+      · simpa using! signVector_E 4 four_ge_one (by norm_num))
   have hs : oMod (signModule 4 four_ge_one) wsP (signVector 4 four_ge_one) =
       (0 : ℂ) • signVector 4 four_ge_one := by
     rw [zero_smul]

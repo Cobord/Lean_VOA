@@ -167,7 +167,8 @@ theorem extMor_natural (a : RAlg ω) {X Y : D} (h : X ⟶ Y) :
 
 @[simp] theorem extMor_simple (a : RAlg ω) (i : F.ι) : extMor ω a (F.simple i) = a i := by
   rw [extMor_eq_extWith ω a (decompSimple i)]
-  simp [extWith, decompSimple]
+  show ∑ _k : Fin 1, ω.map (𝟙 (F.simple i)) ≫ a i ≫ ω.map (𝟙 (F.simple i)) = a i
+  simp
 
 /-- Any endomorphism family is recovered from its values on simples through a decomposition. -/
 theorem extMor_eq_sum (a : RAlg ω) {X : D} (d : Decomp X) :
@@ -247,12 +248,17 @@ theorem exists_smul_of_commute {V : FGModuleCat ℂ} (ψ : V ⟶ V)
     intro g
     have := congrArg (fun m : V ⟶ V => m.hom.hom) (h (FGModuleCat.ofHom g))
     simp only [FGModuleCat.hom_hom_comp] at this
-    simpa [Module.End.mul_eq_comp] using this.symm
+    first
+      | (simp only [Module.End.mul_eq_comp]; exact this.symm)
+      | exact this.symm
   obtain ⟨t, _, ht⟩ := Module.End.mem_center_iff.mp hc
   refine ⟨t, ?_⟩
   ext v
   have := LinearMap.congr_fun ht v
-  simpa using this
+  first
+    | exact this
+    | exact this.trans (by simp)
+    | (simp at this; rw [this]; rfl)
 
 /-- Schur for the fiber: a map `ω X_i ⟶ ω X_j` intertwining all of `RAlg ω` comes from `D`. -/
 theorem exists_map_eq_of_commute_simple {i j : F.ι} (ψ : ω.obj (F.simple i) ⟶ ω.obj (F.simple j))

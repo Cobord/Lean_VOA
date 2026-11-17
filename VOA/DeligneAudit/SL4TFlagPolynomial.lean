@@ -72,7 +72,7 @@ theorem thomFlag_polynomial (ρ : R →ₐ[ℂ] T) (hρ : Function.Surjective ρ
       ring
   have hmem : Polynomial.C x * X ^ n ∈ (L.map φ).comap φ := by
     change φ (Polynomial.C x * X ^ n) ∈ L.map φ
-    simpa [φ] using hsource hx
+    simpa [φ] using! hsource hx
   rw [Ideal.comap_map_of_surjective φ hφ] at hmem
   have hL : Polynomial.C x * X ^ n ∈ L :=
     (sup_le le_rfl hker) hmem

@@ -104,7 +104,7 @@ theorem stabRow_sound (g r : ℕ) (c : List ℕ) (h : stabRowOK g r c = true) :
     refine list_sum_mem fun y hy => ?_
     obtain ⟨p, hp, rfl⟩ := List.mem_map.mp hy
     rw [quadP_scaleQ]
-    exact intCast_mul_mem _ (Pq_mem _ (by simpa using List.all_eq_true.mp hs p hp))
+    exact intCast_mul_mem _ (Pq_mem _ (by simpa using! List.all_eq_true.mp hs p hp))
   have hC : ((certL c : ℂ))⁻¹ • ((certL c : MvPolynomial (Fin 78) ℂ) * quadP 78 (adS e6T g (Pq r)))
       = quadP 78 (adS e6T g (Pq r)) := by
     rw [smul_eq_C_mul, ← mul_assoc, show (certL c : MvPolynomial (Fin 78) ℂ) = MvPolynomial.C (certL c : ℂ) by simp,
@@ -376,7 +376,7 @@ theorem st77 : ∀ q ∈ S2, adDer fE6 (77 : Fin 78) q ∈ S2 :=
 /-- **`I₂` is ad-stable.** -/
 theorem e6_stable : RelationsStable fE6 E6data.fullMatrix := by
   intro x r
-  rw [quadraticRelation_adMatrix]
+  erw [quadraticRelation_adMatrix]
   fin_cases x
   · exact st0 _ (Submodule.subset_span ⟨r, rfl⟩)
   · exact st1 _ (Submodule.subset_span ⟨r, rfl⟩)

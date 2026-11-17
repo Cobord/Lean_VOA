@@ -28,7 +28,7 @@ noncomputable def heisenbergOfAdmissible (N : AdmissibleModule W M)
     ext x
     have hc := heis_comm_of N.toWeakModule hh p q x
     simpa only [WeakModule.act_def, LinearMap.sub_apply, Module.End.mul_apply,
-      LinearMap.smul_apply, Module.End.one_apply, mul_one] using hc
+      LinearMap.smul_apply, Module.End.one_apply, mul_one] using! hc
   bdd x := by
     obtain ⟨K, hK⟩ := N.truncation h x
     exact ⟨K.toNat, fun n hn => hK n (by omega)⟩
@@ -39,7 +39,7 @@ noncomputable def heisenbergOfAdmissible (N : AdmissibleModule W M)
       have hlev : ∀ J : ℕ, (mode (N.YM h) n ^ J) y ∈ N.lev (k - n * J) := by
         intro J
         induction J with
-        | zero => simpa using hy
+        | zero => simpa using! hy
         | succ J ih =>
           rw [pow_succ', Module.End.mul_apply]
           have hl := N.act_lev hh.mem ih (p := n)
@@ -105,7 +105,7 @@ theorem twisted_fock_decomposition (P : TwistedModule g n M) (hn : 0 < n)
   refine ⟨⟨(twistedHeisenberg P hn hh hg).fockMap_injective,
     (twistedHeisenberg P hn hh hg).fockMap_surjective⟩, ?_⟩
   intro f
-  simpa using (twistedHeisenberg P hn hh hg).fockMap_vacZero f
+  simpa using! (twistedHeisenberg P hn hh hg).fockMap_vacZero f
 
 /-- The Heisenberg vacuum space of a nonzero twisted module is nonzero. -/
 theorem twisted_vac_ne_bot (P : TwistedModule g n M) (hn : 0 < n)

@@ -146,7 +146,7 @@ theorem pow_mem_sub {X : Type u} [AddCommGroup X] [Module ℂ X] (A : WeakModule
     (P : Submodule (modeAlg A) X) (m : ℂ) (n : ℕ) {x : X} (hx : x ∈ P) :
     ((L0 A - m • 1) ^ n) x ∈ P := by
   induction n generalizing x with
-  | zero => simpa using hx
+  | zero => simpa using! hx
   | succ n ih =>
     rw [pow_succ', Module.End.mul_apply]
     have h1 := ih hx

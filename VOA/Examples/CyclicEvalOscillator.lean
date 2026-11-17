@@ -73,7 +73,7 @@ theorem oscSet_comm : ∀ a ∈ oscSet, ∀ b ∈ oscSet, a * b = b * a := by
 abbrev OscAlg : Subalgebra ℂ (Module.End ℂ (MvPolynomial ℕ ℂ)) := Algebra.adjoin ℂ oscSet
 
 instance oscAlg_isMulCommutative : IsMulCommutative OscAlg :=
-  Algebra.isMulCommutative_adjoin ℂ oscSet_comm
+  Algebra.isMulCommutative_adjoin ℂ fun a ha b hb _ => oscSet_comm a ha b hb
 
 open scoped IsMulCommutative
 
@@ -161,7 +161,7 @@ theorem constantCoeff_smul' (c : ℂ) (P : MvPolynomial ℕ ℂ) :
   rw [smul_eq_C_mul, map_mul, constantCoeff_C]
 
 theorem constantCoeff_oscD_monomial (α : ℕ →₀ ℕ) (c : ℂ) (P : MvPolynomial ℕ ℂ) :
-    constantCoeff (oscD (monomial α c) P) = c * coeff α P * pairConst α := by
+    constantCoeff (oscD (monomial α c) P) = c * P.coeff α * pairConst α := by
   classical
   have hc : monomial α c = c • monomial α (1 : ℂ) := by rw [smul_monomial, smul_eq_mul, mul_one]
   rw [hc, map_smul, LinearMap.smul_apply, constantCoeff_smul', mul_assoc]
@@ -181,7 +181,8 @@ theorem constantCoeff_oscD_monomial (α : ℕ →₀ ℕ) (c : ℂ) (P : MvPolyn
           hαβ (le_antisymm hle (tsub_eq_zero_iff_le.mp h0))
         rw [if_pos h0, oscK_eq_zero hle]; ring
       · rw [if_neg h0]; ring
-  | add p q hp hq => rw [map_add, map_add, hp, hq, coeff_add]; ring
+  | add p q hp hq =>
+    rw [map_add, map_add, hp, hq, AddMonoidAlgebra.coeff_add, Finsupp.add_apply]; ring
 
 /-- **The pairing is the constant term of the differential action**:
 `constantCoeff (F(2∂_{a_1}, 4∂_{a_2}, …) P) = ⟨F, P⟩`. -/

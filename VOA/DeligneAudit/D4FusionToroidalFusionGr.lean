@@ -85,7 +85,7 @@ theorem numerator_inv (c : Fin n) (i s : ℕ) :
   change liftedOp A c i s (Finsupp.single d x) ∈ numerator A w
   rw [liftedOp_single]
   exact Submodule.subset_span ⟨d + s, _, by
-    simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+    simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using!
       evalFbelow_op A w c i s (d + 1) hx, rfl⟩
 
 theorem denominator_inv (c : Fin n) (i s : ℕ) :
@@ -108,7 +108,7 @@ theorem high_mem_denominator (h : HighTShift A w m) (c : Fin n) (i s : ℕ)
   rw [liftedOp_single]
   exact Submodule.subset_span ⟨d + s, _, by
     simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm,
-      Nat.add_sub_cancel_left] using h c i s (d + 1) hs hx, rfl⟩
+      Nat.add_sub_cancel_left] using! h c i s (d + 1) hs hx, rfl⟩
 
 def restrictedOp (c : Fin n) (i s : ℕ) :
     numerator A w →ₗ[ℂ] numerator A w where
@@ -159,7 +159,7 @@ theorem grOp_comm (h : HighTShift A w m) (a b : Fin n)
               ∑ e, f a b e • restrictedOp A w e (i + j) (r + s) y := by
           apply Subtype.ext
           simpa only [Submodule.coe_sub, Submodule.coe_sum, Submodule.coe_smul]
-            using lifted_comm A a b i j r s y.1
+            using! lifted_comm A a b i j r s y.1
         rw [← map_sub, hsub, map_sum]
         apply Finset.sum_congr rfl
         intro e _

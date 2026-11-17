@@ -17,7 +17,7 @@ theorem coreNewtonEnd_mem (H : ℕ → Module.End ℂ V) (T : Submodule ℂ V)
   induction n using Nat.strong_induction_on with
   | h n ih =>
       cases n with
-      | zero => simpa [SL4T.newtonEnd] using hv
+      | zero => simpa [SL4T.newtonEnd] using! hv
       | succ n =>
           simp only [SL4T.newtonEnd, LinearMap.smul_apply, LinearMap.sum_apply,
             Module.End.mul_apply]
@@ -58,7 +58,7 @@ theorem coreEvaluation_mem_of_stable (Q : CurrentModule A3Sector.bracketTable V)
       (SL4T.rightE (a + b + c) (a + b) a) (by simp [SL4T.rightE, SL4T.eClass]) T
       (fun s _ v hv => hT _ s hv) _ n hφ
     intro s hs φ
-    simpa [coreCartanSymbol, coreAdjointPowerSum] using h 0 s hs φ
+    simpa [coreCartanSymbol, coreAdjointPowerSum] using! h 0 s hs φ
   have hg (n : ℕ) {φ : CoreBaseRing a b c} (hφ : π φ ∈ T) :
       π (SL4T.leftE (a + b + c) (a + b) a n * φ) ∈ T := by
     apply coreElementary_mul_mem
@@ -73,16 +73,16 @@ theorem coreEvaluation_mem_of_stable (Q : CurrentModule A3Sector.bracketTable V)
   induction P using MvPolynomial.induction_on with
   | C z =>
       change π (algebraMap ℂ (CoreBaseRing a b c) z) ∈ T
-      simpa only [Algebra.algebraMap_eq_smul_one, map_smul] using T.smul_mem z hunit
-  | add P R hP hR => simpa only [map_add] using T.add_mem hP hR
+      simpa only [Algebra.algebraMap_eq_smul_one, map_smul] using! T.smul_mem z hunit
+  | add P R hP hR => simpa only [map_add] using! T.add_mem hP hR
   | mul_X P t hP =>
       rw [map_mul, mul_comm]
       rcases t with ⟨side, n⟩
       cases side
       · simpa only [SL4T.leftE, SL4T.eClass, SL4T.biLeft_mk, SL4T.elementary_succ,
-          SL4T.alphabetIn, MvPolynomial.rename_X] using hg (n + 1) hP
+          SL4T.alphabetIn, MvPolynomial.rename_X] using! hg (n + 1) hP
       · simpa only [SL4T.rightE, SL4T.eClass, SL4T.biRight_mk, SL4T.elementary_succ,
-          SL4T.alphabetIn, MvPolynomial.rename_X] using hx (n + 1) hP
+          SL4T.alphabetIn, MvPolynomial.rename_X] using! hx (n + 1) hP
 
 /-- A core coefficient orbit is contained in the cyclic current module of its unit. -/
 theorem coreEvaluation_mem_cyclic (Q : CurrentModule A3Sector.bracketTable V)

@@ -35,12 +35,12 @@ theorem a3_lower_wick_summand (b c k d : ℕ)
     let N := a3HigherLeviClosure ρ w b c K
     have hspec : (zs.map fun i => ρ.op (F 2) i).prod w ∈
         a3CountSpan ρ w 0 0 zs.length := by
-      simpa using a3CountSpan_word ρ w 2 zs 0 0 0
+      simpa using! a3CountSpan_word ρ w 2 zs 0 0 0
         (a3CountSpan_zero ρ w)
     have hys : (ys.map fun i => ρ.op (F 1) i).prod
         ((zs.map fun i => ρ.op (F 2) i).prod w) ∈
         a3CountSpan ρ w 0 ys.length zs.length := by
-      simpa using a3CountSpan_word ρ w 1 ys 0 0 zs.length hspec
+      simpa using! a3CountSpan_word ρ w 1 ys 0 0 zs.length hspec
     have hb := a3_bWord_coeff_count ρ w 1 p.2 z.2 0 ys.length
       zs.length hys
     have ha := a3CountSpan_word ρ w 0 p.1 0
@@ -57,21 +57,21 @@ theorem a3_lower_wick_summand (b c k d : ℕ)
       apply a3CountSpan_le_higher ρ w b c K p.1.length
         (ys.length + p.2.length) zs.length hheight
       simpa [aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-        mul_smul] using ha
+        mul_smul] using! ha
     have hf := a3_fCurrent_pow_preserves ρ 0
       (a3HigherKeySpan ρ w b c K) (k - p.2.length) z.1 hbase
     simpa [N, K, a3ConvKey, a3ConvA, a3ConvB,
-      a3ConvSpectator, mul_assoc, mul_smul] using hf
+      a3ConvSpectator, mul_assoc, mul_smul] using! hf
   · let K : A3RadicalKey := ⟨zs.length, xs.length, ys.length + k, d⟩
     let N := a3HigherLeviClosure ρ w b c K
     have hspec : (zs.map fun i => ρ.op (F 0) i).prod w ∈
         a3CountSpan ρ w zs.length 0 0 := by
-      simpa using a3CountSpan_word ρ w 0 zs 0 0 0
+      simpa using! a3CountSpan_word ρ w 0 zs 0 0 0
         (a3CountSpan_zero ρ w)
     have hys : (ys.map fun i => ρ.op (F 2) i).prod
         ((zs.map fun i => ρ.op (F 0) i).prod w) ∈
         a3CountSpan ρ w zs.length 0 ys.length := by
-      simpa using a3CountSpan_word ρ w 2 ys zs.length 0 0 hspec
+      simpa using! a3CountSpan_word ρ w 2 ys zs.length 0 0 hspec
     have hb := a3_bWord_coeff_count ρ w 2 p.2 z.2 zs.length 0
       ys.length hys
     have ha := a3CountSpan_word ρ w 1 p.1 zs.length 0
@@ -88,11 +88,11 @@ theorem a3_lower_wick_summand (b c k d : ℕ)
       apply a3CountSpan_le_higher ρ w b c K zs.length
         p.1.length (ys.length + p.2.length) hheight
       simpa [aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-        mul_smul] using ha
+        mul_smul] using! ha
     have hf := a3_fCurrent_pow_preserves ρ 1
       (a3HigherKeySpan ρ w b c K) (k - p.2.length) z.1 hbase
     simpa [N, K, a3ConvKey, a3ConvA, a3ConvB,
-      a3ConvSpectator, mul_assoc, mul_smul] using hf
+      a3ConvSpectator, mul_assoc, mul_smul] using! hf
 
 end VOA.DeligneAudit.A3Sector
 

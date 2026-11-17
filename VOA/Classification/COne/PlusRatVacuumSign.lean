@@ -278,7 +278,7 @@ theorem translation_zero_of_onlySign (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m)
       exact ((V2mPlus m hm).creation _).2 0 le_rfl
     · apply Module.End.eigenspace_le_maxGenEigenspace
       apply Module.End.mem_eigenspace_iff.mpr
-      simpa only [one_smul] using ht
+      simpa only [one_smul] using! ht
   apply weightOne_top_eq_zero m hm hm2 hw1 A hyΩ ht
   rw [← telescopeE_eq m hm A hyΩ]
   exact translation_telescope A π 1 hb (by norm_num) hx he (EP_mem_grading m hm)

@@ -54,7 +54,7 @@ theorem NN.mul {f g : PowerSeries ℚ} (hf : NN f) (hg : NN g) : NN (f * g) := f
 theorem NN_X_pow (k : ℕ) : NN (X ^ k : PowerSeries ℚ) := fun N => by
   rw [coeff_X_pow]; split_ifs <;> norm_num
 
-theorem NN_one : NN (1 : PowerSeries ℚ) := by simpa using NN_X_pow 0
+theorem NN_one : NN (1 : PowerSeries ℚ) := by simpa using! NN_X_pow 0
 
 theorem NN_qbinom : ∀ n k, NN (VOA.DeligneGaussian.qbinom (X : PowerSeries ℚ) n k)
   | _, 0 => by rw [VOA.DeligneGaussian.qbinom_zero_right]; exact NN_one
@@ -87,7 +87,7 @@ theorem addTerm_nodup (t : Term) (s : LPoly) (h : (s.map Prod.fst).Nodup) :
   rw [addTerm_keys]
   split_ifs with h1
   · exact h
-  · exact h.append (List.nodup_singleton _) (by simpa using h1)
+  · exact h.append (List.nodup_singleton _) (by simpa using! h1)
 
 theorem foldr_addTerm_nodup (f : LPoly) : ((f.foldr addTerm []).map Prod.fst).Nodup := by
   induction f with
@@ -109,34 +109,37 @@ theorem demazureChar_NF (m : ℕ) : NF (demazureChar cartanD4 thetaD4 wordD4 m) 
     exact normalize_NF _
 
 /-- Integral elements of `𝕜[x,z]`: no negative powers of `r`. -/
-def IntR (g : D4K.R) : Prop := ∀ (v : D4K.V) (e : ℤ), e < 0 → (g v).coeff e = 0
+def IntR (g : D4K.R) : Prop := ∀ (v : D4K.V) (e : ℤ), e < 0 → (g.coeff v).coeff e = 0
 
 theorem IntR_ιR (f : R') : IntR (ιR f) := by
   intro v e he
   rw [ιR_apply]
-  show (HahnSeries.ofPowerSeries ℤ ℚ (f v)).coeff e = 0
+  show (HahnSeries.ofPowerSeries ℤ ℚ (f.coeff v)).coeff e = 0
   rw [PowerSeries.coeff_coe, if_pos he]
 
 /-- `f ↦ ∑_v f(v) θ(-v₀) z^{v with x killed}`. -/
-def ctQ (f : R') : R' := f.sum fun v c => AddMonoidAlgebra.single (D4K.killX v) (c * thP (-(v 0)))
+def ctQ (f : R') : R' := f.coeff.sum fun v c => AddMonoidAlgebra.single (D4K.killX v) (c * thP (-(v 0)))
 
 theorem ctTheta_ιR (f : R') : D4K.ctTheta (ιR f) = ιR (ctQ f) := by
   induction f using AddMonoidAlgebra.induction_linear with
-  | zero => rw [map_zero, map_zero]; exact (map_zero ιR).symm
+  | zero =>
+      rw [map_zero, map_zero, ctQ, AddMonoidAlgebra.coeff_zero, Finsupp.sum_zero_index, map_zero]
   | add f g hf hg =>
       rw [map_add, map_add, hf, hg, ← map_add]
       congr 1
+      unfold ctQ
+      rw [AddMonoidAlgebra.coeff_add]
       exact (Finsupp.sum_add_index' (fun _ => by rw [zero_mul, AddMonoidAlgebra.single_zero])
         (fun _ _ _ => by rw [add_mul, AddMonoidAlgebra.single_add])).symm
   | single v c =>
-      rw [ιR_single, D4K.ctFun_mon, ctQ, Finsupp.sum_single_index (by rw [zero_mul, AddMonoidAlgebra.single_zero]),
+      rw [ιR_single, D4K.ctFun_mon, ctQ, AddMonoidAlgebra.coeff_single, Finsupp.sum_single_index (by rw [zero_mul, AddMonoidAlgebra.single_zero]),
         ιR_single, map_mul, coeK_thP]
 
 theorem smul_ιR (c : P) (h : R') : coeK c • ιR h = ιR (c • h) := by
-  refine Finsupp.ext fun v => ?_
-  show coeK c * (ιR h) v = (ιR (c • h)) v
+  refine AddMonoidAlgebra.coeff_injective (Finsupp.ext fun v => ?_)
+  show coeK c * (ιR h).coeff v = (ιR (c • h)).coeff v
   rw [ιR_apply, ιR_apply]
-  show coeK c * coeK (h v) = coeK (c * h v)
+  show coeK c * coeK (h.coeff v) = coeK (c * h.coeff v)
   rw [map_mul]
 
 theorem Cdem_integral (m : ℕ) : IntR (D4K.Cdem m) := by
@@ -175,7 +178,7 @@ theorem rootToV_inj {μ ν : List ℤ} (hμ : ∃ a b c d : ℤ, μ = [a, b, c, 
   rfl
 
 theorem termR_apply_coeff (t : Term) (v : D4K.V) (e : ℤ) :
-    ((D4K.termR t) v).coeff (2 * e) =
+    ((D4K.termR t).coeff v).coeff (2 * e) =
       if D4K.rootToV t.1.1 = v ∧ t.1.2 = e then (t.2 : ℚ) else 0 := by
   rw [D4K.termR, D4K.mon]
   show ((Finsupp.single (D4K.rootToV t.1.1) (D4K.qq ^ t.1.2 * (t.2 : D4K.Kq))) v).coeff (2 * e) = _
@@ -207,13 +210,13 @@ theorem sum_key (g : LPoly) (hnd : (g.map Prod.fst).Nodup) (t0 : Term) (ht : t0 
         intro h; exact hnd.1 (h ▸ List.mem_map_of_mem ht')
 
 theorem sum_termR_coeff (L : LPoly) (v : D4K.V) (e : ℤ) :
-    ((L.map D4K.termR).sum v).coeff (2 * e) =
+    (((L.map D4K.termR).sum).coeff v).coeff (2 * e) =
       (L.map fun t => if D4K.rootToV t.1.1 = v ∧ t.1.2 = e then (t.2 : ℚ) else 0).sum := by
   induction L with
   | nil => rfl
   | cons t L ih =>
       rw [List.map_cons, List.sum_cons, List.map_cons, List.sum_cons, ← ih, ← termR_apply_coeff]
-      show ((D4K.termR t v) + ((L.map D4K.termR).sum v)).coeff (2 * e) = _
+      show ((D4K.termR t).coeff v + ((L.map D4K.termR).sum).coeff v).coeff (2 * e) = _
       rw [HahnSeries.coeff_add]
 
 /-- **Energy** from integrality of the D₄ identity. -/
@@ -226,7 +229,7 @@ theorem energy_holds (m : ℕ) :
   have hnf := demazureChar_NF m
   have hint := Cdem_integral m (D4K.rootToV t0.1.1) (2 * (t0.1.2 + m * m)) (by omega)
   rw [D4K.Cdem, ← (D4K.toR_demazureChar m).2] at hint
-  change ((D4K.qq ^ (m * m)) * (D4K.toR (demazureChar cartanD4 thetaD4 wordD4 m))
+  change ((D4K.qq ^ (m * m)) * (D4K.toR (demazureChar cartanD4 thetaD4 wordD4 m)).coeff
     (D4K.rootToV t0.1.1)).coeff _ = 0 at hint
   rw [show D4K.qq ^ (m * m) = HahnSeries.single (2 * ((m * m : ℕ) : ℤ)) (1 : ℚ) by
     rw [← zpow_natCast, D4K.qq_zpow], show 2 * (t0.1.2 + (m : ℤ) * m) = 2 * t0.1.2 + 2 * ((m * m : ℕ) : ℤ) by

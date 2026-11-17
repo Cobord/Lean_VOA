@@ -53,13 +53,16 @@ theorem tensor_hom_ext {X Y Z : Ordinary W} (f g : tensorObj F X Y ⟶ Z)
   apply tensor_hom_ext F
   intro n x y
   simp
+  rfl
 
 @[simp] theorem tensorHom_comp {X X' X'' Y Y' Y'' : Ordinary W}
     (f : X ⟶ X') (f' : X' ⟶ X'') (g : Y ⟶ Y') (g' : Y' ⟶ Y'') :
     tensorHom F (f ≫ f') (g ≫ g') = tensorHom F f g ≫ tensorHom F f' g' := by
   apply tensor_hom_ext F
   intro n x y
+  change _ = (tensorHom F f' g').val ((tensorHom F f g).val _)
   simp
+  rfl
 
 /-- The actual fusion bifunctor, with its identity and composition laws proved. -/
 def tensorBifunctor : Ordinary W × Ordinary W ⥤ Ordinary W where

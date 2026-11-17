@@ -57,11 +57,11 @@ theorem ksCorrectedClass_shape (m : ℕ) (k : RadicalKey) (t : Fin 4 → ℕ)
     (hs : ksCorrectedSupported m k) (hc : ksKeyClass m k = t) :
     k = pairFinalKey (t 0) (t 2) (t 3) k.degree := by
   have h0 : k.x - k.y = t 0 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 0) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 0) hc
   have h2 : k.y = t 2 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 2) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 2) hc
   have h3 : k.z = t 3 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 3) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 3) hc
   rw [← h0, ← h2, ← h3]
   exact ksCorrectedSupported_shape m k hs
 
@@ -72,7 +72,7 @@ theorem ksCorrectedClass_orbit (m : ℕ) (k : RadicalKey) (t : Fin 4 → ℕ)
     rw [← hc]
     exact ksCorrectedKeyClass_mem m k hs
   have hm : t 0 + t 1 + t 2 + t 3 = m := by
-    simpa only [Fin.sum_univ_four] using (Finset.mem_piAntidiag.mp ht).1
+    simpa only [Fin.sum_univ_four] using! (Finset.mem_piAntidiag.mp ht).1
   rw [ksCorrectedClass_shape m k t hs hc, ← hm]
   exact keyOrbitLength_pairFinalKey (t 0) (t 1) (t 2) (t 3) k.degree
 
@@ -81,11 +81,11 @@ theorem ksCorrectedClass_boxCount (m : ℕ) (k : RadicalKey) (t : Fin 4 → ℕ)
     ksCorrectedBoxCount m k = ksGradedBoxCount m (t 0) (t 2) (t 3) k.degree := by
   rw [ksCorrectedSupported_boxCount m k hs]
   have h0 : k.x - k.y = t 0 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 0) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 0) hc
   have h2 : k.y = t 2 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 2) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 2) hc
   have h3 : k.z = t 3 := by
-    simpa [ksKeyClass] using congrArg (fun f : Fin 4 → ℕ => f 3) hc
+    simpa [ksKeyClass] using! congrArg (fun f : Fin 4 → ℕ => f 3) hc
   rw [h0, h2, h3]
 
 end VOA.DeligneAudit.D4Levi

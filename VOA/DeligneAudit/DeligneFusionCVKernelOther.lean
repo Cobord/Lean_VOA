@@ -28,13 +28,13 @@ theorem Q_two_eq_QFrom (F : ℕ → Module.End ℂ V)
     (htr : ∀ k, L ≤ k → F k u = 0) (hs : B + L ≤ s) :
     Q F 2 s u = QFrom F (B + 1) 2 s u := by
   have htwo (G : ℕ → Module.End ℂ V) :
-      Q G 2 s = ∑ x ∈ Finset.antidiagonal s, G x.1 * G x.2 := by
+      Q G 2 s = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal s, G x.1 * G x.2 := by
     rw [Q_succ]
     simp only [Q_one]
   rw [htwo, QFrom, htwo]
   simp only [LinearMap.coe_sum, Finset.sum_apply, Module.End.mul_apply]
   refine Finset.sum_congr rfl fun x hx => ?_
-  have hxs : x.1 + x.2 = s := Finset.mem_antidiagonal.mp hx
+  have hxs : x.1 + x.2 = s := Finset.HasAntidiagonal.mem_antidiagonal.mp hx
   by_cases h1 : B + 1 ≤ x.1
   · by_cases h2 : B + 1 ≤ x.2
     · simp only [fromMode, if_pos h1, if_pos h2]
@@ -63,7 +63,7 @@ theorem f1_QFrom_second (R : CurrentModule bracketTable V) {w : V} {L a p : ℕ}
   apply Q_commute_on (fromMode (R.op 4) p) (R.op 3 a) (thetaKernel R L)
   · intro k v hv
     by_cases hk : p ≤ k
-    · simpa only [fromMode, if_pos hk] using thetaKernel_f2 R L k hv
+    · simpa only [fromMode, if_pos hk] using! thetaKernel_f2 R L k hv
     · simp only [fromMode, if_neg hk, LinearMap.zero_apply]
       exact (thetaKernel R L).zero_mem
   · intro k v hv

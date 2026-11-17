@@ -117,10 +117,10 @@ theorem frameWordState_span (L : IntegralLattice) :
     intro p α
     rw [← MvPolynomial.support_sum_monomial_coeff p, TensorProduct.sum_tmul]
     refine Submodule.sum_mem _ (fun a _ => ?_)
-    rw [show (MvPolynomial.monomial a (MvPolynomial.coeff a p))
-          = (MvPolynomial.coeff a p) • MvPolynomial.monomial a (1 : ℂ) from by
+    rw [show (MvPolynomial.monomial a (p.coeff a))
+          = (p.coeff a) • MvPolynomial.monomial a (1 : ℂ) from by
         rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one],
-      ← TensorProduct.smul_tmul' (MvPolynomial.coeff a p) (MvPolynomial.monomial a (1 : ℂ))
+      ← TensorProduct.smul_tmul' (p.coeff a) (MvPolynomial.monomial a (1 : ℂ))
         (eGen L α)]
     exact Submodule.smul_mem _ _ (hmono a α)
   rw [hS, eq_top_iff, ← TensorProduct.span_tmul_eq_top ℂ (FockN (rank L)) (L.carrier →₀ ℂ),

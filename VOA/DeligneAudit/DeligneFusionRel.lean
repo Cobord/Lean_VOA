@@ -43,17 +43,17 @@ theorem mabRel_zero_iff {V : Type} [AddCommGroup V] [Module ℂ V]
     MabRel ρ w 0 m ↔ LocalWeylRel ρ w m := by
   constructor
   · intro h
-    refine ⟨h.raising, h.cartan_pos, by simpa using h.cartan_zero, by simpa using h.lowering_f1,
-      by simpa using h.lowering_f2, fun fα h3 h6 => ?_⟩
+    refine ⟨h.raising, h.cartan_pos, by simpa using! h.cartan_zero, by simpa using! h.lowering_f1,
+      by simpa using! h.lowering_f2, fun fα h3 h6 => ?_⟩
     have : fα = 3 ∨ fα = 4 ∨ fα = 5 := by omega
     rcases this with rfl | rfl | rfl
-    · simpa using h.trunc_f1
-    · simpa using h.trunc_f2
-    · simpa using h.trunc_theta
+    · simpa using! h.trunc_f1
+    · simpa using! h.trunc_f2
+    · simpa using! h.trunc_theta
   · intro h
-    exact ⟨h.raising, h.cartan_pos, by simpa using h.cartan_zero, by simpa using h.lowering_f1,
-      by simpa using h.lowering_f2, by simpa using h.fusion 3 (by decide) (by decide),
-      by simpa using h.fusion 4 (by decide) (by decide), by simpa using h.fusion 5 (by decide) (by decide)⟩
+    exact ⟨h.raising, h.cartan_pos, by simpa using! h.cartan_zero, by simpa using! h.lowering_f1,
+      by simpa using! h.lowering_f2, by simpa using! h.fusion 3 (by decide) (by decide),
+      by simpa using! h.fusion 4 (by decide) (by decide), by simpa using! h.fusion 5 (by decide) (by decide)⟩
 
 /-- **F4 (target; named literature input: Feigin, Fourier–Littelmann, Ravinder Prop. 1)**: the
 degree pieces of a fusion module are finite-dimensional and its total dimension is at most `8^m`.

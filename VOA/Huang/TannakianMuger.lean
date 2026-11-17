@@ -95,7 +95,7 @@ theorem muger_numeric (hd : ∀ c, 0 < d c) (hθ : ∀ c, ‖θ c‖ = 1) (a b :
       (by
         have e1 : ∑ c, (((N a b c : ℝ) * d c : ℝ) : ℂ) = ∑ c, (N a b c : ℂ) * (d c : ℂ) :=
           Finset.sum_congr rfl fun c _ => by push_cast; ring
-        simp only
+        try simp only
         rw [e1, ← hmul, ← hS, balancedS]
         refine Finset.sum_congr rfl fun c _ => ?_
         push_cast; ring)

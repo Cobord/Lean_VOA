@@ -32,7 +32,7 @@ theorem newtonCoeff_congr_positive (p q : ℕ → R)
 
 /-- Newton recursion is the differential equation for the signed elementary series. -/
 theorem newtonCoefficientSeries_derivative (p : ℕ → R) :
-    PowerSeries.derivative R (newtonCoefficientSeries p) =
+    PowerSeries.derivative (R := R) (newtonCoefficientSeries p) =
       -(positivePowerSumSeries p * newtonCoefficientSeries p) := by
   ext n : 1
   rw [mul_comm (positivePowerSumSeries p), PowerSeries.coeff_derivative,
@@ -52,7 +52,7 @@ theorem newtonCoefficientSeries_derivative (p : ℕ → R) :
 /-- A normalized solution of the Newton differential equation is unique. -/
 theorem newtonCoefficientSeries_unique (p : ℕ → R) (S : PowerSeries R)
     (hzero : PowerSeries.coeff 0 S = 1)
-    (hderiv : PowerSeries.derivative R S = -(positivePowerSumSeries p * S)) :
+    (hderiv : PowerSeries.derivative (R := R) S = -(positivePowerSumSeries p * S)) :
     newtonCoefficientSeries p = S := by
   ext n : 1
   simp only [newtonCoefficientSeries, PowerSeries.coeff_mk]
@@ -109,7 +109,7 @@ theorem newtonCoefficientSeries_neg_of_inverse (p : ℕ → R) (S : PowerSeries 
     (h : newtonCoefficientSeries p * S = 1) : newtonCoefficientSeries (fun s => -p s) = S := by
   have he : newtonCoefficientSeries (fun s => -p s) * newtonCoefficientSeries p = 1 := by
     rw [← newtonCoefficientSeries_add]
-    simpa only [neg_add_cancel] using (newtonCoefficientSeries_zero (R := R))
+    simpa only [neg_add_cancel] using! (newtonCoefficientSeries_zero (R := R))
   calc
     newtonCoefficientSeries (fun s => -p s) = newtonCoefficientSeries (fun s => -p s) *
         (newtonCoefficientSeries p * S) := by rw [h, mul_one]
@@ -127,7 +127,7 @@ theorem specializedElementary_complete_inverse (f : SymPoly →ₐ[ℂ] R) :
     simp
   · have he := congrArg f (complete_relation n (by omega))
     simpa only [map_sum, map_mul, map_pow, map_neg, map_one, map_zero,
-      PowerSeries.coeff_one, if_neg hn] using he
+      PowerSeries.coeff_one, if_neg hn] using! he
 
 /-- Inverse Newton reconstruction recovers a specialized elementary series. -/
 theorem newtonCoefficientSeries_elementary (f : SymPoly →ₐ[ℂ] R) (d : ℕ) :
@@ -157,7 +157,7 @@ theorem newtonCoeff_difference_alphabets (f g : SymPoly →ₐ[ℂ] R) (d e n : 
     exact specializedElementary_complete_inverse g
   have hc := congrArg (PowerSeries.coeff n) he
   simpa only [newtonCoefficientSeries, PowerSeries.coeff_mk, PowerSeries.coeff_mul,
-    Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] using hc
+    Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] using! hc
 
 end
 

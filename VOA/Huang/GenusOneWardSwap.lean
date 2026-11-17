@@ -186,6 +186,7 @@ theorem tauZ_swap {α₁ α₂ : ℂ} {x : P₁.carrier} {y : P₂.carrier}
   have := trace_weightBlock_cross Q.isMod N.isMod (Y₂.val (sMode Q N α₂ n k) y)
     (Y₁.val (rMode Q N α₁ n k) x) _ _ hg hf
   convert this using 2
+  all_goals rfl
 
 /-- The rotated trace is the swapped series. -/
 theorem Phi_swap (x : P₁.carrier) (y : P₂.carrier) :

@@ -258,8 +258,8 @@ theorem ratFuchsian_piece {P₁ P₂ P₃ P₄ : LWModule W} (i₁ : P₁.IsIrre
     d.supported hbase
   convert h using 1
   ext n
-  rw [PowerSeries.coeff_mk, VOA.Huang.MatrixCoeff.coeff_prodSeries, prodCoef,
-    VOA.Huang.MatrixCoeff.prodCoeff]
+  rw [PowerSeries.coeff_mk]
+  erw [VOA.Huang.MatrixCoeff.coeff_prodSeries, prodCoef, VOA.Huang.MatrixCoeff.prodCoeff]
   congr 3
   · ring_nf
   · congr 1; ring_nf
@@ -292,7 +292,7 @@ theorem productHalfPlaneContinuation_pbw : ProductHalfPlaneContinuation F := by
     obtain ⟨s₀, b, c, p, hcp, hFE⟩ := ratFuchsian_piece F hV (PA.irreducible j.1)
       (PB.irreducible j.2.1) (PC.irreducible j.2.2.1) (PD.irreducible j.2.2.2)
       (productComponent F PA PB PC PD J j) (dj j) (hbelow j r hr)
-    exact fuchsian_halfPlane_continuation (fun i hi => by simpa using hcp i hi) hFE hss'
+    exact fuchsian_halfPlane_continuation (fun i hi => by simpa using! hcp i hi) hFE hss'
   choose! Ψ hΨa hΨeq using hpiece
   refine ⟨fun ζ => ∑ j : ExternalIndex PA PB PC PD, ∑ r ∈ R j,
     Complex.exp ((d.δ - d.α - r) * Complex.log ζ) * Ψ j r (1 / ζ), ?_, ?_⟩

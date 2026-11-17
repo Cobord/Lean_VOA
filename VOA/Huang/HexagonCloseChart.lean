@@ -132,13 +132,15 @@ theorem hasDerivAt_sigmaQ (q : ℂ) {τ : ℂ} (hτ : τ.re < 0) :
     HasDerivAt (sigmaQ q) (1 / (1 - Complex.exp τ)) τ := by
   have hslit : 1 - Complex.exp τ ∈ Complex.slitPlane := Or.inl (one_sub_exp_re_pos hτ)
   have h1 : HasDerivAt (fun τ => 1 - Complex.exp τ) (-Complex.exp τ) τ := by
-    simpa using (Complex.hasDerivAt_exp τ).const_sub 1
+    simpa using! (Complex.hasDerivAt_exp τ).const_sub 1
   have h2 := h1.clog hslit
   have h3 := ((hasDerivAt_id τ).const_add (Complex.log (-q))).sub h2
   convert h3 using 1
-  have := one_sub_exp_ne_zero hτ
-  field_simp
-  ring
+  · funext t
+    rfl
+  · have := one_sub_exp_ne_zero hτ
+    field_simp
+    ring
 
 theorem differentiableOn_sigmaQ (q : ℂ) :
     DifferentiableOn ℂ (sigmaQ q) {τ : ℂ | τ.re < 0} := fun _ hτ =>

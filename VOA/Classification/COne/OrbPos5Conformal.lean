@@ -26,8 +26,8 @@ theorem coefficientField_integral {n : ℕ} (hn : 0 < n) (a j k : ℤ)
 operator constructed in `OrbPos3`. No Jacobi hypothesis enters. -/
 theorem shiftedY_conformal {n : ℕ} (hn : 0 < n) (a j : ℤ) :
     shiftedY n a j (V2m 1 le_rfl).conformalVector n = energyOperator n a j := by
-  change shiftedY n a j (latStateGen (latP 1) (ωN (rank (latP 1)) 1) 0) n = _
-  rw [shiftedY_latState]
+  change shiftedY n a j (latStateGen (latP 1) (ωN (rank (latP 1)) 1) (0 : ℤ)) n = _
+  rw [shiftedY_latState n a j 0 (ωN (rank (latP 1)) 1)]
   change ((Finsupp.lsum ℂ (coefficientField n a j 0))
     (deltaCoeffs ((a : ℂ)/(2*n)) (ωN (rank (latP 1)) 1))) n = _
   rw [deltaCoeffs_omega, map_add, map_add, Finsupp.lsum_single,

@@ -27,7 +27,7 @@ theorem fullFlag_finite (B N : ℕ) : FiniteDimensional ℂ (FullFlagRing B N) :
   have hi : ∀ x ∈ Set.range (fullFlagRoot B N), IsIntegral ℂ x := by
     rintro x ⟨i, rfl⟩
     refine ⟨Polynomial.X ^ N, Polynomial.monic_X_pow N, ?_⟩
-    simpa only [Polynomial.eval₂_pow, Polynomial.eval₂_X] using fullFlagRoot_pow B N i
+    simpa only [Polynomial.eval₂_pow, Polynomial.eval₂_X] using! fullFlagRoot_pow B N i
   have hf := fg_adjoin_of_finite (Set.finite_range (fullFlagRoot B N)) hi
   rw [fullFlag_adjoin_roots, Algebra.top_toSubmodule] at hf
   exact Module.Finite.of_fg_top hf
@@ -45,7 +45,6 @@ theorem fullFlagSymmetricIdeal_le_ker (B : ℕ) (x : Fin B → A)
   simp only [List.map_ofFn, Function.comp_def, AlgHom.toRingHom_eq_coe,
     RingHom.coe_coe, MvPolynomial.aeval_X] at hm
   have hc := congrArg (fun p : Polynomial A => p.coeff s) (hm.trans he)
-  dsimp only at hc
   rw [Polynomial.coeff_map, elementaryProduct_coeff] at hc
   simp only [map_mul, map_pow, map_neg, map_one, Polynomial.coeff_one,
     if_neg (Nat.ne_of_gt hs)] at hc
@@ -61,7 +60,7 @@ def fullFlagLift (B N : ℕ) (x : Fin B → A)
     apply Ideal.span_le.mpr
     rintro p ⟨i, rfl⟩
     change MvPolynomial.aeval x (MvPolynomial.X i ^ N : MvPolynomial (Fin B) ℂ) = 0
-    simpa only [map_pow, MvPolynomial.aeval_X] using hx i)
+    simpa only [map_pow, MvPolynomial.aeval_X] using! hx i)
 
 theorem fullFlagLift_surjective (B N : ℕ) (x : Fin B → A)
     (he : D4Levi.ksEPoly (List.ofFn x) = 1) (hx : ∀ i, x i ^ N = 0)

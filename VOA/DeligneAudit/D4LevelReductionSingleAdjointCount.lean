@@ -63,7 +63,7 @@ theorem singleAdjointDirect_multinomial (b c : ℕ) :
   calc
     (b.factorial * c.factorial) * Nat.multinomial Finset.univ
         (singleAdjointDirectMultiplicity b c) = (1 + b + c).factorial := by
-      simpa only [add_assoc, zero_add] using hm
+      simpa only [add_assoc, zero_add] using! hm
     _ = (b.factorial * c.factorial) * ((1 + b + c).choose (b + 1) * (b + 1)) := by
       rw [← hc]
       ring
@@ -86,7 +86,7 @@ theorem singleAdjointPaired_multinomial (b c : ℕ) (hc : 1 ≤ c) :
   calc
     ((b + 1).factorial * (c - 1).factorial) * Nat.multinomial Finset.univ
         (singleAdjointPairedMultiplicity b c) = (1 + b + c).factorial := by
-      simpa only [ht] using hm
+      simpa only [ht] using! hm
     _ = ((b + 1).factorial * (c - 1).factorial) *
         ((1 + b + c).choose (b + 1) * c) := by
       have hfac : c.factorial = c * (c - 1).factorial := by
@@ -111,7 +111,7 @@ theorem levelTarget_singleAdjoint (b c : ℕ) (hc : 1 ≤ c) :
     constructor
     · intro ht
       obtain ⟨ht, hg, hl⟩ := Finset.mem_filter.mp ht
-      simpa only [Finset.mem_insert, Finset.mem_singleton] using
+      simpa only [Finset.mem_insert, Finset.mem_singleton] using!
         singleAdjointMultiplicity_cases b c t ht hg hl
     · intro ht
       simp only [Finset.mem_insert, Finset.mem_singleton] at ht

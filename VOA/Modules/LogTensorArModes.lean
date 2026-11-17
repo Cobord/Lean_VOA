@@ -66,15 +66,13 @@ noncomputable def matrixTerm (s q : ℂ) (k j l : ℕ) :
         (Y.1 q k (firstTermEnd N₁ s j l x) y)
       map_add' y z := by simp only [map_add,LinearMap.add_apply]
       map_smul' c y := by simp only [map_smul,RingHom.id_apply] })
-    (fun x z r => by ext y; dsimp only; simp only [LinearMap.coe_mk,AddHom.coe_mk,map_add,LinearMap.add_apply])
-    (fun c x r => by ext y; dsimp only; simp only [LinearMap.coe_mk,AddHom.coe_mk,map_smul,LinearMap.smul_apply,RingHom.id_apply])
+    (fun x z r => by ext y; simp only [LinearMap.coe_mk,AddHom.coe_mk,map_add,LinearMap.add_apply])
+    (fun c x r => by ext y; simp only [LinearMap.coe_mk,AddHom.coe_mk,map_smul,LinearMap.smul_apply,RingHom.id_apply])
     (fun x r t => by
       ext y
-      dsimp only
       simp only [LinearMap.coe_mk,AddHom.coe_mk,C2Rigid.dualPairingFlip_apply,map_add,LinearMap.add_apply])
     (fun c x r => by
       ext y
-      dsimp only
       simp only [LinearMap.coe_mk,AddHom.coe_mk,C2Rigid.dualPairingFlip_apply,map_smul,LinearMap.smul_apply,RingHom.id_apply])
 
 @[simp] theorem matrixTerm_apply (s q : ℂ) (k j l : ℕ) (x : M₁)
@@ -138,6 +136,6 @@ theorem pair_modes (r : ℤ) (n : ℂ) (k : ℕ) {a b c : ℂ} {x : M₁} {y : M
       (internalProjTo N₂.toGW.isInternal (a+c-n-1) y : M₂) = _
     rw [C2Rigid.internalProjTo_coe_mem N₂.toGW hy]
   · rw [C2Rigid.internalProjTo_eq_zero_of_ne N₂.toGW hy (Ne.symm h)]
-    simp only [LinearMap.comp_apply,Submodule.coe_zero,map_zero]
+    exact map_zero _
 
 end VOA.LogTensor.Ar

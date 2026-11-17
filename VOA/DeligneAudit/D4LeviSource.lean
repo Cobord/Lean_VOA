@@ -18,7 +18,7 @@ theorem source_localWeyl
     VOA.DeligneAudit.A3Sector.LocalWeylRel
       (leviCurrent ρ) w (VOA.DeligneAudit.A3Sector.weightABC 0 m 0) := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro e he r
     have hraise : D4sector.raising (leviColour e) := by
@@ -64,11 +64,11 @@ theorem source_localWeyl
     · have hnil := rs_lowering hs
         (by change 16 ≤ 16 ∧ 16 < 20; decide : D4sector.lowering (16 : Fin 28))
       have hzero : ρ.op (16 : Fin 28) 0 w = 0 := by
-        simpa [D4sector, lowExpD4, Function.iterate_one] using hnil
+        simpa [D4sector, lowExpD4, Function.iterate_one] using! hnil
       simpa [leviCurrent, leviSign, leviColour,
         VOA.DeligneAudit.A3Sector.simpleF,
         VOA.DeligneAudit.A3Sector.weightABC, Function.iterate_one,
-        LinearMap.smul_apply] using congrArg Neg.neg hzero
+        LinearMap.smul_apply] using! congrArg Neg.neg hzero
 
 /-- At the source, the restricted cyclic sl4 module has rank at most 6^m. -/
 theorem source_levi_rank
@@ -76,7 +76,7 @@ theorem source_levi_rank
     FiniteDimensional ℂ
       (cycSubG (leviCurrent ρ) w) ∧
       Module.finrank ℂ (cycSubG (leviCurrent ρ) w) ≤ 6 ^ m := by
-  simpa using VOA.DeligneAudit.A3Sector.a3_all_weight_rank
+  simpa using! VOA.DeligneAudit.A3Sector.a3_all_weight_rank
     (leviCurrent ρ) w 0 m 0 (source_localWeyl ρ w m h)
 
 end VOA.DeligneAudit.D4Levi

@@ -43,7 +43,7 @@ theorem exists_finite_determining_jet [FiniteDimensional ℂ E]
     have he : jetKernel s N = jetKernel s (max N (k + 1)) :=
       hN _ (le_max_left _ _)
     rwa [← he]
-  simpa using hm k (lt_of_lt_of_le (Nat.lt_succ_self k) (le_max_right _ _))
+  simpa using! hm k (lt_of_lt_of_le (Nat.lt_succ_self k) (le_max_right _ _))
 
 /-- Subtracting a realized coefficient moves the residual into the next jet
 kernel; this is the precise increase needed by the termination proof. -/
@@ -74,7 +74,7 @@ theorem eq_top_of_leading_lifts [FiniteDimensional ℂ E]
       obtain ⟨z, hz, hzlow, hzmatch⟩ := hlift n (x - y) hxy
       refine ⟨y + z, T.add_mem hy hz, ?_⟩
       have h := sub_mem_next_jet s hxy hzlow hzmatch
-      simpa only [sub_sub] using h
+      simpa only [sub_sub] using! h
   obtain ⟨y, hy, hxy⟩ := happrox N
   have he : x = y := sub_eq_zero.mp (hN _ hxy)
   exact he.symm ▸ hy

@@ -22,7 +22,7 @@ theorem mixedCatalogMass_flatMap {ι : Type*} (l : List ι)
   induction l with
   | nil => rfl
   | cons a l ih =>
-      simpa [mixedCatalogMass, List.sum_append] using
+      simpa [mixedCatalogMass, List.sum_append] using!
         (congrArg (fun n => mixedCatalogMass (f a) + n) ih)
 
 theorem mixedCatalogMass_b_prepend (s : MixedBState)
@@ -53,7 +53,7 @@ theorem mixedACellCatalog_mass (A : ℕ) : mixedCatalogMass (mixedACellCatalog A
 theorem mixedCellCatalog_mass (A B : ℕ) :
     mixedCatalogMass (mixedCellCatalog A B) = 15 ^ A * 6 ^ B := by
   induction B with
-  | zero => simpa [mixedCellCatalog] using mixedACellCatalog_mass A
+  | zero => simpa [mixedCellCatalog] using! mixedACellCatalog_mass A
   | succ B ih =>
       rw [mixedCellCatalog, mixedCatalogMass_flatMap]
       simp [List.range_succ, mixedCatalogMass_b_prepend, mixedBOrder,

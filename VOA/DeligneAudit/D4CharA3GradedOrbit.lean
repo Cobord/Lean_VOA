@@ -43,7 +43,7 @@ theorem gl3Hilb_add_shift (a b c N : ℕ) (hab : b ≤ a) :
 theorem gl3Hilb_remove_shift (u v w N : ℕ) (hvu : v ≤ u) (hwv : w ≤ v) :
     A2.gl3Hilb u v w N = A2.gl3Hilb (u - w) (v - w) 0 N := by
   have hh := gl3Hilb_add_shift (u - w) (v - w) w N (by omega)
-  simpa only [Nat.sub_add_cancel (hwv.trans hvu), Nat.sub_add_cancel hwv] using hh
+  simpa only [Nat.sub_add_cancel (hwv.trans hvu), Nat.sub_add_cancel hwv] using! hh
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (ρ : CurrentModule bracketTable V)

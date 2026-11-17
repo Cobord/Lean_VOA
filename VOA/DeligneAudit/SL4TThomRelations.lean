@@ -31,8 +31,9 @@ theorem thom_relation_nn (M a b : ℕ) (hM : 0 < M) :
   change (-1 : (S M a b)[X]) ^ (a + b) *
     (Polynomial.C (leftE M a b a * rightE M a b b) * X ^ (M - 1)) ∈ _
   convert h using 1
-  simp only [map_mul, map_pow, map_neg, map_one, pow_add]
-  ring
+  all_goals first
+    | (simp only [map_mul, map_pow, map_neg, map_one, pow_add]; ring)
+    | rfl
 
 /-- The `(ng)` relation modulo the preceding ideal. -/
 theorem thom_relation_ng (M a b : ℕ) :
@@ -42,7 +43,7 @@ theorem thom_relation_ng (M a b : ℕ) :
   rw [rightP_constant]
   have h : leftE M a b a * rightE M a b b ∈ thomI1 M a b :=
     Ideal.subset_span (Set.mem_singleton _)
-  simpa only [mul_comm, mul_left_comm, mul_assoc] using
+  simpa only [mul_comm, mul_left_comm, mul_assoc] using!
     (thomI1 M a b).mul_mem_left ((-1) ^ b) h
 
 /-- The `(both)` relation; the complement identity is used before passing to the piece. -/
@@ -58,7 +59,7 @@ theorem thom_relation_both (M a b : ℕ) (hM : 0 < M) (hb : b ≤ M) :
     exact (thomI2 M a b).mul_mem_left _ (Ideal.subset_span (Set.mem_singleton _))
   have h := polynomial_both_mem (leftP M a b) (rightP M a b) (rightPbar M a b)
     (M - 1) (thomI2 M a b) hfact hp
-  simpa only [rightPbar_constant, Nat.sub_add_cancel (show 1 ≤ M by omega)] using h
+  simpa only [rightPbar_constant, Nat.sub_add_cancel (show 1 ≤ M by omega)] using! h
 
 /-- The final `(gn)` relation. -/
 theorem thom_relation_gn (M a b : ℕ) :

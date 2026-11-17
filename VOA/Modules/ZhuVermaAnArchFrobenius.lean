@@ -191,7 +191,9 @@ noncomputable def LUUniversalData.of_frobenius (F : LUFamily W)
 
 end InducedAssignment
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the Frobenius lifting family.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the Frobenius lifting family.**
 
 Packaging the end-to-end reduction with the injective half resting on the *nonvanishing* universal
 lifting family `L : FrobeniusLiftFamily F` (surjectivity is derived from irreducibility, not

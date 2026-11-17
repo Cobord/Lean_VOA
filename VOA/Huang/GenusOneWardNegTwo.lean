@@ -99,7 +99,7 @@ theorem sqAct_translation {M : Type u} [AddCommGroup M] [Module ℂ M] (A : OrdV
   have hL : ∀ i : ℤ, mode (A.YM (W.L (-1) b)) i w = (-(i : ℂ)) • mode (A.YM b) (i - 1) w := by
     intro i
     have h := act_T_covariance A.toWeakModule b i w
-    simpa only [WeakModule.act_def] using h
+    simpa only [WeakModule.act_def] using! h
   simp only [GenusOne.sqAct_apply]
   have hshift : (∑ᶠ i : ℤ, sqBracketCoeffZ (kb + 1) m i • mode (A.YM (W.L (-1) b)) i w) =
       ∑ᶠ i : ℤ, sqBracketCoeffZ (kb + 1) m (i + 1) • mode (A.YM (W.L (-1) b)) (i + 1) w :=
@@ -319,7 +319,6 @@ theorem ward_neg_two_phi {b : V} {kb : ℕ} (hb : b ∈ W.grading (kb : ℤ))
       neg_smul]
   -- assemble
   have hsum := congrArg₂ (· + ·) h1 h2
-  simp only at hsum
   rw [hTl (-1), show ((-1 : ℤ) - 1) = -2 by norm_num, Int.cast_neg, Int.cast_one, neg_neg,
     one_smul, smul_add, smul_add] at hsum
   rw [← hcdef] at hOm

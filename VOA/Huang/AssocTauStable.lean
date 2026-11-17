@@ -419,7 +419,7 @@ theorem coproduct_lower_truncation (hV : StronglyRational W)
   refine mul_eq_zero_of_right _ (Finset.sum_eq_zero fun i _ => ?_)
   have hw : mode (P₃.isMod.YM u) i w₃ ∈ P₃.isMod.weight (α₃ + β - i - 1) := by
     have := VOA.mode_mem_weight P₃.isMod hu h₃ i
-    simpa using this
+    simpa using! this
   rw [hM _ _ _ _ hw hf _ k, Pi.zero_apply, mul_zero]
   have hi : (0 : ℝ) ≤ i := Nat.cast_nonneg i
   simp only [Complex.add_re, Complex.sub_re, Complex.intCast_re, Complex.one_re,

@@ -49,7 +49,7 @@ theorem gr_eig (m : ℕ) (hm : 1 ≤ m)
         (wUG D4sector.f (ravFam D4sector m 0)) (by rw [TU_zero]; trivial) := by
     apply Subtype.ext
     simp [gradedSingle]
-  simpa only [zero_mul, zero_add, hsmul, map_smul] using hcongr
+  simpa only [zero_mul, zero_add, hsmul, map_smul] using! hcongr
 
 theorem eval_eig (m : ℕ) (_hm : 1 ≤ m)
     {V : Type} [AddCommGroup V] [Module ℂ V]

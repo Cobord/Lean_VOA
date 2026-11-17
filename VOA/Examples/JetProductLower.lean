@@ -189,7 +189,7 @@ theorem std_local_indep (r k : ℕ) (y : (Fin r → Fin 4) → ℂ)
   intro w hw
   have := local_indep _ (stdConf r) rfl (good_stdConf r) k _ hrel (typeList w)
     (by rw [validSet_stdConf]; exact Finset.mem_image_of_mem _ hw)
-  simpa [wOf_typeList] using this
+  simpa [wOf_typeList] using! this
 
 /-! ### Homogeneity and support of the local products -/
 
@@ -202,10 +202,10 @@ theorem evd_isHomogeneous (l : ℕ) (t : ℂ) : (evd l t).IsHomogeneous 1 :=
 theorem locG_isHomogeneous (l : ℕ) (t : ℂ) (g : Fin 4) :
     (locG l t g).IsHomogeneous (gdeg g) := by
   fin_cases g
-  · simpa [locG, gdeg, gtype, tdeg] using (ev_isHomogeneous l t).pow 2
-  · simpa [locG, gdeg, gtype, tdeg] using ev_isHomogeneous l t
-  · simpa [locG, gdeg, gtype, tdeg] using isHomogeneous_one ℕ ℂ
-  · simpa [locG, gdeg, gtype, tdeg] using evd_isHomogeneous l t
+  · simpa [locG, gdeg, gtype, tdeg] using! (ev_isHomogeneous l t).pow 2
+  · simpa [locG, gdeg, gtype, tdeg] using! ev_isHomogeneous l t
+  · simpa [locG, gdeg, gtype, tdeg] using! isHomogeneous_one ℕ ℂ
+  · simpa [locG, gdeg, gtype, tdeg] using! evd_isHomogeneous l t
 
 theorem prod_locG_isHomogeneous {r : ℕ} (l : ℕ) (t : Fin r → ℂ) (w : Fin r → Fin 4) :
     (∏ i, locG l (t i) (w i)).IsHomogeneous (∑ i, gdeg (w i)) :=
@@ -274,7 +274,7 @@ theorem card_cols (r k : ℕ) : Fintype.card (Cols r k) = (2 * r).choose k := by
 /-- A monomial in the support of a charge-`k` local product comes from a row index. -/
 theorem exists_row_of_coeff {r k : ℕ} (_hk : k ≤ 2 * r) (Q : UPoly)
     (hQ : Q.IsHomogeneous k) (hS : Q ∈ supported ℂ (Set.Iic (2 * r - k)))
-    (d : ℕ →₀ ℕ) (hd : coeff d Q ≠ 0) : ∃ s : Rows r k, Multiset.toFinsupp (msOf s) = d := by
+    (d : ℕ →₀ ℕ) (hd : Q.coeff d ≠ 0) : ∃ s : Rows r k, Multiset.toFinsupp (msOf s) = d := by
   have hdeg : d.degree = k := by
     have := hQ hd
     rwa [Finsupp.degree_eq_weight_one]
@@ -289,12 +289,12 @@ theorem exists_row_of_coeff {r k : ℕ} (_hk : k ≤ 2 * r) (Q : UPoly)
   refine ⟨⟨(Finsupp.toMultiset d).pmap (fun j hj => (⟨j, hj⟩ : Fin (2 * r - k + 1))) hmem, ?_⟩, ?_⟩
   · rw [Multiset.card_pmap, Finsupp.card_toMultiset, ← hdeg, Finsupp.degree]
     rfl
-  · rw [Multiset.toFinsupp_eq_iff, msOf]
-    simp only [Sym.coe_mk, Multiset.map_pmap, Multiset.pmap_eq_map, Multiset.map_id']
+  · rw [Multiset.toFinsupp_eq_iff]
+    simp only [msOf, Sym.coe_mk, Multiset.map_pmap, Multiset.pmap_eq_map, Multiset.map_id']
 
 theorem eval_Apol_col {r k : ℕ} (s : Rows r k) (w : Cols r k) (_hk : k ≤ 2 * r) :
     eval tStd (Apol (msOf s) (2 * r - k) w.1) =
-      coeff (Multiset.toFinsupp (msOf s)) (∏ i, locG (2 * r - k) (tStd i) (w.1 i)) := by
+      (∏ i, locG (2 * r - k) (tStd i) (w.1 i)).coeff (Multiset.toFinsupp (msOf s)) := by
   rw [eval_Apol _ _ (msOf_le s), if_pos]
   rw [sum_vcount, w.2]
 
@@ -319,7 +319,7 @@ theorem block_indep (r k : ℕ) (hk : k ≤ 2 * r) (y : Rows r k → MvPolynomia
     apply hc
     -- the local product combination vanishes
     set Q : UPoly := ∑ s', c s' • ∏ i, locG (2 * r - k) (tStd i) ((e s').1 i) with hQdef
-    have hcoeffQ : ∀ s : Rows r k, coeff (Multiset.toFinsupp (msOf s)) Q = 0 := by
+    have hcoeffQ : ∀ s : Rows r k, Q.coeff (Multiset.toFinsupp (msOf s)) = 0 := by
       intro s
       have := congrFun hMc s
       simp only [Matrix.mulVec, dotProduct, Matrix.map_apply, Pi.zero_apply] at this
@@ -340,7 +340,7 @@ theorem block_indep (r k : ℕ) (hk : k ≤ 2 * r) (y : Rows r k → MvPolynomia
         (Subalgebra.prod_mem _ fun i _ => locG_mem_supported _ _ _) _
     have hQ0 : Q = 0 := by
       ext d
-      rw [coeff_zero]
+      rw [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
       by_contra hd
       obtain ⟨s, hs⟩ := exists_row_of_coeff hk Q hhom hsupp d hd
       exact hd (hs ▸ hcoeffQ s)
@@ -355,7 +355,7 @@ theorem block_indep (r k : ℕ) (hk : k ≤ 2 * r) (y : Rows r k → MvPolynomia
       simp only [y', dif_pos (e s').2, Subtype.coe_eta, Equiv.symm_apply_apply]
     funext s'
     have := std_local_indep r k y' hrel (e s').1 (by simp [colSet, (e s').2])
-    simpa [y', dif_pos (e s').2] using this
+    simpa [y', dif_pos (e s').2] using! this
   by_contra hy
   exact hdet (Matrix.exists_vecMul_eq_zero_iff.mp ⟨y, hy, hM⟩)
 

@@ -53,19 +53,19 @@ variable {R : CurrentModule bracketTable V} {w : V}
 theorem mabRel_zero_cv3 {N : ℕ} (h : MabRel R w 0 N) (hN : 0 < N) :
     CV3Rel R w (0, 0) (0, 0) (0, 0) N := by
   refine ⟨h.raising, h.cartan_pos, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa using h.cartan_zero 6 (by decide)
-  · simpa using h.cartan_zero 7 (by decide)
-  · simpa using h.lowering_f1
-  · simpa using h.lowering_f2
-  · simpa [parts] using CVRoots.first h hN
-  · simpa [parts] using CVRoots.second h hN
-  · simpa [parts] using CVRoots.highest h hN
+  · simpa using! h.cartan_zero 6 (by decide)
+  · simpa using! h.cartan_zero 7 (by decide)
+  · simpa using! h.lowering_f1
+  · simpa using! h.lowering_f2
+  · simpa [parts] using! CVRoots.first h hN
+  · simpa [parts] using! CVRoots.second h hN
+  · simpa [parts] using! CVRoots.highest h hN
 
 /-- Every CV presentation kills individual modes beyond the partition length. -/
 theorem trunc_of_cvrel {F : ℕ → Module.End ℂ V} {ξ : List ℕ}
     (h : CVRel F ξ w) (s : ℕ) (hs : ξ.length ≤ s) : F s w = 0 := by
   have ht : T ξ.length ξ = 0 := T_of_le _ _ le_rfl
-  simpa only [Q_one] using h 1 s ξ.length (by omega) (by omega)
+  simpa only [Q_one] using! h 1 s ξ.length (by omega) (by omega)
 
 /-- A final part equal to one gives square nilpotence of the top mode. -/
 theorem top_square_of_cvrel {F : ℕ → Module.End ℂ V}
@@ -74,7 +74,7 @@ theorem top_square_of_cvrel {F : ℕ → Module.End ℂ V}
     (F (r + n + j - 1) ^ 2) w = 0 := by
   have htr : ∀ q, r + n + j ≤ q → F q w = 0 := by
     intro q hq
-    exact trunc_of_cvrel h q (by simpa only [parts_length] using hq)
+    exact trunc_of_cvrel h q (by simpa only [parts_length] using! hq)
   have ht := parts_last_tail r n j hj
   have hq : Q F 2 ((r + n + j - 1) * 2) w = 0 :=
     h 2 _ (r + n + j - 1) (by omega) (by omega)
@@ -93,8 +93,8 @@ theorem theta_trunc (h : CV3Rel R w (0, 0) ν ϱ j) (q : ℕ)
 theorem second_top_square (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 1 ≤ j) :
     (R.op 4 (ν.2 + ϱ.2 + j - 1) ^ 2) w = 0 := by
   have hsecond : CVRel (R.op 4) (parts ϱ.2 ν.2 j) w := by
-    simpa only [Nat.zero_add] using h.second
-  simpa only [Nat.zero_add, Nat.add_comm ϱ.2 ν.2] using
+    simpa only [Nat.zero_add] using! h.second
+  simpa only [Nat.zero_add, Nat.add_comm ϱ.2 ν.2] using!
     top_square_of_cvrel (r := ϱ.2) (n := ν.2) (j := j)
       (CVRoots.sl2_second R).hFF hj hsecond
 
@@ -104,7 +104,7 @@ theorem first_cutoff_two (h : CV3Rel R w (0, 0) ν ϱ j) :
   apply cvrel_cutoff (CVRoots.sl2_first R).hFF h.first
     (ν.1 + ϱ.1) 2 _ (by omega)
   have ht : T (ν.1 + ϱ.1) (parts ϱ.1 ν.1 (0 + j)) = j := by
-    simpa only [Nat.zero_add, Nat.add_comm ν.1 ϱ.1] using parts_tail ϱ.1 ν.1 j
+    simpa only [Nat.zero_add, Nat.add_comm ν.1 ϱ.1] using! parts_tail ϱ.1 ν.1 j
   rw [ht]
   omega
 
@@ -114,7 +114,7 @@ theorem first_cutoff_three (h : CV3Rel R w (0, 0) ν ϱ j) (hj : 1 ≤ j) :
   apply cvrel_cutoff (CVRoots.sl2_first R).hFF h.first
     (ν.1 + ϱ.1) 3 _ (by omega)
   have ht : T (ν.1 + ϱ.1) (parts ϱ.1 ν.1 (0 + j)) = j := by
-    simpa only [Nat.zero_add, Nat.add_comm ν.1 ϱ.1] using parts_tail ϱ.1 ν.1 j
+    simpa only [Nat.zero_add, Nat.add_comm ν.1 ϱ.1] using! parts_tail ϱ.1 ν.1 j
   rw [ht]
   omega
 

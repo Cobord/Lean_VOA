@@ -24,7 +24,7 @@ theorem polarRange_coeff_mem (m R r a b c s : ℕ) (h2 : 2 ≤ r) (hR : r ≤ R)
 
 theorem polarRange_highest_mem (m R r s : ℕ) (h2 : 2 ≤ r) (hR : r ≤ R) (hs : m < r + s) :
     PowerSeries.coeff s (AllM.current m 0 ^ r) ∈ polarRangeIdeal m R := by
-  simpa only [currentMap_orbit,Function.iterate_zero_apply] using
+  simpa only [currentMap_orbit,Function.iterate_zero_apply] using!
     polarRange_coeff_mem m R r 0 0 0 s h2 hR hs
 
 theorem polarRangeIdeal_mono (m : ℕ) {R R' : ℕ} (h : R ≤ R') :
@@ -228,7 +228,7 @@ theorem topShiftWord_static_mem_topPolarRange (m n s : ℕ) (ks : List ℕ) (hn 
           topShift m k (topShiftWord m ks (PowerSeries.coeff s (topCurrent m ^ (n + 1)))) -
             N • topShift m k (PowerSeries.coeff t (topCurrent m ^ (n + 1))) ∈
           topPolarRangeIdeal m n := by
-        simpa only [map_sub,map_nsmul] using topPolarRangeIdeal_shift_closed m n k ih
+        simpa only [map_sub,map_nsmul] using! topPolarRangeIdeal_shift_closed m n k ih
       have hstep := (topPolarRangeIdeal m n).nsmul_mem
         (topShift_step_mem_topPolarRange m n t k hn (by dsimp [t]; omega)) N
       rw [nsmul_sub,smul_smul] at hstep
@@ -245,7 +245,7 @@ theorem topShiftWord_static_mem_topPolarRange (m n s : ℕ) (ks : List ℕ) (hn 
         simp only [t,List.sum_cons]
         omega
       rw [hidx] at hsum
-      simpa only [topShiftWord,List.length_cons,pow_succ,N] using hsum
+      simpa only [topShiftWord,List.length_cons,pow_succ,N] using! hsum
 
 /-- An arbitrary-mode lowering of a power-(n+1) highest coefficient differs from
 the shifted zero-mode lowering by a powers-2..n member. -/
@@ -276,7 +276,7 @@ theorem polar_mode_step_mem_polarRange (m n a b c s ell : ℕ) (d : Fin 3) (hn :
   have h := polarRange_iterate_zero_mem m n 2 c
     (polarRange_iterate_zero_mem m n 1 b (polarRange_iterate_zero_mem m n 0 a
       (highest_mode_step_mem_polarRange m n s ell d hn hs)))
-  simpa only [VariablePower.iterate_deriv_sub] using h
+  simpa only [VariablePower.iterate_deriv_sub] using! h
 
 /-- Every negative word on an admissible power-(n+1) polar reduces modulo the
 powers-2..n ideal to one static polar, with exact index and lowering counts. -/
@@ -305,7 +305,7 @@ theorem negativeModeWord_static_mem_polarRange (m n s a b c : ℕ) (l : List (Fi
             g0Deriv m (cubeDirection d) ell
               (PowerSeries.coeff t (currentMap m (orbit ℂ (n + 1) a' b' c'))) ∈
           polarRangeIdeal m n := by
-        simpa only [negativeModeWord] using
+        simpa only [negativeModeWord] using!
           negativeModeWord_congr_polarRange m n [(d,ell)] ih
       have hstep := polar_mode_step_mem_polarRange m n a' b' c' t ell d hn
         (by dsimp [t]; omega)
@@ -313,7 +313,7 @@ theorem negativeModeWord_static_mem_polarRange (m n s a b c : ℕ) (l : List (Fi
       rw [actual_zero_polar_coefficient] at hsum
       fin_cases d <;>
         simpa [negativeModeWord,negativeModeAxisCount,polarZeroStep,t,a',b',c',
-          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hsum
+          Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using! hsum
 
 /-- MAIN: mixed top-shift and negative words on a power-(n+1) source reduce
 modulo the powers-2..n ideal to (n+1)^(number of shifts) times one static polar. -/

@@ -152,7 +152,8 @@ theorem sugawaraEECWardAt_negOne : SugawaraEECWardAt k85FockCharge (-1) := by
   simp only [sub_neg_eq_add, Int.cast_add, Int.cast_one, Int.cast_negSucc,
     neg_add_cancel, Int.cast_zero, zero_mul, add_zero, zero_smul, sub_zero,
     if_neg (by norm_num : (-1 : ℤ) ≠ 0)]
-  simpa only [alphaMode] using h
+  simp only [alphaMode]
+  exact h
 
 /-- The existing grading calculation supplies the unshifted oscillator identity at `0`. -/
 theorem sugawaraEECWardAt_zero : SugawaraEECWardAt k85FockCharge 0 := by

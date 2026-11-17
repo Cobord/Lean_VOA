@@ -326,7 +326,7 @@ theorem leviCompound_compound_commute {W : Type} [AddCommGroup W] [Module ℂ W]
   apply LinearMap.ext
   intro X
   have hc : Q.op 5 r (Q.op 5 s X) - Q.op 5 s (Q.op 5 r X) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 5 5 r s X
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 5 5 r s X
   exact sub_eq_zero.mp hc
 
 /-! ### Realization at one adjoint site -/

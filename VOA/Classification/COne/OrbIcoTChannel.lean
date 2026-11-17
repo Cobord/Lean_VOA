@@ -28,6 +28,7 @@ theorem sixth_wv : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 6 ≤ t → t ≤ 1
       have hgr : Φ i j ∈ V2v.grading (((6 : ℕ) : ℤ) ^ 2) := by
         refine Submodule.sub_mem _ ?_ (Submodule.smul_mem _ _ (wv_grading _ _))
         convert V2v.smul_mem_grading (wv_grading 6 i) (wv_grading 6 j) 35 using 2
+        all_goals norm_num
       have hho : ho (Φ i j) = ((12 : ℂ) - 2 * ((t - 6 : ℕ) : ℂ)) • Φ i j := by
         subst hij
         simp only [Φ]
@@ -76,7 +77,7 @@ theorem sixth_wv : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 6 ≤ t → t ≤ 1
           · exact Submodule.zero_mem _
           · exact Submodule.smul_mem _ _
               (ih (i + (j - 1)) (by omega) i (j - 1) rfl (by omega) (by omega) hi (by omega))
-      exact ekernel 6 (t - 6) (by omega) hgr (by simpa using hho) heo
+      exact ekernel 6 (t - 6) (by omega) hgr (by simpa using! hho) heo
 
 /-- The complete sixth-channel projection on every pair of multiplet vectors. -/
 theorem sixth_wv_all (i j : ℕ) (hi : i ≤ 12) (hj : j ≤ 12) :
@@ -105,6 +106,7 @@ theorem sixth_wv_all (i j : ℕ) (hi : i ≤ 12) (hj : j ≤ 12) :
     rw [sixthCoeff_support a b ha hb (Or.inr hhigh), Rat.cast_zero, zero_mul] at hc
     have hg : V2v.smul (wv 6 a) 35 (wv 6 b) ∈ V2v.grading (((6 : ℕ) : ℤ) ^ 2) := by
       convert V2v.smul_mem_grading (wv_grading 6 a) (wv_grading 6 b) 35 using 2
+      all_goals norm_num
     refine ekernel 6 (t - 6) (by omega) hg ?_ ?_
     · rw [ho_smul, ho_wv, ho_wv,
         PreVertexAlgebra.smul_smul_left, PreVertexAlgebra.smul_smul_right]

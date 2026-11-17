@@ -71,11 +71,11 @@ theorem doublyMarkedStratum_finrank_of_eq (m j : ℕ) (V Y : Finset (Fin (m + 3)
   have hζ : Function.Injective ζ := by
     intro a b h
     apply Fin.ext
-    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using h
+    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using! h
     exact_mod_cast h'
   have hζ0 : ∀ a, ζ a ≠ 0 := by
     intro a h
-    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using h
+    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using! h
     exact Nat.succ_ne_zero a.val (by exact_mod_cast h')
   have hinj : Function.Injective (doublyMarkedStratumPoint (m + 1) 1 j V Y ζ) :=
     fun a b h => Subtype.ext (doublyMarkedPoint_injective _ _ V ζ hζ hζ0 h)

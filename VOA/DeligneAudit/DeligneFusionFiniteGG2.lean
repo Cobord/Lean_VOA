@@ -52,7 +52,7 @@ theorem g2_kn : ∀ c : Fin 14, g2Kn c = true → G2sector.raising c ∨ G2secto
   change ∀ c : Fin 14, g2Kn c = true →
     (c.val ∈ posL) ∨ (c.val ∈ ([4, 13] : List ℕ))
   intro c h
-  simpa [g2Kn] using h
+  simpa [g2Kn] using! h
 
 /-- **The finiteness table facts for `G2`.** -/
 theorem g2_finiteTable : FiniteTableG G2sector :=

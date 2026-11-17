@@ -12,6 +12,11 @@ unproved input: rational `spinDict` coordinates of the normalized `Φ` images of
 individual odd short classes.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -209,10 +214,18 @@ def sigmaBSpinPart (t : ZMod 2) : SpaceW →ₗ[ℚ] SpaceW where
   toFun N j i := if j.1 = t then N j i else 0
   map_add' N M := by
     ext j i
-    by_cases h : j.1 = t <;> simp [h]
+    first
+      | (by_cases h : j.1 = t <;> simp [h]) <;> done
+      | (show (if j.1 = t then (N + M) j i else 0) =
+            (if j.1 = t then N j i else 0) + (if j.1 = t then M j i else 0)
+         by_cases h : j.1 = t <;> simp [h])
   map_smul' q N := by
     ext j i
-    by_cases h : j.1 = t <;> simp [h]
+    first
+      | (by_cases h : j.1 = t <;> simp [h]) <;> done
+      | (show (if j.1 = t then (q • N) j i else 0) =
+            q • (if j.1 = t then N j i else 0)
+         by_cases h : j.1 = t <;> simp [h])
 
 theorem sigmaBSpinPart_mem (N : SpaceW) (t : ZMod 2) :
     spinDict (sigmaBSpinPart t N) ∈ TPframe (sigmaBFrameShift + t) :=
@@ -312,7 +325,7 @@ theorem sigmaBShortAction_injective (c : ShortIdx) :
   have hK : Rmat c * N = (4 : ℚ)⁻¹ • (Rmat c * N * Umat c) := by
     exact sub_eq_zero.mp ((smul_eq_zero.mp hN).resolve_left (by norm_num))
   have hU := congrArg (fun M : SpaceW => M * Umat c) hK
-  dsimp only at hU
+  try dsimp only at hU
   rw [Matrix.smul_mul, Matrix.mul_assoc (Rmat c * N), sigmaBUmat_sq,
     Matrix.mul_smul, smul_smul] at hU
   have hzero : Rmat c * N * Umat c = 0 := by
@@ -323,7 +336,7 @@ theorem sigmaBShortAction_injective (c : ShortIdx) :
     linarith
   rw [hzero, smul_zero] at hK
   have h := congrArg (fun M : SpaceW => Rmat c * M) hK
-  dsimp only at h
+  try dsimp only at h
   rwa [← Matrix.mul_assoc, sigmaBRmat_sq, Matrix.one_mul, Matrix.mul_zero] at h
 
 theorem sigmaBShortAction_surjective (c : ShortIdx) :

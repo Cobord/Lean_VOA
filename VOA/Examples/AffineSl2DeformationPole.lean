@@ -81,6 +81,7 @@ theorem L43_regular_iff_pole_parameter_zero (D : FirstOrderDeformation L43)
     intro a ha b hb
     refine ⟨hnorm a ha b hb, ?_⟩
     have h := hδ ⟨a, ha⟩ ⟨b, hb⟩
-    simpa only [hz, mul_zero, zero_smul] using h
+    simp only [hz, mul_zero, zero_smul] at h
+    exact h
 
 end VOA.LQ43

@@ -110,7 +110,7 @@ def currentCarrier (Q : ρ → σ × σ → K) (m d : ℕ) :
     intro a p hp
     constructor
     · intro e g he t
-      simpa using congrArg (fun f => a • f) (hp.1 e g he t)
+      simpa using! congrArg (fun f => a • f) (hp.1 e g he t)
     · intro r ij t
       have hread : currentReadback (Q r) ij t (a • p) =
           a • currentReadback (Q r) ij t p := by
@@ -203,7 +203,7 @@ theorem auxiliary_swap_invariant {m d : ℕ}
       simp only [Fin.val_castAdd] at hv
       omega
     exact Equiv.swap_apply_of_ne_of_ne hi2 hi1
-  simpa [swapVariables] using hp (Equiv.swap ij.1.2 ij.1.1) (Equiv.refl _) he t
+  simpa [swapVariables] using! hp (Equiv.swap ij.1.2 ij.1.1) (Equiv.refl _) he t
 
 /-- The full auxiliary carrier has a unique coordinatewise conductor quotient,
 and that quotient lies in the literal current carrier. -/

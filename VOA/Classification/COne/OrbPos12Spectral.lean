@@ -91,7 +91,7 @@ theorem spectralResolution_of_finiteOrder (f : R) (hf : IsOfFinOrder f) :
   intro c hc
   have hr : P.IsRoot c := (mem_roots hmon.ne_zero).mp (Multiset.mem_toFinset.mp hc)
   refine ⟨?_, hp c hc⟩
-  simpa [P, IsRoot, sub_eq_zero] using hr
+  simpa [P, IsRoot, sub_eq_zero] using! hr
 end Algebra
 
 universe u

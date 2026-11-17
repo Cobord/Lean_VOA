@@ -78,7 +78,6 @@ theorem adR_iterate_eq_sum (X Z : R) (n : ℕ) :
     rw [hLf, hRf]
     simp only [mul_neg, sub_eq_add_neg]
   have h := congrArg (fun T : AddMonoid.End R => T Z) (hc.add_pow n)
-  simp only at h
   rw [← AddMonoid.End.coe_pow, hs, h]
   erw [AddMonoidHom.finsetSum_apply]
   refine sum_congr rfl fun m _ => ?_
@@ -105,7 +104,6 @@ theorem pow_mul_eq_sum (A B : R) (n : ℕ) :
     rw [hLf, hRf, adR_apply]
     abel
   have h := congrArg (fun T : AddMonoid.End R => T B) (hc.add_pow n)
-  simp only at h
   have hL : A ^ n * B = (L ^ n) B := by
     rw [AddMonoid.End.coe_pow, hLf, mul_left_iterate_apply]
   rw [hL, hs, h]
@@ -129,7 +127,7 @@ theorem adR_iterate_pow {X Y : R} {q : ℕ} (hq : (adR X)^[q + 1] Y = 0) :
   | N + 1 => by
       obtain ⟨⟨c, hc0, hc⟩, hz⟩ := adR_iterate_pow hq N
       have hY : ∀ i, q < i → (adR X)^[i] Y = 0 := fun i hi => adR_iterate_of_le hq (by omega)
-      have hzero : ∀ j, ∀ ij ∈ antidiagonal j, (q < ij.1 ∨ q * N < ij.2) →
+      have hzero : ∀ j, ∀ ij ∈ HasAntidiagonal.antidiagonal j, (q < ij.1 ∨ q * N < ij.2) →
           j.choose ij.1 • ((adR X)^[ij.1] Y * (adR X)^[ij.2] (Y ^ N)) = 0 := by
         rintro j ⟨i, k⟩ _ (h | h)
         · rw [hY i h, zero_mul, smul_zero]
@@ -146,7 +144,7 @@ theorem adR_iterate_pow {X Y : R} {q : ℕ} (hq : (adR X)^[q + 1] Y = 0) :
           exact hne (Prod.ext (by simp only at this hcon ⊢; nlinarith)
             (by simp only at this hcon ⊢; nlinarith))
         · intro h
-          exact absurd (mem_antidiagonal.2 (by ring)) h
+          exact absurd (HasAntidiagonal.mem_antidiagonal.2 (by ring)) h
       · rw [pow_succ', adR_iterate_mul]
         refine sum_eq_zero fun ik hik => hzero _ _ hik ?_
         have := mem_antidiagonal.1 hik

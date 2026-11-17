@@ -73,7 +73,7 @@ theorem polynomial_complement_divX (q qb : R[X]) (m : ℕ)
     X ^ m = qb.divX * q + q.divX * Polynomial.C (qb.coeff 0) := by
   have hd := congrArg Polynomial.divX ((mul_comm qb q).trans h)
   rw [polynomial_divX_mul, divX_X_pow, if_neg (by omega), Nat.add_sub_cancel] at hd
-  simpa only [mul_comm] using hd.symm
+  simpa only [mul_comm] using! hd.symm
 
 /-- Identity (both), including the additional term supported on the preceding ideal. -/
 theorem polynomial_both (p q qb : R[X]) (m : ℕ)

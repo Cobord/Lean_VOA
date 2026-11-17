@@ -91,7 +91,7 @@ theorem pow_kill_op (c : Fin 8) (hc : 3 ≤ c.val ∧ c.val < 6) (d : Fin 8) (s 
 /-- **Local nilpotency**: `A^{2|l| + N₀}` kills `wordOp l w` once `A^{N₀}` kills `w`. -/
 theorem pow_kill_wordOp (c : Fin 8) (hc : 3 ≤ c.val ∧ c.val < 6) {w : V} {N0 : ℕ}
     (hw : (ρ.op c 0 ^ N0) w = 0) : ∀ l : List (Fin 8 × ℕ), (ρ.op c 0 ^ (2 * l.length + N0)) (wordOp ρ l w) = 0
-  | [] => by simpa using hw
+  | [] => by simpa using! hw
   | (x :: l) => by
       rw [List.length_cons, show 2 * (l.length + 1) + N0 = (2 * l.length + N0) + 2 by ring]
       exact pow_kill_op c hc x.1 x.2 _ (pow_kill_wordOp c hc hw l)
@@ -112,7 +112,7 @@ theorem lowering_pow_w {w : V} {m : ℕ} (hW : LocalWeylRel ρ w m) (c : Fin 8)
       hW.lowering_f1, map_zero]
   · rw [show 2 * m + 1 = m + (m + 1) by ring, pow_add, Module.End.mul_apply, Module.End.pow_apply _ (m + 1),
       hW.lowering_f2, map_zero]
-  · simpa using ftheta_pow hM
+  · simpa using! ftheta_pow hM
 
 end Nil
 
@@ -215,7 +215,7 @@ theorem length_le_of_ne {w : V} {m : ℕ} (hW : LocalWeylRel ρ w m) :
       have hTrep : T = List.replicate T.length x :=
         List.eq_replicate_iff.mpr ⟨rfl, fun y hy => by
           have := List.all_eq_true.mp (List.all_takeWhile (p := p) (l := x :: rest)) y hy
-          simpa [hp] using this⟩
+          simpa [hp] using! this⟩
       have hTlen : 1 ≤ T.length := by
         rw [hT, List.takeWhile_cons_of_pos (by simp [hp])]; simp
       have hpw : (T ++ D).Pairwise (fun a c => keyFin a ≤ keyFin c) := hTD ▸ hs
@@ -229,8 +229,8 @@ theorem length_le_of_ne {w : V} {m : ℕ} (hW : LocalWeylRel ρ w m) :
         | cons y D' =>
           have hy : p y = false := by
             have := List.head_dropWhile_not p (l := x :: rest) (by rw [← hD, hDc]; simp)
-            simpa [← hD, hDc] using this
-          have hyx : y ≠ x := by simpa [hp] using hy
+            simpa [← hD, hDc] using! this
+          have hyx : y ≠ x := by simpa [hp] using! hy
           rw [hDc] at hxD
           rcases List.mem_cons.mp hxD with h | h
           · exact hyx h.symm
@@ -294,7 +294,7 @@ theorem finite_bounded_lists (L b : ℕ) :
   refine ((List.finite_length_le {x : Fin 8 × ℕ // x.2 ≤ b} L).image
     (List.map Subtype.val)).subset ?_
   rintro l ⟨hl, hb⟩
-  refine ⟨l.pmap Subtype.mk hb, by simpa using hl, ?_⟩
+  refine ⟨l.pmap Subtype.mk hb, by simpa using! hl, ?_⟩
   simp [List.map_pmap]
 
 /-- **The finiteness clause**: degree pieces of fusion modules are finite-dimensional. -/

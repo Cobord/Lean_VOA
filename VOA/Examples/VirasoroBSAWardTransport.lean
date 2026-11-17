@@ -90,7 +90,7 @@ theorem transportState_L0 {c h : ℂ} (A : System V c h) (t : ℂ) (N r : ℕ) :
   | h r ih =>
     by_cases hr : r=0
     · subst r
-      simpa using A.seed_zero
+      simpa using! A.seed_zero
     · rw [transportState_eq_source A t N r (by omega),map_smul,
         transportSource_L0 A t N r (fun j => ih j j.isLt),smul_comm]
 

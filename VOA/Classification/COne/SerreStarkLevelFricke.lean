@@ -90,8 +90,8 @@ theorem frickeConj_mem {N : ℕ} {γ : SL(2, ℤ)} (hγ : γ ∈ CongruenceSubgr
     (hc : γ 1 0 = N * c') : frickeConj γ c' hc ∈ CongruenceSubgroup.Gamma1 N := by
   rw [CongruenceSubgroup.Gamma1_mem] at hγ ⊢
   refine ⟨?_, ?_, ?_⟩
-  · simpa [frickeConj] using hγ.2.1
-  · simpa [frickeConj] using hγ.1
+  · simpa [frickeConj] using! hγ.2.1
+  · simpa [frickeConj] using! hγ.1
   · simp [frickeConj]
 
 theorem mobius_frickeConj {N : ℕ} (hN : 0 < N) (γ : SL(2, ℤ)) (c' : ℤ) (hc : γ 1 0 = N * c')
@@ -110,7 +110,7 @@ theorem mobius_frickeConj {N : ℕ} (hN : 0 < N) (γ : SL(2, ℤ)) (c' : ℤ) (h
       · exact h'
       · exact absurd h' hτ.ne'
     have ha' : γ 0 0 = 0 := by exact_mod_cast ha
-    have hb : (γ 0 1 : ℂ) = 0 := by rw [ha'] at h; simpa using h
+    have hb : (γ 0 1 : ℂ) = 0 := by rw [ha'] at h; simpa using! h
     have hb' : γ 0 1 = 0 := by exact_mod_cast hb
     have hdet := γ.2
     rw [Matrix.det_fin_two, ha', hb'] at hdet
@@ -221,13 +221,13 @@ theorem isThetaTypeForm_fricke {N : ℕ} (hN : 0 < N) (h24 : 24 ∣ N) {f : ℂ 
         · exact h'
         · exact absurd h' hτ.ne'
       have ha' : a = 0 := by exact_mod_cast ha
-      have hb : (b : ℂ) = 0 := by rw [ha'] at h; simpa using h
+      have hb : (b : ℂ) = 0 := by rw [ha'] at h; simpa using! h
       have hb' : b = 0 := by exact_mod_cast hb
       rw [ha', hb'] at hdet₀; simp at hdet₀
     -- `−1/(Nσ) = X τ = δ (U τ)`
     have hU11ne : (U 1 1 : ℂ) ≠ 0 := by exact_mod_cast hU11.ne'
     have hdenU : denZ U τ ≠ 0 := by
-      simp only [denZ, hU10]; push_cast; simpa using hU11ne
+      simp only [denZ, hU10]; push_cast; simpa using! hU11ne
     set w := mobZ U τ with hwdef
     have hwval : w = ((U 0 0 : ℂ) * τ + U 0 1) / U 1 1 := by
       rw [hwdef, mobZ, hU10]; push_cast; ring

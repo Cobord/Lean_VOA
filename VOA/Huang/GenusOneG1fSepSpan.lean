@@ -43,14 +43,14 @@ theorem weighted_support_finite (Y : IntertwiningOperator P.isMod Q.isMod A)
   simp only [Finset.mem_coe, Finset.mem_range]
   by_contra h
   have hrK : K ≤ (r : ℤ) := by omega
-  exact hr (by simpa using congrArg (c r • ·) (hK r hrK))
+  exact hr (by simpa using! congrArg (c r • ·) (hK r hrK))
 
 theorem intertwiner_nat_bound' (Y : IntertwiningOperator P.isMod Q.isMod A) (n : ℂ)
     (w : P.carrier) (x : Q.carrier) : ∃ S : ℕ, ∀ s : ℕ, S ≤ s → Y.val (n + s) w x = 0 := by
   obtain ⟨K, hK⟩ := Y.property.truncation w x n
   refine ⟨K.toNat, fun s hs => ?_⟩
   have := hK (s : ℤ) (by omega)
-  simpa using this
+  simpa using! this
 
 /-- Homogeneous piece of the explicit bracket field. -/
 def bracketAtWeightG (Y : IntertwiningOperator P.isMod Q.isMod A) (α n : ℂ) :

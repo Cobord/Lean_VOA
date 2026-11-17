@@ -45,7 +45,7 @@ theorem commute_of_mem_closure {G E : Type*} [Group G] [Group E] (π : E →* G)
     | inv b _ ih =>
       intro e m he hm
       have := ih e m⁻¹ he (by rw [map_inv, hm, inv_inv])
-      simpa using this.inv_right
+      simpa using! this.inv_right
   intro e m he hm
   revert e m
   suffices ∀ a ∈ Subgroup.closure A, ∀ e m : E, π e = a → π m ∈ Subgroup.closure B →
@@ -67,7 +67,7 @@ theorem commute_of_mem_closure {G E : Type*} [Group G] [Group E] (π : E →* G)
   | inv a _ ih =>
     intro e m he hm
     have := ih e⁻¹ m (by rw [map_inv, he, inv_inv]) hm
-    simpa using this.inv_left
+    simpa using! this.inv_left
 
 /-! ## Conjugation identities at level `3^{k+1}` -/
 
@@ -272,7 +272,7 @@ theorem threePowerSchur : ThreePowerSchur := by
       SchurTrivial (Matrix.SpecialLinearGroup (Fin 2) (ZMod (3 ^ k))) := by
     intro k hk
     induction k, hk using Nat.le_induction with
-    | base => simpa using schurTrivial_SL_three
+    | base => simpa using! schurTrivial_SL_three
     | succ k hk ih =>
       exact schurTrivial_of_layerTrivial (rhoTop k) (rhoTop_surjective k) ih
         (layerTrivial_three hk)

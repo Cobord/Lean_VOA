@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace BorcherdsPreData
 
 variable {g : Type*} [LieRing g] [LieAlgebra ℂ g] (P : BorcherdsPreData g)

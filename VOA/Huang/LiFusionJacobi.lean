@@ -50,8 +50,8 @@ theorem prod_rec {F : ℤ → ℤ → E} (hF : TruncSecond F) (l m n : ℤ) :
         rw [cbz_pascal_up, mul_add, add_smul,
           show l + 1 + m - i = l + (m + 1) - i by ring]]
     exact finsum_add_distrib
-      (by simpa using prod_fin hF l (m + 1) n 0)
-      (by simpa only [show l + (m + 1) = l + 1 + m by ring] using
+      (by simpa using! prod_fin hF l (m + 1) n 0)
+      (by simpa only [show l + (m + 1) = l + 1 + m by ring] using!
         prod_fin hF l (m + 1) n 1)
   have h2 : (∑ᶠ i : ℤ, (negOnePow i * cbz l (i - 1)) • F (l + 1 + m - i) (n + i)) =
       -prod F l m (n + 1) := by
@@ -91,7 +91,7 @@ theorem iter_rec {H : ℤ → ℤ → E} (hH : TruncSecond (fun p q => H q p))
         cbz m (i - 1) • H (l + i) (m + (n + 1) - i)) from
     finsum_congr fun i => by
       rw [cbz_pascal_up, add_smul, show m + 1 + n = m + (n + 1) by ring],
-    finsum_add_distrib (by simpa using iter_fin hH l m (n + 1) 0)
+    finsum_add_distrib (by simpa using! iter_fin hH l m (n + 1) 0)
       (iter_fin hH l m (n + 1) 1)]
   congr 1
   rw [← finsum_int_succ_shift
@@ -192,7 +192,7 @@ theorem modeJacobi_of_boundaries {Y : IntertwiningModes M₁ M₂ M₃}
   have hz := Boundary.defect_eq_zero_of_boundaries hF hG hH
     (fun l n => (he l 0 n).mpr (hb a x y l (c + n)))
     (fun m n => (he 0 m n).mpr (hc a x y m (c + n))) l m 0
-  simpa only [Int.cast_zero, add_zero] using (he l m 0).mp hz
+  simpa only [Int.cast_zero, add_zero] using! (he l m 0).mp hz
 
 /-- Reconstruction needs only weight support and the two Jacobi boundaries. -/
 theorem isIntertwiningOperator_of_weight_boundaries {Y : IntertwiningModes M₁ M₂ M₃}

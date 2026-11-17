@@ -106,8 +106,8 @@ theorem cfT_YTL_YTL (α β : L.carrier) (k k' : ℤ)
               fz ((L.form α β : ℤ) : ℂ) (-(-k - 2 + L.form α α)) else 0))
         • eT L hEven hU α (eT L hEven hU β t) := by
   rw [YTL_tmul, map_smul, YTL_tmul, map_smul, map_smul, cfT_tmul, smul_smul, smul_smul]
-  rw [show coeff 0 (DD (chargeCoord L α) (-k - 2 + L.form α α) (DD (chargeCoord L β)
-      (-k' - 2 + L.form β β) 1)) = constantCoeff (DD (chargeCoord L α) (-k - 2 + L.form α α)
+  rw [show (DD (chargeCoord L α) (-k - 2 + L.form α α) (DD (chargeCoord L β)
+      (-k' - 2 + L.form β β) 1)).coeff 0 = constantCoeff (DD (chargeCoord L α) (-k - 2 + L.form α α)
         (DD (chargeCoord L β) (-k' - 2 + L.form β β) 1)) by rw [MvPolynomial.constantCoeff_eq],
     constantCoeff_DD_DD, show pair (chargeCoord L α) (chargeCoord L β) = ((L.form α β : ℤ) : ℂ) from
       sum_chargeCoord L hPos α β]

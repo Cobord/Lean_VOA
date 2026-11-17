@@ -33,6 +33,8 @@ Main results (unconditional, for real `k`):
   family, conditional only on `LayerSignAnchor` and `LayerSignRigidity`.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 namespace AffineSl2BelowCritical
@@ -336,7 +338,7 @@ theorem fieldCov_idFieldA :
 
 theorem fieldCov_YwordA : ∀ w : List (Fin 3 × ℕ),
     FieldCov (compactRho hreal) ((-1 : ℂ) ^ w.length) (YwordA k w) (YwordA k (flipWord w))
-  | [] => by simpa using fieldCov_idFieldA
+  | [] => by simpa using! fieldCov_idFieldA
   | b :: w => by
       rw [YwordA_cons]
       have h := FieldCov.nprod (genFieldA_isField k b.1 b.2)

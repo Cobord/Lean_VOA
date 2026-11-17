@@ -57,7 +57,7 @@ theorem admissible_first_multiplicity (p q : ℕ) (hp : 2≤p) (hq : 0<q) :
   have hm : q-1+1=q := by omega
   have hc : ((p-1 : ℕ) : ℤ)=(p : ℤ)-1 := by omega
   simpa [affineKacMultiplicity,oscillatorEnergy,oscillatorCharge,hr,hm,hc,
-    Nat.mul_comm] using jointIndex_zero_zero_card
+    Nat.mul_comm] using! jointIndex_zero_zero_card
 
 /-- The central polynomial belonging to one Kac root factor, before its
 actual descendant multiplicity is applied. -/
@@ -100,7 +100,6 @@ theorem affineVacuumProduct_admissible_factor (p q : ℕ) (hp : 2≤p) (hq : 0<q
     Finset.mem_erase.mpr ⟨by simp,admissible_first_label_mem p q hp hq⟩
   have he := Finset.mul_prod_erase ((affineKacLabels (q*(p-1)) ((p : ℤ)-1)).erase ((1,0),0))
     (fun i => (affineRootPolynomial i)^affineKacMultiplicity (q*(p-1)) ((p : ℤ)-1) i) hm
-  dsimp only at he
   rw [admissible_first_multiplicity p q hp hq,pow_one,admissible_first_root_polynomial p q hp hq] at he
   exact he.symm
 
@@ -135,7 +134,7 @@ theorem affineVacuumProduct_admissible_simple (p q : ℕ) (hp : 2≤p) (hq : 0<q
   · have hqC : -(q : ℂ)≠0 := neg_ne_zero.mpr (by exact_mod_cast (Nat.ne_of_gt hq))
     simpa only [derivative_mul,derivative_C,derivative_sub,derivative_X,
       sub_zero,zero_mul,mul_one,zero_add,eval_add,eval_mul,eval_sub,eval_X,eval_C,
-      sub_self,mul_zero,zero_add,add_zero] using
+      sub_self,mul_zero,zero_add,add_zero] using!
       mul_ne_zero hqC (admissibleVacuumRemainder_ne_zero p q hp hq hcop)
 
 /-- The actual shifted Verma denominator is nonzero at every admissible
@@ -145,7 +144,7 @@ theorem affineMinusTwoPolynomial_admissible_ne_zero (p q : ℕ) (hp : 2≤p) (hq
     (affineMinusTwoPolynomial (q*(p-1)) (p : ℤ)).eval ((p : ℂ)/q-2)≠0 := by
   have ht : (p : ℂ)/q≠0 := div_ne_zero
     (by exact_mod_cast (show p≠0 by omega)) (by exact_mod_cast (Nat.ne_of_gt hq))
-  have hk : (p : ℂ)/q-2+2≠0 := by simpa only [sub_add_cancel] using ht
+  have hk : (p : ℂ)/q-2+2≠0 := by simpa only [sub_add_cancel] using! ht
   rw [affineMinusTwoPolynomial_eval,weightDeterminant_eq_affineKacProduct_all,
     eval_mul,eval_C]
   exact mul_ne_zero (Finset.prod_ne_zero_iff.mpr (fun i _ => derivativeMultiplier_ne_zero _ hk _ _))

@@ -60,11 +60,11 @@ theorem one_mem_TF : (1 : FockN (rank (latP m))) ∈ TF m hm :=
 
 theorem ωM_mem_TM : ωM m hm ∈ TM m hm := by
   have := iw_mem m hm [(true, 1)] (by decide +kernel)
-  simpa [iwVal, gen] using this
+  simpa [iwVal, gen] using! this
 
 theorem WM_mem_TM : WM m hm ∈ TM m hm := by
   have := iw_mem m hm [(false, 1)] (by decide +kernel)
-  simpa [iwVal, gen] using this
+  simpa [iwVal, gen] using! this
 
 theorem TF_Dop {q : FockN (rank (latP m))} (hq : q ∈ TF m hm) : Dop m q ∈ TF m hm := by
   obtain ⟨x, hx, hxq⟩ := hq
@@ -120,8 +120,8 @@ theorem mem_gradingWN_of_lat {w : ℕ} {r : FockN (rank (latP m))}
   rwa [coordEα_latStateGen_zero, gradingZN_of_nonneg (Int.natCast_nonneg w), Int.toNat_natCast] at this
 
 theorem coeff_FilF {e : ℤ} {R : FockN (rank (latP m))} (hR : R ∈ FilF (latP m) e) :
-    ∀ t, coeff t R ≠ 0 → (monoDeg (latP m) t : ℤ) ≤ e := by
-  refine Submodule.span_induction (p := fun R _ => ∀ t, coeff t R ≠ 0 → (monoDeg (latP m) t : ℤ) ≤ e)
+    ∀ t, R.coeff t ≠ 0 → (monoDeg (latP m) t : ℤ) ≤ e := by
+  refine Submodule.span_induction (p := fun R _ => ∀ t, R.coeff t ≠ 0 → (monoDeg (latP m) t : ℤ) ≤ e)
     ?_ ?_ ?_ ?_ hR
   · rintro _ ⟨s, hs, rfl⟩ t ht
     rw [coeff_monomial] at ht
@@ -130,8 +130,8 @@ theorem coeff_FilF {e : ℤ} {R : FockN (rank (latP m))} (hR : R ∈ FilF (latP 
     · exact absurd rfl ht
   · intro t ht; simp at ht
   · intro x y _ _ hx hy t ht
-    rw [coeff_add] at ht
-    by_cases h : coeff t x = 0
+    rw [MvPolynomial.coeff_add] at ht
+    by_cases h : x.coeff t = 0
     · rw [h, zero_add] at ht; exact hy t ht
     · exact hx t h
   · intro c x _ hx t ht
@@ -139,14 +139,14 @@ theorem coeff_FilF {e : ℤ} {R : FockN (rank (latP m))} (hR : R ∈ FilF (latP 
     exact hx t (right_ne_zero_of_mul ht)
 
 theorem coeff_gradingWN {w : ℕ} {R : FockN (rank (latP m))} (hR : R ∈ gradingWN (rank (latP m)) w)
-    (t : (ℕ × Fin (rank (latP m))) →₀ ℕ) (ht : coeff t R ≠ 0) : monoWt (latP m) t = w := by
+    (t : (ℕ × Fin (rank (latP m))) →₀ ℕ) (ht : R.coeff t ≠ 0) : monoWt (latP m) t = w := by
   have := (mem_gradingWN.mp hR) ht
   rw [← this, Finsupp.weight_apply, monoWt]
   refine Finsupp.sum_congr fun v _ => ?_
   simp [weightFnN, mul_comm]
 
 theorem coeff_even {R : FockN (rank (latP m))} (hR : sigmaN (rank (latP m)) R = R)
-    (t : (ℕ × Fin (rank (latP m))) →₀ ℕ) (ht : coeff t R ≠ 0) : Even (monoDeg (latP m) t) := by
+    (t : (ℕ × Fin (rank (latP m))) →₀ ℕ) (ht : R.coeff t ≠ 0) : Even (monoDeg (latP m) t) := by
   by_contra hodd
   rw [Nat.not_even_iff_odd] at hodd
   have h := coeff_sigmaN m t R
@@ -154,14 +154,14 @@ theorem coeff_even {R : FockN (rank (latP m))} (hR : sigmaN (rank (latP m)) R = 
   have h2 : (t.sum fun _ k => k) = monoDeg (latP m) t := rfl
   rw [h2, Odd.neg_one_pow hodd] at h
   apply ht
-  have : (2 : ℂ) * coeff t R = 0 := by linear_combination h
-  simpa using this
+  have : (2 : ℂ) * R.coeff t = 0 := by linear_combination h
+  simpa using! this
 
 theorem mem_TF_of_support {R : FockN (rank (latP m))}
     (h : ∀ t ∈ R.support, monomial t (1 : ℂ) ∈ TF m hm) : R ∈ TF m hm := by
   rw [R.as_sum]
   refine Submodule.sum_mem _ fun t ht => ?_
-  rw [show monomial t (coeff t R) = coeff t R • monomial t (1 : ℂ) by
+  rw [show monomial t (R.coeff t) = R.coeff t • monomial t (1 : ℂ) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   exact Submodule.smul_mem _ _ (h t ht)
 
@@ -391,7 +391,7 @@ theorem monomial_mem_TF : ∀ (w : ℕ) (s : (ℕ × Fin (rank (latP m))) →₀
       rw [← monomial_two, monomial_mul, one_mul, add_comm]
     rw [hmono, show xk m i * xk m j * monomial s' 1 = r - R by rw [hRr]; ring]
     refine Submodule.sub_mem _ hrTF (mem_TF_of_support m hm fun t ht => ?_)
-    have htne : coeff t R ≠ 0 := Finsupp.mem_support_iff.mp ht
+    have htne : R.coeff t ≠ 0 := Finsupp.mem_support_iff.mp ht
     -- `R` is homogeneous of weight `w`
     have hrw : r ∈ gradingWN (rank (latP m)) w := by
       refine mem_gradingWN_of_lat m hm ?_

@@ -177,15 +177,11 @@ theorem nilExp_logShift (s n : ℂ) (x : M₁) (y : M₂) :
         logShift s Y.1 n 0 x y) y ?_ ?_ ?_
     · intro b y hy
       exact nilExp_logShift_homogeneous N₁ N₂ N₃ Y s n hx hy
-    · dsimp only
-      simp only [map_zero]
+    · simp only [map_zero]
     · intro y z hy hz
-      dsimp only at hy hz ⊢
       simp only [map_add,hy,hz]
-  · dsimp only
-    simp only [map_zero,LinearMap.zero_apply]
+  · simp only [map_zero,LinearMap.zero_apply]
   · intro x z hx hz
-    dsimp only at hx hz ⊢
     simp only [map_add,LinearMap.add_apply,hx,hz]
 
 /-- The genuine logarithmic operator identity behind Jordan branch covariance. -/

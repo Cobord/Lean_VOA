@@ -66,14 +66,14 @@ theorem doublyMarkedZeroLayer_child_singly_le :
     exact Finset.card_pos.mpr hV
   have hrec := singlyMarkedFlag_finrank_le (m + 1) 0 (by omega) (deletedGroup u V) hV'
   rw [Nat.sub_zero, deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [doublyMarkedZeroLayerBound, if_pos rfl] using hrec
+  simpa only [doublyMarkedZeroLayerBound, if_pos rfl] using! hrec
 
 theorem doublyMarkedZeroLayer_child_lower_le (i : ℕ) (hi : 1 ≤ i) :
     Module.finrank ℂ (DoublyMarkedFlagRing (m + 2) (deletedGroup u V) m) ≤
       doublyMarkedZeroLayerBound (deletedGroup u V)ᶜ.card V.card m i := by
   have hrec := doublyMarkedFlag_finrank_le m 0 (by omega) (deletedGroup u V)
   rw [Nat.sub_zero, deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [doublyMarkedZeroLayerBound, if_neg (show i ≠ 0 by omega)] using hrec
+  simpa only [doublyMarkedZeroLayerBound, if_neg (show i ≠ 0 by omega)] using! hrec
 
 theorem doublyMarkedZeroLayer_finrank_le_bound (i : ℕ) (hi : i < m + 2) :
     Module.finrank ℂ (DoublyMarkedFlagRing (m + 3) V (m + 1) ⧸ rootPowerLayerIdeal
@@ -158,7 +158,7 @@ theorem doublyMarkedLayerMap_injective_weak :
   rw [doublyMarkedLayer_finrank_eq_bound m k hk1 hk V hV u hu 0 (by omega)]
   have hrec := weakMarkedFlag_finrank_le (m + 1) k hk1 hk (deletedGroup u V) hV'
   rw [deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [doublyMarkedLayerBound, if_pos rfl] using hrec
+  simpa only [doublyMarkedLayerBound, if_pos rfl] using! hrec
 
 theorem doublyMarkedLayerMap_injective_same (i : ℕ) (hi1 : 1 ≤ i) (hik : i < k) :
     Function.Injective (deletedLayerMap
@@ -168,7 +168,7 @@ theorem doublyMarkedLayerMap_injective_same (i : ℕ) (hi1 : 1 ≤ i) (hik : i <
   rw [doublyMarkedLayer_finrank_eq_bound m k hk1 hk V hV u hu i (by omega)]
   have hrec := doublyMarkedFlag_finrank_le m (k - 1) (by omega) (deletedGroup u V)
   rw [show m - (k - 1) = m + 1 - k by omega, deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [doublyMarkedLayerBound, if_neg (show i ≠ 0 by omega), if_pos hik] using hrec
+  simpa only [doublyMarkedLayerBound, if_neg (show i ≠ 0 by omega), if_pos hik] using! hrec
 
 theorem doublyMarkedLayerMap_injective_lower (i : ℕ) (hik : k + 1 ≤ i) (hi : i < m + 2 - k) :
     Function.Injective (deletedLayerMap
@@ -179,13 +179,13 @@ theorem doublyMarkedLayerMap_injective_lower (i : ℕ) (hik : k + 1 ≤ i) (hi :
   have hrec := doublyMarkedFlag_finrank_le m k (by omega) (deletedGroup u V)
   rw [show m - k = m + 1 - k - 1 by omega, deletedGroup_card_of_notMem V u hu] at hrec
   simpa only [doublyMarkedLayerBound, if_neg (show i ≠ 0 by omega),
-    if_neg (show ¬ i < k by omega), if_neg (show i ≠ k by omega)] using hrec
+    if_neg (show ¬ i < k by omega), if_neg (show i ≠ k by omega)] using! hrec
 
 /-- The product of the remaining first-group roots in the singly marked child at the zero point
 layer has exactly the configuration count of the unmarked product bound. -/
 theorem doublyMarkedLayer_childProduct_finrank_eq :
-    Module.finrank ℂ ((Ideal.span {∏ j ∈ (deletedGroup u V)ᶜ,
-        quotientRoot (singlyMarkedFlagIdeal (m + 2) (deletedGroup u V) (m + 1 - k)) j}
+    Module.finrank ℂ ((Ideal.span {(∏ j ∈ (deletedGroup u V)ᶜ,
+        quotientRoot (singlyMarkedFlagIdeal (m + 2) (deletedGroup u V) (m + 1 - k)) j)}
           ).restrictScalars ℂ) =
       V.card * (V.card - 1).choose 2 * Nat.card (FullFlagConfiguration (m - 1) (k - 1)) ∧
     Module.finrank ℂ (MvPolynomial (Fin (m + 2)) ℂ ⧸
@@ -272,7 +272,7 @@ theorem weakLayer_child_weak_le (i : ℕ) (hi : i < k - 1) :
   have hrec := weakMarkedFlag_finrank_le (m + 1) (k - 1) (by omega) (by omega)
     (deletedGroup u V) hV'
   rw [show m + 1 - (k - 1) = m + 2 - k by omega, deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [weakLayerBound, if_pos hi] using hrec
+  simpa only [weakLayerBound, if_pos hi] using! hrec
 
 theorem weakLayer_child_singly_le :
     Module.finrank ℂ (SinglyMarkedFlagRing (m + 2) (deletedGroup u V) (m + 2 - k)) ≤
@@ -282,7 +282,7 @@ theorem weakLayer_child_singly_le :
     exact Finset.card_pos.mpr hV
   have hrec := singlyMarkedFlag_finrank_le (m + 1) (k - 1) (by omega) (deletedGroup u V) hV'
   rw [show m + 1 - (k - 1) = m + 2 - k by omega, deletedGroup_card_of_notMem V u hu] at hrec
-  simpa only [weakLayerBound, if_neg (lt_irrefl _), if_pos rfl] using hrec
+  simpa only [weakLayerBound, if_neg (lt_irrefl _), if_pos rfl] using! hrec
 
 theorem weakLayer_child_lower_le (i : ℕ) (hik : k ≤ i) (hi : i < m + 2 - k) :
     Module.finrank ℂ (WeakMarkedFlagRing (m + 2) (deletedGroup u V) (m + 2 - k - 1)) ≤
@@ -293,7 +293,7 @@ theorem weakLayer_child_lower_le (i : ℕ) (hik : k ≤ i) (hi : i < m + 2 - k) 
   have hrec := weakMarkedFlag_finrank_le (m + 1) k hk1 (by omega) (deletedGroup u V) hV'
   rw [show m + 1 - k = m + 2 - k - 1 by omega, deletedGroup_card_of_notMem V u hu] at hrec
   simpa only [weakLayerBound, if_neg (show ¬ i < k - 1 by omega),
-    if_neg (show i ≠ k - 1 by omega), if_pos hi] using hrec
+    if_neg (show i ≠ k - 1 by omega), if_pos hi] using! hrec
 
 theorem weakLayer_child_doubly_le :
     Module.finrank ℂ (DoublyMarkedFlagRing (m + 2) (deletedGroup u V) (m + 2 - k - 1)) ≤
@@ -301,7 +301,7 @@ theorem weakLayer_child_doubly_le :
   have hrec := doublyMarkedFlag_finrank_le m (k - 1) (by omega) (deletedGroup u V)
   rw [show m - (k - 1) = m + 2 - k - 1 by omega, deletedGroup_card_of_notMem V u hu] at hrec
   simpa only [weakLayerBound, if_neg (show ¬ m + 2 - k < k - 1 by omega),
-    if_neg (show m + 2 - k ≠ k - 1 by omega), if_neg (lt_irrefl _)] using hrec
+    if_neg (show m + 2 - k ≠ k - 1 by omega), if_neg (lt_irrefl _)] using! hrec
 
 theorem weakLayer_finrank_le_bound (i : ℕ) (hi : i < m + 2 - k + 1) :
     Module.finrank ℂ (WeakMarkedFlagRing (m + 3) V (m + 2 - k) ⧸ rootPowerLayerIdeal

@@ -81,7 +81,7 @@ theorem rootedGordonRootFactor_isWeightedHomogeneous {n : ℕ} (rho : Fin n → 
       convert
         (MvPolynomial.isWeightedHomogeneous_X K (fun _ => 1) i).pow (slotColor i) using 1 <;>
         simp)
-  simpa [rootedGordonRootFactor] using h
+  simpa [rootedGordonRootFactor] using! h
 
 theorem rootedGordonPairFactor_isWeightedHomogeneous {n : ℕ} (rho : Fin n → ℕ) :
     (rootedGordonPairFactor (K := K) rho).IsWeightedHomogeneous
@@ -96,11 +96,11 @@ theorem rootedGordonPairFactor_isWeightedHomogeneous {n : ℕ} (rho : Fin n → 
     (fun ij => 2 * min (slotColor ij.1.1) (slotColor ij.1.2))
     (w := fun _ => 1)
     (fun ij _ => by
-      simpa only [nsmul_eq_mul, mul_one] using
+      simpa only [nsmul_eq_mul, mul_one] using!
         (VOA.P3ResidualWindowPreservation.collisionFactor_isWeightedHomogeneous_one
           (K := K) ij.1.1 ij.1.2).pow
             (2 * min (slotColor ij.1.1) (slotColor ij.1.2)))
-  simpa [rootedGordonPairFactor] using h
+  simpa [rootedGordonPairFactor] using! h
 
 /-- The scalar rooted Gordon conductor is homogeneous in the explicit pair-sum degree. -/
 theorem rootedGordonConductor_isWeightedHomogeneous {n : ℕ} (rho : Fin n → ℕ) :

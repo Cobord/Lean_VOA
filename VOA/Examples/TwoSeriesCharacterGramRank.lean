@@ -181,7 +181,6 @@ theorem rank_boundQ (m : ℕ) :
     have hL1 : dT (t0 n) ^ 2 * K * GRq n m (t0 n) ≠ 0 :=
       mul_ne_zero (mul_ne_zero (pow_ne_zero _ hM) (diag_ne _)) (GRq_ne n m)
     apply hL1
-    simp only at hlim
     rw [hlim]
     simp only [sub_self, zero_pow hr0.ne', zero_mul]
   have hrn := ((PD (1 + m) f).map (Polynomial.eval c0)).mulVecLin.finrank_range_add_finrank_ker

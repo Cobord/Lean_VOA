@@ -57,6 +57,8 @@ residue must be taken of `f`, **not** of `P` — `Res(P‴·P) ≡ 0` — and th
 identity in `m` for each `J ≥ 1`** (`J = 2` gives `−(m+1) = −(m−n)/2`; every other `J ≥ 1` gives `0`).
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open PowerSeries

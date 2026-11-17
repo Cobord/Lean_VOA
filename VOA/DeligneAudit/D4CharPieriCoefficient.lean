@@ -73,7 +73,7 @@ theorem ePieri_unit (q : Rˣ) (u : ℕ → Rˣ) : EPieri (q : R) u := by
     rfl
   have hc := congrArg (fun p : Polynomial R => p.coeff r) hp
   simpa only [Polynomial.coeff_mul_C, pieri_elementary_polynomial_coeff,
-    pieri_coeff_subset_sum, pieriRHS] using hc
+    pieri_coeff_subset_sum, pieriRHS] using! hc
 
 end
 

@@ -115,7 +115,7 @@ theorem doublyMarkedPoint_powerSum_mem (B k : ℕ) (V : Finset (Fin (B + 2)))
       X i ^ (B - k) := by
     intro i
     have h := affineRootProduct_top (σ := Fin (B + 2)) i (List.ofFn ζ)
-    simpa only [List.length_ofFn] using h
+    simpa only [List.length_ofFn] using! h
   have heval : ∀ (x : Fin (B + 2) → ℂ) i, aeval x (Q i) =
       ((List.ofFn ζ).map fun z => x i - z).prod := by
     intro x i
@@ -202,7 +202,7 @@ theorem doublyMarkedFlagIdeal_le_pointInitialIdeal (B k : ℕ) (V : Finset (Fin 
       exact Finset.prod_eq_zero hi h0
     · have h := IsHomogeneous.prod S (fun i => (X i : MvPolynomial (Fin (B + 2)) ℂ))
         (fun _ => 1) (fun i _ => isHomogeneous_X ℂ i)
-      simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, smul_eq_mul] using h
+      simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, smul_eq_mul] using! h
   · apply Ideal.span_le.mpr
     rintro p ⟨i, rfl⟩
     exact hcut i
@@ -233,11 +233,11 @@ theorem doublyMarkedFlag_finrank_ge (B k : ℕ) (V : Finset (Fin (B + 2))) :
   have hζ : Function.Injective ζ := by
     intro a b h
     apply Fin.ext
-    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using h
+    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using! h
     exact_mod_cast h'
   have hζ0 : ∀ a, ζ a ≠ 0 := by
     intro a h
-    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using h
+    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using! h
     exact Nat.succ_ne_zero a.val (by exact_mod_cast h')
   letI : Fintype (FullFlagConfiguration B k) := Fintype.ofFinite _
   obtain ⟨hfin, hdim⟩ := pointInitialQuotient_finrank (doublyMarkedPoint B k V ζ)

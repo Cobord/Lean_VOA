@@ -95,7 +95,7 @@ private theorem xz_sRootFactor_image (a b c d : ℕ) :
       rw [hzero]
       simp [speciesShiftExponent, newXZLabelX, newXZLabelZ, boundarySpeciesShift]
     · simp only [mapDomain_xzToDiagonalLabel_apply_passive,
-        Finsupp.mapDomain_apply Sum.inr_injective]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
       rcases j with ⟨A, j⟩
       cases A <;>
         simp [speciesShiftExponent, liftXZPassiveLabel, boundarySpeciesShift]
@@ -126,7 +126,7 @@ private theorem yy_sRootFactor_image (a b c d : ℕ) :
       rw [hzero]
       simp [speciesShiftExponent, newYYLabelZero, newYYLabelOne, boundarySpeciesShift]
     · simp only [mapDomain_yyToDiagonalLabel_apply_passive,
-        Finsupp.mapDomain_apply Sum.inr_injective]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
       rcases j with ⟨A, j⟩
       cases A <;>
         simp [speciesShiftExponent, liftYYPassiveLabel, boundarySpeciesShift]
@@ -185,9 +185,28 @@ private theorem xz_currentSCollisionProduct_image (a b c d : ℕ) :
           (currentSCollisionProduct (K := K) a b c d) *
         activeCurrentSCollisionProduct (K := K) a b c d := by
   classical
-  simp [currentSCollisionProduct, activeCurrentSCollisionProduct,
+  have hX0 :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.X, (0 : Fin (a + 1))⟩ =
+        (Sum.inl () : BoundaryDiagonalLabel a b c d) := rfl
+  have hX (i : Fin a) :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.X, i.succ⟩ =
+        (Sum.inr ⟨BoundarySpecies.X, i⟩ : BoundaryDiagonalLabel a b c d) := rfl
+  have hY (i : Fin b) :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.Y, i⟩ =
+        (Sum.inr ⟨BoundarySpecies.Y, i⟩ : BoundaryDiagonalLabel a b c d) := rfl
+  have hZ0 :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.Z, (0 : Fin (c + 1))⟩ =
+        (Sum.inl () : BoundaryDiagonalLabel a b c d) := rfl
+  have hZ (i : Fin c) :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.Z, i.succ⟩ =
+        (Sum.inr ⟨BoundarySpecies.Z, i⟩ : BoundaryDiagonalLabel a b c d) := rfl
+  have hS (i : Fin d) :
+      xzToDiagonalLabel a b c d ⟨BoundarySpecies.S, i⟩ =
+        (Sum.inr ⟨BoundarySpecies.S, i⟩ : BoundaryDiagonalLabel a b c d) := rfl
+  simp [hX0, hX, hY, hZ0, hZ, hS,
+    currentSCollisionProduct, activeCurrentSCollisionProduct,
     xzDiagonalSubstitution, passiveDiagonalSubstitution, collisionFactor,
-    boundarySLabel, boundaryCurrentLabel, xzToDiagonalLabel,
+    boundarySLabel, boundaryCurrentLabel,
     targetSLabel, targetCollisionLabel, Fintype.prod_sum_type,
     Fintype.prod_prod_type, Fin.prod_univ_succ]
   rw [Finset.prod_pow]

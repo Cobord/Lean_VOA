@@ -13,11 +13,11 @@ theorem a2KeyEnum_injective (p q : ℕ) :
   rcases lt_trichotomy i j with hlt | heq | hgt
   · have hless := a2KeyEnum_descending p q i j hlt
     exact False.elim ((a2KeyLess_irrefl q (a2KeyEnum p q i))
-      (by simpa [hij] using hless))
+      (by simpa [hij] using! hless))
   · exact heq
   · have hless := a2KeyEnum_descending p q j i hgt
     exact False.elim ((a2KeyLess_irrefl q (a2KeyEnum p q i))
-      (by simpa [hij] using hless))
+      (by simpa [hij] using! hless))
 
 /-- Across distinct keys with fixed colour counts, each two-box pair
 contributes to at most one degree. -/

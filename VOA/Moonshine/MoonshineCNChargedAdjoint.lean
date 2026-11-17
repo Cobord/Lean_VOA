@@ -14,7 +14,10 @@ theorem latForm_canonicalChargedField_state (hEven : L.Even) (γ : L.carrier) (n
     latForm L (mode (canonicalChargedField F γ) n (latStateGen L p β)) (latStateGen L q δ)
       = (-1 : ℂ) ^ (LatGen.halfNorm L γ) * latForm L (latStateGen L p β)
           (mode (canonicalChargedField F γ) (2 * LatGen.halfNorm L γ - n - 2) (latStateGen L q δ)) := by
-  rw [mode_apply, mode_apply, canonicalChargedField_tmul, canonicalChargedField_tmul, map_smul, LinearMap.smul_apply,
+  show latForm L (canonicalChargedField F γ (-n - 1) (latStateGen L p β)) (latStateGen L q δ)
+      = (-1 : ℂ) ^ (LatGen.halfNorm L γ) * latForm L (latStateGen L p β)
+          (canonicalChargedField F γ (-(2 * LatGen.halfNorm L γ - n - 2) - 1) (latStateGen L q δ))
+  rw [canonicalChargedField_tmul, canonicalChargedField_tmul, map_smul, LinearMap.smul_apply,
     smul_eq_mul, map_smul, smul_eq_mul, latForm_state, latForm_state]
   by_cases h : γ + β + δ = 0
   · have hδ : δ = -(γ + β) := by rw [eq_neg_iff_add_eq_zero, add_comm]; exact h

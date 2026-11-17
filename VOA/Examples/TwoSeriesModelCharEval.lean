@@ -170,7 +170,7 @@ def tp (c : Fin 2) (b : ℕ) : TPoly := if c = 0 then (if b = 0 then 1 else 0) e
 
 /-- The lowest part `Σ_{b+d=a} tp_c(b) · G_{g,d}` of a block coefficient. -/
 def lowC (c : Fin 2) (g : Fin 4) (a : ℕ) : MPoly TPoly :=
-  ∑ p ∈ Finset.antidiagonal a, MvPolynomial.C (tp c p.1) * ι TPoly (genCoeff g p.2)
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal a, MvPolynomial.C (tp c p.1) * ι TPoly (genCoeff g p.2)
 
 theorem tp_lowDeg (c : Fin 2) (b : ℕ) : lowDeg (c : ℕ) (tp c b) := by
   unfold tp
@@ -193,9 +193,9 @@ theorem coeff_gS_T (g : Fin 4) (a : ℕ) :
   · rintro ⟨b, d⟩ hp hne
     have : b ≠ 0 := by
       intro hb; apply hne; subst hb
-      simp only [Finset.mem_antidiagonal, zero_add] at hp; rw [hp]
+      simp only [Finset.HasAntidiagonal.mem_antidiagonal, zero_add] at hp; rw [hp]
     simp [tp, this]
-  · intro h; exact absurd (Finset.mem_antidiagonal.mpr (zero_add a)) h
+  · intro h; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (zero_add a)) h
 
 theorem coeff_tS_mul_gS (g : Fin 4) (a : ℕ) :
     PowerSeries.coeff a (tS TPoly X * gS TPoly g) = lowC 1 g a := by
@@ -225,7 +225,7 @@ theorem blk_coeff_sub_lowM_10 (g : Fin 4) (hg : g ≠ 3) (a : ℕ) :
 
 theorem blk_coeff_sub_lowM_13 (a : ℕ) :
     PowerSeries.coeff a (blk TPoly X 1 3) - lowC 1 3 a =
-      -((1 / 2 : ℂ) • ∑ p ∈ Finset.antidiagonal a, MvPolynomial.C (X p.1 * X p.2)) := by
+      -((1 / 2 : ℂ) • ∑ p ∈ Finset.HasAntidiagonal.antidiagonal a, MvPolynomial.C (X p.1 * X p.2)) := by
   have hb : blk TPoly X 1 3 = tS TPoly X * gS TPoly 3 -
       (1 / 2 : ℂ) • (tS TPoly X * tS TPoly X) := by simp [blk]
   rw [hb, map_sub, coeff_tS_mul_gS, sub_sub_cancel_left, PowerSeries.coeff_smul,
@@ -274,7 +274,7 @@ theorem prod_sub_lowM : ∀ {K : ℕ} (c : Fin K → ℕ) (x y : Fin K → MPoly
     rw [Fin.prod_univ_succ, Fin.prod_univ_succ, Fin.sum_univ_succ]
     have hy0 : LowM (c 0) (y 0) := by
       have := (hx 0).add ((hy 0).mono (Nat.le_succ _))
-      simpa using this
+      simpa using! this
     refine ⟨?_, hy0.mul ih.2⟩
     have e : y 0 * ∏ i : Fin K, y i.succ - x 0 * ∏ i : Fin K, x i.succ =
         (y 0 - x 0) * ∏ i : Fin K, y i.succ +
@@ -289,7 +289,7 @@ theorem prod_sub_lowM : ∀ {K : ℕ} (c : Fin K → ℕ) (x y : Fin K → MPoly
 /-! ### Expanding the lowest parts and evaluating -/
 
 theorem prod_lowC {K : ℕ} (c : Fin K → Fin 2) (g : Fin K → Fin 4) (a : Fin K → ℕ) :
-    ∏ i, lowC (c i) (g i) (a i) = ∑ p ∈ Fintype.piFinset (fun i => Finset.antidiagonal (a i)),
+    ∏ i, lowC (c i) (g i) (a i) = ∑ p ∈ Fintype.piFinset (fun i => Finset.HasAntidiagonal.antidiagonal (a i)),
       MvPolynomial.C (∏ i, tp (c i) (p i).1) * ι TPoly (Pga g (toF fun i => (p i).2)) := by
   simp only [lowC]
   rw [Finset.prod_univ_sum]
@@ -301,7 +301,7 @@ theorem prod_lowC {K : ℕ} (c : Fin K → Fin 2) (g : Fin K → Fin 4) (a : Fin
 theorem Φ_pblk {K S : ℕ} (F : MvPolynomial (Fin S) ℂ) (c : Fin K → Fin 2) (hc : ∑ i, (c i : ℕ) = S)
     (g : Fin K → Fin 4) (a : Fin K → ℕ) :
     VOA.TwoSeries.StrictModel.Φ TPoly (ψF F) (pblk TPoly X c g a) =
-      ∑ p ∈ Fintype.piFinset (fun i => Finset.antidiagonal (a i)),
+      ∑ p ∈ Fintype.piFinset (fun i => Finset.HasAntidiagonal.antidiagonal (a i)),
         ψF F (∏ i, tp (c i) (p i).1) • Pga g (toF fun i => (p i).2) := by
   have hlow := (prod_sub_lowM (fun i => (c i : ℕ)) (fun i => lowC (c i) (g i) (a i))
     (fun i => PowerSeries.coeff (a i) (blk TPoly X (c i) (g i)))
@@ -315,8 +315,8 @@ theorem Φ_pblk {K S : ℕ} (F : MvPolynomial (Fin S) ℂ) (c : Fin K → Fin 2)
   exact VOA.TwoSeries.StrictModel.Φ_C_mul_ι TPoly _ _ _
 
 theorem coeff_rename_natAdd {m s : ℕ} (F : MvPolynomial (Fin s) ℂ) (b : Fin (m + s) → ℕ) :
-    coeff (toF b) (rename (Fin.natAdd m) F) =
-      if ∀ k : Fin m, b (Fin.castAdd s k) = 0 then coeff (toF fun j => b (Fin.natAdd m j)) F
+    (rename (Fin.natAdd m) F).coeff (toF b) =
+      if ∀ k : Fin m, b (Fin.castAdd s k) = 0 then F.coeff (toF fun j => b (Fin.natAdd m j))
       else 0 := by
   classical
   split_ifs with hb
@@ -326,7 +326,7 @@ theorem coeff_rename_natAdd {m s : ℕ} (F : MvPolynomial (Fin s) ℂ) (b : Fin 
       · rw [toF_apply, hb k, Finsupp.mapDomain_notin_range]
         rintro ⟨j, hj⟩
         exact absurd (congrArg Fin.val hj) (by simp; omega)
-      · rw [toF_apply, Finsupp.mapDomain_apply (Fin.natAdd_injective s m), toF_apply]
+      · rw [toF_apply, Finsupp.mapDomain_apply_of_injective (Fin.natAdd_injective s m), toF_apply]
     rw [he, coeff_rename_mapDomain _ (Fin.natAdd_injective s m)]
   · apply coeff_rename_eq_zero
     intro u hu
@@ -340,7 +340,7 @@ theorem coeff_rename_natAdd {m s : ℕ} (F : MvPolynomial (Fin s) ℂ) (b : Fin 
     exact absurd (congrArg Fin.val hj) (by simp; omega)
 
 theorem ψF_tp_col {m s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (b : Fin (m + s) → ℕ) :
-    ψF F (∏ i, tp (col m s i) (b i)) = coeff (toF b) (rename (Fin.natAdd m) F) := by
+    ψF F (∏ i, tp (col m s i) (b i)) = (rename (Fin.natAdd m) F).coeff (toF b) := by
   classical
   rw [coeff_rename_natAdd, Fin.prod_univ_add]
   simp only [col, Fin.append_left, Fin.append_right, tp, if_true,
@@ -354,19 +354,19 @@ theorem ψF_tp_col {m s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (b :
 
 theorem sum_piFinset_antidiagonal {K : ℕ} {M : Type*} [AddCommMonoid M] (a : Fin K → ℕ)
     (f : (Fin K →₀ ℕ) → (Fin K →₀ ℕ) → M) :
-    ∑ p ∈ Fintype.piFinset (fun i => Finset.antidiagonal (a i)),
+    ∑ p ∈ Fintype.piFinset (fun i => Finset.HasAntidiagonal.antidiagonal (a i)),
         f (toF fun i => (p i).1) (toF fun i => (p i).2) =
-      ∑ x ∈ Finset.antidiagonal (toF a), f x.1 x.2 := by
+      ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (toF a), f x.1 x.2 := by
   refine Finset.sum_nbij' (fun p => ((toF fun i => (p i).1), (toF fun i => (p i).2)))
     (fun x i => (x.1 i, x.2 i)) ?_ ?_ ?_ ?_ ?_
   · intro p hp
-    simp only [Fintype.mem_piFinset, Finset.mem_antidiagonal] at hp ⊢
+    simp only [Fintype.mem_piFinset, Finset.HasAntidiagonal.mem_antidiagonal] at hp ⊢
     ext i; simp [hp i]
   · intro x hx
-    simp only [Fintype.mem_piFinset, Finset.mem_antidiagonal] at hx ⊢
+    simp only [Fintype.mem_piFinset, Finset.HasAntidiagonal.mem_antidiagonal] at hx ⊢
     intro i
     have := congrArg (· i) hx
-    simpa using this
+    simpa using! this
   · intro p _; funext i; simp
   · intro x _; ext i <;> simp
   · intro p _; rfl
@@ -377,12 +377,11 @@ theorem lam_ψF_pblk {m s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (m
     (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l) (α : Fin (m + s) → ℕ) (g : Fin (m + s) → Fin 4)
     (a : Fin (m + s) → ℕ) :
     Lam ms l α (VOA.TwoSeries.StrictModel.Φ TPoly (ψF F) (pblk TPoly X (col m s) g a)) =
-      coeff (toF a) (rename (Fin.natAdd m) F * (esymmPow α * Apol ms l g)) := by
+      (rename (Fin.natAdd m) F * (esymmPow α * Apol ms l g)).coeff (toF a) := by
   rw [Φ_pblk F (col m s) (sum_col' m s), map_sum, coeff_mul]
   simp only [map_smul, smul_eq_mul, ψF_tp_col hF]
   have h := sum_piFinset_antidiagonal a (fun b d =>
-    coeff b (rename (Fin.natAdd m) F) * coeff d (esymmPow α * Apol ms l g))
-  simp only at h
+    (rename (Fin.natAdd m) F).coeff b * (esymmPow α * Apol ms l g).coeff d)
   rw [← h]
   apply Finset.sum_congr rfl
   intro p _

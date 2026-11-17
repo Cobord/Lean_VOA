@@ -14,6 +14,9 @@ noncomputable section
 open Module
 namespace VOA.Moonshine.ConwayNorton
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {L : Type*} [LieRing L] [LieAlgebra ℂ L] (S : Submodule ℂ L)
 variable {ι : Type*} (b : Basis ι ℂ S)
 

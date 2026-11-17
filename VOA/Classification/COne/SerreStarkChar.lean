@@ -45,7 +45,7 @@ theorem exists_Gamma0_lift (N : ℕ) [NeZero N] (u : (ZMod N)ˣ) :
   obtain ⟨x, y, hxy⟩ := hcop
   refine ⟨⟨!![y, -x; (N : ℤ), (d : ℤ)], ?_⟩, ?_, ?_⟩
   · rw [Matrix.det_fin_two_of]; linear_combination hxy
-  · rw [CongruenceSubgroup.Gamma0_mem]; simp
+  · exact CongruenceSubgroup.Gamma0_mem.2 (by simp)
   · simp [d]
 
 /-- A chosen lift `γ_u ∈ Γ₀(N)` of `u ∈ (ℤ/N)ˣ`. -/

@@ -169,9 +169,9 @@ theorem auxiliaryCosetToCohomology_mode
     (parityCompatible_tensorSVA V W hV hW hVW) hg
     (auxiliaryCosetEmbedding A.toAffineSl2Action B.toAffineSl2Action hV hW hVW x)
     (auxiliaryCosetEmbedding A.toAffineSl2Action B.toAffineSl2Action hV hW hVW y) n)
-  congr 1
-  apply Subtype.ext
-  exact auxiliaryVacuumEmbedding_mode (x : M) (y : M) n
+  exact congrArg (cosetToCohomology (tensorTranslatedAffineActionAt A B hV hW hVW (-4) hlevel)
+    (parityCompatible_tensorSVA V W hV hW hVW) hg)
+    (Subtype.ext (auxiliaryVacuumEmbedding_mode (x : M) (y : M) n))
 
 end Translated
 end VOA.Sl2Coset

@@ -24,19 +24,19 @@ theorem qbinom_X_symm (n k : ℕ) (hk : k ≤ n) :
   rw [Nat.sub_sub_self hk] at h₁
   calc
     _ = CarrierChain.qpochGen Polynomial.X n := by
-      simpa only [mul_assoc, mul_comm, mul_left_comm] using h₁
-    _ = _ := by simpa only [mul_assoc] using h₂.symm
+      simpa only [mul_assoc, mul_comm, mul_left_comm] using! h₁
+    _ = _ := by simpa only [mul_assoc] using! h₂.symm
 
 /-- Gaussian symmetry in any commutative ring, even when Pochhammer factors vanish. -/
 theorem qbinom_symm {R : Type*} [CommRing R] (q : R) (n k : ℕ) (hk : k ≤ n) :
     qbinom q n (n - k) = qbinom q n k := by
   have h := congrArg (Polynomial.eval₂RingHom (Int.castRingHom R) q)
     (qbinom_X_symm n k hk)
-  simpa only [A2.map_qbinom, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using h
+  simpa only [A2.map_qbinom, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using! h
 
 theorem qbinom_diagonal {R : Type*} [CommRing R] (q : R) (n : ℕ) :
     qbinom q n n = 1 := by
-  simpa only [Nat.sub_zero, qbinom_zero_right] using qbinom_symm q n 0 (Nat.zero_le n)
+  simpa only [Nat.sub_zero, qbinom_zero_right] using! qbinom_symm q n 0 (Nat.zero_le n)
 
 end VOA.DeligneAudit.D4Char
 

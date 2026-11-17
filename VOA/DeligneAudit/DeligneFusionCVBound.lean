@@ -64,11 +64,11 @@ theorem SL2_quot {E H F : ℕ → Module.End ℂ V} (h : SL2 E H F) (K : Submodu
     refine qext _ _ fun v => ?_ <;>
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.mul_apply, Submodule.mkQ_apply,
       Submodule.mapQ_apply, ← Submodule.Quotient.mk_sub, ← Submodule.Quotient.mk_smul] <;> congr 1
-  · have := congrArg (fun T => T v) (h.hEF s k); simpa [Module.End.mul_apply] using this
-  · have := congrArg (fun T => T v) (h.hHF p k); simpa [Module.End.mul_apply] using this
-  · have := congrArg (fun T => T v) (h.hHE p q); simpa [Module.End.mul_apply] using this
-  · have := congrArg (fun T => T v) (h.hFF i j); simpa [Module.End.mul_apply] using this
-  · have := congrArg (fun T => T v) (h.hEE i j); simpa [Module.End.mul_apply] using this
+  · have := congrArg (fun T => T v) (h.hEF s k); simpa [Module.End.mul_apply] using! this
+  · have := congrArg (fun T => T v) (h.hHF p k); simpa [Module.End.mul_apply] using! this
+  · have := congrArg (fun T => T v) (h.hHE p q); simpa [Module.End.mul_apply] using! this
+  · have := congrArg (fun T => T v) (h.hFF i j); simpa [Module.End.mul_apply] using! this
+  · have := congrArg (fun T => T v) (h.hEE i j); simpa [Module.End.mul_apply] using! this
 
 /-- Rank–nullity inequality for a submodule. -/
 theorem finrank_le_map_add_inf' {W : Type u} [AddCommGroup W] [Module ℂ W] (f : V →ₗ[ℂ] W)
@@ -104,7 +104,7 @@ theorem cv_nil : CVGoal.{u} [] := by
   haveI : FiniteDimensional ℂ (Fspan F y) := Submodule.finiteDimensional_of_le hle
   refine ⟨inferInstance, ?_⟩
   calc Module.finrank ℂ (Fspan F y) ≤ Module.finrank ℂ (ℂ ∙ y) := Submodule.finrank_mono hle
-    _ ≤ 1 := by simpa using finrank_span_le_card ({y} : Set V)
+    _ ≤ 1 := by simpa using! finrank_span_le_card ({y} : Set V)
     _ = _ := by simp
 
 theorem cv_single (a : ℕ) : CVGoal.{u} [a] := by
@@ -145,7 +145,7 @@ theorem hw_pow_Fb {V : Type u} [AddCommGroup V] [Module ℂ V] {E H F : ℕ → 
     (hH : ∀ p, 1 ≤ p → H p y = 0) (hF : ∀ q, L1 + 1 ≤ q → F q y = 0) {c0 : ℂ} (hH0 : H 0 y = c0 • y) :
     ∀ n, (∀ s, E s ((F L1 ^ n) y) = 0) ∧ (∀ p, 1 ≤ p → H p ((F L1 ^ n) y) = 0) ∧
       (∀ q, L1 + 1 ≤ q → F q ((F L1 ^ n) y) = 0) ∧ ∃ c : ℂ, H 0 ((F L1 ^ n) y) = c • (F L1 ^ n) y
-  | 0 => ⟨by simpa using hE, by simpa using hH, by simpa using hF, c0, by simpa using hH0⟩
+  | 0 => ⟨by simpa using! hE, by simpa using! hH, by simpa using! hF, c0, by simpa using! hH0⟩
   | n + 1 => by
       obtain ⟨h1, h2, h3, c, h4⟩ := hw_pow_Fb hS hL1 hE hH hF hH0 n
       obtain ⟨g1, g2, g3⟩ := hw_Fb hS.hEF hS.hHF hS.hFF hL1 h1 h2 h3

@@ -280,15 +280,16 @@ noncomputable def YeαFam (t : ℤ) (n : ℤ) : ℂ →ₗ[ℂ] (B →ₗ[ℂ] L
 /-- The genuine **lattice vertex operator** `Y(eᵅ,z)` as a `FormalDist (End LatModule)`, built
 from real combinators (so ℂ-linearity is automatic): the `zᵗ`-coefficient sends the basis state
 `p ⊗ e^{nα}` to `(EE_{t-2n} p) ⊗ e^{(n+1)α}`. -/
-noncomputable def Yeα (t : ℤ) : LatModule →ₗ[ℂ] LatModule :=
-  TensorProduct.lift (Finsupp.lsum ℂ (YeαFam t)).flip
+noncomputable def Yeα : FormalDist (Module.End ℂ LatModule) := fun t =>
+  TensorProduct.lift ((Finsupp.lsum ℂ (YeαFam t)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap).flip
 
 /-- The defining action of `Y(eᵅ,z)` on a basis state `p ⊗ e^{nα}`. -/
 theorem Yeα_tmul (t n : ℤ) (p : B) :
     Yeα t (p ⊗ₜ[ℂ] eVec n) = (EE (t - 2 * n) p) ⊗ₜ[ℂ] eVec (n + 1) := by
   rw [Yeα, TensorProduct.lift.tmul]
-  change (Finsupp.lsum ℂ (YeαFam t)) (eVec n) p = _
-  rw [eVec, Finsupp.lsum_single, YeαFam, LinearMap.toSpanSingleton_apply, one_smul,
+  change (Finsupp.lsum ℂ (YeαFam t)) (Finsupp.single n 1) p = _
+  rw [Finsupp.lsum_single, YeαFam, LinearMap.toSpanSingleton_apply, one_smul,
     LinearMap.comp_apply, LinearMap.flip_apply, TensorProduct.mk_apply]
 
 /-! ## §6  Genuine creation (VA3 on the lattice generator)
@@ -1014,11 +1015,12 @@ theorem Yeα_bracket_zero : bracketDist Yeα Yeα = 0 := by
   | zero => rw [map_zero]
   | add y1 y2 h1 h2 => rw [map_add, h1, h2, add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, h1, h2, add_zero]
       | single n a =>
-          rw [(Finsupp.smul_single_one n a).symm]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, Yeα_bracket_on_state eeMaster, smul_zero]
 
 /-- **`Local Yeα Yeα`** (the main lattice mutual-locality input, bound `N = 0`): the genuine
@@ -1147,7 +1149,7 @@ theorem zGradeOp_tmul (p : B) (n : ℤ) :
 
 /-- The **boson current** `α(z)` on `LatModule`: the boson dressing on the Fock factor plus the
 zero-mode `α₀ = z^{α₀}`-grading `zGradeOp` on the lattice factor (the `z₁⁻¹`-coefficient). -/
-noncomputable def alphaLat (j : ℤ) : End ℂ LatModule :=
+noncomputable def alphaLat : FormalDist (End ℂ LatModule) := fun j =>
   LinearMap.rTensor LatGrp (alphaField j) + (if j = -1 then zGradeOp else 0)
 
 theorem alphaLat_tmul (j : ℤ) (p : B) (n : ℤ) :
@@ -1203,12 +1205,12 @@ theorem alphaLat_comm_Yeα (j t : ℤ) :
   | zero => rw [map_zero, map_zero]
   | add y1 y2 h1 h2 => rw [map_add, map_add, h1, h2]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => erw [TensorProduct.tmul_zero, map_zero, map_zero]
       | add g1 g2 h1 h2 => erw [TensorProduct.tmul_add, map_add, map_add, h1, h2]
       | single n a =>
-          rw [show (Finsupp.single n a : LatGrp) = a • eVec n from
-            (Finsupp.smul_single_one n a).symm]
+          rw [show (AddMonoidAlgebra.single n a : LatGrp) = a • eVec n by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, map_smul, alphaLat_comm_Yeα_tmul,
             LinearMap.smul_apply]
 

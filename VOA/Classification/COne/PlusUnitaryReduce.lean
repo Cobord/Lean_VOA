@@ -94,7 +94,7 @@ theorem exists_eigen_lowest {M : Type} [AddCommGroup M] [Module ℂ M]
   obtain ⟨y, hy⟩ := hw.exists_hasEigenvector
   refine ⟨w, (y : M), y.2, fun h0 => hy.2 (Subtype.ext h0), ?_⟩
   have := congrArg (fun z : N.weight h => (z : M)) (Module.End.HasEigenvector.apply_eq_smul hy)
-  simpa [rhoLW_apply_coe] using this
+  simpa [rhoLW_apply_coe] using! this
 
 /-- **Pseudo-unitarity of `V_{2m}⁺` from the four top-level statements.** -/
 theorem pseudoUnitary_of_tops (h1 : PlusM1Dichotomy m hm) (h2 : PlusERelation m hm)
@@ -119,7 +119,7 @@ theorem pseudoUnitary_of_tops (h1 : PlusM1Dichotomy m hm) (h2 : PlusERelation m 
       rcases Nat.eq_zero_or_pos j with rfl | hj0
       · -- `h = 0`: the vacuum case
         exfalso
-        have h0 : h = 0 := by simpa using hh
+        have h0 : h = 0 := by simpa using! hh
         subst h0
         obtain ⟨e⟩ := h4 M N hirr x hlow hx hx0 (by rw [hW, hcurve]; simp) hE
         exact hnot.false e

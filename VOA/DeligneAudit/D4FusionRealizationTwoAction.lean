@@ -117,6 +117,7 @@ theorem siteAction_zero_inl (f : Fin n → Fin n → Fin n → ℂ) (c i : Fin n
     siteAction (D1SiteG.zeroOp f c) v (Sum.inl i) =
       -∑ j : Fin n, f c i j * v (Sum.inl j) := by
   simp [siteAction, D1SiteG.zeroOp_apply, D1SiteG.coOp_apply, DeligneSector.slotA, siteCoordinates]
+  rfl
 
 @[simp] theorem siteAction_zero_inr (f : Fin n → Fin n → Fin n → ℂ) (c : Fin n)
     (v : SiteVector n) : siteAction (D1SiteG.zeroOp f c) v (Sum.inr ()) = 0 := rfl

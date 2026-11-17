@@ -232,8 +232,9 @@ theorem sugawara_sesq {E : ℤ} {v : WakModule k} (hv : v ∈ (universal k hk).g
     map_finsum φ (L0sum_support_finite k v)] at hE
   -- the finite index set of nonzero Sugawara terms
   let S1 : Finset ℤ := (Finset.range N).map ⟨fun m : ℕ => (m : ℤ), Nat.cast_injective⟩
-  let S2 : Finset ℤ := (Finset.range (N + 1)).map
-    ⟨fun m : ℕ => -(m : ℤ) - 1, fun a b h => by simp only at h; omega⟩
+  have hinj2 : Function.Injective (fun m : ℕ => -(m : ℤ) - 1) := fun a b h => by
+    simp only at h; omega
+  let S2 : Finset ℤ := (Finset.range (N + 1)).map ⟨fun m : ℕ => -(m : ℤ) - 1, hinj2⟩
   have hdisj : Disjoint S1 S2 := by
     rw [Finset.disjoint_left]
     intro p hp1 hp2

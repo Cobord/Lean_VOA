@@ -24,7 +24,7 @@ theorem xyzCountSpan_le_heightHigher (x y z : ℕ) (k : RadicalKey)
   rw [xyzCountSpan, Submodule.span_le]
   rintro v ⟨l, he, hx, hu, hup, hy, hz, rfl⟩
   have hheight : keyHeight m k < keyHeight m (wordKey l) := by
-    simpa [keyHeight, wordKey, he, hx, hu, hup, hy, hz] using hh
+    simpa [keyHeight, wordKey, he, hx, hu, hup, hy, hz] using! hh
   apply Submodule.mem_iSup_of_mem ⟨wordKey l, hheight⟩
   exact keyLayer_le_orbit ρ w (wordKey l) (radicalWord_mem_key ρ w l)
 
@@ -34,7 +34,7 @@ theorem heightHigherOrbit_le_higher_shift (k : RadicalKey) (r : ℕ) :
   rw [heightHigherOrbit, iSup_le_iff]
   intro j
   apply keyOrbit_le_higher
-  exact Or.inl (by simpa [keyHeight_shift] using j.property)
+  exact Or.inl (by simpa [keyHeight_shift] using! j.property)
 
 theorem heightHigherOrbit_full_levi_inv (k : RadicalKey)
     (a : Fin 28) (ha : IsLevi a) (r : ℕ) :
@@ -60,11 +60,11 @@ theorem fOp_coeff_preserves_heightHigher (k : RadicalKey) (n s : ℕ)
   | zero =>
       by_cases hs : s = 0
       · subst s
-        simpa [fCurrent] using hv
+        simpa [fCurrent] using! hv
       · simp [hs]
   | succ n ih =>
       rw [pow_succ, PowerSeries.coeff_mul]
-      change (∑ q ∈ Finset.antidiagonal s,
+      change (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         PowerSeries.coeff q.1 (fCurrent (fOp ρ) ^ n) *
           PowerSeries.coeff q.2 (fCurrent (fOp ρ))) • v ∈ _
       rw [Finset.sum_smul]
@@ -72,7 +72,7 @@ theorem fOp_coeff_preserves_heightHigher (k : RadicalKey) (n s : ℕ)
       intro q hq
       have hf : fOp ρ q.2 v ∈ heightHigherOrbit ρ w m k :=
         heightHigherOrbit_full_levi_inv ρ w m k 18 ⟨10, rfl⟩ q.2 hv
-      simpa [fCurrent, fOp, mul_smul] using ih q.1 hf
+      simpa [fCurrent, fOp, mul_smul] using! ih q.1 hf
 
 theorem fTop_coeff_preserves_heightHigher (k : RadicalKey) (n s : ℕ)
     {v : V} (hv : v ∈ heightHigherOrbit ρ w m k) :
@@ -82,11 +82,11 @@ theorem fTop_coeff_preserves_heightHigher (k : RadicalKey) (n s : ℕ)
   | zero =>
       by_cases hs : s = 0
       · subst s
-        simpa [fCurrent] using hv
+        simpa [fCurrent] using! hv
       · simp [hs]
   | succ n ih =>
       rw [pow_succ, PowerSeries.coeff_mul]
-      change (∑ q ∈ Finset.antidiagonal s,
+      change (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         PowerSeries.coeff q.1 (fCurrent (fTopOp ρ) ^ n) *
           PowerSeries.coeff q.2 (fCurrent (fTopOp ρ))) • v ∈ _
       rw [Finset.sum_smul]
@@ -95,8 +95,8 @@ theorem fTop_coeff_preserves_heightHigher (k : RadicalKey) (n s : ℕ)
       have hf : fTopOp ρ q.2 v ∈ heightHigherOrbit ρ w m k := by
         have hh := heightHigherOrbit_full_levi_inv ρ w m k 23
           ⟨9, rfl⟩ q.2 hv
-        simpa [fTopOp] using (heightHigherOrbit ρ w m k).neg_mem hh
-      simpa [fCurrent, fTopOp, mul_smul] using ih q.1 hf
+        simpa [fTopOp] using! (heightHigherOrbit ρ w m k).neg_mem hh
+      simpa [fCurrent, fTopOp, mul_smul] using! ih q.1 hf
 
 theorem heightHigherOrbit_selectiveCartan_inv
     (k : RadicalKey) (q : Fin 3) (r : ℕ)

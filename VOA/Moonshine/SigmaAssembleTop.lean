@@ -38,6 +38,11 @@ generic top-level reduction for similitudes.  Used by `SigmaAssemble.lean` to bu
 hypotheses (seed, membership).  Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -96,7 +101,7 @@ theorem TForm_psi_symm {s : ZMod 2} (m : Fin 24) {x y : TLeechT} (hx : x ∈ lee
     refine eig_induct (s := s) (fun y => TForm (psiOf (Bop s) m z) y = TForm z (psiOf (Bop s) m y))
       ?_ ?_
     · intro a b ha hb
-      simp only at ha hb ⊢
+      try simp only at ha hb ⊢
       rw [map_add, map_add, map_add, ha, hb]
     · intro z' hz' N' hN0' hE'
       rw [psiOf_eigN hz hN0 hE, psiOf_eigN hz' hN0' hE', map_smul, map_smul, LinearMap.smul_apply,
@@ -122,7 +127,7 @@ theorem psi_psi {s : ZMod 2} {t : TLeechT} (hts : t ∈ leechFrameT s) (ht0 : t 
     psiOf (Bop s) m (psiOf (Bop s) m x) = x := by
   refine eig_induct (s := s) (fun x => psiOf (Bop s) m (psiOf (Bop s) m x) = x) ?_ ?_ x hx
   · intro a b ha hb
-    simp only at ha hb ⊢
+    try simp only at ha hb ⊢
     rw [map_add, map_add, ha, hb]
   · intro z hz N hN0 hE
     by_cases hz0 : z = 0
@@ -392,10 +397,10 @@ theorem simil_of_top {z₀ : VPlus} (hz₀ : z₀ ∈ frameSector 1) {w : ℤ}
   have hz : ∀ b ∈ frameSector 1, Fk Φ κ b z₀ = 0 := by
     intro b hb
     refine span_V3_induction hcyc (fun b => Fk Φ κ b z₀ = 0) (by simp)
-      (fun a b ha hb' => by simp only at ha hb' ⊢; rw [map_add, LinearMap.add_apply, ha, hb', add_zero])
-      (fun c a ha => by simp only at ha ⊢; rw [map_smul, LinearMap.smul_apply, ha, smul_zero])
+      (fun a b ha hb' => by (try simp only at ha hb' ⊢); rw [map_add, LinearMap.add_apply, ha, hb', add_zero])
+      (fun c a ha => by (try simp only at ha ⊢); rw [map_smul, LinearMap.smul_apply, ha, smul_zero])
       (fun k u hu n => ?_) hb
-    simp only
+    try simp only
     rw [Fk_inv hΦ κ u hu n hz₀ hz₀]
     refine smul_eq_zero_of_right _ (Finset.sum_eq_zero fun j _ => smul_eq_zero_of_right _ ?_)
     have hj := L_one_pow_mem V0P (k := k) (x := u) hu j

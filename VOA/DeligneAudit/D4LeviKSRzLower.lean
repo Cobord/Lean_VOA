@@ -27,11 +27,11 @@ theorem rz_lower_base (xs ys zs : List ℕ) (k : ℕ)
   let N := higherOrbit ρ w m (rzKey xs ys zs k d)
   have hz : (zs.map (zOp ρ)).prod w ∈
       xyzCountSpan ρ w 0 0 zs.length := by
-    simpa using xyzCountSpan_z_word ρ w zs 0 0 0
+    simpa using! xyzCountSpan_z_word ρ w zs 0 0 0
       (xyzCountSpan_zero ρ w)
   have hx : (xs.map (xOp ρ)).prod ((zs.map (zOp ρ)).prod w) ∈
       xyzCountSpan ρ w xs.length 0 zs.length := by
-    simpa using xyzCountSpan_x_word ρ w xs 0 0 zs.length hz
+    simpa using! xyzCountSpan_x_word ρ w xs 0 0 zs.length hz
   have hb := xyzCountSpan_z_coeff ρ w p.2 q.2 xs.length 0
     zs.length hx
   have ha := xyzCountSpan_y_word ρ w p.1 xs.length 0
@@ -48,10 +48,10 @@ theorem rz_lower_base (xs ys zs : List ℕ) (k : ℕ)
       (((xs.map (xOp ρ)).prod * (zs.map (zOp ρ)).prod) • w) ∈ N := by
     apply xyzCountSpan_le_higher ρ w m xs.length p.1.length
       (zs.length + p.2.length) (rzKey xs ys zs k d) hheight
-    simpa [aWord, mul_smul] using ha
+    simpa [aWord, mul_smul] using! ha
   have hf := fOp_coeff_preserves_higher ρ w m
     (rzKey xs ys zs k d) (k - p.2.length) q.1 hbase
-  simpa [N, mul_assoc, mul_smul] using hf
+  simpa [N, mul_assoc, mul_smul] using! hf
 
 end VOA.DeligneAudit.D4Levi
 

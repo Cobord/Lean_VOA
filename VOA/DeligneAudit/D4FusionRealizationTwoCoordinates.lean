@@ -81,6 +81,7 @@ theorem coordinates_tprod (n : ℕ) (u : Fin 2 → D1SiteG.Space n) (p : PairInd
   rw [twoBasis, Module.Basis.repr_reindex_apply,
     Basis.piTensorProduct_repr_tprod_apply]
   simp [pairIndexEquiv, Fin.prod_univ_two]
+  rfl
 
 /-- Coordinate equality implies equality in the actual source module. -/
 theorem coordinates_injective (n : ℕ) : Function.Injective (coordinates n) :=

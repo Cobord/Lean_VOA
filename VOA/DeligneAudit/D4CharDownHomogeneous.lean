@@ -118,8 +118,8 @@ theorem gtMixed_five_homogeneous (q : R) (h : PochhammerUnits q)
   intro r hr
   apply Finset.sum_congr rfl
   intro t ht
-  have hr : r ≤ n := by simpa using hr
-  have ht : t ≤ m := by simpa using ht
+  have hr : r ≤ n := by simpa using! hr
+  have ht : t ≤ m := by simpa using! ht
   rw [← gtMixed_five]
   simp only [gtMixedFiveCoeff, Nat.add_sub_of_le hr, Nat.add_sub_of_le ht]
 

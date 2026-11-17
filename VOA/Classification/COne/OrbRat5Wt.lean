@@ -51,7 +51,7 @@ theorem V8_grading_low {k : ℕ} (hk : k ≤ 3) {v : LatModuleGen (latP 4)}
   obtain ⟨q, hq, rfl⟩ := Submodule.mem_map.mp (hle hv)
   refine ⟨q, ?_, by rw [mkEα_apply]; rfl⟩
   rw [gradingZN_of_nonneg (by positivity)] at hq
-  simpa using hq
+  simpa using! hq
 
 theorem fock_zero_eq {q : FockN (rank (latP 4))} (hq : q ∈ gradingWN (rank (latP 4)) 0) :
     ∃ c : ℂ, q = c • (1 : FockN (rank (latP 4))) := by
@@ -103,9 +103,9 @@ theorem V8_grading_four {v : LatModuleGen (latP 4)}
   obtain ⟨q₁, hq₁, rfl⟩ := Submodule.mem_map.mp hy
   obtain ⟨q₂, hq₂, rfl⟩ := Submodule.mem_map.mp hz
   rw [gradingZN_of_nonneg (by norm_num)] at hq hq₁ hq₂
-  obtain ⟨a, rfl⟩ := fock_zero_eq (by simpa using hq₁)
-  obtain ⟨b, rfl⟩ := fock_zero_eq (by simpa using hq₂)
-  refine ⟨q, by simpa using hq, a, b, ?_⟩
+  obtain ⟨a, rfl⟩ := fock_zero_eq (by simpa using! hq₁)
+  obtain ⟨b, rfl⟩ := fock_zero_eq (by simpa using! hq₂)
+  refine ⟨q, by simpa using! hq, a, b, ?_⟩
   simp only [mkEα_apply]
   rfl
 

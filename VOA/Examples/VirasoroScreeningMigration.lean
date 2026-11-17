@@ -55,9 +55,8 @@ energies are explicit, so no untruncated exponential is being differentiated. -/
 theorem screeningFockState_migration_coeff (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (i j : ℕ) (hi : 0<d i)
     (hd : Finsupp.weight (fun k => k+1) (d - Finsupp.single i 1) + (j+1) = r*s) :
-    ((j+1:ℕ):ℂ) * MvPolynomial.coeff (fockOccupation d)
-      (MvPolynomial.X (i,0) *
-        MvPolynomial.pderiv (j,0) (screeningFockState r s t β)) =
+    ((j+1:ℕ):ℂ) * (MvPolynomial.X (i,0) *
+        MvPolynomial.pderiv (j,0) (screeningFockState r s t β)).coeff (fockOccupation d) =
       ((((i+1:ℕ):ℚ) * (d i:ℚ) * screeningPrefactor β d *
         screeningMoment r s t (powerSumSubstitution (Fin r)
           (MvPolynomial.monomial
@@ -76,9 +75,8 @@ theorem screeningFockState_migration_coeff (r s t : ℕ) (β : ℚ)
 with the preceding formula this covers every occupation, including boundaries. -/
 theorem screeningFockState_migration_coeff_zero (r s t : ℕ) (β : ℚ)
     (d : ℕ →₀ ℕ) (i j : ℕ) (hi : d i=0) :
-    MvPolynomial.coeff (fockOccupation d)
-      (MvPolynomial.X (i,0) *
-        MvPolynomial.pderiv (j,0) (screeningFockState r s t β)) = 0 := by
+    (MvPolynomial.X (i,0) *
+        MvPolynomial.pderiv (j,0) (screeningFockState r s t β)).coeff (fockOccupation d) = 0 := by
   classical
   rw [MvPolynomial.coeff_X_mul', if_neg]
   simpa only [Finsupp.mem_support_iff, fockOccupation_apply, hi, ne_eq, not_true_eq_false,

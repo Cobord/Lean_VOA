@@ -31,45 +31,45 @@ private theorem lowering_cases : ∀ c : Fin 28, D4sector.lowering c →
   rcases hv with h0 | h1 | h2 | h3
   · left
     apply Fin.ext
-    simpa [negativeIndex] using h0
+    simpa [negativeIndex] using! h0
   · right; left
     apply Fin.ext
-    simpa [negativeIndex] using h1
+    simpa [negativeIndex] using! h1
   · right; right; left
     apply Fin.ext
-    simpa [negativeIndex] using h2
+    simpa [negativeIndex] using! h2
   · right; right; right
     apply Fin.ext
-    simpa [negativeIndex] using h3
+    simpa [negativeIndex] using! h3
 
 theorem twoGen_one_lowering (c : Fin 28) (hc : D4sector.lowering c) :
     (twoCurrent.op c 0)^[D4sector.lowExp c + 1] (twoGen 1) = 0 := by
   rcases lowering_cases c hc with h0 | h1 | h2 | h3
   · subst c
-    simpa [outer_exp_zero (0 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (0 : Fin 12) (by decide) (by decide)] using!
       twoGen_outer_lowering 1 0 (by decide) (by decide)
   · subst c
-    simpa [outer_exp_zero (1 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (1 : Fin 12) (by decide) (by decide)] using!
       twoGen_outer_lowering 1 1 (by decide) (by decide)
   · subst c
-    simpa [D4sector, lowExpD4, negativeIndex] using twoGen_center_lowering 1
+    simpa [D4sector, lowExpD4, negativeIndex] using! twoGen_center_lowering 1
   · subst c
-    simpa [outer_exp_zero (3 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (3 : Fin 12) (by decide) (by decide)] using!
       twoGen_outer_lowering 1 3 (by decide) (by decide)
 
 theorem twoOne_lowering (c : Fin 28) (hc : D4sector.lowering c) :
     (twoOneCurrent.op c 0)^[D4sector.lowExp c + 1] twoOneGen = 0 := by
   rcases lowering_cases c hc with h0 | h1 | h2 | h3
   · subst c
-    simpa [outer_exp_zero (0 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (0 : Fin 12) (by decide) (by decide)] using!
       twoOne_outer_lowering 0 (by decide) (by decide)
   · subst c
-    simpa [outer_exp_zero (1 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (1 : Fin 12) (by decide) (by decide)] using!
       twoOne_outer_lowering 1 (by decide) (by decide)
   · subst c
-    simpa [D4sector, lowExpD4, negativeIndex] using twoOne_center_lowering
+    simpa [D4sector, lowExpD4, negativeIndex] using! twoOne_center_lowering
   · subst c
-    simpa [outer_exp_zero (3 : Fin 12) (by decide) (by decide)] using
+    simpa [outer_exp_zero (3 : Fin 12) (by decide) (by decide)] using!
       twoOne_outer_lowering 3 (by decide) (by decide)
 
 theorem twoGen_one_localWeyl :
@@ -78,10 +78,10 @@ theorem twoGen_one_localWeyl :
   cartan_pos := twoGen_one_cartan_pos
   cartan_zero := by
     intro c hc
-    simpa only [one_mul] using twoGen_cartan_zero 1 c hc
+    simpa only [one_mul] using! twoGen_cartan_zero 1 c hc
   lowering := by
     intro c hc
-    simpa only [one_mul] using twoGen_one_lowering c hc
+    simpa only [one_mul] using! twoGen_one_lowering c hc
   fusion := twoGen_one_fusion_all
   cartanN_pos := by
     intro c hc
@@ -96,10 +96,10 @@ theorem twoOne_localWeyl :
   cartan_pos := twoOne_cartan_pos
   cartan_zero := by
     intro c hc
-    simpa only [one_mul] using twoOne_cartan_zero c hc
+    simpa only [one_mul] using! twoOne_cartan_zero c hc
   lowering := by
     intro c hc
-    simpa only [one_mul] using twoOne_lowering c hc
+    simpa only [one_mul] using! twoOne_lowering c hc
   fusion := twoOne_fusion_all
   cartanN_pos := by
     intro c hc

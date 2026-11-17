@@ -14,6 +14,8 @@ Consequently such an operator cannot have a nonzero charge. This argument
 uses the actual locally finite normal products, without irreducibility or
 any restriction on the level.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

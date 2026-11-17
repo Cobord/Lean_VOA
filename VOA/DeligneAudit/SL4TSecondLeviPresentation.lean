@@ -79,7 +79,7 @@ def secondLeviRelationQuotientEvaluation (e₁ e₂ : ℕ) :
       intro P hP
       apply Subtype.ext
       have hz := hP (1 : B)
-      simpa only [map_one, one_mul] using hz)
+      simpa only [map_one, one_mul] using! hz)
 
 theorem secondLeviRelationQuotientEvaluation_mk (e₁ e₂ : ℕ)
     (P : secondLeviSymmetricModes (B := B) e₁ e₂) :

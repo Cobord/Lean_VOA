@@ -66,7 +66,7 @@ theorem mapDomain_coord (g : Fin k → Fin k) (e : Fin k →₀ ℕ) (a : Fin k)
   simp only [Finsupp.single_apply]
 
 theorem coeff_rename_sum (g : Fin k → Fin k) (p : XP k) (d : Fin k →₀ ℕ) :
-    coeff d (rename g p) = ∑ e ∈ p.support, if e.mapDomain g = d then coeff e p else 0 := by
+    (rename g p).coeff d = ∑ e ∈ p.support, if e.mapDomain g = d then p.coeff e else 0 := by
   classical
   conv_lhs => rw [as_sum p]
   rw [map_sum, coeff_sum]
@@ -78,8 +78,8 @@ theorem coeff_rename_sum (g : Fin k → Fin k) (p : XP k) (d : Fin k →₀ ℕ)
 theorem coeff_rename_collapse {n : ℕ} {τ : Fin n → Fin k} (hτ : Function.Injective τ)
     {s₀ : Fin k} (hs₀ : s₀ ∈ univ.image τ) {e' : Fin k →₀ ℕ}
     (he' : ∀ i ∈ univ.image τ, e' i = 0) (j : ℕ) (Y : XP k) :
-    coeff (e' + Finsupp.single s₀ j) (rename (collapseTo s₀ (univ.image τ)) Y) =
-      ∑ l ∈ finsuppAntidiag (univ : Finset (Fin n)) j, coeff (e' + l.mapDomain τ) Y := by
+    (rename (collapseTo s₀ (univ.image τ)) Y).coeff (e' + Finsupp.single s₀ j) =
+      ∑ l ∈ finsuppAntidiag (univ : Finset (Fin n)) j, Y.coeff (e' + l.mapDomain τ) := by
   classical
   set S := univ.image τ with hS
   set ρ := collapseTo s₀ S with hρ
@@ -134,7 +134,7 @@ theorem coeff_rename_collapse {n : ℕ} {τ : Fin n → Fin k} (hτ : Function.I
       rw [Finsupp.coe_add, Pi.add_apply]
       by_cases haS : a ∈ S
       · obtain ⟨r, -, rfl⟩ := mem_image.mp haS
-        rw [he' _ haS, zero_add, Finsupp.mapDomain_apply hτ]
+        rw [he' _ haS, zero_add, Finsupp.mapDomain_apply_of_injective hτ]
         rfl
       · rw [Finsupp.mapDomain_notin_range _ _ (fun ⟨r, hr⟩ => haS (hr ▸ mem_image_of_mem τ
           (mem_univ r))), add_zero]
@@ -154,7 +154,7 @@ theorem coeff_rename_collapse {n : ℕ} {τ : Fin n → Fin k} (hτ : Function.I
         · exact (Finsupp.notMem_support_iff.mp h).symm
   -- compare the two sums
   have himage := sum_image (s := finsuppAntidiag (univ : Finset (Fin n)) j)
-    (g := fun l => e' + l.mapDomain τ) (f := fun e => coeff e Y)
+    (g := fun l => e' + l.mapDomain τ) (f := fun e => Y.coeff e)
     (fun x _ y _ h => Finsupp.mapDomain_injective hτ (add_left_cancel h))
   rw [coeff_rename_sum, ← sum_filter, ← himage]
   refine sum_subset (fun e he => ?_) fun e he hne => ?_
@@ -208,8 +208,8 @@ theorem pol_prod_X_mul : ∀ (n : ℕ) (B : Finset (Fin k)) (l : Fin n → ℕ) 
       refine mem_Inj.mpr ⟨Fin.cons_injective_iff.mpr ⟨fun ⟨r, hr⟩ => ?_, hinj⟩, fun r => ?_⟩
       · exact (ne_of_mem_erase (hr ▸ hmem r)) rfl
       · refine Fin.cases ?_ (fun r => ?_) r
-        · simpa using hi
-        · simpa using mem_of_mem_erase (hmem r)
+        · simpa using! hi
+        · simpa using! mem_of_mem_erase (hmem r)
     · obtain ⟨hinj, hmem⟩ := mem_Inj.mp hτ
       refine mem_sigma.mpr ⟨hmem 0, mem_Inj.mpr ⟨fun a b h => ?_, fun r => ?_⟩⟩
       · exact Fin.succ_injective _ (hinj h)
@@ -235,7 +235,7 @@ theorem prod_X_pow_eq_monomial {n : ℕ} (τ : Fin n → Fin k) (l : Fin n →�
   exact prod_congr rfl fun r _ => X_pow_eq_monomial
 
 theorem dot_monomial_mul_left (m : Fin k →₀ ℕ) (P Y : XP k) :
-    dot (monomial m 1 * P) Y = ∑ e' ∈ P.support, coeff e' P * coeff (e' + m) Y := by
+    dot (monomial m 1 * P) Y = ∑ e' ∈ P.support, P.coeff e' * Y.coeff (e' + m) := by
   conv_lhs => rw [as_sum P]
   rw [mul_sum, dot_sum_left]
   refine sum_congr rfl fun e' _ => ?_
@@ -267,7 +267,7 @@ theorem dot_pol_jet_n {n : ℕ} (hn : 1 ≤ n) {G : TPoly} (hG : G ∈ jetIdealT
     · exact pol_vars _ _ i (fun h' => (mem_sdiff.mp h').2 hi) h
   have hterm : ∀ l ∈ finsuppAntidiag (univ : Finset (Fin n)) j,
       dot (R * ((∏ r : Fin n, (X (τ r) : XP k) ^ (l r)) * pol (B \ S) (c j))) Y =
-        ∑ e' ∈ P.support, coeff e' P * coeff (e' + l.mapDomain τ) Y := by
+        ∑ e' ∈ P.support, P.coeff e' * Y.coeff (e' + l.mapDomain τ) := by
     intro l _
     rw [prod_X_pow_eq_monomial, mul_left_comm, dot_monomial_mul_left]
   rw [sum_congr rfl hterm, sum_comm]
@@ -278,7 +278,7 @@ theorem dot_pol_jet_n {n : ℕ} (hn : 1 ≤ n) {G : TPoly} (hG : G ∈ jetIdealT
   rw [← coeff_rename_collapse hinj hs₀ (hPS e' he') j Y]
   have hSB : S ⊆ B := fun i hi => by obtain ⟨r, -, rfl⟩ := mem_image.mp hi; exact hmem r
   have hcard : #S = n := by rw [hS, card_image_of_injective _ hinj, card_univ, Fintype.card_fin]
-  rw [hY S hSB hcard (τ ⟨0, hn⟩) hs₀, coeff_zero]
+  rw [hY S hSB hcard (τ ⟨0, hn⟩) hs₀, MvPolynomial.coeff_zero, Finsupp.zero_apply]
 
 /-- `⟨pol(F), x_l^N Y⟩ = 0` for `Y` vanishing on the `n`-fold diagonals avoiding `x_l`, when
 `∂F/∂T_M ∈ J_n` for all `M ≥ N`. -/
@@ -337,7 +337,7 @@ theorem toMS_split {n : ℕ} {τ : Fin n → Fin k} (hτ : Function.Injective τ
   · rw [sum_image (fun x _ y _ h => hτ h)]
     refine sum_congr rfl fun r _ => ?_
     rw [Finsupp.coe_add, Pi.add_apply, he' _ (mem_image_of_mem τ (mem_univ r)), zero_add,
-      Finsupp.mapDomain_apply hτ]
+      Finsupp.mapDomain_apply_of_injective hτ]
 
 theorem monomial_add_sum_single {n : ℕ} (μ : ℕ →₀ ℕ) (l : Fin n →₀ ℕ) :
     (monomial (μ + ∑ r : Fin n, Finsupp.single (l r) 1) 1 : TPoly) =
@@ -367,14 +367,14 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
   by_contra hFU
   obtain ⟨ψ, hψF, hUψ⟩ := Submodule.exists_le_ker_of_notMem hFU
   have hψJ : ∀ G ∈ jetIdealT n, ψ G = 0 := fun G hG =>
-    hUψ (Submodule.mem_sup_left (by simpa using hG))
+    hUψ (Submodule.mem_sup_left (by simpa using! hG))
   have hψB : ∀ G ∈ boxSpan N k E, ψ G = 0 := fun G hG => hUψ (Submodule.mem_sup_right hG)
   rcases Nat.lt_or_ge E k with hEk | hEk
   · exact hψF (by rw [HighDegSucc.eq_zero_of_wt_lt hFh hFw hEk, map_zero])
   set d := E - k with hd
   set f : XP k := ∑ e ∈ Ek k d,
     monomial e (ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ)) with hfdef
-  have hcoeff : ∀ e, coeff e f =
+  have hcoeff : ∀ e, f.coeff e =
       if e ∈ Ek k d then ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ) else 0 := by
     intro e
     rw [hfdef, coeff_sum]
@@ -390,9 +390,9 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
     have hsE : Finsupp.weight wT s = E := hFw (mem_support_iff.mp hs)
     rw [hfdef, dot_sum_right]
     simp only [dot_monomial_right]
-    have h1 : ∀ e ∈ Ek k d, coeff e (pol univ (monomial s 1)) *
+    have h1 : ∀ e ∈ Ek k d, (pol univ (monomial s 1)).coeff e *
         (ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ)) =
-        coeff e (pol univ (monomial s 1)) * (ψ (monomial s 1) / (k.factorial : ℂ)) := by
+        (pol univ (monomial s 1)).coeff e * (ψ (monomial s 1) / (k.factorial : ℂ)) := by
       intro e _
       by_cases he : e ∈ (pol univ (monomial s 1)).support
       · rw [pol_monomial_support s univ e he]
@@ -405,7 +405,7 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
       rw [h2, hsE] at h3
       rw [mem_Ek, ← Finsupp.degree_eq_sum, hd]
       omega
-    have hsum : ∑ e ∈ Ek k d, coeff e (pol univ (monomial s 1)) = (k.factorial : ℂ) := by
+    have hsum : ∑ e ∈ Ek k d, (pol univ (monomial s 1)).coeff e = (k.factorial : ℂ) := by
       rw [← sum_subset hsub (fun e _ he => notMem_support_iff.mp he)]
       have := pol_monomial_eval (k := k) s univ
       rw [card_univ, Fintype.card_fin, if_pos hsk, eval_eq] at this
@@ -417,7 +417,7 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
     conv_lhs => rw [as_sum F]
     rw [pol_sum, dot_sum_left, map_sum]
     refine sum_congr rfl fun s hs => ?_
-    have hmon : (monomial s (coeff s F) : TPoly) = coeff s F • monomial s 1 := by
+    have hmon : (monomial s (F.coeff s) : TPoly) = F.coeff s • monomial s 1 := by
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [hmon, pol_smul, dot_smul_left, hC1 s hs, map_smul, smul_eq_mul]
   -- `f ∈ L`
@@ -442,7 +442,7 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
     have hτ : Function.Injective τ := τ.injective
     have himS : univ.image τ = S := Finset.image_orderEmbOfFin_univ S hS
     ext c
-    rw [coeff_zero]
+    rw [MvPolynomial.coeff_zero, Finsupp.zero_apply]
     by_cases hc : ∃ i ∈ S, i ≠ s₀ ∧ c i ≠ 0
     · obtain ⟨i, hiS, his, hci⟩ := hc
       by_contra hc0
@@ -501,7 +501,7 @@ theorem jetPoincare_of_arrangement {n : ℕ} (hn : 1 ≤ n) (hA : ArrangementInc
       rw [mem_Ek, mem_Ek, ← Finsupp.degree_eq_sum, ← Finsupp.degree_eq_sum, degree_mapDomain]
     have htoMS : toMS univ (e₁.mapDomain σ) = toMS univ e₁ := by
       rw [toMS, toMS, ← Equiv.sum_comp σ]
-      exact sum_congr rfl fun i _ => by rw [Finsupp.mapDomain_apply σ.injective]
+      exact sum_congr rfl fun i _ => by rw [Finsupp.mapDomain_apply_of_injective σ.injective]
     rw [coeff_rename_mapDomain _ σ.injective, hcoeff, hcoeff, htoMS]
     simp only [hEk']
   exact hψF (hC2 ▸ dot_pol_Wn hn hder (hA k N f hC5 hC3 hC4))

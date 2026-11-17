@@ -58,13 +58,13 @@ private theorem zWord_hom : ∀ l : List ℕ,
   intro l
   induction l with
   | nil =>
-      simpa [zWord] using
+      simpa [zWord] using!
         MvPolynomial.isWeightedHomogeneous_one ℂ om
   | cons s l ih =>
       have hz : MvPolynomial.IsWeightedHomogeneous om (z s) (1, s) :=
         MvPolynomial.isWeightedHomogeneous_X ℂ om s
       have hm := hz.mul ih
-      simpa [zWord, Nat.add_comm] using hm
+      simpa [zWord, Nat.add_comm] using! hm
 
 private theorem evAlg_zWord (l : List ℕ) :
     Sl2Weyl.evAlg F hFF (zWord l) = (l.map F).prod := by
@@ -83,7 +83,7 @@ theorem sl2_box_word_length_zero (y : V) (m : ℕ)
     (l.map F).prod y = 0 := by
   have h := sl2_box_homogeneous_length_zero F hFF y m hk
     (zWord l) (l.length, l.sum) (zWord_hom l) hl
-  simpa only [evAlg_zWord] using h
+  simpa only [evAlg_zWord] using! h
 
 end VOA.DeligneAudit.A3Sector
 

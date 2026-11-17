@@ -68,7 +68,7 @@ theorem state_beta_double_partial (r q M a b : ℕ)
       ∑ i : Fin r,∑ j∈Finset.univ.erase i,
         ((single ((a : ℤ) • unitExponent r i) 1 : Auxiliary r)*
         (single ((b : ℤ) • unitExponent r j) 1 : Auxiliary r)*
-          pairOmittedIntegrand r q M i j)
+          pairOmittedIntegrand r q M i j).coeff
           (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   rw [state,← oscillatorPartial_apply,← oscillatorPartial_apply,
     integrand_beta_double_partial r q M a b ha hb,auxiliary_sum_apply]

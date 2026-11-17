@@ -28,7 +28,7 @@ theorem a3_lower_wick_term (b c k s d : ℕ)
   let R : Module.End ℂ V :=
     (zs.map fun i => ρ.op (F (a3ConvSpectator j)) i).prod
   have hsum :
-      (∑ z ∈ Finset.antidiagonal s,
+      (∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
         (PowerSeries.coeff z.1 (fCurrent f ^ (k - p.2.length)) *
           aWord A p.1) * PowerSeries.coeff z.2 (bWord B p.2)) •
         (((ys.map B).prod * R) • w) ∈ N := by
@@ -38,11 +38,11 @@ theorem a3_lower_wick_term (b c k s d : ℕ)
     exact a3_lower_wick_summand ρ w b c k d j xs ys zs p hp hshort z
   have hscalar (z : ℂ) :
       (algebraMap ℂ (Module.End ℂ V) z) •
-        ((∑ x ∈ Finset.antidiagonal s,
+        ((∑ x ∈ Finset.HasAntidiagonal.antidiagonal s,
           (PowerSeries.coeff x.1 (fCurrent f ^ (k - p.2.length)) *
             aWord A p.1) * PowerSeries.coeff x.2 (bWord B p.2)) •
           (((ys.map B).prod * R) • w)) ∈ N := by
-    simpa using N.smul_mem z hsum
+    simpa using! N.smul_mem z hsum
   have hcast : ((-1 : Module.End ℂ V) ^ p.2.length *
       (k.descFactorial p.2.length : Module.End ℂ V)) =
       algebraMap ℂ (Module.End ℂ V)
@@ -50,7 +50,7 @@ theorem a3_lower_wick_term (b c k s d : ℕ)
     simp
   unfold conversionTerm
   rw [hcast]
-  simpa only [mul_smul] using
+  simpa only [mul_smul] using!
     hscalar ((-1 : ℂ) ^ p.2.length * (k.descFactorial p.2.length : ℂ))
 
 theorem a3_box_conversion_graded (a b c : ℕ)

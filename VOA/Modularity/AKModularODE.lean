@@ -223,7 +223,7 @@ theorem Lsq_tower (W : VertexOperatorAlgebra 𝒱) {a : 𝒱} {Δ : ℂ} (ha : I
   | zero =>
       intro j
       rcases Nat.eq_zero_or_pos j with rfl | hj
-      · simpa using h0
+      · simpa using! h0
       · rw [towerScalar_zero_right, if_neg (by omega), zero_smul]
         exact hp (2 * (j : ℤ)) (by omega)
   | succ n ih =>
@@ -707,7 +707,7 @@ theorem formalODE_of_monic_of_unitriangular {S : 𝒱 →ₗ[ℂ] FormalQSeries}
   rw [Finset.sum_congr rfl (fun j (_ : j ∈ Finset.range s) => by
     rw [hπsmul, hπd])] at hcoe
   have hfun := congrFun hcoe e
-  simpa [psSMul] using hfun
+  simpa [psSMul] using! hfun
 
 /-- **Arakawa–Kawasetsu Theorem 5.7, equation (2) — formal form.**  For a VOA satisfying the
 Etingof–Schedler hypothesis, a **square-bracket primary** vector `a`, and any formal block `S`,
@@ -763,7 +763,7 @@ theorem character_formalODE_of_etingofFinite (W : VertexOperatorAlgebra 𝒱) (N
     fun v => torusOnePoint_mem_QSeriesAt W N hcw v
   have h := formalODE_of_etingofFinite_of_sqPrimary W hsupp
     (torusOnePointHom_isFormalBlock N) hzero hE (vacuum_isSqPrimary W)
-  simpa only [torusOnePointHom_apply, torusOnePoint_vacuum] using h
+  simpa only [torusOnePointHom_apply, torusOnePoint_vacuum] using! h
 
 /-- **The adjoint-module case** — AK Theorem 5.1's own object: the character of `𝒱` itself.
 ⚠ Formal, not an MLDE, and near-vacuous (file header). -/

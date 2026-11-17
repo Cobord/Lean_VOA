@@ -36,7 +36,7 @@ theorem mode_iterate_finite (W : VertexOperatorAlgebra V)
   apply finsum_eq_finsetSum_of_support_subset
   intro i hi
   by_contra hnot
-  have hiB : B ≤ i := by simpa using hnot
+  have hiB : B ≤ i := by simpa using! hnot
   have hax := smul_eq_zero_of_weights W ha hx (n := i) (by omega)
   have hbx := smul_eq_zero_of_weights W hb hx (n := n+i) (by omega)
   apply hi

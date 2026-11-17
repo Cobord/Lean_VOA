@@ -26,9 +26,9 @@ theorem JetApproxAlong.list_sum {l : Filter ℂ} {d : ℕ} {α : Type*}
     (h : ∀ i ∈ xs, JetApproxAlong l d (f i) (p i)) :
     JetApproxAlong l d (fun t => (xs.map (fun i => f i t)).sum) ((xs.map p).sum) := by
   induction xs with
-  | nil => simpa using JetApproxAlong.polynomial d (0 : ℂ[X])
+  | nil => simpa using! JetApproxAlong.polynomial d (0 : ℂ[X])
   | cons i xs ih =>
-    simpa only [List.map_cons,List.sum_cons] using JetApproxAlong.add
+    simpa only [List.map_cons,List.sum_cons] using! JetApproxAlong.add
       (h i (by simp)) (ih (by intro j hj; exact h j (by simp [hj])))
 
 theorem coeff_jetSum_foldl {α : Type*} (P : ℕ) (xs : List α) (J : α → Jet)
@@ -62,10 +62,9 @@ theorem jet_recurrence_remainder (self : Bool) (n : ℕ) (hn0 : 1≤n)
   intro k hk
   have hk' : k≤precisionBefore self n := by omega
   have h := congrArg (fun J => (zp J).coeff k) (jet_recurrence_holds self n hn0 hn)
-  simp only [JetRecurrence] at h
   rw [coeff_jetAdd _ _ _ hk',coeff_jetMul _ _ _ hk',
     coeff_jetSum _ _ _ hk',zp_jetZero,Polynomial.coeff_zero] at h
-  simpa only [Polynomial.coeff_add,coeff_list_sum,coeff_jetMul _ _ _ hk'] using h
+  simpa only [Polynomial.coeff_add,coeff_list_sum,coeff_jetMul _ _ _ hk'] using! h
 
 /-- The actual undivided recurrence in the positive-width form used by the cache. -/
 def widthSequenceError (self : Bool) (F : ℕ → ℂ → ℂ) (n : ℕ) (t : ℂ) : ℂ :=
@@ -91,7 +90,7 @@ theorem widthSequence_jetApprox (self : Bool) (F : ℕ → ℂ → ℂ)
       have h := JetApproxAlong.polynomial (l := l) (precisionAfter self 0+1) (1 : ℂ[X])
       apply h.congr
       filter_upwards [hzero] with t ht
-      simpa using ht.symm
+      simpa using! ht.symm
     · let P := precisionBefore self n
       let d := P+1
       let D := zp (coefficientJets self n 0)
@@ -126,7 +125,7 @@ theorem widthSequence_jetApprox (self : Bool) (F : ℕ → ℂ → ℂ)
       have hrem : Polynomial.X^d ∣ -((List.range (min 6 n)).map p).sum-D*J := by
         have h := dvd_neg.mpr (jet_recurrence_remainder self n (by omega) hn)
         convert h using 1 <;> dsimp [d,P,D,J,p] <;> ring
-      have hr0 := hr.of_remainder (q := 0) (by simpa only [sub_zero] using hrem)
+      have hr0 := hr.of_remainder (q := 0) (by simpa only [sub_zero] using! hrem)
       have herr : JetApproxAlong l d (fun t => widthAt self n 0 t*(F n t-J.eval (t-1))) 0 := by
         apply hr0.congr
         filter_upwards [hrec n (by omega) hn] with t ht
@@ -157,7 +156,7 @@ theorem widthSequence_tendsto (self : Bool) (F : ℕ → ℂ → ℂ)
     (n : ℕ) (hn : n≤channelBound self) :
     Tendsto (F n) l (𝓝 ((((valueJets self n)[0]?).getD 0 : ℚ) : ℂ)) := by
   have h := widthSequence_jetApprox self F hl hzero hrec n hn
-  simpa only [← Polynomial.coeff_zero_eq_eval_zero,coeff_zp] using h.tendsto (by omega) hl
+  simpa only [← Polynomial.coeff_zero_eq_eval_zero,coeff_zp] using! h.tendsto (by omega) hl
 
 /-- The seven-channel actual recurrence equals the cached positive-width form. -/
 theorem widthSequenceError_eq_fin (self : Bool) (F : ℕ → ℂ → ℂ) (n : ℕ) (t : ℂ) :

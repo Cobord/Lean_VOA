@@ -51,7 +51,7 @@ theorem intQbinom_pascal (q : R) (a b : ℤ) (ha : 0 ≤ a) :
   · simp [intQbinom, show (0 : ℤ) ≤ (n : ℤ) + 1 by omega]
   · obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ b by omega)
     simpa only [← Nat.cast_add, Nat.cast_one, intQbinom_nat, Int.toNat_sub,
-      Int.toNat_natCast] using qbinom_succ_succ q n k
+      Int.toNat_natCast] using! qbinom_succ_succ q n k
 
 /-- The transfer balance relation, including both out-of-range tails. -/
 theorem intQbinom_balance (q : R) (a b : ℤ) (ha : 0 ≤ a) :
@@ -65,7 +65,7 @@ theorem intQbinom_balance (q : R) (a b : ℤ) (ha : 0 ≤ a) :
   · obtain ⟨n, rfl⟩ := Int.eq_ofNat_of_zero_le ha
     obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ b by omega)
     simpa only [← Nat.cast_add, Nat.cast_one, intQbinom_nat, Int.toNat_sub,
-      Int.toNat_natCast] using qbinom_balance q n k
+      Int.toNat_natCast] using! qbinom_balance q n k
 
 theorem qbinom_X_lower (n k : ℕ) :
     (1 - Polynomial.X ^ (n + 1 - k)) * qbinom (Polynomial.X : Polynomial ℤ) (n + 1) k =
@@ -88,7 +88,7 @@ theorem qbinom_lower (q : R) (n k : ℕ) :
   have h := congrArg (Polynomial.eval₂RingHom (Int.castRingHom R) q)
     (qbinom_X_lower n k)
   simpa only [map_mul, map_sub, map_one, map_pow, A2.map_qbinom,
-    Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using h
+    Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X] using! h
 
 /-- The W(0,1) identity, also at a = 0 where the upper index a-1 is negative. -/
 theorem intQbinom_lower (q : R) (a b : ℤ) (ha : 0 ≤ a) :

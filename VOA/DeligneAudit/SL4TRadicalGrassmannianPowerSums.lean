@@ -71,10 +71,40 @@ theorem radicalGrassmannianQuotientMap_powerSum (d : Fin 3 → ℕ) (j : Fin 3) 
     radicalGrassmannianQuotientMap ρ w a b c h d
       (radicalGrassmannianPowerSum a b c d j (s + 1)) =
         Ideal.Quotient.mk _ (radicalPositivePowerSum d j s) := by
-  fin_cases j <;>
-    simp only [radicalGrassmannianPowerSum, radicalGrassmannianQuotientMap,
-      Algebra.TensorProduct.lift_tmul, map_one, one_mul, mul_one]
-  all_goals exact radicalGrassmannianFactor_powerSum ρ w a b c h d _ s
+  -- Lean 4.35: `simp [lift_tmul]` no longer fires (the tensor factors are typed
+  -- `H (d j) (weightABC a b c j)` vs `H (d 0) a`, equal only after unfolding
+  -- `weightABC`); evaluate each tensor slot by `change` instead.
+  have k0 : radicalGrassmannianQuotientMap ρ w a b c h d
+      (radicalGrassmannianPowerSum a b c d 0 (s + 1)) =
+        radicalGrassmannianFactor ρ w a b c h d 0
+          (grassmannianPowerSum (d 0) (weightABC a b c 0) (s + 1)) := by
+    change radicalGrassmannianFactor ρ w a b c h d 0
+        (grassmannianPowerSum (d 0) (weightABC a b c 0) (s + 1)) *
+      (radicalGrassmannianFactor ρ w a b c h d 1 1 *
+        radicalGrassmannianFactor ρ w a b c h d 2 1) = _
+    simp only [map_one, mul_one]
+  have k1 : radicalGrassmannianQuotientMap ρ w a b c h d
+      (radicalGrassmannianPowerSum a b c d 1 (s + 1)) =
+        radicalGrassmannianFactor ρ w a b c h d 1
+          (grassmannianPowerSum (d 1) (weightABC a b c 1) (s + 1)) := by
+    change radicalGrassmannianFactor ρ w a b c h d 0 1 *
+      (radicalGrassmannianFactor ρ w a b c h d 1
+          (grassmannianPowerSum (d 1) (weightABC a b c 1) (s + 1)) *
+        radicalGrassmannianFactor ρ w a b c h d 2 1) = _
+    simp only [map_one, mul_one, one_mul]
+  have k2 : radicalGrassmannianQuotientMap ρ w a b c h d
+      (radicalGrassmannianPowerSum a b c d 2 (s + 1)) =
+        radicalGrassmannianFactor ρ w a b c h d 2
+          (grassmannianPowerSum (d 2) (weightABC a b c 2) (s + 1)) := by
+    change radicalGrassmannianFactor ρ w a b c h d 0 1 *
+      (radicalGrassmannianFactor ρ w a b c h d 1 1 *
+        radicalGrassmannianFactor ρ w a b c h d 2
+          (grassmannianPowerSum (d 2) (weightABC a b c 2) (s + 1))) = _
+    simp only [map_one, one_mul]
+  fin_cases j
+  · exact k0.trans (radicalGrassmannianFactor_powerSum ρ w a b c h d 0 s)
+  · exact k1.trans (radicalGrassmannianFactor_powerSum ρ w a b c h d 1 s)
+  · exact k2.trans (radicalGrassmannianFactor_powerSum ρ w a b c h d 2 s)
 
 /-- Positive power-sum generation makes the three-Grassmannian quotient map surjective. -/
 theorem radicalGrassmannianQuotientMap_surjective (d : Fin 3 → ℕ) :

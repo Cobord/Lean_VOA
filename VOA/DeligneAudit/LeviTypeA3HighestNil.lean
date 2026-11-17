@@ -69,12 +69,12 @@ theorem a3_highest_nilpotence (a b c : ℕ)
         abel
       _ = 0 := by rw [hc]; simp
   have hY : (Y ^ (a + b + 1)) w = 0 := by
-    simpa [Y, F, Module.End.pow_apply] using
+    simpa [Y, F, Module.End.pow_apply] using!
       a3_compound_one_nilpotence ρ w a b c h
   have hX : (X ^ (c + 1)) w = 0 := by
-    simpa [X, leviF, simpleF, weightABC, Module.End.pow_apply] using h.lowering 2
+    simpa [X, leviF, simpleF, weightABC, Module.End.pow_apply] using! h.lowering 2
   have hN : Z^[(a + b) + 1 + 2 * c] w = 0 := by
-    simpa [← Module.End.pow_apply] using
+    simpa [← Module.End.pow_apply] using!
       two_root_nil_large X Y Z w (a + b) c hXY hXXY hYYX hY hX
   have hEF : ∀ v, E (Z v) - Z (E v) = H v := by
     intro v
@@ -101,15 +101,15 @@ theorem a3_highest_nilpotence (a b c : ℕ)
     change ρ.op 12 0 w + ρ.op 13 0 w + ρ.op 14 0 w =
       ((a + b + c : ℕ) : ℂ) • w
     rw [show ρ.op 12 0 w = (a : ℂ) • w by
-      simpa [simpleH, weightABC] using h.cartan_zero 0]
+      simpa [simpleH, weightABC] using! h.cartan_zero 0]
     rw [show ρ.op 13 0 w = (b : ℂ) • w by
-      simpa [simpleH, weightABC] using h.cartan_zero 1]
+      simpa [simpleH, weightABC] using! h.cartan_zero 1]
     rw [show ρ.op 14 0 w = (c : ℂ) • w by
-      simpa [simpleH, weightABC] using h.cartan_zero 2]
+      simpa [simpleH, weightABC] using! h.cartan_zero 2]
     simp [Nat.cast_add, add_smul]
   have hsharp := sl2_lowering_of_nilpotent E Z H hEF hHF w
     (a + b + c) ((a + b) + 1 + 2 * c) hE hH hN (by omega)
-  simpa [Z, Module.End.pow_apply, Nat.add_assoc] using hsharp
+  simpa [Z, Module.End.pow_apply, Nat.add_assoc] using! hsharp
 
 end VOA.DeligneAudit.A3Sector
 

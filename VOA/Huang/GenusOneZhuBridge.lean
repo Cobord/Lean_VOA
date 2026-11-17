@@ -97,7 +97,7 @@ theorem insertionSymmetricTopDecomposition_of_bimodule (P : ι → LWModule W)
     refine ⟨?_, ?_, ?_⟩
     · intro w hw
       change T ((fzO A.toWeakModule).mkQ w) i = 0
-      have hq : (fzO A.toWeakModule).mkQ w = 0 := by simpa using hw
+      have hq : (fzO A.toWeakModule).mkQ w = 0 := by simpa using! hw
       rw [hq, map_zero]
       rfl
     · intro p a ha w x
@@ -111,7 +111,7 @@ theorem insertionSymmetricTopDecomposition_of_bimodule (P : ι → LWModule W)
       apply Subtype.ext
       rw [rhoLW_apply_coe, oMod_homogeneous (P i).isMod ha, hx]
   refine ⟨fun i => ⟨C i, hC i⟩, fun w => ?_⟩
-  simpa [g, C] using (hT ((fzO A.toWeakModule).mkQ w)).symm
+  simpa [g, C] using! (hT ((fzO A.toWeakModule).mkQ w)).symm
 
 /-- Full algebraic leading realization, with quotient actions as the
 remaining decomposition input; lifting is still the separate Li theorem. -/

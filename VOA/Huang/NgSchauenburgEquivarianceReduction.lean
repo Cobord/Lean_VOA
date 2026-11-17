@@ -55,10 +55,10 @@ theorem equivariantIndicator_of_S (F : SphericalFusion C)
           equivariantIndicator F Z.simple V m l (ρ (modularInvolution g) z) := by
     induction hg using Subgroup.closure_induction with
     | mem g hg =>
-      rcases (show g = ModularGroup.S ∨ g = ModularGroup.T by simpa using hg) with rfl | rfl
-      · simpa only [rowAction_S, modularInvolution_S] using hS
+      rcases (show g = ModularGroup.S ∨ g = ModularGroup.T by simpa using! hg) with rfl | rfl
+      · simpa only [rowAction_S, modularInvolution_S] using! hS
       · intro m l z
-        simpa only [rowAction_T, modularInvolution_T] using
+        simpa only [rowAction_T, modularInvolution_T] using!
           equivariantIndicator_T F Z M ρ hr V m l z
     | one =>
       intro m l z
@@ -95,7 +95,7 @@ theorem generalizedIndicatorEquivariance_iff_S (F : SphericalFusion C)
             equivariantIndicator F Z.simple V m l (ρ ModularGroup.S⁻¹ z) := by
   constructor
   · intro he ρ hr V m l z
-    simpa only [rowAction_S, modularInvolution_S] using he ρ hr V m l ModularGroup.S z
+    simpa only [rowAction_S, modularInvolution_S] using! he ρ hr V m l ModularGroup.S z
   · intro hs ρ hr V m l γ z
     exact equivariantIndicator_of_S F Z M ρ hr V (hs ρ hr V) m l γ z
 

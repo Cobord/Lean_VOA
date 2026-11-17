@@ -122,6 +122,8 @@ DLM2 (`q-alg/9509005`) Prop 6.1, Thm 6.2/6.3;
 
 namespace VOA
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open VertexOperatorAlgebra
 open Module (End)
 open scoped BigOperators TensorProduct
@@ -416,7 +418,7 @@ theorem indRho_deg_levCover (P : ParabolicRep W n U) {e c : ℤ} {x : VHatCarrie
     have := actMode_levCover P (p := m) ha hz
     rw [VHatRep.actMode_def] at this
     rwa [hd] at this
-  · dsimp only
+  · try dsimp only
     rw [map_zero]
     exact Submodule.zero_mem _
   · intro x₁ x₂ _ _ h₁ h₂
@@ -592,7 +594,7 @@ theorem posLevel_indRho_nonneg (Q : ParabolicRep W 0 U) {e : ℕ} {x : VHatCarri
     refine Submodule.mem_iSup_of_mem e ?_
     rw [show d + (e : ℤ) - (e : ℤ) = d from by ring]
     exact mem_modeStep hx hz'
-  · dsimp only
+  · try dsimp only
     rw [map_zero]
     exact Submodule.zero_mem _
   · intro z₁ z₂ h₁ h₂
@@ -657,7 +659,7 @@ theorem posLevel_indRho_orbit (Q : ParabolicRep W 0 U) :
         · have hbr : ⁅x, x'⁆ ∈ deg W (e + (e' : ℤ)) := deg_bracket_deg W hx hx'
           have h3 := ih hbr hw
           rwa [show d - (e' : ℤ) + (e + (e' : ℤ)) = d + e from by ring] at h3
-      · dsimp only
+      · try dsimp only
         rw [map_zero]
         exact Submodule.zero_mem _
       · intro z₁ z₂ _ _ h₁ h₂
@@ -666,7 +668,7 @@ theorem posLevel_indRho_orbit (Q : ParabolicRep W 0 U) :
       · intro c z₁ _ h₁
         rw [map_smul]
         exact Submodule.smul_mem _ _ h₁
-    · dsimp only
+    · try dsimp only
       rw [map_zero]
       exact Submodule.zero_mem _
     · intro z₁ z₂ h₁ h₂
@@ -681,7 +683,7 @@ theorem posLevel_indRho (Q : ParabolicRep W 0 U) {e d : ℤ} {x : VHatCarrier W}
     (motive := fun z => indRho Q x z ∈ posLevel Q (d + e)) hz ?_ ?_ ?_
   · intro r z hz'
     exact posLevel_indRho_orbit Q r hx hz'
-  · dsimp only
+  · try dsimp only
     rw [map_zero]
     exact Submodule.zero_mem _
   · intro z₁ z₂ h₁ h₂
@@ -723,7 +725,7 @@ theorem indMk_mem_posLevel_len (Q : ParabolicRep W 0 U) :
         rw [hstep]
         have := posLevel_indRho Q hx (ih hy'' u)
         rwa [show d - e + e = d from by ring] at this
-      · dsimp only
+      · try dsimp only
         rw [TensorProduct.zero_tmul, map_zero]
         exact Submodule.zero_mem _
       · intro y₁ y₂ _ _ h₁ h₂
@@ -732,7 +734,7 @@ theorem indMk_mem_posLevel_len (Q : ParabolicRep W 0 U) :
       · intro c y₁ _ h₁
         rw [← TensorProduct.smul_tmul', map_smul]
         exact Submodule.smul_mem _ _ h₁
-    · dsimp only
+    · try dsimp only
       rw [TensorProduct.zero_tmul, map_zero]
       exact Submodule.zero_mem _
     · intro y₁ y₂ h₁ h₂
@@ -748,7 +750,7 @@ theorem levCover_le_posLevel (Q : ParabolicRep W 0 U) (d : ℤ) :
     (motive := fun y => indMk Q (y ⊗ₜ[ℂ] u) ∈ posLevel Q d) hy ?_ ?_ ?_
   · intro r y hy'
     exact indMk_mem_posLevel_len Q r hy' u
-  · dsimp only
+  · try dsimp only
     rw [TensorProduct.zero_tmul, map_zero]
     exact Submodule.zero_mem _
   · intro y₁ y₂ h₁ h₂

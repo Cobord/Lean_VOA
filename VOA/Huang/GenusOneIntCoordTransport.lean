@@ -59,7 +59,7 @@ theorem transportedModes_injective : Function.Injective
   apply (normalizedCoordinateChange N).injective
   have he := congrArg (fun f : IntertwiningModes P.carrier Q.carrier N.carrier =>
     f n (normalizedCoordinateChange P w) (normalizedCoordinateChange Q x)) h
-  simpa only [transportedModes_apply, LinearEquiv.symm_apply_apply] using he
+  simpa only [transportedModes_apply, LinearEquiv.symm_apply_apply] using! he
 
 theorem inverse_square_mode (P : LWModule W) (a : V) (m : ℤ) (w : P.carrier) :
     (normalizedCoordinateChange P).symm (SquareModule.sqMode P.isMod m a w) =
@@ -139,7 +139,7 @@ theorem transportedModes_jacobi_left_finite
   apply (normalizedCoordinateChange N).symm.injective
   simpa only [map_smul, map_sub, map_zero, inverse_square_mode,
     transportedModes_apply, LinearEquiv.symm_apply_apply,
-    IsIntertwiningOperator.jacL] using hz
+    IsIntertwiningOperator.jacL] using! hz
 
 /-- The right square Jacobi coefficient (including the commutator case `l=0`)
 has finite support, before summation. -/
@@ -155,7 +155,7 @@ theorem transportedModes_jacobi_right_finite
   apply hi
   apply (normalizedCoordinateChange N).symm.injective
   simpa only [map_smul, map_zero, inverse_square_mode, transportedModes_apply,
-    LinearEquiv.symm_apply_apply, IsIntertwiningOperator.jacR] using hz
+    LinearEquiv.symm_apply_apply, IsIntertwiningOperator.jacR] using! hz
 
 /-- Full square-bracket Jacobi identity for the transported field, with the
 existing explicit Zhu square modes on each of the three modules. -/

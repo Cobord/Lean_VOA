@@ -25,7 +25,7 @@ theorem flatCurrent_eq_columns (c : Fin 28) (k : ℕ) :
   funext x
   obtain ⟨q,rfl⟩ := (pairFlat 28).surjective x
   rw [flatCoordinates_at_pair,coordinates_current_two,flatCoordinates_symm_single]
-  simpa only [vec,pairFlat_val] using
+  simpa only [vec,pairFlat_val] using!
     coordinateOp_single_coeff c k p.1 p.2 q.1 q.2
 
 /-- The certificate operator intertwines with the actual current on every tensor. -/
@@ -35,7 +35,7 @@ theorem flatCoordinates_current (c : Fin 28) (k : ℕ) (v : D1TensorG.Space 28 2
   have h := LinearMap.congr_fun (flatCurrent_eq_columns hJ hskew c k)
     (flatCoordinates 28 v)
   simpa only [LinearMap.comp_apply,LinearEquiv.coe_coe,
-    LinearEquiv.symm_apply_apply] using h
+    LinearEquiv.symm_apply_apply] using! h
 
 end
 #print axioms flatCoordinates_current

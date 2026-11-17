@@ -43,7 +43,7 @@ theorem primary_word {a : V} {h : ℤ} (ha : a ∈ W.grading h)
       W.smul a ((wWt w : ℤ) - 1) (virWord W w W.vacuum) = ((gam h w : ℚ) : ℂ) • a
   | [] => by
     refine ⟨fun m hm => ?_, ?_⟩
-    · exact PreVertexAlgebra.smul_vacuum_nonneg _ a (by simpa [wWt] using hm)
+    · exact PreVertexAlgebra.smul_vacuum_nonneg _ a (by simpa [wWt] using! hm)
     · simp [virWord, wWt, gam]
   | k :: w => by
     obtain ⟨h0, h1⟩ := primary_word ha hp w

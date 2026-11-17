@@ -96,7 +96,8 @@ theorem sectorOne_of_viaE (h1 : SectorOneViaE m hm) (h0 : PlusSectorFinite m hm 
       exact this ⟨y, hy, rfl⟩
     · rw [hμapp]
       exact poissonMul_mem_O₂_right _ _ hz
-  rw [sectorP, Submodule.span_le]
+  unfold sectorP
+  rw [Submodule.span_le]
   rintro _ ⟨f, rfl⟩
   have := h1 f
   exact (sup_le (le_sup_right) hE) this

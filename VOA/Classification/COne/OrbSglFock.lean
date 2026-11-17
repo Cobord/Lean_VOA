@@ -150,7 +150,8 @@ theorem oMod_boson_latticeTop :
       chi m j 0 • latVacuumGen (latP m) := by
   rw [oMod_homogeneous _ (boson_mem m hm), show (1 : ℤ) - 1 = 0 by norm_num]
   change mode ((latticeModule m hm j).YM (hb m)) 0 (latStateGen (latP m) (vacuumN _) 0) = _
-  rw [← hVec_eq_hb, latticeModule_zeroMode]
+  rw [← hVec_eq_hb]
+  refine (latticeModule_zeroMode (m := m) (hm := hm) (j := j) (p := vacuumN _) (γ := 0)).trans ?_
   rfl
 
 /-! ## Even words: rational values -/

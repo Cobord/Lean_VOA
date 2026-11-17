@@ -21,19 +21,19 @@ theorem hypPBWMap_coefficient_at_max (κ ell : ℂ) (p : hypFock)
       Finsupp.weight hypBCountWeight t < Finsupp.weight hypBCountWeight e ∨
         (Finsupp.weight hypBCountWeight t = Finsupp.weight hypBCountWeight e ∧
           Finsupp.weight hypBLevelWeight t ≤ Finsupp.weight hypBLevelWeight e)) :
-    coeff e (hypPBWMap κ ell p) = κ ^ (Finsupp.weight hypBCountWeight e) * coeff e p := by
+    (hypPBWMap κ ell p).coeff e = κ ^ (Finsupp.weight hypBCountWeight e) * p.coeff e := by
   classical
   have hterm (t : (ℕ × Fin 2) →₀ ℕ) (ht : t ∈ p.support) :
-      coeff e (hypPBWMap κ ell (monomial t (coeff t p))) =
-        if t = e then κ ^ (Finsupp.weight hypBCountWeight e) * coeff e p else 0 := by
-    have hz : coeff e (hypPBWMap κ ell (monomial t 1) -
-        κ ^ (Finsupp.weight hypBCountWeight t) • monomial t 1) = 0 := by
+      (hypPBWMap κ ell (monomial t (p.coeff t))).coeff e =
+        if t = e then κ ^ (Finsupp.weight hypBCountWeight e) * p.coeff e else 0 := by
+    have hz : (hypPBWMap κ ell (monomial t 1) -
+        κ ^ (Finsupp.weight hypBCountWeight t) • monomial t 1).coeff e = 0 := by
       by_contra hc
       have hlt := (hypBFiltered_mem _ _ _).mp (hypPBWMap_leading κ ell t) e hc
       have hle := hmax t ht
       omega
     rw [coeff_sub, coeff_smul] at hz
-    have hm : (monomial t (coeff t p) : hypFock) = coeff t p • monomial t 1 := by
+    have hm : (monomial t (p.coeff t) : hypFock) = p.coeff t • monomial t 1 := by
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [hm, map_smul, coeff_smul, sub_eq_zero.mp hz]
     by_cases hte : t = e
@@ -69,7 +69,7 @@ theorem hypPBWMap_injective (κ ell : ℂ) (hκ : κ ≠ 0) :
     intro t ht
     exact Prod.Lex.toLex_le_toLex.mp (hmax t ht)
   have hc := hypPBWMap_coefficient_at_max κ ell p e he hm
-  rw [hp, coeff_zero] at hc
+  rw [hp, show (0 : hypFock).coeff e = 0 by simp] at hc
   exact (mul_ne_zero (pow_ne_zero _ hκ) (mem_support_iff.mp he)) hc.symm
 
 theorem hypPBWMap_monomial_mem_range (κ ell : ℂ) (hκ : κ ≠ 0)
@@ -98,7 +98,7 @@ theorem hypPBWMap_monomial_mem_range (κ ell : ℂ) (hκ : κ ≠ 0)
           · exact ihd _ hd _ t rfl rfl
           · exact ihw _ hw t hd rfl
         simpa only [smul_monomial, smul_eq_mul, mul_one] using
-          (LinearMap.range (hypPBWMap κ ell)).smul_mem (coeff t r) hm
+          (LinearMap.range (hypPBWMap κ ell)).smul_mem (r.coeff t) hm
       have hs := (LinearMap.range (hypPBWMap κ ell)).sub_mem
         (LinearMap.mem_range_self _ (monomial e 1)) hrange
       have hs' : κ ^ d • monomial e 1 ∈ LinearMap.range (hypPBWMap κ ell) := by
@@ -115,7 +115,7 @@ theorem hypPBWMap_surjective (κ ell : ℂ) (hκ : κ ≠ 0) :
   apply Submodule.sum_mem
   intro e _
   simpa only [smul_monomial, smul_eq_mul, mul_one] using
-    (LinearMap.range (hypPBWMap κ ell)).smul_mem (coeff e p)
+    (LinearMap.range (hypPBWMap κ ell)).smul_mem (p.coeff e)
     (hypPBWMap_monomial_mem_range κ ell hκ e)
 
 /-- A linear automorphism of the polynomial space supplied by negative Sugawara words. -/

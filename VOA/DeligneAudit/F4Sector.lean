@@ -66,11 +66,11 @@ theorem u3_mem (a : Fin 52) : X a * quadraticRelation cas ∈ quadraticIdeal rel
   obtain ⟨⟨hL, hb⟩, hc⟩ := ha
   have := VOA.DeligneAudit.E6Sparse.mem_of_u3Check relQ (quadraticIdeal rel) qQ a _ hL _
     (fun t ht => by
-      have hlt : t.2.2 < 324 := by simpa using hb t ht
+      have hlt : t.2.2 < 324 := by simpa using! hb t ht
       rw [quadP_eq, ← rel_poly ⟨t.2.2, hlt⟩]
       exact Ideal.subset_span ⟨⟨t.2.2, hlt⟩, rfl⟩) hc
   rw [quadP_eq, ← cas_poly] at this
-  simpa [VOA.DeligneAudit.E6Sparse.Xn, a.2] using this
+  simpa [VOA.DeligneAudit.E6Sparse.Xn, a.2] using! this
 
 /-- **The F4 type data**: 52 currents, `I₂ⁿˢ` (324 relations), the Casimir, U3 checked. -/
 def F4data : DeligneCarrierData where
@@ -131,14 +131,14 @@ theorem quadraticRelation_fullMatrix (r : Option (Fin 324)) :
 theorem gen_stab : ∀ g ∈ gensL, ∀ (hg : g < 52), ∀ r,
     quadraticRelation (adMatrix fF4 ⟨g, hg⟩ (F4data.fullMatrix r)) ∈ Sp F4data.fullMatrix := by
   intro g hgG hg r
-  rw [fullMatrix_eq, quadraticRelation_adMatrix_castL range_ok _ _ (relZ_range (idx_lt r))]
+  erw [fullMatrix_eq, quadraticRelation_adMatrix_castL range_ok _ _ (relZ_range (idx_lt r))]
   set i := gensL.idxOf g
   have hi : i < gensL.length := List.idxOf_lt_length_of_mem hgG
   have hgi : gensL.getD i 0 = g := by
     rw [List.getD_eq_getElem _ _ hi]; exact List.getElem_idxOf hi
   have h := stab_ok
   simp only [stabChecks, List.all_eq_true, List.mem_range] at h
-  have h1 := h i (by simpa using hi) (idx r) (idx_lt r)
+  have h1 := h i (by simpa using! hi) (idx r) (idx_lt r)
   simp only [stabCheck] at h1
   rw [hgi] at h1
   split at h1
@@ -224,7 +224,7 @@ theorem table_wt (x y c : Fin 52) (h : wtS c ≠ wtS x + wtS y) : fF4 x y c = 0 
   funext i
   have := hw x x.2 y y.2 p hp i i.2
   rw [hpc] at this
-  simpa [wtS] using this
+  simpa [wtS] using! this
 
 /-- `ℓ_i = ht ∘ s_i` (coefficients `1 - ⟨α_j, α_i^∨⟩`). -/
 def ellS (i : Fin 52) : Fin 4 → ℤ := if i.val = 26 then ![-1, 1, 2, 2] else if i.val = 13 then ![1, -1, 2, 1] else if i.val = 46 then ![3, 2, -1, 1] else if i.val = 47 then ![2, 1, 1, -1] else ![0, 0, 0, 0]

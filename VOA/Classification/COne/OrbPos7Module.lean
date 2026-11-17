@@ -26,7 +26,7 @@ theorem starPF_eigen {n : ℕ} (hn : 0 < n) (a j : ℤ) (r : ℕ) (u : Space)
     ring
   have hh := allStatePF hn a j u v (-(r : ℤ)) e ℓ
   rw [residueProjection_eigen hn a (-(r : ℤ)) u he] at hh
-  simpa only [Int.cast_neg] using hh
+  simpa only [Int.cast_neg] using! hh
 
 /-- The full `OrbPos5` target, for every state. -/
 theorem shiftedProductFormula {n : ℕ} (hn : 0 < n) (a j : ℤ) :

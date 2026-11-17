@@ -11,7 +11,7 @@ namespace VOA.AffineSl2BoundaryParabolicRoots
 theorem positive_resonance_scale (P r m ell : ℕ) (hP : 0<P) (hr : 0<r)
     (hell : 0<ell) (hcop : P.Coprime 2)
     (he : 2*m=P*(ell+(2*r-1))) :
-    ∃ s : ℕ, r≤s ∧ m=P*s ∧ ell+(2*r-1)=2*s := by
+    ∃ s : ℕ, r ≤ s ∧ m=P*s ∧ ell+(2*r-1)=2*s := by
   have hdiv : P ∣ m := hcop.dvd_of_dvd_mul_left (he ▸ dvd_mul_right P _)
   obtain ⟨s,hs⟩ := hdiv
   refine ⟨s, ?_, hs, ?_⟩
@@ -30,12 +30,12 @@ theorem positive_resonance_first (P r m ell : ℕ) (hP : 0<P) (hr : 0<r)
   have hsle : s≤r := by nlinarith [hmle]
   have hsr : s=r := by omega
   constructor
-  · simpa [hsr] using hm
+  · simpa [hsr] using! hm
   · omega
 
 /-- Negative-family resonances have mode P*s and multiplicity 2s+2r-1. -/
 theorem negative_resonance_scale (P r m ell : ℕ) (hP : 0<P) (_hr : 0<r)
-    (hm : 0<m) (hcop : P.Coprime 2)
+    (hm : 0 < m) (hcop : P.Coprime 2)
     (he : 2*m+P*(2*r-1)=P*ell) :
     ∃ s : ℕ, 0<s ∧ m=P*s ∧ ell=2*s+(2*r-1) := by
   have hdiv : P ∣ 2*m := (Nat.dvd_add_iff_left (dvd_mul_right P (2*r-1))).mpr
@@ -49,7 +49,7 @@ theorem negative_resonance_scale (P r m ell : ℕ) (hP : 0<P) (_hr : 0<r)
 /-- Every nonhorizontal negative root lies strictly above the first
 positive root energy; its smallest possible energy is P*(2r+1). -/
 theorem negative_resonance_energy (P r m ell : ℕ) (hP : 0<P) (hr : 0<r)
-    (hm : 0<m) (hcop : P.Coprime 2)
+    (hm : 0 < m) (hcop : P.Coprime 2)
     (he : 2*m+P*(2*r-1)=P*ell) : P*(2*r+1) ≤ m*ell := by
   obtain ⟨s,hs,hm',hell⟩ := negative_resonance_scale P r m ell hP hr hm hcop he
   have hmP : P ≤ m := by nlinarith
@@ -80,7 +80,7 @@ theorem first_kac_labels (P r : ℕ) (hP : 0<P) (hr : 0<r) (hcop : P.Coprime 2)
         linear_combination hz
       exact_mod_cast hh
     have hb : (m+1)*(j+1)≤P*r := by
-      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using he) hn
+      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using! he) hn
     obtain ⟨hm,hj⟩ := positive_resonance_first P r (m+1) (j+1) hP hr (by omega) hcop heq hb
     right
     have hm' : m=P*r-1 := by omega
@@ -107,7 +107,7 @@ theorem first_kac_labels (P r : ℕ) (hP : 0<P) (hr : 0<r) (hcop : P.Coprime 2)
         exact_mod_cast hh
       have henergy := negative_resonance_energy P r m (j+1) hP hr (by omega) hcop heq
       have hb : m*(j+1)≤P*r := by
-        exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using he) hn
+        exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using! he) hn
       have : P*r<P*(2*r+1) := Nat.mul_lt_mul_of_pos_left (by omega) hP
       omega
   · exact False.elim (ha rfl)
@@ -133,15 +133,15 @@ theorem next_label_mem (P r : ℕ) (hP : 0<P) (hr : 0<r)
     ((0,P*r-1),0) ∈ Wak.Charged.affineKacLabels (P*r) c := by
   have hpr : 0<P*r := Nat.mul_pos hP hr
   have hm := Wak.Charged.admissible_first_label_mem_charge 2 (P*r)
-    (by omega) hpr c (by simpa using hc)
-  simpa using hm
+    (by omega) hpr c (by simpa using! hc)
+  simpa using! hm
 
 /-- Its exact actual occupation multiplicity is one through all lower charges. -/
 theorem next_label_multiplicity (P r : ℕ) (hP : 0<P) (hr : 0<r)
     (c : ℤ) (hc : c≤1) :
     Wak.Charged.affineKacMultiplicity (P*r) c ((0,P*r-1),0)=1 := by
-  simpa using Wak.Charged.admissible_first_multiplicity_charge 2 (P*r)
-    (by omega) (Nat.mul_pos hP hr) c (by simpa using hc)
+  simpa using! Wak.Charged.admissible_first_multiplicity_charge 2 (P*r)
+    (by omega) (Nat.mul_pos hP hr) c (by simpa using! hc)
 
 /-- The root isolated above has precisely the required boundary highest weight. -/
 theorem next_label_resonant (P r : ℕ) (hP : 0<P) (hr : 0<r) :
@@ -182,7 +182,7 @@ theorem reflected_first_kac_labels (P r : ℕ) (hP : 0<P) (hr : 0<r)
     have henergy := negative_resonance_energy P r (m+1) (j+1)
       hP hr (by omega) hcop heq
     have hb : (m+1)*(j+1)≤P*r := by
-      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using he) hn
+      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using! he) hn
     have : P*r<P*(2*r+1) := Nat.mul_lt_mul_of_pos_left (by omega) hP
     omega
   · have heq : 2*m=P*((j+1)+(2*r-1)) := by
@@ -194,7 +194,7 @@ theorem reflected_first_kac_labels (P r : ℕ) (hP : 0<P) (hr : 0<r)
         linear_combination -hz
       exact_mod_cast hh
     have hb : m*(j+1)≤P*r := by
-      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using he) hn
+      exact le_trans (by simpa [Wak.Charged.oscillatorEnergy,Nat.mul_comm] using! he) hn
     obtain ⟨hm,hj⟩ := positive_resonance_first P r m (j+1) hP hr (by omega) hcop heq hb
     have hj' : j=0 := by omega
     simp [hm,hj']
@@ -211,7 +211,9 @@ theorem reflected_resonant_multiplicity_zero (P r : ℕ) (hP : 0<P) (hr : 0<r)
   simp only [Wak.Charged.affineKacMultiplicity,Wak.Charged.oscillatorEnergy,
     Wak.Charged.oscillatorCharge,Fin.isValue,Fin.reduceEq,if_true,if_false,
     zero_add,one_mul,Nat.sub_eq_zero_of_le hn]
-  letI := Wak.Charged.jointIndex_zero_positive_empty (c-1*(-1)) (by omega)
-  exact Fintype.card_eq_zero
+  refine (@Fintype.card_eq_zero_iff _ (Wak.Charged.kacProductFintype _ _)).mpr ?_
+  simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, zero_add, one_mul, Nat.cast_one,
+    Nat.sub_eq_zero_of_le hn]
+  exact Wak.Charged.jointIndex_zero_positive_empty _ (by omega)
 
 end VOA.AffineSl2BoundaryParabolicRoots

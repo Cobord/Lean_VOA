@@ -179,18 +179,18 @@ theorem sandwich_of_weight (Y : IntertwiningOperator P.isMod Q.isMod N.isMod) {�
     rw [← inverse_square_energy N D, hDw, map_smul]
   by_cases hδ : ∃ κ : ℤ, P.h + Q.h - n - 1 - N.h = κ
   · obtain ⟨κ, hκ⟩ := hδ
-    have hwa : w ∈ moduleLevelLE P a := mem_moduleLevelLE P le_rfl (by simpa using hw)
-    have hxb : x ∈ moduleLevelLE Q b := mem_moduleLevelLE Q le_rfl (by simpa using hx)
+    have hwa : w ∈ moduleLevelLE P a := mem_moduleLevelLE P le_rfl (by simpa using! hw)
+    have hxb : x ∈ moduleLevelLE Q b := mem_moduleLevelLE Q le_rfl (by simpa using! hx)
     have hy : Y.val n w x ∈ moduleLevelLE N (a + b + κ) := by
       have := intertwiner_mem_level Y hκ hwa hxb 0
-      simpa using this
+      simpa using! this
     have t1 := normalizedCoordinateChange_sub_mem_lower N hy
     have hw1 : w - normalizedCoordinateChange P w ∈ moduleLevelLE P (a - 1) := by
       have := Submodule.neg_mem _ (normalizedCoordinateChange_sub_mem_lower P hwa)
-      simpa using this
+      simpa using! this
     have hx1 : x - normalizedCoordinateChange Q x ∈ moduleLevelLE Q (b - 1) := by
       have := Submodule.neg_mem _ (normalizedCoordinateChange_sub_mem_lower Q hxb)
-      simpa using this
+      simpa using! this
     have t2a : Y.val n (w - normalizedCoordinateChange P w) x ∈
         moduleLevelLE N (a + b + κ - 1) := by
       have := intertwiner_mem_level Y hκ hw1 hxb 0

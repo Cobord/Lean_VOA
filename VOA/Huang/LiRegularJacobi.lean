@@ -495,8 +495,7 @@ noncomputable def weakModuleR (hz : z ≠ 0) : WeakModule W (Bs.Dsub z) where
       intro i
       simp only [Submodule.coe_smul, hmode, rJacR, dd_T, mul_assoc, ← T_add, yRres_CT]
       rw [show m - i + n = m + n - i by ring]
-    simp only [LinearMap.coe_mk, AddHom.coe_mk]
-    rw [coe_finsum_of hL (rJacL_support_finite hz α.2 a b l _ _),
+    erw [coe_finsum_of hL (rJacL_support_finite hz α.2 a b l _ _),
       coe_finsum_of hR (rJacR_support_finite hz α.2 a b l _ _)]
     exact yRres_jacobi hz α.2 a b l (T m) (T n)
 

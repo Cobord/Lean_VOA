@@ -59,7 +59,7 @@ theorem halfBraiding_evaluation (A : Center C) (X : C) :
   rw [A.2.monoidal, halfBraiding_unit] at h
   simpa only [Category.assoc, ← comp_whiskerRight_assoc,
     Iso.hom_inv_id, id_whiskerRight, Category.id_comp,
-    Iso.inv_hom_id, Category.comp_id, Iso.hom_inv_id_assoc] using
+    Iso.inv_hom_id, Category.comp_id, Iso.hom_inv_id_assoc] using!
     congrArg (fun f => (α_ A.1 Xᘁ X).hom ≫ f ≫ (λ_ A.1).hom) h.symm
 
 /-- The explicit forward partial trace is the reverse-map bend of the cap slide. -/
@@ -134,6 +134,6 @@ theorem forwardBlockOperator_single_pair (F : SphericalFusion C) (A : Center C)
     simpa only [generalizedRotation, LinearEquiv.trans_symm, LinearEquiv.trans_apply,
       homCongr, LinearEquiv.symm_mk, LinearEquiv.coe_mk, Iso.refl_hom,
       Category.id_comp, Category.assoc, he, forwardBlockOperator,
-      Pivotal.partialTraceLeftLinear, LinearMap.coe_mk, AddHom.coe_mk] using h
+      Pivotal.partialTraceLeftLinear, LinearMap.coe_mk, AddHom.coe_mk] using! h
 
 end VOA.Huang.NSCongruence

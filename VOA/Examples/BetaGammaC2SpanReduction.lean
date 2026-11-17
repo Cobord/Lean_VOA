@@ -49,7 +49,7 @@ theorem linearMap_smul_neg_two_eq_zero_of_words (D : Fock →ₗ[ℂ] M)
       obtain ⟨l₂, rfl⟩ := hx
       exact hword l₁ l₂
     · have hz := bgSVOA.smul_smul_right (stWordBG l₁) (0 : ℂ) (-2) (1 : Fock)
-      simpa using congrArg D hz
+      simpa using! congrArg D hz
     · intro x y _ _ hx hy
       simp only [SuperVertexAlgebra.smul_add_right, map_add, hx, hy, add_zero]
     · intro c x _ hx
@@ -64,7 +64,7 @@ theorem linearMap_smul_neg_two_eq_zero_of_words (D : Fock →ₗ[ℂ] M)
     obtain ⟨l₁, rfl⟩ := hx
     exact hright l₁ v
   · have hz := bgSVOA.smul_smul_left (0 : ℂ) (1 : Fock) (-2) v
-    simpa using congrArg D hz
+    simpa using! congrArg D hz
   · intro x y _ _ hx hy
     simp only [SuperVertexAlgebra.smul_add_left, map_add, hx, hy, add_zero]
   · intro c x _ hx

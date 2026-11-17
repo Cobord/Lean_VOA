@@ -46,7 +46,7 @@ theorem xyzPowerSumAlgebra_height
       split_ifs <;> norm_num
     have hdiv := (heightHigherOrbit ρ w m k).smul_mem
       (if j = 5 then (1 : ℂ) else 2)⁻¹ hh
-    simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using hdiv
+    simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using! hdiv
   have hsub : xyzPowerSumAlgebra shape ≤
       preservingShiftAlgebra (MvPolynomial σ ℂ)
         (symmetricShiftAction σ) N := by
@@ -65,7 +65,7 @@ theorem pairSourceSymmetric_mul_height
   have hQ : (Q : MvPolynomial (PairSource a b c) ℂ) ∈
       xyzPowerSumAlgebra (pairSourceShape a b c) :=
     pairSourceSymmetric_le_xyzPowerSumAlgebra a b c Q.property
-  simpa only [Subalgebra.coe_mul, symmetricShiftAction_apply] using
+  simpa only [Subalgebra.coe_mul, symmetricShiftAction_apply] using!
     xyzPowerSumAlgebra_height ρ w m h k
       (pairSourceShape a b c) (pairSourceShape_xyz a b c)
       Q hQ P hP

@@ -27,7 +27,7 @@ theorem chargeCoord_one (d : ℤ) :
   have h (k : ℕ) : chargeCoord (latP 1) (k : ℤ) (a0 1) = (k : ℂ) * cα 1 := by
     induction k with
     | zero =>
-      simpa only [Nat.cast_zero, zero_mul] using chargeCoord_zero (latP 1) (a0 1)
+      simpa only [Nat.cast_zero, zero_mul] using! chargeCoord_zero (latP 1) (a0 1)
     | succ k ih =>
       have hh := chargeCoord_add (latP 1) ((k : ℤ) : (latP 1).carrier)
         ((1 : ℤ) : (latP 1).carrier) (a0 1)
@@ -84,7 +84,9 @@ theorem exponentialActionOne_sound (b d n : ℤ) (P : RawPoly ℕ) :
   norm_cast
   rw [← chargeCoord_one]
   have h := V2m_charge_smul_evRc 1 le_rfl b d n (liftR R)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul] at h
-  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*1=2 by norm_num] using h.symm
+  rw [evRc_liftR,
+    PlusCharacterTable.rankOne_cocycle 1 (b : (latP 1).carrier) (d : (latP 1).carrier),
+    one_smul] at h
+  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*1=2 by norm_num] using! h.symm
 
 end VOA.Classification.COne.OrbOctaRC

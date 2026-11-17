@@ -57,7 +57,7 @@ theorem exists_comb_of_span_triple {E : Type*} [AddCommGroup E] [Module ℂ E]
   have hS : Module.finrank ℂ S ≤ 3 := by
     have := finrank_range_le_card (R := ℂ) (b := ![f1, f2, f3])
     rw [Set.finrank] at this
-    simpa using this
+    simpa using! this
   have hTeq : T = S := Submodule.eq_of_le_of_finrank_le hTS (by rw [hT]; exact hS)
   rw [← hTeq] at hv
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).mp hv
@@ -202,7 +202,7 @@ theorem lat_weight_three_mem_span (r : Fin (m - 1)) (hs : r.val + 5 ≤ m) {v : 
     · have : m * n ^ 2 + n * s ≥ 5 := by nlinarith
       omega
   subst hn
-  have hw3 : w = 3 := by simpa using hkey
+  have hw3 : w = 3 := by simpa using! hkey
   subst hw3
   intro y hy
   obtain ⟨q, hq, rfl⟩ := Submodule.mem_map.mp hy

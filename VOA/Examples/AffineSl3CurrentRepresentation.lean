@@ -14,6 +14,8 @@ The polynomial energy has the opposite sign from the affine degree generator.
 All current-data obligations are discharged below at every complex level; no
 representation premise or noncritical-level restriction is imposed.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3
 open Module (End)
 open VOA.AffineLie

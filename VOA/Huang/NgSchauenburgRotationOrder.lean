@@ -20,6 +20,7 @@ def joinPower (V : C) : (a b : ℕ) →
 @[simp] theorem joinPower_right_zero (V : C) (a : ℕ) :
     joinPower V a 0 = appendPower V a := rfl
 
+set_option backward.isDefEq.respectTransparency false in
 @[simp] theorem joinPower_zero (V : C) (b : ℕ) :
     (joinPower V 0 b).hom = eqToHom (by simp only [Nat.zero_add]; rfl) := by
   induction b with
@@ -41,6 +42,7 @@ theorem joinPower_append (V : C) (a b : ℕ) :
         tensorPower V (a + 1) ◁ (appendPower V b).hom ≫ (joinPower V a (b + 1)).hom := by
   simp [joinPower]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Concatenation also respects the first factor. -/
 theorem joinPower_succ (V : C) (a b : ℕ) :
     (joinPower V (a + 1) b).hom =
@@ -61,6 +63,7 @@ theorem joinPower_succ (V : C) (a b : ℕ) :
       Category.assoc]
     monoidal
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Associativity of concatenation when the middle block is one factor. -/
 theorem joinPower_middle (V : C) (a b : ℕ) :
     (appendPower V a).hom ▷ tensorPower V (b + 1) ≫ (joinPower V (a + 1) b).hom =
@@ -84,7 +87,6 @@ theorem joinPower_middle (V : C) (a b : ℕ) :
           (appendPower V (a + 1 + b + 1)).hom := by
         simp only [comp_whiskerRight, Category.assoc]
         rw [← whisker_exchange_assoc, associator_inv_naturality_left_assoc]
-        rfl
       _ = _ := by
         rw [ih]
         simp only [comp_whiskerRight, Category.assoc, eqToHom_whiskerRight]
@@ -140,6 +142,7 @@ theorem rotation_join_step (P : Pivotal C) (V : C) (a b : ℕ)
   rw [rotation_tensor]
   simp
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Iterated single rotations are the canonical tensor-block rotation. -/
 theorem fsRotation_iterate_join (P : Pivotal C) (V : C) (a b : ℕ)
     (f : 𝟙_ C ⟶ tensorPower V (a + 1) ⊗ tensorPower V (b + 1)) :
@@ -167,7 +170,6 @@ theorem fsRotation_iterate_join (P : Pivotal C) (V : C) (a b : ℕ)
     erw [ih]
     simp only [Category.assoc, eqToHom_trans, joinPower_succ]
     dsimp only [tensorPower]
-    simp only [Category.assoc, eqToHom_trans]
     simp only [← Category.assoc]
     erw [fsRotation_cast P V (show b + a + 3 = a + 1 + b + 2 by omega)]
     erw [rotation_join_step]
@@ -176,6 +178,7 @@ theorem fsRotation_iterate_join (P : Pivotal C) (V : C) (a b : ℕ)
     simp [g]
     rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The rotation returns to its starting morphism after the number of factors. -/
 theorem fsRotation_iterate_self (P : Pivotal C) (V : C) (n : ℕ)
     (f : 𝟙_ C ⟶ tensorPower V n) : (fsRotation P V n)^[n] f = f := by

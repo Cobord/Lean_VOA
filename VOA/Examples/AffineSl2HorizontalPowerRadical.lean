@@ -32,7 +32,7 @@ theorem horizontalState_reflection_adjoint (k : ℂ) (d : ℕ)
     fin_cases a <;> simp [IsLower,adjointColour,Fin.ext_iff] at * <;> omega
   have hh : ¬(-n=0 ∧ adjointColour a=2) := by
     fin_cases a <;> simp [IsLower,adjointColour,Fin.ext_iff] at * <;> omega
-  simpa only [if_neg hh] using (horizontalState_reflection_highest k d).modes _ _ hp
+  simpa only [if_neg hh] using! (horizontalState_reflection_highest k d).modes _ _ hp
 
 /-- The reflected highest state lies in the full actual canonical radical. -/
 theorem horizontalState_reflection_radical (k : ℂ) (d : ℕ) :
@@ -71,10 +71,10 @@ theorem horizontalState_raising (k h : ℂ) (r : ℕ) :
     have hc := HighestNormalOrdering.push (mode k h) k (mode_comm k h)
       0 1 0 0 (highestVector k h)
     have he : mode k h 0 0 (highestVector k h) = 0 := by
-      simpa using mode_highest k h 0 0 (by simp [IsLower])
+      simpa using! mode_highest k h 0 0 (by simp [IsLower])
     have hh : mode k h 2 0 (highestVector k h) = h • highestVector k h := by
-      simpa using mode_highest k h 2 0 (by simp [IsLower])
-    simpa [horizontalState_zero,he,hh,Fin.sum_univ_three,fabc] using hc
+      simpa using! mode_highest k h 2 0 (by simp [IsLower])
+    simpa [horizontalState_zero,he,hh,Fin.sum_univ_three,fabc] using! hc
   | succ r ih =>
     rw [horizontalState_succ]
     have hc := HighestNormalOrdering.push (mode k h) k (mode_comm k h)

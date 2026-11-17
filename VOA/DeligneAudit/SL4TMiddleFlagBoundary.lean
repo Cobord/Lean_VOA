@@ -30,7 +30,7 @@ theorem middleFlag_first_top_product (q : MixedParams) (hq : MixedValid q)
         mixedEvaluation q (mixedH 1 (q.B - q.d2).toNat) := by
   have hd := (middleFlag_outer_lengths q hq hA).1
   have h := (mixedG1prime_top q hq).trans (mixedU_top q hq)
-  simpa [middleFlagTop, hd, mixedE, mul_comm] using h
+  simpa [middleFlagTop, hd, mixedE, mul_comm] using! h
 
 /-- The last two flag tops multiply to the top of the chosen middle base. -/
 theorem middleFlag_second_top_product (q : MixedParams) (hq : MixedValid q)
@@ -39,7 +39,7 @@ theorem middleFlag_second_top_product (q : MixedParams) (hq : MixedValid q)
       mixedEvaluation q (mixedE 1 q.d2.toNat) := by
   have hd := (middleFlag_outer_lengths q hq hA).2
   have h := (mixedG2prime_top q hq).trans (mixedV_top q hq)
-  simpa [middleFlagTop, hA, hd, mixedH] using h
+  simpa [middleFlagTop, hA, hd, mixedH] using! h
 
 /-- The product of all four top classes vanishes at every positive number of sites. -/
 theorem middleFlag_top_product_zero (q : MixedParams) (hq : MixedValid q)
@@ -91,8 +91,8 @@ theorem middleFlag_stateIdeal (q : MixedParams) (hq : MixedValid q)
         rw [← hsecond]
         exact (Ideal.span {middleFlagTop q .d2}).mul_mem_left _ hmem
     · have he : x = middleFlagTop q s := by
-        cases s <;> simpa [mixedBPair, middleFlagTop] using hx
-      simpa only [he] using hmem
+        cases s <;> simpa [mixedBPair, middleFlagTop] using! hx
+      simpa only [he] using! hmem
   · apply Ideal.span_le.mpr
     rintro x rfl
     apply Ideal.subset_span
@@ -129,7 +129,7 @@ theorem principalBoundary_mul_mem {R : Type*} [CommRing R]
     ∀ x ∈ Ideal.span {e}, t * x ∈ I := by
   intro x hx
   obtain ⟨y, rfl⟩ := Ideal.mem_span_singleton.mp hx
-  simpa only [mul_assoc, mul_left_comm t e] using I.mul_mem_right y h
+  simpa only [mul_assoc, mul_left_comm t e] using! I.mul_mem_right y h
 
 /-- Every first-site boundary is killed modulo the preceding prefix. -/
 theorem doubledSiteOuterThom_boundary (q : MixedParams) (hq : MixedValid q)
@@ -152,7 +152,7 @@ theorem doubledSiteOuterThom_boundary (q : MixedParams) (hq : MixedValid q)
       dsimp [doubledSiteOuterThom, doubledSiteOuterOrder] <;> ring
   · convert hm 2 1 (by decide) using 1 <;>
       dsimp [doubledSiteOuterThom, doubledSiteOuterOrder] <;> ring
-  · simpa [doubledSiteOuterThom, doubledSiteOuterOrder] using hm 3 2 (by decide)
+  · simpa [doubledSiteOuterThom, doubledSiteOuterOrder] using! hm 3 2 (by decide)
 
 /-- Every reversed second-site boundary is killed modulo its preceding prefix. -/
 theorem doubledSiteInnerThom_boundary (q : MixedParams) (hq : MixedValid q)
@@ -175,7 +175,7 @@ theorem doubledSiteInnerThom_boundary (q : MixedParams) (hq : MixedValid q)
       dsimp [doubledSiteInnerThom, doubledSiteInnerOrder] <;> ring
   · convert hm 2 1 (by decide) using 1 <;>
       dsimp [doubledSiteInnerThom, doubledSiteInnerOrder] <;> ring
-  · simpa [doubledSiteInnerThom, doubledSiteInnerOrder] using hm 3 2 (by decide)
+  · simpa [doubledSiteInnerThom, doubledSiteInnerOrder] using! hm 3 2 (by decide)
 
 /-- Both ordered chains begin at zero and end at the full ring. -/
 theorem doubledSiteChains_endpoints (q : MixedParams) :

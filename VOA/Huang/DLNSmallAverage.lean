@@ -100,7 +100,7 @@ theorem layer_eq_one_of_averaging {G S E : Type} [Group G] [Group S] [Group E]
     have hre : ∏ q ∈ Q, c (σ (s⁻¹ * q * s)) m = ∏ q ∈ Q, c (σ q) m := by
       apply Finset.prod_nbij' (fun q => s⁻¹ * q * s) (fun q => s * q * s⁻¹)
       · intro q hq; exact hQ s q hq
-      · intro q hq; simpa using hQ s⁻¹ q hq
+      · intro q hq; simpa using! hQ s⁻¹ q hq
       · intro q _; group
       · intro q _; group
       · intro q _; rfl
@@ -152,7 +152,7 @@ theorem layer_eq_one_of_averaging {G S E : Type} [Group G] [Group S] [Group E]
     rw [hc_apply, Subgroup.mem_center_iff.mp hxc (σ q), mul_inv_cancel_right]
   have hcard : x ^ Q.card = 1 := by
     have := congrArg Subtype.val (hAx'.symm.trans hAx)
-    simpa using this
+    simpa using! this
   have := (pow_gcd_eq_one (a := x)).mpr ⟨hcard, hxp⟩
   rwa [hcop.gcd_eq_one, pow_one] at this
 

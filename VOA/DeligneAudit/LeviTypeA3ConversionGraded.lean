@@ -53,7 +53,7 @@ theorem a3_box_conversion_graded_of_higher (a b c : ℕ)
   have hfj : simpleF (Fin.succ j) = leviF j := by
     fin_cases j <;> rfl
   have hkill : PowerSeries.coeff s (fCurrent f ^ k) • w = 0 := by
-    simpa only [hfj] using
+    simpa only [hfj] using!
       a3_simple_conversion_kill ρ w a b c h (Fin.succ j) k s hk hks
   exact box_conversion_graded f A B hfa hfb hab haa k s xs ys R w
     hRf hkill (by intro z v; simp) N hHigher

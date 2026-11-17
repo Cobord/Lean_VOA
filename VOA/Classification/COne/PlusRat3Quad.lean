@@ -129,7 +129,7 @@ theorem hasN_LmV {y : VP m hm} {P : RawPoly ℕ} (hy : HasN m hm y P) :
     rw [LmV, Function.iterate_succ_apply', ← LmV, L_neg_one_eq_smul]
     have h := hasN_smul_left m hm (hasN_omega m hm) (hasN_LmV hy k) 0
     rw [HasN, LmPow, LmR, ls_normR]
-    simpa using h
+    simpa using! h
 
 /-- `Σ c · L(-1)^k H^{2t}` in `V⁺`. -/
 def combV : List (ℚ × ℕ × ℕ) → VP m hm

@@ -56,7 +56,7 @@ theorem vacuum_equiv_of_adjoint_embedding (S : VOASubalgebra W)
     have ht := hom_mem_weight hf hx
     change f x ∈ adjWeight W 0 at ht
     have hw : adjWeight W 0 = W.grading 0 := by
-      simpa only [Int.cast_zero] using adjWeight_cast W 0
+      simpa only [Int.cast_zero] using! adjWeight_cast W 0
     rwa [hw] at ht
   have hxs : f x ∈ S.carrier := by
     rw [W.vacuum_grade] at hfx
@@ -121,7 +121,7 @@ theorem vacuum_sector_nonvacuum_weight_gap (S : VOASubalgebra W)
   have hnne : n ≠ 0 := by
     intro hz
     subst n
-    have h0 : N.weight 0 ≠ ⊥ := by simpa only [Int.cast_zero] using hα
+    have h0 : N.weight 0 ≠ ⊥ := by simpa only [Int.cast_zero] using! hα
     obtain ⟨e⟩ := vacuum_equiv_of_adjoint_embedding S hS N hi f hf hfi h0
     exact hn.false e
   simp only [Complex.intCast_re]

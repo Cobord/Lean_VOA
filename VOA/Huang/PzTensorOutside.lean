@@ -364,7 +364,6 @@ theorem coefFun_commutator (m : ℤ) (x : HomPair P₁ P₂) (γ : ℂ) (kk : �
     rw [copT_eq_sum (hBil _) hu i x hN₁, PzTensorHatBridge.finsum_int_eq_range
       (fun r : ℤ => cbz i r * coefFun Y₁ Y₂ f w₃ α₃ h₄ (γ + wt - i - 1) kk (pairLeft x hu r))
       N₁ (fun r hr => by
-      dsimp only
       rcases hr with hr | hr
       · rw [cbz_neg hr]; ring
       · have h0 : mode (P₁.isMod.YM u) r x.w₁ = 0 := by
@@ -498,7 +497,6 @@ theorem outE_eq_zero (γ : ℂ) (kk : ℕ) (x : HomPair P₁ P₂) (ℓ m : ℤ)
     rw [PzTensorHatBridge.finsum_int_eq_range (fun i : ℤ => (negOnePow i * cbz ℓ i)
         * coefFun Y₁ Y₂ (f ∘ₗ mode (P₄.isMod.YM u) (ℓ - i)) w₃ α₃ (h₄ - wt + ((ℓ - i : ℤ) : ℂ) + 1)
           γ kk x) NA (fun i hi => by
-        dsimp only
         rcases hi with hi | hi
         · rw [cbz_neg hi]; ring
         · have := hNA i.toNat (by omega)
@@ -507,7 +505,6 @@ theorem outE_eq_zero (γ : ℂ) (kk : ℕ) (x : HomPair P₁ P₂) (ℓ m : ℤ)
       PzTensorHatBridge.finsum_int_eq_range (fun i : ℤ => (negOnePow i * cbz ℓ i)
         * coefFun Y₁ Y₂ f (mode (P₃.isMod.YM u) i w₃) (α₃ + wt - (i : ℂ) - 1) h₄ γ kk x) N₃
         (fun i hi => by
-        dsimp only
         rcases hi with hi | hi
         · rw [cbz_neg hi]; ring
         · have := hN₃ i.toNat (by omega)

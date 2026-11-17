@@ -349,7 +349,7 @@ theorem cm_mem (a : Fin 3) (n : ℤ) (j2 : KF × ℤ) {g : Sl2GhostSpace}
       shiftTarget KoszulConcrete.ghostB (fun δ : KF × ℤ => δ.1 = ghShiftF 1 n ∧ b2 δ.1 = 2 * δ.2)
         j2 := by
   have h := ghostB_lift (ghostYCoeff_shifts a 1 n) j2 g hg
-  simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using h
+  simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using! h
 
 theorem b2_ghShiftF_one_nonneg {n : ℤ} (hn : 0 ≤ n) : b2 (ghShiftF 1 n) = 0 := by
   unfold ghShiftF
@@ -456,11 +456,11 @@ theorem finsum_Dterm (N : ℕ) (a : Fin 3) (m : MatterSpace) (g : Sl2GhostSpace)
     ∑ᶠ n, Dterm hA N a m g n =
       ∑ jj ∈ Finset.range N, mLead hA (toLex (a, jj)) m ⊗ₜ[ℂ] gAn (toLex (a, jj)) g := by
   rw [finsum_eq_sum_of_support_subset _ (Dterm_support hA N a m g),
-    Finset.sum_image (fun x _ y _ h => by simpa using h)]
+    Finset.sum_image (fun x _ y _ h => by simpa using! h)]
   refine Finset.sum_congr rfl fun jj hjj => ?_
   rw [Finset.mem_range] at hjj
   have e : (-(-(jj : ℤ) - 1) - 1) = (jj : ℤ) := by ring
-  rw [Dterm, if_pos ⟨by omega, by rw [e]; simpa using hjj⟩, e, Int.toNat_natCast]
+  rw [Dterm, if_pos ⟨by omega, by rw [e]; simpa using! hjj⟩, e, Int.toNat_natCast]
   rfl
 
 /-- **The decomposition of `Q` on a pure tensor**: `Q (m ⊗ g) - dN (m ⊗ g)` has no component
@@ -518,7 +518,7 @@ theorem Q_sub_dN_tmul (N : ℕ) {j1 j2 : KF × ℤ} {m : MatterSpace} {g : Sl2Gh
         · rintro ⟨w, hw⟩
           have hsh : (ghShiftF 1 n).1.2 = (n : ℂ) := by
             have := congrArg Prod.snd (piRp_ghShiftF 1 n)
-            simpa [piRp_apply] using this
+            simpa [piRp_apply] using! this
           simp only [Prod.fst_add, Prod.snd_add] at hw
           rw [hsh, ← hwg] at hw
           have hw' : (w : ℤ) = wg + n := by exact_mod_cast hw

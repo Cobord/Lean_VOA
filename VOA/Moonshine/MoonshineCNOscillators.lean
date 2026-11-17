@@ -25,16 +25,18 @@ theorem complexChargeOscillator_vacuum {r : ℕ} (v : Fin r → ℂ) (m : ℤ)
 theorem complexChargeOscillator_commutator {r : ℕ} (v w : Fin r → ℂ) (m n : ℤ) :
     ⁅complexChargeOscillator v m, complexChargeOscillator w n⁆ =
       (if m + n = 0 then (∑ a, v a * w a) * (m : ℂ) else 0) • LinearMap.id := by
-  simp only [complexChargeOscillator, sum_lie, lie_sum, smul_lie, lie_smul]
-  simp only [Ring.lie_def, oscN_comm, mul_one, smul_smul]
+  simp only [complexChargeOscillator, Ring.lie_def]
+  rw [Finset.sum_mul_sum, Finset.sum_mul_sum, Finset.sum_comm (s := Finset.univ) (t := Finset.univ)
+    (f := fun b a => (w b • oscN r 1 b n) * (v a • oscN r 1 a m)), ← Finset.sum_sub_distrib]
+  have key : ∀ a b : Fin r,
+      (v a • oscN r 1 a m) * (w b • oscN r 1 b n) - (w b • oscN r 1 b n) * (v a • oscN r 1 a m)
+        = (v a * w b) • (if a = b ∧ m + n = 0 then (m : ℂ) * 1 else 0) • LinearMap.id := by
+    intro a b
+    rw [← oscN_comm, smul_sub, smul_mul_smul_comm, smul_mul_smul_comm, mul_comm (w b)]
+  simp only [← Finset.sum_sub_distrib, key, smul_smul, mul_one]
   by_cases h : m + n = 0
-  · simp [h, mul_ite, ite_smul, ← Finset.sum_smul, ← Finset.sum_mul]
-    simp only [smul_smul, smul_eq_mul, ← Finset.sum_smul]
-    congr 1
-    rw [Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    intro a _
-    ring
+  · simp only [h, and_true, mul_ite, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq,
+      Finset.mem_univ, ite_true, ← Finset.sum_smul, ← Finset.sum_mul]
   · simp [h]
 
 /-- An explicit complex frame: `(x+y/2, i(x-y/2))` has bilinear norm `2xy`. -/

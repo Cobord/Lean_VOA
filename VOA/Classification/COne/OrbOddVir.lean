@@ -1,4 +1,5 @@
 import VOA.Core.VertexOperatorAlgebra
+import Mathlib.Data.Rat.Cast.Lemmas
 
 /-!
 # OrbOdd (1): a kernel-checkable Virasoro normal-ordering engine

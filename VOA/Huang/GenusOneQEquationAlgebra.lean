@@ -105,7 +105,7 @@ theorem exists_uniform_qEquation [IsNoetherianRing R]
   have he := hφ ha
   rw [LinearMap.mem_ker, map_sub, map_sum] at he
   simp only [map_smul] at he
-  simpa only [← map_eq_qIterate φ t D hD] using sub_eq_zero.mp he
+  simpa only [← map_eq_qIterate φ t D hD] using! sub_eq_zero.mp he
 
 /-- The algebraic relation has coefficients regular at q = 0 whenever the
 four specified generators are regular there. No division of coefficients is used. -/

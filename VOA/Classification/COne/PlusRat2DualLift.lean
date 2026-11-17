@@ -73,14 +73,14 @@ theorem exists_eigen_in (A : WeakModule W M) (P : Submodule (modeAlg A) M) (μ :
   have hmem : ∀ j : ℕ, (f ^ j) v ∈ P := by
     intro j
     induction j with
-    | zero => simpa using hvP
+    | zero => simpa using! hvP
     | succ j ih =>
       rw [pow_succ', Module.End.mul_apply]
       change L0 A ((f ^ j) v) - μ • (f ^ j) v ∈ P
       exact P.sub_mem (mem_P_mode A P _ 1 ih) (P.smul_of_tower_mem μ ih)
   have hex : ∃ j : ℕ, (f ^ (j + 1)) v = 0 := by
     rcases Nat.eq_zero_or_pos k with rfl | hk0
-    · exact absurd (by simpa using hk) hv0
+    · exact absurd (by simpa using! hk) hv0
     · exact ⟨k - 1, by rwa [Nat.sub_add_cancel hk0]⟩
   let j := Nat.find hex
   have hj : (f ^ (j + 1)) v = 0 := Nat.find_spec hex
@@ -124,10 +124,10 @@ theorem bottom_eigen (hC2 : C2Cofinite W) (A : WeakModule W M) (P : Submodule (m
     refine ⟨?_, ?_⟩
     · change v ∈ cyclic A e
       rw [hcyc]; exact hvP
-    · simpa using hv
+    · simpa using! hv
   have h2 := homogeneousDegreeSpan_eigen A heL 0 hvd
   rw [Module.End.mem_eigenspace_iff] at h2
-  simpa using h2
+  simpa using! h2
 
 /-- **Eigenvector lift**: the quotient bottom lifts to an honest `L(0)`-eigenvector. -/
 theorem exists_eigen_lift (hC2 : C2Cofinite W) (A : WeakModule W M)
@@ -191,7 +191,7 @@ theorem exists_eigen_lift (hC2 : C2Cofinite W) (A : WeakModule W M)
     simp only [Complex.add_re, Complex.intCast_re] at hre
     have hz0 : z ≠ 0 := by
       rintro rfl
-      exact hne (by simpa using hz)
+      exact hne (by simpa using! hz)
     have : (z : ℝ) ≤ 0 := by linarith
     have hz0' : (z : ℝ) ≠ 0 := by exact_mod_cast hz0
     exact lt_of_le_of_ne this hz0'

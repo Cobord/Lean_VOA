@@ -121,7 +121,7 @@ Only finitely many traced grades occur, without an analytic interchange. -/
 theorem coeff_rescale_geometric_mul {d : ℕ} (hd : 0 < d)
     (rho : ℂ) (F : PowerSeries ℂ) (n : ℕ) :
     PowerSeries.coeff n (PowerSeries.rescale rho (geometricDenominator d * F)) =
-      rho ^ n * ∑ p ∈ Finset.antidiagonal n,
+      rho ^ n * ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
         if d ∣ p.1 then PowerSeries.coeff p.2 F else 0 := by
   rw [PowerSeries.coeff_rescale, PowerSeries.coeff_mul]
   simp only [coeff_geometricDenominator hd, ite_mul, one_mul, zero_mul]
@@ -131,7 +131,7 @@ theorem coeff_rescale_shifted_geometric_mul {d : ℕ} (hd : 0 < d)
     (rho : ℂ) (F : PowerSeries ℂ) (n : ℕ) :
     PowerSeries.coeff n
         (PowerSeries.rescale rho (PowerSeries.X ^ d * geometricDenominator d * F)) =
-      rho ^ n * (∑ p ∈ Finset.antidiagonal n,
+      rho ^ n * (∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
         if d ∣ p.1 then PowerSeries.coeff p.2 F else 0) -
       rho ^ n * PowerSeries.coeff n F := by
   rw [← geometricDenominator_sub_one hd, sub_mul, one_mul, map_sub, map_sub,
@@ -159,13 +159,13 @@ theorem coeff_lambertCuspSeries_mul_geometric
       PowerSeries.coeff_X_pow_mul', if_neg (by omega), mul_zero, mul_zero]
   rw [PowerSeries.coeff_mul]
   calc
-    _ = ∑ p ∈ Finset.antidiagonal n, ∑ k ∈ Finset.range n,
+    _ = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, ∑ k ∈ Finset.range n,
         PowerSeries.coeff p.1 (PowerSeries.rescale rho
           (PowerSeries.C (c k) * PowerSeries.X ^ (k + 1) * geometricDenominator (k + 1))) *
           PowerSeries.coeff p.2 F := by
       apply Finset.sum_congr rfl
       intro p hp
-      rw [hcoeff p.1 (by have := Finset.mem_antidiagonal.mp hp; omega), Finset.sum_mul]
+      rw [hcoeff p.1 (by have := Finset.HasAntidiagonal.mem_antidiagonal.mp hp; omega), Finset.sum_mul]
     _ = _ := by
       rw [Finset.sum_comm]
       apply Finset.sum_congr rfl

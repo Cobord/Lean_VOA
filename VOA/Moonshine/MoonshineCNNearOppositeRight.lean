@@ -265,13 +265,13 @@ theorem oppositePairIterate_eq_tower (u v y : H) (p q ℓ m n : ℤ) (a b : ℕ)
   rw [hskew]
   obtain ⟨hfin, hfin2, hfinr⟩ := antidiag_fins g
     (fun r => V.oppositeTowerVector u v y p q ℓ m n a b r) (Ns - ℓ)
-    (fun i hi j => by rw [hg]; simp only []; rw [cbz_apply_neg _ hi]; ring) hVzero
+    (fun i hi j => by rw [hg]; (try simp only []); rw [cbz_apply_neg _ hi]; ring) hVzero
   rw [antidiag_reindex g (fun r => V.oppositeTowerVector u v y p q ℓ m n a b r) hfin hfin2 hfinr]
   refine finsum_congr (fun r => ?_)
   rcases lt_or_ge r 0 with hr | hr
   · rw [show (∑ᶠ j : ℕ, g (r - (j : ℤ)) j) = (∑ᶠ _j : ℕ, (0 : ℂ)) from
         finsum_congr (fun j => by
-          rw [hg]; simp only []
+          rw [hg]; (try simp only [])
           rw [cbz_apply_neg (2 * q - ℓ - n - 2 - (b : ℤ)) (by omega : r - (j : ℤ) < 0)]; ring)]
     rw [finsum_zero, zero_smul, oppositeTowerCoeff, if_neg (by omega), zero_smul]
   · obtain ⟨rn, rfl⟩ : ∃ rn : ℕ, r = (rn : ℤ) := ⟨r.toNat, (Int.toNat_of_nonneg hr).symm⟩

@@ -24,7 +24,7 @@ theorem rz_hsymm_eq_sum_vectors (k s : ℕ) :
     intro i hi hnot
     have hzero : (t : Multiset (Fin k)).count i = 0 :=
       Multiset.count_eq_zero_of_notMem (by
-        simpa only [Multiset.mem_toFinset] using hnot)
+        simpa only [Multiset.mem_toFinset] using! hnot)
     simp [hzero])]
   simp
 

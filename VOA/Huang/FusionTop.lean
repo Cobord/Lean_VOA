@@ -525,10 +525,10 @@ noncomputable def topMap :
   toFun Y := topBilin Y.2
   map_add' Y Y' := by
     ext w₁ w₂
-    simp [topComp_add]
+    simp [topComp_add] <;> rfl
   map_smul' c Y := by
     ext w₁ w₂
-    simp [topComp_smul]
+    simp [topComp_smul] <;> rfl
 
 variable {A₁ P₂ P₃}
 
@@ -670,10 +670,10 @@ noncomputable def fzSpaceToQuot :
   toFun T := (fzO A₁.toWeakModule).liftQ T.1 (fun x hx => T.2.1 x hx)
   map_add' T T' := by
     apply Submodule.linearMap_qext
-    ext; simp
+    ext; simp <;> rfl
   map_smul' c T := by
     apply Submodule.linearMap_qext
-    ext; simp
+    ext; simp <;> rfl
 
 variable {A₁ P₂ P₃}
 
@@ -687,7 +687,9 @@ theorem fzSpaceToQuot_injective : Function.Injective (fzSpaceToQuot A₁ P₂ P�
   apply Subtype.ext
   ext w₁ w₂
   have := congrArg (fun f => ((f (Submodule.Quotient.mk w₁) w₂ : bot P₃) : P₃.carrier)) hT
-  simpa [fzSpaceToQuot] using this
+  first
+    | exact this
+    | (simp [fzSpaceToQuot] at this ⊢; exact this)
 
 /-- `fzSpace` is finite-dimensional when `M₁/O(M₁)` is. -/
 theorem finiteDimensional_fzSpace [FiniteDimensional ℂ (M₁ ⧸ fzO A₁.toWeakModule)] :

@@ -68,7 +68,7 @@ theorem source_bound_of_span {m : ℕ} (h : HighestRel R w m)
   haveI : FiniteDimensional ℂ (⊤ : Submodule ℂ V) := hfd
   haveI : FiniteDimensional ℂ V := Module.Finite.of_surjective
     (⊤ : Submodule ℂ V).subtype (fun v => ⟨⟨v, Submodule.mem_top⟩, rfl⟩)
-  exact ⟨inferInstance, by simpa using hdim⟩
+  exact ⟨inferInstance, by simpa using! hdim⟩
 
 /-- Individual current-degree pieces are finite without an ambient-source
 finiteness premise; total degree sums require the separate universal bridge. -/

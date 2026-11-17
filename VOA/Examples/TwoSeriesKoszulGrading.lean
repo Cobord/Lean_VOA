@@ -165,8 +165,8 @@ theorem semiInfiniteQ_shiftsB (hA : GradedUnitary (affineForm L) (affineRealStru
   refine tensorDeg_induction (matterBK L) VOA.KoszulConcrete.ghostB k
     (fun z => semiInfiniteQ (matterAction L).toAffineSl2Action z ∈
       shiftTarget (blockB L) GoodB k)
-    (by simp) (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [map_smul] using Submodule.smul_mem _ c hx) ?_ z hz
+    (by simp) (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [map_smul] using! Submodule.smul_mem _ c hx) ?_ z hz
   intro b x hx y hy
   rw [semiInfiniteQ_tmul, matter_even_invol]
   have hk : b + (k - b) = k := by abel
@@ -178,7 +178,7 @@ theorem semiInfiniteQ_shiftsB (hA : GradedUnitary (affineForm L) (affineRealStru
         shiftTarget VOA.KoszulConcrete.ghostB (fun δ : KF × ℤ => δ.1 = ghShiftF 1 n ∧ b2 δ.1 = 2 * δ.2)
           (k - b) := by
       have h := ghostB_lift (ghostYCoeff_shifts a 1 n) (k - b) y hy
-      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using h
+      simpa only [ghostGenerator_one, mode_apply, show -(-n - 1) - 1 = n by ring] using! h
     have h := tmul_mem_tensor_shiftTarget (matterBK L) VOA.KoszulConcrete.ghostB hJ hc
     rw [hk] at h
     exact shiftTarget_mono (current_term_goodB n) k h
@@ -217,7 +217,7 @@ theorem antiZero_mem_blockB (a : Fin 3) (j : KF × ℤ) :
     · have hb : b2 (i + antiShiftB).1 = 2 * (i + antiShiftB).2 := by
         simp only [antiShiftB, Prod.fst_add, Prod.snd_add, map_add, b2_antiShift, h1, add_zero]
       rw [if_pos hb]
-      simpa [antiShiftB] using ghostModeF_mem a 0 0 hy
+      simpa [antiShiftB] using! ghostModeF_mem a 0 0 hy
     · rw [Submodule.mem_bot] at hy; rw [hy, map_zero]; exact Submodule.zero_mem _
 
 theorem blockB_le_weight (w : Finset ModeIdx → ℝ) (j : KF × ℤ) :

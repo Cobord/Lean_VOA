@@ -33,7 +33,6 @@ theorem completedLogProduct_shift_transport
     apply Subtype.ext
     have he := congrArg (fun q : Completion N₅ => (q γ : M₅))
       (evaluatePoint_shift_transport N₂ N₃ N₅ Y₂ ell₂ s y z)
-    dsimp only at he
     rw [completionL0exp_apply] at he
     change L0exp N₅ (-s) (q γ)=(q' γ : M₅)
     rw [he,L0exp_neg_cancel]
@@ -62,7 +61,6 @@ theorem completedLogIterate_shift_transport
     apply Subtype.ext
     have he := congrArg (fun q : Completion N₅ => (q γ : M₅))
       (evaluatePoint_shift_transport N₁ N₂ N₅ Y₄ ell₀ s x y)
-    dsimp only at he
     rw [completionL0exp_apply] at he
     change L0exp N₅ (-s) (q γ)=(q' γ : M₅)
     rw [he,L0exp_neg_cancel]

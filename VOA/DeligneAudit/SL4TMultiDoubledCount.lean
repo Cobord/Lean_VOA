@@ -31,7 +31,7 @@ theorem multiDoubledSiteCellCatalog_valid (k n : ℕ) (c : MixedParams × MixedC
     (hc : c ∈ multiDoubledSiteCellCatalog k n) :
     MixedValid c.1 ∧ c.1.A = 0 ∧ c.1.B = n + 2 * k := by
   induction k generalizing c with
-  | zero => simpa [multiDoubledSiteCellCatalog] using mixedCellCatalog_valid 0 n c hc
+  | zero => simpa [multiDoubledSiteCellCatalog] using! mixedCellCatalog_valid 0 n c hc
   | succ k ih =>
       obtain ⟨p, _, hc⟩ := List.mem_flatMap.mp hc
       obtain ⟨d, hd, rfl⟩ := List.mem_map.mp hc

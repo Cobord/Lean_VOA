@@ -35,10 +35,10 @@ theorem keyPrefix_eq_higher
       · exact hlt
       · have hqe : q = ⟨i, hi⟩ := Fin.ext heq
         exact False.elim ((keyLess_irrefl m j.val)
-          (by simpa [← hq, hqe] using j.property))
+          (by simpa [← hq, hqe] using! j.property))
       · have hless := keyEnum_descending m ⟨i, hi⟩ q hgt
         exact False.elim ((keyLess_irrefl m j.val)
-          (keyLess_trans m (by simpa [hq] using hless) j.property))
+          (keyLess_trans m (by simpa [hq] using! hless) j.property))
     rw [← hq]
     exact le_iSup_of_le q (le_iSup_of_le hqi le_rfl)
 

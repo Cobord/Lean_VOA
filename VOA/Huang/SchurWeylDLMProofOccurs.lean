@@ -136,7 +136,7 @@ theorem sum_smul_smul_eq_zero {ι : Type*} (T : Finset ι) (y w : ι → 𝒱)
       · exact hbase m hmP q
       have hr := hrec m (q - L)
       rw [Finset.sum_eq_single 0] at hr
-      · simpa [negOnePow] using hr
+      · simpa [negOnePow] using! hr
       · intro k _ hk0
         rw [ih (m + k) (by omega), smul_zero]
       · intro h0
@@ -299,6 +299,6 @@ theorem multSpace_ne_bot (hW : W.IsSimple) (G : Subgroup (Aut W)) [Finite G] {E 
     exact (Submodule.mem_bot ℂ).mp hφ
   apply hv
   have := congrArg (fun ψ : E →ₗ[ℂ] 𝒱 => ψ e₀) h0
-  simpa [φ] using this
+  simpa [φ] using! this
 
 end VOA.Huang.SchurWeyl

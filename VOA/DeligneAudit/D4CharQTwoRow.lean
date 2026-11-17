@@ -59,7 +59,7 @@ theorem gtQ_two_expansion (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
   have hr := Finset.mem_Icc.mp hr
   rw [gtQCoeff_two]
   have hg : gtQ q h u 1 ![(r : ℤ)] = gtInvPoch q h r * (u 0 : R) ^ r := by
-    simpa [gtOneRow] using gtQ_oneRow_one q h u r
+    simpa [gtOneRow] using! gtQ_oneRow_one q h u r
   rw [hg]
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Fin.sum_univ_succ,
     Matrix.cons_val_succ, Fin.sum_univ_zero, add_zero, Int.toNat_natCast]

@@ -267,7 +267,8 @@ def adjointModule (W : VertexOperatorAlgebra 𝒱) : OrdVModule W 𝒱 where
       rw [adjWeight_cast W m] at hx
       have := W.L_zero_grading x hx
       rw [VertexOperatorAlgebra.L_def] at this
-      simpa using this
+      have this' : (adjointWeakModule W).YM W.conformalVector (-2) x = _ := this
+      simpa using this'
     · rw [adjWeight_eq_bot W (not_exists.mp h), Submodule.mem_bot] at hx
       rw [hx, map_zero, smul_zero]
   finrank := by

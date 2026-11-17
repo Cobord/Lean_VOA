@@ -74,7 +74,7 @@ theorem eqOn_power_of_ode (hSo : IsOpen S) (hSc : IsPreconnected S) (hSU : ∀ z
     rw [Ne, Complex.cpow_eq_zero_iff]
     exact fun h => hne h.1
   have h1 := hK z hz
-  simp only at h1
+  try simp only at h1
   rw [Complex.cpow_neg] at h1
   have e : α z - M₀ = K * (z - c) ^ (A : ℂ) := by
     rw [← h1, mul_assoc, inv_mul_cancel₀ hpow0, mul_one]
@@ -114,7 +114,7 @@ theorem eqOn_exp_of_ode (hSo : IsOpen S) (hSc : IsPreconnected S)
   obtain ⟨K, hK⟩ := exists_const_of_hasDerivAt_zero hSo hSc hd
   refine ⟨K, fun z hz => ?_⟩
   have h1 := hK z hz
-  simp only at h1
+  try simp only at h1
   have e : α z - M₀ = K * Complex.exp (A * z) := by
     rw [← h1, mul_assoc, ← Complex.exp_add, show -(A : ℂ) * z + A * z = 0 by ring,
       Complex.exp_zero, mul_one]

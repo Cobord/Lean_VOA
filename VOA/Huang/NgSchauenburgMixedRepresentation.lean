@@ -108,7 +108,7 @@ theorem mixedRepresentation_independent (F : SphericalFusion C) (M : Modular F)
     simp [SpecialLinearGroup.SL2Z_generators]
   induction hg using Subgroup.closure_induction with
   | mem g hg =>
-    rcases (show g = ModularGroup.S ∨ g = ModularGroup.T by simpa using hg) with rfl | rfl
+    rcases (show g = ModularGroup.S ∨ g = ModularGroup.T by simpa using! hg) with rfl | rfl
     · exact hs
     · exact ht
   | one => simp

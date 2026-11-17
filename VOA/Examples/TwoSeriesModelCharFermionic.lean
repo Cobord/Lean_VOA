@@ -91,7 +91,7 @@ end Newton
 
 theorem rqf_zero' : (reciprocalQFactorial 0 : PowerSeries ℚ) = 1 := by
   have h := qFactorial_mul_reciprocal (R := ℚ) 0
-  simpa using h
+  simpa using! h
 
 /-- `Σ_m (-1)^m q^{C(M-m,2)} (q)_{A+m} / ((q)_{M-m} (q)_m) = q^{M(A+1) + C(M,2)} (q)_A / (q)_M`. -/
 theorem newton_rqf (A M : ℕ) :
@@ -328,7 +328,7 @@ theorem euler_cube_mul_fermSeries (n : ℕ) :
     rw [PowerSeries.coeff_mul]
     apply Finset.sum_eq_zero
     intro ij hij
-    rw [coeff_fermTerm_eq_zero n ij.1 N (by have := Finset.mem_antidiagonal.mp hij; omega),
+    rw [coeff_fermTerm_eq_zero n ij.1 N (by have := Finset.HasAntidiagonal.mem_antidiagonal.mp hij; omega),
       zero_mul]
   rw [coeff_indexBounded_sum _ hE d d le_rfl,
     coeff_indexBounded_sum _ (fun d r h => coeff_alternatingTerm_mul_eq_zero d r h _) d d le_rfl,
@@ -337,7 +337,7 @@ theorem euler_cube_mul_fermSeries (n : ℕ) :
   rw [sum_triangle_shift (fun N j => PowerSeries.coeff d (fermDouble n N (j - N))) d]
   apply Finset.sum_congr rfl
   intro N hN
-  have hNd : N ≤ d := by simpa [Nat.lt_succ_iff] using Finset.mem_range.mp hN
+  have hNd : N ≤ d := by simpa [Nat.lt_succ_iff] using! Finset.mem_range.mp hN
   rw [mul_comm, euler_cube_mul_fermTerm,
     coeff_indexBounded_sum _ (fun d t h => coeff_fermDouble_eq_zero n N t d (by omega)) d d le_rfl,
     map_sum]
@@ -353,7 +353,6 @@ theorem fermSeries_eq_product (n : ℕ) :
   unfold AffineSl2BoundaryCharacter.product
   have h := congrArg (fun f => f * (reciprocalEuler : PowerSeries ℚ) ^ 3)
     (euler_cube_mul_fermSeries n)
-  simp only at h
   have hinv : (euler : PowerSeries ℚ) ^ 3 * reciprocalEuler ^ 3 = 1 := by
     rw [← mul_pow, euler_mul_reciprocal, one_pow]
   calc

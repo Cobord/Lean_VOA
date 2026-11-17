@@ -69,7 +69,7 @@ theorem cvTopFirst_rel_zero (ν ϱ : Weight) (k : ℕ) :
     CV3Rel (cvUnivRep (0, 0) ν ϱ (k + 2)) (cvTopFirst (0, 0) ν ϱ k)
       (0, 1) (ν + (0, 1)) ϱ k := by
   have hi : ν.1 + ϱ.1 + (k + 2) - 1 = ν.1 + ϱ.1 + k + 1 := by omega
-  simpa only [cvTopFirst, Nat.zero_add, hi, Nat.add_sub_cancel] using
+  simpa only [cvTopFirst, Nat.zero_add, hi, Nat.add_sub_cancel] using!
     first_kernel_rel_zero (cvUniv_rel (0, 0) ν ϱ (k + 2)) (by omega)
 
 /-- In the actual quotient by the first cyclic kernel, the second top vector
@@ -86,14 +86,14 @@ theorem cvTopSecond_quotient_rel_zero (ν ϱ : Weight) (k : ℕ) :
       (cvFirstKernelSpan (0, 0) ν ϱ k) (cycSub_inv _ _)).op 3
         (ν.1 + ϱ.1 + (k + 2) - 1)
         ((cvFirstKernelSpan (0, 0) ν ϱ k).mkQ (cv_wU (0, 0) ν ϱ (k + 2))) = 0 := by
-    rw [quotRep_op]
+    erw [quotRep_op]
     apply (Submodule.Quotient.mk_eq_zero _).mpr
-    simpa only [hi, cvFirstKernelSpan, cvTopFirst, Nat.zero_add] using
+    simpa only [hi, cvFirstKernelSpan, cvTopFirst, Nat.zero_add] using!
       wordOp_mem_cycSub (cvUnivRep (0, 0) ν ϱ (k + 2))
         (cvTopFirst (0, 0) ν ϱ k) []
   have ht := second_kernel_rel_zero hs (by omega) hz
   simpa only [cvFirstQuotientRep, quotRep_op, cvTopSecond, Nat.zero_add, hi',
-    Nat.add_sub_cancel] using ht
+    Nat.add_sub_cancel] using! ht
 
 /-- A linear-algebra step for two successive cyclic kernel images. Its
 finiteness conclusion does not assume the ambient source is finite. -/
@@ -167,7 +167,7 @@ theorem cvTopFirst_rel_fundamental (ν ϱ : Weight) (k : ℕ) :
     CV3Rel (cvUnivRep (1, 0) ν ϱ (k + 2)) (cvTopFirst (1, 0) ν ϱ k)
       (0, 0) (ν + (0, 1)) ϱ (k + 1) := by
   have hi : 1 + ν.1 + ϱ.1 + k + 1 = ν.1 + ϱ.1 + (k + 2) := by omega
-  simpa only [cvTopFirst, hi, Nat.add_sub_cancel] using
+  simpa only [cvTopFirst, hi, Nat.add_sub_cancel] using!
     CVKernelFundamental.first_kernel_rel_fundamental
       (cvUniv_rel (1, 0) ν ϱ (k + 2)) (by omega)
 
@@ -185,14 +185,14 @@ theorem cvTopSecond_quotient_rel_fundamental (ν ϱ : Weight) (k : ℕ) :
       (cvFirstKernelSpan (1, 0) ν ϱ k) (cycSub_inv _ _)).op 3
         (ν.1 + ϱ.1 + (k + 2))
         ((cvFirstKernelSpan (1, 0) ν ϱ k).mkQ (cv_wU (1, 0) ν ϱ (k + 2))) = 0 := by
-    rw [quotRep_op]
+    erw [quotRep_op]
     apply (Submodule.Quotient.mk_eq_zero _).mpr
-    simpa only [hi, cvFirstKernelSpan, cvTopFirst] using
+    simpa only [hi, cvFirstKernelSpan, cvTopFirst] using!
       wordOp_mem_cycSub (cvUnivRep (1, 0) ν ϱ (k + 2))
         (cvTopFirst (1, 0) ν ϱ k) []
   have ht := CVKernelFundamentalSecond.rel hs (by omega) hz
   simpa only [cvFirstQuotientRep, quotRep_op, cvTopSecond, Nat.zero_add, hi',
-    Nat.add_sub_cancel] using ht
+    Nat.add_sub_cancel] using! ht
 
 /-- The actual fundamental-epsilon universal module obeys the three-term
 dimension step, with only finite-dimensionality of its smaller modules as input. -/

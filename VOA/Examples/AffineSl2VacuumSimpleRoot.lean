@@ -56,10 +56,10 @@ theorem vacuumChevalley_kernel_ideal (n : ℕ) (c : ℤ) (r : JointIndex n (2*c)
   apply (joint_mem_maxIdeal_iff k hk n (-(2*c)) _ ht).mpr
   intro j
   have hj : currentEnergy j.val=(n : ℤ) ∧ currentCharge j.val=2*c := by
-    simpa only [neg_neg] using j.property
+    simpa only [neg_neg] using! j.property
   let jj : JointIndex n (2*c) := ⟨j.val,hj⟩
   simpa only [map_sum,map_smul,LinearMap.sum_apply,LinearMap.smul_apply,smul_eq_mul,
-    vacuumChevalleyPolynomial_actual k hk] using hr jj
+    vacuumChevalleyPolynomial_actual k hk] using! hr jj
 
 /-- A simple root of the actual Chevalley vacuum determinant forces
 triviality of every graded first-order deformation at a nonzero noncritical level. -/
@@ -75,7 +75,7 @@ theorem graded_rigidity_of_vacuum_simple_root (hk0 : k≠0) (n : ℕ) (c : ℤ)
     apply vacuumChevalley_kernel_ideal k hk n c s
     intro j
     have he := hs j
-    simpa only [vacuumChevalleyPolynomial_symm n c j,mul_comm] using he
+    simpa only [vacuumChevalleyPolynomial_symm n c j,mul_comm] using! he
   have hqr : (I).mkQ (vacuumChevalley k (∑i,r i • currentPBWBasis k hk i.val))=0 :=
     (Submodule.Quotient.mk_eq_zero _).mpr hir
   have hqs : (I).mkQ (∑i,s i • currentPBWBasis k hk i.val)=0 :=
@@ -89,7 +89,7 @@ theorem graded_rigidity_of_vacuum_simple_root (hk0 : k≠0) (n : ℕ) (c : ℤ)
     simp only [vacuumChevalley_word,map_smul,smul_smul,universalWord_mkQ] at hqr
     exact hqr
   have hsv : ∑i,s i • currentWord k hk (jointWord n (2*c) i) (simple k hk).vacuum=0 := by
-    simpa only [map_sum,map_smul,← jointWord_state k hk n (2*c),universalWord_mkQ] using hqs
+    simpa only [map_sum,map_smul,← jointWord_state k hk n (2*c),universalWord_mkQ] using! hqs
   apply graded_rigidity_of_relations k hk hk0 u a (jointWord n (2*c)) s hru hsv
   have he : relationPairPolynomial u a (jointWord n (2*c)) s=
       ∑i,∑j,(r i*s j) • vacuumChevalleyPolynomial n c i j := by
@@ -102,7 +102,7 @@ theorem graded_rigidity_of_vacuum_simple_root (hk0 : k≠0) (n : ℕ) (c : ℤ)
     congr 1
     ring
   rw [he]
-  simpa only [map_sum,map_smul,Polynomial.eval_finsetSum,Polynomial.eval_smul,smul_eq_mul] using hp
+  simpa only [map_sum,map_smul,Polynomial.eval_finsetSum,Polynomial.eval_smul,smul_eq_mul] using! hp
 
 end
 end VOA.AffineSl2GeneralRigidity

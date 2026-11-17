@@ -38,7 +38,7 @@ theorem squareDilation_of_mem (t : ℂ) {n : ℤ} {v : V}
     (hv : v ∈ sqWeightSpace W (n : ℂ)) : squareDilation (W := W) t v = t ^ n • v := by
   by_cases hn : 0 ≤ n
   · obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le hn
-    simpa only [zpow_natCast] using squareDilation_of_mem_nat t hv
+    simpa only [zpow_natCast] using! squareDilation_of_mem_nat t hv
   · have hv0 : v = 0 := by
       rw [sqWeightSpace_eq_bot_of_neg W (by omega), Submodule.mem_bot] at hv
       exact hv
@@ -71,14 +71,14 @@ theorem squareDilation_sqMode {K : ℤ} {a : V}
       t ^ (K - j - 1) • sqMode W j a (squareDilation (W := W) t v) :=
   squareDilation_comp_of_degree (sqMode W j a) (K - j - 1)
     (fun m v hv => by
-      simpa only [show K + m - j - 1 = m + (K - j - 1) by ring] using
+      simpa only [show K + m - j - 1 = m + (K - j - 1) by ring] using!
         sqMode_mem_sqWeightSpace W ha hv j) ht v
 
 theorem squareDilation_Lsq (j : ℤ) {t : ℂ} (ht : t ≠ 0) (v : V) :
     squareDilation (W := W) t (Lsq W j v) = t ^ (-j) • Lsq W j (squareDilation (W := W) t v) :=
   squareDilation_comp_of_degree (Lsq W j) (-j)
     (fun m v hv => by
-      simpa only [Int.cast_add, Int.cast_neg, sub_eq_add_neg] using
+      simpa only [Int.cast_add, Int.cast_neg, sub_eq_add_neg] using!
         Lsq_mem_sqWeightSpace W hv j) ht v
 
 /-- The correct parameter-dependent kernels after keeping square weight.
@@ -155,5 +155,6 @@ theorem traceFun_squareDilation (hC2 : C2Cofinite W) (t : ℂ) (x : ι)
   rw [squareDilation_eq_sum, map_sum]
   simp only [map_smul, smul_eq_mul, traceFunStateLinear, LinearMap.coe_mk,
     AddHom.coe_mk]
+  rfl
 
 end VOA.Huang.GenusOne.IntCoord

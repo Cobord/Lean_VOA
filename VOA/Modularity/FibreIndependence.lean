@@ -266,7 +266,7 @@ theorem fibreIndependent_of_bottomSeparation (Mfam : ι → IrrModule W) (h : ι
       intro hc'
       exact hkl (by
         have : ee.symm k = ee.symm l := Subtype.ext hc'
-        simpa using congrArg ee this)
+        simpa using! congrArg ee this)
     refine hsep _ _ hjne ?_
     rw [hhq _ (ee.symm k).2, hhq _ (ee.symm l).2]
   set k₀ : Fin r := ee ⟨j₀, hj₀S₀⟩ with hk₀

@@ -173,7 +173,7 @@ theorem extraPhi_YML (u : LatModuleGen L) (k : ℤ)
         (extraPhi L hEven hU μ (rank L) x) := by
   have h := congrArg (fun A => mode (A : Fld _).1 0
       (extraConj L hEven hU μ x)) (extraConj_FL L hEven hU μ hPos k u)
-  dsimp only at h
+  try dsimp only at h
   rw [mode_conjF, LinearMap.comp_apply, LinearMap.comp_apply, extraConj_sq] at h
   change extraConj L hEven hU μ (YML L hEven hU u k x) =
     YML L hEven hU (chiLat L (extraPairChar L μ) u) k (extraConj L hEven hU μ x) at h
@@ -345,7 +345,7 @@ theorem extraPlusIsometry_bijective : Function.Bijective (extraPlusIsometry μ) 
     · exact smul_right_injective _ (extraPlusFormScalar_ne_zero μ)
     · intro x
       refine ⟨(extraPlusFormScalar μ)⁻¹ • x, ?_⟩
-      dsimp only
+      try dsimp only
       rw [smul_smul, mul_inv_cancel₀ (extraPlusFormScalar_ne_zero μ), one_smul]
   exact hs.comp (extraPlusEquiv μ).bijective
 

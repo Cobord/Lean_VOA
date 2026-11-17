@@ -48,14 +48,16 @@ theorem symmetricShiftAction_preserves
     symmetricShiftAction σ P W ∈ N := by
   exact symmetric_shift_preserves σ (MvPolynomial σ ℂ)
     (AlgHom.id ℂ (MvPolynomial σ ℂ))
-    (symmetricShiftAction σ) N (by simpa using hpower) P hP W hW
+    (symmetricShiftAction σ) N (by simpa using! hpower) P hP W hW
 
 /-- Evaluate a mode polynomial by assigning a vector to each mode word. -/
 noncomputable def modeWordEvaluation
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (f : (σ →₀ ℕ) → V) : MvPolynomial σ ℂ →ₗ[ℂ] V :=
-  Finsupp.lsum ℂ fun a =>
-    (LinearMap.ringLmapEquivSelf ℂ ℂ V).symm (f a)
+  -- through `coeff`: in Lean 4.35 Mathlib `AddMonoidAlgebra` is a structure, not `Finsupp`
+  (Finsupp.lsum ℂ fun a =>
+    (LinearMap.ringLmapEquivSelf ℂ ℂ V).symm (f a)).comp
+    (AddMonoidAlgebra.coeffLinearEquiv (S := ℂ) (M := σ →₀ ℕ) ℂ).toLinearMap
 
 theorem modeWordEvaluation_monomial
     {V : Type*} [AddCommGroup V] [Module ℂ V]

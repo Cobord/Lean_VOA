@@ -110,7 +110,7 @@ theorem affineKac_factor (t : ℂ) (n : ℕ) (c : ℤ) (i : (Fin 3×ℕ)×ℕ)
       ring
     change (X-Polynomial.C (realRootWeight t ((0,q),r)))^affineKacMultiplicity n c ((0,q),r) ∣ _
     rw [hw]
-    simpa [affineKacMultiplicity,oscillatorEnergy,oscillatorCharge] using hh
+    simpa [affineKacMultiplicity,oscillatorEnergy,oscillatorCharge] using! hh
   · have hh := weightDeterminant_negative_factor (r+1) q (n-(r+1)*q)
       (by omega) (c+((r+1 : ℕ) : ℤ)) t
     have he : (r+1)*q+(n-(r+1)*q)=n := by
@@ -120,7 +120,7 @@ theorem affineKac_factor (t : ℂ) (n : ℕ) (c : ℤ) (i : (Fin 3×ℕ)×ℕ)
     have hcc : -((r+1 : ℕ) : ℤ)+(c+((r+1 : ℕ) : ℤ))=c := by ring
     rw [hcc] at hh
     simpa [realRootWeight,realRootSlope,realRootOffset,affineKacMultiplicity,
-      oscillatorEnergy,oscillatorCharge,sub_eq_add_neg,add_assoc,add_comm,add_left_comm,Polynomial.C_ofNat] using hh
+      oscillatorEnergy,oscillatorCharge,sub_eq_add_neg,add_assoc,add_comm,add_left_comm,Polynomial.C_ofNat] using! hh
   · exact False.elim (hc rfl)
 
 /-- Pairwise distinct actual root families divide simultaneously at nonreal
@@ -144,11 +144,11 @@ theorem weightDeterminant_eq_affineKacProduct (t : ℂ) (ht : t.im≠0) (n : ℕ
         affineKacProduct t n c := by
   have hk : t-2+2≠0 := by
     have ht0 : t≠0 := by intro hz; simp [hz] at ht
-    simpa using ht0
+    simpa using! ht0
   have hh := Polynomial.eq_leadingCoeff_mul_of_monic_of_dvd_of_natDegree_le
     (affineKacProduct_monic t n c) (affineKacProduct_dvd t ht n c)
     (by rw [weightDeterminant_natDegree (t-2) hk,affineKacProduct_natDegree])
-  simpa only [weightDeterminant_leadingCoeff (t-2) hk] using hh
+  simpa only [weightDeterminant_leadingCoeff (t-2) hk] using! hh
 
 end
 end VOA.Wak.Charged

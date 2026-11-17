@@ -45,7 +45,7 @@ theorem polyWidthStage_even_sound (H K t : ℂ) (r N : ℕ) (P : ℂ[X]) (u : �
   | h r ih =>
     intro n hn
     cases r with
-    | zero => simpa only [polyWidthStage,wardBSAUniform] using hu n hn
+    | zero => simpa only [polyWidthStage,wardBSAUniform] using! hu n hn
     | succ r =>
       simp only [polyWidthStage,wardBSAUniform,coeff_smul,finsetSum_coeff,smul_eq_mul]
       have he (j : Fin (r+1)) := polyWidthStep_even_sound H K (r+1) j N n j.isLt

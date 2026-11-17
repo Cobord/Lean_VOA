@@ -55,7 +55,7 @@ theorem integer_screening_kac_root (r s m : ℕ) (hr : 0 < r) (hs : 0 < s)
     (screeningFockState r s (m^2) (m:ℚ)) hgrade hne h1 h2
   have hm' : (m:ℚ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
   rw [screening_central_charge _ hm', screening_highest_weight _ _ _ hm'] at hh
-  simpa only [Rat.cast_natCast] using hh
+  simpa only [Rat.cast_natCast] using! hh
 
 /-- The positive squares form an infinite set of distinct nonzero complex
 parameters, and every one is an actual root for any fixed positive labels. -/

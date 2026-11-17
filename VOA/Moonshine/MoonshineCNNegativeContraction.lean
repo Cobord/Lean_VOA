@@ -64,7 +64,7 @@ theorem annihilation_creation_general_contraction (α β : L.carrier) (N : ℤ) 
       set op : ℤ → End ℂ (FockN (rank L)) :=
         fun j => (creationField F α (b - j)).comp (annihilationCoefficientZ F β (N - j)) with hop
       have hopvanish : ∀ j : ℤ, N.toNat < j → op j = 0 := fun j hj => by
-        rw [hop]; dsimp only
+        rw [hop]; try dsimp only
         rw [annihilationCoefficientZ_neg F β (show N - j < 0 by omega), LinearMap.comp_zero]
       have hLHS : (annihilationCoefficientZ F β N).comp (creationField F α b)
           = (N : ℂ)⁻¹ • ∑ r ∈ Finset.range N.toNat,
@@ -125,7 +125,7 @@ theorem annihilation_creation_general_contraction (α β : L.carrier) (N : ℤ) 
           rw [← Finset.sum_sub_distrib]
           refine Finset.sum_congr rfl fun r _ => ?_
           rw [smul_sub, smul_comm (kappa PC i) PC]
-          rw [hop]; dsimp only
+          rw [hop]; try dsimp only
           rw [show b - (i : ℤ) - ((r : ℤ) + 1) = b - ((i : ℤ) + r + 1) from by ring,
             show N - 1 - (r : ℤ) - (i : ℤ) = N - ((i : ℤ) + r + 1) from by ring]]
         rw [← Finset.smul_sum, ← endomorphism_comp_sum, hMain i hi, ← Finset.smul_sum, ← Finset.smul_sum]

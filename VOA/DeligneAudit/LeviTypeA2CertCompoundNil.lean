@@ -41,7 +41,7 @@ private theorem compound_nil_large (p q : ℕ)
   have hYpow : ∀ b : ℕ, (Y ^ (p + 1 + 2 * b)) ((X ^ b) w) = 0 := by
     intro b
     induction b with
-    | zero => simpa [X, Y, Module.End.pow_apply] using h.lowering_first
+    | zero => simpa [X, Y, Module.End.pow_apply] using! h.lowering_first
     | succ b ih =>
         have ht := pow_kill_of_ad Y X 2 (p + 1 + 2 * b) ((X ^ b) w)
           hYYX ih
@@ -49,16 +49,16 @@ private theorem compound_nil_large (p q : ℕ)
         rw [hexp, pow_add, pow_succ' X b]
         rw [show p + 1 + 2 * b + 2 = 2 + (p + 1 + 2 * b) by omega,
           pow_add] at ht
-        simpa only [pow_two, Module.End.mul_apply] using ht
+        simpa only [pow_two, Module.End.mul_apply] using! ht
   have hXw : (X ^ (q + 1)) w = 0 := by
-    simpa [X, Module.End.pow_apply] using h.lowering_second
+    simpa [X, Module.End.pow_apply] using! h.lowering_second
   have hYN : ∀ b < q + 1,
       (Y ^ (p + 1 + 2 * q)) ((X ^ b) w) = 0 := by
     intro b hb
     exact pow_kill_mono Y (hYpow b) (by omega)
   have ht := top_nil X Y 1 (q + 1) (p + 1 + 2 * q) w
     hXXY hXw hYN
-  simpa only [Function.iterate_one, hXY] using ht
+  simpa only [Function.iterate_one, hXY] using! ht
 
 /-- The compound-root lowering operator has its sharp highest-weight power. -/
 theorem a2_compound_nilpotence (p q : ℕ)
@@ -87,10 +87,10 @@ theorem a2_compound_nilpotence (p q : ℕ)
   have hH : H w = ((p + q : ℕ) : ℂ) • w := by
     simp [H, h.cartan_first, h.cartan_second, Nat.cast_add, add_smul]
   have hN : F^[p + 1 + 2 * q] w = 0 := by
-    simpa [F, ← Module.End.pow_apply] using compound_nil_large ρ w p q h
+    simpa [F, ← Module.End.pow_apply] using! compound_nil_large ρ w p q h
   have hsharp := sl2_lowering_of_nilpotent E F H hEF hHF w
     (p + q) (p + 1 + 2 * q) hE hH hN (by omega)
-  simpa [A2CompoundNilpotence, F, Module.End.pow_apply] using hsharp
+  simpa [A2CompoundNilpotence, F, Module.End.pow_apply] using! hsharp
 
 /-- Every nonzero radical key lies in the explicit finite box. -/
 theorem a2KeyBox_contains_nonzero_unconditional (p q : ℕ)

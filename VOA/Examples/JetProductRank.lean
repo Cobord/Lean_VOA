@@ -37,21 +37,21 @@ theorem Pga_mem_jetImage : ∀ {r : ℕ} (w : Fin r → Fin 4) (a : Fin r →₀
     rw [Pga, Fin.prod_univ_succ, jetImage, pow_succ']
     refine Submodule.mul_mem_mul (genCoeff_mem_genSpan _ _) ?_
     have := Pga_mem_jetImage (fun i : Fin r => w i.succ) (toF fun i : Fin r => a i.succ)
-    simpa [Pga, jetImage] using this
+    simpa [Pga, jetImage] using! this
 
 /-- The `J`-flag of a generator. -/
 def jflag (g : Fin 4) : ℕ := if g = 3 then 1 else 0
 
 theorem genSer_serWH (g : Fin 4) : SerWH (genSer g) (jflag g) := by
   fin_cases g
-  · simpa [genSer, xSer, jflag] using serWH_mul (serWH_colSer 0) (serWH_colSer 0)
-  · simpa [genSer, ySer, jflag] using serWH_mul (serWH_colSer 0) (serWH_colSer 1)
-  · simpa [genSer, zSer, jflag] using serWH_mul (serWH_colSer 1) (serWH_colSer 1)
+  · simpa [genSer, xSer, jflag] using! serWH_mul (serWH_colSer 0) (serWH_colSer 0)
+  · simpa [genSer, ySer, jflag] using! serWH_mul (serWH_colSer 0) (serWH_colSer 1)
+  · simpa [genSer, zSer, jflag] using! serWH_mul (serWH_colSer 1) (serWH_colSer 1)
   · have h1 : SerWH (dS (colSer 0) * colSer 1) 1 := by
-      simpa using serWH_mul (serWH_dS (serWH_colSer 0)) (serWH_colSer 1)
+      simpa using! serWH_mul (serWH_dS (serWH_colSer 0)) (serWH_colSer 1)
     have h2 : SerWH (colSer 0 * dS (colSer 1)) 1 := by
-      simpa using serWH_mul (serWH_colSer 0) (serWH_dS (serWH_colSer 1))
-    simpa [genSer, jSer, jflag] using serWH_sub h1 h2
+      simpa using! serWH_mul (serWH_colSer 0) (serWH_dS (serWH_colSer 1))
+    simpa [genSer, jSer, jflag] using! serWH_sub h1 h2
 
 theorem Pga_isWeightedHomogeneous {r : ℕ} (w : Fin r → Fin 4) (a : Fin r →₀ ℕ) :
     IsWeightedHomogeneous jetWt (Pga w a) (∑ i, ((a i : ℤ) + jflag (w i))) := by
@@ -82,7 +82,7 @@ def jcount {r : ℕ} (w : Fin r → Fin 4) : ℕ := ∑ i, jflag (w i)
 
 /-- Homogeneity of the generating polynomials. -/
 theorem coeff_Apol_ne_zero {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
-    (w : Fin r → Fin 4) (d : Fin r →₀ ℕ) (hd : coeff d (Apol ms l w) ≠ 0) :
+    (w : Fin r → Fin 4) (d : Fin r →₀ ℕ) (hd : (Apol ms l w).coeff d ≠ 0) :
     ∑ i, d i + jcount w = ms.sum := by
   rw [coeff_Apol ms l hms] at hd
   have h := Pga_isWeightedHomogeneous w d hd
@@ -97,7 +97,7 @@ theorem esymm_isHomogeneous' (r n : ℕ) : (esymm (Fin r) ℂ n).IsHomogeneous n
   intro t ht
   have := IsHomogeneous.prod t (fun i => (X i : MvPolynomial (Fin r) ℂ)) (fun _ => 1)
     (fun i _ => isHomogeneous_X ℂ i)
-  simpa [(Finset.mem_powersetCard.mp ht).2] using this
+  simpa [(Finset.mem_powersetCard.mp ht).2] using! this
 
 /-- The weight of an exponent vector `α`: `Σ (i+1) α_i`. -/
 def awt {r : ℕ} (α : Fin r → ℕ) : ℕ := ∑ i : Fin r, ((i : ℕ) + 1) * α i
@@ -116,24 +116,25 @@ def Lam {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (α : Fin r → ℕ) : JetPoly �
 /-- The functional `Λ_{λ,α}` on `P_{w,d}` is a coefficient of `e^α · Apol`. -/
 theorem coeff_esymmPow_mul_Apol {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (α : Fin r → ℕ) (w : Fin r → Fin 4) (d : Fin r →₀ ℕ) :
-    coeff d (esymmPow α * Apol ms l w) = Lam ms l α (Pga w d) := by
+    (esymmPow α * Apol ms l w).coeff d = Lam ms l α (Pga w d) := by
   rw [← MvPolynomial.coeff_coe, MvPolynomial.coe_mul, coe_Apol ms l hms, ← Gam_opE, coeff_Gam]
   rfl
 
 theorem Apol_eq_zero {r : ℕ} (ms : Multiset ℕ) (l : ℕ) (hms : ∀ j ∈ ms, j ≤ l)
     (w : Fin r → Fin 4) (hw : ∑ i, vcount (w i) ≠ l) : Apol ms l w = 0 := by
   ext d
-  rw [coeff_Apol ms l hms, coeff_mono_Pga ms l hms, if_neg hw, coeff_zero]
+  rw [coeff_Apol ms l hms, coeff_mono_Pga ms l hms, if_neg hw, AddMonoidAlgebra.coeff_zero,
+    Finsupp.zero_apply]
 
 /-- A coefficient of `e^α · Apol` can only be nonzero in the matching total degree. -/
 theorem coeff_esymmPow_mul_Apol_eq_zero {r : ℕ} (ms : Multiset ℕ) (l : ℕ)
     (hms : ∀ j ∈ ms, j ≤ l) (α : Fin r → ℕ) (w : Fin r → Fin 4) (d : Fin r →₀ ℕ)
     (hd : ∑ i, d i + jcount w ≠ awt α + ms.sum) :
-    coeff d (esymmPow α * Apol ms l w) = 0 := by
+    (esymmPow α * Apol ms l w).coeff d = 0 := by
   rw [coeff_mul]
   apply Finset.sum_eq_zero
   intro p hp
-  rw [Finset.mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   by_contra hne
   have h1 := esymmPow_isHomogeneous α (left_ne_zero_of_mul hne)
   have h2 := coeff_Apol_ne_zero ms l hms w p.2 (right_ne_zero_of_mul hne)
@@ -145,7 +146,7 @@ theorem coeff_esymmPow_mul_Apol_eq_zero {r : ℕ} (ms : Multiset ℕ) (l : ℕ)
     simp only [Finsupp.coe_add, Pi.add_apply, Finset.sum_add_distrib]
     congr 1
     exact (Finset.sum_subset (Finset.subset_univ _) (fun i _ hi => by
-      simpa using hi)).trans rfl |>.symm
+      simpa using! hi)).trans rfl |>.symm
   omega
 
 /-! ### Linear independence of the elementary-symmetric monomials -/
@@ -290,7 +291,7 @@ theorem jetIndex_indep (r N : ℕ) (c : JIdx r → ℂ)
   have hy : ∀ w : Cols r k0, ∑ s, y s * Apol (msOf s) (2 * r - k0) w.1 = 0 := by
     intro w
     ext d
-    rw [coeff_zero, coeff_sum]
+    rw [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, coeff_sum]
     simp only [y, Finset.sum_mul, coeff_sum, smul_mul_assoc, coeff_smul, smul_eq_mul]
     by_cases hW : ∑ i, d i + jcount w.1 + r = N
     · have htot := hc (Pga w.1 d) (Pga_mem_jetImage w.1 d) (by
@@ -315,7 +316,8 @@ theorem jetIndex_indep (r N : ℕ) (c : JIdx r → ℂ)
         intro α _
         simp only [LamI]
         rw [← coeff_esymmPow_mul_Apol _ _ (msOf_le s), Apol_eq_zero _ _ (msOf_le s) _
-          (vcount_ne_of_ne k0 k hk w), mul_zero, coeff_zero, mul_zero]
+          (vcount_ne_of_ne k0 k hk w), mul_zero, AddMonoidAlgebra.coeff_zero,
+          Finsupp.zero_apply, mul_zero]
       · intro h; exact absurd (Finset.mem_univ _) h
     · apply Finset.sum_eq_zero
       intro s _
@@ -363,7 +365,7 @@ theorem card_jetIndex_le_finrank (r N : ℕ) :
       · intro j _ hj
         simp [c, hj]
     have := jetIndex_indep r N c hc i.1 i.2
-    simpa [c, hi] using this
+    simpa [c, hi] using! this
   have := hli.fintype_card_le_finrank
   rwa [Fintype.card_coe, Subspace.dual_finrank_eq] at this
 

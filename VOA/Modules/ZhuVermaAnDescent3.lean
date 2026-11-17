@@ -286,8 +286,9 @@ theorem cbz_diag_vandermonde (X Y : ℤ) (e : ℕ) :
   rw [show ((e:ℤ) + X) = (X + (e:ℤ)) from by ring] at hvm
   rw [← hvm]
   rw [finsumZ_eq_range_sum (fun p => cbz (e:ℤ) p * cbz X ((Y + (e:ℤ)) - p)) (N := e+1)
-      (fun p hp => by dsimp only; rw [cbz_apply_neg (e:ℤ) hp, zero_mul])
-      (fun p hp => by dsimp only; rw [cbz_lt (by positivity) (by push_cast at hp; omega), zero_mul])]
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg (e:ℤ) hp, zero_mul])
+      (fun p hp => by
+        (try dsimp only); rw [cbz_lt (by positivity) (by push_cast at hp; omega), zero_mul])]
   rw [← Finset.sum_range_reflect (fun i => cbz (e:ℤ) (i:ℤ) * cbz X ((Y + (e:ℤ)) - (i:ℤ))) (e+1)]
   refine Finset.sum_congr rfl fun j hj => ?_
   have hje : j ≤ e := by have := Finset.mem_range.mp hj; omega

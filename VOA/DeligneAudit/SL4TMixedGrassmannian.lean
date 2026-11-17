@@ -24,7 +24,7 @@ theorem mixedBase_elementary_tail (q : MixedParams) (hq : MixedValid q) (i : Fin
     mixedEvaluation q (mixedE (mixedBaseIndex i) j) = 0 := by
   apply mixedRelation_zero q hq
   refine Or.inl ⟨mixedBaseIndex i, j, ?_, rfl⟩
-  fin_cases i <;> simpa [mixedBaseLength, mixedBaseIndex, mixedLengths] using hj
+  fin_cases i <;> simpa [mixedBaseLength, mixedBaseIndex, mixedLengths] using! hj
 
 /-- The original finite complete-function windows in the three base factors. -/
 theorem mixedBase_complete_window (q : MixedParams) (hq : MixedValid q) (i : Fin 3)
@@ -104,7 +104,7 @@ theorem mixedU_top (q : MixedParams) (hq : MixedValid q) :
       intro j hj _
       simp only [map_mul, map_pow, map_neg, map_one]
       exact mul_eq_zero_of_right _ (mixedBase_complete_tail q hq 1 j hj))
-  simpa only [map_mul, map_pow, map_neg, map_one] using h
+  simpa only [map_mul, map_pow, map_neg, map_one] using! h
 
 /-- The top of the second ambient alphabet is the product of its two base tops. -/
 theorem mixedV_top (q : MixedParams) (hq : MixedValid q) :
@@ -125,7 +125,7 @@ theorem mixedV_top (q : MixedParams) (hq : MixedValid q) :
       intro j hj _
       simp only [map_mul, map_pow, map_neg, map_one]
       exact mul_eq_zero_of_right _ (mixedBase_complete_tail q hq 2 j hj))
-  simpa only [map_mul, map_pow, map_neg, map_one] using h
+  simpa only [map_mul, map_pow, map_neg, map_one] using! h
 
 end
 

@@ -58,12 +58,13 @@ noncomputable def geoAltSeries : PowerSeries ℂ := PowerSeries.mk fun n => ((-1
 /-- `d(log(1+X))` is the alternating geometric series (Mathlib's `deriv_log`, with the
 `algebraMap ℚ ℂ` discharged). -/
 theorem derivative_log_eq_geoAltSeries :
-    (PowerSeries.derivative ℂ) (PowerSeries.log ℂ) = geoAltSeries := by
+    (PowerSeries.derivative (R := ℂ)) (PowerSeries.log ℂ) = geoAltSeries := by
   rw [PowerSeries.deriv_log]
   refine PowerSeries.ext (fun n => ?_)
-  rw [PowerSeries.coeff_mk, geoAltSeries, PowerSeries.coeff_mk, eq_ratCast]
-  push_cast
-  ring
+  rw [PowerSeries.coeff_mk, geoAltSeries, PowerSeries.coeff_mk]
+  -- Lean 4.35 port: newer Mathlib's `deriv_log` is already stated with `(-1 : A) ^ n`, so the
+  -- `rw` above closes the goal there; on 4.30 the `algebraMap ℚ ℂ` cast is discharged here.
+  all_goals (rw [eq_ratCast]; push_cast; ring)
 
 /-- **`(1 + X)·Σ(−1)ⁿXⁿ = 1`** — the geometric series inverts `1 + X`. -/
 theorem onePlusX_mul_geoAltSeries :
@@ -91,7 +92,7 @@ theorem hasSubst_expMinusOne : PowerSeries.HasSubst expMinusOne := by
 
 /-- `d(e^z − 1) = e^z`. -/
 theorem derivative_expMinusOne' :
-    (PowerSeries.derivative ℂ) expMinusOne = PowerSeries.exp ℂ := by
+    (PowerSeries.derivative (R := ℂ)) expMinusOne = PowerSeries.exp ℂ := by
   rw [expMinusOne, map_sub, Derivation.map_one_eq_zero, sub_zero]
   exact PowerSeries.derivative_exp ℂ
 
@@ -116,7 +117,7 @@ terms (`derivative.ext`). -/
 theorem log_subst_expMinusOne :
     (PowerSeries.log ℂ).subst expMinusOne = PowerSeries.X := by
   refine PowerSeries.derivative.ext ?_ ?_
-  · rw [PowerSeries.derivative_subst ℂ hasSubst_expMinusOne, derivative_log_eq_geoAltSeries,
+  · rw [PowerSeries.derivative_subst (hg := hasSubst_expMinusOne), derivative_log_eq_geoAltSeries,
       derivative_expMinusOne', subst_expMinusOne_geoAltSeries_mul_exp, PowerSeries.derivative_X]
   · have hcc : PowerSeries.constantCoeff expMinusOne = 0 := by
       rw [expMinusOne, map_sub, PowerSeries.constantCoeff_exp, map_one, sub_self]

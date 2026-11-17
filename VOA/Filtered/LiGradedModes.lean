@@ -25,7 +25,8 @@ theorem liWeightPiece_smul_nonneg_mem (W : VertexOperatorAlgebra V)
   have heq : ((N + M - (n + 1) : ℕ) : ℤ) = (N : ℤ) + M - n - 1 := by
     rw [Nat.cast_sub hN, Nat.cast_add, Nat.cast_add, Nat.cast_one]
     ring
-  simpa only [heq] using hgr
+  simp only [heq]
+  exact hgr
 
 /-- The representative-level nonnegative mode, already projected to the target Li layer. -/
 noncomputable def liWeightPieceMode (W : VertexOperatorAlgebra V)
@@ -227,15 +228,16 @@ theorem liAssociatedGradedMode_normalized_support_finite (W : VertexOperatorAlge
 The PVA identities for this operation are separate obligations. -/
 noncomputable def liLambdaBracket (W : VertexOperatorAlgebra V)
     (x y : liAssociatedGraded W) : Polynomial (liAssociatedGraded W) :=
-  Polynomial.ofFinsupp (Finsupp.ofSupportFinite
+  Polynomial.ofFinsupp (AddMonoidAlgebra.ofCoeff (Finsupp.ofSupportFinite
     (fun n : ℕ => (n.factorial : ℂ)⁻¹ • liAssociatedGradedMode W n x y)
-    (liAssociatedGradedMode_normalized_support_finite W x y))
+    (liAssociatedGradedMode_normalized_support_finite W x y)))
 
 @[simp] theorem coeff_liLambdaBracket (W : VertexOperatorAlgebra V)
     (x y : liAssociatedGraded W) (n : ℕ) :
     (liLambdaBracket W x y).coeff n =
       (n.factorial : ℂ)⁻¹ • liAssociatedGradedMode W n x y := by
-  simp [liLambdaBracket, Polynomial.coeff_ofFinsupp, Finsupp.ofSupportFinite_coe]
+  simp [liLambdaBracket, Polynomial.coeff_ofFinsupp, AddMonoidAlgebra.coeff_ofCoeff,
+    Finsupp.ofSupportFinite_coe]
 
 /-- Additivity in the first lambda-bracket argument. -/
 theorem liLambdaBracket_add_left (W : VertexOperatorAlgebra V)

@@ -42,10 +42,10 @@ theorem hypExponent_split (e : (ℕ × Fin 2) →₀ ℕ) :
     simp [hypAExponent]
   · change (hypBExponent e).mapDomain (fun j => (j, (1 : Fin 2))) (j, 1) +
       hypAExponent e (j, 1) = e (j, 1)
-    rw [Finsupp.mapDomain_apply
-      (f := fun j : ℕ => (j, (1 : Fin 2)))
-      (fun _ _ h => (Prod.mk.inj h).1)]
-    simp [hypAExponent, hypBExponent, Finsupp.comapDomain_apply]
+    rw [Finsupp.mapDomain_apply' Set.univ (f := fun j : ℕ => (j, (1 : Fin 2))) _
+      (Set.subset_univ _) (Set.injOn_of_injective (fun _ _ h => (Prod.mk.inj h).1))
+      (Set.mem_univ _)]
+    simp [hypAExponent, hypBExponent, Finsupp.comapDomain_apply] <;> rfl
 
 theorem hypAExponent_oneFamily (e : (ℕ × Fin 2) →₀ ℕ) (c : ℂ) :
     monomial (hypAExponent e) c ∈ hypOneFamily 0 := by
@@ -70,21 +70,23 @@ theorem hypCanonicalBWord_degrees (e : (ℕ × Fin 2) →₀ ℕ) :
   have h := hypBHomogeneous_mul (hypBWordMonomial_homogeneous (hypCanonicalBWord e))
     (hypOneFamily_bHomogeneous_zero _ (hypAExponent_oneFamily e 1))
   rw [hypCanonicalBWord_factorization] at h
-  have hc : coeff e (monomial e (1 : ℂ)) ≠ 0 := by simp
+  have hc : (monomial e (1 : ℂ)).coeff e ≠ 0 := by simp
   exact ⟨by simpa using (h.1 hc).symm, by simpa using (h.2 hc).symm⟩
 
 /-- Replace each b-monomial by its decreasing negative Sugawara word. -/
 def hypPBWMap (κ ell : ℂ) : Module.End ℂ hypFock :=
-  Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
+  (Finsupp.lsum ℂ fun e => LinearMap.smulRight LinearMap.id
     (stringNegativeWord (fun j => hypSugawara κ ell (-(j + 1 : ℤ)))
-      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))
+      (monomial (hypAExponent e) 1) (hypCanonicalBWord e))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem hypPBWMap_monomial (κ ell : ℂ) (e : (ℕ × Fin 2) →₀ ℕ) (c : ℂ) :
     hypPBWMap κ ell (monomial e c) = c •
       stringNegativeWord (fun j => hypSugawara κ ell (-(j + 1 : ℤ)))
         (monomial (hypAExponent e) 1) (hypCanonicalBWord e) := by
-  rw [hypPBWMap]
-  erw [Finsupp.lsum_single]
+  rw [hypPBWMap, LinearMap.comp_apply]
+  change (Finsupp.lsum ℂ _) (Finsupp.single e c) = _
+  rw [Finsupp.lsum_single]
   rfl
 
 /-- The sorted-word map is triangular with diagonal `κ` to the b-count. -/

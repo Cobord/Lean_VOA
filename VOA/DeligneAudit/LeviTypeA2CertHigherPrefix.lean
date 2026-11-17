@@ -36,10 +36,10 @@ theorem a2OrderedPrefix_eq_higher (p q : ℕ)
       rcases lt_trichotomy m.val i with hlt | heq | hgt
       · exact hlt
       · have hmeq : m = ⟨i, hi⟩ := Fin.ext heq
-        exact False.elim ((a2KeyLess_irrefl q j) (by simpa [← hm, hmeq] using hj))
+        exact False.elim ((a2KeyLess_irrefl q j) (by simpa [← hm, hmeq] using! hj))
       · have hless := a2KeyEnum_descending p q ⟨i, hi⟩ m hgt
         exact False.elim ((a2KeyLess_irrefl q j)
-          (a2KeyLess_trans q (by simpa [hm] using hless) hj))
+          (a2KeyLess_trans q (by simpa [hm] using! hless) hj))
     rw [← hm]
     exact le_iSup_of_le m (le_iSup_of_le hmi le_rfl)
 

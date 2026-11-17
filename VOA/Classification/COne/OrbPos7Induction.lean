@@ -109,7 +109,7 @@ theorem PF_word_right (l : List (ℕ × Fin (rank (latP 1)))) (β : ℤ) :
       (rescaledField_mem hn a j e u) (rescaledField_mem hn a j f v)
       0 ((e : ℂ)/n) p ℓ L (fun s hs => by
         have hh := hK₁ s (by dsimp [L] at hs; omega)
-        simpa only [zero_add] using hh)
+        simpa only [zero_add] using! hh)
     rw [ih u e f ℓ, current_star] at hT
     have hterm : ∀ s ∈ Finset.range L,
         gBinom p s • star (0+(e : ℂ)/n)

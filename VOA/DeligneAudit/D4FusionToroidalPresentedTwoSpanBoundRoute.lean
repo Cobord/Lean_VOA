@@ -31,7 +31,7 @@ theorem twoPositiveKerToM_injective : Function.Injective twoPositiveKerToM := by
   intro x y h
   apply Subtype.ext
   apply Subtype.ext
-  simpa [twoPositiveKerToM] using congrArg Subtype.val h
+  simpa [twoPositiveKerToM] using! congrArg Subtype.val h
 
 theorem twoPositiveSpanBound_of_localWeyl
     (h₁ : LocalWeylRelG D4sector twoCurrent (twoGen 1) 1)

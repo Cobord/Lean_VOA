@@ -37,9 +37,11 @@ open scoped BigOperators
 
 variable (L : IntegralLattice)
 
-/-- `eᵅ` as a raw `Finsupp` (defeq to `latticeAlgebra.e α`). -/
+/-- `eᵅ` is the monoid-algebra basis vector `single α 1`. (Lean 4.35 port: newer Mathlib makes
+`AddMonoidAlgebra` a structure, so the product lemmas below are stated on the underlying
+`Finsupp.single α 1`; on Mathlib v4.30 this is definitionally `latticeAlgebra.e α`.) -/
 theorem e_eq_single (α : L.carrier) :
-    (latticeAlgebra.e α : L.carrier →₀ ℂ) = Finsupp.single α (1 : ℂ) := rfl
+    latticeAlgebra.e α = AddMonoidAlgebra.single α (1 : ℂ) := rfl
 
 /-- For a fixed `α`, the `ℂ`-linear "left-multiply by `eᵅ`" operator
 `g ↦ ∑_β g(β) ε(α,β) e^{α+β}`. -/
@@ -77,11 +79,11 @@ theorem twMul_single_single (α β : L.carrier) (a b : ℂ) :
 product `single α 1 ⋆ single β 1 = single (α+β) ε(α,β)` (the `a = b = 1` case of
 `twMul_single_single`; `latticeAlgebra.e γ = single γ 1`). -/
 theorem twMul_e (α β : L.carrier) :
-    twMul L (latticeAlgebra.e α) (latticeAlgebra.e β)
+    twMul L (Finsupp.single α (1 : ℂ)) (Finsupp.single β (1 : ℂ))
       = Finsupp.single (α + β) (latticeCocycle L α β) := by
   have h := twMul_single_single L α β 1 1
   rw [one_mul, one_mul] at h
-  rw [e_eq_single, e_eq_single, h]
+  exact h
 
 /-! ## Bi-`ℂ`-linearity (free, from `twMulL` being a bilinear map) -/
 
@@ -137,19 +139,19 @@ theorem twMul_assoc (f g h : L.carrier →₀ ℂ) :
 /-! ## The unit `e⁰` -/
 
 /-- `e⁰ ⋆ g = g` (using `ε(0,·) = 1`). -/
-theorem one_twMul (g : L.carrier →₀ ℂ) : twMul L (latticeAlgebra.e 0) g = g := by
+theorem one_twMul (g : L.carrier →₀ ℂ) : twMul L (Finsupp.single 0 (1 : ℂ)) g = g := by
   induction g using Finsupp.induction_linear with
   | zero => simp
   | add g₁ g₂ hg₁ hg₂ => rw [twMul_add_right, hg₁, hg₂]
   | single β b =>
-      rw [e_eq_single, twMul_single_single, zero_add, latticeCocycle_zero_left, one_mul, mul_one]
+      rw [twMul_single_single, zero_add, latticeCocycle_zero_left, one_mul, mul_one]
 
 /-- `f ⋆ e⁰ = f` (using `ε(·,0) = 1`). -/
-theorem twMul_one (f : L.carrier →₀ ℂ) : twMul L f (latticeAlgebra.e 0) = f := by
+theorem twMul_one (f : L.carrier →₀ ℂ) : twMul L f (Finsupp.single 0 (1 : ℂ)) = f := by
   induction f using Finsupp.induction_linear with
   | zero => simp
   | add f₁ f₂ hf₁ hf₂ => rw [twMul_add_left, hf₁, hf₂]
   | single α a =>
-      rw [e_eq_single, twMul_single_single, add_zero, latticeCocycle_zero_right, mul_one, mul_one]
+      rw [twMul_single_single, add_zero, latticeCocycle_zero_right, mul_one, mul_one]
 
 end VOA.IntegralLattice

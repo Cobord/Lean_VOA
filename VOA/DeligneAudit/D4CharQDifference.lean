@@ -25,7 +25,7 @@ theorem powerSeries_qDifferenceUnits (A : Type*) [CommRing A] :
 theorem qDifferenceUnits_map {S : Type*} [CommRing S] (φ : R →+* S) {q : R}
     (hq : QDifferenceUnits q) : QDifferenceUnits (φ q) := by
   intro n hn
-  simpa only [map_sub, map_one, map_pow] using (hq n hn).map φ
+  simpa only [map_sub, map_one, map_pow] using! (hq n hn).map φ
 
 /-- The coefficient recursion, with the unit factor written as 1 - q^n. -/
 theorem qDifference_coeff_rec (q : R) (A B G : PowerSeries R)
@@ -60,7 +60,7 @@ theorem qDifference_unique (q : R) (hq : QDifferenceUnits q)
   | h n ih =>
       by_cases hn : n = 0
       · subst n
-        simpa only [coeff_zero_eq_constantCoeff_apply] using hzero
+        simpa only [coeff_zero_eq_constantCoeff_apply] using! hzero
       · apply (hq n (Nat.pos_of_ne_zero hn)).mul_left_cancel
         rw [qDifference_coeff_rec q A B G hA hB hG,
           qDifference_coeff_rec q A B H hA hB hH]
@@ -74,7 +74,7 @@ theorem qDifference_zero (q : R) (hq : QDifferenceUnits q)
     (hG : rescale q G * A = G * B) (hzero : constantCoeff G = 0) : G = 0 := by
   apply qDifference_unique q hq A B G 0 hA hB hG
   · simp
-  · simpa using hzero
+  · simpa using! hzero
 
 /-- The integral q-series version, also valid after any coefficient-ring homomorphism. -/
 theorem qDifference_unique_of_series_map (φ : PowerSeries ℤ →+* R)

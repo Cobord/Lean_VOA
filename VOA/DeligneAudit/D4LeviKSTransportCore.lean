@@ -15,13 +15,13 @@ variable (ρ : CurrentModule D4sector.f V) (w : V) (m : ℕ)
 private theorem factorial_smul_zero (n : ℕ) (A : Module.End ℂ V)
     (h : (n.factorial • A) w = 0) : A w = 0 := by
   have hh : (n.factorial : ℂ) • A w = 0 := by
-    simpa only [Nat.cast_smul_eq_nsmul, map_nsmul] using h
+    simpa only [Nat.cast_smul_eq_nsmul, map_nsmul] using! h
   exact (smul_eq_zero.mp hh).resolve_left (by exact_mod_cast Nat.factorial_ne_zero n)
 
 private theorem descFactorial_smul_zero (n k : ℕ) (hk : k ≤ n)
     (A : Module.End ℂ V) (h : (n.descFactorial k • A) w = 0) : A w = 0 := by
   have hh : (n.descFactorial k : ℂ) • A w = 0 := by
-    simpa only [Nat.cast_smul_eq_nsmul, map_nsmul] using h
+    simpa only [Nat.cast_smul_eq_nsmul, map_nsmul] using! h
   have hn : (n.descFactorial k : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt (Nat.descFactorial_pos.mpr hk))
   exact (smul_eq_zero.mp hh).resolve_left hn

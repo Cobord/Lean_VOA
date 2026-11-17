@@ -44,7 +44,7 @@ theorem zhuTowerSpan_of_C2 {ι : Type*} (s : ι → V) (k : ι → ℤ)
       rw [himg, hfun]
       exact hspan
     have hh := congrArg (Submodule.comap (O₂ W).mkQ) hmap
-    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using hh.symm
+    simpa only [Submodule.comap_map_mkQ, Submodule.comap_top, sup_comm] using! hh.symm
   have htop := span_sup_O_eq_top W S hShom htop₂
   have hpow (i : ι) (n : ℕ) : mk W (lift (i, n)) ∈ zhuTowerSpan W s := by
     have hn := mk_L_neg_two_pow_mem W (hs i) n
@@ -83,8 +83,8 @@ theorem icoSeeds_grading (b : Bool) : icoSeeds b ∈ Wi.grading (if b then 36 el
 /-- The actual, untruncated Zhu tower span is unconditional. -/
 theorem ico_zhuTowerSpan_eq_top : zhuTowerSpan Wi icoSeeds = ⊤ := by
   apply zhuTowerSpan_of_C2 Wi icoSeeds (fun b => if b then 36 else 0) icoSeeds_grading
-  have h := OrbXu.orbifold_twoTowers_of_primary ico Xico icoPrimaryReduction_std
-  rw [OrbXu.twoTowers_eq_towerSpan] at h
-  simpa only [icoSeeds, apply_ite] using h
+  have h := (OrbXu.twoTowers_eq_towerSpan (orbifoldVOA ico) Xico).symm.trans
+    (OrbXu.orbifold_twoTowers_of_primary ico Xico icoPrimaryReduction_std)
+  simpa only [icoSeeds, apply_ite] using! h
 
 end VOA.Classification.COne.OrbIcoZ

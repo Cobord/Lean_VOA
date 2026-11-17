@@ -75,7 +75,7 @@ theorem invVir_swap (pre post : List ℕ) (i j : ℕ) (hij : i < j) :
   | cons q pre ih =>
       simp only [List.cons_append, invVir, List.filter_append, List.length_append,
         List.filter_cons]
-      split_ifs <;> simp only [List.length_cons] at ih ⊢ <;> omega
+      split_ifs <;> (try simp only [List.length_cons] at ih ⊢) <;> omega
 
 theorem exists_inversion_vir :
     ∀ l : List ℕ, ¬SortedWord l →
@@ -194,7 +194,7 @@ theorem prodX_mem (w : List ℕ) : prodX w ∈ Dg w.length := by
   | nil => simp [prodX, mem_Dg]
   | cons n w ih =>
       have h := Dg_mul (mem_Dg.mpr (le_of_eq (totalDegree_X (R := ℂ) n))) ih
-      simpa [prodX, add_comm] using h
+      simpa [prodX, add_comm] using! h
 
 theorem LtWord_mem (w : List ℕ) : LtWord k hk w ∈ Dg w.length := by
   induction w with
@@ -205,7 +205,7 @@ theorem LtWord_mem (w : List ℕ) : LtWord k hk w ∈ Dg w.length := by
       have h2 := Dg_mul (mem_Dg.mpr (le_of_eq (totalDegree_X (R := ℂ) n))) ih
       rw [← sub_add_cancel (Lt k hk _ _) (cL k • (X n * LtWord k hk w))]
       refine Submodule.add_mem _ (Dg_mono (by omega) h) (Submodule.smul_mem _ _ ?_)
-      simpa [add_comm] using h2
+      simpa [add_comm] using! h2
 
 theorem LtWord_sub_lead (w : List ℕ) :
     LtWord k hk w - cL k ^ w.length • prodX w ∈ Dlow w.length := by
@@ -227,10 +227,10 @@ theorem LtWord_sub_lead (w : List ℕ) :
 
 theorem prodX_isHomogeneous (w : List ℕ) : IsHomogeneous (prodX w) w.length := by
   induction w with
-  | nil => simpa [prodX] using isHomogeneous_one ℕ ℂ
+  | nil => simpa [prodX] using! isHomogeneous_one ℕ ℂ
   | cons n w ih =>
       have := (isHomogeneous_X ℂ n).mul ih
-      simpa [prodX, add_comm] using this
+      simpa [prodX, add_comm] using! this
 
 theorem homogeneousComponent_LtWord (w : List ℕ) :
     homogeneousComponent w.length (LtWord k hk w) = cL k ^ w.length • prodX w := by
@@ -268,7 +268,7 @@ theorem lead_linearIndependent (hk : k + 2 ≠ 0) :
   have hmono : LinearIndependent ℂ fun w : {w : List ℕ // SortedWord w} =>
       (monomial (Multiset.toFinsupp (w.1 : Multiset ℕ)) (1 : ℂ) : EPoly) := by
     have := (basisMonomials ℕ ℂ).linearIndependent.comp _ (sorted_toFinsupp_injective)
-    simpa [Function.comp_def, coe_basisMonomials] using this
+    simpa [Function.comp_def, coe_basisMonomials] using! this
   have hu := hmono.units_smul fun w => Units.mk0 (cL k ^ w.1.length)
     (pow_ne_zero _ (cL_ne_zero k hk))
   convert hu using 1
@@ -340,7 +340,7 @@ theorem Dg_le_map_vLen (d : ℕ) : Dg d ≤ (vLen c d).map (phi c k hk) := by
       rw [P.as_sum]
       refine Submodule.sum_mem _ fun ν hν => ?_
       have hdeg : (ν.sum fun _ e => e) ≤ d + 1 := (le_totalDegree hν).trans (mem_Dg.mp hP)
-      have hm : monomial ν (coeff ν P) = coeff ν P • monomial ν (1 : ℂ) := by
+      have hm : monomial ν (P.coeff ν) = P.coeff ν • monomial ν (1 : ℂ) := by
         rw [smul_monomial, smul_eq_mul, mul_one]
       rw [hm]
       refine Submodule.smul_mem _ _ ?_

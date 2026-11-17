@@ -27,12 +27,12 @@ noncomputable def minimalThreeNormOperator (a : ℂ) (F : PowerSeries ℂ) : Pow
 formal chain and product rules applicable directly. -/
 theorem minimalThreeNormOperator_derivatives (a : ℂ) (F : PowerSeries ℂ) :
     minimalThreeNormOperator a F=
-      (1-X)^3*X^3*derivative ℂ (derivative ℂ (derivative ℂ F))+
+      (1-X)^3*X^3*derivative (R := ℂ) (derivative (R := ℂ) (derivative (R := ℂ) F))+
       ((2-4*PowerSeries.C a)*(1-X)^3*X^2-2*(PowerSeries.C a+1)*X^3*(1-X)^2)*
-        derivative ℂ (derivative ℂ F)+
+        derivative (R := ℂ) (derivative (R := ℂ) F)+
       ((3*(PowerSeries.C a)^2-3*PowerSeries.C a)*(1-X)^3*X+
         (PowerSeries.C a+1)*PowerSeries.C a*X^2*(3-4*X)*(1-X)-
-        2*(PowerSeries.C a+1)*X^2*(1-X)^2)*derivative ℂ F+
+        2*(PowerSeries.C a+1)*X^2*(1-X)^2)*derivative (R := ℂ) F+
       2*(PowerSeries.C a+1)*(PowerSeries.C a)^2*X^2*(2-X)*F := by
   simp only [minimalThreeNormOperator,bsaEuler,Derivation.leibniz,smul_eq_mul,
     derivative_X,Derivation.map_one_eq_zero,zero_mul,mul_zero,add_zero,zero_add,one_mul,map_add,map_sub,map_mul,map_pow,map_ofNat,map_one]
@@ -41,10 +41,10 @@ theorem minimalThreeNormOperator_derivatives (a : ℂ) (F : PowerSeries ℂ) :
 /-- Second ordinary derivative of the binomial gauge, with its polynomial
 denominator kept on the left. -/
 theorem minimalThreeGauge_derivative_two (α : ℂ) :
-    (1-X)^2*derivative ℂ (derivative ℂ (bsaGaugeSeries α))=
+    (1-X)^2*derivative (R := ℂ) (derivative (R := ℂ) (bsaGaugeSeries α))=
       PowerSeries.C (α*(α+1))*bsaGaugeSeries α := by
   have h1 := bsaGaugeSeries_derivative α
-  have h2 := congrArg (derivative ℂ) h1
+  have h2 := congrArg (derivative (R := ℂ)) h1
   simp only [Derivation.leibniz,smul_eq_mul,map_sub,Derivation.map_one_eq_zero,derivative_X,
     zero_sub,neg_one_mul,derivative_C,zero_mul,zero_add] at h2
   simp only [map_mul,map_add,map_one]
@@ -53,11 +53,11 @@ theorem minimalThreeGauge_derivative_two (α : ℂ) :
 /-- Third ordinary derivative of the same gauge. This is a formal
 consequence of its first-order equation, valid at every complex exponent. -/
 theorem minimalThreeGauge_derivative_three (α : ℂ) :
-    (1-X)^3*derivative ℂ (derivative ℂ (derivative ℂ (bsaGaugeSeries α)))=
+    (1-X)^3*derivative (R := ℂ) (derivative (R := ℂ) (derivative (R := ℂ) (bsaGaugeSeries α)))=
       PowerSeries.C (α*(α+1)*(α+2))*bsaGaugeSeries α := by
   have h1 := bsaGaugeSeries_derivative α
   have h2 := minimalThreeGauge_derivative_two α
-  have h3 := congrArg (derivative ℂ) h2
+  have h3 := congrArg (derivative (R := ℂ)) h2
   simp only [pow_two,Derivation.leibniz,smul_eq_mul,map_sub,Derivation.map_one_eq_zero,derivative_X,
     zero_sub,neg_one_mul,derivative_C,zero_mul,zero_add] at h3
   simp only [map_mul,map_add,map_one,map_ofNat] at h2 ⊢
@@ -67,11 +67,11 @@ theorem minimalThreeGauge_derivative_three (α : ℂ) :
 /-- The norm operator after removing the binomial gauge. Its coefficients
 are polynomials; the next change of variable is quadratic. -/
 noncomputable def minimalThreeGaugedOperator (a : ℂ) (F : PowerSeries ℂ) : PowerSeries ℂ :=
-  (1-X)^3*X^3*derivative ℂ (derivative ℂ (derivative ℂ F))+
-  2*X^2*(2*PowerSeries.C a-1)*(1-X)^2*(2*X-1)*derivative ℂ (derivative ℂ F)+
+  (1-X)^3*X^3*derivative (R := ℂ) (derivative (R := ℂ) (derivative (R := ℂ) F))+
+  2*X^2*(2*PowerSeries.C a-1)*(1-X)^2*(2*X-1)*derivative (R := ℂ) (derivative (R := ℂ) F)+
   X*(1-X)*(19*(PowerSeries.C a)^2*X^2-19*(PowerSeries.C a)^2*X+
     3*(PowerSeries.C a)^2-15*PowerSeries.C a*X^2+15*PowerSeries.C a*X-
-    3*PowerSeries.C a+2*X^2-2*X)*derivative ℂ F-
+    3*PowerSeries.C a+2*X^2-2*X)*derivative (R := ℂ) F-
   6*(PowerSeries.C a)^2*X*(PowerSeries.C a-1)*(1-X)*(2*X-1)*F
 
 /-- Multiplication by the nonsingular binomial gauge conjugates the
@@ -87,15 +87,15 @@ theorem minimalThreeNormOperator_gauge (a : ℂ) (F : PowerSeries ℂ) :
     apply pow_ne_zero
     intro h
     have := congrArg (coeff 0) h
-    simpa using this)
+    simpa using! this)
   rw [minimalThreeNormOperator_derivatives]
   simp only [minimalThreeGaugedOperator,Derivation.leibniz,smul_eq_mul,map_add]
   linear_combination
     X^3*(1-X)^3*F*h3+
-    (1-X)*(3*X^3*(1-X)^3*derivative ℂ F+
+    (1-X)*(3*X^3*(1-X)^3*derivative (R := ℂ) F+
       ((2-4*PowerSeries.C a)*(1-X)^3*X^2-2*(PowerSeries.C a+1)*X^3*(1-X)^2)*F)*h2+
-    (1-X)^2*(3*X^3*(1-X)^3*derivative ℂ (derivative ℂ F)+
-      2*((2-4*PowerSeries.C a)*(1-X)^3*X^2-2*(PowerSeries.C a+1)*X^3*(1-X)^2)*derivative ℂ F+
+    (1-X)^2*(3*X^3*(1-X)^3*derivative (R := ℂ) (derivative (R := ℂ) F)+
+      2*((2-4*PowerSeries.C a)*(1-X)^3*X^2-2*(PowerSeries.C a+1)*X^3*(1-X)^2)*derivative (R := ℂ) F+
       ((3*(PowerSeries.C a)^2-3*PowerSeries.C a)*(1-X)^3*X+
         (PowerSeries.C a+1)*PowerSeries.C a*X^2*(3-4*X)*(1-X)-
         2*(PowerSeries.C a+1)*X^2*(1-X)^2)*F)*h1
@@ -105,10 +105,10 @@ theorem minimalThreeNormOperator_gauge (a : ℂ) (F : PowerSeries ℂ) :
 in a. This ordinary-derivative version avoids any formal-series division. -/
 theorem minimalThreeHyperOperator_four (a : ℂ) (F : PowerSeries ℂ) :
     4*minimalThreeHyperOperator a F=
-      4*X^3*(1-X)*derivative ℂ (derivative ℂ (derivative ℂ F))+
-      X^2*(8-16*PowerSeries.C a-(14-16*PowerSeries.C a)*X)*derivative ℂ (derivative ℂ F)+
+      4*X^3*(1-X)*derivative (R := ℂ) (derivative (R := ℂ) (derivative (R := ℂ) F))+
+      X^2*(8-16*PowerSeries.C a-(14-16*PowerSeries.C a)*X)*derivative (R := ℂ) (derivative (R := ℂ) F)+
       X*(12*(PowerSeries.C a)^2-12*PowerSeries.C a-
-        (19*(PowerSeries.C a)^2-23*PowerSeries.C a+6)*X)*derivative ℂ F-
+        (19*(PowerSeries.C a)^2-23*PowerSeries.C a+6)*X)*derivative (R := ℂ) F-
       6*(PowerSeries.C a)^2*(1-PowerSeries.C a)*X*F := by
   have h2 := congrArg (PowerSeries.C (R:=ℂ))
     (show 4*((1-8*a)/2)=2-16*a by ring)
@@ -120,8 +120,8 @@ theorem minimalThreeHyperOperator_four (a : ℂ) (F : PowerSeries ℂ) :
   simp only [minimalThreeHyperOperator,bsaEuler,Derivation.leibniz,smul_eq_mul,
     derivative_X,Derivation.map_one_eq_zero,one_mul,zero_mul,mul_zero,add_zero,
     zero_add,map_add,map_sub,map_mul,map_pow,map_ofNat,map_one]
-  linear_combination -X*(X*derivative ℂ F+X^2*derivative ℂ (derivative ℂ F))*h2-
-    X^2*derivative ℂ F*h3-X*F*h4
+  linear_combination -X*(X*derivative (R := ℂ) F+X^2*derivative (R := ℂ) (derivative (R := ℂ) F))*h2-
+    X^2*derivative (R := ℂ) F*h3-X*F*h4
 
 /-- The quadratic variable change has zero constant term, so its
 substitution into every formal series is well-defined. -/
@@ -142,19 +142,19 @@ theorem minimalThreeGaugedOperator_pullback (a : ℂ) (G : PowerSeries ℂ) :
     (minimalThreeHyperOperator_four a G)
   simp only [← coe_substAlgHom hs,map_mul,map_add,map_sub,map_pow,map_ofNat,map_one] at hh
   simp only [coe_substAlgHom,subst_C,subst_X hs] at hh
-  have hn4 : derivative ℂ (4:PowerSeries ℂ)=0 := Derivation.map_natCast _ 4
-  have hn2 : derivative ℂ (2:PowerSeries ℂ)=0 := Derivation.map_natCast _ 2
-  have hn8 : derivative ℂ (-8:PowerSeries ℂ)=0 := by
+  have hn4 : derivative (R := ℂ) (4:PowerSeries ℂ)=0 := Derivation.map_natCast _ 4
+  have hn2 : derivative (R := ℂ) (2:PowerSeries ℂ)=0 := Derivation.map_natCast _ 2
+  have hn8 : derivative (R := ℂ) (-8:PowerSeries ℂ)=0 := by
     rw [map_neg]; exact neg_eq_zero.mpr (Derivation.map_natCast _ 8)
-  have hd : derivative ℂ minimalThreeQuadratic=4*(1-2*X) := by
+  have hd : derivative (R := ℂ) minimalThreeQuadratic=4*(1-2*X) := by
     simp [minimalThreeQuadratic,Derivation.leibniz,smul_eq_mul,hn4,hn2]
     ring
-  have hdd : derivative ℂ (4*(1-2*X):PowerSeries ℂ)= -8 := by
+  have hdd : derivative (R := ℂ) (4*(1-2*X):PowerSeries ℂ)= -8 := by
     simp [Derivation.leibniz,smul_eq_mul,hn4,hn2]
     ring
   apply mul_left_cancel₀ (show (4:PowerSeries ℂ)≠0 by
     intro h; have := congrArg PowerSeries.constantCoeff h; norm_num only [map_ofNat,map_zero] at this)
-  simp only [minimalThreeGaugedOperator,derivative_subst ℂ hs,
+  simp only [minimalThreeGaugedOperator,derivative_subst hs,
     Derivation.leibniz,smul_eq_mul,map_add,hd,hdd,hn4,hn2,hn8,
     map_sub,Derivation.map_one_eq_zero,derivative_X,zero_mul,mul_zero,zero_add,add_zero]
   simp only [minimalThreeQuadratic] at hh ⊢

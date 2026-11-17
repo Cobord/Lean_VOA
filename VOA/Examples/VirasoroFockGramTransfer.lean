@@ -52,7 +52,7 @@ theorem chargedFockMap_mode (ell p : ℂ) (m : ℤ)
     chargedFockMap ell p (vermaMode _ _ m v) =
       sectorVirasoro ell p m (chargedFockMap ell p v) := by
   simpa only [chargedFockMap, chargedFockRep, VirDeformModes.fixedRho_L,
-    chargedFockData] using universalMap_intertwines (chargedFockRep ell p)
+    chargedFockData] using! universalMap_intertwines (chargedFockRep ell p)
       (vacuumN 1) (chargedFock_isHighest ell p) (VOA.L m) v
 
 /-- The kernel of the universal Fock map is a proper invariant submodule,
@@ -80,13 +80,13 @@ theorem chargedFockMap_mem_level (ell p : ℂ) (N : ℕ)
     ((verma_mem_level_iff_eigen _ _ N v).mp hv)
   rw [chargedFockMap_mode, map_smul] at he
   intro d hd
-  have hc := congrArg (coeff d) he
+  have hc := congrArg (fun q => q.coeff d) he
   rw [chargedFock_zero_coefficient, coeff_smul] at hc
   simp only [smul_eq_mul] at hc
   have hh : (Finsupp.weight weightFnN d:ℂ) = (N:ℂ) := by
     apply sub_eq_zero.mp
     apply (mul_eq_zero.mp (by linear_combination hc :
-      ((Finsupp.weight weightFnN d:ℂ)-(N:ℂ))*coeff d (chargedFockMap ell p v)=0)).resolve_right hd
+      ((Finsupp.weight weightFnN d:ℂ)-(N:ℂ))*(chargedFockMap ell p v).coeff d=0)).resolve_right hd
   exact_mod_cast hh
 
 /-- The genuine universal map restricted to the corresponding actual
@@ -163,7 +163,7 @@ theorem chargedFock_singular_gram_root (ell p : ℂ) (N : ℕ) (hN : 0 < N)
     apply hvne
     rw [← ha, hz]
     exact (vermaLevelState_eq_zero_iff _ _ N 0).mpr rfl
-  · simpa only [ha] using hv1
-  · simpa only [ha] using hv2
+  · simpa only [ha] using! hv1
+  · simpa only [ha] using! hv2
 
 end VOA.VirasoroScreening

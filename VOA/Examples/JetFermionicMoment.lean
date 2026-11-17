@@ -35,7 +35,7 @@ variable {K : Type*} [Field K]
 
 /-- `Σ_{a+b=N} 1/((q)_a (q)_b)`. -/
 def pairSum (N : ℕ) : PowerSeries K :=
-  ∑ p ∈ Finset.antidiagonal N, reciprocalQFactorial p.1 * reciprocalQFactorial p.2
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N, reciprocalQFactorial p.1 * reciprocalQFactorial p.2
 
 /-- The previous pair sum, with `X_{-1} = 0`. -/
 def pairMinus : ℕ → PowerSeries K
@@ -53,7 +53,7 @@ theorem rqf_zero : (reciprocalQFactorial 0 : PowerSeries K) = 1 := by
 
 /-- `Σ_{a+b=N} q^a / ((q)_a (q)_b)`. -/
 def weightedPairSum (N : ℕ) : PowerSeries K :=
-  ∑ p ∈ Finset.antidiagonal N,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
     PowerSeries.X ^ p.1 * reciprocalQFactorial p.1 * reciprocalQFactorial p.2
 
 theorem weightedPairSum_eq (N : ℕ) :
@@ -68,11 +68,11 @@ theorem weightedPairSum_eq (N : ℕ) :
         intro a
         rw [← rqf_succ_shift (K := K) a]
         ring
-      have hs : ∑ p ∈ Finset.antidiagonal M, (PowerSeries.X : PowerSeries K) ^ (p.1 + 1) *
+      have hs : ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, (PowerSeries.X : PowerSeries K) ^ (p.1 + 1) *
           reciprocalQFactorial (p.1 + 1) * reciprocalQFactorial p.2 =
-          ∑ p ∈ Finset.antidiagonal M, reciprocalQFactorial (p.1 + 1) *
+          ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, reciprocalQFactorial (p.1 + 1) *
             reciprocalQFactorial p.2 -
-          ∑ p ∈ Finset.antidiagonal M, reciprocalQFactorial p.1 *
+          ∑ p ∈ Finset.HasAntidiagonal.antidiagonal M, reciprocalQFactorial p.1 *
             reciprocalQFactorial p.2 := by
         rw [← Finset.sum_sub_distrib]
         apply Finset.sum_congr rfl
@@ -88,23 +88,23 @@ theorem pairSum_rec (N : ℕ) :
     (1 - PowerSeries.X ^ (N + 1)) * (pairSum (N + 1) : PowerSeries K) =
       2 * pairSum N - pairMinus N := by
   have hsplit : (1 - PowerSeries.X ^ (N + 1)) * (pairSum (N + 1) : PowerSeries K) =
-      (∑ p ∈ Finset.antidiagonal (N + 1),
+      (∑ p ∈ Finset.HasAntidiagonal.antidiagonal (N + 1),
         ((1 - PowerSeries.X ^ p.1) * reciprocalQFactorial p.1) * reciprocalQFactorial p.2) +
-      ∑ p ∈ Finset.antidiagonal (N + 1),
+      ∑ p ∈ Finset.HasAntidiagonal.antidiagonal (N + 1),
         PowerSeries.X ^ p.1 * reciprocalQFactorial p.1 *
           ((1 - PowerSeries.X ^ p.2) * reciprocalQFactorial p.2) := by
     rw [pairSum, Finset.mul_sum, ← Finset.sum_add_distrib]
     apply Finset.sum_congr rfl
     intro p hp
-    have hsum : p.1 + p.2 = N + 1 := Finset.mem_antidiagonal.mp hp
+    have hsum : p.1 + p.2 = N + 1 := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
     rw [← hsum, pow_add]
     ring
-  have h1 : (∑ p ∈ Finset.antidiagonal (N + 1),
+  have h1 : (∑ p ∈ Finset.HasAntidiagonal.antidiagonal (N + 1),
       ((1 - PowerSeries.X ^ p.1) * reciprocalQFactorial p.1) *
         (reciprocalQFactorial p.2 : PowerSeries K)) = pairSum N := by
     rw [Finset.Nat.sum_antidiagonal_succ]
     simp only [pow_zero, sub_self, zero_mul, zero_add, rqf_succ_shift, pairSum]
-  have h2 : (∑ p ∈ Finset.antidiagonal (N + 1),
+  have h2 : (∑ p ∈ Finset.HasAntidiagonal.antidiagonal (N + 1),
       PowerSeries.X ^ p.1 * reciprocalQFactorial p.1 *
         ((1 - PowerSeries.X ^ p.2) * (reciprocalQFactorial p.2 : PowerSeries K))) =
       weightedPairSum N := by

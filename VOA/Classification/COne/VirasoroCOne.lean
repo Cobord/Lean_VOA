@@ -54,6 +54,8 @@ modulo the contravariant radical); its level-`n` dimension is `finrank (vermaSim
 open PowerSeries Finset
 open scoped PowerSeries.WithPiTopology
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 namespace VOA.Classification.COne
@@ -79,7 +81,7 @@ theorem card_vermaPartitions_eq (n : ℕ) :
   refine Fintype.card_congr
     { toFun := fun s => ⟨s.val.map (· + 1), fun {i} hi => by
           obtain ⟨a, -, rfl⟩ := Multiset.mem_map.mp hi; omega,
-          by simpa [vermaMultisetEnergy] using s.property⟩
+          by simpa [vermaMultisetEnergy] using! s.property⟩
       invFun := fun p => ⟨p.parts.map (· - 1), by
           rw [vermaMultisetEnergy, Multiset.map_map]
           refine Eq.trans ?_ p.parts_sum
@@ -146,7 +148,7 @@ theorem eulerSeries_eq_tprod :
   have hN' : ∀ᶠ x in (Filter.atTop : Filter (Finset ℕ)),
       coeff N (∏ b ∈ x, (1 - (X : PowerSeries ℤ) ^ (b + 1))) =
       coeff N (∏' b : ℕ, (1 - (X : PowerSeries ℤ) ^ (b + 1))) := by
-    simpa using hN
+    simpa using! hN
   obtain ⟨s0, hs0⟩ := Filter.eventually_atTop.mp hN'
   set M := N + s0.sup id + 1
   have hsub : s0 ≤ range M := by
@@ -289,7 +291,7 @@ theorem coeff_mul_congr_right (f : PowerSeries ℤ) {g g' : PowerSeries ℤ} {N 
     (hg : ∀ b ≤ N, coeff b g = coeff b g') : coeff N (f * g) = coeff N (f * g') := by
   rw [PowerSeries.coeff_mul, PowerSeries.coeff_mul]
   refine Finset.sum_congr rfl fun p hp => ?_
-  rw [hg p.2 (by have := Finset.antidiagonal.snd_le hp; omega)]
+  rw [hg p.2 (by have := Finset.HasAntidiagonal.mem_antidiagonal.mp hp; omega)]
 
 /-- **GR (3.4), degenerate case, below the first singular level.** For `h = μ²`,
 `η · ch L(1, μ²)` agrees with `q^{μ²} - q^{(μ+1)²}` in every coefficient below `(μ+1)²`. -/
@@ -411,6 +413,6 @@ theorem iVirasoro_of_composition (hJH : VirLocalCompositionSeries.{u})
     (eulerSeries_mul_simpleCharSeries hdeg)⟩
   have h0 := hA 0
   rw [Nat.cast_zero, V.vacuum_grade, finrank_span_singleton hvac] at h0
-  simpa [vermaSimpleLevel_zero_finrank] using h0.symm
+  simpa [vermaSimpleLevel_zero_finrank] using! h0.symm
 
 end VOA.Classification.COne

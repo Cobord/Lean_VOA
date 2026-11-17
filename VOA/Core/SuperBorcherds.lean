@@ -349,7 +349,7 @@ theorem superBorcherds (V : SuperNearVOA 𝒱) {p q : ZMod 2} {u v : 𝒱} (hu :
         (fun ℓ' n' => BLε V (koszul p q) u v x ℓ' (-(k : ℤ) - 1) n'
           - BRs V u v x ℓ' (-(k : ℤ) - 1) n')
         (fun ℓ' n' => by
-          dsimp only
+          try dsimp only
           have hbl := BL_recε V (koszul p q) u v x ℓ' (-(k : ℤ) - 1) n'
           have hbr := BRs_rec V u v x ℓ' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) from by ring] at hbl hbr
@@ -358,7 +358,7 @@ theorem superBorcherds (V : SuperNearVOA 𝒱) {p q : ZMod 2} {u v : 𝒱} (hu :
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
         (fun n' => by
-          dsimp only
+          try dsimp only
           rw [borcherds_boundaryε V hu hv x (-(k : ℤ) - 1) n', sub_self])
         ℓ n
       exact sub_eq_zero.mp key

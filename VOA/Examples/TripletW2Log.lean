@@ -275,7 +275,7 @@ theorem djCarrier_deg_le_maxGenEigenspace (U : AmMod W 0) (h : ℂ) (k : ℕ)
     rw [djModeZero_omega_sub_pow_tmul U h n k v w, hnil]
     simp
   have hy := LinearMap.congr_fun hmap y
-  simpa using hy
+  simpa using! hy
 
 
 /-! ## §3 The logarithmic module -/

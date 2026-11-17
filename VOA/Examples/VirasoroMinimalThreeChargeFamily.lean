@@ -44,13 +44,12 @@ theorem nonresonant_terminal_L1_at_charge (c h b t : ℂ) (N R : ℕ)
     vermaMode c h 1 ((wardSourceAt c h b t (vermaBSAWeight N t) N f).val R)=0 := by
   have hh := wardSourceAt_first_defect c h b t N ht hN f
   have he := congrArg (fun g : wardSequenceSpace c h => g.val (R-1)) hh
-  dsimp only at he
   rw [wardSourceAt_diagonal _ _ _ _ _ _ _ _
     (nonresonant_first_below_at_charge c h b t N R ht hN f hf hd),wardSourceDiagonal_shift_one,
     show R-1+1=R by omega,hz,zero_smul] at he
   change vermaMode _ _ 1 _-(_ : ℂ) • _=0 at he
   rw [hf (R-1) (by omega),smul_zero,sub_zero] at he
-  simpa only [show R-1+1=R by omega] using he
+  simpa only [show R-1+1=R by omega] using! he
 
 /-- The seed-three diagonal starts at zero at the rational vacuum parameters,
 independently of the actual module charge. -/

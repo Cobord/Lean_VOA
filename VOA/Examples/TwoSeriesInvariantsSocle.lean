@@ -246,7 +246,7 @@ theorem finiteDimensional_and_finrank_le_of_socle [Fintype ι]
         exact congrArg Subtype.val this
       have hcharge : σ hz (y i v) = (2 * (s i : ℂ)) • y i v := by
         have := D.charge_contract_π (hinv v) i 1
-        simpa only [map_one, LinearMap.comp_id] using this
+        simpa only [map_one, LinearMap.comp_id] using! this
       refine (H (s i)).sep (N - D.deg i) (y i v)
         (contract_mem_of_tensorWeight (D.w i) (D.supp i) (hwt v)) hcharge fun F hF => ?_
       have he : (N - (D.deg i : ℤ)) - (s i : ℤ) * (s i) = E i := by
@@ -368,8 +368,8 @@ abbrev GrCartanAlg (r : ℕ) : Subalgebra ℂ (Module.End ℂ (GrA L r)) :=
 
 instance grCartanAlg_isMulCommutative (r : ℕ) : IsMulCommutative (GrCartanAlg L r) :=
   Algebra.isMulCommutative_adjoin ℂ (by
-    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
-    exact ((grRho_cartan_comm L r (i + 1) (j + 1)).neg_left.neg_right).eq)
+    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ -
+    exact (grRho_cartan_comm L r (i + 1) (j + 1)).neg_left.neg_right)
 
 open scoped IsMulCommutative
 

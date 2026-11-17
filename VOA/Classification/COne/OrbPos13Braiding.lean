@@ -48,15 +48,17 @@ theorem ambientIntertwiner_skew (G : Subgroup (Aut W)) :
   rw [skewModes_apply (ambientIntertwiner G).property.truncation, sSum, smul_finsum]
   by_cases hn : ∃ k : ℤ, (k : ℂ) = n
   · obtain ⟨k, rfl⟩ := hn
-    rw [OrbPos9.Assoc.ambientIntertwiner_int, W.skew_mode]
+    rw [OrbPos9.Assoc.ambientIntertwiner_int G k a b, W.skew_mode a b k]
     apply finsum_congr
     intro j
     have hi : (k : ℂ) + j = ((k + (j : ℤ) : ℤ) : ℂ) := by push_cast; rfl
+    have hj : (ambientIntertwiner G).val ((k : ℂ) + j) b a = W.smul b (k + j) a :=
+      (congrArg (fun m => (ambientIntertwiner G).val m b a) hi).trans
+        (OrbPos9.Assoc.ambientIntertwiner_int G (k + j) b a)
     have hL : (ambient G).isMod.Lm1 = W.toPreVertexAlgebra.T := by
       rw [W.T_eq_Lneg1]
       rfl
-    simp only [sTerm, hi, OrbPos9.Assoc.ambientIntertwiner_int, hL, smul_smul,
-      omegaPhase_int_sc]
+    simp only [sTerm, hj, hL, smul_smul, omegaPhase_int_sc]
     congr 2
     change (W.Y b) (-(k + (j : ℤ)) - 1) a = _
     congr 2

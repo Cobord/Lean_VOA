@@ -238,7 +238,9 @@ theorem v_core (K L : ℕ) (γ : ℤ) (δ : ℕ) :
         (f := fun i : ℤ => cbz (L : ℤ) i
           * (if 0 ≤ (γ + 2 + (δ:ℤ) - i) ∧ (γ + 2 + (δ:ℤ) - i) ≤ (δ : ℤ)
               then cbz (K : ℤ) (γ + 2 + (δ:ℤ) - i) else 0))]
-    simp only [Equiv.coe_addLeft]
+    change (∑ᶠ k : ℤ, cbz (L : ℤ) (γ + 2 + k)
+              * (if 0 ≤ (γ + 2 + (δ:ℤ) - (γ + 2 + k)) ∧ (γ + 2 + (δ:ℤ) - (γ + 2 + k)) ≤ (δ : ℤ)
+                  then cbz (K : ℤ) (γ + 2 + (δ:ℤ) - (γ + 2 + k)) else 0)) = _
     rw [show (∑ᶠ k : ℤ, cbz (L : ℤ) (γ + 2 + k)
               * (if 0 ≤ (γ + 2 + (δ:ℤ) - (γ + 2 + k)) ∧ (γ + 2 + (δ:ℤ) - (γ + 2 + k)) ≤ (δ : ℤ)
                   then cbz (K : ℤ) (γ + 2 + (δ:ℤ) - (γ + 2 + k)) else 0))
@@ -252,8 +254,8 @@ theorem v_core (K L : ℕ) (γ : ℤ) (δ : ℕ) :
     rw [finsumZ_eq_range_sum (N := δ + 1)
         (fun k : ℤ => cbz (L : ℤ) (γ + 2 + k)
           * (if 0 ≤ k ∧ k ≤ (δ : ℤ) then cbz (K : ℤ) ((δ:ℤ) - k) else 0))
-        (fun p hp => by dsimp only; rw [if_neg (by omega), mul_zero])
-        (fun p hp => by dsimp only; rw [if_neg (by omega), mul_zero])]
+        (fun p hp => by (try dsimp only); rw [if_neg (by omega), mul_zero])
+        (fun p hp => by (try dsimp only); rw [if_neg (by omega), mul_zero])]
     refine Finset.sum_congr rfl fun k hk => ?_
     have : k < δ + 1 := Finset.mem_range.mp hk
     rw [if_pos ⟨by positivity, by exact_mod_cast Nat.lt_succ_iff.mp this⟩]

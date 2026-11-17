@@ -65,7 +65,7 @@ theorem ravFam_symbol_tail (hm : 0 < m) (t : List (Ltr S.n))
       rw [hq]
       exact highest_cartan_t S hskew z h hh (r % m) hs
   · simp only [Nat.add_zero, symbolLetters_replicate_zero]
-    rw [wordOpT_replicate_zero]
+    refine (wordOpT_replicate_zero S hskew z x _ (highest S hskew z)).trans ?_
     change ((grOp _ _ m x 0 0) ^ (m * S.lowExp x + 1))
       (highest S hskew z) = 0
     exact highest_lowering S hskew z x hx hm
@@ -79,7 +79,7 @@ theorem ravFam_symbol_tail (hm : 0 < m) (t : List (Ltr S.n))
         (highest S hskew z) = 0
       rw [hq, hr]
       exact highest_u_two S hskew z S.c₀ 0
-    · have hq : (m + 0) / m = 1 := by simpa using Nat.div_self hm
+    · have hq : (m + 0) / m = 1 := by simpa using! Nat.div_self hm
       have hr : (m + 0) % m = 0 := by simp
       simp only [symbolLetters, wordOpT, if_neg hx]
       change grOp _ _ m x ((m + 0) / m) ((m + 0) % m)
@@ -104,8 +104,8 @@ theorem ravFam_symbol_eig (hm : 0 < m) (q : Fin S.n × ℂ)
       q.2 • highest S hskew z := by
   simp only [ravFam, ravSpec, Set.mem_setOf_eq] at hq
   rcases hq with ⟨h, hh, rfl⟩ | ⟨h, hh, rfl⟩
-  · simpa only [Nat.add_zero] using highest_cartan_zero S hskew z h hh hm
-  · simpa only [Nat.add_zero] using highest_cartanN_zero S hskew z h hh hm
+  · simpa only [Nat.add_zero] using! highest_cartan_zero S hskew z h hh hm
+  · simpa only [Nat.add_zero] using! highest_cartanN_zero S hskew z h hh hm
 
 end
 

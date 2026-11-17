@@ -48,7 +48,7 @@ theorem pairRestriction_y_decomposition (a b c : ℕ)
       ∑ d ∈ (pairSplitAlgebra a b c P).support,
         rename (pairXZTarget a b c)
           (pairPairedXZFinsuppMonomial a b c d *
-            coeff d (pairSplitAlgebra a b c P)) := by
+            (pairSplitAlgebra a b c P).coeff d) := by
   conv_lhs => rw [pairY_decomposition a b c P]
   simp only [map_sum, pairRestriction_yFinsupp_xz]
 

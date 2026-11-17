@@ -95,7 +95,10 @@ theorem psi_apply (g : G) (n : ℂ) (a b : V) :
       (vertexIntertwiner G).1 n 0 a ((g : Aut W) b) := by
   change (mulHom G hfg hC2).1 ((tensorMorphism hC2 (𝟙 (vObj G hfg)) (autHom G hfg g)).1
     ((canonical hC2 (vObj G hfg) (vObj G hfg)).1 n 0 a b)) = _
-  rw [tensorMorphism_apply]
+  -- 4.35: `a b : V` sit at the `vObj` carrier, so the canonical-mode lemma is applied
+  -- in term mode rather than by `rw`.
+  refine (congrArg (mulHom G hfg hC2).1
+    (tensorMorphism_apply hC2 (𝟙 (vObj G hfg)) (autHom G hfg g) n 0 a b)).trans ?_
   exact congrArg (fun Y : LogIntertwiningOperator (orbifold G).adjointRestrict
       (orbifold G).adjointRestrict (orbifold G).adjointRestrict => Y.1 n 0 a ((g : Aut W) b))
     (mulWeakHom_intertwiner G hfg hC2)
@@ -294,7 +297,7 @@ theorem coevHom_psi (g : G) :
   apply hom_ext
   intro x
   change (psiHom G hfg hC2 g).1 (coevLinear G hfg hC2 hW x) = _
-  rw [psi_coevLinear]
+  refine (psi_coevLinear G hfg hC2 hW g x).trans ?_
   unfold deltaCoeff
   by_cases hg : g = 1
   · rw [if_pos hg, if_pos hg]

@@ -34,6 +34,11 @@ forms after extension of scalars to `ℂ`.
   `T_s⁺` with `(−1)^s = κ_J (−1)^t`, `κ_J = frameSign`).
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.GriessDictionary
@@ -197,7 +202,7 @@ theorem vnat_smul_spinDict_spinDict (N M : SpaceW) :
       rw [← hnat, SimpleNat.natForm_symm, hP, natForm_smul_one_adjoint (spinDict_pair_mem N),
         vnat_smul_one_comm (spinDict_pair_mem N) (untwistedDict_pair_mem u),
         vnat_smul_untwisted_twisted, SimpleNat.natForm_apply]
-      dsimp only
+      try dsimp only
       rw [topAct_untwistedDict_spinDict, TPForm_spinDict, bform_gmul_spinBlock_spinBlock N M hu,
         bform_spinBlock_spinBlock]
       simp
@@ -307,6 +312,25 @@ theorem linearIndependent_griessImage : LinearIndependent ℂ griessImage := by
   rw [if_pos rfl] at h
   simpa using h
 
+/-- `#SpinIdx = 4096`, counted with `Nat.card` (instance-free), so that no `Fintype SpinIdx`
+instance mismatch reaches the kernel when rewriting a `Fintype.card SpinIdx`. -/
+private theorem natCard_spinIdx : Nat.card SpinIdx = 4096 := by
+  have h : Nat.card C₀ = 2 ^ 11 := by
+    rw [Nat.card_congr (Module.finBasisOfFinrankEq (ZMod 2) C₀ finrank_C₀).equivFun.toEquiv,
+      Nat.card_fun, Nat.card_zmod, Nat.card_eq_fintype_card, Fintype.card_fin]
+  rw [Nat.card_prod, Nat.card_zmod, h]
+  norm_num
+
+/-- `card_spinIdx` for an arbitrary `Fintype SpinIdx` instance (explicit, so `rw` unifies it with
+whatever instance occurs in the goal instead of re-synthesizing and comparing instances).
+Lean 4.35 port: rewrite with this *immediately* after `Module.finrank_matrix`.  Any later rewrite
+whose match is only up to instances (e.g. `Module.finrank_self`) inside a `Nat` product still
+containing `Fintype.card SpinIdx` makes the kernel `whnf` that cardinality (enumerating `C₀`),
+which times out / exhausts memory. -/
+private theorem card_spinIdx_any (inst : Fintype SpinIdx) : @Fintype.card SpinIdx inst = 4096 := by
+  rw [@Fintype.card_eq_nat_card SpinIdx inst]
+  exact natCard_spinIdx
+
 /-- `dim_ℚ SpaceB = dim_ℂ V♮₂`. -/
 theorem finrank_spaceB : Module.finrank ℚ SpaceB = Module.finrank ℂ (VnatVOA.grading 2) := by
   set p : SpaceB →ₗ[ℚ] SpaceW :=
@@ -320,7 +344,7 @@ theorem finrank_spaceB : Module.finrank ℚ SpaceB = Module.finrank ℂ (VnatVOA
   change Module.finrank ℚ SpaceW + Module.finrank ℚ untwistedSub = _ at hrn
   rw [← hrn, VnatVOA_grading, finrank_gradingNat, finrank_leechPlus_two,
     show (((2 : ℤ) : ℂ)) = (2 : ℂ) by norm_num, finrank_plusModule_weight_two,
-    Module.finrank_matrix, Module.finrank_self, card_spinIdx, Fintype.card_fin]
+    Module.finrank_matrix, card_spinIdx_any, Module.finrank_self, Fintype.card_fin]
   ring
 
 /-- **A `ℂ`-basis of `V♮₂`**: the dictionary images of a `ℚ`-basis of `SpaceB`. -/
@@ -479,7 +503,7 @@ theorem span_range_spinDict :
       · rintro _ ⟨N, rfl⟩
         exact spinTopVec_mem_weight_two N
       · rw [LinearMap.finrank_range_of_inj spinTopVec_injective, finrank_plusModule_weight_two,
-          Module.finrank_matrix, Module.finrank_self, card_spinIdx, Fintype.card_fin]
+          Module.finrank_matrix, card_spinIdx_any, Module.finrank_self, Fintype.card_fin]
     rw [← hrange]
     rintro _ ⟨N, rfl⟩
     rw [Matrix.matrix_eq_sum_single N, map_sum]

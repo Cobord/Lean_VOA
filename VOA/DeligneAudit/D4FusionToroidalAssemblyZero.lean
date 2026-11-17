@@ -19,14 +19,14 @@ theorem denominator_zero_mem (v : ℕ →₀ UModG f R)
       obtain ⟨j, x, hx, rfl⟩ := hv
       by_cases hj : j = 0
       · subst j
-        simpa using hx
+        simpa using! hx
       · simp [hj]
   | zero => simp
   | add x y hx hy ihx ihy =>
-      simpa only [Finsupp.coe_add, Pi.add_apply] using
+      simpa only [Finsupp.coe_add, Pi.add_apply] using!
         (Submodule.add_mem (TU f R m 1) ihx ihy)
   | smul a x hx ih =>
-      simpa only [Finsupp.coe_smul, Pi.smul_apply] using
+      simpa only [Finsupp.coe_smul, Pi.smul_apply] using!
         (Submodule.smul_mem (TU f R m 1) a ih)
 
 /-- A class represented at grade zero by a vector of the universal module. -/
@@ -50,7 +50,7 @@ theorem zeroClass_ker : LinearMap.ker (zeroClass f R m) = TU f R m 1 := by
         grKernel f R m :=
       (Submodule.Quotient.mk_eq_zero (grKernel f R m)).mp hx
     have hz := denominator_zero_mem f R m _ hq
-    simpa [gradedSingle] using hz
+    simpa [gradedSingle] using! hz
   · intro hx
     change (grKernel f R m).mkQ
       (gradedSingle f R m 0 x (by rw [TU_zero]; trivial)) = 0

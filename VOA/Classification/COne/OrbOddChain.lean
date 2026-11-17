@@ -51,8 +51,8 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱] {W : VertexOperat
 theorem L_pos_of_L1_L2 {y : 𝒱} (h1 : W.L 1 y = 0) (h2 : W.L 2 y = 0) :
     ∀ m : ℕ, 1 ≤ m → W.L (m : ℤ) y = 0
   | 0, h => absurd h (by norm_num)
-  | 1, _ => by simpa using h1
-  | 2, _ => by simpa using h2
+  | 1, _ => by simpa using! h1
+  | 2, _ => by simpa using! h2
   | m + 3, _ => by
     have ih := L_pos_of_L1_L2 h1 h2 (m + 2) (by omega)
     have e := L_L_apply (W := W) 1 ((m + 2 : ℕ) : ℤ) y
@@ -170,24 +170,24 @@ theorem chain_L1 : ∀ N : ℕ, 1 ≤ N → N ≤ 16 →
       cacheOK 9 1 64 1 c = true → chkGen c xv prev wit α = true →
       W.L 1 (evV W x xv) = (α : ℂ) • evV W x prev := fun hcok hk => by
     have := chkGen_sound hc hx hx0 hs7 (m := 1) hcok hk
-    simpa using this
+    simpa using! this
   interval_cases N
-  · simpa [xsN] using key ca1_1_ok chkA1_ok
-  · simpa [xsN] using key ca1_2_ok chkA2_ok
-  · simpa [xsN] using key ca1_3_ok chkA3_ok
-  · simpa [xsN] using key ca1_4_ok chkA4_ok
-  · simpa [xsN] using key ca1_5_ok chkA5_ok
-  · simpa [xsN] using key ca1_6_ok chkA6_ok
-  · simpa [xsN] using key ca1_7_ok chkA7_ok
-  · simpa [xsN] using key ca1_8_ok chkA8_ok
-  · simpa [xsN] using key ca1_9_ok chkA9_ok
-  · simpa [xsN] using key ca1_10_ok chkA10_ok
-  · simpa [xsN] using key ca1_11_ok chkA11_ok
-  · simpa [xsN] using key ca1_12_ok chkA12_ok
-  · simpa [xsN] using key ca1_13_ok chkA13_ok
-  · simpa [xsN] using key ca1_14_ok chkA14_ok
-  · simpa [xsN] using key ca1_15_ok chkA15_ok
-  · simpa [xsN] using key ca1_16_ok chkA16_ok
+  · simpa [xsN] using! key ca1_1_ok chkA1_ok
+  · simpa [xsN] using! key ca1_2_ok chkA2_ok
+  · simpa [xsN] using! key ca1_3_ok chkA3_ok
+  · simpa [xsN] using! key ca1_4_ok chkA4_ok
+  · simpa [xsN] using! key ca1_5_ok chkA5_ok
+  · simpa [xsN] using! key ca1_6_ok chkA6_ok
+  · simpa [xsN] using! key ca1_7_ok chkA7_ok
+  · simpa [xsN] using! key ca1_8_ok chkA8_ok
+  · simpa [xsN] using! key ca1_9_ok chkA9_ok
+  · simpa [xsN] using! key ca1_10_ok chkA10_ok
+  · simpa [xsN] using! key ca1_11_ok chkA11_ok
+  · simpa [xsN] using! key ca1_12_ok chkA12_ok
+  · simpa [xsN] using! key ca1_13_ok chkA13_ok
+  · simpa [xsN] using! key ca1_14_ok chkA14_ok
+  · simpa [xsN] using! key ca1_15_ok chkA15_ok
+  · simpa [xsN] using! key ca1_16_ok chkA16_ok
 
 theorem chain_L2 : ∀ N : ℕ, 1 ≤ N → N ≤ 16 →
     W.L 2 (evV W x (xsN N)) =
@@ -197,24 +197,24 @@ theorem chain_L2 : ∀ N : ℕ, 1 ≤ N → N ≤ 16 →
       cacheOK 9 1 64 2 c = true → chkGen c xv prev wit α = true →
       W.L 2 (evV W x xv) = (α : ℂ) • evV W x prev := fun hcok hk => by
     have := chkGen_sound hc hx hx0 hs7 (m := 2) hcok hk
-    simpa using this
+    simpa using! this
   interval_cases N
-  · simpa [xsN] using key ca2_1_ok chkB1_ok
-  · simpa [xsN] using key ca2_2_ok chkB2_ok
-  · simpa [xsN] using key ca2_3_ok chkB3_ok
-  · simpa [xsN] using key ca2_4_ok chkB4_ok
-  · simpa [xsN] using key ca2_5_ok chkB5_ok
-  · simpa [xsN] using key ca2_6_ok chkB6_ok
-  · simpa [xsN] using key ca2_7_ok chkB7_ok
-  · simpa [xsN] using key ca2_8_ok chkB8_ok
-  · simpa [xsN] using key ca2_9_ok chkB9_ok
-  · simpa [xsN] using key ca2_10_ok chkB10_ok
-  · simpa [xsN] using key ca2_11_ok chkB11_ok
-  · simpa [xsN] using key ca2_12_ok chkB12_ok
-  · simpa [xsN] using key ca2_13_ok chkB13_ok
-  · simpa [xsN] using key ca2_14_ok chkB14_ok
-  · simpa [xsN] using key ca2_15_ok chkB15_ok
-  · simpa [xsN] using key ca2_16_ok chkB16_ok
+  · simpa [xsN] using! key ca2_1_ok chkB1_ok
+  · simpa [xsN] using! key ca2_2_ok chkB2_ok
+  · simpa [xsN] using! key ca2_3_ok chkB3_ok
+  · simpa [xsN] using! key ca2_4_ok chkB4_ok
+  · simpa [xsN] using! key ca2_5_ok chkB5_ok
+  · simpa [xsN] using! key ca2_6_ok chkB6_ok
+  · simpa [xsN] using! key ca2_7_ok chkB7_ok
+  · simpa [xsN] using! key ca2_8_ok chkB8_ok
+  · simpa [xsN] using! key ca2_9_ok chkB9_ok
+  · simpa [xsN] using! key ca2_10_ok chkB10_ok
+  · simpa [xsN] using! key ca2_11_ok chkB11_ok
+  · simpa [xsN] using! key ca2_12_ok chkB12_ok
+  · simpa [xsN] using! key ca2_13_ok chkB13_ok
+  · simpa [xsN] using! key ca2_14_ok chkB14_ok
+  · simpa [xsN] using! key ca2_15_ok chkB15_ok
+  · simpa [xsN] using! key ca2_16_ok chkB16_ok
 
 end Chain
 
@@ -244,18 +244,19 @@ theorem chain_main {u v : 𝒱} (hc : W.centralCharge = ((1 : ℚ) : ℂ))
     fun n k => L_smul_primary hu hup n k v
   have hL1 : ∀ k : ℤ, W.L 1 (W.smul u k v) = ((16 - k : ℤ) : ℂ) • W.smul u (k + 1) v := by
     intro k
-    rw [hrec, show W.L 1 v = 0 by simpa using hvp 1 le_rfl, PreVertexAlgebra.smul_zero_right,
+    rw [hrec, show W.L 1 v = 0 by simpa using! hvp 1 le_rfl, PreVertexAlgebra.smul_zero_right,
       zero_add, show (1 : ℤ) + k = k + 1 by ring]
     congr 1
   have hL2 : ∀ k : ℤ, W.L 2 (W.smul u k v) = ((24 - k : ℤ) : ℂ) • W.smul u (k + 2) v := by
     intro k
-    rw [hrec, show W.L 2 v = 0 by simpa using hvp 2 (by norm_num),
+    rw [hrec, show W.L 2 v = 0 by simpa using! hvp 2 (by norm_num),
       PreVertexAlgebra.smul_zero_right, zero_add, show (2 : ℤ) + k = k + 2 by ring]
     congr 1
   have hgr : ∀ k : ℤ, W.smul u k v ∈ W.grading (24 - k) := by
     intro k
     have := W.grading_mode u hu v hv k
-    convert this using 2; ring
+    convert this using 2
+    all_goals first | rfl | ring
   -- Step 1: `u₍ₖ₎v = 0` for `k ≥ 16`
   have step1 : ∀ i : ℕ, ∀ j : ℕ, 9 ≤ j + i → W.smul u (16 + (j : ℤ)) v = 0 := by
     intro i
@@ -279,7 +280,7 @@ theorem chain_main {u v : 𝒱} (hc : W.centralCharge = ((1 : ℚ) : ℂ))
           rw [mem_prim]
           refine ⟨hgr _, fun m => ?_⟩
           have := L_pos_of_L1_L2 e1 e2 (m + 1) (by omega)
-          simpa using this
+          simpa using! this
         exact ((hP _ (by omega) _ (hkS _) hprim).2 (by omega))
   have hzero : ∀ k : ℤ, 16 ≤ k → W.smul u k v = 0 := by
     intro k hk
@@ -288,13 +289,13 @@ theorem chain_main {u v : 𝒱} (hc : W.centralCharge = ((1 : ℚ) : ℂ))
   -- Step 2: `u₍₁₅₎v = c u`
   have hprim15 : W.smul u 15 v ∈ prim W 9 := by
     rw [mem_prim]
-    refine ⟨by simpa using hgr 15, fun m => ?_⟩
+    refine ⟨by simpa using! hgr 15, fun m => ?_⟩
     have e1 := hL1 15
     have e2 := hL2 15
     rw [hzero (15 + 1) (by norm_num), smul_zero] at e1
     rw [hzero (15 + 2) (by norm_num), smul_zero] at e2
     have := L_pos_of_L1_L2 e1 e2 (m + 1) (by omega)
-    simpa using this
+    simpa using! this
   obtain ⟨c, hc15⟩ := (hP 9 (by norm_num) _ (hkS 15) hprim15).1 rfl
   refine ⟨c, hc15, ?_⟩
   -- Step 3: induction on the level
@@ -309,7 +310,7 @@ theorem chain_main {u v : 𝒱} (hc : W.centralCharge = ((1 : ℚ) : ℂ))
     | zero =>
       intro _ M hM
       obtain rfl : M = 0 := by omega
-      rw [hxs0]; simpa using hc15
+      rw [hxs0]; simpa using! hc15
     | succ N ih =>
       intro hN M hM
       rcases Nat.lt_or_ge M (N + 1) with hlt | hge
@@ -350,7 +351,7 @@ theorem chain_main {u v : 𝒱} (hc : W.centralCharge = ((1 : ℚ) : ℂ))
           rw [mem_prim]
           refine ⟨hyg, fun m => ?_⟩
           have := L_pos_of_L1_L2 hy1 hy2 (m + 1) (by omega)
-          simpa using this
+          simpa using! this
         have h0 := (hP _ (by omega) y hyS hprim).2 (by omega)
         exact sub_eq_zero.mp h0
   exact fun N hN => key N hN N le_rfl

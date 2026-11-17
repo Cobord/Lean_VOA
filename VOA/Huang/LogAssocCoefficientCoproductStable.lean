@@ -72,16 +72,13 @@ theorem coefficientSpan_rho_stable {d : ℤ} {u : V} (hu : u∈W.grading d) (p :
     · exact coefficient_mem_span hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
         Y₁ Y₂ _ _ _ _ _ _ (supportedAt_comp_mode hf hu (p-i)) hz
     · exact coefficient_mem_span hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-        Y₁ Y₂ _ _ _ _ _ _ hf (by simpa only [Int.cast_natCast] using N₃.mode_mem_weight hu hz (i : ℤ))
-  · dsimp only
-    rw [map_zero]
+        Y₁ Y₂ _ _ _ _ _ _ hf (by simpa only [Int.cast_natCast] using! N₃.mode_mem_weight hu hz (i : ℤ))
+  · rw [map_zero]
     exact S.zero_mem
   · intro x y _ _ hx hy
-    dsimp only
     rw [map_add]
     exact S.add_mem hx hy
   · intro s x _ hx
-    dsimp only
     rw [map_smul]
     exact S.smul_mem s hx
 
@@ -120,7 +117,7 @@ theorem coefficient_truncated (f : M₄ →ₗ[ℂ] ℂ) (z : M₃) (c β γ : �
   apply smul_eq_zero_of_right
   apply Finset.sum_eq_zero
   intro i hi
-  rw [hB _ _ _ f (by simpa only [Int.cast_natCast] using N₃.mode_mem_weight hu hz (i : ℤ))
+  rw [hB _ _ _ f (by simpa only [Int.cast_natCast] using! N₃.mode_mem_weight hu hz (i : ℤ))
     hf _ k (Or.inr ?_),smul_zero]
   have hp' : (p : ℝ) ≤ P := by exact_mod_cast le_trans hp (min_le_right Q P)
   have hi' : (0 : ℝ) ≤ i := Nat.cast_nonneg i

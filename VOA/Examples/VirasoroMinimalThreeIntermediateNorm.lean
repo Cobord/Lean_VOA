@@ -91,7 +91,7 @@ theorem minimalThreeVacuumCoefficient_higher (p : ℕ) (hp : 2≤p) (hcop : Nat.
       (((m:ℂ)+1)*vermaBSAWeight 3 ((3:ℂ)/(p:ℂ))+(r:ℂ)) •
         minimalThreeVacuumCoefficient p hp hcop r := by
   induction m generalizing r with
-  | zero => simpa using minimalThreeVacuumCoefficient_L2 p hp hcop r hr
+  | zero => simpa using! minimalThreeVacuumCoefficient_L2 p hp hcop r hr
   | succ m ih =>
     have hA := ih (r+1) (by omega)
     have hB := ih r (by omega)
@@ -129,7 +129,7 @@ theorem minimalThreeVacuumCoefficient_positive_to (p : ℕ) (hp : 2≤p)
         minimalThreeVacuumCoefficient p hp hcop j := by
   by_cases he : r=j+1
   · subst r
-    simpa using minimalThreeVacuumCoefficient_L1 p hp hcop j hr
+    simpa using! minimalThreeVacuumCoefficient_L1 p hp hcop j hr
   · have hk : r=j+(r-j-2)+2 := by omega
     have hh := minimalThreeVacuumCoefficient_higher p hp hcop (r-j-2) j (by omega)
     rw [← hk] at hh
@@ -138,7 +138,7 @@ theorem minimalThreeVacuumCoefficient_positive_to (p : ℕ) (hp : 2≤p)
       have hi : ((r-j-2:ℕ):ℤ)+1=(r:ℤ)-(j:ℤ)-1 := by omega
       exact_mod_cast hi
     rw [hz,hc] at hh
-    simpa only [add_comm] using hh
+    simpa only [add_comm] using! hh
 
 /-- Pair the full preterminal state equation with its own coefficient.
 Adjointness and the proved positive Ward action give a scalar recurrence
@@ -173,7 +173,7 @@ theorem minimalThree_actual_norm_recursion (p : ℕ) (hp : 2≤p) (hcop : Nat.Co
     rw [VirGram4.canB_adj,neg_sub,
       minimalThreeVacuumCoefficient_positive_to p hp hcop r j j.isLt hr,map_smul,smul_eq_mul]
   simp only [hs] at he
-  simpa only [mul_assoc] using he
+  simpa only [mul_assoc] using! he
 
 /-- The cubic diagonal is invertible at each positive preterminal index.
 This uses the established actual fusion nonresonance, not a new assumption. -/

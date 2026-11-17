@@ -22,7 +22,7 @@ def hypTensorCoordinates : (V ⊗[ℂ] hypFock) ≃ₗ[ℂ] ((ℕ × Fin 2) →�
 
 @[simp] theorem hypTensorCoordinates_tmul (v : V) (p : hypFock)
     (e : (ℕ × Fin 2) →₀ ℕ) :
-    hypTensorCoordinates (v ⊗ₜ[ℂ] p) e = coeff e p • v := by
+    hypTensorCoordinates (v ⊗ₜ[ℂ] p) e = p.coeff e • v := by
   rw [hypTensorCoordinates, TensorProduct.equivFinsuppOfBasisRight_apply_tmul_apply]
   rfl
 
@@ -56,7 +56,7 @@ theorem hypTensorSupported_mem (s : Set ((ℕ × Fin 2) →₀ ℕ)) (x : V ⊗[
   simp only [Finsupp.mem_support_iff]
 
 theorem hypTensorSupported_tmul (s : Set ((ℕ × Fin 2) →₀ ℕ)) (v : V) (p : hypFock)
-    (hp : ∀ e, coeff e p ≠ 0 → e ∈ s) : v ⊗ₜ[ℂ] p ∈ hypTensorSupported s := by
+    (hp : ∀ e, p.coeff e ≠ 0 → e ∈ s) : v ⊗ₜ[ℂ] p ∈ hypTensorSupported s := by
   rw [hypTensorSupported_mem]
   intro e he
   apply hp e

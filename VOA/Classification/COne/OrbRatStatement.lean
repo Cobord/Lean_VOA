@@ -70,7 +70,7 @@ def InvolutionOrbifoldRationalOfC2 : Prop :=
 /-- An element of finite order generates a finite subgroup. -/
 theorem finite_zpowers_of_isOfFinOrder {G : Type*} [Group G] {g : G} (hg : IsOfFinOrder g) :
     Finite (Subgroup.zpowers g) :=
-  hg.finite_zpowers.to_subtype
+  hg.finite_zpowers
 
 /-- An involution has finite order. -/
 theorem isOfFinOrder_of_mul_self {G : Type*} [Group G] {g : G} (hg : g * g = 1) :

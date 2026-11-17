@@ -52,7 +52,7 @@ theorem tsum_spectrumCosets (hC2 : C2Cofinite W) (N : LogVModule W M)
   have hg : Summable g := (hinj.summable_iff hvan).mp heSum
   refine ⟨hg,?_⟩
   rw [← hinj.tsum_eq hsupport,heSum.tsum_prod]
-  simpa only [e,I] using Finset.tsum_subtype (spectrumCosets hC2 N hfg)
+  simpa only [e,I] using! Finset.tsum_subtype (spectrumCosets hC2 N hfg)
     (fun mu => ∑' d : ℤ,g (spectrumCosetRep hC2 N hfg mu+d))
 
 variable {M₁ M₂ M₃ M₄ M₅ : Type u}
@@ -138,7 +138,7 @@ theorem completedLogProduct_eq_spectrum (hC2 : C2Cofinite W)
       (prodTermZ (fun n => Y₁.1 n k) (fun n => Y₂.1 n 0) f x y z
         (α₁+α₂+α₃-β-2) (α₂+α₃-r-1) z₁ 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ f x y z _ _ k 0 one_ne_zero (by simpa only [norm_one] using one_lt_norm ht)
+      Y₁ Y₂ f x y z _ _ k 0 one_ne_zero (by simpa only [norm_one] using! one_lt_norm ht)
   have hrows : ∀ mu∈spectrumCosets hC2 N₅ hfg₅,
       Summable fun d : ℤ => g (spectrumCosetRep hC2 N₅ hfg₅ mu+d) := by
     intro mu hmu

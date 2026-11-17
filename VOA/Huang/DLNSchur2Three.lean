@@ -22,7 +22,7 @@ theorem not_isUnit_sq_sub_one_threePower {k : ℕ} (hk : 0 < k)
     unit_sq_three (Units.map f.toMonoidHom u)
   intro h
   have h' := h.map f
-  rw [map_sub, map_pow, map_one, hu, sub_self] at h'
-  exact not_isUnit_zero h'
+  rw [map_sub, map_pow, map_one, hu] at h'
+  exact not_isUnit_zero ((congrArg IsUnit (sub_self _)).mp h')
 
 end VOA.Huang.DLNSchur

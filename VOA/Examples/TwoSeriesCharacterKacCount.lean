@@ -84,7 +84,6 @@ theorem line_sumQ (L off N : ℕ) (hN : N = L + off) (P : ℕ → ℕ → Prop) 
     exact hx (if_neg hc)
   refine Finset.sum_bij_ne_zero (fun x _ _ => K (J (x.2.val + 1))) ?_ ?_ ?_ ?_
   · intro x hx hne
-    dsimp only
     have hp := hPJ _ _ (hcond x hne)
     have hmem := (Finset.mem_filter.mp hx).2
     have he := hee (J (x.2.val + 1))
@@ -156,19 +155,18 @@ theorem lineA1 (L : ℕ) :
     (fun j => (2 * n + 3) * j + 1) (fun j => 2 * j + 1) (fun j => -(2 * j + 1)) (fun v => v / 2)
     (fun k => ((-k - 1) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
   · intro u v h
-    simp only at h ⊢
     obtain ⟨w, rfl | rfl⟩ := Nat.even_or_odd' v
     · exfalso; ring_nf at h; omega
     · rw [show (2 * w + 1) / 2 = w by omega]
       exact ⟨by ring_nf at h ⊢; omega, rfl⟩
-  · intro j; simp only; ring
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply eeq_param; ring
+  · intro j; ring
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply eeq_param; ring
 
 /-- Line `2u = Qv + 2n + 1` (level `L`, `h = 0`) ↔ odd `k ≥ 1`. -/
 theorem lineA2 (L : ℕ) :
@@ -181,19 +179,18 @@ theorem lineA2 (L : ℕ) :
     (fun j => (2 * n + 3) * j + 2 * n + 2) (fun j => 2 * j + 1) (fun j => 2 * j + 1)
     (fun v => v / 2) (fun k => ((k - 1) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
   · intro u v h
-    simp only at h ⊢
     obtain ⟨w, rfl | rfl⟩ := Nat.even_or_odd' v
     · exfalso; ring_nf at h; omega
     · rw [show (2 * w + 1) / 2 = w by omega]
       exact ⟨by ring_nf at h ⊢; omega, rfl⟩
-  · intro j; simp only; ring
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply eeq_param; ring
+  · intro j; ring
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply eeq_param; ring
 
 /-- Line `2u = Qv + 2n + 5` (level `m`, `h = 1`) ↔ even `k ≤ -2`. -/
 theorem lineB1 (m : ℕ) :
@@ -206,19 +203,18 @@ theorem lineB1 (m : ℕ) :
     (fun j => (2 * n + 3) * j + 2 * n + 4) (fun j => 2 * j + 1) (fun j => -(2 * j + 2))
     (fun v => v / 2) (fun k => ((-k - 2) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
   · intro u v h
-    simp only at h ⊢
     obtain ⟨w, rfl | rfl⟩ := Nat.even_or_odd' v
     · exfalso; ring_nf at h; omega
     · rw [show (2 * w + 1) / 2 = w by omega]
       exact ⟨by ring_nf at h ⊢; omega, rfl⟩
-  · intro j; simp only; ring
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply eeq_param; ring
+  · intro j; ring
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply eeq_param; ring
 
 /-- Line `Qv = 2u + 2n + 5` (level `m`, `h = 1`) ↔ even `k ≥ 2`. -/
 theorem lineB2 (m : ℕ) :
@@ -231,21 +227,20 @@ theorem lineB2 (m : ℕ) :
     (fun j => (2 * n + 3) * j + 2 * n + 2) (fun j => 2 * j + 3) (fun j => 2 * j + 2)
     (fun v => (v - 3) / 2) (fun k => ((k - 2) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
   · intro u v h
-    simp only at h ⊢
     obtain ⟨w, rfl | rfl⟩ := Nat.even_or_odd' v
     · exfalso; ring_nf at h; omega
     · rcases w with _ | w
       · exfalso; ring_nf at h; omega
       · rw [show (2 * (w + 1) + 1 - 3) / 2 = w by omega]
         exact ⟨by ring_nf at h ⊢; omega, by ring⟩
-  · intro j; simp only; ring
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply eeq_param; ring
+  · intro j; ring
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply eeq_param; ring
 
 theorem eA_one_one : eA n 1 1 = 1 := by
   unfold eA

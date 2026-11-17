@@ -68,14 +68,14 @@ theorem hasNonzeroSingular_kac_small (r s : ℕ) (hr : 0<r) (hs : 0<s)
       (fusionKacWeight b a t⁻¹) (b*a) →
       HasNonzeroSingular (vermaBSACharge t) (fusionKacWeight a b t) (a*b) := by
     intro a b hh
-    simpa only [vermaBSACharge_inv,fusionKacWeight_swap_inv _ _ t ht,Nat.mul_comm] using hh
+    simpa only [vermaBSACharge_inv,fusionKacWeight_swap_inv _ _ t ht,Nat.mul_comm] using! hh
   rcases hsmall with h | h
   · rcases (show r=1 ∨ r=2 by omega) with rfl | rfl
-    · simpa using hasNonzeroSingular_kac_one s hs t ht
+    · simpa using! hasNonzeroSingular_kac_one s hs t ht
     · exact hswap 2 s (hasNonzeroSingular_kac_two s hs t⁻¹ (inv_ne_zero ht))
   · rcases (show s=1 ∨ s=2 by omega) with rfl | rfl
     · apply hswap r 1
-      simpa using hasNonzeroSingular_kac_one r hr t⁻¹ (inv_ne_zero ht)
+      simpa using! hasNonzeroSingular_kac_one r hr t⁻¹ (inv_ne_zero ht)
     · exact hasNonzeroSingular_kac_two r hr t ht
 
 /-- All positive label pairs contributing below level nine have a label
@@ -118,7 +118,7 @@ theorem vermaKacGramDet_continuousAt (n : ℕ) (h t : ℂ) (ht : t≠0) :
       (fun z => MvPolynomial.eval (fun i : Fin 2 => if i=0 then vermaBSACharge z else h)
         (vermaGramPolynomial n).det) := by
     funext z
-    simpa using (vermaGramPolynomial_det_eval (vermaBSACharge z) h n).symm
+    simpa using! (vermaGramPolynomial_det_eval (vermaBSACharge z) h n).symm
   rw [he]
   apply (MvPolynomial.continuous_eval _).continuousAt.comp
   apply continuousAt_pi.mpr
@@ -147,6 +147,6 @@ theorem vermaWeightDeterminant_kac_below_nine_all (t : ℂ) (ht : t≠0)
       nhdsWithin_le_nhds)
   filter_upwards [self_mem_nhdsWithin] with z hz
   have he := congrArg (Polynomial.eval h) (vermaWeightDeterminant_kac_below_nine z hz n hn)
-  simpa only [vermaWeightDeterminant_eval,Polynomial.eval_mul,Polynomial.eval_C] using he
+  simpa only [vermaWeightDeterminant_eval,Polynomial.eval_mul,Polynomial.eval_C] using! he
 
 end VOA.InverseDS.VirasoroVerma

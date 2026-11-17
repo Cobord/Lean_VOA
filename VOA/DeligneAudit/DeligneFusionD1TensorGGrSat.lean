@@ -52,24 +52,24 @@ theorem tensor_filtSat :
     · change (D1TensorG.rep S.f S.jacobi hskew z).op h r (generator S.c₀) ∈ _
       rw [tensor_cartan S hskew z h hh r]
       exact Submodule.smul_mem _ _ (w_mem_Fbelow _ _ (by
-        simpa [degree, SectorGraded.wordDeg] using hr))
+        simpa [degree, SectorGraded.wordDeg] using! hr))
     · rw [← word_replicate, tensor_lowering S hskew z i hi]
       exact Submodule.zero_mem _
     · by_cases hx : x = S.c₀
       · subst x
-        simpa only [if_pos rfl, degree, SectorGraded.wordDeg, List.map_cons,
-          List.map_nil, List.sum_cons, List.sum_nil, Nat.add_zero] using
+        simpa only [↓reduceIte, degree, SectorGraded.wordDeg, List.map_cons,
+          List.map_nil, List.sum_cons, List.sum_nil, Nat.add_zero] using!
           tensor_trunc_theta S hskew z
       · simpa only [if_neg hx, degree, SectorGraded.wordDeg, List.map_cons,
-          List.map_nil, List.sum_cons, List.sum_nil, Nat.add_zero] using
+          List.map_nil, List.sum_cons, List.sum_nil, Nat.add_zero] using!
           tensor_trunc_non_theta S hskew z x hx
     · change (D1TensorG.rep S.f S.jacobi hskew z).op h r (generator S.c₀) ∈ _
       rw [tensor_cartanN S hskew z h hh r]
       exact Submodule.smul_mem _ _ (w_mem_Fbelow _ _ (by
-        simpa [degree, SectorGraded.wordDeg] using hr))
+        simpa [degree, SectorGraded.wordDeg] using! hr))
   · rintro _ (⟨h, hh, rfl⟩ | ⟨h, hh, rfl⟩)
-    · simpa using tensor_cartan S hskew z h hh 0
-    · simpa using tensor_cartanN S hskew z h hh 0
+    · simpa using! tensor_cartan S hskew z h hh 0
+    · simpa using! tensor_cartanN S hskew z h hh 0
 
 /-- The constructed graded current action satisfies every explicit source relation. -/
 theorem tensor_gr_sat :

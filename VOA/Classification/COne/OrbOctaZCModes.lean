@@ -15,7 +15,7 @@ abbrev selfMode (k : ℤ) : A OrbOctaR.W :=
 theorem selfMode_high (k : ℤ) (hk : 31 < k) : selfMode k = 0 := by
   have hg : OrbOctaR.W.smul OrbOctaR.X k OrbOctaR.X ∈ OrbOctaR.W.grading (31 - k) := by
     convert OrbOctaR.W.grading_mode _ OrbOctaR.X_grading _ OrbOctaR.X_grading k using 2
-    ring
+    all_goals first | rfl | ring
   rw [OrbOctaR.W.positivity _ (by omega)] at hg
   rw [selfMode, (Submodule.mem_bot ℂ).mp hg, map_zero]
 
@@ -25,7 +25,7 @@ theorem selfMode_circle (m : ℕ) :
   have h := (mk_eq_zero_iff OrbOctaR.W).mpr
     (Hres_mem_O OrbOctaR.W OrbOctaR.X_grading OrbOctaR.X m 0)
   simpa only [Hres, Gres, add_zero, map_sum,
-    map_smul, Nat.cast_add, Nat.cast_ofNat] using h
+    map_smul, Nat.cast_add, Nat.cast_ofNat] using! h
 
 /-- Skew symmetry reduced to a finite sum in the intrinsic Zhu algebra. -/
 theorem selfMode_skew (k : ℤ) (hk : k ≤ 30) :
@@ -48,6 +48,6 @@ theorem selfMode_skew (k : ℤ) (hk : k ≤ 30) :
   rw [hs, Onm_zero_zero_eq_O] at h
   have hh := (mk_eq_zero_iff OrbOctaR.W).mpr h
   rw [map_sub, map_smul, map_sum] at hh
-  simpa only [map_smul, sub_eq_zero] using hh
+  simpa only [map_smul, sub_eq_zero] using! hh
 
 end VOA.Classification.COne.OrbOctaZC

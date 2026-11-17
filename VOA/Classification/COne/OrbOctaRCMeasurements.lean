@@ -20,7 +20,7 @@ theorem charged_mode32 : chargedProbe dualState16 (W.smul X (-1) X) =
   rw [primary_ground_coupling]
   have h := congrArg (fun q : ℚ => (q : ℂ)) ward16_candidate
   push_cast at h
-  simpa only [mul_comm] using h
+  simpa only [mul_comm] using! h
 
 theorem charged_mode34 : chargedProbe dualState18 (W.smul X (-3) X) =
     (2 : ℂ) * candidateB34 := by
@@ -32,6 +32,6 @@ theorem charged_mode34 : chargedProbe dualState18 (W.smul X (-3) X) =
   rw [primary_ground_coupling]
   have h := congrArg (fun q : ℚ => (q : ℂ)) ward18_candidate
   push_cast at h
-  simpa only [mul_comm] using h
+  simpa only [mul_comm] using! h
 
 end VOA.Classification.COne.OrbOctaRC

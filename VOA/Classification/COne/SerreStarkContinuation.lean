@@ -139,8 +139,9 @@ theorem isOpen_good : IsOpen {s | S.Good s} := by
   refine isOpen_iInter_of_finite fun p => ?_
   refine Units.isOpen.preimage ?_
   have hp0 : (p.1 : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (S.prime p).ne_zero
-  refine continuous_const.sub (Continuous.smul ?_ continuous_const)
-  exact continuous_id.const_mul 2 |>.neg |>.const_cpow (Or.inl hp0)
+  have hc : Continuous fun s : ℂ => (p.1 : ℂ) ^ (-(2 * s)) :=
+    continuous_id.const_mul 2 |>.neg |>.const_cpow (Or.inl hp0)
+  exact continuous_const.sub (hc.smul continuous_const)
 
 theorem eval_charpolyRev_eq_det (M : S.Mat) (x : ℂ) :
     (Matrix.charpolyRev M).eval x = (1 - x • M).det := by

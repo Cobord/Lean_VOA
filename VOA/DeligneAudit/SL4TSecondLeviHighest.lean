@@ -19,7 +19,7 @@ theorem secondRadical_raising_zero_of_no_compound (he : ∀ s, ρ.op 1 s w = 0)
     (hl : l.countP (fun x => x.1 = 1) = 0) :
     ρ.op 1 r (radicalWord (a2RadicalOp ρ) l • w) = 0 := by
   induction l with
-  | nil => simpa [radicalWord] using he r
+  | nil => simpa [radicalWord] using! he r
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       have hi : i = 0 := by
@@ -28,7 +28,7 @@ theorem secondRadical_raising_zero_of_no_compound (he : ∀ s, ρ.op 1 s w = 0)
         · simp at hl
       subst i
       have ht : l.countP (fun x => x.1 = 1) = 0 := by
-        simpa using hl
+        simpa using! hl
       have hc := a2_raising_simple_comm ρ r s
       have happ := congrArg (fun T : Module.End ℂ V =>
         T (radicalWord (a2RadicalOp ρ) l • w)) hc
@@ -51,7 +51,7 @@ theorem secondRadical_raised_insert_compound (r s : ℕ) (k : A2RadicalKey)
     a2KeyRaised r (a2KeyInsert 1 s k) =
       a2KeyInsert 1 s (a2KeyRaised r k) := by
   rcases k with ⟨d₁, d₂, degree⟩
-  have hd : 1 ≤ d₂ := by simpa using hk
+  have hd : 1 ≤ d₂ := by simpa using! hk
   simp [a2KeyRaised, a2KeyInsert, Nat.sub_add_cancel hd,
     Nat.add_comm, Nat.add_left_comm]
 
@@ -82,7 +82,7 @@ theorem secondRadical_raising_word_key (he : ∀ s, ρ.op 1 s w = 0) (r : ℕ) (
           exact a2RadicalOp_maps_key ρ w 0 s (a2KeyRaised r (a2WordKey l)) ih
         change ρ.op 1 r (a2RadicalOp ρ 0 s u) ∈ _
         rw [sub_eq_iff_eq_add.mp happ]
-        simpa using hmap
+        simpa using! hmap
       · have hc := a2_raising_compound_comm ρ r s
         have happ := congrArg (fun T : Module.End ℂ V => T u) hc
         simp only [LinearMap.sub_apply, Module.End.mul_apply] at happ
@@ -118,9 +118,9 @@ theorem secondRadical_raising_maps_key (he : ∀ s, ρ.op 1 s w = 0) (r : ℕ) (
       rw [← hk]
       exact secondRadical_raising_word_key ρ w he r l
   | zero => simp
-  | add x y _ _ hx hy => simpa using
+  | add x y _ _ hx hy => simpa using!
       (a2KeyLayer ρ w (a2KeyRaised r k)).add_mem hx hy
-  | smul c x _ hx => simpa using
+  | smul c x _ hx => simpa using!
       (a2KeyLayer ρ w (a2KeyRaised r k)).smul_mem c hx
 
 
@@ -133,8 +133,8 @@ theorem secondRadical_word_eq_currentWord (l : List (Fin 2 × ℕ)) :
   | cons x xs ih =>
       rcases x with ⟨i, s⟩
       fin_cases i
-      · simpa [wordOp, radicalWord, a2RadicalOp] using congrArg (ρ.op 3 s) ih
-      · simpa [wordOp, radicalWord, a2RadicalOp] using congrArg (ρ.op 5 s) ih
+      · simpa [wordOp, radicalWord, a2RadicalOp] using! congrArg (ρ.op 3 s) ih
+      · simpa [wordOp, radicalWord, a2RadicalOp] using! congrArg (ρ.op 5 s) ih
 
 /-- The node-two lowering operator kills every vector of a fixed radical key
 after a common power. The bound comes from the generic current-word lemma. -/
@@ -157,7 +157,7 @@ theorem secondRadical_key_lowering_nilpotent (q : ℕ)
       change (ρ.op 4 0 ^ (q + 1 + adK A2sector * l'.length))
         (wordOp ρ l' w) = 0 at hpow
       rw [hword] at hpow
-      simpa only [l', List.length_map, hlen] using hpow
+      simpa only [l', List.length_map, hlen] using! hpow
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy]
   | smul c x _ hx => simp [map_smul, hx]

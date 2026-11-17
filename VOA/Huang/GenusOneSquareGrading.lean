@@ -91,7 +91,7 @@ theorem insertion_sq_sub_surj (A : OrdVModule W M) {h : ℂ}
     obtain ⟨x, hx, t, ht, rfl⟩ := Submodule.mem_sup.mp hw
     have hc : (h + n) - (h + d) ≠ 0 := by
       have hne : (n : ℂ) ≠ (d : ℂ) := by exact_mod_cast (by omega : n ≠ d)
-      simpa only [add_sub_add_left_eq_sub, sub_ne_zero] using hne
+      simpa only [add_sub_add_left_eq_sub, sub_ne_zero] using! hne
     let y₀ : M := ((h + n) - (h + d))⁻¹ • x
     have hy₀ : y₀ ∈ A.weight (h + n) := Submodule.smul_mem _ _ hx
     have hcy : ((h + n) - (h + d)) • y₀ = x := by

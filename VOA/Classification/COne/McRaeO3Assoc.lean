@@ -222,7 +222,7 @@ theorem vertex_completed_assoc (hC2 : C2Cofinite (orbifoldVOA G))
         ∑' i : ℕ, cbz (i - ℓ - 1) i * P (D - K - ℓ + i) := by
       intro ℓ
       have h := OrbPos9.Assoc.assoc_rel G x y z f D K hK k1 hk1 ℓ
-      simpa only [OrbPos9.Assoc.ambientIntertwiner_int] using h
+      simpa only [OrbPos9.Assoc.ambientIntertwiner_int] using! h
     have hP : ∀ k, k1 ≤ k → P k = 0 := by
       intro k hk
       simp only [P]
@@ -247,7 +247,7 @@ theorem vertex_completed_assoc (hC2 : C2Cofinite (orbifoldVOA G))
       have hsum := completedLogProduct_summable hC2 (ambientLog G) (ambientLog G)
         (ambientLog G) (ambientLog G) (ambientLog G) hfg hfg hfg hfg hfg Yv Yv hx hy hz f β ht'
       have hinj : Function.Injective fun k : ℤ => (b' : ℂ) + c - 1 - (k : ℂ) :=
-        fun m n h => by simpa using h
+        fun m n h => by simpa using! h
       refine (hsum.comp_injective hinj).congr fun k => ?_
       simp only [Function.comp]
       rw [prodTerm_vertex G _ hx hy hz f, hPk, hexp, Complex.exp_log (by
@@ -257,7 +257,7 @@ theorem vertex_completed_assoc (hC2 : C2Cofinite (orbifoldVOA G))
       have hsum := completedLogIterate_summable hC2 (ambientLog G) (ambientLog G)
         (ambientLog G) (ambientLog G) (ambientLog G) hfg hfg hfg hfg hfg Yv Yv hx hy hz f β ht
       have hinj : Function.Injective fun r : ℤ => (((a' + b' - 1 : ℤ) : ℂ)) - (r : ℂ) :=
-        fun m n h => by simpa using h
+        fun m n h => by simpa using! h
       refine (hsum.comp_injective hinj).congr fun r => ?_
       simp only [Function.comp]
       rw [iterTerm_vertex G t hx hy hz f, hQr]

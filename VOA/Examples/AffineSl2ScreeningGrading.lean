@@ -21,7 +21,7 @@ noncomputable section
 auxiliary weight plus a fixed offset. Zero coefficients satisfy every weight. -/
 def CoeffGrade {G : Type*} [AddCommGroup G] (w : Fin 3 × ℕ → ℂ)
     (L : G →+ ℂ) (a : ℂ) (P : AddMonoidAlgebra WakFock G) : Prop :=
-  ∀ g, Eul w (P g) = (L g+a) • P g
+  ∀ g, Eul w (P.coeff g) = (L g+a) • P.coeff g
 
 /-- The zero expression has every coefficient grading. -/
 theorem CoeffGrade.zero {G : Type*} [AddCommGroup G] (w : Fin 3 × ℕ → ℂ)
@@ -36,7 +36,7 @@ theorem CoeffGrade.add {G : Type*} [AddCommGroup G] {w : Fin 3 × ℕ → ℂ}
     (hP : CoeffGrade w L a P) (hQ : CoeffGrade w L a Q) :
     CoeffGrade w L a (P+Q) := by
   intro g
-  change Eul w (P g+Q g) = (L g+a) • (P g+Q g)
+  change Eul w (P.coeff g+Q.coeff g) = (L g+a) • (P.coeff g+Q.coeff g)
   rw [map_add,hP g,hQ g,smul_add]
 
 /-- A finite sum preserves a common coefficient grading. -/
@@ -58,7 +58,7 @@ theorem CoeffGrade.single {G : Type*} [AddCommGroup G] {w : Fin 3 × ℕ → ℂ
   intro x
   by_cases hx : g=x
   · subst x; simpa using h
-  · simp [AddMonoidAlgebra.single_apply,hx]
+  · simp [hx]
 
 /-- Multiplication adds offsets, by the actual Euler derivation rule and
 finite Laurent convolution. This does not assume any screening Ward equation. -/
@@ -68,7 +68,7 @@ theorem CoeffGrade.mul {G : Type*} [AddCommGroup G] {w : Fin 3 × ℕ → ℂ}
     CoeffGrade w L (a+b) (P*Q) := by
   classical
   intro g
-  rw [AddMonoidAlgebra.mul_apply]
+  rw [AddMonoidAlgebra.coeff_mul]
   simp only [Finsupp.sum,map_sum,Finset.smul_sum]
   apply Finset.sum_congr rfl
   intro x hx
@@ -187,7 +187,7 @@ theorem CoeffGrade.sub {G : Type*} [AddCommGroup G] {w : Fin 3 × ℕ → ℂ}
     (hP : CoeffGrade w L a P) (hQ : CoeffGrade w L a Q) :
     CoeffGrade w L a (P-Q) := by
   intro g
-  change Eul w (P g-Q g) = (L g+a) • (P g-Q g)
+  change Eul w (P.coeff g-Q.coeff g) = (L g+a) • (P.coeff g-Q.coeff g)
   rw [map_sub,hP g,hQ g,smul_sub]
 
 /-- The lifted Vandermonde is the product of ordinary auxiliary differences
@@ -269,13 +269,15 @@ theorem state_energy (r q M : ℕ) (hq : 0 < q) :
     push_cast
     rw [hq']
     linear_combination -(M : ℂ)*hc
-  simpa only [hs] using h
+  rw [hs] at h
+  exact h
 
 /-- The actual screening vector has beta-minus-gamma charge r. -/
 theorem state_charge (r q M : ℕ) :
     Dch (state r q M) = (r : ℂ) • state r q M := by
-  simpa only [AddMonoidHom.zero_apply,zero_add] using
-    integrand_charge r q M (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
+  have h := integrand_charge r q M (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
+  rw [AddMonoidHom.zero_apply,zero_add] at h
+  exact h
 
 end
 end VOA.Wak.Screening

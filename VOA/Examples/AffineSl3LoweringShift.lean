@@ -12,6 +12,8 @@ Jacobi reduces the relevant cubic gamma commutators to oscillator
 commutators. Their difference at fixed total index commutes with every
 ghost and has nonzero ghost charge, so it vanishes as an actual operator.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

@@ -32,7 +32,7 @@ variable {V M : Type u} [AddCommGroup V] [Module ℂ V]
 
 theorem mem_imGT_add_one' {z : ℂ} (hz : z ∈ imGT 0) : z + 1 ∈ imGT 0 := by
   change (0 : ℝ) < (z + 1).im
-  simpa using hz
+  simpa using! hz
 
 theorem IsInsertionAnalyticBlock.translate {F : M → ℂ → ℂ} (hF : IsInsertionAnalyticBlock A F) :
     IsInsertionAnalyticBlock A (fun v z => F v (z + 1)) where
@@ -273,7 +273,7 @@ theorem insertionTraceSpanning_of_inputs (hC2 : C2Cofinite W) (hA : A.IsIrreduci
   let g : E := ⟨tr Z₂, traceFamily_mem hC2 hA Mfam h hcw Z₂⟩
   have hgTr : g ∈ Tr := (memTr g).mpr ⟨Z₂, rfl⟩
   let f' : E := f - g
-  have hf'Tr : f' ∉ Tr := fun h' => hfTr (by simpa [f'] using Tr.add_mem h' hgTr)
+  have hf'Tr : f' ∉ Tr := fun h' => hfTr (by simpa [f'] using! Tr.add_mem h' hgTr)
   have hZsplit : Z - (fun i => tEig W h i • Z₂ i) + μ • Z₂ - Z₁ = 0 := by
     funext i
     simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, Pi.zero_apply, Z₁, Z₂]

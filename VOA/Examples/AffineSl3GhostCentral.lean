@@ -12,6 +12,8 @@ The normal-ordering boundary changes under an integer shift. Its signed
 finite interval has total weight minus the shift, giving the central
 commutator of the actual diagonal beta-gamma currents.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3.FreeField
 noncomputable section
 open Classical

@@ -39,7 +39,7 @@ theorem sget_eq_zero_of_suppIn {L : SV} {P : ℕ → Bool} (h : suppIn L P = tru
 theorem mem_of_suppIn {L : SV} {P : ℕ → Bool} (h : suppIn L P = true) {c : ℕ} (hc : sget L c ≠ 0) :
     P c = true := by
   by_contra h'
-  exact hc (sget_eq_zero_of_suppIn h (by simpa using h'))
+  exact hc (sget_eq_zero_of_suppIn h (by simpa using! h'))
 
 /-! ## Kernel checks -/
 
@@ -76,7 +76,7 @@ theorem rootL : ∀ x : Fin 248, x.val ∈ fusL → x ≠ 247 →
 /-! ## The `∀ c` forms used by `E8FusionKernel` -/
 
 theorem ne_val {c x : Fin 248} (h : c ≠ x) : (c.val == x.val) = false := by
-  simpa using fun h' => h (Fin.ext h')
+  simpa using! fun h' => h (Fin.ext h')
 
 theorem e8_truncUpZ : ∀ x : Fin 248, x.val ∈ fusL ∨ x.val ∈ lowL →
     (hselK x).val < 8 ∧ fZ brK (hselK x) x x ≠ 0 ∧
@@ -119,7 +119,7 @@ theorem e8_simpleZ : (∀ c : Fin 248, fZ brK 8 128 c = if c = 7 then 1 else 0) 
 theorem e8_eθZ : (∀ c : Fin 248, fZ brK 127 247 c ≠ 0 → c.val < 8) ∧ fZ brK 127 247 7 = -2 := by
   obtain ⟨h1, h2⟩ := eθL
   refine ⟨fun c hc => ?_, h2⟩
-  simpa using mem_of_suppIn h1 hc
+  simpa using! mem_of_suppIn h1 hc
 
 theorem e8_rootZ : ∀ x : Fin 248, x.val ∈ fusL → x ≠ 247 →
     8 ≤ (bselK x).val ∧ (bselK x).val < 128 ∧ kselK x ≠ 0 ∧

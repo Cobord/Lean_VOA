@@ -79,7 +79,7 @@ theorem traceDualBasis_leftBend (F : SphericalFusion C) (A X Y : C)
   intro f
   rw [F.scalarTrace_comp_comm, F.traceDualBasis_pair]
   have h := scalarTrace_leftBend F ((leftDuality A X Y) f) (F.traceDualBasis b a)
-  simpa [Module.Basis.map_repr] using h
+  simpa [Module.Basis.map_repr] using! h
 
 /-- Bending both members of each composition-dual pair changes the
 normalization from the source simple dimension to the target one. -/

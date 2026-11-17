@@ -17,6 +17,11 @@ namespace VOA
 open PowerSeries
 open scoped BigOperators
 
+/-- `coeff_derivativeFun` restated with `derivativeFun` (Mathlib's alias is stated with `d⁄dX`). -/
+private theorem coeff_derivativeFun_sq (f : PowerSeries ℂ) (n : ℕ) :
+    coeff n (derivativeFun f) = coeff (n + 1) f * (n + 1) :=
+  coeff_derivativeFun f n
+
 /-- The derivative rule for a natural power of a unit whose derivative is `1`. -/
 theorem derivativeFun_unit_natZpow_of_derivative_one (U : (PowerSeries ℂ)ˣ)
     (hU : derivativeFun (U : PowerSeries ℂ) = 1) (k : ℕ) :
@@ -32,7 +37,7 @@ theorem derivativeFun_unit_natZpow_of_derivative_one (U : (PowerSeries ℂ)ˣ)
       rw [show (((k + 1 : ℕ) : ℤ) - 1) = (k : ℤ) by push_cast; ring,
         zpow_natCast, Units.val_pow_eq_pow_val]
     rw [hk, hk1]
-    have h := PowerSeries.derivative_pow ℂ (U : PowerSeries ℂ) (k + 1)
+    have h := PowerSeries.derivative_pow (g := (U : PowerSeries ℂ)) (n := k + 1)
     change derivativeFun ((U : PowerSeries ℂ) ^ (k + 1))
       = ((k + 1 : ℕ) : PowerSeries ℂ) * (U : PowerSeries ℂ) ^ k
     change derivativeFun ((U : PowerSeries ℂ) ^ (k + 1))
@@ -132,7 +137,7 @@ theorem coeff_iterate_derivativeFun (f : PowerSeries ℂ) (r s : ℕ) :
       simp only [Function.iterate_zero_apply, Nat.add_zero]
       field_simp
   | succ r ih =>
-      rw [Function.iterate_succ_apply', coeff_derivativeFun, ih (s := s + 1)]
+      rw [Function.iterate_succ_apply', coeff_derivativeFun_sq, ih (s := s + 1)]
       have hs : (s.factorial : ℂ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero s
       rw [show s + 1 + r = s + (r + 1) by omega]
       rw [Nat.factorial_succ]
@@ -288,7 +293,7 @@ theorem sqBracketCoeffZ_gBinom_collapse {q k : ℕ} (hq : 1 ≤ q) (hqk : q ≤ 
       sqBracketCoeffZ K j (j + (n : ℤ)) := by
     intro K n
     exact (sqBracketCoeffZ_eq_coeff_sqGen K j n).symm
-  simpa only [hgen] using h
+  simpa only [hgen, Nat.succ_eq_add_one, smul_eq_mul] using h
 
 /-! ## The translation/weight pair -/
 
@@ -369,7 +374,7 @@ theorem sqBracketCoeffZ_low_pair_collapse (k : ℕ) (j : ℤ) (t : ℕ) :
   have hHcoeff : ∀ r : ℕ, coeff r (derivativeFun (X * Pw 0)) =
       ((r : ℂ) + 1) * sqBracketCoeffZ 2 1 ((r + 1 : ℕ) : ℤ) := by
     intro r
-    rw [coeff_derivativeFun, coeff_succ_X_mul, hDcoeff]
+    rw [coeff_derivativeFun_sq, coeff_succ_X_mul, hDcoeff]
     push_cast
     ring
   have hGcoeff : ∀ n : ℕ, coeff n (sqGen k j) =
@@ -619,7 +624,7 @@ theorem dLNat_support_finite (W : VertexOperatorAlgebra 𝒱) (v : 𝒱) :
   have h := (dL_support_finite W 0 v).preimage
     (f := fun r : ℕ ↦ (r : ℤ)) (Function.Injective.injOn Int.ofNat_injective)
   refine h.subset fun r hr ↦ ?_
-  simpa only [Set.mem_preimage] using hr
+  exact hr
 
 theorem sqNat_support_finite (W : VertexOperatorAlgebra 𝒱) (a : 𝒱)
     (k : ℕ) (j : ℤ) (v : 𝒱) :
@@ -631,7 +636,7 @@ theorem sqNat_support_finite (W : VertexOperatorAlgebra 𝒱) (a : 𝒱)
       have : (r : ℤ) = (s : ℤ) := add_left_cancel hrs
       exact_mod_cast this : Function.Injective fun n : ℕ ↦ j + (n : ℤ)).injOn
   refine h.subset fun n hn ↦ ?_
-  simpa only [Set.mem_preimage] using hn
+  exact hn
 
 /-- Swap two nested `finsum`s from joint finite support. -/
 theorem finsum_finsum_comm_sq {α β M : Type*} [AddCommMonoid M] (F : α → β → M)
@@ -993,7 +998,7 @@ theorem sqLowCommTerm_support_finite (W : VertexOperatorAlgebra 𝒱) (a : 𝒱)
   refine hswap.subset fun p hp ↦ ?_
   change g (Prod.swap p) ≠ 0
   rcases p with ⟨n, r⟩
-  simpa only [g, sqLowCommTerm, Prod.swap_prod_mk, Prod.fst, Prod.snd,
+  simpa only [g, sqLowCommTerm, Function.mem_support, Prod.swap_prod_mk, Prod.fst, Prod.snd,
     Nat.add_comm] using hp
 
 theorem sqPositiveReindexedTerm_support_finite (W : VertexOperatorAlgebra 𝒱) (a : 𝒱)

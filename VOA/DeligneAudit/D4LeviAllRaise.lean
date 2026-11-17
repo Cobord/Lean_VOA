@@ -50,15 +50,15 @@ theorem positive_zero_of_simple (v : V)
   have h4 : ∀ s, Q.op 4 s v = 0 := by
     intro s
     have hc := positive_pair_op Q 0 0 s v
-    simpa [h3, h5] using hc
+    simpa [h3, h5] using! hc
   have h1 : ∀ s, Q.op 1 s v = 0 := by
     intro s
     have hc := positive_pair_op Q 1 0 s v
-    simpa [h0, h3] using hc
+    simpa [h0, h3] using! hc
   have h2 : ∀ s, Q.op 2 s v = 0 := by
     intro s
     have hc := positive_pair_op Q 2 0 s v
-    simpa [h0, h4] using hc
+    simpa [h0, h4] using! hc
   fin_cases e
   · exact h0 r
   · exact h1 r

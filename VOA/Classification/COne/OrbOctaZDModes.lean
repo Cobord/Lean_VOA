@@ -40,7 +40,7 @@ theorem q24_negative_modes {d : ℕ} (hd : 0 < d)
         rw [hk, smul_zero]
       rw [hz, zero_add] at h
       simpa only [Nat.cast_zero, cbz_zero, one_smul, zero_sub, Nat.cast_add,
-        Nat.cast_ofNat, Nat.cast_one, add_assoc, add_comm, add_left_comm] using h
+        Nat.cast_ofNat, Nat.cast_one, add_assoc, add_comm, add_left_comm] using! h
 
 /-- Top products require only lower-weight vanishing and the corresponding mode identity. -/
 theorem q24_top {F G : P3} {s t : ℕ}
@@ -56,6 +56,6 @@ theorem q24_top {F G : P3} {s t : ℕ}
   have ha : OrbC2.average octa (T2 (F * G)) = Tav (F * G) := rfl
   rw [ha] at hav
   have h := q24_lowerDesc hbelow hav
-  simpa only [map_sub, map_smul, hm, smul_zero, sub_zero] using h
+  simpa only [map_sub, map_smul, hm, smul_zero, sub_zero] using! h
 
 end VOA.Classification.COne.OrbOctaZD

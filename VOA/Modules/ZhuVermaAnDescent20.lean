@@ -312,9 +312,9 @@ theorem VASum_eq_kFinsum (M P n j : ℕ) (γ μ : ℤ) :
         (fun a : ℤ => cbz ((P : ℤ) + n + 1 + j) ((P : ℤ) - 2 * n - 2 - μ - γ + a)
             * (cbz ((M : ℤ) + n) a
                 * cbz (γ + 2 * (n : ℤ) + 1 - a) (γ - a)))
-        (fun p hp => by dsimp only; rw [cbz_apply_neg ((M : ℤ) + n) hp]; ring)
+        (fun p hp => by (try dsimp only); rw [cbz_apply_neg ((M : ℤ) + n) hp]; ring)
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_lt (by positivity) (by
             have : (M + n + 1 : ℤ) ≤ p := by exact_mod_cast hp
             omega : (M : ℤ) + n < p)]; ring)).symm
@@ -378,9 +378,9 @@ theorem VInnerI_eq_GvJFinsum (M P n j : ℕ) (γ μ : ℤ) :
           finsumZ_eq_range_sum (N := 1 + j + 1)
             (fun t : ℤ => cbz (1 + (j : ℤ)) t * cbz ((P : ℤ) + n) ((((μ : ℤ) + 2 * n + 2) + k) - t)
                 * VHkerJ M n j γ k)
-            (fun p hp => by dsimp only; rw [cbz_apply_neg (1 + (j : ℤ)) hp, zero_mul, zero_mul])
+            (fun p hp => by (try dsimp only); rw [cbz_apply_neg (1 + (j : ℤ)) hp, zero_mul, zero_mul])
             (fun p hp => by
-              dsimp only
+              try dsimp only
               rw [cbz_lt (by positivity) (by
                 have : (1 + j + 1 : ℤ) ≤ p := by exact_mod_cast hp
                 omega : 1 + (j : ℤ) < p), zero_mul, zero_mul])]
@@ -403,7 +403,7 @@ theorem VInnerI_eq_GvJFinsum (M P n j : ℕ) (γ μ : ℤ) :
       rw [Set.mem_Icc]
       by_contra hcon
       apply hk
-      simp only []
+      (try simp only [])
       rcases not_and_or.mp hcon with h | h
       · rw [VHkerJ_lo M n j γ (by omega : k < (n : ℤ) + 1 + j), mul_zero, mul_zero]
       · rw [VHkerJ_hi M n j γ (by omega : γ + (n : ℤ) + 1 + j < k), mul_zero, mul_zero]]

@@ -80,7 +80,9 @@ theorem weylWord_additive_unit (u v : (ZMod n)ˣ)
       calc
         _ = ((u : ZMod n) * (↑u⁻¹ : ZMod n)) * ((v : ZMod n) * (↑v⁻¹ : ZMod n)) := by ring
         _ = 1 := by simp
-    ext i j; fin_cases i <;> fin_cases j <;>
+    ext i j
+    simp only [Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_inv]
+    fin_cases i <;> fin_cases j <;>
       simp [weyl, Matrix.mul_apply, Fin.sum_univ_two, mul_assoc, mul_comm, mul_left_comm, he]
   have hc := normalized_weyl_upper_conj h2 h3 π hs X Y hn q (-1) hq
     ((u : ZMod n) * (↑v⁻¹ : ZMod n))

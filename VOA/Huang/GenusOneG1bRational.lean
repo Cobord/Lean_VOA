@@ -80,9 +80,9 @@ theorem RatRows.mul {E₁ c₁ d₁ E₂ c₂ d₂ : ℕ} {f g : R2} (hf : RatRo
   classical
   choose P hP he using hf
   choose Q hQ hq using hg
-  refine ⟨∑ x ∈ Finset.antidiagonal p, P x.1 * Q x.2, ?_, ?_⟩
+  refine ⟨∑ x ∈ Finset.HasAntidiagonal.antidiagonal p, P x.1 * Q x.2, ?_, ?_⟩
   · refine Polynomial.natDegree_sum_le_of_forall_le _ _ fun x hx => ?_
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     refine (Polynomial.natDegree_mul_le).trans ?_
     have h1 := hP x.1
     have h2 := hQ x.2
@@ -158,7 +158,7 @@ def powSer (m : ℕ) : PowerSeries ℂ :=
   PowerSeries.mk fun k => if k = 0 then 0 else ((k : ℂ)) ^ m
 
 theorem powSer_succ (m : ℕ) :
-    powSer (m + 1) = PowerSeries.X * PowerSeries.derivative ℂ (powSer m) := by
+    powSer (m + 1) = PowerSeries.X * PowerSeries.derivative (R := ℂ) (powSer m) := by
   ext k
   cases k with
   | zero => simp [powSer]
@@ -211,12 +211,12 @@ theorem eulerian (m : ℕ) :
           omega
         omega
     · -- apply the derivation to `(1 - t)^{m+1} powSer m = P`
-      have hD := congrArg (PowerSeries.derivative ℂ) he
+      have hD := congrArg (PowerSeries.derivative (R := ℂ)) he
       rw [Derivation.leibniz, Derivation.leibniz_pow] at hD
-      have hX : PowerSeries.derivative ℂ omt = -1 := by
+      have hX : PowerSeries.derivative (R := ℂ) omt = -1 := by
         simp [omt]
       rw [hX] at hD
-      have hP' : PowerSeries.derivative ℂ (pc P) = pc (Polynomial.derivative P) := by
+      have hP' : PowerSeries.derivative (R := ℂ) (pc P) = pc (Polynomial.derivative P) := by
         simp only [pc, Polynomial.coeToPowerSeries.ringHom_apply]
         exact PowerSeries.derivative_coe P
       rw [hP'] at hD

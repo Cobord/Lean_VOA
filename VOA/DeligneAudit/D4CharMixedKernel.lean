@@ -65,7 +65,7 @@ theorem gtMixedEulerStep_unique (q : R) (h : PochhammerUnits q)
       by_cases hk : k = 0 <;> simp [coeff_rescale, coeff_C, hk]
     rw [map_mul, hc, mul_assoc, gtMixedEulerStep_shift]
     ring
-  · simpa using hzero
+  · simpa using! hzero
 
 /-- Coefficient form of the same uniqueness step, convenient for finite GT expansions. -/
 theorem gtMixedEulerStep_coeff_of_shift (q : R) (h : PochhammerUnits q)

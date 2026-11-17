@@ -103,7 +103,7 @@ theorem coreCoefficientMap_cartan (a b c : ℕ)
   apply LinearMap.ext
   intro φ
   simpa only [coreCoefficientCurrent, coreCoefficientMap, coreCoefficientTranslate,
-    LinearMap.coe_mk, AddHom.coe_mk, LinearMap.comp_apply, mul_assoc] using h i s hs (σ * φ)
+    LinearMap.coe_mk, AddHom.coe_mk, LinearMap.comp_apply, mul_assoc] using! h i s hs (σ * φ)
 
 /-- The cyclic cover before evaluation at the unit coefficient. -/
 def coreCoefficientSpan (a b c : ℕ) (Q : CurrentModule A3Sector.bracketTable V)
@@ -148,7 +148,7 @@ def coreCoverCurrent (a b c : ℕ) (Q : CurrentModule A3Sector.bracketTable V)
     (fun _ hv => cycSubG_inv _ π e r hv)
   comm e f r s v := by
     apply Subtype.ext
-    simpa using (coreCoefficientCurrent a b c Q).comm e f r s v.val
+    simpa using! (coreCoefficientCurrent a b c Q).comm e f r s v.val
 
 /-- The Grassmannian ring acts on the cover by linear endomorphisms. -/
 def coreCoverAction (a b c : ℕ) (Q : CurrentModule A3Sector.bracketTable V)
@@ -195,7 +195,7 @@ def coreCoverAction (a b c : ℕ) (Q : CurrentModule A3Sector.bracketTable V)
     apply LinearMap.ext
     intro φ
     change f.val (algebraMap ℂ (CoreBaseRing a b c) z * φ) = z • f.val φ
-    simpa only [Algebra.smul_def] using f.val.map_smul z φ
+    simpa only [Algebra.smul_def] using! f.val.map_smul z φ
 
 /-- Every coefficient operator on the cover commutes with every Levi current. -/
 theorem coreCoverAction_commute (a b c : ℕ) (Q : CurrentModule A3Sector.bracketTable V)

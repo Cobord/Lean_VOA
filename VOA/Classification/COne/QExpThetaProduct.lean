@@ -21,12 +21,12 @@ def thetaEulerProduct (r u : ℂ) : ℂ := ∏' n : ℕ, (1 - u * r ^ n)
 
 theorem thetaEulerProduct_summable {r : ℂ} (hr : ‖r‖ < 1) (u : ℂ) :
     Summable (fun n : ℕ => ‖-(u * r ^ n)‖) := by
-  simpa only [norm_neg, norm_mul, norm_pow] using
+  simpa only [norm_neg, norm_mul, norm_pow] using!
     (summable_geometric_of_lt_one (norm_nonneg r) hr).mul_left ‖u‖
 
 theorem thetaEulerProduct_multipliable {r : ℂ} (hr : ‖r‖ < 1) (u : ℂ) :
     Multipliable (fun n : ℕ => 1 - u * r ^ n) := by
-  simpa only [sub_eq_add_neg] using
+  simpa only [sub_eq_add_neg] using!
     multipliable_one_add_of_summable (thetaEulerProduct_summable hr u)
 
 theorem thetaEulerProduct_ne_zero {r u : ℂ} (hr : ‖r‖ < 1)
@@ -47,7 +47,7 @@ theorem thetaEulerProduct_shift {r : ℂ} (hr : ‖r‖ < 1) (u : ℂ) :
     simp_rw [he]
     exact thetaEulerProduct_multipliable hr (u * r)
   have ht := tprod_eq_zero_mul' (f := fun n : ℕ => 1 - u * r ^ n) hs
-  simpa only [he, pow_zero, mul_one, thetaEulerProduct] using ht
+  simpa only [he, pow_zero, mul_one, thetaEulerProduct] using! ht
 
 /-- Locally uniform convergence on the entire elliptic parameter plane. -/
 theorem thetaEulerProduct_hasProdLocallyUniformlyOn {r : ℂ} (hr : ‖r‖ < 1) :
@@ -57,11 +57,11 @@ theorem thetaEulerProduct_hasProdLocallyUniformlyOn {r : ℂ} (hr : ‖r‖ < 1)
   intro K _ hK
   obtain ⟨M, hM⟩ := hK.isBounded.exists_norm_le
   have hs := (summable_geometric_of_lt_one (norm_nonneg r) hr).mul_left M
-  simpa only [thetaEulerProduct, sub_eq_add_neg] using
+  simpa only [thetaEulerProduct, sub_eq_add_neg] using!
     hs.hasProdUniformlyOn_one_add hK
       (f := fun n (u : ℂ) => -(u * r ^ n))
       (Eventually.of_forall (fun n u hu => by
-        simpa only [norm_neg, norm_mul, norm_pow] using
+        simpa only [norm_neg, norm_mul, norm_pow] using!
           mul_le_mul_of_nonneg_right (hM u hu) (pow_nonneg (norm_nonneg r) n)))
       (fun n => (continuous_id.mul continuous_const).neg.continuousOn)
 
@@ -102,7 +102,7 @@ theorem thetaExp_eq_one_iff (z : ℂ) : thetaExp z = 1 ↔ ∃ m : ℤ, z = m :=
     exact mul_ne_zero (mul_ne_zero (by norm_num) (ofReal_ne_zero.mpr Real.pi_ne_zero)) I_ne_zero
   constructor
   · rintro ⟨m, hm⟩
-    exact ⟨m, mul_left_cancel₀ hp (by simpa only [mul_comm] using hm)⟩
+    exact ⟨m, mul_left_cancel₀ hp (by simpa only [mul_comm] using! hm)⟩
   · rintro ⟨m, rfl⟩
     exact ⟨m, by ring⟩
 

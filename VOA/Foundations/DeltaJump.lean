@@ -170,7 +170,8 @@ theorem negPowJump_eq_deltaDeriv (k : ℕ) :
     have hLR : L - R = 0 := by
       rw [eq_deltaDeriv_zero_of_mulBySub_eq_zero hmul0]
       ext m n
-      rw [deltaDeriv_apply, Finset.range_zero, Finset.prod_empty, one_smul]
+      refine (deltaDeriv_apply 0 _ m n).trans ?_
+      rw [Finset.range_zero, Finset.prod_empty, one_smul]
       show (L - R) (-1) (m + n + 1 + 0) = (0 : FormalDist₂ ℂ) m n
       rw [hres (m + n + 1 + 0)]; rfl
     rw [← sub_eq_zero]; exact hLR

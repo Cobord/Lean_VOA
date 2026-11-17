@@ -38,12 +38,12 @@ theorem secondLeviQuotientEvaluation_saturated_generators (e₁ e₂ s : ℕ)
     (secondLeviQuotientCartan Q β e₁ e₂ 1 (s + 1)) _ _ hR
   · intro P
     simpa only [secondLeviBaseEmbedding, AlgHom.coe_mk, RingHom.coe_mk,
-      MonoidHom.coe_mk, OneHom.coe_mk, if_true, neg_smul, sub_eq_add_neg] using
+      MonoidHom.coe_mk, OneHom.coe_mk, if_true, neg_smul, sub_eq_add_neg] using!
       secondLeviQuotientEvaluation_cartan Q β e₁ e₂ 0 (s + 1) u hu P
   · intro P
     simpa only [secondLeviBaseEmbedding, AlgHom.coe_mk, RingHom.coe_mk,
       MonoidHom.coe_mk, OneHom.coe_mk, show (1 : Fin 2) ≠ 0 by decide,
-      if_false, one_smul] using
+      if_false, one_smul] using!
       secondLeviQuotientEvaluation_cartan Q β e₁ e₂ 1 (s + 1) v hv P
 
 /-- Degree induction propagates every saturated relation through all symmetric multipliers. -/
@@ -66,7 +66,7 @@ theorem secondLeviQuotientEvaluation_symmetric_mul (e₁ e₂ : ℕ) (u v : ℕ 
         (u (s + 1)) (v (s + 1)) (hu _ (by omega)) (hv _ (by omega)) hx).2
   have hm := hle (secondLeviSymmetricModes_le_powerSumAlgebra e₁ e₂ hP) R hR
   have hz := hm (1 : B)
-  simpa only [map_one, one_mul] using hz
+  simpa only [map_one, one_mul] using! hz
 
 variable (ρ : CurrentModule bracketTable V) (w : V)
 variable (a b c : ℕ) (h : LocalWeylRel ρ w (weightABC a b c))

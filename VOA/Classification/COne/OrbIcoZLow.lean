@@ -41,7 +41,7 @@ theorem ico_prim_low_zero {N : ℤ} (hpos : 0 < N) (hN : N < 36)
     | add z t _ _ hz ht => rw [map_add]; exact Submodule.add_mem _ hz ht
     | smul c z _ hz => rw [map_smul]; exact Submodule.smul_mem _ c hz
   have hmem : y ∈ prim Wi N ⊓ lowerDesc Wi N :=
-    ⟨hy, by simpa only [piHom_of_mem Wi hg] using hl y hs⟩
+    ⟨hy, by simpa only [piHom_of_mem Wi hg] using! hl y hs⟩
   rw [prim_inf_lowerDesc (W := Wi)
     ((v2VirUnitary_holds.some).restrict (orbifold ico)) N] at hmem
   exact (Submodule.mem_bot ℂ).mp hmem
@@ -83,6 +83,7 @@ private abbrev topState := Wi.smul Xico 71 Xico
 
 private theorem topState_grading : topState ∈ Wi.grading 0 := by
   convert Wi.grading_mode _ Xico_grading _ Xico_grading 71 using 2
+  all_goals first | rfl | norm_num
 
 private theorem topState_Lneg1 : Wi.L (-1) topState = 0 := by
   change Wi.L (-1) (Wi.smul Xico 71 Xico) = 0
@@ -102,7 +103,7 @@ private theorem lowCheckV_sound {m : ℕ} {v r : VVec} (hk : lowCheckV m v r = t
     Wi.L (m : ℤ) (evV Wi topState v) = evV Wi topState r := by
   have hc : Wi.centralCharge = ((1 : ℚ) : ℂ) := by
     change (V2m 1 le_rfl).centralCharge = _
-    simpa using V2m_centralCharge 1 le_rfl
+    simpa using! V2m_centralCharge 1 le_rfl
   have hz : Wi.L 0 topState = ((0 : ℚ) : ℂ) • topState := by
     rw [Wi.L_zero_grading _ topState_grading]; norm_num
   unfold lowCheckV at hk
@@ -111,7 +112,7 @@ private theorem lowCheckV_sound {m : ℕ} {v r : VVec} (hk : lowCheckV m v r = t
     have he := evV_eq_zero_of_isZeroK (W := Wi) (x := topState) hk
     rw [evV_append, evV_scaleV,
       bindV_sound (fun w r h => lowerF_sound hc topState_pos hz _ _ w r h) v t ht] at he
-    simpa only [Rat.cast_neg, Rat.cast_one, neg_one_smul, add_neg_eq_zero] using he
+    simpa only [Rat.cast_neg, Rat.cast_one, neg_one_smul, add_neg_eq_zero] using! he
   · exact absurd hk (by simp)
 
 private theorem lowWords_L1 (n : ℕ) (hn : n < 4) :
@@ -121,7 +122,7 @@ private theorem lowWords_L1 (n : ℕ) (hn : n < 4) :
   rw [evV_append, evV_scaleV] at h
   have hz : evV Wi topState (lowExtra1 (n + 1)) = 0 := by
     interval_cases n <;> simp [lowExtra1, evV, evW, topState_Lneg1]
-  simpa only [hz, add_zero, Rat.cast_natCast] using h
+  simpa only [hz, add_zero, Rat.cast_natCast] using! h
 
 private theorem lowWords_L2 (n : ℕ) (hn : n < 3) :
     Wi.L 2 (evV Wi topState (lowWords (n + 2))) =
@@ -130,7 +131,7 @@ private theorem lowWords_L2 (n : ℕ) (hn : n < 3) :
   rw [evV_append, evV_scaleV] at h
   have hz : evV Wi topState (lowExtra2 (n + 2)) = 0 := by
     interval_cases n <;> simp [lowExtra2, evV, evW, topState_Lneg1]
-  simpa only [hz, add_zero, Rat.cast_add, Rat.cast_natCast, Rat.cast_ofNat] using h
+  simpa only [hz, add_zero, Rat.cast_add, Rat.cast_natCast, Rat.cast_ofNat] using! h
 
 private abbrev selfState (n : ℕ) := Wi.smul Xico (71 - (n : ℤ)) Xico
 
@@ -139,12 +140,12 @@ private theorem X_pos : ∀ m : ℕ, 1 ≤ m → Wi.L (m : ℤ) Xico = 0 := by
   have h := ((mem_prim _).mp X_primary).2 (m - 1)
   rwa [show ((m - 1 : ℕ) : ℤ) + 1 = m by omega] at h
 
-private theorem X_L1 : Wi.L 1 Xico = 0 := by simpa using X_pos 1 (by decide)
-private theorem X_L2 : Wi.L 2 Xico = 0 := by simpa using X_pos 2 (by decide)
+private theorem X_L1 : Wi.L 1 Xico = 0 := by simpa using! X_pos 1 (by decide)
+private theorem X_L2 : Wi.L 2 Xico = 0 := by simpa using! X_pos 2 (by decide)
 
 private theorem selfState_grading (n : ℕ) : selfState n ∈ Wi.grading n := by
   convert Wi.grading_mode _ Xico_grading _ Xico_grading (71 - (n : ℤ)) using 2
-  ring
+  all_goals first | rfl | ring
 
 private theorem selfState_L1 (n : ℕ) : Wi.L 1 (selfState (n + 1)) =
     (n : ℂ) • selfState n := by
@@ -180,7 +181,7 @@ theorem selfState_low (n : ℕ) (hn : n ≤ 4) :
       refine ⟨Submodule.sub_mem _ (selfState_grading _) ?_, fun m => ?_⟩
       · have h := evV_mem_grading topState_grading
           (fun p hp => lowWords_spec ⟨n + 1, by omega⟩ p hp)
-        simpa only [zero_add] using h
+        simpa only [zero_add] using! h
       · have h1 : Wi.L 1 (selfState (n + 1) - evV Wi topState (lowWords (n + 1))) = 0 := by
           rw [map_sub, selfState_L1, lowWords_L1 n (by omega), ih n (by omega) (by omega),
             sub_self]
@@ -191,7 +192,7 @@ theorem selfState_low (n : ℕ) (hn : n ≤ 4) :
           · rw [show n + 1 + 1 = n + 2 by omega, map_sub, selfState_L2,
               lowWords_L2 n (by omega), ih n (by omega) (by omega), sub_self]
         have h := L_pos_of_L1_L2 h1 h2 (m + 1) (by omega)
-        simpa using h
+        simpa using! h
 
 /-- The only low-primary-channel input needed by the finite P25 certificate. -/
 theorem low_mode67 : selfMode 67 =

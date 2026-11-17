@@ -33,9 +33,9 @@ theorem entryMatrix_toEntries_diag (l : List (ℕ × ℕ × ℤ)) (hl : inRange1
   intro e1 e2
   exfalso
   have e1' : t.1 = 132 := by
-    have := congrArg Fin.val e1; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.1] using this
+    have := congrArg Fin.val e1; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.1] using! this
   have e2' : t.2.1 = 132 := by
-    have := congrArg Fin.val e2; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.2] using this
+    have := congrArg Fin.val e2; simpa [Fin.ofNat, Nat.mod_eq_of_lt h2.2] using! this
   simp [e1', e2'] at h1
 
 theorem e7_diag : ∀ r, E7data.fullMatrix r ((132 : Fin 133), (132 : Fin 133)) = 0 := by
@@ -58,7 +58,7 @@ theorem e7_raising : ∀ e : Fin 133, (7 ≤ e.val ∧ e.val < 70) → ∀ y, fE
   intro e he y
   have := List.all_eq_true.mp (List.all_eq_true.mp h e (List.mem_range'_1.mpr ⟨he.1, by omega⟩)) y
     (List.mem_range.mpr y.2)
-  rw [fE7_eq]; simpa using this
+  rw [fE7_eq]; simpa using! this
 
 theorem e7_cartan : ∀ h : Fin 133, h.val < 7 → ∀ y : Fin 133,
     fE7 h y 132 = if y = (132 : Fin 133) then -(thetaH h : ℂ) else 0 := by
@@ -115,7 +115,7 @@ theorem e7_table_wt : ∀ x y c, E7Lie.wt c ≠ E7Lie.wt x + E7Lie.wt y → fE7 
     funext k
     have := congrArg (fun l => l.getD k.val 0) e2
     simp only [List.getD_eq_getElem?_getD, List.getElem?_ofFn, List.getElem?_zipWith] at this
-    simpa [Fin.is_lt] using this
+    simpa [Fin.is_lt] using! this
   · rfl
 
 /-- **No `m`-fold weight sum hits `m·wt c₀ - (m e + 1)·wt i`**. -/

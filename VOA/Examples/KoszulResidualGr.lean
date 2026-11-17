@@ -276,7 +276,7 @@ theorem PiR_weight (r : ℕ) (n0 : ℤ) {x : ASpace ⊗[ℂ] BSpace}
         split_ifs at hy with h
         · unfold bWeight
           convert hy using 2
-          simp [layerIndex]
+          simp [layerIndex] <;> rfl
         · rw [Submodule.mem_bot] at hy; rw [hy]; exact Submodule.zero_mem _
       have ha' : grMapA hA r a ∈ grDeg r d := by
         rw [grMapA_of_mem hA r rfl ha]
@@ -376,7 +376,7 @@ theorem ev_mem (i : (ℤ × ℤ) × ℂ) :
     rw [(PhiU u).as_sum, map_sum, AddSubmonoidClass.coe_finset_sum, rTensor_sum_apply]
     refine Submodule.sum_mem _ fun μ hμ => ?_
     obtain ⟨hdeg, hen⟩ := hsupp μ hμ
-    rw [show monomial μ (coeff μ (PhiU u)) = coeff μ (PhiU u) • monomial μ 1 by
+    rw [show monomial μ ((PhiU u).coeff μ) = (PhiU u).coeff μ • monomial μ 1 by
       rw [smul_monomial, smul_eq_mul, mul_one], map_smul, Subalgebra.coe_smul,
       LinearMap.rTensor_smul, LinearMap.smul_apply]
     refine Submodule.smul_mem _ _ ?_

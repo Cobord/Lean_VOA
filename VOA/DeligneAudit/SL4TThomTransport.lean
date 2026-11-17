@@ -63,8 +63,9 @@ theorem thomGN_mk (M a b : ℕ) (ha : a ≤ M) (ha0 : 0 < a) (hb : b < M)
     (p : BiSymPoly) :
     thomGN M a b ha ha0 hb (Ideal.Quotient.mk _ (Ideal.Quotient.mk _ p)) =
       Ideal.Quotient.mk _ p := by
-  rw [thomGN, AlgEquiv.trans_apply, Ideal.quotientEquivAlgOfEq_mk]
-  exact S_boundary_quot_mk M a b true false ha hb.le ha0 hb p
+  exact (congrArg (S_boundary_quot M a b true false ha hb.le ha0 hb)
+    (Ideal.quotientEquivAlgOfEq_mk ℂ (thomI3_eq_boundary M a b) _)).trans
+    (S_boundary_quot_mk M a b true false ha hb.le ha0 hb p)
 
 theorem thomGN_surjective (M a b : ℕ) (ha : a ≤ M) (ha0 : 0 < a) (hb : b < M) :
     Function.Surjective (thomGN M a b ha ha0 hb).symm :=
@@ -82,8 +83,8 @@ theorem boundaryProjection_leftP_divX (M a b : ℕ) (cutR : Bool)
     (fun P : (S (M - 1) (a - 1) (boundaryIndex b cutR))[X] => P.coeff (n + 1)) h
   change ((leftP M a b).map _).coeff (n + 1) =
     (X * leftP (M - 1) (a - 1) (boundaryIndex b cutR)).coeff (n + 1) at hc
-  rw [coeff_map, coeff_X_mul] at hc
-  simpa only [coeff_map, coeff_divX] using hc
+  erw [coeff_map, coeff_X_mul] at hc
+  simpa only [coeff_map, coeff_divX] using! hc
 
 theorem boundaryProjection_rightP_divX (M a b : ℕ) (cutL : Bool)
     (ha : a ≤ M) (hb : b ≤ M) (hL : BoundaryAllowed M a cutL) (hb0 : 0 < b) :
@@ -96,8 +97,8 @@ theorem boundaryProjection_rightP_divX (M a b : ℕ) (cutL : Bool)
     (fun P : (S (M - 1) (boundaryIndex a cutL) (b - 1))[X] => P.coeff (n + 1)) h
   change ((rightP M a b).map _).coeff (n + 1) =
     (X * rightP (M - 1) (boundaryIndex a cutL) (b - 1)).coeff (n + 1) at hc
-  rw [coeff_map, coeff_X_mul] at hc
-  simpa only [coeff_map, coeff_divX] using hc
+  erw [coeff_map, coeff_X_mul] at hc
+  simpa only [coeff_map, coeff_divX] using! hc
 
 end
 

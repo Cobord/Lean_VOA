@@ -430,10 +430,11 @@ private theorem wordAct_mem_currentWordPiece_of_negativeModeClosed
         wordStateA_mem_currentWordPiece k 0 [] (Nat.zero_le _)
   | cons a rest ih =>
       rw [wordAct_cons, wordLevel_cons]
-      simpa only [PreVertexAlgebra.smul_def, Nat.add_comm] using
-        hclosed (wordLevel rest) a.2.2 a.1
+      have h := hclosed (wordLevel rest) a.2.2 a.1
           (wordAct (adjointWeakModule (affineSl2VOA_closed k hk)) rest
             (affineSl2VOA_closed k hk).vacuum) ih
+      simp only [PreVertexAlgebra.smul_def, Nat.add_comm] at h
+      exact h
 
 /-- The local negative-mode closure lemma implies strict current-word spanning of every Li
 piece. -/

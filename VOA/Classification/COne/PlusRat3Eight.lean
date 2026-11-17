@@ -211,7 +211,7 @@ theorem fock_weight_two_mem_span {p : FockN (rank (latP m))}
   rw [p.as_sum]
   refine Submodule.sum_mem _ fun d hd => ?_
   have hw : Finsupp.weight weightFnN d = 2 := hp (MvPolynomial.mem_support_iff.mp hd)
-  rw [show monomial d (coeff d p) = coeff d p • (monomial d (1 : ℂ) : FockN (rank (latP m))) by
+  rw [show monomial d (p.coeff d) = p.coeff d • (monomial d (1 : ℂ) : FockN (rank (latP m))) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   apply Submodule.smul_mem
   rcases weight_eq_two (rank (latP m)) d hw with ⟨a, rfl⟩ | ⟨a, b, rfl⟩
@@ -375,18 +375,18 @@ theorem pairSplitting_half_sign_eight (i : Fin 8) (hi : i = 2 ∨ i = 3) :
   have h4 : mode (A.YM (HP 8 hm 2)) 3 x = (1 : ℂ) • x := by
     have h := hzero (HP_mem_grading 8 hm 2 (by norm_num) (by norm_num))
     rw [chiT_sign_HP 8 hm two_le_eight 2 (Or.inl rfl)] at h
-    simpa using h
+    simpa using! h
   have h6 : mode (A.YM (HP 8 hm 3)) 5 x = (1 : ℂ) • x := by
     have h := hzero (HP_mem_grading 8 hm 3 (by norm_num) (by norm_num))
     rw [chiT_sign_HP 8 hm two_le_eight 3 (Or.inr rfl)] at h
-    simpa using h
+    simpa using! h
   have hE : mode (A.YM (EP 8 hm)) (((8 : ℕ) : ℤ) - 1) x = 0 := by
     have h := hzero (EP_mem_grading 8 hm)
     have hv := (chiT_hasValues 8 hm two_le_eight (.inr 1)).2.2
     change chiT 8 hm two_le_eight (.inr 1) (VOA.mk (V2mPlus 8 hm) (EP 8 hm)) = _ at hv
     rw [hv] at h
     simp [values, exceptional] at h
-    simpa using h
+    simpa using! h
   -- the lattice model: the sign module
   set B := (signModule 8 hm).toWeakModule
   set e := signVector 8 hm

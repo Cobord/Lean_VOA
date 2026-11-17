@@ -53,12 +53,12 @@ private theorem qp_trim_aux : ∀ p : PL,
       induction r with
       | nil => simp [qp]
       | cons y r ihr => simp only [List.cons_append, qp, ihr]
-    · rw [List.dropWhile_cons_of_neg (by simpa using hx)]
+    · rw [List.dropWhile_cons_of_neg (by simpa using! hx)]
 
 theorem qp_trim (p : PL) : qp (ptrim p) = qp p := by
   unfold ptrim
   have h := qp_trim_aux p.reverse
-  simpa only [List.reverse_reverse] using h
+  simpa only [List.reverse_reverse] using! h
 
 def badd : BP → BP → BP
   | [], q => q

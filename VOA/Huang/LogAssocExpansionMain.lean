@@ -160,7 +160,7 @@ theorem log_product_fullCoset_hasLogExp (hC2 : C2Cofinite W)
   refine hasLogExp_congr (fun t _ => ?_) hE
   unfold logProductFullCosetFun
   refine (tsum_eq_sum (s := Finset.range K) fun k hk => ?_).symm
-  have hk' : K≤k := by simpa only [Finset.mem_range,not_lt] using hk
+  have hk' : K≤k := by simpa only [Finset.mem_range,not_lt] using! hk
   simp only [logProductIntegerCosetFun,VOA.Huang.AssocCoeffRules.prodFunZ,
     VOA.Huang.AssocCommutator.prodValueZ,VOA.Huang.AssocCommutator.prodTermZ,prodCoeff,
     hK Y₁ _ k hk',LinearMap.zero_apply,map_zero,zero_mul,tsum_zero,mul_zero]

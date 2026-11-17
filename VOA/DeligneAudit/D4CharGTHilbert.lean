@@ -22,13 +22,11 @@ theorem rsSum_gtRows_nat {A : Type*} [AddCommMonoid A] {N : ℕ}
     intro i
     have hi := (mem_gtRows _ _).mp hμ i
     apply Finset.mem_Icc.mpr
-    dsimp only
     constructor <;> omega
   · intro μ hμ
     rw [mem_gtRows]
     intro i
     have hi := Finset.mem_Icc.mp ((Fintype.mem_piFinset.mp hμ) i)
-    dsimp only
     constructor <;> omega
   · intro μ hμ
     funext i
@@ -55,9 +53,9 @@ theorem rsSum_piFinset_cons {A : Type*} [AddCommMonoid A] {N : ℕ}
       · intro μ hμ
         simp only [Fintype.mem_piFinset, Fin.forall_fin_succ, Fin.cons_zero,
           Fin.cons_succ] at hμ
-        simpa [Finset.mem_product, Fintype.mem_piFinset, Fin.tail] using hμ
+        simpa [Finset.mem_product, Fintype.mem_piFinset, Fin.tail] using! hμ
       · intro p hp
-        simpa [Finset.mem_product, Fintype.mem_piFinset, Fin.forall_fin_succ] using hp
+        simpa [Finset.mem_product, Fintype.mem_piFinset, Fin.forall_fin_succ] using! hp
       · intro μ _
         exact Fin.cons_self_tail μ
       · intro p _

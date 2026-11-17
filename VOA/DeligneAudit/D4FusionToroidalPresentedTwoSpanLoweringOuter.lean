@@ -16,11 +16,11 @@ theorem twoGen_negative_comm (i : Fin 12) (s : ℕ) (x : PTE 2) :
       ((ρPTE 2).op (negativeIndex i) 0 0 x) := by
   have ht : ∀ i : Fin 12, ∀ e : Fin 28,
       fZ br (negativeIndex i) 27 e = 0 := by decide +kernel
-  have hf : ∀ e : Fin 28,
+  have hf : ∀ e : Fin D4sector.n,
       D4sector.f (negativeIndex i) D4sector.c₀ e = 0 := by
     intro e
     change (fZ br (negativeIndex i) 27 e : ℂ) = 0
-    rw [ht]
+    rw [ht i e]
     simp
   have hc := (ρPTE 2).comm (negativeIndex i) D4sector.c₀ 0 1 0 s x
   simp only [hf, zero_smul, Finset.sum_const_zero, ite_self] at hc
@@ -36,12 +36,12 @@ theorem twoGen_outer_lowering (s : ℕ) (i : Fin 12)
   have hv := two_seed_lowering_v_nil i hi
   have he := outer_exp_zero i hi hne
   have hv' : (ρPTE 2).op (negativeIndex i) 0 0 (pTE 2) = 0 := by
-    simpa [he] using hv
+    simpa [he] using! hv
   have hz : (ρPTE 2).op (negativeIndex i) 0 0 (twoGen s) = 0 := by
     change (ρPTE 2).op (negativeIndex i) 0 0
       ((ρPTE 2).op D4sector.c₀ 1 s (pTE 2)) = 0
     rw [twoGen_negative_comm, hv', map_zero]
-  simpa [twoCurrent] using hz
+  simpa [twoCurrent] using! hz
 
 theorem twoOne_outer_lowering (i : Fin 12)
     (hi : i.val < 4) (hne : i ≠ 2) :

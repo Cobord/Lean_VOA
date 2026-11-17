@@ -15,6 +15,9 @@ open scoped TensorProduct
 open Module
 namespace VOA.Moonshine.ConwayNorton
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {L : Type*} [LieRing L] [LieAlgebra ℂ L] (S : Submodule ℂ L)
 
 /-- The degree filtration `F 0 = ℂ`, `F (n+1) = ℂ + F n · S` of the tensor algebra. -/

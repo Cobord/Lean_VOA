@@ -74,6 +74,9 @@ open CliffordAlgebra
 open Module (End)
 open VOA.Reconstruction
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §0  The modes `χᵃ_p` and the canonical anticommutation relations
 
 `FormalDist` is indexed by the `z`-exponent, so `chi a j = χᵃ_{-j-1}`.  Every computation below

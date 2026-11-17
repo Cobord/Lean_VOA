@@ -13,6 +13,8 @@ single finite sum of negative modes on earlier coefficients. This gives
 a concrete recurrence for actual states, beyond the
 one-dimensional survival functional.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- The cubic source's diagonal, written without its finite operator recursion. -/

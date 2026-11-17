@@ -235,7 +235,7 @@ theorem higherRadicalCountClosure_leviPow (d : Fin 3 → ℕ) (c : Fin 8) (r n :
     higherRadicalCountClosure ρ w d ≤
       (higherRadicalCountClosure ρ w d).comap (ρ.op (a3LeviColour c) r ^ n) := by
   induction n with
-  | zero => intro u hu; simpa using hu
+  | zero => intro u hu; simpa using! hu
   | succ n ih =>
     intro u hu
     rw [Submodule.mem_comap, pow_succ', Module.End.mul_apply]
@@ -261,7 +261,7 @@ theorem flatMarkedWord_mem_higherRadical (B e a b : ℕ) (ha : a ≤ 1) :
 theorem firstPow_flatCorner_mem (B n : ℕ) :
     (ρ.op 6 0 ^ n) (flatCornerVector ρ w B) ∈ flatKernelSpace ρ w B := by
   induction n with
-  | zero => simpa using flatCornerVector_mem_flatKernelSpace ρ w B
+  | zero => simpa using! flatCornerVector_mem_flatKernelSpace ρ w B
   | succ n ih =>
     rw [pow_succ', Module.End.mul_apply]
     exact flatKernelSpace_parabolic ρ w B 6 (by simp [flatParabolicColour]) ih
@@ -300,7 +300,7 @@ theorem flatLeakSpan_unit_newton (d : ℕ) :
     have hc' : newtonEnd (flatShiftCurrent ρ) d ((ρ.op 9 0 ^ (B - b)) ((ρ.op 7 0 ^ b)
         (ρ.op 8 0 w))) = (ρ.op 9 0 ^ (B - b)) (newtonEnd (flatShiftCurrent ρ) d
           ((ρ.op 7 0 ^ b) (ρ.op 8 0 w))) := by
-      simpa only [Module.End.mul_apply] using
+      simpa only [Module.End.mul_apply] using!
         (LinearMap.congr_fun hcomm.eq ((ρ.op 7 0 ^ b) (ρ.op 8 0 w))).symm
     rw [hc', newtonEnd_flatShift_compoundPow_eq_zero ρ (ρ.op 8 0 w) (fun s hs => by
         rw [flatShiftCurrent_highest, flatShiftCurrent_source_zero ρ w 1 B 1 hW s hs, map_zero])

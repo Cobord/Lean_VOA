@@ -23,17 +23,17 @@ theorem source_root_mode_zero
     (c : Fin 28) (hc : 16 ≤ c.val) (r : ℕ)
     (hr : rootModeBound m c ≤ r) : ρ.op c r w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   obtain ⟨i, rfl⟩ := negativeIndex_covers c hc
   have hf : ρ.op (negativeIndex i) (rootModeBound m (negativeIndex i)) w = 0 := by
     have hfusion : D4sector.fusion (negativeIndex i) :=
       negativeIndex_range i
     have hbase := rs_fusion hs hfusion
-    simpa [rootModeBound, D4sector] using hbase
+    simpa [rootModeBound, D4sector] using! hbase
   obtain ⟨k, rfl⟩ : ∃ k, r = rootModeBound m (negativeIndex i) + k :=
     ⟨r - rootModeBound m (negativeIndex i), by omega⟩
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · simpa using hf
+  · simpa using! hf
   have hc := ρ.comm (negativeCartan i) (negativeIndex i) k
     (rootModeBound m (negativeIndex i)) w
   have hcart : D4sector.cartan (negativeCartan i) :=

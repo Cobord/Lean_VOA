@@ -73,8 +73,12 @@ theorem exists_large_values_from_height {c : ℕ → ℂ} (hc : IsJDominated c) 
   have hu0 : u 0 = 1 := by simp [hudef]
   have hg0 : g 0 = 0 := by simp [hgdef]
   have hgder : HasDerivAt g 1 0 := by
-    have h := (hasDerivAt_id (0 : ℂ)).mul ((hud.differentiableAt hnhds).hasDerivAt)
-    simpa [hu0] using h
+    first
+      | (have h := (hasDerivAt_id (0 : ℂ)).mul ((hud.differentiableAt hnhds).hasDerivAt)
+         simpa [hu0] using h)
+      | (have h : HasDerivAt (fun y : ℂ => y * u y) (1 * u 0 + 0 * _) 0 :=
+           (hasDerivAt_id (0 : ℂ)).mul ((hud.differentiableAt hnhds).hasDerivAt)
+         simpa [hu0] using h)
   have hstrict : HasStrictDerivAt g 1 0 := by
     have h := (hgd.analyticAt hnhds).hasStrictDerivAt
     rwa [hgder.deriv] at h

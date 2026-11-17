@@ -42,21 +42,21 @@ variable (Q : CurrentModule VOA.AffineSl3.bracketTable W)
 theorem leviRaising_middle_comm (r s : ℕ) (x : W) :
     Q.op 0 r (Q.op 3 s x) = Q.op 3 s (Q.op 0 r x) + Q.op 6 (r + s) x := by
   have h : Q.op 0 r (Q.op 3 s x) - Q.op 3 s (Q.op 0 r x) = Q.op 6 (r + s) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 0 3 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 0 3 r s x
   exact sub_eq_iff_eq_add'.mp h
 
 /-- `[η(r), q(s)] = -F(r + s)`. -/
 theorem leviRaising_compound_comm (r s : ℕ) (x : W) :
     Q.op 0 r (Q.op 5 s x) = Q.op 5 s (Q.op 0 r x) - Q.op 4 (r + s) x := by
   have h : Q.op 0 r (Q.op 5 s x) - Q.op 5 s (Q.op 0 r x) = -Q.op 4 (r + s) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 0 5 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 0 5 r s x
   rw [sub_eq_iff_eq_add'.mp h, sub_eq_add_neg]
 
 /-- `[E₁₃(r), g(s)] = -e₃(r + s)`. -/
 theorem leviOuterRaising_middle_comm (r s : ℕ) (x : W) :
     Q.op 2 r (Q.op 3 s x) = Q.op 3 s (Q.op 2 r x) - Q.op 1 (r + s) x := by
   have h : Q.op 2 r (Q.op 3 s x) - Q.op 3 s (Q.op 2 r x) = -Q.op 1 (r + s) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 2 3 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 2 3 r s x
   rw [sub_eq_iff_eq_add'.mp h, sub_eq_add_neg]
 
 /-- `[E₁₃(r), q(s)] = h₂(r + s) + h₃(r + s)`. -/
@@ -64,42 +64,42 @@ theorem leviOuterRaising_compound_comm (r s : ℕ) (x : W) :
     Q.op 2 r (Q.op 5 s x) = Q.op 5 s (Q.op 2 r x) + (Q.op 6 (r + s) x + Q.op 7 (r + s) x) := by
   have h : Q.op 2 r (Q.op 5 s x) - Q.op 5 s (Q.op 2 r x) =
       Q.op 6 (r + s) x + Q.op 7 (r + s) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 2 5 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 2 5 r s x
   exact sub_eq_iff_eq_add'.mp h
 
 /-- `[e₃(r), g(s)] = 0`. -/
 theorem leviLastRaising_middle_comm (r s : ℕ) (x : W) :
     Q.op 1 r (Q.op 3 s x) = Q.op 3 s (Q.op 1 r x) := by
   have h : Q.op 1 r (Q.op 3 s x) - Q.op 3 s (Q.op 1 r x) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 1 3 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 1 3 r s x
   exact sub_eq_zero.mp h
 
 /-- `[e₃(r), q(s)] = g(r + s)`. -/
 theorem leviLastRaising_compound_comm (r s : ℕ) (x : W) :
     Q.op 1 r (Q.op 5 s x) = Q.op 5 s (Q.op 1 r x) + Q.op 3 (r + s) x := by
   have h : Q.op 1 r (Q.op 5 s x) - Q.op 5 s (Q.op 1 r x) = Q.op 3 (r + s) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 1 5 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 1 5 r s x
   exact sub_eq_iff_eq_add'.mp h
 
 /-- `[g(s), F(t)] = -q(s + t)`. -/
 theorem leviMiddle_last_comm (s t : ℕ) (x : W) :
     Q.op 3 s (Q.op 4 t x) = Q.op 4 t (Q.op 3 s x) - Q.op 5 (s + t) x := by
   have h : Q.op 3 s (Q.op 4 t x) - Q.op 4 t (Q.op 3 s x) = -Q.op 5 (s + t) x := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 3 4 s t x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 3 4 s t x
   rw [sub_eq_iff_eq_add'.mp h, sub_eq_add_neg]
 
 /-- `[q(s), F(t)] = 0`. -/
 theorem leviCompound_last_comm (s t : ℕ) (x : W) :
     Q.op 5 s (Q.op 4 t x) = Q.op 4 t (Q.op 5 s x) := by
   have h : Q.op 5 s (Q.op 4 t x) - Q.op 4 t (Q.op 5 s x) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 5 4 s t x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 5 4 s t x
   exact sub_eq_zero.mp h
 
 /-- `[F(r), η(s)] = 0`. -/
 theorem leviLast_raising_comm (r s : ℕ) (x : W) :
     Q.op 4 r (Q.op 0 s x) = Q.op 0 s (Q.op 4 r x) := by
   have h : Q.op 4 r (Q.op 0 s x) - Q.op 0 s (Q.op 4 r x) = 0 := by
-    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using Q.comm 4 0 r s x
+    simpa [Fin.sum_univ_eight, VOA.AffineSl3.bracketTable] using! Q.comm 4 0 r s x
   exact sub_eq_zero.mp h
 
 /-- `[h₂(0), g(0)] = -2 g(0)` on powers: `h₂ g^n = g^n h₂ - 2n g^n`. -/
@@ -202,7 +202,7 @@ theorem zeroModeSecondWord_mem (φ : R) (a b : ℕ) :
       rw [pow_succ', Module.End.mul_apply]
       exact secondLeviCountLayer_compound Q β _ _ 0 ih
   induction a with
-  | zero => simpa using hq b
+  | zero => simpa using! hq b
   | succ a ih =>
     rw [pow_succ', Module.End.mul_apply]
     exact secondLeviCountLayer_middle Q β _ _ 0 ih
@@ -536,7 +536,7 @@ theorem secondRaisingPreimage_finalLevi (C : Submodule ℂ W)
         · exact C.smul_mem _ (hx (r + t)).1
         · exact C.smul_mem _ (hx (r + t)).2
       · rw [a2_positive_levi_bracket c a e (by rcases hc with rfl | rfl <;> simp [a2Positive])
-          ha (by simpa [a2Positive] using he), zero_smul]
+          ha (by simpa [a2Positive] using! he), zero_smul]
         exact C.zero_mem
     · rcases hc with rfl | rfl
       · exact hC a t ha (hx r).1
@@ -613,7 +613,7 @@ variable (Q : CurrentModule VOA.AffineSl3.bracketTable W)
 theorem leviRaising_compoundPow (β₁ : W) (hη : Q.op 0 0 β₁ = 0) (e : ℕ) :
     Q.op 0 0 ((Q.op 5 0 ^ e) β₁) = -((e : ℂ) • Q.op 4 0 ((Q.op 5 0 ^ (e - 1)) β₁)) := by
   have hq := endomorphism_antiderivation_pow (Q.op 0 0) (Q.op 5 0) (Q.op 4 0)
-    (fun u => by simpa using leviRaising_compound_comm Q 0 0 u)
+    (fun u => by simpa using! leviRaising_compound_comm Q 0 0 u)
     (fun u => (leviCompound_last_comm Q 0 0 u).symm) e β₁
   rw [hq, hη, map_zero, zero_sub, endomorphism_commute_pow (Q.op 4 0) (Q.op 5 0)
     (fun u => (leviCompound_last_comm Q 0 0 u).symm)]
@@ -622,7 +622,7 @@ theorem leviRaising_compoundPow (β₁ : W) (hη : Q.op 0 0 β₁ = 0) (e : ℕ)
 theorem leviMiddleCartan_compoundPow (β₁ : W) (p : ℂ) (hw : Q.op 6 0 β₁ = p • β₁) (e : ℕ) :
     Q.op 6 0 ((Q.op 5 0 ^ e) β₁) = (p - e) • (Q.op 5 0 ^ e) β₁ := by
   induction e with
-  | zero => simpa using hw
+  | zero => simpa using! hw
   | succ e ih =>
     have hc := (leviCartan_secondLowering_comm Q 0 0 ((Q.op 5 0 ^ e) β₁)).2.2.1
     rw [pow_succ', Module.End.mul_apply, hc, ih, map_smul, zero_add]
@@ -676,7 +676,7 @@ theorem secondLevi_topWord_descent {R : Type} [CommRing R] [Algebra ℂ R] (β :
     rwa [Nat.sub_sub_self hE] at this
   intro k
   induction k with
-  | zero => intro _; simpa using htop
+  | zero => intro _; simpa using! htop
   | succ k ih =>
     intro hk
     set E := p - (k + 1) with hE

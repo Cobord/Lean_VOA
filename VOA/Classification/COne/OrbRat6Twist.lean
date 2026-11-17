@@ -40,7 +40,7 @@ theorem top9_mem (j : ℤ) : top9 ∈ (Nj j).weight (hj j) :=
 theorem top9_ne : top9 ≠ 0 := latVacuumGen_ne_zero (latP (1 * 3 ^ 2))
 
 theorem Nj_lowest {j : ℤ} (hj9 : |j| ≤ 9) : IsLowestWeight (Nj j) (hj j) :=
-  latticeModule_isLowestWeight (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3) j (by simpa using hj9)
+  latticeModule_isLowestWeight (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3) j (by simpa using! hj9)
 
 theorem fiber_zero {j : ℤ} (hj9 : |j| < 9) (w n : ℤ) (hw0 : 0 ≤ w)
     (h : ((((w.toNat : ℕ) : ℝ) + ((2 * ((1 * 3 ^ 2 : ℕ) : ℤ) * n + j : ℤ) : ℝ) ^ 2 /
@@ -72,7 +72,7 @@ theorem Nj_weight_top {j : ℤ} (hj9 : |j| < 9) : (Nj j).weight (hj j) ≤ ℂ �
     (glueDelta (1 * 3 ^ 2) j) (hj j) ≤ _
   refine iSup_le fun p => iSup_le fun hp => ?_
   obtain ⟨hp0, hpw⟩ := hp
-  rw [shiftWeight_rankOne (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3) j] at hpw
+  rw [shiftWeight_rankOne (1 * 3 ^ 2) (one_le_mn2 1 le_rfl 3) j p.1.toNat p.2] at hpw
   obtain ⟨hw0, hn0⟩ := fiber_zero hj9 p.1 p.2 hp0 hpw
   obtain ⟨w, n⟩ := p
   simp only at hw0 hn0
@@ -80,8 +80,7 @@ theorem Nj_weight_top {j : ℤ} (hj9 : |j| < 9) : (Nj j).weight (hj j) ≤ ℂ �
   rintro _ ⟨q, hq, rfl⟩
   obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.mp (fock_zero hq)
   refine Submodule.mem_span_singleton.mpr ⟨c, ?_⟩
-  rw [mkEα_apply]
-  exact (latStateGen_csmul _ c 1 _).symm
+  exact (latStateGen_csmul (latP (1 * 3 ^ 2)) c 1 (0 : ℤ)).symm
 
 /-- `V_{L+λ_j}` as a weak module of the tetrahedral model. -/
 abbrev Bj (j : ℤ) : WeakModule cubicModel Sp9 := pullWeak iotaW_hom (Nj j).toWeakModule

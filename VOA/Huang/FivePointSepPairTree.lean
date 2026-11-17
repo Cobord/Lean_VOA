@@ -127,7 +127,7 @@ theorem pair_rowBound (hs : OrdinaryFourPointSummability F)
   have hsl := fivePoint_slice_summable F hs .pair (πo ≫ k) d' (h + j₀)
   have hinj : Function.Injective (fun m : ℕ => (h' - k₀ - j₀) + (m : ℂ)) := by
     intro a b hab
-    have : (a : ℂ) = b := by simpa using hab
+    have : (a : ℂ) = b := by simpa using! hab
     exact_mod_cast this
   obtain ⟨K, hK⟩ := ((hsl.comp_injective hinj).tendsto_atTop_zero.norm).bddAbove_range
   have hsr : (0 : ℝ) < 1 + s' := by linarith

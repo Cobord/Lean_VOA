@@ -65,6 +65,9 @@ open Module (End)
 open scoped BigOperators TensorProduct DirectSum
 open Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -193,7 +196,9 @@ end InducedAssignment
 
 /-! ## The faithful hinge on the single `hiso` residual `MUJNatural` -/
 
-/-- **`phase4_of_dj28_uniform` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`phase4_of_dj28_uniform` — the faithful, `hall`-free Zhu Theorem 5.3.4 bijection
 `Φ(𝒱) ↔ Irr A(𝒱)` (`forwardMapIrr`) for the genuine uniform Construction-A family, with `hiso`
 resting on the SINGLE residual `MUJNatural`.**
 

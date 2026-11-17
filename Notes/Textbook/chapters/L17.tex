@@ -396,8 +396,8 @@ library must admit them, hence the predicate.
 \end{physics}
 \begin{status}
 A definition; standard axioms. It is satisfiable (Theorem~\ref{l17:thm:tosuperspin}) and fails for
-$\beta\gamma$ (\lean{bgSVA_not_spinStatistics}, §\ref{l17:sec:bg}). For symplectic fermions its
-failure is noted in a docstring but not formalised.
+$\beta\gamma$ (\lean{bgSVA_not_spinStatistics}, §\ref{l17:sec:bg}) and for symplectic fermions
+(\lean{sympFermSVA_not_spinStatistics}, Theorem~\ref{l17:thm:sfspin}).
 \end{status}
 
 \begin{proposition}[Every vertex algebra is a super vertex algebra]\label{l17:prop:tosuper}
@@ -1175,8 +1175,10 @@ So the left side is $0$. Right side: $\lseventeenvac_{(-1+i)}\lseventeenvac=\del
 $\binom{1/N}0=1$, and the label is $1-N-1=-N$, so the right side is $x$. Hence $x=0$.
 \end{proof}
 \begin{status}
-Checked in Lean against the library (the check is not part of this release); not a library theorem. \texttt{\#print axioms} of
-the three statements: \lean{[propext, Classical.choice, Quot.sound]}.
+Proved in the library: the three statements (with the same names, together with
+\lean{superTwistedModule_subsingleton}) are theorems in namespace \lean{VOA.SuperTwistedModule}, file
+\leanpath{VOA/\allowbreak Modules/\allowbreak SuperTwistedModuleZero.lean} (quoted in Chapter~\ref{ch:15},
+Section~\ref{ch15:sec:super}). \texttt{\#print axioms} of the three statements: \lean{[propext, Classical.choice, Quot.sound]}.
 \end{status}
 
 \begin{warning}[title={Finding (F1): every twisted super theorem with $N\ge2$ is vacuous}]
@@ -1503,7 +1505,7 @@ noncomputable def bgOmega : Fock :=
     - (1 / 2 : ℂ) • stWordBG [Sum.inl 1, Sum.inr 0]
 ...
 noncomputable def bgSVOA : SuperVertexOperatorAlgebra Fock :=
-  bgSNVOA.toSVOA (by simpa only using gradingBG_zero) (fun h hh => gradingBG_eq_bot_of_re_neg hh)
+  bgSNVOA.toSVOA gradingBG_zero (fun h hh => gradingBG_eq_bot_of_re_neg hh)
 \end{leancode}
 \noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak BetaGammaVirasoro.lean}.
 \begin{leancode}
@@ -1693,6 +1695,36 @@ loop.
 \texttt{\#print axioms VOA.SympFerm.sympFermSVOA}: \lean{[propext, Classical.choice, Quot.sound]}.
 Unconditional. It has genuinely odd states (the release audit elaborated \lean{sfCre 0 0 ∈ sympFermSVOA.parity 1}), so the Koszul
 sign is exercised; it is the library's only super VOA instance of which this is true.
+\end{status}
+
+\begin{theorem}[Symplectic fermions violate spin--statistics]\label{l17:thm:sfspin}
+The super vertex algebra \lean{sympFermSVA} does not satisfy spin--statistics
+(Definition~\ref{l17:def:spinstat}): the nonzero state $\chi^0_{-1}\lseventeenvac$ is odd and has the integer weight $1$.
+\end{theorem}
+\noindent File \leanpath{VOA/\allowbreak Examples/\allowbreak SymplecticFermionInstance.lean}.
+\begin{leancode}
+theorem sympFermSVA_not_spinStatistics : ¬ SpinStatistics sympFermSVA := by
+\end{leancode}
+\begin{dictionary}
+\lean{SpinStatistics} is Definition~\ref{l17:def:spinstat}; \lean{sympFermSVA} is the super vertex algebra underlying
+\lean{sympFermSVOA} (Theorem~\ref{l17:thm:sfsvoa}), with grading by word weight and parity \lean{evenOdd QSF}. There is no
+hypothesis. The witness in the proof is \lean{stWordSF [(0, 0)]}, the one-letter word $e_{0,0}$, i.e.\ the generator
+$\chi^0_{-1}\lseventeenvac$ of the exterior algebra (the docstring writes it $\chi^+_{-1}|0\rangle$). The statement could only be
+cheap if the gradings were degenerate; it is not, because the proof exhibits a specific \emph{nonzero} vector lying in the weight-$1$
+piece and in the odd piece, so the biconditional of \lean{SpinStatistics} ($1\in\Z$, hence parity $0$) fails at it.
+\end{dictionary}
+\begin{physics}
+The symplectic fermions $\chi^a$ are fermionic fields of spin $1$, the standard example of the failure of spin--statistics in a
+non-unitary (logarithmic) CFT; together with $\beta\gamma$ (bosons of spin $\frac12$) it shows that the library's super VOA
+notion admits both directions of violation.
+\end{physics}
+\begin{proof}[Proof on paper]
+$\chi^0_{-1}\lseventeenvac=e_{0,0}$ is a nonzero generator of the exterior algebra, it is a word of weight $1$ and of odd length,
+hence in the weight-$1$ space and in the odd part. Spin--statistics applied to it with $h=1\in\Z$ would force parity $\bar0$,
+contradicting $\bar1\neq\bar0$.
+\end{proof}
+\begin{status}
+Proved; axioms standard (\lean{[propext, Classical.choice, Quot.sound]}). Unconditional.
 \end{status}
 
 \begin{theorem}[Symplectic fermions are super $C_2$-cofinite]\label{l17:thm:sfc2}
@@ -2837,6 +2869,7 @@ Thm.~\ref{l17:thm:bgsvoa}\\
 \lean{not_SuperC2Cofinite_bgSVOA}, \lean{bgSVOA_strict_}\allowbreak\lean{halfIntegral_quasiLisse} & $\beta\gamma$
 quasi-lisse, not lisse & unconditional & Thm.~\ref{l17:thm:bgquasi}\\
 \lean{SympFerm.sympFermSVOA} & symplectic fermions, $c=-2$, genuinely odd states & unconditional & Thm.~\ref{l17:thm:sfsvoa}\\
+\lean{SympFerm.}\allowbreak\lean{sympFermSVA_}\allowbreak\lean{not_}\allowbreak\lean{spinStatistics} & spin--statistics fails for symplectic fermions & unconditional & Thm.~\ref{l17:thm:sfspin}\\
 \lean{sympFerm_superC2Cofinite} & SF are $C_2$-cofinite & unconditional & Thm.~\ref{l17:thm:sfc2}\\
 \lean{ASF_not_isSemisimpleRing}, \lean{finrank_ASF_le_four} & $A(SF)$ not semisimple, $\dim\le4$ (not ``$=4$'') & unconditional & Thm.~\ref{l17:thm:sfzhu}\\
 \lean{IsSuperRational} & complete reducibility of graded super modules & definition; quantifies over

@@ -104,7 +104,7 @@ theorem hasC_sum_range (n : ℕ) (f : ℕ → VP m hm) (F : ℕ → RawPoly ℕ)
     (hf : ∀ i, HasC m hm (f i) (F i)) :
     HasC m hm (∑ i ∈ Finset.range n, f i) ((List.range n).flatMap F) := by
   induction n with
-  | zero => simpa using hasC_zero m hm
+  | zero => simpa using! hasC_zero m hm
   | succ n ih =>
     rw [Finset.sum_range_succ, List.range_succ, List.flatMap_append, List.flatMap_singleton]
     exact hasC_add m hm ih (hf n)
@@ -195,7 +195,7 @@ theorem cpow_succ (e : ℕ) (P : RawPoly ℕ) : cpow (e + 1) P = prependC 0 (cpo
 theorem hasC_cpow {y : VP m hm} {P : RawPoly ℕ} (hy : HasC m hm y P) (e : ℕ) :
     HasC m hm (cα m ^ e • y) (cpow e P) := by
   induction e with
-  | zero => simpa [cpow] using hy
+  | zero => simpa [cpow] using! hy
   | succ e ih => rw [cpow_succ, pow_succ, mul_comm, mul_smul]; exact hasC_c m hm ih
 
 /-- A certificate entry: a polynomial in `c` (as `(q, e)` pairs), a neutral word `a`, a charged

@@ -68,10 +68,10 @@ def colourPositionSwap (i j : Fin B) (h : colour i = colour j) :
   intro l
   by_cases hi : l = i
   · subst l
-    simpa using h.symm
+    simpa using! h.symm
   by_cases hj : l = j
   · subst l
-    simpa using h
+    simpa using! h
   simp [Equiv.swap_apply_of_ne_of_ne hi hj]
 
 /-- Exchanging unused variables fixes a monomial. -/
@@ -102,7 +102,7 @@ theorem colourPolynomialAverage_move_power (d : Fin B →₀ ℕ) (i j : Fin B)
   change colourPolynomialAverage colour
     (rename (Equiv.swap i j) (monomial d 1 * X i ^ s)) = _ at h
   simpa only [map_mul, map_pow, rename_X, Equiv.swap_apply_left,
-    monomial_rename_swap_of_zero d i j hi hj] using h
+    monomial_rename_swap_of_zero d i j hi hj] using! h
 
 /-- Averaging a product with a colour power sum expands into its marked-variable terms. -/
 theorem colourPolynomialAverage_powerSum_mul (d : Fin B →₀ ℕ) (c : C) (s : ℕ) :
@@ -154,7 +154,7 @@ theorem colourPolynomialAverage_monomial_mem_tail (N : ℕ) (hN : 0 < N)
         rw [show a.support = d.support.erase i from Finsupp.support_erase, ← hn]
         exact Finset.card_erase_lt_of_mem (Finsupp.mem_support_iff.mpr (by omega))
       have hbN : N ≤ b j := by simp only [b, Finsupp.add_apply, Finsupp.single_eq_same]; omega
-      simpa only [b, monomial_add_single] using ih b.support.card hlt b j hbN rfl
+      simpa only [b, monomial_add_single] using! ih b.support.card hlt b j hbN rfl
     have hu (j : Fin B) (hj : j ∈ U) :
         av (monomial a 1 * X j ^ d i) = av (monomial d 1) := by
       obtain ⟨hjS, hj0⟩ := Finset.mem_filter.mp hj
@@ -182,7 +182,7 @@ theorem colourPolynomialAverage_monomial_mem_tail (N : ℕ) (hN : 0 < N)
       apply Finset.card_ne_zero.mpr
       exact ⟨i, by simp [U, S, a]⟩
     have hfinal := (J.restrictScalars ℂ).smul_mem (U.card : ℂ)⁻¹ hmem
-    simpa only [smul_smul, inv_mul_cancel₀ hcard, one_smul] using hfinal
+    simpa only [smul_smul, inv_mul_cancel₀ hcard, one_smul] using! hfinal
 
 /-- Averaging the whole coordinate-power ideal gives elements of the colour tail ideal. -/
 theorem colourPolynomialAverage_mem_tail (N : ℕ) (hN : 0 < N)
@@ -210,7 +210,7 @@ theorem colourPolynomialAverage_mem_tail (N : ℕ) (hN : 0 < N)
       | add p q hp hq =>
         rw [add_mul, map_add]
         exact J.add_mem hp hq
-    | zero => intro q; simpa only [mul_zero, map_zero] using J.zero_mem
+    | zero => intro q; simpa only [mul_zero, map_zero] using! J.zero_mem
     | add x y hx hy ihx ihy =>
       intro q
       rw [mul_add, map_add]
@@ -220,7 +220,7 @@ theorem colourPolynomialAverage_mem_tail (N : ℕ) (hN : 0 < N)
       change av (q * (a * x)) ∈ J
       rw [← mul_assoc]
       exact ih (q * a)
-  simpa only [one_mul] using hmul 1
+  simpa only [one_mul] using! hmul 1
 
 /-- A block power sum above the cutoff is in the ideal of coordinate powers. -/
 theorem colourPolynomialPowerSum_mem_coordinateIdeal (N : ℕ) (c : C) (s : ℕ)
@@ -267,7 +267,7 @@ theorem colourPowerSumTailIdeal_zero (i : Fin B) : colourPowerSumTailIdeal colou
   rw [he] at hm
   have hh := ((colourPowerSumTailIdeal colour 0).restrictScalars ℂ).smul_mem
     (S.card : ℂ)⁻¹ hm
-  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using hh
+  simpa only [smul_smul, inv_mul_cancel₀ hn, one_smul] using! hh
 
 /-- The coordinate-power contraction formula includes empty alphabets and zero cutoff. -/
 theorem colourCoordinateIdeal_contract (N : ℕ) :

@@ -20,7 +20,7 @@ open Finset
 
 /-- An indicator on the antidiagonal picks one term. -/
 theorem sum_antidiagonal_ite_snd (a j₀ : ℕ) (g : ℕ → ℂ) :
-    ∑ x ∈ Finset.antidiagonal a, (if x.2 = j₀ then g x.1 else 0) =
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, (if x.2 = j₀ then g x.1 else 0) =
       if j₀ ≤ a then g (a - j₀) else 0 := by
   split_ifs with h
   · rw [Finset.sum_eq_single (a - j₀, j₀)]
@@ -29,12 +29,12 @@ theorem sum_antidiagonal_ite_snd (a j₀ : ℕ) (g : ℕ → ℂ) :
       rw [if_neg]
       intro hx2
       apply hne
-      rw [Finset.mem_antidiagonal] at hx
+      rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       ext <;> simp <;> omega
     · intro hn
-      exact absurd (Finset.mem_antidiagonal.mpr (by simp; omega)) hn
+      exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp; omega)) hn
   · refine Finset.sum_eq_zero fun x hx => ?_
-    rw [Finset.mem_antidiagonal] at hx
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
     rw [if_neg (by omega)]
 
 /-- For a degree `(mᵢ, nᵢ)` in the open cone, the divisor sum of `coneLog` sees exactly the
@@ -97,10 +97,10 @@ theorem sum_divisors_ite_eq_sum_Icc {mi ni j v A : ℕ} (hmi : 1 ≤ mi) (hni : 
 
 /-- The two-variable antidiagonal indicator. -/
 theorem sum_antidiagonal_ite_two (a b j₀ v₀ : ℕ) (F : ℕ → ℕ → ℂ) :
-    ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+    ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
         (if (x.2, y.2) = (j₀, v₀) then F x.1 y.1 else 0) =
       if j₀ ≤ a ∧ v₀ ≤ b then F (a - j₀) (b - v₀) else 0 := by
-  have h : ∀ x : ℕ × ℕ, ∑ y ∈ Finset.antidiagonal b,
+  have h : ∀ x : ℕ × ℕ, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
       (if (x.2, y.2) = (j₀, v₀) then F x.1 y.1 else 0) =
         if x.2 = j₀ then (if v₀ ≤ b then F x.1 (b - v₀) else 0) else 0 := by
     intro x
@@ -149,7 +149,7 @@ include hdeg hlow in
 `a · N(a,b) = Σ_{s+j=a} Σ_{u+v=b} N(s,u) · ℓ(j,v)`. -/
 theorem expCount_coeff_identity (a b : ℕ) :
     (a : ℂ) * expCount deg low (a, b) =
-      ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+      ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
         (expCount deg low (x.1, y.1) : ℂ) * logCountCoeff deg low x.2 y.2 := by
   classical
   have hrec := count_recursion deg hdeg low hlow (a, b)
@@ -164,7 +164,7 @@ theorem expCount_coeff_identity (a b : ℕ) :
   have hterm : ∀ i ∈ low (a, b), ∀ k ∈ Finset.Icc 1 a,
       (if k • deg i ≤ (a, b) then
           ((deg i).1 : ℂ) * expCount deg low ((a, b) - k • deg i) else 0) =
-        ∑ x ∈ Finset.antidiagonal a, ∑ y ∈ Finset.antidiagonal b,
+        ∑ x ∈ Finset.HasAntidiagonal.antidiagonal a, ∑ y ∈ Finset.HasAntidiagonal.antidiagonal b,
           (if (x.2, y.2) = k • deg i then
             (expCount deg low (x.1, y.1) : ℂ) * ((deg i).1 : ℂ) else 0) := by
     intro i _ k _
@@ -185,8 +185,8 @@ theorem expCount_coeff_identity (a b : ℕ) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun y hy => ?_
   -- now: Σ_i Σ_k [ (x.2,y.2) = k • deg i ] N(x.1,y.1) mᵢ = N(x.1,y.1) ℓ(x.2,y.2)
-  have hxa : x.2 ≤ a := by rw [Finset.mem_antidiagonal] at hx; omega
-  have hyb : y.2 ≤ b := by rw [Finset.mem_antidiagonal] at hy; omega
+  have hxa : x.2 ≤ a := by rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx; omega
+  have hyb : y.2 ≤ b := by rw [Finset.HasAntidiagonal.mem_antidiagonal] at hy; omega
   have hinner : ∀ i ∈ low (a, b),
       ∑ k ∈ Finset.Icc 1 a, (if (x.2, y.2) = k • deg i then
         (expCount deg low (x.1, y.1) : ℂ) * ((deg i).1 : ℂ) else 0) =

@@ -23,19 +23,18 @@ private theorem wordOpT_map {m : ℕ}
   | nil => rfl
   | cons a l ih =>
       change φ (ρG.op a.1 a.2.1 a.2.2 (wordOpT ρG l x)) = _
-      rw [heq, ih]
-      rfl
+      exact (heq a.1 a.2.1 a.2.2 _).trans (congrArg (ρF.op a.1 a.2.1 a.2.2) ih)
 
 private theorem wordOpT_mem_zero {m : ℕ} (ρF : ToroidalModule D4sector.f m F)
     (F₀ : Submodule ℂ F) (hst : ∀ c s, F₀ ≤ F₀.comap (ρF.op c 0 s))
     (l : List (TLtr 28)) (v : F) (hv : v ∈ F₀)
     (hl : uDeg l = 0) : wordOpT ρF l v ∈ F₀ := by
   induction l with
-  | nil => simpa [wordOpT] using hv
+  | nil => simpa [wordOpT] using! hv
   | cons a l ih =>
-      have ha : a.2.1 = 0 := by simpa [uDeg] using (Nat.add_eq_zero_iff.mp hl).1
-      have ht : uDeg l = 0 := by simpa [uDeg] using (Nat.add_eq_zero_iff.mp hl).2
-      simpa [wordOpT, ha] using hst a.1 a.2.2 (ih ht)
+      have ha : a.2.1 = 0 := by simpa [uDeg] using! (Nat.add_eq_zero_iff.mp hl).1
+      have ht : uDeg l = 0 := by simpa [uDeg] using! (Nat.add_eq_zero_iff.mp hl).2
+      simpa [wordOpT, ha] using! hst a.1 a.2.2 (ih ht)
 
 private theorem symbol_uDeg (m : ℕ) : ∀ l : List (Ltr 28),
     uDeg (symbolLetters m l) = symbolDegree m l
@@ -77,9 +76,12 @@ private theorem zeroClass_word_mem {m : ℕ} (hm : 1 ≤ m)
             (0 + symbolDegree m l) (wordOp (univRepG f R) l (wUG f R))
               (word_mem_shift f R m (highModeShift_D4 R m hm) hm l 0
                 (wUG f R) hw)) := congrArg _ hg.symm
-        _ = _ := by simpa [grGenerator, grToroidal_D4] using hh.symm
-    rw [hword, wordOpT_map (grToroidal_D4 m hm) ρF φ heq, hgen]
-    exact wordOpT_mem_zero ρF F₀ hst _ _ hv ((symbol_uDeg m l).trans hd)
+        _ = _ := by simpa [grGenerator, grToroidal_D4] using! hh.symm
+    rw [hword]
+    subst hgen
+    exact (congrArg (· ∈ F₀) (wordOpT_map (grToroidal_D4 m hm) ρF φ heq
+      (symbolLetters m l) (grGenerator f R m))).mpr
+      (wordOpT_mem_zero ρF F₀ hst _ _ hv ((symbol_uDeg m l).trans hd))
   · have hshift := word_mem_shift f R m (highModeShift_D4 R m hm) hm l
       0 (wUG f R) hw
     have htu : wordOp (univRepG f R) l (wUG f R) ∈ TU f R m 1 :=

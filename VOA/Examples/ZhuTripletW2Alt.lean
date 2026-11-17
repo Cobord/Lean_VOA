@@ -193,7 +193,7 @@ theorem omegaJordanAt_of_nilpotent (M : AMod W) (h : ℂ) (k : ℕ)
     cases k with
     | zero =>
         exfalso
-        have h1 : (1 : Module.End ℂ M.carrier) = 0 := by simpa using hk
+        have h1 : (1 : Module.End ℂ M.carrier) = 0 := by simpa using! hk
         exact hne (by rw [← mul_one f, h1, mul_zero])
     | succ j => exact ⟨j, hk⟩
   classical

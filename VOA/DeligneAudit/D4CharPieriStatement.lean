@@ -43,7 +43,7 @@ theorem ePieri_zero (q : R) (u : ℕ → Rˣ) (N : ℕ) (lam : Fin N → ℤ) :
 theorem ePieri_top (q : R) (u : ℕ → Rˣ) (N : ℕ) (lam : Fin N → ℤ) :
     pieriElementary u N N * gtEval q u N lam = pieriRHS q u N lam N := by
   have hs : (Finset.univ : Finset (Fin N)).powersetCard N = {Finset.univ} := by
-    simpa using (Finset.powersetCard_self (Finset.univ : Finset (Fin N)))
+    simpa using! (Finset.powersetCard_self (Finset.univ : Finset (Fin N)))
   simp only [pieriElementary, pieriRHS, hs, Finset.sum_singleton]
   simp only [pieriCoeff, Finset.mem_univ, or_true, ↓reduceIte, Finset.prod_const_one,
     one_mul]
@@ -57,7 +57,7 @@ theorem ePieri_above_rank (q : R) (u : ℕ → Rˣ) (N : ℕ) (lam : Fin N → �
     (r : ℕ) (hr : N < r) :
     pieriElementary u N r * gtEval q u N lam = pieriRHS q u N lam r := by
   have hs : (Finset.univ : Finset (Fin N)).powersetCard r = ∅ :=
-    Finset.powersetCard_eq_empty.mpr (by simpa using hr)
+    Finset.powersetCard_eq_empty.mpr (by simpa using! hr)
   simp [pieriElementary, pieriRHS, hs]
 
 /-- The complete rank-one base, for all integer highest weights and all r. -/

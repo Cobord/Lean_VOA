@@ -18,7 +18,7 @@ theorem rz_finset_modes_perm (k : ℕ) (e : Fin k → ℕ) :
       (Finset.nodup_toList _) (List.nodup_finRange _)).2
     intro t
     simp
-  simpa only [List.ofFn_eq_map] using hperm.map e
+  simpa only [List.ofFn_eq_map] using! hperm.map e
 
 theorem rzRawSourceGenerator_eval_allocations
     (ρ : CurrentModule D4sector.f V) (w : V)
@@ -48,7 +48,7 @@ theorem rzRawSourceGenerator_eval_allocations
       fun x => ((1 : Fin 6), α x)) ++
       List.replicate b ((4 : Fin 6), 0))
   have hw := radicalWord_perm ρ w hp'
-  simpa only [List.map_map, List.append_assoc] using hw
+  simpa only [List.map_map, List.append_assoc] using! hw
 
 end VOA.DeligneAudit.D4Levi
 

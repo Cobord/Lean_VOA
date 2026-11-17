@@ -19,6 +19,8 @@ map from the universal affine vacuum module into the first-order extension.
 Identifying its cyclic image with the mode-closed reconstruction carrier remains
 a separate step; no full rigidity assertion is made here.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA
 open Deform
 open Module (End)

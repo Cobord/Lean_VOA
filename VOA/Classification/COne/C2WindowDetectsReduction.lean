@@ -148,7 +148,7 @@ theorem cyclicL0_mem_window (N : AdmissibleModule W M) (x : M) (b : ℕ) :
   intro j y hy
   apply Submodule.mem_iSup_of_mem j
   change mode (N.YM W.conformalVector) 1 (y : M) ∈ N.lev (j.val : ℤ)
-  simpa using N.act_lev (p := 1) W.conformal_mem
+  simpa using! N.act_lev (p := 1) W.conformal_mem
     (show (y : M) ∈ N.lev (j.val : ℤ) from hy)
 
 /-- Local finiteness of `L(0)` on a homogeneous cyclic module, stated as a

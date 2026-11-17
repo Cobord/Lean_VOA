@@ -75,7 +75,7 @@ theorem ksOneBox_J_of_length_gt (q n d : ℕ) (hn : q < n)
     have hq := ksBox_degree_le q f hf
     omega
   have h := box_span_graded q hp
-  simpa only [hgen, Submodule.span_empty, bot_sup_eq] using h
+  simpa only [hgen, Submodule.span_empty, bot_sup_eq] using! h
 
 end VOA.DeligneAudit.D4Levi
 

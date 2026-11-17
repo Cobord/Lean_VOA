@@ -28,7 +28,7 @@ theorem truncatedLabelModule_finite_and_local_bound (a b c M : ℕ) :
   haveI : FiniteDimensional ℂ (⊤ : Submodule ℂ (TruncatedLabelModule a b c M)) := hf
   haveI : FiniteDimensional ℂ (TruncatedLabelModule a b c M) :=
     Module.Finite.of_surjective Submodule.topEquiv.toLinearMap Submodule.topEquiv.surjective
-  exact ⟨inferInstance, by simpa only [finrank_top] using hr⟩
+  exact ⟨inferInstance, by simpa only [finrank_top] using! hr⟩
 
 /-- Every high current vanishes on the entire universal truncated module. -/
 theorem truncatedLabelModule_current_zero (a b c M : ℕ)

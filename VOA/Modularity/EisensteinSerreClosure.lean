@@ -110,7 +110,8 @@ def serreForm : ModularForm 𝒮ℒ ((n + 2 : ℕ) : ℤ) :=
 
 theorem serreForm_apply {z : ℂ} (hz : z ∈ imGT 0) :
     serreForm F (ofComplex z) = serreDerivC (n : ℤ) (fun w => F (ofComplex w)) z := by
-  rw [serreForm, mkLevelOne_apply, ofComplex_apply_of_im_pos hz]
+  change serreFun F (ofComplex z : ℂ) = _
+  rw [ofComplex_apply_of_im_pos hz]
   exact serreFun_eq F hz
 
 end SerreForm

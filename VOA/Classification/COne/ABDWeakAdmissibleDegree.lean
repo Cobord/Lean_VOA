@@ -60,7 +60,7 @@ theorem L0_mem_homogeneousDegreeSpan (A : WeakModule W M) (x : M) (d : ℤ)
     apply Submodule.subset_span
     refine ⟨ω :: l, ?_, rfl⟩
     change 2 - 1 - 1 + homogeneousDegree l = d
-    simpa using hl
+    simpa using! hl
   | zero => rw [map_zero]; exact Submodule.zero_mem _
   | add a b _ _ ha hb => rw [map_add]; exact Submodule.add_mem _ ha hb
   | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha

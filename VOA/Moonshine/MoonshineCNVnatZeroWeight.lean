@@ -36,12 +36,16 @@ theorem hypLevel_one_span :
   apply le_antisymm
   · intro p hp
     have hp' : p.IsWeightedHomogeneous weightFnN 1 := by
-      simpa only [hypLevel, gradingZN_of_nonneg (by norm_num : (0 : ℤ) ≤ 1)] using hp
+      first
+        | simpa only [hypLevel, gradingZN_of_nonneg (by norm_num : (0 : ℤ) ≤ 1)] using hp
+        | exact mem_gradingWN.mp (by
+            rw [hypLevel, gradingZN_of_nonneg (by norm_num : (0 : ℤ) ≤ 1)] at hp
+            exact hp)
     rw [p.as_sum]
     apply Submodule.sum_mem
     intro e he
     obtain ⟨a, ha⟩ := hypWeightOne_exponent e (hp' (mem_support_iff.mp he))
-    have hm : monomial e (coeff e p) = coeff e p • X (0, a) := by
+    have hm : monomial e (p.coeff e) = p.coeff e • X (0, a) := by
       rw [ha, X, smul_monomial, smul_eq_mul, mul_one]
     rw [hm]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)

@@ -103,6 +103,7 @@ theorem hypOscillator_mem_level (a : Fin 2) (q : ℂ) (n N : ℤ) (p : hypFock)
   · have hp' : p ∈ gradingWN 2 N.toNat := by
       simpa only [hypLevel, gradingZN_of_nonneg hN] using hp
     have hos (b : Fin 2) : oscN 2 1 b n p ∈ hypLevel (N - n) := by
+      show oscN 2 1 b n p ∈ gradingZN 2 (N - n)
       simpa only [Int.toNat_of_nonneg hN] using oscN_mem_gradingZN 2 1 b n hp'
     rcases lt_trichotomy n 0 with hn | rfl | hn
     · rw [hypOscillator_neg _ _ _ hn]; exact hos a

@@ -21,7 +21,7 @@ theorem mixed_current_coeff_allocations {A : Type*} [Ring A]
         List.flatMap_def, List.map_flatten, List.sum_flatten, List.map_map]
       conv =>
         lhs
-        rw [← (Finset.antidiagonal s).toList_toFinset,
+        rw [← (Finset.HasAntidiagonal.antidiagonal s).toList_toFinset,
           List.sum_toFinset _ (Finset.nodup_toList _)]
       congr 1
       apply List.map_congr_left

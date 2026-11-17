@@ -29,7 +29,7 @@ theorem grassIdeal_boundary (M d : ℕ) (cutE : Bool) (hd : d ≤ M)
   | true =>
       simp only [boundaryIndex, boundaryPoly, BoundaryAllowed, if_true] at *
       rw [show M - 1 - (d - 1) = M - d by omega]
-      simpa only [Nat.sub_add_cancel (show 1 ≤ d by omega)] using
+      simpa only [Nat.sub_add_cancel (show 1 ≤ d by omega)] using!
         grassIdeal_peel_e (d - 1) (M - d)
 
 /-- The two new relations in the fixed ambient polynomial ring. -/

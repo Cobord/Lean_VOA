@@ -17,11 +17,15 @@ noncomputable def chargeDiagonal (c : ℤ → ℂ) : Space →ₗ[ℂ] Space :=
 
 theorem chargeDiagonal_latState (c : ℤ → ℂ) (p : Osc) (β : ℤ) :
     chargeDiagonal c (latStateGen (latP 1) p β) = c β • latStateGen (latP 1) p β := by
-  rw [latStateGen, chargeDiagonal, TensorProduct.map_tmul]
+  change chargeDiagonal c (p ⊗ₜ[ℂ] eGen (latP 1) β) = c β • (p ⊗ₜ[ℂ] eGen (latP 1) β)
+  rw [chargeDiagonal, TensorProduct.map_tmul]
   change p ⊗ₜ[ℂ] ((Finsupp.lsum ℂ _) (Finsupp.single β 1)) = _
-  rw [Finsupp.lsum_single]
+  refine (congrArg (fun x : (latP 1).carrier →₀ ℂ => p ⊗ₜ[ℂ] x) (Finsupp.lsum_single ℂ
+    (fun β : ℤ => LinearMap.toSpanSingleton ℂ (ℤ →₀ ℂ) (c β • eGen (latP 1) β)) β (1 : ℂ))).trans ?_
   change p ⊗ₜ[ℂ] ((1 : ℂ) • (c β • eGen (latP 1) β)) = _
-  rw [one_smul, TensorProduct.tmul_smul]
+  refine (congrArg (fun x : (latP 1).carrier →₀ ℂ => p ⊗ₜ[ℂ] x)
+    (one_smul ℂ (c β • eGen (latP 1) β))).trans ?_
+  exact TensorProduct.tmul_smul (c β) p (eGen (latP 1) β)
 
 noncomputable def residueProjection (n : ℕ) (a e : ℤ) : Space →ₗ[ℂ] Space :=
   chargeDiagonal fun β => if (e - a * β) % (n : ℤ) = 0 then 1 else 0

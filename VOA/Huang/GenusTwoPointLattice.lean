@@ -26,7 +26,7 @@ noncomputable def torusPeriods (τ : UpperHalfPlane) : PeriodPair where
       Complex.one_im, Complex.one_re, Complex.zero_im, mul_zero] at hi
     have ha : a = 0 := (mul_eq_zero.mp hi).resolve_right (ne_of_gt τ.im_pos)
     subst a
-    simpa using h
+    simpa using! h
 
 /-- Reindexing the lattice sum by its integer basis. Reindexing total sums
 does not itself assert convergence at the small exponents. -/
@@ -140,7 +140,7 @@ theorem fourier_eq_lattice_germ (τ : UpperHalfPlane) (h : FourierLaurentExpansi
       (torus_weierstrass_hasFPowerSeriesAt τ).eventually_hasSum_sub] with z hz hL
     exact hz.unique hL
   filter_upwards [he.filter_mono nhdsWithin_le_nhds, self_mem_nhdsWithin] with z hz hz0
-  have hn : z ≠ 0 := by simpa using hz0
+  have hn : z ≠ 0 := by simpa using! hz0
   rw [fourierRegularPart, if_neg hn] at hz
   have hL := (torusPeriods τ).weierstrassPExcept_add 0 z
   simp only [Submodule.coe_zero, sub_zero, ne_eq, OfNat.ofNat_ne_zero,

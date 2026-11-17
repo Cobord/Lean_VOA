@@ -62,7 +62,7 @@ theorem scalar_injective : Function.Injective (fun c : ℂ => c • (1 : Matrix 
   intro c d h
   let i : κ := Classical.arbitrary κ
   have hi := congrArg (fun M : Matrix κ κ ℂ => M i i) h
-  simpa using hi
+  simpa using! hi
 
 /-- The scalar coefficient on the principal congruence subgroup as a complex-valued hom. -/
 noncomputable def scalarCharacterComplex (ρ : SL2Z →* Matrix κ κ ℂ) {N : ℕ}

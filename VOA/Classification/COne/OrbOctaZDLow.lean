@@ -57,7 +57,7 @@ theorem q24_grading_lt36 {N : ℤ} (hpos : 0 < N) (hN : N < 36)
     | add a b _ _ ha hb => rw [map_add]; exact Submodule.add_mem _ ha hb
     | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ c ha
   have h := hp y (grading_lt_36 N hN hy)
-  simpa only [piHom_of_mem W hy, LinearMap.mem_ker, LinearMap.comp_apply] using h
+  simpa only [piHom_of_mem W hy, LinearMap.mem_ker, LinearMap.comp_apply] using! h
 
 /-- The circle relation at index -5 kills the new weight-36 mode class. -/
 theorem q24_selfMode_neg5 : q24L (selfMode (-5)) = 0 := by
@@ -71,10 +71,11 @@ theorem q24_selfMode_neg5 : q24L (selfMode (-5)) = 0 := by
     intro j hj
     have hg : W.smul X (((j + 1 : ℕ) : ℤ) - 5) X ∈
         W.grading (35 - (j : ℤ)) := by
-      convert W.grading_mode _ X_grading _ X_grading _ using 2 ; push_cast ; ring
+      convert W.grading_mode _ X_grading _ X_grading (((j + 1 : ℕ) : ℤ) - 5) using 2
+      all_goals first | rfl | omega | (push_cast; ring)
     rw [q24_grading_lt36 (by have := Finset.mem_range.mp hj; omega) (by omega) hg,
       smul_zero]
   rw [hz, zero_add] at h
-  simpa using h
+  simpa using! h
 
 end VOA.Classification.COne.OrbOctaZD

@@ -33,6 +33,9 @@ namespace VOA
 open Module (End)
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 namespace TwistedReduction
@@ -207,6 +210,9 @@ theorem field_jacobi_nat {a b : Fld M} (h : Local a.1 b.1) (x : M) (ell m n : �
   · funext i
     rw [negOnePow_natCast, cbz_apply_nonneg _ (Int.natCast_nonneg i), Int.toNat_natCast,
       negOnePow_eq_zpow']
+  all_goals
+    funext i
+    rw [cbz_apply_nonneg _ (Int.natCast_nonneg i), Int.toNat_natCast]
 
 /-- **`zᶜ` in the first slot is expanded binomially** (needs locality):
 `(zᶜA)₍ℓ₎B = Σ_t C(c,t) z^{c−t} (A₍ℓ₊ₜ₎B)`, in modes. -/
@@ -502,7 +508,7 @@ theorem comm_part_Y (p q : ℤ) (r K K' : ℕ) (hK : r + K' ≤ K) (Yf : ℕ →
   rw [sum_range_sq_eq_sum_antidiagonal K
     (fun i' k => ((((-1 : ℂ) ^ (r + i') * gBinom p (r + i')) * ((-1 : ℂ) ^ k * gBinom q k))
         * gBinom ((r + i' : ℕ) : ℤ) r) • Y (i' + k))
-    (fun i k h => by simp only; rw [hY _ (by omega), smul_zero])]
+    (fun i k h => by (try simp only); rw [hY _ (by omega), smul_zero])]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [← comm_coeff_Y p q r m, Finset.sum_smul]
   refine Finset.sum_congr rfl fun ik hik => ?_
@@ -631,17 +637,17 @@ theorem mode_prod_comm_formula (hAB : Local A.1 B.1) (L : ℕ)
   have hrL := Finset.mem_range.mp hr
   simp only [Finset.sum_sub_distrib, ← Finset.smul_sum]
   rw [comm_part_X p q r K (fun m => mode (Fld.prod r A B).1 (p + q - r - m)
-      (mode C.1 (N + m) x)) (fun m hm => by simp only; rw [hcC _ (by omega), map_zero]),
+      (mode C.1 (N + m) x)) (fun m hm => by (try simp only); rw [hcC _ (by omega), map_zero]),
     comm_part_Y p q r K nD.succ (by omega)
       (fun i k => mode C.1 (p + q + N - ((i + k : ℕ) : ℤ))
         (mode (Fld.prod r A B).1 (i + k - r) x))
       (fun m => mode C.1 (p + q - r + N - m) (mode (Fld.prod r A B).1 m x))
       (fun i' k => by
-        simp only
+        (try simp only)
         rw [show p + q + N - ((r + i' + k : ℕ) : ℤ) = p + q - r + N - ((i' + k : ℕ) : ℤ) by
             push_cast; ring,
           show ((r + i' : ℕ) : ℤ) + k - r = ((i' + k : ℕ) : ℤ) by push_cast; ring])
-      (fun m hm => by simp only; rw [hcD r hrL _ (by omega), map_zero])]
+      (fun m hm => by (try simp only); rw [hcD r hrL _ (by omega), map_zero])]
   rw [Finset.smul_sum, Finset.smul_sum, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [hσ r]
@@ -821,7 +827,7 @@ theorem deriv_prod (n : ℤ) (D X : Fld M) :
         mode D.1 (n - i) (mode X.1 (N + i - 1) x) := by
     rw [sum_range_shift_one (fun i => ((-1 : ℂ) ^ i * gBinom n i * (i : ℂ)) •
         mode D.1 (n - i) (mode X.1 (N + i - 1) x)) K (by simp)
-        (by simp only; rw [hX _ (by omega)]; simp)]
+        (by (try simp only); rw [hX _ (by omega)]; simp)]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [show n - ((j + 1 : ℕ) : ℤ) = n - 1 - j by push_cast; ring,
       show N + ((j + 1 : ℕ) : ℤ) - 1 = N + j by push_cast; ring, smul_smul]

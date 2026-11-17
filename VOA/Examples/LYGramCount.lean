@@ -57,7 +57,6 @@ theorem line_sum (L off n : ℕ) (hn : n = L + off) (P : ℕ → ℕ → Prop) [
     exact hx (if_neg hc)
   refine Finset.sum_bij_ne_zero (fun x _ _ => K (J (x.2.val + 1))) ?_ ?_ ?_ ?_
   · intro x hx hne
-    dsimp only
     have hp := hPJ _ _ (hcond x hne)
     have hmem := (Finset.mem_filter.mp hx).2
     have he := hee (J (x.2.val + 1))
@@ -130,15 +129,15 @@ theorem lineA1 (n : ℕ) :
   refine line_sum n 0 n (by ring) (fun u v => 5 * v = 2 * u + 3) (fun k => k % 2 ≠ 0 ∧ k ≤ -1)
     (fun j => 5 * j + 1) (fun j => 2 * j + 1) (fun j => -(2 * j + 1)) (fun v => v / 2)
     (fun k => ((-k - 1) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · intro u v h; simp only at h ⊢; omega
-  · intro j; simp only; omega
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply ee_param; ring
+  · intro u v h; omega
+  · intro j; omega
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply ee_param; ring
 
 /-- Line `2u = 5v + 3` (level `n`, `h = 0`) ↔ odd `k ≥ 1`. -/
 theorem lineA2 (n : ℕ) :
@@ -149,15 +148,15 @@ theorem lineA2 (n : ℕ) :
   refine line_sum n 0 n (by ring) (fun u v => 2 * u = 5 * v + 3) (fun k => k % 2 ≠ 0 ∧ 1 ≤ k)
     (fun j => 5 * j + 4) (fun j => 2 * j + 1) (fun j => 2 * j + 1) (fun v => v / 2)
     (fun k => ((k - 1) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · intro u v h; simp only at h ⊢; omega
-  · intro j; simp only; omega
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply ee_param; ring
+  · intro u v h; omega
+  · intro j; omega
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply ee_param; ring
 
 /-- Line `2u = 5v + 7` (level `m`, `h = 1`) ↔ even `k ≤ -2`. -/
 theorem lineB1 (m : ℕ) :
@@ -169,15 +168,15 @@ theorem lineB1 (m : ℕ) :
     (fun k => k % 2 = 0 ∧ k ≤ -2)
     (fun j => 5 * j + 6) (fun j => 2 * j + 1) (fun j => -(2 * j + 2)) (fun v => v / 2)
     (fun k => ((-k - 2) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · intro u v h; simp only at h ⊢; omega
-  · intro j; simp only; omega
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply ee_param; ring
+  · intro u v h; omega
+  · intro j; omega
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply ee_param; ring
 
 /-- Line `5v = 2u + 7` (level `m`, `h = 1`) ↔ even `k ≥ 2`. -/
 theorem lineB2 (m : ℕ) :
@@ -189,15 +188,15 @@ theorem lineB2 (m : ℕ) :
     (fun k => k % 2 = 0 ∧ 2 ≤ k)
     (fun j => 5 * j + 4) (fun j => 2 * j + 3) (fun j => 2 * j + 2) (fun v => (v - 3) / 2)
     (fun k => ((k - 2) / 2).toNat) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · intro u v h; simp only at h ⊢; omega
-  · intro j; simp only; omega
-  · intro k hk; simp only at hk ⊢; omega
-  · intro j; simp only; omega
-  · intro j j' h; simp only at h; omega
-  · intro j j' h; simp only at h; omega
-  · intro j; simp only; omega
-  · intro j; simp only; omega
-  · intro j; simp only; push_cast; apply ee_param; ring
+  · intro u v h; omega
+  · intro j; omega
+  · intro k hk; omega
+  · intro j; omega
+  · intro j j' h; omega
+  · intro j j' h; omega
+  · intro j; omega
+  · intro j; omega
+  · intro j; push_cast; apply ee_param; ring
 
 /-- The term of a Kac-label sum, cast to `ℤ`. -/
 theorem term_cast (L : ℕ) (x : Fin L × Fin L) (hx : x ∈ kacLabels L) (e : ℕ) :

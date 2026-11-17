@@ -61,7 +61,7 @@ def particleMap (m D : ℕ) (color : ι → Fin 3) :
   toFun L := particlePolynomial D (pullbackDual m (extendDual m D color L)) color
   map_add' L M := by
     ext r
-    simp only [coeff_particlePolynomial, coeff_add]
+    simp only [coeff_particlePolynomial, AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
     split_ifs <;> simp [pullbackDual, extendDual]
   map_smul' c L := by
     ext r
@@ -71,9 +71,9 @@ def particleMap (m D : ℕ) (color : ι → Fin 3) :
 /-- Exact ordinary coefficients of the realized dual polynomial. -/
 theorem coeff_particleMap (m D : ℕ) (color : ι → Fin 3)
     (L : sector (K := K) m D color →ₗ[K] K) (r : ι →₀ ℕ) (hr : r.degree = D) :
-    coeff r (particleMap (K := K) m D color L) =
+    (particleMap (K := K) m D color L).coeff r =
       L ⟨quotientMode m color r, quotientMode_mem_sector m D color r hr⟩ := by
-  change coeff r (particlePolynomial D _ color) = _
+  change (particlePolynomial D _ color).coeff r = _
   rw [coeff_particlePolynomial, if_pos hr]
   change extendDual m D color L (quotientMode m color r) = _
   exact extendDual_apply_sector m D color L
@@ -86,9 +86,9 @@ theorem particleMap_injective (m D : ℕ) (color : ι → Fin 3) :
   have heq : Set.EqOn (extendDual m D color L) (extendDual m D color M)
       (quotientMode m color '' (↑(degreeFiber (ι := ι) D) : Set (ι →₀ ℕ))) := by
     rintro _ ⟨r, hr, rfl⟩
-    have hc := congrArg (coeff r) h
-    change coeff r (particlePolynomial D _ color) =
-      coeff r (particlePolynomial D _ color) at hc
+    have hc := congrArg (fun q : MvPolynomial ι K => q.coeff r) h
+    change (particlePolynomial D _ color).coeff r =
+      (particlePolynomial D _ color).coeff r at hc
     simpa [coeff_particlePolynomial, (mem_degreeFiber D r).mp hr, pullbackDual,
       quotientMode] using hc
   ext x

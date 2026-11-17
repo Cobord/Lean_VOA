@@ -32,11 +32,11 @@ theorem a3_two_box_word_one_step_fixed (a b c : ℕ)
       Finsupp.degree_apply, Finsupp.sum, Prod.fst_sum] using
       congrArg Prod.fst hwf
   have hsum : xs.sum = r := by
-    simpa [xs, a2_lst_sum] using congrArg Prod.snd hwf
+    simpa [xs, a2_lst_sum] using! congrArg Prod.snd hwf
   have hstep := a3_pair_word_one_step ρ w a b c h 0 xs ys zs
   simpa only [a3ConvA, a3ConvB, a3ConvSpectator, weightABC,
     Fin.succ_zero_eq_one, hlen, hsum, mul_assoc,
-    Module.End.mul_apply, Nat.add_assoc] using hstep
+    Module.End.mul_apply, Nat.add_assoc] using! hstep
 
 end
 end VOA.DeligneAudit.A3Sector

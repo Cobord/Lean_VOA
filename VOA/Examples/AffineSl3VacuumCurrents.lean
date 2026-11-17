@@ -16,6 +16,8 @@ current commutator yields two-term delta locality with bound two, with the
 actual matrix trace form and all eight structure constants. No PBW basis,
 simple quotient, or vertex-algebra reconstruction is assumed.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl3
 open VOA VOA.AffineLie
 noncomputable section

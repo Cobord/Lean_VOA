@@ -121,7 +121,7 @@ theorem singlyProductLayer_lower_le_ker (k : ℕ) (hn : n = h + k) (hh : 1 ≤ h
   change aeval (deletedLayerRoot ρ u i) (flagGroupProduct (deletedGroup u V)ᶜ) = 0
   have h0 := layer_mk_eq_zero ρ u i _
     (deletedComplProduct_mem ρ V u hu (singlyMarkedProduct_compl_product_zero _ _ _) i hi1)
-  simpa [flagGroupProduct, deletedLayerRoot, map_prod] using h0
+  simpa [flagGroupProduct, deletedLayerRoot, map_prod] using! h0
 
 end LayerRelations
 

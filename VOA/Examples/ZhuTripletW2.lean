@@ -401,7 +401,6 @@ theorem adjointBottom_rho_conformalVector (W : VertexOperatorAlgebra 𝒱) :
     change mode (W.Y W.conformalVector) ((2 : ℤ) - 1) (x : 𝒱) = 0
     rw [show ((2 : ℤ) - 1) = ((0 : ℤ) + 1) by ring, ← L_def,
       W.L_zero_grading _ (coe_mem_grading_zero W x), Int.cast_zero, zero_smul]
-  rw [LinearMap.zero_apply]
   exact Subtype.ext (hcoe.trans hz)
 
 /-- **`[𝟙] ≠ 0` in `A(𝒱)`**, i.e. `O(𝒱) ≠ 𝒱`, for any VOA with `𝟙 ≠ 0`.

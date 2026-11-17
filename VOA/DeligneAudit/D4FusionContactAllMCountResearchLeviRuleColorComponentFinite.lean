@@ -21,7 +21,7 @@ theorem color_component_forget (m D T : ℕ) (b : Fin 3 → ℤ) (p : Ring ℂ m
   intro e he
   funext j
   have hh := congrFun (hp he) (Fin.castAdd 3 j)
-  simpa only [color_monomial_weight_base,pureAColorTargetDegree_base] using hh
+  simpa only [color_monomial_weight_base,pureAColorTargetDegree_base] using! hh
 
 /-- Restrict the existing explicit finite source-product indices by exact bit grade. -/
 def boundedColorComponentPairs (m D T : ℕ) (b : Fin 3 → ℤ) :

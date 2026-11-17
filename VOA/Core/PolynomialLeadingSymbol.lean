@@ -25,12 +25,12 @@ variable {σ : Type*} {w : σ → ℕ}
 
 /-- Every monomial in the polynomial has weight at most d. -/
 def AtMost (w : σ → ℕ) (d : ℕ) : Submodule ℂ (MvPolynomial σ ℂ) where
-  carrier := {P | ∀ e, coeff e P ≠ 0 → Finsupp.weight w e ≤ d}
+  carrier := {P | ∀ e, P.coeff e ≠ 0 → Finsupp.weight w e ≤ d}
   zero_mem' := by simp
   add_mem' := by
     intro P Q hp hq e he
-    by_cases h : coeff e P = 0
-    · exact hq e (by simpa [coeff_add, h] using he)
+    by_cases h : P.coeff e = 0
+    · exact hq e (by simpa [h] using he)
     · exact hp e h
   smul_mem' := by
     intro c P hp e he
@@ -38,12 +38,12 @@ def AtMost (w : σ → ℕ) (d : ℕ) : Submodule ℂ (MvPolynomial σ ℂ) wher
 
 /-- Every nonzero coefficient lies strictly below weight d. -/
 def Below (w : σ → ℕ) (d : ℕ) : Submodule ℂ (MvPolynomial σ ℂ) where
-  carrier := {P | ∀ e, coeff e P ≠ 0 → Finsupp.weight w e < d}
+  carrier := {P | ∀ e, P.coeff e ≠ 0 → Finsupp.weight w e < d}
   zero_mem' := by simp
   add_mem' := by
     intro P Q hp hq e he
-    by_cases h : coeff e P = 0
-    · exact hq e (by simpa [coeff_add, h] using he)
+    by_cases h : P.coeff e = 0
+    · exact hq e (by simpa [h] using he)
     · exact hp e h
   smul_mem' := by
     intro c P hp e he
@@ -167,7 +167,7 @@ theorem Symbol.component {d : ℕ} {P Q : MvPolynomial σ ℂ} (h : Symbol w d P
   ext e
   rw [coeff_weightedHomogeneousComponent]
   split_ifs with he
-  · have hr : coeff e (P-Q) = 0 := by
+  · have hr : (P-Q).coeff e = 0 := by
       by_contra hc
       exact (Nat.lt_irrefl d) (he ▸ h.remainder e hc)
     simpa only [coeff_sub, sub_eq_zero] using hr
@@ -177,7 +177,7 @@ theorem Symbol.component {d : ℕ} {P Q : MvPolynomial σ ℂ} (h : Symbol w d P
 theorem Symbol.component_above {d e : ℕ} {P Q : MvPolynomial σ ℂ}
     (h : Symbol w d P Q) (he : d < e) : weightedHomogeneousComponent w e P = 0 := by
   ext u
-  simp only [coeff_weightedHomogeneousComponent, coeff_zero]
+  simp only [coeff_weightedHomogeneousComponent]
   split_ifs with hu
   · by_contra hc
     exact (Nat.not_le_of_lt he) (hu ▸ h.atMost u hc)

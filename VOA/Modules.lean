@@ -106,6 +106,9 @@ import VOA.Modules.ContragredientCharacterClose
    is given by the `ZhuVermaAnArchLUBijection{,PBW}` main theorems imported near the end of this
    file. -/
 import VOA.Modules.ZhuVermaAnArchPhase4Bijection
+import VOA.Modules.ZhuVermaAnArchCarrierBridgeVacuity
+import VOA.Modules.SuperTwistedModuleZero
+import VOA.Modules.FusionCoeffZero
 /- `CrossCircReduce` reduces the A-direction keystone `hslice`/`MUGradedAction` to the SINGLE
    cross-circle membership family (the diagonal `circ` field is the proven `hcirc_closed`; `crossL`
    derives from `crossCirc`). -/

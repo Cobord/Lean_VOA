@@ -46,7 +46,7 @@ theorem quadraticRelation_eq_of_symm {σ : Type*} [Fintype σ] (q q' : σ × σ 
   have h2 := (key q).trans ((Finset.sum_congr rfl fun xy _ => by
     rw [show q xy + q xy.swap = q' xy + q' xy.swap from h xy.1 xy.2]).trans (key q').symm)
   have h2' := congrArg (fun p => (2 : ℂ)⁻¹ • p) h2
-  simpa [smul_smul] using h2'
+  simpa [smul_smul] using! h2'
 
 theorem casPoly_eq_quadraticRelation {𝒱 : Type*} [AddCommGroup 𝒱] [Module ℂ 𝒱]
     {W : VertexOperatorAlgebra 𝒱} {ι : Type*} [Fintype ι] (E : SqCurrentData W ι) :

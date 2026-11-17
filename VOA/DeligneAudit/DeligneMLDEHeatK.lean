@@ -43,7 +43,7 @@ variable {K : Type*} [Field K] [CharZero K]
 local notation "A" => (PowerSeries K)
 
 /-- The `x`-derivative. -/
-local notation "dx" => PowerSeries.derivative K
+local notation "dx" => PowerSeries.derivative (R := K)
 
 /-! ## The coefficientwise `x`-derivative on `A⟦q⟧` -/
 

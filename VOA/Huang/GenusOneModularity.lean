@@ -35,7 +35,7 @@ theorem trace_T_transform (Y : IntertwiningOperator A N N) {h : ℂ}
         = 2 * (Real.pi : ℂ) * Complex.I * (h - W.centralCharge / 24)
           + (n : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) by ring,
       Complex.exp_add, Complex.exp_nat_mul_two_pi_mul_I, mul_one]
-  · rw [trace_mem_QSeriesAt Y hcw w e (by simpa only [not_exists] using he), mul_zero, mul_zero]
+  · rw [trace_mem_QSeriesAt Y hcw w e (by simpa only [not_exists] using! he), mul_zero, mul_zero]
 
 /-- T-transformation of the defined trace value. Convergence is certified separately by
 `hasSum_trace_of_fg_closed`; this identity itself is termwise. -/

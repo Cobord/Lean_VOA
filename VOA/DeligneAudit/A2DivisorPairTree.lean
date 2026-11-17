@@ -23,7 +23,7 @@ variable {m : ℕ} {a b : Fin m} (hab : a ≠ b) {s : Fin m → Fin 8} (hs : IsC
 include hab hs
 
 theorem goodTree0 : (Hpair a b ^ 0 * zab a b ^ 0 * Fspec a b) • castT tB0 ∈ Good a b s := by
-  simpa using good_base hab hs
+  simpa using! good_base hab hs
 
 theorem goodTree1 : (Hpair a b ^ 1 * zab a b ^ 0 * Fspec a b) • castT tB1 ∈ Good a b s :=
   good_S_castT 3 hab (goodTree0 hab hs) tree1 (by ring)

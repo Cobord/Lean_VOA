@@ -80,7 +80,7 @@ theorem f4CertData_sc (a b g : Fin 52) :
   rw [basis_eq_vec f4Checks a, basis_eq_vec f4Checks b,
     lie_vec f4Checks (by simp [inRange]) (by simp [inRange])]
   change (Pi.basisFun ℂ (Fin 52)).repr _ g = _
-  rw [Pi.basisFun_repr]
+  erw [Pi.basisFun_repr]
   simp [vec, brL, coef_scale]
 
 theorem f4CertData_form (a b : Fin 52) :

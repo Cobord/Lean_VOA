@@ -14,6 +14,8 @@ every descendant of index at least three is diagonal. Iterating these
 actual operator identities gives the full finite source recursion for
 arbitrary seed index, with no assumption that its terminal scalar is nonzero.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- At levels zero and one the negative-mode sum has no L-minus-two term.
@@ -27,7 +29,7 @@ theorem vermaVacuumSurvival_source_all (c : ℂ) (f : ℕ → Verma c 0) (r : �
     have hh := vermaVacuumSurvival_mode c 0 (f 0)
     norm_num at hh ⊢
     exact hh
-  · simpa using vermaVacuumSurvival_source c f r
+  · simpa using! vermaVacuumSurvival_source c f r
 
 /-- The second descendant's full scalar action, including its two initial
 boundary coefficients. The field-weight shift is retained exactly. -/
@@ -180,6 +182,6 @@ theorem wardSourceAt_vacuum (c b t a : ℂ) (N : ℕ)
     vermaVacuumSurvival c ((wardSourceAt c 0 b t a N f).val r)=
       wardBSAVacuumSource b t a N N (fun j => vermaVacuumSurvival c (f.val j)) r := by
   have hh := wardBSASourceOperator_vacuum c b t a N N (wardFieldLift c 0 a f) r
-  simpa [wardSourceAt,wardFieldLift] using hh
+  simpa [wardSourceAt,wardFieldLift] using! hh
 
 end VOA.InverseDS.VirasoroVerma

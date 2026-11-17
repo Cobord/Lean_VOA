@@ -214,10 +214,9 @@ theorem good_V (V : PairTable m) (hsym : ∀ c d, V c d = V d c)
       congr 1
       refine Finset.sum_congr rfl fun r _ => ?_
       rw [smul_smul]
-    rw [Finset.sum_congr rfl fun d _ => e1 d, Finset.sum_add_distrib, Finset.sum_comm]
-    congr 1
-    refine Finset.sum_congr rfl fun r _ => ?_
-    rw [Finset.sum_smul]
+    rw [Finset.sum_congr rfl fun d _ => e1 d, Finset.sum_add_distrib, add_right_inj]
+    simp only [Finset.sum_smul]
+    exact Finset.sum_comm
   have hkey : ((72 : ℕ) : Pm m) • ((2 : Pm m) • V) =
       ∑ c, ∑ d, V c d • castT (m := m) (comb (symL c d)) := by
     rw [← h2V, Finset.smul_sum, Finset.sum_congr rfl fun c _ => step c, Finset.sum_add_distrib]

@@ -62,7 +62,8 @@ theorem S_zero_mid (Z : IntertwiningModes N₁ N₂ M₃) (u : 𝒱) (x₁ : N�
     (q : ℂ) : S B₁ B₂ A₃ Z u x₁ x₂ ℓ 0 q = AD B₁ B₂ A₃ Z u x₁ x₂ ℓ q := by
   rw [S, JL, JR, AD, finsum_eq_single (fun i : ℤ => cbz 0 i • Z ((0 : ℤ) + q - i)
       (mode (B₁.YM u) (ℓ + i) x₁) x₂) (0 : ℤ)
-    (fun i hi => by dsimp only; rw [cbz_zero_left, if_neg hi, zero_smul])]
+    (fun i hi => by try dsimp only
+                    rw [cbz_zero_left, if_neg hi, zero_smul])]
   simp
 
 variable {B₁ B₂ A₃}

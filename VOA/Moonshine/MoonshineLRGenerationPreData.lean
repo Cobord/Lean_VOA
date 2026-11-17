@@ -14,6 +14,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Borcherds data without the generation field. -/
 structure BorcherdsPreData (g : Type*) [LieRing g] [LieAlgebra ℂ g] where
   weightSpace : ℤ × ℤ → Submodule ℂ g

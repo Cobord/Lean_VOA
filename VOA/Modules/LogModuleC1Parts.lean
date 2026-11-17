@@ -30,10 +30,9 @@ theorem c1Part_le_weight (N : LogVModule W M) (α : ℂ) :
   apply Submodule.span_le.mpr
   rintro _ ⟨d,a,m,hd,ha,hm,rfl⟩
   have h := N.mode_mem_weight ha hm (-1)
-  convert h using 1
-  congr 1
-  push_cast
-  ring
+  have e : α - (d : ℂ) + (d : ℂ) - ((-1 : ℤ) : ℂ) - 1 = α := by push_cast; ring
+  rw [e] at h
+  exact h
 
 /-- Projecting C1 onto alpha gives its actual homogeneous generating span. -/
 theorem weightProj_mem_c1Part (N : LogVModule W M) (α : ℂ) {x : M}

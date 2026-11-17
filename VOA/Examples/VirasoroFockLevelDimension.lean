@@ -60,7 +60,7 @@ noncomputable def fockLevelCoefficientEquiv (N : ℕ) :
     gradingWN 1 N ≃ₗ[ℂ]
       ({d : (ℕ × Fin 1) →₀ ℕ // Finsupp.weight weightFnN d = N} →₀ ℂ) := by
   rw [gradingWN, weightedHomogeneousSubmodule_eq_finsupp_supported]
-  exact Finsupp.supportedEquivFinsupp _
+  exact AddMonoidAlgebra.supportedEquivFinsupp _
 
 /-- Every actual Fock level is finite-dimensional, by its finite set of
 energy occupations. -/

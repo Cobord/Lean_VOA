@@ -56,7 +56,7 @@ theorem coeff_succ_mul_of_constantCoeff_eq_zero (A L : PowerSeries K)
 
 omit [CharZero K] in
 theorem coeff_succ_X_mul_derivative (A : PowerSeries K) (a : ℕ) :
-    PowerSeries.coeff (a + 1) (PowerSeries.X * PowerSeries.derivative K A) =
+    PowerSeries.coeff (a + 1) (PowerSeries.X * PowerSeries.derivative (R := K) A) =
       ((a + 1 : ℕ) : K) * PowerSeries.coeff (a + 1) A := by
   rw [PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_derivative, mul_comm]
   push_cast
@@ -64,7 +64,7 @@ theorem coeff_succ_X_mul_derivative (A : PowerSeries K) (a : ℕ) :
 
 /-- **`odeSol L` solves `p A′ = A L`.** -/
 theorem odeSol_spec (L : PowerSeries K) (hL : PowerSeries.constantCoeff L = 0) :
-    PowerSeries.X * PowerSeries.derivative K (odeSol L) = odeSol L * L := by
+    PowerSeries.X * PowerSeries.derivative (R := K) (odeSol L) = odeSol L * L := by
   ext n
   rcases n with _ | a
   · rw [PowerSeries.coeff_zero_X_mul, PowerSeries.coeff_zero_eq_constantCoeff_apply, map_mul, hL,
@@ -76,8 +76,8 @@ theorem odeSol_spec (L : PowerSeries K) (hL : PowerSeries.constantCoeff L = 0) :
 
 /-- **Uniqueness:** two solutions of `p A′ = A L` with the same constant term coincide. -/
 theorem eq_of_ode {A B L : PowerSeries K} (hL : PowerSeries.constantCoeff L = 0)
-    (hA : PowerSeries.X * PowerSeries.derivative K A = A * L)
-    (hB : PowerSeries.X * PowerSeries.derivative K B = B * L)
+    (hA : PowerSeries.X * PowerSeries.derivative (R := K) A = A * L)
+    (hB : PowerSeries.X * PowerSeries.derivative (R := K) B = B * L)
     (h0 : PowerSeries.constantCoeff A = PowerSeries.constantCoeff B) : A = B := by
   ext n
   induction n using Nat.strong_induction_on with

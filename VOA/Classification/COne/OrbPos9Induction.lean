@@ -39,8 +39,9 @@ def reynolds (G : Subgroup (Aut W)) [Fintype G] : V →ₗ[ℂ] (orbifold G).car
 
 @[simp] theorem reynolds_apply (G : Subgroup (Aut W)) [Fintype G] (x : V) :
     (reynolds G x : V) = (Fintype.card G : ℂ)⁻¹ • ∑ g : G, g.1 x := by
-  classical
-  simp [reynolds]
+  show (((Fintype.card G : ℂ)⁻¹) • ∑ g : G, g.1.toLinearEquiv.toLinearMap) x = _
+  exact (LinearMap.smul_apply _ _ _).trans
+    (congrArg ((Fintype.card G : ℂ)⁻¹ • ·) (LinearMap.sum_apply _ _ _))
 
 /-- Reynolds averaging intertwines every mode of the fixed-point VOA. -/
 def unitRetraction (G : Subgroup (Aut W)) [Fintype G] : ambient G ⟶ vacuumObject :=
@@ -48,12 +49,15 @@ def unitRetraction (G : Subgroup (Aut W)) [Fintype G] : ambient G ⟶ vacuumObje
     intro v k x
     apply Subtype.ext
     change (reynolds G (W.smul v.1 k x) : V) = W.smul v.1 k (reynolds G x : V)
-    rw [reynolds_apply, reynolds_apply]
-    simp only [PreVertexAlgebra.smul, map_smul, map_sum]
-    congr 1
-    apply Finset.sum_congr rfl
-    intro g _
-    exact (g.1.map_smul' v.1 k x).trans (by rw [v.2 g.1 g.2]; rfl)⟩
+    have key : ∀ y : V, (reynolds G (W.smul v.1 k y) : V) = W.smul v.1 k (reynolds G y : V) := by
+      intro y
+      rw [reynolds_apply, reynolds_apply]
+      simp only [PreVertexAlgebra.smul, map_smul, map_sum]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro g _
+      exact (g.1.map_smul' v.1 k y).trans (by rw [v.2 g.1 g.2]; rfl)
+    exact key x⟩
 
 @[simp] theorem unitInclusion_retraction (G : Subgroup (Aut W)) [Fintype G] :
     unitInclusion G ≫ unitRetraction G = 𝟙 vacuumObject := by

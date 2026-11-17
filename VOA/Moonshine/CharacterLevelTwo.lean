@@ -74,7 +74,7 @@ theorem discriminant_S (z w : ℍ) (h : (w : ℂ) = -(z : ℂ)⁻¹) : Δ w = (z
   have := discriminant_smul ModularGroup.S z
   have hw : w = ModularGroup.S • z := by
     apply UpperHalfPlane.ext; rw [h, modular_S_smul]; simp
-  rw [hw, this]; simp [ModularGroup.S]; left; norm_cast
+  rw [hw, this]; simp [ModularGroup.S]; try (left; norm_cast)
 
 /-- `γ = [[1,-1],[2,-1]]`. -/
 def gammaST : SL(2, ℤ) := ⟨!![1, -1; 2, -1], by simp [Matrix.det_fin_two]⟩
@@ -85,7 +85,7 @@ theorem discriminant_gam (z w : ℍ) (h : (w : ℂ) = ((z : ℂ) - 1) / (2 * z -
   have hw : w = gammaST • z := by
     apply UpperHalfPlane.ext; rw [h, specialLinearGroup_apply]; simp [gammaST]; ring_nf
   rw [hw, this]; simp [gammaST]; left
-  rw [sub_eq_add_neg]; norm_cast
+  rw [sub_eq_add_neg]; try norm_cast
 
 noncomputable abbrev dblH : ℍ → ℍ := affH 2 0 two_pos
 noncomputable abbrev hlfH : ℍ → ℍ := affH (1 / 2) 0 (by norm_num)
@@ -132,7 +132,7 @@ theorem phiFun_of_neg_inv (z w : ℍ) (hSz : (w : ℂ) = -(z : ℂ)⁻¹) :
 theorem phiFun_slash_S : phiFun ∣[(12 : ℤ)] ModularGroup.S = phiFun := by
   ext z
   rw [ModularForm.slash_action_eq'_iff, phiFun_of_neg_inv z _ (by rw [modular_S_smul]; simp)]
-  simp [ModularGroup.S]; left; norm_cast
+  simp [ModularGroup.S]; try (left; norm_cast)
 
 theorem phiFun_slash_T : phiFun ∣[(12 : ℤ)] ModularGroup.T = phiFun := by
   ext z
@@ -555,7 +555,9 @@ theorem qExpansion_phiForm : qExpansion 1 (phiForm : ℍ → ℂ) = phiSeries :=
   obtain ⟨hs, he⟩ := phiFun_eq_ev τ
   have : phiForm τ = phiFun τ := rfl
   rw [this, he]
-  simpa only [smul_eq_mul] using hs.of_norm.hasSum
+  first
+  | simpa only [smul_eq_mul] using hs.of_norm.hasSum
+  | (simp only [smul_eq_mul, ev]; exact hs.of_norm.hasSum)
 
 theorem coeff_one_one_sub_X_pow (n : ℕ) :
     coeff 1 (((1 : PowerSeries ℂ) - X) ^ n) = -(n : ℂ) := by

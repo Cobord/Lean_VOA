@@ -664,7 +664,7 @@ def matterBGData (hA : GradedUnitary (affineForm L) (affineRealStructure L) (aff
       (fun z => tensorMap_sq _ _ (fun x => by simp [(affineCompactLayerData L).sq])
         (fun y => by simp [hCB.sq]) z)
       (fun y => by simp [(auxiliaryCompactLayerData L).sq]) x
-    simpa using h
+    simpa using! h
   P_eq i x hx y :=
     tensorP_deg _ _ _ _ (TensorProduct.map (rsLin (affineRealStructure L)) (rsLin RB))
       (rsLin (auxiliaryRealStructure L)) _ _
@@ -687,7 +687,7 @@ def matterBGData (hA : GradedUnitary (affineForm L) (affineRealStructure L) (aff
         simp [conjIdx, hg]
       rw [e]; exact h
     · have h0 := (matterDeg_le_zeroGhost L) i hx
-      rw [eq_zero_of_mem_zeroGhost (by simpa using hg) h0, map_zero]
+      rw [eq_zero_of_mem_zeroGhost (by simpa using! hg) h0, map_zero]
       exact Submodule.zero_mem _
   ρ_J0 a x := (matterRho_J0 L) RB hCB.rho_mode a x
 

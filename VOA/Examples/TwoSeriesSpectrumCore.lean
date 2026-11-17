@@ -69,7 +69,7 @@ theorem eString_stable (R : ZeroModeRel ρ) {s : M} {c : ℂ}
   have hP : ∀ (k : ℕ) (a : Fin 3) (j : ℕ), ρ (a, j + 1) ((ρ (0, 0) ^ k) s) = 0 := by
     intro k
     induction k with
-    | zero => intro a j; simpa using hpos a j
+    | zero => intro a j; simpa using! hpos a j
     | succ k ih =>
       intro a j
       rw [pow_succ_apply']
@@ -77,7 +77,7 @@ theorem eString_stable (R : ZeroModeRel ρ) {s : M} {c : ℂ}
   have hH : ∀ k : ℕ, ρ (2, 0) ((ρ (0, 0) ^ k) s) = (c + 2 * (k : ℂ)) • (ρ (0, 0) ^ k) s := by
     intro k
     induction k with
-    | zero => simpa using hh
+    | zero => simpa using! hh
     | succ k ih =>
       rw [pow_succ_apply', R.he, ih, map_smul]
       push_cast
@@ -119,7 +119,7 @@ theorem eString_stable (R : ZeroModeRel ρ) {s : M} {c : ℂ}
 theorem word_mem_eString (R : ZeroModeRel ρ) {s : M} {c : ℂ}
     (hpos : ∀ a j, ρ (a, j + 1) s = 0) (hf : ρ (1, 0) s = 0) (hh : ρ (2, 0) s = c • s) :
     ∀ l : List (Fin 3 × ℕ), word ρ l s ∈ eString ρ s
-  | [] => by simpa [word] using eString_pow_mem (ρ := ρ) s 0
+  | [] => by simpa [word] using! eString_pow_mem (ρ := ρ) s 0
   | k :: l => by
     rw [word_cons_apply]
     exact eString_stable R hpos hf hh k _ (word_mem_eString R hpos hf hh l)
@@ -148,7 +148,7 @@ theorem sing_cyclic (R : ZeroModeRel ρ) {r : ℕ} (w : Module.Dual ℂ M)
   have hH : ρ (2, 0) ((ρ (0, 0) ^ k) s) = (c + 2 * (k : ℂ)) • (ρ (0, 0) ^ k) s := by
     clear hk
     induction k with
-    | zero => simpa using hh
+    | zero => simpa using! hh
     | succ k ih =>
       rw [pow_succ_apply', R.he, ih, map_smul]
       push_cast
@@ -164,8 +164,8 @@ theorem sing_cyclic (R : ZeroModeRel ρ) {r : ℕ} (w : Module.Dual ℂ M)
     have : m + 2 * k = 0 := by exact_mod_cast this
     omega
   obtain ⟨rfl, rfl⟩ := hk0
-  have hws : w s ≠ 0 := by simpa using hk
-  refine ⟨?_, by simpa using hm, hws⟩
+  have hws : w s ≠ 0 := by simpa using! hk
+  refine ⟨?_, by simpa using! hm, hws⟩
   by_contra hd
   exact hws (supp d hd s hsd)
 

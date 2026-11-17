@@ -150,8 +150,8 @@ theorem momentumSector_le_wordSpan (α : L.carrier) :
   change p ⊗ₜ[ℂ] eGen L α ∈ _
   rw [← MvPolynomial.support_sum_monomial_coeff p, TensorProduct.sum_tmul]
   refine Submodule.sum_mem _ fun d _ => ?_
-  rw [show MvPolynomial.monomial d (MvPolynomial.coeff d p) =
-      (MvPolynomial.coeff d p) • MvPolynomial.monomial d (1 : ℂ) by
+  rw [show MvPolynomial.monomial d (p.coeff d) =
+      (p.coeff d) • MvPolynomial.monomial d (1 : ℂ) by
         rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one], ← TensorProduct.smul_tmul']
   apply Submodule.smul_mem
   apply Submodule.subset_span

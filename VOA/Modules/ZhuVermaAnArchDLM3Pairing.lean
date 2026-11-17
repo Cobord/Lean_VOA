@@ -91,6 +91,8 @@ Props 4.3 / 4.6 (`:1086-1096`) / 4.7 (`:1098-1122`); Prop 3.1 (`:489`); Zhu Lemm
 (`:130`, proved in full at `refs/dlm2.txt:575-591`).
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA
 
 open VertexOperatorAlgebra

@@ -37,7 +37,7 @@ theorem fock_weight_three_mem_span {p : FockN (rank (latP m))}
   rw [p.as_sum]
   refine Submodule.sum_mem _ fun d hd => ?_
   have hw : Finsupp.weight weightFnN d = 3 := hp (MvPolynomial.mem_support_iff.mp hd)
-  rw [show monomial d (coeff d p) = coeff d p • (monomial d (1 : ℂ) : FockN (rank (latP m))) by
+  rw [show monomial d (p.coeff d) = p.coeff d • (monomial d (1 : ℂ) : FockN (rank (latP m))) by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   apply Submodule.smul_mem
   rcases weight_eq_three (rank (latP m)) d hw with ⟨a, rfl⟩ | ⟨a, b, rfl⟩ | ⟨a, b, c, rfl⟩

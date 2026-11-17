@@ -352,7 +352,7 @@ theorem blockRelSpanE_eq_span :
           rw [sqMode_of_mem_grading W ha]; exact htail m hm) (max K K0) (le_max_left _ _)
         have := relHom_le_span W _ (hK0 (max K K0) (le_max_right _ _))
         rw [hstab] at this
-        simpa only [relR, sqMode_of_mem_grading W ha] using this
+        simpa only [relR, sqMode_of_mem_grading W ha] using! this
     intro y hy
     exact hle hy
   · rw [Submodule.span_le]

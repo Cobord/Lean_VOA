@@ -6,6 +6,9 @@ open scoped BigOperators
 namespace VOA.Moonshine.ConwayNorton
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem borcherdsSimpleRoot_positive_boundary {α β : ℤ × ℤ}
     (hα : borcherdsSimpleRoot α) (hβ : borcherdsRootSupport β)
     (hd : borcherdsRootSupport (α - β)) :

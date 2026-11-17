@@ -28,11 +28,11 @@ def lowerRoot (t : R) : Matrix.SpecialLinearGroup (Fin 2) R :=
   ext i j; fin_cases i <;> fin_cases j <;> simp [lowerRoot]
 
 @[simp] theorem upperRoot_add (s t : R) : upperRoot (s + t) = upperRoot s * upperRoot t := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [upperRoot, Matrix.mul_apply, Fin.sum_univ_two, add_comm]
 
 @[simp] theorem lowerRoot_add (s t : R) : lowerRoot (s + t) = lowerRoot s * lowerRoot t := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem upperRoot_pow (t : R) (n : ℕ) : upperRoot t ^ n = upperRoot (n * t) := by
@@ -57,13 +57,13 @@ theorem root_generators (n : ℕ) [NeZero n] :
   have hT : VOA.Huang.DLN.reduction n ModularGroup.T ∈ K := by
     have heq : VOA.Huang.DLN.reduction n ModularGroup.T = upperRoot (1 : ZMod n) := by
       ext i j; fin_cases i <;> fin_cases j <;>
-        simp [VOA.Huang.DLN.reduction, ModularGroup.T, upperRoot]
+        simp [VOA.Huang.DLN.reduction, ModularGroup.coe_T, upperRoot]
     exact heq ▸ hu
   have hS : VOA.Huang.DLN.reduction n ModularGroup.S ∈ K := by
     have heq : VOA.Huang.DLN.reduction n ModularGroup.S =
         upperRoot (-1 : ZMod n) * lowerRoot 1 * upperRoot (-1) := by
-      ext i j; fin_cases i <;> fin_cases j <;>
-        simp [VOA.Huang.DLN.reduction, ModularGroup.S, upperRoot, lowerRoot,
+      ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
+        simp [VOA.Huang.DLN.reduction, ModularGroup.coe_S, upperRoot, lowerRoot,
           Matrix.mul_apply, Fin.sum_univ_two]
     rw [heq, hu_neg]
     exact K.mul_mem (K.mul_mem (K.inv_mem hu) hl) (K.inv_mem hu)
@@ -92,7 +92,7 @@ def torus (u : Rˣ) : Matrix.SpecialLinearGroup (Fin 2) R :=
 theorem torus_upper_conj (u : Rˣ) (t : R) :
     torus u * upperRoot t * (torus u)⁻¹ = upperRoot ((u : R) ^ 2 * t) := by
   rw [torus_inv]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [torus, upperRoot, Matrix.mul_apply, Fin.sum_univ_two, pow_two, mul_assoc,
       mul_comm, mul_left_comm]
 
@@ -100,7 +100,7 @@ theorem torus_upper_conj (u : Rˣ) (t : R) :
 theorem torus_lower_conj (u : Rˣ) (t : R) :
     torus u * lowerRoot t * (torus u)⁻¹ = lowerRoot ((↑u⁻¹ : R) ^ 2 * t) := by
   rw [torus_inv]
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j; simp only [Matrix.SpecialLinearGroup.coe_mul]; fin_cases i <;> fin_cases j <;>
     simp [torus, lowerRoot, Matrix.mul_apply, Fin.sum_univ_two, pow_two, mul_assoc,
       mul_comm, mul_left_comm]
 

@@ -202,8 +202,8 @@ theorem superTorusOnePoint_eq_zero_of_odd (N : SuperOrdVModule W M)
   · have hbot : V.grading h = ⊥ := hW h hint
     have hz : V.wtProj h u = 0 := by
       have hm : V.wtProj h u ∈ (⊥ : Submodule ℂ VType) := by
-        simpa only [hbot] using V.wtProj_mem h u
-      simpa using hm
+        simpa only [hbot] using! V.wtProj_mem h u
+      simpa using! hm
     rw [hz, map_zero]
 
 /-- The vacuum insertion is the formal supercharacter. -/
@@ -211,9 +211,9 @@ theorem superTorusOnePoint_vacuum (N : SuperOrdVModule W M)
     (hW : W.toSuperNearVOA.IntegralWeights) :
     N.superTorusOnePoint hW W.vacuum = N.formalSupercharacter := by
   have hv : W.vacuum ∈ W.toSuperNearVOA.gradingZ 0 := by
-    simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using W.vacuum_mem
+    simpa only [SuperNearVOA.gradingZ_apply, Int.cast_zero] using! W.vacuum_mem
   rw [N.superTorusOnePoint_of_mem_gradingZ hW hv W.vacuum_parity]
-  simpa using N.zeroModeSupertrace_vacuum
+  simpa using! N.zeroModeSupertrace_vacuum
 
 end SuperOrdVModule
 

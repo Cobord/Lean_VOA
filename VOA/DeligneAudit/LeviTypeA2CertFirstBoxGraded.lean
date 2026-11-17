@@ -35,7 +35,7 @@ theorem a2_first_box_graded_with_spectators (p q : ℕ)
     | cons s ys ih =>
         simp only [B, List.map_cons, List.prod_cons] at *
         have hc : ρ.op 5 s * F i = F i * ρ.op 5 s := by
-          simpa [F, a2RadicalOp] using
+          simpa [F, a2RadicalOp] using!
             a2RadicalOp_comm ρ (1 : Fin 2) (0 : Fin 2) s i
         calc
           (ρ.op 5 s * (ys.map fun t => ρ.op 5 t).prod) * F i =
@@ -46,7 +46,7 @@ theorem a2_first_box_graded_with_spectators (p q : ℕ)
           _ = F i * (ρ.op 5 s * (ys.map fun t => ρ.op 5 t).prod) := by rw [mul_assoc]
   have hEF : ∀ k, ρ.op 0 1 * F k - F k * ρ.op 0 1 = ρ.op 6 (k + 1) := by
     intro k
-    simpa [F, Nat.add_comm] using hS.hEF 1 k
+    simpa [F, Nat.add_comm] using! hS.hEF 1 k
   have hHF : ∀ m k, ρ.op 6 (m + 1) * F k - F k * ρ.op 6 (m + 1) =
       (-2 : ℂ) • F (m + 1 + k) := by
     intro m k
@@ -56,7 +56,7 @@ theorem a2_first_box_graded_with_spectators (p q : ℕ)
     intro m
     exact h.cartan_pos 6 (by decide) _ (by omega)
   have hN : (F 0 ^ (p + 1)) w = 0 := by
-    simpa [F, Module.End.pow_apply] using h.lowering_first
+    simpa [F, Module.End.pow_apply] using! h.lowering_first
   have hk : ∀ r s, 1 ≤ r → p + 1 ≤ r + s →
       (PowerSeries.coeff s (VOA.DeligneAudit.Garland.Fs F ^ r)) w = 0 := by
     intro r s hr hrs

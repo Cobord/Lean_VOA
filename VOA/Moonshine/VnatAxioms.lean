@@ -66,6 +66,9 @@ namespace VOA.Moonshine.VnatAxioms
 open Module (End)
 open VnatBlock SkewIntertwiner Reconstruction InvForm SkewAdjoint VertexOperatorAlgebra
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## The genuine `W̄` as a linear map, and the block vertex map -/
 
 /-- `t ↦ W̄(t, z)` as a linear map. -/
@@ -236,15 +239,15 @@ theorem htt_of_span {κ : Type*} (g : κ → TP) (hg : Submodule.span ℂ (Set.r
   intro t t'
   refine TP_induction g hg (fun s => Local (YnatT leechWbar s) (YnatT leechWbar t')) ?_ ?_ ?_
     (fun i => hright i t') t
-  · simp only
+  · try simp only
     rw [YnatT_zero]
     exact Reconstruction.Local.zero_left _
   · intro a b ha hb
-    simp only at ha hb ⊢
+    try simp only at ha hb ⊢
     rw [YnatT_add]
     exact Reconstruction.Local.add_left ha hb
   · intro c a ha
-    simp only at ha ⊢
+    try simp only at ha ⊢
     rw [YnatT_smul]
     exact Reconstruction.Local.symm (Reconstruction.Local.smulR c (Reconstruction.Local.symm ha))
 

@@ -34,14 +34,14 @@ theorem submodule_eq_bot_of_bottom_disjoint
           ∈ K.carrier ⊓ N.weight h :=
         ⟨N.component_mem_of_graded K (N.submodule_isGraded K) hk h,
           (DirectSum.decompose N.weight k h).property⟩
-      simpa only [hK, Submodule.mem_bot] using hm
+      simpa only [hK, Submodule.mem_bot] using! hm
     have he0 := congrArg (fun z => ((DirectSum.decompose N.weight z h : N.weight h) : E)) he
     dsimp only at he0
     rw [DirectSum.decompose_add, DirectSum.add_apply, AddMemClass.coe_add,
       DirectSum.decompose_of_mem_same N.weight hx, hk0, zero_add] at he0
     exact he0 ▸ N.component_mem_of_graded Q (N.submodule_isGraded Q) hq h)
   have hd := hcompl.inf_eq_bot
-  simpa only [hQ, inf_top_eq] using hd
+  simpa only [hQ, inf_top_eq] using! hd
 
 /-- Complete reducibility removes the maximal bottom-trivial submodule. -/
 theorem maxJ_eq_bot_of_completelyReducible

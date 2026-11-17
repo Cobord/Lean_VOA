@@ -72,33 +72,27 @@ theorem integrand_beta_partial_omissions (r q M d : ℕ) (hd : d≤r*(q-1)) :
 selected actual oscillator coefficients. -/
 theorem auxiliary_sum_apply {r : ℕ} {I : Type*} (S : Finset I)
     (P : I → Auxiliary r) (g : Fin r → ℤ) :
-    (∑ i∈S,P i) g=∑ i∈S,P i g := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simp only [Finset.sum_empty]; rfl
-  | @insert i S hi ih =>
-      rw [Finset.sum_insert hi,Finset.sum_insert hi]
-      change P i g+(∑ j∈S,P j) g=_
-      rw [ih]
+    (∑ i∈S,P i).coeff g=∑ i∈S,(P i).coeff g := by
+  rw [AddMonoidAlgebra.coeff_sum,Finsupp.finsetSum_apply]
 
 /-- An actual beta partial of the screening vector equals the finite sum
 of selected omitted-factor expressions. The depth is inside the cutoff. -/
 theorem state_beta_partial_omissions (r q M d : ℕ) (hd : d≤r*(q-1)) :
     pderiv (0,d) (state r q M)=
       ∑ i : Fin r,((single ((d : ℤ) • unitExponent r i) 1 : Auxiliary r)*
-        omittedIntegrand r q M i) (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
+        omittedIntegrand r q M i).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   rw [state,← oscillatorPartial_apply,integrand_beta_partial_omissions r q M d hd,
     auxiliary_sum_apply]
 
 /-- The first beta annihilation mode is exactly the sum of the selected
 omitted integrands, with no auxiliary monomial shift. -/
 theorem state_beta_one_omissions (r q M : ℕ) :
-    bD 1 (state r q M)=∑ i : Fin r,omittedIntegrand r q M i
+    bD 1 (state r q M)=∑ i : Fin r,(omittedIntegrand r q M i).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ)) := by
   rw [bD_of_pos (by omega : (1 : ℤ)≤1),dV_apply]
   have h := state_beta_partial_omissions r q M 0 (by omega)
   simpa only [Int.sub_self,Int.toNat_zero,Nat.cast_zero,zero_smul,
-    ← AddMonoidAlgebra.one_def,one_mul] using h
+    ← AddMonoidAlgebra.one_def,one_mul] using! h
 
 end
 end VOA.Wak.Screening

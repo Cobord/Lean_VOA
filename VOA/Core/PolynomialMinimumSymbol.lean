@@ -37,12 +37,12 @@ theorem Symbol.component {d : ℤ} {P Q : MvPolynomial σ ℂ} (h : Symbol w d P
   ext e
   rw [coeff_weightedHomogeneousComponent]
   split_ifs with he
-  · have hr : coeff e (P-Q)=0 := by
+  · have hr : (P-Q).coeff e=0 := by
       by_contra hc
       have hb := (mem_iff _).mp h.remainder e hc
       rw [he] at hb
       omega
-    simpa only [coeff_sub,sub_eq_zero] using hr
+    simpa only [MvPolynomial.coeff_sub,sub_eq_zero] using hr
   · exact (h.homogeneous.coeff_eq_zero e he).symm
 
 /-- Independent minimum symbols imply independent polynomials, even

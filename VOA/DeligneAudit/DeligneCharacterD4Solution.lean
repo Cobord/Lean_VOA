@@ -91,7 +91,7 @@ theorem Ikernel_coeff_one (hF : D4F.D4FiniteIdentity) : coeff 1 Ikernel = 0 := b
   have h' : (1 - rr) • coeff 1 Ikernel = 0 := by
     rw [sub_smul, one_smul, Algebra.smul_def, h]
   rcases smul_eq_zero.mp h' with h0 | h0
-  · exact absurd h0 (by simpa using rr_pow_ne_one 1 one_ne_zero)
+  · exact absurd h0 (by simpa using! rr_pow_ne_one 1 one_ne_zero)
   · exact h0
 
 theorem Ikernel_coeff_odd (hF : D4F.D4FiniteIdentity) (k : ℕ) :

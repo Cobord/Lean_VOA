@@ -28,7 +28,7 @@ theorem IsJacobiFamily.commutator (hF : IsJacobiFamily A₁ A₂ A₃ F)
       ∑ᶠ i : ℤ, cbz p i • F (p+n-i) (mode (A₁.YM u) i x) y := by
   have h := hF.jacobi u x y 0 p n
   rw [finsum_eq_single _ (0:ℤ)] at h
-  · simpa [cbz_zero_left,negOnePow] using h
+  · simpa [cbz_zero_left,negOnePow] using! h
   · intro i hi
     simp [cbz_zero_left,hi]
 

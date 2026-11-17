@@ -26,7 +26,7 @@ theorem thetaResidueDivisor_summable (N a : ℕ) {u q : ℂ}
     (hu : ‖u‖ = 1) (hq : ‖q‖ < 1) :
     Summable (fun n : ℕ+ => thetaResidueDivisor N a u n * q ^ (n : ℕ)) := by
   have hs : Summable (fun n : ℕ => (n : ℝ) * ‖q‖ ^ n) := by
-    simpa using summable_norm_pow_mul_geometric_of_norm_lt_one 1 (r := ‖q‖) (by simpa using hq)
+    simpa using! summable_norm_pow_mul_geometric_of_norm_lt_one 1 (r := ‖q‖) (by simpa using! hq)
   apply (hs.subtype (fun n : ℕ => 0 < n)).of_norm_bounded
   intro n
   rw [norm_mul, norm_pow]
@@ -90,7 +90,7 @@ theorem thetaExp_torsion_parameter (N a b : ℕ) (τ : ℍ) :
 theorem thetaExp_tau_qParam {N : ℕ} (hN : 0 < N) (τ : ℍ) :
     thetaExp τ = Function.Periodic.qParam (N : ℝ) τ ^ N := by
   have hn : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
-  simpa [hn] using thetaExp_torsion_parameter N N 0 τ
+  simpa [hn] using! thetaExp_torsion_parameter N N 0 τ
 
 theorem thetaExp_complement_parameter {N : ℕ} (hN : 0 < N) (a b : Fin N) (τ : ℍ) :
     thetaExp ((τ : ℂ) - ((a.val : ℂ) / N * τ + (b.val : ℂ) / N)) =
@@ -139,14 +139,14 @@ theorem weightOneLambertFourier {N : ℕ} (hN : 0 < N) : WeightOneLambertFourier
       exact hb (Nat.eq_zero_of_dvd_of_lt hdiv b.isLt)
     have hpos : thetaResidueLambert N a.val u q = thetaLambert (q ^ N) (u * q ^ N) := by
       rw [ha]
-      simpa using thetaResidueLambert_eq_thetaLambert hN hN (le_refl N) u q
+      simpa using! thetaResidueLambert_eq_thetaLambert hN hN (le_refl N) u q
     have hc := weightOne_boundary_constant hN a b ha hb
     rw [thetaExp_div_nat] at hc
     change weightOneIntegralCoeff N ζ a b 0 / weightOneScale N ζ a b =
       (1 + u) / (2 * (1 - u)) at hc
     have hc' : weightOneIntegralCoeff N ζ a b 0 =
         weightOneScale N ζ a b * ((1 + u) / (2 * (1 - u))) := by
-      simpa only [mul_comm] using (div_eq_iff (weightOneScale_ne_zero hN hζ a b)).mp hc
+      simpa only [mul_comm] using! (div_eq_iff (weightOneScale_ne_zero hN hζ a b)).mp hc
     rw [hbase, hpos, hneg, hc', ha]
     simp only [Nat.cast_zero, zero_div, sub_zero, pow_zero, mul_one]
     rw [thetaLambert_boundary hQ hu]

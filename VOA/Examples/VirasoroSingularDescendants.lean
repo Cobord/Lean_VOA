@@ -24,10 +24,13 @@ theorem creationDescendant_mem_grading (c : ℂ) (w : List ℕ) {q : ℤ}
     (v : VirUniv c) (hv : v ∈ gradingVir c q) :
     creationDescendant c w v ∈ gradingVir c (q+(energyVir w:ℤ)) := by
   induction w with
-  | nil => simpa [creationDescendant] using hv
+  | nil => simpa [creationDescendant] using! hv
   | cons i w ih =>
     have hh := Lop_neg_maps_grading c i ih
-    convert hh using 1 <;> simp only [energyVir_cons, Nat.cast_add, Nat.cast_ofNat] <;> ring
+    have he : q + (energyVir (i :: w) : ℤ) = q + (energyVir w : ℤ) + ((i : ℤ) + 2) := by
+      simp only [energyVir_cons, Nat.cast_add, Nat.cast_ofNat]; ring
+    rw [he]
+    exact hh
 
 /-- The descendant convention agrees with the general Virasoro word action,
 so the already proved adjoint-word radical theorem applies directly. -/
@@ -38,7 +41,7 @@ theorem creationDescendant_eq_virWord (c : ℂ) (w : List ℕ) (v : VirUniv c) :
   | nil => rfl
   | cons i w ih =>
     simpa only [creationDescendant, LinearMap.comp_apply, List.map_cons,
-      virWord, Module.End.mul_apply, virasoroVOA_L_eq_Lop] using congrArg (Lop c (-(i:ℤ)-2)) ih
+      virWord, Module.End.mul_apply, virasoroVOA_L_eq_Lop] using! congrArg (Lop c (-(i:ℤ)-2)) ih
 
 /-- Every creation descendant of a positive-weight singular state pairs to
 zero with every vacuum-module state. Independence is supplied separately. -/
@@ -56,7 +59,7 @@ noncomputable def gradedCreationDescendant (c : ℂ) {n : ℕ}
     gradingVir c ((n+m:ℕ):ℤ) :=
   ⟨creationDescendant c w.1 v, by
     have hh := creationDescendant_mem_grading c w.1 v v.property
-    simpa [w.property.2] using hh⟩
+    simpa [w.property.2] using! hh⟩
 
 /-- A nonzero starting state gives exactly one independent member for each
 partition of the added energy into parts at least two. No quotient or
@@ -84,8 +87,8 @@ theorem gradedCreationDescendant_gram_row (c : ℂ) {n : ℕ} (hn : 0 < n)
   have he : ∀ k, (partitionGramPolynomial (n+m) k j).eval c =
       (VirGram4.canB c).form (b k : VirUniv c) (b j : VirUniv c) := by
     intro k
-    simpa only [Matrix.map_apply, GramMat.gramMatrix_apply, b] using
-      congrArg (fun M => M k j) (partitionGramPolynomial_eval c (n+m))
+    exact (congrArg (fun M => M k j) (partitionGramPolynomial_eval c (n+m))).trans
+      (GramMat.gramMatrix_apply (VirGram4.canB c) ((n+m : ℕ) : ℤ) (gradedBasis c (n+m)) k j)
   simp_rw [he]
   have hs := congrArg (gradingVir c ((n+m:ℕ):ℤ)).subtype
     (b.sum_equivFun (gradedCreationDescendant c v m i))
@@ -93,7 +96,7 @@ theorem gradedCreationDescendant_gram_row (c : ℂ) {n : ℕ} (hn : 0 < n)
   have hh := congrArg (fun x => (VirGram4.canB c).form x (b j : VirUniv c)) hs
   have hz := creationDescendant_singular_pairing_zero c hn v v.property h1 h2 i.1 (b j)
   simpa only [map_sum, LinearMap.sum_apply, map_smul, LinearMap.smul_apply,
-    smul_eq_mul] using hh.trans hz
+    smul_eq_mul] using! hh.trans hz
 
 /-- A nonzero singular state at level n forces at least p₂(m) factors X-c
 in the actual determinant at level n+m. This is a proved uniform descendant

@@ -36,10 +36,10 @@ theorem gtLastEulerPair_coeff (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ
 
 /-- Take the w constant term separately in every formal bidegree. -/
 def gtLastCTBi (F : GTBiSeries (GTLastLaurent R)) : GTBiSeries R :=
-  PowerSeries.mk fun m => PowerSeries.mk fun n => (gtBiCoeff n m F) 0
+  PowerSeries.mk fun m => PowerSeries.mk fun n => (gtBiCoeff n m F).coeff 0
 
 @[simp] theorem gtLastCTBi_coeff (F : GTBiSeries (GTLastLaurent R)) (n m : ℕ) :
-    gtBiCoeff n m (gtLastCTBi F) = (gtBiCoeff n m F) 0 := by
+    gtBiCoeff n m (gtLastCTBi F) = (gtBiCoeff n m F).coeff 0 := by
   simp [gtLastCTBi, gtBiCoeff]
 
 /-- The constant term of the actual last-coordinate Euler factors is Gamma. -/
@@ -52,12 +52,12 @@ theorem gtLastEulerPair_ct (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ) :
   change gtBiCoeff n m (gtLastCTBi (gtLastEulerPair q h x y)) =
     gtBiCoeff n m (gtMixedGamma q h x y)
   rw [gtLastCTBi_coeff, gtLastEulerPair_coeff, gtMixedGamma, gtBiCoeff_diagonal]
-  simp only [AddMonoidAlgebra.single_apply, sub_eq_zero, Nat.cast_inj]
+  simp only [AddMonoidAlgebra.coeff_single, Finsupp.single_apply, sub_eq_zero, Nat.cast_inj]
   by_cases hn : n = m <;> simp [hn]
 
 theorem gtBiCoeff_mul (F G : GTBiSeries R) (n m : ℕ) :
-    gtBiCoeff n m (F * G) = ∑ b ∈ Finset.antidiagonal m,
-      ∑ a ∈ Finset.antidiagonal n,
+    gtBiCoeff n m (F * G) = ∑ b ∈ Finset.HasAntidiagonal.antidiagonal m,
+      ∑ a ∈ Finset.HasAntidiagonal.antidiagonal n,
         gtBiCoeff a.1 b.1 F * gtBiCoeff a.2 b.2 G := by
   simp [gtBiCoeff, coeff_mul, map_sum]
 
@@ -79,7 +79,7 @@ theorem gtLastEulerPair_mul_ct (q : R) (h : PochhammerUnits q) (x y : ℕ → R�
       (gtLastCTBi (gtLastEulerPair q h x y * F.map (PowerSeries.map gtLastC))) =
     gtBiCoeff n m (gtMixedGamma q h x y * F)
   rw [gtLastCTBi_coeff, gtBiCoeff_mul, gtBiCoeff_mul]
-  change (∑ b ∈ Finset.antidiagonal m, ∑ a ∈ Finset.antidiagonal n,
+  change (∑ b ∈ Finset.HasAntidiagonal.antidiagonal m, ∑ a ∈ Finset.HasAntidiagonal.antidiagonal n,
     gtBiCoeff a.1 b.1 (gtLastEulerPair q h x y) *
       gtBiCoeff a.2 b.2 (F.map (PowerSeries.map gtLastC))).coeff 0 = _
   simp only [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
@@ -89,7 +89,7 @@ theorem gtLastEulerPair_mul_ct (q : R) (h : PochhammerUnits q) (x y : ℕ → R�
   intro a _
   rw [gtLastEulerPair_coeff, gtBiCoeff_map, gtLastC_apply,
     AddMonoidAlgebra.single_mul_single, add_zero, gtMixedGamma, gtBiCoeff_diagonal]
-  simp only [AddMonoidAlgebra.coeff, AddMonoidAlgebra.single_apply,
+  simp only [AddMonoidAlgebra.coeff_single, Finsupp.single_apply,
     sub_eq_zero, Nat.cast_inj]
   by_cases he : a.1 = b.1 <;> simp [he]
 
@@ -97,7 +97,7 @@ theorem gtLastEulerPair_mul_ct (q : R) (h : PochhammerUnits q) (x y : ℕ → R�
 theorem gtLastEulerPair_mul_ct_coeff (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ)
     (F : GTBiSeries R) (n m : ℕ) :
     (gtBiCoeff n m
-      (gtLastEulerPair q h x y * F.map (PowerSeries.map gtLastC))) 0 =
+      (gtLastEulerPair q h x y * F.map (PowerSeries.map gtLastC))).coeff 0 =
       ∑ k ∈ Finset.range (min n m + 1),
         (gtOneRowCoeff q h x 2 k * gtOneRowCoeff q h y 2 k) *
           gtBiCoeff (n - k) (m - k) F := by

@@ -44,7 +44,7 @@ theorem fThree_zeroXs_u_yz
       have hd := fThree_radicalWord ρ w m h r ((1, 0) :: (2, u) :: l)
       have ht := fThreeDerivative_yz_zero ρ r l w hl
       simpa [zeroXs, fThreeDerivative, fThreeLetter, radicalWord,
-        wordOp, radicalColour, ht, sub_eq_add_neg] using hd
+        wordOp, radicalColour, ht, sub_eq_add_neg] using! hd
   | succ n ih =>
       have hc := congrArg (fun T : Module.End ℂ V =>
         T (radicalWord ρ w (zeroXs (n + 1) ++ (2, u) :: l)))
@@ -67,7 +67,7 @@ theorem fThree_zeroXs_u_yz
                 (radicalWord ρ w (zeroXs (n + 1) ++ (2, u) :: l))) =
             -ρ.op (25 : Fin 28) r
               (radicalWord ρ w (zeroXs (n + 1) ++ (2, u) :: l)) := by
-          simpa [LinearMap.sub_apply, Module.End.mul_apply] using hc
+          simpa [LinearMap.sub_apply, Module.End.mul_apply] using! hc
         calc
           _ = (ρ.op (17 : Fin 28) r
               (ρ.op (22 : Fin 28) 0
@@ -143,11 +143,11 @@ theorem uup_zeroXs_yz_higher
   rw [fThree_zeroXs_u_yz ρ w m h n r u l hl] at hf
   have hneg : -((n + 1 : ℕ) : ℂ) •
       radicalWord ρ w ((3, r) :: zeroXs n ++ (2, u) :: l) ∈ N := by
-    simpa only [sub_add_cancel] using N.add_mem hf hyMem
+    simpa only [sub_add_cancel] using! N.add_mem hf hyMem
   have hcoef : (-((n + 1 : ℕ) : ℂ)) ≠ 0 := by
     exact neg_ne_zero.mpr (by exact_mod_cast Nat.succ_ne_zero n)
   have hscaled := N.smul_mem (-((n + 1 : ℕ) : ℂ))⁻¹ hneg
-  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using hscaled
+  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using! hscaled
 
 end VOA.DeligneAudit.D4Levi
 

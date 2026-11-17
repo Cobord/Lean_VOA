@@ -72,7 +72,7 @@ theorem selectiveCartanWord_maps_key
     selectiveCartanWord ρ ps v ∈
       keyLayer ρ w (keyShift (ps.map Prod.snd).sum k) := by
   induction ps with
-  | nil => simpa [selectiveCartanWord, keyShift] using hv
+  | nil => simpa [selectiveCartanWord, keyShift] using! hv
   | cons p ps ih =>
       have hp : 0 < p.2 := hps p (by simp)
       have htail : ∀ q ∈ ps, 0 < q.2 := by
@@ -80,7 +80,7 @@ theorem selectiveCartanWord_maps_key
         exact hps q (by simp [hq])
       have hstep := selectiveCartan_maps_key ρ w m h p.1 p.2 hp
         (keyShift (ps.map Prod.snd).sum k) (ih htail)
-      simpa [selectiveCartanWord, keyShift_add] using hstep
+      simpa [selectiveCartanWord, keyShift_add] using! hstep
 
 end VOA.DeligneAudit.D4Levi
 

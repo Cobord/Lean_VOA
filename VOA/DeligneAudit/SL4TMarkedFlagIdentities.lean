@@ -171,7 +171,7 @@ theorem pair_boundary_mem_of_product (V : Finset (Fin n)) (hV : ∏ i ∈ V, x i
     intro i hi
     simp only [Finset.mem_compl, Finset.mem_insert, Finset.mem_singleton, not_or]
     exact ⟨fun h => ha (h ▸ hi), fun h => hu (h ▸ hi)⟩⟩)
-  simpa only [show N + k - 1 + 1 = N + k by omega] using h
+  simpa only [show N + k - 1 + 1 = N + k by omega] using! h
 
 /-- Cutoff exchange by size: if `a^N = 0` and there are at most `N + k` roots, then
 `a^(N-1) u^k ∈ (u^(k+1))`. -/
@@ -181,7 +181,7 @@ theorem pair_boundary_mem_of_card (a u : Fin n) (hau : a ≠ u) (N k : ℕ) (hN 
   apply twoRoot_boundary_power_mem (x a) (x u) N k hN hx
   have h := pairComplete_vanish x hE a u hau (N + k - 1) (Or.inl (by
     rw [pairComplement_card a u hau, Fintype.card_fin]; omega))
-  simpa only [show N + k - 1 + 1 = N + k by omega] using h
+  simpa only [show N + k - 1 + 1 = N + k by omega] using! h
 
 end Exchange
 
@@ -190,7 +190,7 @@ end Exchange
 theorem pair_middle_zero (x y : A) (h : ℕ) (hx : x ^ (h + 1) = 0) (hy : y ^ (h + 1) = 0)
     (hs : ∑ e ∈ Finset.range (2 * h + 1), x ^ e * y ^ (2 * h - e) = 0) : x ^ h * y ^ h = 0 := by
   rw [Finset.sum_eq_single h] at hs
-  · simpa only [show 2 * h - h = h by omega] using hs
+  · simpa only [show 2 * h - h = h by omega] using! hs
   · intro e _ hne
     by_cases he : h < e
     · rw [pow_eq_zero_of_le (by omega) hx, zero_mul]
@@ -230,7 +230,7 @@ theorem powerSum_boundary_mem (pU pV : ℕ → A) (u : A) (M K h : ℕ) (hh : 2 
     rw [hM', hsplit, map_sub, map_neg, map_pow, sub_mul, neg_mul, ← pow_add,
       show h - 1 + K = M by omega, pow_eq_zero_of_le (show K + 1 ≤ M by omega) hu,
       sub_zero, neg_eq_zero] at hr
-    simpa only [map_mul, map_pow] using hr
+    simpa only [map_mul, map_pow] using! hr
   · intro e he hne
     by_cases hle : h ≤ e
     · rw [htail e hle, map_neg, map_pow, neg_mul, ← pow_add,

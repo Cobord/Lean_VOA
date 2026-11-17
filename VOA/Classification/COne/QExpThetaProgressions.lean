@@ -14,7 +14,7 @@ theorem theta_positive_residue_progression {N a t : ℕ}
   have hdiv := Nat.mod_add_div t N
   by_cases he : a = N
   · subst a
-    have hm : t % N = 0 := by simpa using hmod
+    have hm : t % N = 0 := by simpa using! hmod
     have hd : N * (t / N) = t := by omega
     have hq : 0 < t / N := by
       apply Nat.pos_of_ne_zero

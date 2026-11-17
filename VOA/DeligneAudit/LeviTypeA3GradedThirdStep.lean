@@ -39,13 +39,13 @@ theorem a3_three_box_word_one_step (a b c : ℕ)
       Finsupp.degree_apply, Finsupp.sum, Prod.fst_sum] using
       congrArg Prod.fst hwf
   have hsumf : fs.sum = r := by
-    simpa [fs, a2_lst_sum] using congrArg Prod.snd hwf
+    simpa [fs, a2_lst_sum] using! congrArg Prod.snd hwf
   have hleng : gs.length = d₂ := by
     simpa [gs, a2_lst_length, Finsupp.weight_apply, om,
       Finsupp.degree_apply, Finsupp.sum, Prod.fst_sum] using
       congrArg Prod.fst hwg
   have hsumg : gs.sum = s := by
-    simpa [gs, a2_lst_sum] using congrArg Prod.snd hwg
+    simpa [gs, a2_lst_sum] using! congrArg Prod.snd hwg
   have hstep := a3_pair_word_one_step ρ w a b c h 1 gs zs fs
   have hbox : a3PairBoxSpan ρ w 1 gs fs c zs.length zs.sum ≤
       a3EffectiveTarget ρ w a b c k := by
@@ -61,7 +61,7 @@ theorem a3_three_box_word_one_step (a b c : ℕ)
     simpa only [a3ConvA, a3ConvB, a3ConvSpectator, weightABC,
       hleng, hsumg, hlenf, hsumf, k, mul_assoc,
       Module.End.mul_apply, Nat.add_assoc, Nat.add_comm,
-      Nat.add_left_comm] using hstep
+      Nat.add_left_comm] using! hstep
   rw [a3_rotate_radical_words ρ w fs gs zs] at hstep'
   exact (sup_le (hbox.trans le_sup_left) le_sup_right) hstep'
 

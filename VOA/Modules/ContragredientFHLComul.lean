@@ -8,6 +8,9 @@ open Module (End Dual)
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝒱 : Type*} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
 /-- **Single-step homogeneous `L₁`-bracket, vector form.**  For `u ∈ 𝒱_p`,

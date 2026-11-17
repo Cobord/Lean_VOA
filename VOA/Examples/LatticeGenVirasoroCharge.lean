@@ -226,7 +226,8 @@ theorem TrecGen_Yeαvec_on_state (hPos : L.PosDef) (β : L.carrier) (s : ℤ) (�
             - EEVec L β (s - L.form β γ) (HeisenbergN.LvirN (rank L) 1 (-1) p)
             + chargeOsc L (β + γ) (-1) (EEVec L β (s - L.form β γ) p)
             - EEVec L β (s - L.form β γ) (chargeOsc L γ (-1) p) from by abel,
-      hp, show s + 1 - L.form β γ = (s - L.form β γ) + 1 from by ring, LinearMap.smul_apply]
+      hp, show s + 1 - L.form β γ = (s - L.form β γ) + 1 from by ring]
+    try rw [LinearMap.smul_apply]
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply, Yeαvec_tmul, map_smul,
     TrecGen_tmul, TrecGen_tmul, map_add, Yeαvec_tmul, Yeαvec_tmul, smul_add,
     ← latStateGen_smul_boson, ← latStateGen_smul_boson, ← latStateGen_smul_boson,

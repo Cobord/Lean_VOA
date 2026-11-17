@@ -5,6 +5,8 @@ import VOA.Examples.VirasoroVacuumFusionRecursion
 channels. All off-diagonal terms and field-weight shifts are retained. -/
 set_option Elab.async false
 set_option maxSynthPendingDepth 3
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 namespace VOA.Classification.COne.OrbIcoV
 open VOA InverseDS.VirasoroVerma
@@ -44,7 +46,7 @@ theorem uniformProbe_source_all (c h : ℂ) (f : ℕ → Verma c h) (r : ℕ) :
     have hh := uniformProbe_creation c h 0 (f 0)
     norm_num at hh ⊢
     exact hh
-  · simpa using uniformProbe_source c h f r
+  · simpa using! uniformProbe_source c h f r
 
 /-- The second descendant's full scalar action, including its two initial
 boundary coefficients. The field-weight shift is retained exactly. -/
@@ -197,7 +199,7 @@ theorem wardSourceAt_uniform (c h b t a : ℂ) (N : ℕ)
     uniformProbe c h ((wardSourceAt c h b t a N f).val r)=
       wardBSAUniformSource h b t a N N (fun j => uniformProbe c h (f.val j)) r := by
   have hh := wardBSASourceOperator_uniform c h b t a N N (wardFieldLift c h a f) r
-  simpa [wardSourceAt,wardFieldLift] using hh
+  simpa [wardSourceAt,wardFieldLift] using! hh
 
 
 end VOA.Classification.COne.OrbIcoV

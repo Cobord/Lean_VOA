@@ -9,6 +9,10 @@ attribute [local instance] Classical.propDecidable
 open scoped BigOperators
 namespace VOA.Moonshine.ConwayNorton
 open Module
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {g M : Type*} [LieRing g] [LieAlgebra ℂ g] [AddCommGroup M] [Module ℂ M]
 
 def rootActionContraction (ρ : g →ₗ⁅ℂ⁆ End ℂ M) : g →ₗ[ℂ] g →ₗ[ℂ] End ℂ M :=

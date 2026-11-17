@@ -34,8 +34,7 @@ def slotOp (x : Fin S.n) (i : Fin m) : TPs S m →ₗ[ℂ] TPs S m where
   map_smul' a p := by
     funext t
     simp only [Pi.smul_apply, RingHom.id_apply, smul_eq_C_mul, Finset.mul_sum, mul_neg]
-    congr 1
-    refine Finset.sum_congr rfl fun c _ => ?_
+    refine congrArg Neg.neg (Finset.sum_congr rfl fun c _ => ?_)
     ring
 
 theorem loopOp_eq_sum_slot (x : Fin S.n) (r : ℕ) (v : TPs S m) :
@@ -48,8 +47,7 @@ theorem slotOp_psmul (x : Fin S.n) (i : Fin m) (p : Pm m) (v : TPs S m) :
     slotOp x i (p • v) = p • slotOp x i v := by
   funext t
   simp only [slotOp, LinearMap.coe_mk, AddHom.coe_mk, psmul_apply, Finset.mul_sum, mul_neg]
-  congr 1
-  refine Finset.sum_congr rfl fun c _ => ?_
+  refine congrArg Neg.neg (Finset.sum_congr rfl fun c _ => ?_)
   ring
 
 theorem loopOp_psmul (x : Fin S.n) (r : ℕ) (p : Pm m) (v : TPs S m) :
@@ -197,7 +195,7 @@ theorem slotOp_emb (x : Fin S.n) (i : Fin m) (t : Fin m → Fin S.n) (v : Fin S.
 theorem emb_wordA_mem (i : Fin m) (t : Fin m → Fin S.n) (Q : Pm m)
     (hQ : Q • emb i t (Pi.single S.c₀ 1) ∈ MP S m) :
     ∀ l : List (Fin S.n), Dslot i ^ l.length • Q • emb i t (wordA S.f l (Pi.single S.c₀ 1)) ∈ MP S m
-  | [] => by simpa using hQ
+  | [] => by simpa using! hQ
   | (x :: l) => by
       have h := step_MP x i (emb_wordA_mem i t Q hQ l)
       simp only [List.length_cons]
@@ -232,7 +230,7 @@ theorem slot_all (i : Fin m) (t : Fin m → Fin S.n) (Q : Pm m)
         ∈ MP S m := by
       intro j
       induction j with
-      | zero => simpa using h
+      | zero => simpa using! h
       | succ j ih => rw [← add_assoc]; exact mono_MP i ih
     have := hpow k
     rwa [← hk, smul_smul] at this

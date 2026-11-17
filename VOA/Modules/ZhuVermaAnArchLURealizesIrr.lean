@@ -67,8 +67,7 @@ noncomputable def pRealizesLinEquiv (P : LWModule W)
     (hP : P.IsIrreducibleLW) (x : DJCarrier W (pBotAmMod P)) :
     pRealizesLinEquiv P Pr hU hL0 hP (Submodule.Quotient.mk x) = pPhiBar P x := by
   unfold pRealizesLinEquiv
-  rw [LinearEquiv.trans_apply, Submodule.quotEquivOfEq_mk]
-  rfl
+  erw [LinearEquiv.trans_apply, Submodule.quotEquivOfEq_mk]
 
 /-- **`L(Ω(P)) ≅ P` as a `𝒱`-module isomorphism** — `realizesIrr` for the single irreducible `P`
 (DJ Thm 4.13).  Carries `Pr`, `hU`, `hL0` and the `OrdVModule.finrank` obligation `hfin`. -/

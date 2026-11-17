@@ -222,7 +222,7 @@ theorem castQZ_opAQ (hn : S.n = n) (x : Fin S.n) (L : QV) (hL : qRange n L = tru
   funext a b
   simp only [castQZ, opAQ, opAZ, qget_filter]
   have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by
-    simpa [qRange] using hL
+    simpa [qRange] using! hL
   clear hL
   induction L with
   | nil => simp [qget]
@@ -244,7 +244,7 @@ theorem castQZ_opBQ (hn : S.n = n) (x : Fin S.n) (L : QV) (hL : qRange n L = tru
   funext a b
   simp only [castQZ, opBQ, opBZ, qget_filter]
   have hL' : ∀ t ∈ L, t.1 < n ∧ t.2.1 < n := by
-    simpa [qRange] using hL
+    simpa [qRange] using! hL
   clear hL
   induction L with
   | nil => simp [qget]

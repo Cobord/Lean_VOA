@@ -13,7 +13,7 @@ theorem two_outer_mode_one_v (i : Fin 12)
     (hi : i.val < 4) (hne : i ≠ 2) :
     (ρPTE 2).op (negativeIndex i) 0 1 (pTE 2) = 0 := by
   have hv : (ρPTE 2).op (negativeIndex i) 0 0 (pTE 2) = 0 := by
-    simpa [outer_exp_zero i hi hne] using two_seed_lowering_v_nil i hi
+    simpa [outer_exp_zero i hi hne] using! two_seed_lowering_v_nil i hi
   have hh := two_generator_cartan_mode_one (negativeCartan i)
     (negativeCartan_lt_four i)
   have hc := (ρPTE 2).comm (negativeCartan i) (negativeIndex i)
@@ -22,7 +22,7 @@ theorem two_outer_mode_one_v (i : Fin 12)
       D4sector.f (negativeCartan i) (negativeIndex i) c •
         (ρPTE 2).op c 0 1 (pTE 2)) = 0 := by
     rw [if_pos (by omega)] at hc
-    simpa [hv, hh] using hc.symm
+    simpa [hv, hh] using! hc.symm
   have htable : (∑ c : Fin 28,
       D4sector.f (negativeCartan i) (negativeIndex i) c •
         (ρPTE 2).op c 0 1 (pTE 2)) =
@@ -42,11 +42,11 @@ theorem two_outer_one_comm (i : Fin 12) (s : ℕ) (x : PTE 2) :
       ((ρPTE 2).op (negativeIndex i) 0 1 x) := by
   have ht : ∀ i : Fin 12, ∀ e : Fin 28,
       fZ br (negativeIndex i) 27 e = 0 := by decide +kernel
-  have hf : ∀ e : Fin 28,
+  have hf : ∀ e : Fin D4sector.n,
       D4sector.f (negativeIndex i) D4sector.c₀ e = 0 := by
     intro e
     change (fZ br (negativeIndex i) 27 e : ℂ) = 0
-    rw [ht]
+    rw [ht i e]
     simp
   have hc := (ρPTE 2).comm (negativeIndex i) D4sector.c₀ 0 1 1 s x
   simp only [hf, zero_smul, Finset.sum_const_zero, ite_self] at hc
@@ -60,7 +60,7 @@ theorem twoGen_outer_fusion (s : ℕ) (i : Fin 12)
     change (ρPTE 2).op (negativeIndex i) 0 1
       ((ρPTE 2).op D4sector.c₀ 1 s (pTE 2)) = 0
     rw [two_outer_one_comm, hv, map_zero]
-  simpa [twoCurrent] using hz
+  simpa [twoCurrent] using! hz
 
 theorem twoOne_outer_fusion (i : Fin 12)
     (hi : i.val < 4) (hne : i ≠ 2) :

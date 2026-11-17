@@ -468,7 +468,9 @@ lemma exists_tendsto_power_family_of_neg (hA0 : A < 0) (hA1 : -1 < A) (hK : K �
       simpa using this
     have h2 : Tendsto (fun s : ℝ => ((1 : ℂ) + s * Complex.I) ^ (A : ℂ)) (𝓝[>] 0) (𝓝 1) := by
       have := (continuousAt_cpow_const (b := (A : ℂ)) Complex.one_mem_slitPlane).tendsto.comp h1
-      simpa [Complex.one_cpow] using this
+      first
+        | simpa [Complex.one_cpow] using this
+        | simpa [Complex.one_cpow, Function.comp_def] using this
     have h3 := (h2.const_mul K).add_const (M₀ : ℂ)
     simpa using h3
   · -- the line through `c₀ − 1`

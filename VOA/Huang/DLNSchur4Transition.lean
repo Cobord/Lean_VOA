@@ -35,7 +35,9 @@ theorem gaussLift_lower_torus_upper (X Y : Multiplicative R →* E)
     gaussLift X Y (lowerRoot r * torus u * upperRoot s) =
       Y (Multiplicative.ofAdd r) * torusWord X Y u * X (Multiplicative.ofAdd s) := by
   rw [gaussLift_of_unit_top_left X Y _ u (by
+    simp only [Matrix.SpecialLinearGroup.coe_mul]
     simp [lowerRoot, torus, upperRoot, Matrix.mul_apply, Fin.sum_univ_two])]
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
   simp [lowerRoot, torus, upperRoot, Matrix.mul_apply, Fin.sum_univ_two,
     mul_assoc, mul_comm]
 
@@ -52,9 +54,12 @@ theorem lower_torus_upper_mul_lower_one (r s : R) (u v : Rˣ)
     calc
       _ = (↑u⁻¹ : R) * ((u : R) * (↑u⁻¹ : R)) * ((v : R) * (↑v⁻¹ : R)) := by ring
       _ = _ := by simp
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, upperRoot, Matrix.mul_apply, Fin.sum_univ_two,
-      pow_two, sub_eq_add_neg, mul_add, mul_assoc, mul_comm, he, add_comm, add_left_comm, add_assoc]
+      pow_two, sub_eq_add_neg, mul_add, mul_assoc, mul_comm, he, add_comm, add_left_comm, add_assoc] <;>
+    first | ring1 | linear_combination (r * (u : R)) * Units.mul_inv v
 
 end Charts
 
@@ -176,7 +181,7 @@ theorem gaussLift_mul_lower_one_of_unit_pivots
   let v := u⁻¹ * hb.unit
   have hu : g 0 0 = (u : ZMod n) := (IsUnit.unit_spec ha).symm
   have hb' : (hb.unit : ZMod n) = g 0 0 + g 0 1 := by
-    rw [IsUnit.unit_spec]
+    rw [IsUnit.unit_spec, Matrix.SpecialLinearGroup.coe_mul]
     simp [lowerRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have hv : (v : ZMod n) = 1 + g 0 1 * (↑u⁻¹ : ZMod n) := by
     simp only [v, Units.val_mul, hb', hu, mul_add, Units.mul_inv, mul_comm]

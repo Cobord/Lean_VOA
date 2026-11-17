@@ -164,7 +164,7 @@ def fiberRepM (m : ℕ) : CurrentModule S.f (FibM S m) where
         rw [hsum]
         congr 1
         apply Subtype.ext
-        simpa using h
+        simpa using! h
 
 variable (S) in
 /-- The fibre generator. -/
@@ -380,7 +380,8 @@ theorem linearIndependent_of_eval (w : (Fin m → Fin S.n) → TPs S m) (z0 : Fi
     rw [RingHom.map_det, map_zero] at h1
     have hmat : (MvPolynomial.eval z0).mapMatrix A = Matrix.diagonal fun _ => c := by
       ext t' t
-      simp only [RingHom.mapMatrix_apply, Matrix.map_apply, A, hw, Matrix.diagonal_apply]
+      change MvPolynomial.eval z0 (w t t') = Matrix.diagonal (fun _ => c) t' t
+      rw [hw, Matrix.diagonal_apply]
     rw [hmat, Matrix.det_diagonal, Finset.prod_const] at h1
     exact pow_ne_zero _ hc h1
   have hadj := congrArg (fun v => A.adjugate.mulVec v) hAb
@@ -422,8 +423,9 @@ theorem eval_vt (t t' : Fin m → Fin S.n) :
   classical
   simp only [vt, Finset.sum_apply, map_sum, act, psmul_apply, eval_rename, map_mul]
   rw [Finset.sum_eq_single (1 : Equiv.Perm (Fin m))]
-  · simp only [Equiv.Perm.coe_one, Function.comp_id, eval_lagr, one_mul, deltaT]
-    split_ifs <;> simp
+  · simp only [deltaT]
+    split_ifs with h1 h2 h2 <;>
+      simp_all [Equiv.Perm.coe_one, Function.comp_id, eval_lagr]
   · intro g _ hg
     rw [eval_lagr_perm g hg, zero_mul]
   · simp
@@ -477,7 +479,6 @@ theorem fiberDimM_eventually_zero (hU5 : FusionModuleBoundG S F) :
         have := Finset.sum_le_sum_of_subset (f := fun b => fiberDim (symDeg (K := ℂ) m) (Mdeg S m) b)
           hsub
         have h1 : 1 ≤ fiberDim (symDeg (K := ℂ) m) (Mdeg S m) b := Nat.one_le_iff_ne_zero.mpr hb0
-        simp only at this
         omega
   obtain ⟨B, hB⟩ := key (S.n ^ m + 1)
   have := sum_fiberDimM_le (m := m) hU5 B

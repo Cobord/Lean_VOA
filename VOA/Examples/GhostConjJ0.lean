@@ -54,12 +54,17 @@ abbrev Ppar : Module.End ℂ Sl2GhostSpace := (TensorVA.parGr sl2GhostSVA).koszu
 theorem pair_mem_parity (l0 l1 : SFWord) :
     stWordSF l0 ⊗ₜ[ℂ] stWordSF l1 ∈ ghostPairSVA.parity (len2 l0 + len2 l1) :=
   TensorVA.tmul_mem_tenParity _ _ (stWordSF_mem_evenOdd l0)
-    (by rw [add_sub_cancel_left]; exact stWordSF_mem_evenOdd l1)
+    (by
+      have e : len2 l0 + len2 l1 - ((l0.length : ℕ) : ZMod 2) = len2 l1 := add_sub_cancel_left _ _
+      rw [e]; exact stWordSF_mem_evenOdd l1)
 
 theorem W3_mem_parity (l0 l1 l2 : SFWord) :
     W3 l0 l1 l2 ∈ sl2GhostSVA.parity (len2 l0 + len2 l1 + len2 l2) :=
   TensorVA.tmul_mem_tenParity _ _ (pair_mem_parity l0 l1)
-    (by rw [add_sub_cancel_left]; exact stWordSF_mem_evenOdd l2)
+    (by
+      have e : len2 l0 + len2 l1 + len2 l2 - (len2 l0 + len2 l1) = len2 l2 :=
+        add_sub_cancel_left _ _
+      rw [e]; exact stWordSF_mem_evenOdd l2)
 
 theorem Ppar_W (l0 l1 l2 : SFWord) :
     Ppar (W3 l0 l1 l2) = koszul 1 (len2 l0 + len2 l1 + len2 l2) • W3 l0 l1 l2 :=
@@ -232,12 +237,12 @@ theorem ghostCurrent_cMode (a c : Fin 3) (m : ℤ) :
 theorem Jz_Cr_b (a c : Fin 3) (k : ℕ) (x : Sl2GhostSpace) :
     Jz a (Cr c (k, 0) x) = Cr c (k, 0) (Jz a x) + ∑ i, fabc a c i • Cr i (k, 0) x := by
   have h := LinearMap.congr_fun (ghostCurrent_antiMode a c (-(k : ℤ) - 1)) x
-  simpa [Module.End.mul_apply, LinearMap.sum_apply] using h
+  simpa [Module.End.mul_apply, LinearMap.sum_apply] using! h
 
 theorem Jz_Cr_c (a c : Fin 3) (k : ℕ) (x : Sl2GhostSpace) :
     Jz a (Cr c (k, 1) x) = Cr c (k, 1) (Jz a x) - ∑ i, fabc a i c • Cr i (k, 1) x := by
   have h := LinearMap.congr_fun (ghostCurrent_cMode a c (-(k : ℤ) - 1)) x
-  simpa [Module.End.mul_apply, LinearMap.sum_apply] using h
+  simpa [Module.End.mul_apply, LinearMap.sum_apply] using! h
 
 theorem Jz_vacuum (a : Fin 3) : Jz a (W3 [] [] []) = 0 :=
   (sl2GhostSVA.creation (ghostCurrent a)).2 0 le_rfl

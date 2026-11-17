@@ -82,12 +82,12 @@ theorem minimal_graded_rigidity_of_kac_singular (p q : ℕ) (hp : 2 ≤ p)
   have hne : p ≠ q := by
     intro he
     subst q
-    have hh : p = 1 := by simpa using hcop
+    have hh : p = 1 := by simpa using! hcop
     omega
   rcases lt_or_gt_of_ne hne with hlt | hgt
   · rw [minimalCharge_swap]
     apply minimal_rigidity_of_nonreal_kac_singular q p hp hlt hcop.symm
-    simpa only [Nat.mul_comm] using hs
+    simpa only [Nat.mul_comm] using! hs
   · exact minimal_rigidity_of_nonreal_kac_singular p q hq hgt hcop hs
 
 end VOA.InverseDS.VirasoroVerma

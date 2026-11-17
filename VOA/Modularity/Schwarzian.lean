@@ -51,9 +51,9 @@ noncomputable def schwarzian (f : PowerSeries ℂ) : PowerSeries ℂ :=
 
 theorem derivativeFun_sub (f g : PowerSeries ℂ) :
     derivativeFun (f - g) = derivativeFun f - derivativeFun g := by
-  show (PowerSeries.derivative ℂ) (f - g)
-    = (PowerSeries.derivative ℂ) f - (PowerSeries.derivative ℂ) g
-  exact map_sub _ f g
+  have h := PowerSeries.derivativeFun_add (f - g) g
+  rw [sub_add_cancel] at h
+  exact eq_sub_of_add_eq h.symm
 
 /-- **The cylinder→torus coordinate** `f(z) = e^z − 1` (Gannon 5.3.16a: `w = e^z − 1`; the torus
 normalization `e^{2πiz} − 1` differs by the `2πi` rescaling). -/
@@ -91,8 +91,9 @@ theorem schwarzian_X : schwarzian (PowerSeries.X : PowerSeries ℂ) = 0 := by
     rw [h1, PowerSeries.derivativeFun_one]
   have h3 : derivativeFun (derivativeFun (derivativeFun (PowerSeries.X : PowerSeries ℂ))) = 0 := by
     rw [h2]
-    show (PowerSeries.derivative ℂ) 0 = 0
-    exact map_zero _
+    have h0 := PowerSeries.derivativeFun_smul (0 : ℂ) (0 : PowerSeries ℂ)
+    rw [zero_smul, zero_smul] at h0
+    exact h0
   rw [schwarzian, h3, h2, h1]
   simp
 

@@ -16,9 +16,9 @@ theorem torus_eq_shiftAut (u : ℂˣ) {n : ℕ} (hn : 0 < n)
     (hp : (charU 1 le_rfl u) ^ n = 1) (hu : charU 1 le_rfl u ≠ 1) :
     ∃ a : ℤ, 0 < a ∧ a < n ∧ charU 1 le_rfl u = shiftAut n a := by
   haveI : NeZero n := ⟨hn.ne'⟩
-  have hpow : u ^ n = 1 := charU_injective 1 le_rfl (by simpa using hp)
+  have hpow : u ^ n = 1 := charU_injective 1 le_rfl (by simpa using! hp)
   have hc : (u : ℂ) ^ n = 1 := by
-    simpa only [Units.val_pow_eq_pow_val, Units.val_one] using congrArg Units.val hpow
+    simpa only [Units.val_pow_eq_pow_val, Units.val_one] using! congrArg Units.val hpow
   obtain ⟨i, hin, hi⟩ := (Complex.isPrimitiveRoot_exp n hn.ne').eq_pow_of_pow_eq_one hc
   have hei : phase n (i : ℤ) = (u : ℂ) := by
     rw [← hi, phase, ← Complex.exp_nat_mul]
@@ -32,7 +32,7 @@ theorem torus_eq_shiftAut (u : ℂˣ) {n : ℕ} (hn : 0 < n)
     by_contra h
     have hi0 : i = 0 := by omega
     subst i
-    have h1 : u = 1 := by apply Units.ext; simpa [phase] using hei.symm
+    have h1 : u = 1 := by apply Units.ext; simpa [phase] using! hei.symm
     exact hu (by rw [h1, map_one])
   exact ⟨i, by omega, by omega, by rw [hue]; rfl⟩
 
@@ -59,7 +59,7 @@ theorem inner_twisted_weight_spectrum {g : Aut (V2m 1 le_rfl)} {n : ℕ}
   obtain ⟨u, Q, hQord, _, hQweight⟩ := v2_twisted_torus_reduction hn ho P hi
   have hu : charU 1 le_rfl u ≠ 1 := by
     intro h
-    have hn1 : n = 1 := by simpa [h] using hQord.symm
+    have hn1 : n = 1 := by simpa [h] using! hQord.symm
     exact hg (orderOf_eq_one_iff.mp (ho.trans hn1))
   obtain ⟨a, ha, han, he⟩ := torus_eq_shiftAut u hn
     (by rw [← hQord]; exact pow_orderOf_eq_one _) hu

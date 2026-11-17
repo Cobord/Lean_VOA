@@ -33,7 +33,7 @@ theorem cvrel_merge_last_two_ones (r n e : ℕ)
     exact hn
   · intro q hq
     by_cases heq : q = r + n + e + 1
-    · simpa only [heq] using htop
+    · simpa only [heq] using! htop
     · apply trunc_of_cvrel hCV q
       rw [parts_length]
       omega
@@ -115,14 +115,14 @@ theorem quotient_rel (h : CV3Rel R w ε ν ϱ (k + 2))
     apply cvrel_merge_last_two_ones ϱ.1 ν.1 (ε.1 + k) (CVRoots.sl2_first R)
       (fun s => h.raising 0 (by decide) s)
       (fun p hp => h.cartan_pos 6 (by decide) p hp)
-    · simpa only [Nat.add_assoc] using h.first
+    · simpa only [Nat.add_assoc] using! h.first
     · rw [show ϱ.1 + ν.1 + (ε.1 + k) + 1 = ε.1 + ν.1 + ϱ.1 + k + 1 by omega]
       exact htop1
   · change CVRel (R.op 4) (parts ϱ.2 (ν.2 + 1) (ε.2 + k)) w
     apply cvrel_merge_last_two_ones ϱ.2 ν.2 (ε.2 + k) (CVRoots.sl2_second R)
       (fun s => h.raising 1 (by decide) s)
       (fun p hp => h.cartan_pos 7 (by decide) p hp)
-    · simpa only [Nat.add_assoc] using h.second
+    · simpa only [Nat.add_assoc] using! h.second
     · rw [show ϱ.2 + ν.2 + (ε.2 + k) + 1 = ε.2 + ν.2 + ϱ.2 + k + 1 by omega]
       exact htop2
   · change CVRel (R.op 5)
@@ -164,8 +164,8 @@ theorem quotient_rel_iff :
     · rw [show ε.2 + 2 * ν.2 + 3 * ϱ.2 + (k + 2) + 1 =
         ε.2 + 2 * (ν.2 + 1) + 3 * ϱ.2 + k + 1 by omega]
       exact h.lowering_second
-    · simpa only [Nat.add_assoc] using h1.1
-    · simpa only [Nat.add_assoc] using h2.1
+    · simpa only [Nat.add_assoc] using! h1.1
+    · simpa only [Nat.add_assoc] using! h2.1
     · rw [show ν.1 + ν.2 + (k + 2) = (ν.1 + 1) + (ν.2 + 1) + k by omega]
       exact h.highest
   · rintro ⟨h, htop1, htop2⟩

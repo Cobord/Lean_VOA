@@ -166,8 +166,8 @@ unmarked roots has dimension at least `q · C(q - 1, 2) · (B - 2)!/2^(k-1)`. -/
 theorem singlyMarkedFlag_unmarkedProduct_finrank_ge (B k : ℕ) (hk1 : 1 ≤ k) (hk : 2 * k ≤ B)
     (V : Finset (Fin (B + 1))) (hV : V.Nonempty) :
     V.card * (V.card - 1).choose 2 * Nat.card (FullFlagConfiguration (B - 2) (k - 1)) ≤
-      Module.finrank ℂ ((Ideal.span {∏ i ∈ Vᶜ,
-        quotientRoot (singlyMarkedFlagIdeal (B + 1) V (B - k)) i}).restrictScalars ℂ) := by
+      Module.finrank ℂ ((Ideal.span {(∏ i ∈ Vᶜ,
+        quotientRoot (singlyMarkedFlagIdeal (B + 1) V (B - k)) i)}).restrictScalars ℂ) := by
   classical
   induction B generalizing k with
   | zero => omega

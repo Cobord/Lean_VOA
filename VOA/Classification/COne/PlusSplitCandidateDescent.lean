@@ -43,12 +43,13 @@ theorem candidateFunctional_coordinateMap (hm2 : 2 ≤ m) (i : Fin 4)
     (hd : CandidateDescent m hm i) (c : Index m → ℂ) :
     candidateFunctional m hm hm2 i hd (coordinateMap m hm c) = freeCandidate m i c := by
   simp [candidateFunctional, LinearMap.quotKerEquivOfSurjective_symm_apply]
+  rfl
 
 theorem candidateFunctional_spanningClass (hm2 : 2 ≤ m) (i : Fin 4)
     (hd : CandidateDescent m hm i) (j : Index m) :
     candidateFunctional m hm hm2 i hd (spanningClass m hm j) = candidateValues m i j := by
   have h := candidateFunctional_coordinateMap m hm hm2 i hd (Pi.single j 1)
-  simpa [coordinateMap, freeCandidate] using h
+  simpa [coordinateMap, freeCandidate] using! h
 
 /-- Exact existence criterion for a linear functional with the proposed values. -/
 theorem candidateDescent_iff (hm2 : 2 ≤ m) (i : Fin 4) :
@@ -79,8 +80,8 @@ theorem candidateFunctional_generators (hm2 : 2 ≤ m) (i : Fin 4)
         (V2mPlus m hm).conformalVector (-1) (V2mPlus m hm).vacuum) = _
       exact congrArg (VOA.mk (V2mPlus m hm))
         ((V2mPlus m hm).creation (V2mPlus m hm).conformalVector).1
-    simpa [he, candidateValues, iterateValue] using h
-  · simpa [spanningClass, spanningState, omegaIter, candidateValues, iterateValue] using
+    simpa [he, candidateValues, iterateValue] using! h
+  · simpa [spanningClass, spanningState, omegaIter, candidateValues, iterateValue] using!
       hv (.inl (.inr 0))
   · have h := hv (.inr 0)
     change candidateFunctional m hm hm2 i hd (VOA.mk (V2mPlus m hm) (y0 m hm)) =
@@ -141,8 +142,8 @@ theorem candidateFunctional_omega_vacuum (hm2 : 2 ≤ m) (i : Fin 4)
     (.inl (.inl ⟨j.val+1, by omega⟩))
   have h := linear_omegaIter_test m hm (candidateFunctional m hm hm2 i hd)
     (V2mPlus m hm).vacuum_mem_grading_zero (twistedRow m i 0) 1 j.val
-    (by simpa [spanningClass, spanningState, candidateValues] using hn)
-    (by simpa [spanningClass, spanningState, candidateValues] using hs)
+    (by simpa [spanningClass, spanningState, candidateValues] using! hn)
+    (by simpa [spanningClass, spanningState, candidateValues] using! hs)
   change _ = twistedRow m i 0 * candidateValues m i (.inl (.inl ⟨j.val, by omega⟩))
   exact h.trans (congrArg (fun c => twistedRow m i 0 * c) hn)
 
@@ -176,7 +177,7 @@ theorem candidateFunctional_omega_E (hm2 : 2 ≤ m) (i : Fin 4)
     exact Submodule.smul_mem _ _ (EP_mem_grading m hm)
   have h := linear_omegaIter_test m hm (candidateFunctional m hm hm2 i hd)
     hv (twistedRow m i 0) (twistedRow m i 2 / 2) j.val
-    (by simpa using hn) (by simpa using hs)
+    (by simpa using! hn) (by simpa using! hs)
   exact h.trans (congrArg (fun c => twistedRow m i 0 * c) hn)
 
 end VOA.Classification.COne.PlusZhuFiniteTests

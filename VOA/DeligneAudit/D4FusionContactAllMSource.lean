@@ -30,7 +30,7 @@ theorem simple_nil (h : LocalWeylRelG D4sector R w m) :
     change 16 ≤ (18 : Fin 28).val ∧ (18 : Fin 28).val < 20
     decide
   have he : D4sector.lowExp (18 : Fin 28) = 1 := rfl
-  simpa only [he, Nat.mul_one, Module.End.pow_apply] using h.lowering (18 : Fin 28) hi
+  simpa only [he, Nat.mul_one, Module.End.pow_apply] using! h.lowering (18 : Fin 28) hi
 
 /-- Every negative-current mode at or above m kills the source generator.
 Unlike the all-root convenience theorem, no positivity of m is required. -/
@@ -54,7 +54,7 @@ theorem simple_coefficient (h : LocalWeylRelG D4sector R w m)
     (PowerSeries.coeff s (Garland.Fs (simpleF R) ^ r)) w = 0 := by
   have hw := highestRel_of_localWeyl h
   exact Garland.garland
-    (fun k => by simpa only [add_comm 1 k] using simple_EF R 1 k)
+    (fun k => by simpa only [add_comm 1 k] using! simple_EF R 1 k)
     (fun a k => simple_HF R (a + 1) k)
     (simple_FF R) (simple_E_kills hw 1)
     (fun a => simple_H_pos hw (a + 1) (by omega))
@@ -67,7 +67,7 @@ theorem center_coefficient (h : LocalWeylRelG D4sector R w m)
     (PowerSeries.coeff s (Garland.Fs (currentCenter R) ^ r)) w = 0 := by
   have hw := highestRel_of_localWeyl h
   exact Garland.garland
-    (fun k => by simpa only [add_comm 1 k] using current_highest_EF R 1 k)
+    (fun k => by simpa only [add_comm 1 k] using! current_highest_EF R 1 k)
     (fun a k => current_highest_HF R (a + 1) k)
     (current_center_comm R) (current_highest_E_kills hw 1)
     (fun a => current_highest_H_pos hw (a + 1) (by omega))

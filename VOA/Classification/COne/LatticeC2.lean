@@ -281,7 +281,8 @@ theorem shortCharges_finite : (shortCharges L).Finite := by
       simp [map_sub, this]
     have h0 : L.form (γ - γ') (γ - γ') = 0 := by
       have := LinearMap.congr_fun hzero (γ - γ')
-      simpa only [LinearMap.flip_apply, LinearMap.zero_apply] using this
+      rw [LinearMap.zero_apply] at this
+      exact this
     exact absurd h0 (ne_of_gt (hPos _ hδ))
   have hbox : (Set.univ.pi fun i => Set.Icc (-L.form (b i) (b i)) (L.form (b i) (b i))).Finite :=
     Set.Finite.pi fun i => Set.finite_Icc _ _

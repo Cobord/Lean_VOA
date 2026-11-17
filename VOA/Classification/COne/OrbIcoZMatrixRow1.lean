@@ -22,7 +22,7 @@ theorem lowInterp_correct (k : ℤ) :
   · subst k
     have h1 : mkRat 484 3 = (484/3 : ℚ) := by norm_num [mkRat]
     have h2 : mkRat 1448 3 = (1448/3 : ℚ) := by norm_num [mkRat]
-    simpa only [lowModeExpression, evalRel, add_zero, h1, h2] using low_mode67
+    simpa only [lowModeExpression, evalRel, add_zero, h1, h2] using! low_mode67
   · simp [evalRel, zp]
 
 def modeInterpFinal (k : ℤ) : ModeRel := substRel lowInterp (modeInterp77 k)

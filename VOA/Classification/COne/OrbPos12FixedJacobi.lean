@@ -61,7 +61,8 @@ theorem actionModes_jacobi_fixed (E : CanonicalExtensionAlgebra G hSR)
     _ = _ := hj.trans (by
       apply finsum_congr
       intro i
-      rw [VOA.TwistedReduction.cbz_natCast, actionModes_grid_add G hSR X a hN]
+      rw [VOA.TwistedReduction.cbz_natCast, actionModes_grid_add G hSR X a hN
+        ((V2m 1 le_rfl).smul u.1 (ℓ + i) v) m (k - (i : ℤ))]
       change cbinom (k : ℂ) i • (actionIntertwiner G hSR X a).val
           ((k : ℂ) + (m : ℂ) / N - (i : ℤ))
           ((V2m 1 le_rfl).smul u.1 (ℓ + i) v) x = _

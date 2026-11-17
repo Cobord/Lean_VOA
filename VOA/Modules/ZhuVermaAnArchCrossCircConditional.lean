@@ -82,7 +82,9 @@ theorem zhu534_of_crossCircCore (W : VertexOperatorAlgebra 𝒱)
     Function.Bijective (forwardMapIrr W) :=
   zhu534_bijection W (hcross_of_crossCircCore W hcore) sd
 
-/-- **`zhu534_of_crossCircCore_fields` — the Zhu-5.3.4 bijection with Half B carried as its individual
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhu534_of_crossCircCore_fields` — the Zhu-5.3.4 bijection with Half B carried as its individual
 `StructuralData` fields, each named explicitly.**
 
 Identical content to `zhu534_of_crossCircCore`, but the Half-B bundle is un-packed: the lifting datum
@@ -170,7 +172,9 @@ noncomputable def GAUniformNoGraded.toFull {W : VertexOperatorAlgebra 𝒱}
   hfin := G0.hfin
   hbot := G0.hbot
 
-/-- **`zhu534_of_crossCircCore_peelGraded` — the Zhu-5.3.4 bijection with the construction bundle's
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhu534_of_crossCircCore_peelGraded` — the Zhu-5.3.4 bijection with the construction bundle's
 `graded : MUGradedAction W` field discharged.**
 
 The carried construction datum is the `graded`-free bundle `G0 : GAUniformNoGraded W`; the missing

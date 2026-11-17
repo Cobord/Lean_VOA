@@ -59,7 +59,7 @@ theorem square_eigenvector_eq_zero_of_lower (P : LWModule W)
       LinearEquiv.apply_symm_apply, he]
   have hz := round_eigenvector_eq_zero_of_lower P hde
     (normalizedCoordinateChange_symm_mem P hx) hround
-  simpa using congrArg (normalizedCoordinateChange P) hz
+  simpa using! congrArg (normalizedCoordinateChange P) hz
 
 /-- On homogeneous inputs the full mode conjugation follows from energy conjugation. -/
 theorem normalizedSquareConjugation_of_zero_homogeneous (P : LWModule W)

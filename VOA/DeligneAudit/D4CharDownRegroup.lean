@@ -16,7 +16,7 @@ def gtMixedFourHomCoeff (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ)
   ∑ p ∈ gtPartitionsTwo n, ∑ r ∈ gtPartitionsTwo m,
     gtQ q h x 2 ![(p.1 : ℤ), (p.2 : ℤ)] *
       gtQ q h y 2 ![(r.1 : ℤ), (r.2 : ℤ)] *
-        gtPoly q 4 (gtMixedFourRow p.1 p.2 r.1 r.2) a
+        (gtPoly q 4 (gtMixedFourRow p.1 p.2 r.1 r.2)).coeff a
 
 /-- The corresponding homogeneous GL_5 coefficient, before extracting its last variable. -/
 def gtMixedFiveHomCoeff (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ)
@@ -24,7 +24,7 @@ def gtMixedFiveHomCoeff (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ)
   ∑ p ∈ gtPartitionsTwo n, ∑ r ∈ gtPartitionsTwo m,
     gtQ q h x 2 ![(p.1 : ℤ), (p.2 : ℤ)] *
       gtQ q h y 2 ![(r.1 : ℤ), (r.2 : ℤ)] *
-        gtPoly q 5 (gtMixedFiveRow p.1 p.2 r.1 r.2) a
+        (gtPoly q 5 (gtMixedFiveRow p.1 p.2 r.1 r.2)).coeff a
 
 /-- After taking the fifth-variable constant term, gP in both alphabets gives Gamma. -/
 theorem gtMixedFive_ct_regroup (q : R) (h : PochhammerUnits q) (x y : ℕ → Rˣ)
@@ -63,7 +63,7 @@ theorem gtMixedFourHomCoeff_last_ne_zero (q : R) (h : PochhammerUnits q)
   intro p _
   apply Finset.sum_eq_zero
   intro r _
-  have he : gtPoly q 4 (gtMixedFourRow p.1 p.2 r.1 r.2) a = 0 := by
+  have he : (gtPoly q 4 (gtMixedFourRow p.1 p.2 r.1 r.2)).coeff a = 0 := by
     by_contra hn
     exact ha ((gtPoly_support_bounds q 4 _ a hn).1 4 le_rfl)
   rw [he, mul_zero]

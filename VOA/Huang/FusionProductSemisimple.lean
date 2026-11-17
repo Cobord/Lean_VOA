@@ -45,7 +45,7 @@ theorem channelFactor_spec (i : ι) (Z : IntertwiningOperator A₁ A₂ (R i).is
     postcompose (universalIntertwiner A₁ A₂ R κ B) (R i).isMod
       (channelFactor A₁ A₂ R κ B i Z) = Z := by
   unfold channelFactor
-  rw [map_sum]
+  refine (map_sum (postcompose (universalIntertwiner A₁ A₂ R κ B) (R i).isMod) _ _).trans ?_
   have he (b : κ i) : postcompose (universalIntertwiner A₁ A₂ R κ B) (R i).isMod
       (sumProjection (fun p : Sigma κ => (R p.1).isMod) ⟨i,b⟩) = B i b := by
     apply Subtype.ext

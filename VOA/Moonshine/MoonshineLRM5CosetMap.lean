@@ -149,7 +149,7 @@ theorem cosetS_cosetS {M : ℕ} {x : Σ _ : ℕ, ℕ} (hx : x ∈ heckeCosets M)
     cosetS M (cosetS M x) = x := by
   have h := cosetData_of_mem hx
   obtain ⟨a, b⟩ := x
-  simp only at h
+  try simp only at h
   simp only [cosetS]
   set g := Nat.gcd b (M / a) with hg
   set d₁ := M / a / g with hd₁
@@ -198,7 +198,7 @@ theorem heckeVal_S_smul {f : ℍ → ℂ} (hf : ∀ (γ : SL(2, ℤ)) (τ : ℍ)
       heckeVal f (cosetS M x).1 (M / (cosetS M x).1) (cosetS M x).2 τ := by
   have h := cosetData_of_mem hx
   obtain ⟨a, b⟩ := x
-  simp only at h
+  try simp only at h
   simp only [cosetS]
   set g := Nat.gcd b (M / a) with hg
   set d₁ := M / a / g with hd₁

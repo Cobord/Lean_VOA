@@ -8,6 +8,9 @@ open scoped TensorProduct
 open Module (End)
 open TensorFieldLift
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {A B : Type*} [AddCommGroup A] [Module ℂ A] [AddCommGroup B] [Module ℂ B]
 
 theorem nearTensorField_first_vacuum (V : NearVOA A) (W : NearVOA B) (a : A) :

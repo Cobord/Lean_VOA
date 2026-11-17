@@ -107,7 +107,7 @@ theorem mixedSecondLeviOrbit_bound
       rw [← hx]
       change N.mkQ (Q.op 4 s x) = 0
       rw [radicalCountQuot_truncated ρ w (a + b) ht d 4 s (by
-        simpa [q, mixedLabelBlockParams, Int.toNat_add] using hs) x, map_zero])
+        simpa [q, mixedLabelBlockParams, Int.toNat_add] using! hs) x, map_zero])
   have hr : Set.range π = (secondLeviMultiplicity Q β e₁ e₂ : Set _) := by
     ext x
     constructor

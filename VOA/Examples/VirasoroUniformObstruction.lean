@@ -120,7 +120,7 @@ theorem quotient_relation_of_word_gram (c : ℂ) {n : ℤ}
   have hb : ∀ j, ∑ i, r i * (VirGram4.canB c).form
       (e i : VirModule.VirUniv c) (e j : VirModule.VirUniv c) = 0 := by
     intro j
-    simpa only [hw, universal_gram_entry] using hr j
+    simpa only [hw, universal_gram_entry] using! hr j
   have hm := gram_row_relation_mem_maxIdeal (VirGram4.canB c)
     (VirGram4.canB_isFullyInvariant c) (VirGram4.canB_normalized c) e r hb
   have hz : (VirSimple.maxIdealVir c).mkQ

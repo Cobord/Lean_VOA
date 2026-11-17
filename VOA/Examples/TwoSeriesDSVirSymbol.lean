@@ -202,7 +202,7 @@ theorem sorted_pair_mem_pairGood (hJ : HasJetRelations c n)
         (by rw [← hs, hEw]; omega) (sortDesc w) (sortDesc_sorted w) rfl
       rw [length_sortDesc, hwl] at hmem
       have := Submodule.add_mem _ hdiff hmem
-      simpa using this
+      simpa using! this
   have hsum := Submodule.sum_mem P hterm
   rw [Finset.sum_sub_distrib, ← Finset.sum_smul, Finset.sum_boole] at hsum
   set m : ℂ := (((comps (n + 1) k).filter (fun e => e.Perm W)).card : ℂ) with hm
@@ -243,7 +243,7 @@ theorem pair_mem_pairGood (hJ : HasJetRelations c n)
   · have h := sorted_pair_mem_pairGood c R t n hJ hjet (sortDesc w) (sortDesc_sorted w)
     rw [length_sortDesc] at h
     have := Submodule.add_mem _ (sortDesc_pair_sub c R t n w hpos) h
-    simpa using this
+    simpa using! this
 
 end Straighten
 
@@ -421,8 +421,8 @@ theorem coeff_tSer_pow : ∀ (m k : ℕ),
         obtain ⟨e, -, rfl⟩ := hx
         obtain ⟨e', -, he⟩ := hx'
         have h1 : q.1 = p.1 := (List.cons.inj he).1
-        have hp' := Finset.mem_antidiagonal.mp (Finset.mem_coe.mp hp)
-        have hq' := Finset.mem_antidiagonal.mp (Finset.mem_coe.mp hq)
+        have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp (Finset.mem_coe.mp hp)
+        have hq' := Finset.HasAntidiagonal.mem_antidiagonal.mp (Finset.mem_coe.mp hq)
         exact hpq (Prod.ext h1.symm (by omega))
 
 /-- The jet relations of `R_{m+1}`. -/

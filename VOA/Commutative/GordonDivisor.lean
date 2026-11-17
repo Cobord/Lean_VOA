@@ -71,7 +71,7 @@ theorem clusterDivisor_isHomogeneous (f : σ → τ) :
     (clusterDivisor (K := K) f).IsHomogeneous (clusterDegree f) := by
   apply MvPolynomial.IsHomogeneous.prod
   intro ij _
-  simpa only [one_mul] using
+  simpa only [one_mul, collisionFactor] using
     ((MvPolynomial.isHomogeneous_X K ij.val.1).sub
       (MvPolynomial.isHomogeneous_X K ij.val.2)).pow
         (2 * min (blockSize f ij.val.1) (blockSize f ij.val.2))

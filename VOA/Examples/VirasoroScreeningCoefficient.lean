@@ -26,7 +26,7 @@ noncomputable def screeningMomentLinear (r s t : ℕ) :
     simp only [screeningMoment,map_add,mul_add]
     rfl
   map_smul' a P := by
-    simp only [screeningMoment,map_smul,mul_smul_comm,AddMonoidAlgebra.smul_apply]
+    simp only [screeningMoment,map_smul,mul_smul_comm,AddMonoidAlgebra.coeff_smul_apply]
     rfl
 
 /-- Some single monomial in positive power sums of total weight rs has
@@ -49,8 +49,8 @@ theorem screening_nonzero_monomial (r s t : ℕ) :
   have hw : Finsupp.weight (fun i => i+1) d = r*s :=
     hP (MvPolynomial.mem_support_iff.mp hd)
   have he : L (MvPolynomial.monomial d 1) = 0 := hz d hw
-  have hm : MvPolynomial.monomial d (MvPolynomial.coeff d P) =
-      MvPolynomial.coeff d P • (MvPolynomial.monomial d 1 : MvPolynomial ℕ ℚ) := by
+  have hm : MvPolynomial.monomial d (P.coeff d) =
+      P.coeff d • (MvPolynomial.monomial d 1 : MvPolynomial ℕ ℚ) := by
     simp [MvPolynomial.smul_monomial,smul_eq_mul]
   rw [hm,map_smul,he,smul_zero]
 

@@ -98,7 +98,7 @@ theorem middle_rowBound (hs : OrdinaryFourPointSummability F)
   have hsl := fivePoint_slice_summable F hs .middle (πo ≫ k) d' (h + j₀)
   have hinj : Function.Injective (fun m : ℕ => (h' - k₀) + (m : ℂ)) := by
     intro a b hab
-    have : (a : ℂ) = b := by simpa using hab
+    have : (a : ℂ) = b := by simpa using! hab
     exact_mod_cast this
   obtain ⟨K, hK⟩ := ((hsl.comp_injective hinj).tendsto_atTop_zero.norm).bddAbove_range
   have hsr : (0 : ℝ) < 1 + d.s + d.r / 2 := by linarith [d.positive, d.smaller]
@@ -272,7 +272,9 @@ theorem left_rowBound (hs : OrdinaryFourPointSummability F)
       (tensorObj F X Y).isMod.weight (h + j₀) := by
     have := mem_weight (F X Y).intertwiner.property (hom_mem_weight πc.property d.hx)
       (hom_mem_weight πd.property d.hy) (d.α + d.β - h - 1 - j₀)
-    convert this using 2; ring
+    have e : d.α + d.β - (d.α + d.β - h - 1 - (j₀ : ℂ)) - 1 = h + j₀ := by ring
+    rw [e] at this
+    exact this
   let d₄ : FourPointTest T (tensorObj F X Y) Z O :=
     { α := d.δ, β := h + j₀, γ := d.γ, δ := d.ε - j
       x := πa.val d.t
@@ -287,7 +289,7 @@ theorem left_rowBound (hs : OrdinaryFourPointSummability F)
   have hsum := (hs T (tensorObj F X Y) Z O d₄).2 ⟨leftΩ F X Y Z T, isLeftΩ F X Y Z T⟩
   have hinj : Function.Injective (fun m : ℕ => (h' - k₀) + (m : ℂ)) := by
     intro a b hab
-    have : (a : ℂ) = b := by simpa using hab
+    have : (a : ℂ) = b := by simpa using! hab
     exact_mod_cast this
   obtain ⟨K, hK⟩ := ((hsum.comp_injective hinj).tendsto_atTop_zero.norm).bddAbove_range
   have hc : (0 : ℝ) < 1 + c₄ := by linarith

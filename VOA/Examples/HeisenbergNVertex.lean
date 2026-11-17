@@ -3,6 +3,7 @@ Copyright (c) 2026 Fedor K. Popov. All rights reserved.
 Released under the Apache 2.0 license; see the LICENSE file.
 Authors: Fedor K. Popov
 -/
+import Mathlib.RingTheory.MvPolynomial.Basic
 import VOA.Examples.HeisenbergNFock
 import VOA.Examples.HeisenbergVertex
 import VOA.Core.Dong
@@ -31,7 +32,7 @@ together with all five vertex-algebra axioms.
 * **`YN` on monomials.**  A monomial `∏ X_{(iₜ,aₜ)}` is encoded by its exponent vector
   `(ℕ × Fin r) →₀ ℕ`; the field `YmonN` is the iterated normal-ordered product of the
   `genFieldN`s over the corresponding word `List (ℕ × Fin r)`.  `YN` is the `ℂ`-linear
-  extension via `Finsupp.linearCombination`.
+  extension via `Module.Basis.constr` on the monomial basis.
 * **VA2** `YN_vacuum : YN r k 1 = idFieldN`; `YN_current : YN r k (aᵃ₋₁1) = αᵃ(z)`.
 * **VA4** every two monomial fields are mutually local (`YmonN_local`, iterated `dong_neg`);
   bilinear extension to all `u, v` (`YN_local`).
@@ -85,7 +86,7 @@ theorem currentN_isField (r : ℕ) (k : ℂ) (a : Fin r) : IsField (currentN r k
     intro hmem
     have hle : ((-n - 1 - 1).toNat, a).1 ≤ p.vars.sup (fun u => u.1) :=
       Finset.le_sup (f := fun u => u.1) hmem
-    simp only at hle
+    try simp only at hle
     omega
   rw [hzero, smul_zero, smul_zero]
 
@@ -242,11 +243,13 @@ theorem YmonN_isField (r : ℕ) (k : ℂ) (a : (ℕ × Fin r) →₀ ℕ) :
 /-- **The general vertex operator** `YN : FockN r →ₗ[ℂ] FormalDist (End ℂ (FockN r))` — the
 `ℂ`-linear extension of `YmonN` off the monomial basis of `FockN r` (Gannon §5.2). -/
 noncomputable def YN (r : ℕ) (k : ℂ) : FockN r →ₗ[ℂ] FormalDist (End ℂ (FockN r)) :=
-  Finsupp.linearCombination ℂ (YmonN r k)
+  (MvPolynomial.basisMonomials (ℕ × Fin r) ℂ).constr ℂ (YmonN r k)
 
 theorem YN_monomial (r : ℕ) (k : ℂ) (a : (ℕ × Fin r) →₀ ℕ) (c : ℂ) :
-    YN r k (monomial a c) = c • YmonN r k a :=
-  Finsupp.linearCombination_single ℂ c a
+    YN r k (monomial a c) = c • YmonN r k a := by
+  have hb : (monomial a c : FockN r) = c • MvPolynomial.basisMonomials (ℕ × Fin r) ℂ a := by
+    rw [MvPolynomial.coe_basisMonomials, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
+  rw [hb, map_smul, YN, Module.Basis.constr_basis]
 
 theorem YN_monomial_one (r : ℕ) (k : ℂ) (a : (ℕ × Fin r) →₀ ℕ) :
     YN r k (monomial a 1) = YmonN r k a := by
@@ -340,10 +343,10 @@ theorem YmonN_local (r : ℕ) (k : ℂ) (a b : (ℕ × Fin r) →₀ ℕ) :
 
 /-- `YN k u` as the explicit finite sum of its scaled monomial fields. -/
 theorem YN_eq_support_sum (r : ℕ) (k : ℂ) (u : FockN r) :
-    YN r k u = ∑ a ∈ u.support, (u a) • YmonN r k a := by
-  rw [show YN r k u = Finsupp.linearCombination ℂ (YmonN r k) u from rfl,
-      Finsupp.linearCombination_apply]
-  rfl
+    YN r k u = ∑ a ∈ u.support, (u.coeff a) • YmonN r k a := by
+  conv_lhs => rw [MvPolynomial.as_sum u]
+  rw [map_sum]
+  exact Finset.sum_congr rfl fun a _ => YN_monomial r k a _
 
 theorem smul_YmonN_local (r : ℕ) (k : ℂ) (ca cb : ℂ) (a b : (ℕ × Fin r) →₀ ℕ) :
     Local (ca • YmonN r k a) (cb • YmonN r k b) :=
@@ -353,17 +356,17 @@ theorem smul_YmonN_local_YN (r : ℕ) (k : ℂ) (ca : ℂ) (a : (ℕ × Fin r) �
     Local (ca • YmonN r k a) (YN r k v) := by
   classical
   rw [YN_eq_support_sum r k v]
-  refine (VertexOperatorAlgebra.Local.sum v.support (fun b => (v b) • YmonN r k b)
+  refine (VertexOperatorAlgebra.Local.sum v.support (fun b => (v.coeff b) • YmonN r k b)
     (fun b _ => ?_)).symm
-  exact smul_YmonN_local r k (v b) ca b a
+  exact smul_YmonN_local r k (v.coeff b) ca b a
 
 /-- **VA4 (locality), general states.**  `YN(u,z)` and `YN(v,z)` are mutually local for
 ARBITRARY `u v : FockN r`. -/
 theorem YN_local (r : ℕ) (k : ℂ) (u v : FockN r) : Local (YN r k u) (YN r k v) := by
   classical
   rw [YN_eq_support_sum r k u]
-  exact VertexOperatorAlgebra.Local.sum u.support (fun a => (u a) • YmonN r k a)
-    (fun a _ => smul_YmonN_local_YN r k (u a) a v)
+  exact VertexOperatorAlgebra.Local.sum u.support (fun a => (u.coeff a) • YmonN r k a)
+    (fun a _ => smul_YmonN_local_YN r k (u.coeff a) a v)
 
 /-! ## §5  VA3 — creation: regularity of `YN(u,z)` on the vacuum -/
 
@@ -576,30 +579,26 @@ noncomputable def evalVacAtN (r : ℕ) (j : ℤ) :
     evalVacAtN r j f = f j (vacuumN r) := rfl
 
 theorem YN_apply_vacuum_sum (r : ℕ) (k : ℂ) (u : FockN r) (j : ℤ) :
-    YN r k u j (vacuumN r) = u.sum (fun a c => c • (YmonN r k a j (vacuumN r))) := by
+    YN r k u j (vacuumN r)
+      = ∑ a ∈ u.support, u.coeff a • (YmonN r k a j (vacuumN r)) := by
   show evalVacAtN r j (YN r k u) = _
-  show evalVacAtN r j (Finsupp.linearCombination ℂ (YmonN r k) u) = _
-  rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum, Finsupp.sum]
+  rw [YN_eq_support_sum, map_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [map_smul, evalVacAtN_apply]
 
 /-- **VA3 / general creation, `j < 0`, every state**: `YN(u,z)_j 1 = 0` for `j < 0`. -/
 theorem YN_creation_lt (r : ℕ) (k : ℂ) (u : FockN r) {j : ℤ} (hj : j < 0) :
     YN r k u j (vacuumN r) = 0 := by
-  rw [YN_apply_vacuum_sum, Finsupp.sum]
+  rw [YN_apply_vacuum_sum]
   refine Finset.sum_eq_zero fun a _ => ?_
   rw [YmonN_creation_lt r k a hj, smul_zero]
 
 /-- **VA3 / the `z⁰`-coefficient creates `u`, every state**: `YN(u,0)1 = u`. -/
 theorem YN_creation_zero (r : ℕ) (k : ℂ) (u : FockN r) : YN r k u 0 (vacuumN r) = u := by
   rw [YN_apply_vacuum_sum]
-  rw [show u.sum (fun a c => c • (YmonN r k a 0 (vacuumN r)))
-        = u.sum (fun a c => monomial a c) from
-      Finsupp.sum_congr fun a _ => by
-        rw [YmonN_creation_zero, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]]
-  conv_rhs => rw [← MvPolynomial.support_sum_monomial_coeff u]
-  rw [Finsupp.sum]
-  rfl
+  conv_rhs => rw [MvPolynomial.as_sum u]
+  refine Finset.sum_congr rfl fun a _ => ?_
+  rw [YmonN_creation_zero, MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
 
 /-- **VA3, mode form (regularity)**: `u₍ₙ₎1 = 0` for `n ≥ 0`, every state. -/
 theorem mode_YN_creation_nonneg (r : ℕ) (k : ℂ) (u : FockN r) {n : ℤ} (hn : 0 ≤ n) :
@@ -674,8 +673,7 @@ theorem IsFieldN.finsetSum {r : ℕ} {ι : Type*} (s : Finset ι)
 /-- **`YN k u` is a field for every `u`**. -/
 theorem YN_isField (r : ℕ) (k : ℂ) (u : FockN r) : IsField (YN r k u) := by
   classical
-  rw [show YN r k u = Finsupp.linearCombination ℂ (YmonN r k) u from rfl,
-      Finsupp.linearCombination_apply, Finsupp.sum]
+  rw [YN_eq_support_sum]
   exact IsFieldN.finsetSum _ _ (fun a _ => IsFieldN.smul _ (YmonN_isField r k a))
 
 /-- **VA5 (regularity).**  For every `u, v` the products `u₍ₙ₎v` vanish for all large `n`. -/
@@ -885,24 +883,21 @@ theorem YN_gradedField_of_mem (r : ℕ) (k : ℂ) {w : ℕ} {u : FockN r} (hu : 
     GradedFieldN r (YN r k u) (w : ℤ) := by
   classical
   intro j w' p hp
-  rw [show YN r k u = Finsupp.linearCombination ℂ (YmonN r k) u from rfl,
-      Finsupp.linearCombination_apply, Finsupp.sum]
-  show (∑ a ∈ u.support, (u a) • YmonN r k a) j p ∈ gradingZN r ((w : ℤ) + w' + j)
-  have hsum : (∑ a ∈ u.support, (u a) • YmonN r k a) j p
-      = ∑ a ∈ u.support, ((u a) • YmonN r k a) j p := by
-    rw [show ((∑ a ∈ u.support, (u a) • YmonN r k a) j : End ℂ (FockN r))
-          = ∑ a ∈ u.support, ((u a) • YmonN r k a) j from
-        (Finset.sum_apply (s := u.support) (g := fun a => (u a) • YmonN r k a) j),
+  rw [YN_eq_support_sum]
+  show (∑ a ∈ u.support, (u.coeff a) • YmonN r k a) j p ∈ gradingZN r ((w : ℤ) + w' + j)
+  have hsum : (∑ a ∈ u.support, (u.coeff a) • YmonN r k a) j p
+      = ∑ a ∈ u.support, ((u.coeff a) • YmonN r k a) j p := by
+    rw [show ((∑ a ∈ u.support, (u.coeff a) • YmonN r k a) j : End ℂ (FockN r))
+          = ∑ a ∈ u.support, ((u.coeff a) • YmonN r k a) j from
+        (Finset.sum_apply (s := u.support) (g := fun a => (u.coeff a) • YmonN r k a) j),
       LinearMap.sum_apply]
   rw [hsum]
   apply Submodule.sum_mem
   intro a ha
-  show ((u a) • YmonN r k a) j p ∈ gradingZN r ((w : ℤ) + w' + j)
-  have heval : ((u a) • YmonN r k a) j p = (u a) • (YmonN r k a j p) := rfl
+  show ((u.coeff a) • YmonN r k a) j p ∈ gradingZN r ((w : ℤ) + w' + j)
+  have heval : ((u.coeff a) • YmonN r k a) j p = (u.coeff a) • (YmonN r k a j p) := rfl
   rw [heval]
-  have hcoeff : u.coeff a ≠ 0 := by
-    rw [MvPolynomial.coeff]
-    exact Finsupp.mem_support_iff.mp ha
+  have hcoeff : u.coeff a ≠ 0 := MvPolynomial.mem_support_iff.mp ha
   have hwa : Finsupp.weight weightFnN a = w := by
     rw [mem_gradingWN] at hu; exact hu hcoeff
   have hYmon : (YmonN r k a) j p ∈ gradingZN r (((Finsupp.weight weightFnN a : ℕ) : ℤ) + w' + j) :=
@@ -1030,8 +1025,8 @@ theorem gradingWN_le_span (r w : ℕ) :
   refine Submodule.sum_mem _ (fun d hd => ?_)
   have hdw : Finsupp.weight weightFnN d = w := hp (MvPolynomial.mem_support_iff.mp hd)
   have hmem : (monomial d 1 : FockN r) ∈ weightMonSetN r w := ⟨d, hdw, rfl⟩
-  have hscale : (monomial d (MvPolynomial.coeff d p) : FockN r)
-      = (MvPolynomial.coeff d p) • monomial d 1 := by
+  have hscale : (monomial d (p.coeff d) : FockN r)
+      = (p.coeff d) • monomial d 1 := by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
   rw [hscale]
   exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
@@ -1053,7 +1048,7 @@ theorem gradingWN_zero_eq_span_one (r : ℕ) : gradingWN r 0 = ℂ ∙ (1 : Fock
   apply le_antisymm
   · intro p hp
     rw [mem_gradingWN] at hp
-    have hconst : p = MvPolynomial.C (MvPolynomial.coeff 0 p) := by
+    have hconst : p = MvPolynomial.C (p.coeff 0) := by
       apply MvPolynomial.ext
       intro d
       rw [MvPolynomial.coeff_C]
@@ -1069,8 +1064,8 @@ theorem gradingWN_zero_eq_span_one (r : ℕ) : gradingWN r 0 = ℂ ∙ (1 : Fock
           Finsupp.le_weight_of_ne_zero' weightFnN hdi
         rw [hdw, weightFnN_apply] at hle
         omega
-    rw [hconst, show (MvPolynomial.C (MvPolynomial.coeff 0 p) : FockN r)
-        = (MvPolynomial.coeff 0 p) • 1 from by rw [smul_eq_C_mul, mul_one]]
+    rw [hconst, show (MvPolynomial.C (p.coeff 0) : FockN r)
+        = (p.coeff 0) • 1 from by rw [smul_eq_C_mul, mul_one]]
     exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _)
   · rw [Submodule.span_singleton_le_iff_mem]
     exact isWeightedHomogeneous_one ℂ weightFnN

@@ -134,7 +134,7 @@ theorem pbwCoord_basis (mu : CurrentIndex) :
   simp [pbwCoord, coe_basisMonomials]
 
 theorem coeff_pbwCoord (mu : CurrentIndex) (x : WakModule k) :
-    coeff mu (pbwCoord k hk x) = (currentPBWBasis k hk).repr x mu := by
+    (pbwCoord k hk x).coeff mu = (currentPBWBasis k hk).repr x mu := by
   simp only [pbwCoord, LinearEquiv.trans_apply]
   rfl
 
@@ -144,7 +144,7 @@ theorem pbwCoord_symm_monomial (mu : CurrentIndex) :
 
 /-- Membership in the `p`-th ordinary piece is a degree bound on the PBW coordinates. -/
 theorem mem_ordinaryPiece_iff_coord (p : ℕ) (x : WakModule k) :
-    x ∈ ordinaryPiece k p ↔ ∀ mu, p < mu.degree → coeff mu (pbwCoord k hk x) = 0 := by
+    x ∈ ordinaryPiece k p ↔ ∀ mu, p < mu.degree → (pbwCoord k hk x).coeff mu = 0 := by
   rw [mem_ordinaryPiece_iff_repr k hk]
   simp only [coeff_pbwCoord, pbwLength_eq_degree]
 
@@ -155,13 +155,14 @@ theorem mem_ordinaryPiece_iff_homog (p : ℕ) (x : WakModule k) :
   constructor
   · intro h d hd
     ext mu
-    rw [coeff_homogeneousComponent, coeff_zero]
+    rw [coeff_homogeneousComponent]
     split_ifs with hmu
-    · exact h mu (by rw [hmu]; exact hd)
+    · exact (h mu (by rw [hmu]; exact hd)).trans rfl
     · rfl
   · intro h mu hmu
-    have := congrArg (coeff mu) (h mu.degree hmu)
-    rwa [coeff_homogeneousComponent, if_pos rfl, coeff_zero] at this
+    have this : (homogeneousComponent mu.degree (pbwCoord k hk x)).coeff mu = 0 := by
+      rw [h mu.degree hmu]; rfl
+    rwa [coeff_homogeneousComponent, if_pos rfl] at this
 
 theorem homogeneousComponent_eq_zero_of_mem {p d : ℕ} (hd : p < d) {x : WakModule k}
     (hx : x ∈ ordinaryPiece k p) : homogeneousComponent d (pbwCoord k hk x) = 0 :=
@@ -411,7 +412,7 @@ theorem basis_mem_grading (mu : CurrentIndex) :
 /-- Coordinates of a vector of weight `m` are supported on exponents of weight `m`. -/
 theorem coeff_eq_zero_of_mem_grading {m : ℤ} {x : WakModule k}
     (hx : x ∈ (universal k hk).grading m) {mu : CurrentIndex} (hmu : (enOf mu : ℤ) ≠ m) :
-    coeff mu (pbwCoord k hk x) = 0 := by
+    (pbwCoord k hk x).coeff mu = 0 := by
   rw [coeff_pbwCoord]
   have h := basis_diagonal_coordinate (currentPBWBasis k hk) ((universal k hk).L 0)
     (fun mu => (currentEnergy mu : ℂ)) (currentPBWBasis_L0 k hk) x mu
@@ -427,7 +428,7 @@ theorem coeff_eq_zero_of_mem_grading {m : ℤ} {x : WakModule k}
 
 /-- A vector whose coordinates are supported on exponents of weight `m` has weight `m`. -/
 theorem mem_grading_of_coeff {m : ℤ} {x : WakModule k}
-    (h : ∀ mu, (enOf mu : ℤ) ≠ m → coeff mu (pbwCoord k hk x) = 0) :
+    (h : ∀ mu, (enOf mu : ℤ) ≠ m → (pbwCoord k hk x).coeff mu = 0) :
     x ∈ (universal k hk).grading m := by
   classical
   have hx' : x = ∑ mu ∈ ((currentPBWBasis k hk).repr x).support,

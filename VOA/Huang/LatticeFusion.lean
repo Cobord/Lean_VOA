@@ -209,15 +209,49 @@ noncomputable abbrev hV : LatModuleGen (latP m) := hVec (latP m) (a0 m)
 /-- The charged vacuum `𝟙 ⊗ e^{nα}` (in `V_{L+λ_j}` it stands for `e^{nα + λ_j}`). -/
 noncomputable abbrev xv (n : ℤ) : LatModuleGen (latP m) := latChargeGen (latP m) n
 
+/-! Integer-charge forms of generic lattice-module lemmas (Lean 4.35: an `ℤ`-typed charge in a
+`(latP m).carrier` slot blocks `rw` with the generic `L.carrier`-stated lemma). -/
+
+theorem xv_eq (n : ℤ) : xv m n = latStateGen (latP m) (vacuumN (rank (latP m))) n := rfl
+
+theorem EEVec_vacuum_latP (α t : ℤ) :
+    EEVec (latP m) α t (vacuumN (rank (latP m))) =
+      if 0 ≤ t then vSchur (latP m) α t.toNat else 0 :=
+  EEVec_vacuum (latP m) α t
+
+theorem vSchur_zero_latP (α : ℤ) : vSchur (latP m) α 0 = 1 := vSchur_zero (latP m) α
+
+theorem latStateGen_add_boson_latP (p q : FockN (rank (latP m))) (α : ℤ) :
+    latStateGen (latP m) (p + q) α = latStateGen (latP m) p α + latStateGen (latP m) q α :=
+  latStateGen_add_boson (latP m) p q α
+
+open Classical in
+theorem coordEα_apply_latP (α : ℤ) (α' : (latP m).carrier) (p : FockN (rank (latP m))) :
+    coordEα (latP m) α (p ⊗ₜ[ℂ] eGen (latP m) α') = (if α = α' then p else 0) :=
+  coordEα_apply (latP m) α α' p
+
+theorem coordEα_apply_latP_pos {α : ℤ} {α' : (latP m).carrier} (h : α = α')
+    (p : FockN (rank (latP m))) : coordEα (latP m) α (p ⊗ₜ[ℂ] eGen (latP m) α') = p :=
+  (coordEα_apply_latP m α α' p).trans (if_pos h)
+
+theorem coordEα_apply_latP_neg {α : ℤ} {α' : (latP m).carrier} (h : ¬α = α')
+    (p : FockN (rank (latP m))) : coordEα (latP m) α (p ⊗ₜ[ℂ] eGen (latP m) α') = 0 :=
+  (coordEα_apply_latP m α α' p).trans (if_neg h)
+
+theorem coordEα_apply_latPZ (α α' : ℤ) (p : FockN (rank (latP m))) :
+    coordEα (latP m) α (p ⊗ₜ[ℂ] eGen (latP m) α') = (if α = α' then p else 0) := by
+  convert coordEα_apply (latP m) α α' p <;> exact Iff.rfl
+
 theorem xv_ne_zero (n : ℤ) : xv m n ≠ 0 := by
   intro h
   have := congrArg (coordEα (latP m) n) h
-  rw [xv, latChargeGen, latStateGen, coordEα_apply, if_pos rfl, map_zero] at this
+  rw [show xv m n = vacuumN (rank (latP m)) ⊗ₜ[ℂ] eGen (latP m) n from rfl, coordEα_apply_latPZ,
+    if_pos rfl, map_zero] at this
   exact one_ne_zero this
 
 theorem hmode_pos (j : ℤ) (n : ℤ) {i : ℤ} (hi : 0 < i) :
     mode ((latticeModule m hm j).YM (hV m)) i (xv m n) = 0 := by
-  rw [xv, latChargeGen, latticeModule_hVec_mode, if_neg (by omega), add_zero,
+  rw [xv_eq, latticeModule_hVec_mode, if_neg (by omega), add_zero,
     oscN_apply_pos _ _ _ hi]
   simp [vacuumN, latStateGen]
 
@@ -237,7 +271,7 @@ theorem cmode_xv_zero (j β n : ℤ) (hβ : 0 ≤ β * (2 * m * n + j)) {i : ℤ
     mode ((latticeModule m hm j).YM (latChargeGen (latP m) β)) i (xv m n) = 0 := by
   change mode ((latticeModule m hm j).YM (latChargeGen (latP m) β)) i
     (latStateGen (latP m) (vacuumN (rank (latP m))) n) = 0
-  rw [cmode, EEVec_vacuum, if_neg (by nlinarith)]
+  rw [cmode, EEVec_vacuum_latP, if_neg (by nlinarith)]
   simp [latStateGen]
 
 theorem cmode_xv_top (j β n : ℤ) :
@@ -250,14 +284,14 @@ theorem cmode_xv_top (j β n : ℤ) :
   change mode ((latticeModule m hm j).YM (latChargeGen (latP m) β)) _
     (latStateGen (latP m) (vacuumN (rank (latP m))) n) = _
   rw [cmode, show (-(-1 - β * (2 * m * n + j)) - 1 - 2 * m * β * n - j * β) = 0 by ring,
-    EEVec_vacuum, if_pos le_rfl, Int.toNat_zero, vSchur_zero]
+    EEVec_vacuum_latP, if_pos le_rfl, Int.toNat_zero, vSchur_zero_latP]
   rfl
 
 theorem cmode_mem (j β n i : ℤ) (p : FockN (rank (latP m))) :
     ∃ p' : FockN (rank (latP m)),
       mode ((latticeModule m hm j).YM (latChargeGen (latP m) β)) i (latStateGen (latP m) p n)
         = latStateGen (latP m) p' (β + n) := by
-  rw [cmode, ← latStateGen_csmul]
+  rw [cmode, ← latStateGen_csmulZ]
   exact ⟨_, rfl⟩
 
 
@@ -279,10 +313,10 @@ theorem sector_vanish (a b : ℤ) (h : ∀ q : ℂ, Y q (xv m a) (xv m b) = 0)
     ∀ q : ℂ, Y q (latStateGen (latP m) p a) (xv m b) = 0) p ?_ ?_ ?_
   · intro c q
     rw [show latStateGen (latP m) (MvPolynomial.C c) a = c • xv m a by
-      rw [MvPolynomial.C_eq_smul_one, latStateGen_csmul]; rfl]
+      rw [MvPolynomial.C_eq_smul_one, latStateGen_csmulZ]; rfl]
     rw [map_smul, LinearMap.smul_apply, h, smul_zero]
   · intro p₁ p₂ h₁ h₂ q
-    rw [latStateGen_add_boson, map_add, LinearMap.add_apply, h₁, h₂, add_zero]
+    rw [latStateGen_add_boson_latP, map_add, LinearMap.add_apply, h₁, h₂, add_zero]
   · intro p₁ x h₁
     obtain ⟨k', a'⟩ := x
     have ha : a' = a0 m := by
@@ -394,7 +428,7 @@ theorem L0_latStateGen (j : ℤ) {w : ℕ} {q : FockN (rank (latP m))}
 
 theorem L0_xv (j n : ℤ) :
     mode ((latticeModule m hm j).YM (V2m m hm).conformalVector) 1 (xv m n) = wt m j n • xv m n := by
-  rw [xv, latChargeGen, L0_latStateGen m hm j (vacuumN_mem_gradingWN _) n, Nat.cast_zero, zero_add]
+  rw [xv_eq, L0_latStateGen m hm j (vacuumN_mem_gradingWN _) n, Nat.cast_zero, zero_add]
 
 /-- The Heisenberg modes in the charge coordinates. -/
 theorem coordEα_hmode (l n p : ℤ) (y : LatModuleGen (latP m)) :
@@ -408,13 +442,13 @@ theorem coordEα_hmode (l n p : ℤ) (y : LatModuleGen (latP m)) :
       rw [LinearMap.comp_apply, latticeModule_hVec_mode, LinearMap.add_apply, LinearMap.comp_apply]
       by_cases hp : p = 0
       · subst hp
-        simp only [latStateGen, coordEα_apply]
-        have e := coordEα_apply (latP m) n γ P
-        split_ifs with hn'
-        · rw [LinearMap.smul_apply, e, if_pos hn']; subst hn'; rfl
-        · rw [LinearMap.smul_apply, e, if_neg hn', smul_zero]; simp
-      · simp only [if_neg hp, LinearMap.zero_apply, add_zero, latStateGen, coordEα_apply]
-        split_ifs <;> simp)
+        by_cases hn : n = γ
+        · subst hn
+          simp [latStateGen, coordEα_apply_latPZ, oscN_zero]
+        · simp [latStateGen, coordEα_apply_latPZ, oscN_zero, hn]
+      · by_cases hn : n = γ
+        · simp [latStateGen, coordEα_apply_latPZ, hp, hn]
+        · simp [latStateGen, coordEα_apply_latPZ, hp, hn])
   have := LinearMap.congr_fun hext y
   rw [LinearMap.comp_apply, LinearMap.add_apply, LinearMap.comp_apply] at this
   rw [this]
@@ -424,9 +458,9 @@ theorem coordEα_hmode (l n p : ℤ) (y : LatModuleGen (latP m)) :
 
 /-- The `L₀`-eigenvalue of the vacuum coefficient of the charge-`n` sector. -/
 theorem coeff0_L0 (l n : ℤ) (y : LatModuleGen (latP m)) :
-    MvPolynomial.coeff 0 (coordEα (latP m) n
-        (mode ((latticeModule m hm l).YM (V2m m hm).conformalVector) 1 y))
-      = wt m l n * MvPolynomial.coeff 0 (coordEα (latP m) n y) := by
+    (coordEα (latP m) n
+        (mode ((latticeModule m hm l).YM (V2m m hm).conformalVector) 1 y)).coeff 0
+      = wt m l n * (coordEα (latP m) n y).coeff 0 := by
   set f : LatModuleGen (latP m) →ₗ[ℂ] ℂ :=
     MvPolynomial.lcoeff ℂ 0 ∘ₗ coordEα (latP m) n ∘ₗ
         mode ((latticeModule m hm l).YM (V2m m hm).conformalVector) 1
@@ -441,22 +475,21 @@ theorem coeff0_L0 (l n : ℤ) (y : LatModuleGen (latP m)) :
       simp [latStateGen]
     · rw [HeisenbergN.gradingZN_of_nonneg h1] at hq
       rw [hf, LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply,
-        L0_latStateGen m hm l hq, LinearMap.smul_apply, LinearMap.comp_apply]
-      simp only [latStateGen, map_smul, coordEα_apply, MvPolynomial.lcoeff_apply, smul_eq_mul]
+        L0_latStateGen m hm l hq k.2, LinearMap.smul_apply, LinearMap.comp_apply]
       by_cases hn : n = k.2
       · subst hn
-        simp only [↓reduceIte]
+        simp only [latStateGen, map_smul,
+          coordEα_apply_latP_pos m (show (k.2 : ℤ) = k.2 from rfl), MvPolynomial.lcoeff_apply,
+          smul_eq_mul]
         by_cases hw : k.1.toNat = 0
-        · rw [hw]; simp
-        · have hc : MvPolynomial.coeff 0 q = 0 := by
+        · simp [hw]
+        · have hc : q.coeff 0 = 0 := by
             by_contra hne
             have := (mem_gradingWN.mp hq) hne
             rw [map_zero] at this
             exact hw this.symm
-          rw [hc]; simp
-      · split_ifs with h'
-        · exact absurd h' hn
-        · simp
+          simp [hc]
+      · simp [latStateGen, coordEα_apply_latP_neg m hn]
   have htop : LinearMap.ker f = ⊤ := by
     rw [eq_top_iff, ← bigradα_iSup_eq_top]
     exact iSup_le hk
@@ -474,7 +507,7 @@ include hY in
 `𝒴(e^{λ_j}, z) e^{b}` vanishes, then `𝒴(e^{λ_j}, z) e^{b} = 0`.  (The annihilators act on
 `𝒴(e^{λ_j},z)e^b` as `α(p) ↦ χ z^p`, so every Taylor coefficient is a vacuum coefficient.) -/
 theorem vac_of_coeff (b : ℤ)
-    (h : ∀ (n : ℤ) (q : ℂ), MvPolynomial.coeff 0 (coordEα (latP m) n (Y q (xv m 0) (xv m b))) = 0) :
+    (h : ∀ (n : ℤ) (q : ℂ), (coordEα (latP m) n (Y q (xv m 0) (xv m b))).coeff 0 = 0) :
     ∀ q : ℂ, Y q (xv m 0) (xv m b) = 0 := by
   have hV1 : ∀ (p : ℤ), 0 < p → ∀ q : ℂ,
       mode ((latticeModule m hm l).YM (hV m)) p (Y q (xv m 0) (xv m b))
@@ -484,7 +517,7 @@ theorem vac_of_coeff (b : ℤ)
       (fun i hi => hmode_pos m hm j 0 hi) (hmode_zero m hm j 0) p q
     rwa [hmode_pos m hm k b hp, map_zero, sub_zero] at this
   have key : ∀ d : ℕ, ∀ s : (ℕ × Fin (rank (latP m))) →₀ ℕ, Finsupp.degree s = d →
-      ∀ (n : ℤ) (q : ℂ), MvPolynomial.coeff s (coordEα (latP m) n (Y q (xv m 0) (xv m b))) = 0 := by
+      ∀ (n : ℤ) (q : ℂ), (coordEα (latP m) n (Y q (xv m 0) (xv m b))).coeff s = 0 := by
     intro d
     induction d using Nat.strong_induction_on with
     | _ d IH =>
@@ -511,7 +544,7 @@ theorem vac_of_coeff (b : ℤ)
     have e1 := congrArg (coordEα (latP m) n) (hV1 p hp q)
     rw [coordEα_hmode, if_neg hp.ne', add_zero, oscN_apply_pos _ _ _ hp,
       show (p - 1).toNat = k' by omega, map_smul] at e1
-    have e2 := congrArg (MvPolynomial.coeff t) e1
+    have e2 := congrArg (fun P => AddMonoidAlgebra.coeff P t) e1
     rw [MvPolynomial.coeff_smul, MvPolynomial.coeff_smul, MvPolynomial.coeff_smul,
       coeff_pderivN, IH _ hdeg t rfl n (p + q), ← hst] at e2
     have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne'
@@ -533,15 +566,14 @@ include hY in
 `𝒴(e^{λ_j})₍q₎ e^{b}` in the charge-`n` sector of `V_{L+λ_l}` forces charge conservation
 `2mn + l = j + 2mb + k` (from `α(0)`) and `q = h_j + h_{k,b} − h_{l,n} − 1` (from `L₀`). -/
 theorem coeff_support (b n : ℤ) (q : ℂ)
-    (hne : MvPolynomial.coeff 0 (coordEα (latP m) n (Y q (xv m 0) (xv m b))) ≠ 0) :
+    (hne : (coordEα (latP m) n (Y q (xv m 0) (xv m b))).coeff 0 ≠ 0) :
     2 * m * n + l = j + (2 * m * b + k) ∧ q = wt m j 0 + wt m k b - wt m l n - 1 := by
-  set c := MvPolynomial.coeff 0 (coordEα (latP m) n (Y q (xv m 0) (xv m b))) with hc
+  set c := (coordEα (latP m) n (Y q (xv m 0) (xv m b))).coeff 0 with hc
   constructor
   · have hZ := comm_of_top hY (hV m) (xv m 0) (xv m b) (chi m j 0)
       (fun i hi => hmode_pos m hm j 0 hi) (hmode_zero m hm j 0) 0 q
     rw [hmode_zero m hm k b, map_smul, Int.cast_zero, zero_add, sub_eq_iff_eq_add] at hZ
-    have e1 := congrArg (fun y => MvPolynomial.coeff 0 (coordEα (latP m) n y)) hZ
-    simp only at e1
+    have e1 := congrArg (fun y => (coordEα (latP m) n y).coeff 0) hZ
     rw [coordEα_hmode, if_pos rfl, oscN_zero, LinearMap.zero_apply, zero_add, map_add, map_smul,
       map_smul, MvPolynomial.coeff_smul, MvPolynomial.coeff_add, MvPolynomial.coeff_smul,
       MvPolynomial.coeff_smul, ← hc, smul_eq_mul, smul_eq_mul, smul_eq_mul] at e1
@@ -559,8 +591,7 @@ theorem coeff_support (b n : ℤ) (q : ℂ)
   · have hL := comm_L0 hY (xv m 0) (xv m b) q
     rw [L0_xv m hm k b, L0_xv m hm j 0, map_smul, map_smul, LinearMap.smul_apply,
       sub_eq_iff_eq_add] at hL
-    have e1 := congrArg (fun y => MvPolynomial.coeff 0 (coordEα (latP m) n y)) hL
-    simp only at e1
+    have e1 := congrArg (fun y => (coordEα (latP m) n y).coeff 0) hL
     rw [coeff0_L0, map_add, map_sub, map_smul, map_smul, map_smul, MvPolynomial.coeff_add,
       MvPolynomial.coeff_sub, MvPolynomial.coeff_smul, MvPolynomial.coeff_smul,
       MvPolynomial.coeff_smul, ← hc, smul_eq_mul, smul_eq_mul, smul_eq_mul] at e1
@@ -596,7 +627,7 @@ vacuum coefficients `⟨e^{n}*, 𝒴(e^{λ_j})₍q₎ e^{b₀}⟩` vanish is zer
 theorem eq_zero_of_coeffs (hY : IsIntertwiningOperator (latticeModule m hm j) (latticeModule m hm k)
       (latticeModule m hm l) Y)
     (h : ∀ (n : ℤ) (q : ℂ),
-      MvPolynomial.coeff 0 (coordEα (latP m) n (Y q (xv m 0) (xv m (bz m k)))) = 0) : Y = 0 :=
+      (coordEα (latP m) n (Y q (xv m 0) (xv m (bz m k)))).coeff 0 = 0) : Y = 0 :=
   eq_zero_of_vac m hm hY (bz m k) (bz_bounds m hm k).1 (bz_bounds m hm k).2
     (vac_of_coeff m hm hY _ h)
 
@@ -641,8 +672,8 @@ theorem eq_zero_of_leading (hdiv : (2 * (m : ℤ)) ∣ l - j - k)
     {Y : IntertwiningModes (LatModuleGen (latP m)) (LatModuleGen (latP m)) (LatModuleGen (latP m))}
     (hY : IsIntertwiningOperator (latticeModule m hm j) (latticeModule m hm k)
       (latticeModule m hm l) Y)
-    (h0 : MvPolynomial.coeff 0 (coordEα (latP m) (nTop m j k l)
-      (Y (qTop m j k l) (xv m 0) (xv m (bz m k)))) = 0) : Y = 0 := by
+    (h0 : (coordEα (latP m) (nTop m j k l)
+      (Y (qTop m j k l) (xv m 0) (xv m (bz m k)))).coeff 0 = 0) : Y = 0 := by
   refine eq_zero_of_coeffs m hm hY (fun n q => ?_)
   by_contra hne
   obtain ⟨h1, h2⟩ := coeff_support m hm hY _ n q hne
@@ -670,8 +701,8 @@ theorem leadingCoeff_injective (hdiv : (2 * (m : ℤ)) ∣ l - j - k) :
     (intertwiningSpace (latticeModule m hm j) (latticeModule m hm k)
       (latticeModule m hm l)).sub_mem h₁ h₂
   have hz := eq_zero_of_leading m hm j k l hdiv hs (by
-    change MvPolynomial.coeff 0 (coordEα (latP m) (nTop m j k l)
-      (Y₁ (qTop m j k l) (xv m 0) (xv m (bz m k)) - Y₂ (qTop m j k l) (xv m 0) (xv m (bz m k)))) = 0
+    change (coordEα (latP m) (nTop m j k l)
+      (Y₁ (qTop m j k l) (xv m 0) (xv m (bz m k)) - Y₂ (qTop m j k l) (xv m 0) (xv m (bz m k)))).coeff 0 = 0
     rw [map_sub, MvPolynomial.coeff_sub, sub_eq_zero]
     exact h)
   exact Subtype.ext (sub_eq_zero.mp hz)

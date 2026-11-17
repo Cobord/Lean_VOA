@@ -60,7 +60,7 @@ def deletedLabelStratumConfiguration_relabel (B N k j : ℕ) (Y : Finset (Fin B)
     constructor
     · intro b
       obtain ⟨b, rfl⟩ := e.surjective b
-      simpa only [configurationFiber_card_relabel, Equiv.apply_eq_iff_eq, he] using
+      simpa only [configurationFiber_card_relabel, Equiv.apply_eq_iff_eq, he] using!
         f.property.1 b
     · rw [deletedConfigurationDoublesIn_relabel k Y a f.val e he]
       exact f.property.2⟩
@@ -73,10 +73,10 @@ def deletedLabelStratumConfiguration_relabel (B N k j : ℕ) (Y : Finset (Fin B)
         ext i
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Equiv.symm_apply_eq]
       rw [hf]
-      simpa only [Equiv.apply_eq_iff_eq, he] using h
+      simpa only [Equiv.apply_eq_iff_eq, he] using! h
     · have hs : ∀ b, (e.symm b).val < k ↔ b.val < k := by
         intro b
-        simpa only [Equiv.apply_symm_apply] using (he (e.symm b)).symm
+        simpa only [Equiv.apply_symm_apply] using! (he (e.symm b)).symm
       have h := deletedConfigurationDoublesIn_relabel k Y (e a) f.val e.symm hs
       simp only [Equiv.symm_apply_apply] at h
       rw [h]

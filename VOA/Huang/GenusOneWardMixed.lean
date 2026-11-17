@@ -143,11 +143,13 @@ theorem evF_mixedLHS {t₀ s : ℂ} (ht : ‖t₀‖ < 1) (hΦ : ∀ v w, Conv t
     intro n
     have h := (spatialConvergent t₀).smul_mem (show PowerSeries.coeff n (Phi Y₁ Y₂ x y) ∈
       spatialConvergent t₀ from hΦ x y n) (N.h - W.centralCharge / 24 + n)
-    convert h using 1
-    ext k
-    change c2 (thetaR2 _ _) n k = _
-    rw [thetaR2, c2_mk2]
-    simp [c2]
+    have e : PowerSeries.coeff n (thetaR2 (N.h - W.centralCharge / 24) (Phi Y₁ Y₂ x y)) =
+        (N.h - W.centralCharge / 24 + n) • PowerSeries.coeff n (Phi Y₁ Y₂ x y) := by
+      ext k
+      change c2 (thetaR2 _ _) n k = _
+      rw [thetaR2, c2_mk2]
+      simp [c2]
+    exact (congrArg (· ∈ spatialConvergent t₀) e).mpr h
   have hk : ∀ m : ℕ, Conv t₀ (piK m + if m = 0 then algebraMap ℂ R2 (1 / 2) else 0) := by
     intro m
     refine (conv_piK ht m).add ?_

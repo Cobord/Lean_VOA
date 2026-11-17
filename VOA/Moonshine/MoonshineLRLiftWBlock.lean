@@ -122,7 +122,9 @@ theorem liftWExtraNat_hP (μ : leech.carrier)
 theorem liftWExtra_spinOp (μ : leech.carrier) (s : SpinRep) :
     spinIso.symm (eT leech leech_even leech_isUnit_det_gramMat μ (spinIso s)) =
       (spinOp (coordOfRed (red leech μ))).mulVec s := by
-  rw [← spinIso_spinOp, spinIso.symm_apply_apply]
+  first
+  | rw [← spinIso_spinOp, spinIso.symm_apply_apply]
+  | (rw [← spinIso_spinOp]; exact spinIso.symm_apply_apply _)
 
 /-- The normalized extraspecial VOA lift is the scalar times the phased spin matrix. -/
 theorem liftWExtraNat_spin (μ : leech.carrier)
@@ -218,7 +220,9 @@ theorem liftWExtraNat_data (μ : leech.carrier) (N : Fin 24 → SpinRep) :
     extraVnatAut μ ((0, liftWData N) : Vnat) =
       (0, liftWData (fun j => extraPlusFormScalar μ •
         ((spinOp (coordOfRed (red leech μ))).mulVec (N j) : SpinRep))) := by
-  rw [extraVnatAut_apply, map_zero, liftWData_apply, liftWData_apply, map_sum]
+  first
+  | rw [extraVnatAut_apply, map_zero, liftWData_apply, liftWData_apply, map_sum]
+  | (rw [extraVnatAut_apply, map_zero, liftWData_apply, map_sum]; erw [liftWData_apply])
   congr 1
   apply Finset.sum_congr rfl
   intro j _

@@ -179,7 +179,9 @@ theorem ue_Δ1 : ue X ≫ (D1 X).Δ 0 X = η_ X Xᘁ ≫ (symGCMon (Xᘁ ⊞ X))
     calc _ = (β_ X Xᘁ).hom ≫ (λ_ (Xᘁ ⊗ X)).inv ≫ (𝟙_ C ◁ (β_ Xᘁ X).hom) := by monoidal
       _ = (β_ X Xᘁ).hom ≫ (β_ Xᘁ X).hom ≫ (λ_ (X ⊗ Xᘁ)).inv := by rw [← leftUnitor_inv_naturality]
       _ = _ := by rw [← Category.assoc, SymmetricCategory.symmetry, Category.id_comp]
-  rw [ue, Category.assoc, Category.assoc, D1, Δ0_of_inj1, biprod.inl_fst, tensorHom_id]
+  rw [ue]
+  erw [Category.assoc, Category.assoc]
+  rw [D1, Δ0_of_inj1, biprod.inl_fst, tensorHom_id]
   simp only [GCMon.ι0, symGCMon]
   congr 1
   rw [associator_naturality_left_assoc, ← whisker_exchange, ← reassoc_of% h1]
@@ -189,19 +191,25 @@ theorem uf_Δ2 : uf X ≫ (D2 X).Δ 0 Xᘁ = η_ X Xᘁ ≫ (β_ X Xᘁ).hom ≫
       (β_ X Xᘁ).hom ≫ (λ_ (Xᘁ ⊗ X)).inv := by
     calc _ = (λ_ (X ⊗ Xᘁ)).inv ≫ (𝟙_ C ◁ (β_ X Xᘁ).hom) := by monoidal
       _ = _ := by rw [← leftUnitor_inv_naturality]
-  rw [uf, Category.assoc, D2, Δ0_of_inj1, biprod.inr_snd, tensorHom_id]
+  rw [uf]
+  erw [Category.assoc]
+  rw [D2, Δ0_of_inj1, biprod.inr_snd, tensorHom_id]
   simp only [GCMon.ι0, symGCMon]
   congr 1
   rw [associator_naturality_left_assoc, ← whisker_exchange, reassoc_of% h1]
 
 theorem ue_Δ2 : ue X ≫ (D2 X).Δ 0 X = 0 := by
-  rw [ue, Category.assoc, Category.assoc, D2, Δ0_of_inj1, biprod.inl_snd]
+  rw [ue]
+  erw [Category.assoc, Category.assoc]
+  rw [D2, Δ0_of_inj1, biprod.inl_snd]
   simp only [MonoidalPreadditive.tensor_zero, MonoidalPreadditive.zero_whiskerRight, Limits.zero_comp,
     Limits.comp_zero]
   erw [Limits.comp_zero, Limits.comp_zero]
 
 theorem uf_Δ1 : uf X ≫ (D1 X).Δ 0 Xᘁ = 0 := by
-  rw [uf, Category.assoc, D1, Δ0_of_inj1, biprod.inr_fst]
+  rw [uf]
+  erw [Category.assoc]
+  rw [D1, Δ0_of_inj1, biprod.inr_fst]
   simp only [MonoidalPreadditive.tensor_zero, MonoidalPreadditive.zero_whiskerRight, Limits.zero_comp,
     Limits.comp_zero]
   erw [Limits.comp_zero]
@@ -355,7 +363,7 @@ theorem tder_inclG {W : C} (D : GCDer (SB) W) {Y : C} (x : G.obj Y) : tder G D Y
 
 theorem tder1_ev : tder G (D1 X) X (ev' G X) = ((HH).map (η_ X Xᘁ)).hom ((ε (HH)).hom 1) := by
   change tder G (D1 X) X (tlof G (SB) X (0 + 1) _) = _
-  rw [tder_lof_succ]
+  erw [tder_lof_succ]
   erw [map_map_apply]
   erw [ue_Δ1]
   rw [← map_map_apply, inclG_ε, inclG_map]
@@ -363,7 +371,7 @@ theorem tder1_ev : tder G (D1 X) X (ev' G X) = ((HH).map (η_ X Xᘁ)).hom ((ε 
 
 theorem tder2_ev : tder G (D2 X) X (ev' G X) = 0 := by
   change tder G (D2 X) X (tlof G (SB) X (0 + 1) _) = _
-  rw [tder_lof_succ]
+  erw [tder_lof_succ]
   erw [map_map_apply]
   erw [ue_Δ2]
   rw [G.map_zero]
@@ -372,7 +380,7 @@ theorem tder2_ev : tder G (D2 X) X (ev' G X) = 0 := by
 
 theorem tder1_fv : tder G (D1 X) Xᘁ (fv' G X) = 0 := by
   change tder G (D1 X) Xᘁ (tlof G (SB) Xᘁ (0 + 1) _) = _
-  rw [tder_lof_succ]
+  erw [tder_lof_succ]
   erw [map_map_apply]
   erw [uf_Δ1]
   rw [G.map_zero]
@@ -381,7 +389,7 @@ theorem tder1_fv : tder G (D1 X) Xᘁ (fv' G X) = 0 := by
 
 theorem tder2_fv : tder G (D2 X) Xᘁ (fv' G X) = ((HH).map (η_ X Xᘁ ≫ (β_ X Xᘁ).hom)).hom ((ε (HH)).hom 1) := by
   change tder G (D2 X) Xᘁ (tlof G (SB) Xᘁ (0 + 1) _) = _
-  rw [tder_lof_succ]
+  erw [tder_lof_succ]
   erw [map_map_apply]
   erw [uf_Δ2]
   rw [← Category.assoc, ← map_map_apply, inclG_ε, inclG_map]

@@ -117,10 +117,10 @@ theorem I2ns_le_ker : G2data.I ≤ RingHom.ker
       liDegreeZeroClass g2W 1 ⟨genS g2CertData (-5/3) g2_level_ne i,
         genS_weight_one g2CertData (-5/3) g2_level_ne i⟩).toRingHom := by
   intro p hp
-  have hle : quadraticIdeal G2data.rel ≤ RingHom.ker clG2.toRingHom := by
-    rw [quadraticIdeal, Ideal.span_le]
-    rintro _ ⟨r, rfl⟩
-    exact clG2_rel r
+  have hle : quadraticIdeal G2data.rel ≤ RingHom.ker clG2.toRingHom :=
+    Ideal.span_le.mpr (by
+      rintro _ ⟨r, rfl⟩
+      exact clG2_rel r)
   exact hle hp
 
 /-- **The explicit `G₂` presentation**: currents `J^a_{-1}|0⟩` of `L_{-5/3}(𝔤₂)`, ideal `I₂ⁿˢ`. -/

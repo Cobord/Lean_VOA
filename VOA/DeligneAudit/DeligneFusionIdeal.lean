@@ -44,13 +44,13 @@ theorem trunc_all {V : Type} [AddCommGroup V] [Module ℂ V] {ρ : CurrentModule
       · obtain ⟨j, rfl⟩ : ∃ j, k = N + j := ⟨k - N, by omega⟩
         have : c = 3 ∨ c = 4 ∨ c = 5 := by omega
         rcases this with rfl | rfl | rfl
-        · exact f_trunc_up (by decide) (by decide) (by simpa using h.trunc_f1) hcart j
-        · exact f_trunc_up (by decide) (by decide) (by simpa using h.trunc_f2) hcart j
-        · exact f_trunc_up (by decide) (by decide) (by simpa using h.trunc_theta) hcart j
+        · exact f_trunc_up (by decide) (by decide) (by simpa using! h.trunc_f1) hcart j
+        · exact f_trunc_up (by decide) (by decide) (by simpa using! h.trunc_f2) hcart j
+        · exact f_trunc_up (by decide) (by decide) (by simpa using! h.trunc_theta) hcart j
       · rcases Nat.eq_zero_or_pos k with rfl | hk1
         · have := h.cartan_zero c hc
           have hN : N = 0 := by omega
-          subst hN; simpa using this
+          subst hN; simpa using! this
         · exact h.cartan_pos c hc k hk1
   | (x :: l), c, k, hk => by
       change ρ.op c k (ρ.op x.1 x.2 (wordOp ρ l w)) = 0
@@ -89,7 +89,7 @@ theorem step_ideal (N d : ℕ) :
       Module.finrank ℂ (IVd (univRep N 0) (SectorWeyl.wU N 0) N d) ≤
     Module.finrank ℂ (cycDeg (univRep N 0) (SectorWeyl.wU N 0) d) := by
   have hR : MabRel (univRep 0 N) (SectorWeyl.wU 0 N) N 0 := by
-    have := mabRel_shift (a := 0) (b := 0) N (by simpa using univ_mabRel 0 N); simpa using this
+    have := mabRel_shift (a := 0) (b := 0) N (by simpa using! univ_mabRel 0 N); simpa using! this
   set P := cycDeg (univRep N 0) (SectorWeyl.wU N 0) d
   haveI : FiniteDimensional ℂ P := univ_fd0 N 0 d
   have h := finrank_map_add_inf_ker (univMap hR) P

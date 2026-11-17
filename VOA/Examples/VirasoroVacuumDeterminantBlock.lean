@@ -99,7 +99,7 @@ theorem vermaWeightGramPolynomial_coeff_zero (c : ℂ) (n : ℕ)
     (vermaWeightGramPolynomial c n i j).coeff 0 =
       vermaContravariant c 0 (negWord c 0 i.val) (negWord c 0 j.val) := by
   have he := congrFun (congrFun (vermaWeightGramPolynomial_eval c 0 n) i) j
-  simpa only [Matrix.map_apply, ← Polynomial.coeff_zero_eq_eval_zero, vermaGramMatrix] using he
+  simpa only [Matrix.map_apply, ← Polynomial.coeff_zero_eq_eval_zero, vermaGramMatrix] using! he
 
 /-- Every translated row vanishes at weight zero because the actual
 translation embedding lies in the canonical radical. -/

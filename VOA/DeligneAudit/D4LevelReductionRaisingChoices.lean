@@ -32,7 +32,7 @@ theorem centralRaisingChoices_injective (j : ℕ) (shape : σ → Fin 6)
   | succ j ih =>
       obtain ⟨t, ht, hmap⟩ := List.mem_flatMap.mp hq
       obtain ⟨q, hchoice, rfl⟩ := List.mem_map.mp hmap
-      have ht : shape t = 5 := by simpa using (List.mem_filter.mp ht).2
+      have ht : shape t = 5 := by simpa using! (List.mem_filter.mp ht).2
       obtain ⟨hinj, hcol⟩ := ih _ q hchoice
       have hne (i : Fin j) : q.1 i ≠ t := by
         intro he
@@ -44,13 +44,13 @@ theorem centralRaisingChoices_injective (j : ℕ) (shape : σ → Fin 6)
       · intro i k he
         cases i using Fin.cases <;> cases k using Fin.cases
         · rfl
-        · exact False.elim (hne _ (by simpa using he.symm))
-        · exact False.elim (hne _ (by simpa using he))
-        · exact congrArg Fin.succ (hinj (by simpa using he))
+        · exact False.elim (hne _ (by simpa using! he.symm))
+        · exact False.elim (hne _ (by simpa using! he))
+        · exact congrArg Fin.succ (hinj (by simpa using! he))
       · intro i
         cases i using Fin.cases with
         | zero => exact ht
-        | succ i => simpa [Function.update_of_ne (hne i)] using hcol i
+        | succ i => simpa [Function.update_of_ne (hne i)] using! hcol i
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
 variable (ρ : CurrentModule D4sector.f V) (w : V)

@@ -64,7 +64,7 @@ noncomputable def Lp1 (N : OrdVModule W M) : End ℂ M := mode (N.YM W.conformal
 
 theorem Lm1_mem (N : OrdVModule W M) {α : ℂ} {x : M} (hx : x ∈ N.weight α) :
     Lm1 N.toWeakModule x ∈ N.weight (α + 1) := by
-  have h := mode_mem_weight N W.conformal_mem hx 0
+  have h : Lm1 N.toWeakModule x ∈ _ := mode_mem_weight N W.conformal_mem hx 0
   convert h using 2; push_cast; ring
 
 theorem Lm1_pow_mem (N : OrdVModule W M) {α : ℂ} {x : M} (hx : x ∈ N.weight α) (i : ℕ) :
@@ -77,7 +77,7 @@ theorem Lm1_pow_mem (N : OrdVModule W M) {α : ℂ} {x : M} (hx : x ∈ N.weight
 
 theorem Lp1_mem (N : OrdVModule W M) {α : ℂ} {x : M} (hx : x ∈ N.weight α) :
     Lp1 N x ∈ N.weight (α - 1) := by
-  have h := mode_mem_weight N W.conformal_mem hx 2
+  have h : Lp1 N x ∈ _ := mode_mem_weight N W.conformal_mem hx 2
   convert h using 2; push_cast; ring
 
 theorem Lp1_pow_mem (N : OrdVModule W M) {α : ℂ} {x : M} (hx : x ∈ N.weight α) (j : ℕ) :
@@ -115,7 +115,7 @@ theorem wMode_mem (N : OrdVModule W M) {σ : ℂ} {s : M} (hs : s ∈ N.weight �
   obtain ⟨K, hK⟩ := exists_bound N.toWeakModule s m φ
   rw [wMode_eq_sum N.toWeakModule K hK]
   refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ ?_
-  have h1 := mode_mem_weight N hφ hs (m + i)
+  have h1 : N.act φ (m + i) s ∈ _ := mode_mem_weight N hφ hs (m + i)
   convert Lm1_pow_mem N h1 i using 2; push_cast; ring
 
 /-! ## The dagger `W†(t)₍ₙ₎ = (−1)^w ∑ⱼ (1/j!) W(L₁ʲt)₍₂w−n−2−j₎` -/

@@ -13,7 +13,7 @@ private abbrev ρ := univRepG D4sector.f OneR
 private abbrev w := wUG D4sector.f OneR
 
 private theorem one_sat : Sat D4sector.f ρ w (ravSpec D4sector 1 2) := by
-  simpa [OneR, ravFam_zero_right] using univG_sat D4sector.f OneR
+  simpa [OneR, ravFam_zero_right] using! univG_sat D4sector.f OneR
 
 theorem one_generator_mode_one (c : Fin 28) (hc : c ≠ D4sector.c₀) :
     ρ.op c 1 w = 0 := by
@@ -26,7 +26,7 @@ theorem one_generator_mode_one (c : Fin 28) (hc : c ≠ D4sector.c₀) :
     omega)
   change c ≠ (27 : Fin 28) at hc
   change ρ.op c (if c = (27 : Fin 28) then 2 else 1) w = 0 at h
-  simpa only [if_neg hc] using h
+  simpa only [if_neg hc] using! h
 
 theorem one_generator_mode_two (c : Fin 28) : ρ.op c 2 w = 0 := by
   exact rav_high_kills_generator (m := 1) (R := ρ) (w := w)
@@ -44,9 +44,9 @@ theorem one_top_mode_one_other (c : Fin 28) (hc : c ≠ D4sector.c₀) :
     calc
       _ = ∑ e : Fin 28, D4sector.f c D4sector.c₀ e • ρ.op e 2 w := by
         simpa only [one_generator_mode_one c hc, map_zero, sub_zero,
-          Nat.reduceAdd] using h
+          Nat.reduceAdd] using! h
       _ = 0 := hs
-  simpa only [oneTop] using h'
+  simpa only [oneTop] using! h'
 
 private theorem raising_top_table :
     ∀ c e : Fin 28, 4 ≤ c.val → c.val < 16 →
@@ -77,9 +77,9 @@ theorem one_top_mode_zero_raising (c : Fin 28)
   have h' : ρ.op c 0 (ρ.op D4sector.c₀ 1 w) = 0 := by
     calc
       _ = ∑ e : Fin 28, D4sector.f c D4sector.c₀ e • ρ.op e 1 w := by
-        simpa only [he, map_zero, sub_zero, Nat.zero_add] using h
+        simpa only [he, map_zero, sub_zero, Nat.zero_add] using! h
       _ = 0 := hs
-  simpa only [oneTop] using h'
+  simpa only [oneTop] using! h'
 
 private theorem cartan_top_tableZ :
     ∀ h e : Fin 28, h.val < 4 →
@@ -87,9 +87,7 @@ private theorem cartan_top_tableZ :
   decide +kernel
 
 private theorem cartan_top_table (h e : Fin 28) (hh : h.val < 4) :
-    D4sector.f h D4sector.c₀ e =
-      if e = D4sector.c₀ then -(thetaD4 h : ℂ) else 0 := by
-  change (fZ br h 27 e : ℂ) = if e = 27 then -(thetaD4 h : ℂ) else 0
+    (fZ br h 27 e : ℂ) = if e = 27 then -(thetaD4 h : ℂ) else 0 := by
   rw [cartan_top_tableZ h e hh]
   split_ifs <;> simp
 
@@ -100,13 +98,15 @@ theorem one_top_mode_zero_cartan (c : Fin 28) (hc : c.val < 4) :
   simp only [one_mul] at hw
   have hs : (∑ e : Fin 28, D4sector.f c D4sector.c₀ e • ρ.op e 1 w) =
       -(thetaD4 c : ℂ) • ρ.op D4sector.c₀ 1 w := by
+    change (∑ e : Fin 28, (fZ br c 27 e : ℂ) • ρ.op e 1 w) =
+      -(thetaD4 c : ℂ) • ρ.op (27 : Fin 28) 1 w
     simp only [cartan_top_table c _ hc, ite_smul, zero_smul,
       Finset.sum_ite_eq', Finset.mem_univ, if_true]
   have h := ρ.comm c D4sector.c₀ 0 1 w
   have h' : ρ.op c 0 (ρ.op D4sector.c₀ 1 w) =
       (∑ e : Fin 28, D4sector.f c D4sector.c₀ e • ρ.op e 1 w) +
         ρ.op D4sector.c₀ 1 (ρ.op c 0 w) := by
-    simpa only [Nat.zero_add] using (sub_eq_iff_eq_add.mp h)
+    simpa only [Nat.zero_add] using! (sub_eq_iff_eq_add.mp h)
   change ρ.op c 0 (ρ.op D4sector.c₀ 1 w) = 0
   rw [h', hw, map_smul, hs]
   module

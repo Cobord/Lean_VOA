@@ -46,7 +46,7 @@ theorem commonModeSimple (Q : LWModule W) (iQ : Q.IsIrreducibleLW) :
       act_mem := fun a m x hx => by
         have h := S.smul_mem (FreeAlgebra.ι ℂ (a, m)) hx
         change commonModeRep Q (FreeAlgebra.ι ℂ (a, m)) x ∈ S at h
-        simpa only [commonModeRep, FreeAlgebra.lift_ι_apply] using h }
+        simpa only [commonModeRep, FreeAlgebra.lift_ι_apply] using! h }
   rcases iQ.2 T with h | h
   · left; ext x; exact SetLike.ext_iff.mp h x
   · right; ext x; exact SetLike.ext_iff.mp h x
@@ -91,9 +91,9 @@ theorem single_mem_of_mode_stable {ι : Type v} [Finite ι]
       rw [he]; exact S.smul_mem c hz
     | grade1 am =>
       change (fun j k => commonModeRep (R j) (FreeAlgebra.ι ℂ am) (z j k)) ∈ S
-      simpa only [commonModeRep, FreeAlgebra.lift_ι_apply] using hS am.1 am.2 z hz
-    | add a b ha hb => simpa only [add_smul] using S.add_mem (ha hz) (hb hz)
-    | mul a b ha hb => simpa only [mul_smul] using ha (hb hz)
+      simpa only [commonModeRep, FreeAlgebra.lift_ι_apply] using! hS am.1 am.2 z hz
+    | add a b ha hb => simpa only [add_smul] using! S.add_mem (ha hz) (hb hz)
+    | mul a b ha hb => simpa only [mul_smul] using! ha (hb hz)
   let T : Submodule (CommonModeAlgebra 𝒱) (∀ j, κ j → (R j).carrier) :=
     { carrier := S
       zero_mem' := S.zero_mem
@@ -141,7 +141,7 @@ theorem single_mem_of_mode_stable {ι : Type v} [Finite ι]
       conv_lhs at h => rw [← Finset.univ_sum_single z]
       rw [map_sum, Finset.sum_apply] at h
       simpa only [Finset.sum_eq_single j (fun b _ hb => hblock b (z b) j hb)
-        (fun h => (h (Finset.mem_univ j)).elim)] using h
+        (fun h => (h (Finset.mem_univ j)).elim)] using! h
     · exact hblock j (z j) i (Ne.symm hi)
   exact (Submodule.projection_apply_eq_zero_iff hU.symm).mp hpj
 

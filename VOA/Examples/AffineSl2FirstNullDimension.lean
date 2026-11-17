@@ -50,7 +50,7 @@ theorem finrank_ker_of_simple_root {ι K : Type*} [Fintype ι] [DecidableEq ι] 
     change A.mulVecLin (x.val - y.val) = 0
     rw [map_sub, x.property, y.property, sub_self]
   have hle : Module.finrank K A.mulVecLin.ker ≤ 1 := by
-    simpa using LinearMap.finrank_le_finrank_of_injective hinj
+    simpa using! LinearMap.finrank_le_finrank_of_injective hinj
   have hge : 1 ≤ Module.finrank K A.mulVecLin.ker := by
     apply Submodule.one_le_finrank_iff.mpr
     intro hbot

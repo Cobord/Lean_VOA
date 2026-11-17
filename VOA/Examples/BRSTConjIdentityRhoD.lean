@@ -146,7 +146,7 @@ theorem ghostConj_c0 (a : Fin 3) (y : Sl2GhostSpace) :
   have h := ghostConj_Cr a (0, 1) y
   rw [show swapMode (0, 1) = (0, 1) by simp [swapMode],
     show modeCoef a (0, 1) = 1 by unfold modeCoef; simp] at h
-  simpa using h
+  simpa using! h
 
 /-! ### The conjugated charge on a pure tensor -/
 
@@ -406,9 +406,9 @@ theorem gMode_grading_zero (a : Fin 3) (e : Fin 2) (m : ℤ) (hm : IsZeroMode e 
     {y : Sl2GhostSpace} (hy : y ∈ sl2GhostSVA.grading h) : gMode a e m y ∈ sl2GhostSVA.grading h := by
   rcases hm with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
   · have := sl2GhostSVA.grading_mode (bGhost a) (bGhost_weight a) y hy 0
-    simpa using this
+    simpa using! this
   · have := sl2GhostSVA.grading_mode (cGhost a) (cGhost_weight a) y hy (-1)
-    simpa using this
+    simpa using! this
 
 theorem P0_grading {h : ℂ} {y : Sl2GhostSpace} (hy : y ∈ sl2GhostSVA.grading h) :
     P0 y ∈ sl2GhostSVA.grading h := by
@@ -461,7 +461,6 @@ theorem rhoQ_grading (n : ℤ) {x : BRSTSpace} (hx : x ∈ brstSVA.grading (n : 
     (motive := fun x => ghConjBRST (brstQ x) = Rop n.toNat (ghConjBRST x)) (by simp)
     (fun x y hx hy => by simp only [map_add] at hx hy ⊢; rw [hx, hy])
     (fun c x hx => by
-      simp only at hx ⊢
       rw [map_smul, LinearMap.map_smulₛₗ, hx, LinearMap.map_smulₛₗ, map_smul]) ?_ hx
   intro h1 a ha b hb
   rcases tmul_weights ha hb with h0 | ⟨k1, k2, hk1, hk2, ha', hb'⟩
@@ -529,7 +528,6 @@ theorem cubic_lift (hC : GhostCubicConj) (n : ℤ) {x : BRSTSpace}
     (motive := fun x => cubicDefect n.toNat (P0B (ghConjBRST x)) = 0) (by simp)
     (fun x y hx hy => by simp only [map_add] at hx hy ⊢; rw [hx, hy, add_zero])
     (fun c x hx => by
-      simp only at hx ⊢
       rw [LinearMap.map_smulₛₗ, map_smul, map_smul, hx, smul_zero]) ?_ hx
   intro h1 a ha b hb
   rcases tmul_weights ha hb with h0 | ⟨k1, k2, hk1, hk2, ha', hb'⟩

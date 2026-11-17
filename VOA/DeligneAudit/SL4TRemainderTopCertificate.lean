@@ -18,9 +18,9 @@ theorem polynomial_tail_span_variable_mem (N : ℕ) (p : Polynomial A)
       obtain ⟨c, rfl⟩ := hp
       rw [← pow_succ', show N + c + 1 = N + (c + 1) by omega]
       exact Submodule.subset_span ⟨c + 1, rfl⟩
-  | zero => simpa only [mul_zero] using Submodule.zero_mem _
-  | add p q hp hq ihp ihq => simpa only [mul_add] using Submodule.add_mem _ ihp ihq
-  | smul a p hp ih => simpa only [mul_smul_comm] using Submodule.smul_mem _ a ih
+  | zero => simpa only [mul_zero] using! Submodule.zero_mem _
+  | add p q hp hq ihp ihq => simpa only [mul_add] using! Submodule.add_mem _ ihp ihq
+  | smul a p hp ih => simpa only [mul_smul_comm] using! Submodule.smul_mem _ a ih
 
 /-- Taking linear combinations of tail powers preserves the top-row remainder ideal. -/
 theorem polynomial_tail_topIdeal_le (xs : List A) (N j : ℕ) :
@@ -88,7 +88,7 @@ theorem remainderTopMinor_topIdeal_certificate (xs : List A) (N j : ℕ)
       (∀ l, p.coeff l ∈ remainderTopIdeal xs N j) ∧
       Polynomial.C (remainderTopMinor xs N j cols) * Polynomial.X ^ (xs.length - j) + p ∈
         Ideal.span {alphabetCharacteristic xs, Polynomial.X ^ N} := by
-  simpa only [remainderAllIdeal_eq_topIdeal xs N j hjr] using
+  simpa only [remainderAllIdeal_eq_topIdeal xs N j hjr] using!
     remainderTopMinor_cramer_certificate xs N j cols hj hjr
 
 end

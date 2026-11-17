@@ -887,9 +887,9 @@ theorem ASumAnm_eq_kFinsum (M P n : ℕ) (γ μ : ℤ) :
         (fun a : ℤ => cbz (M : ℤ) a
             * (cbz ((P : ℤ) + n + 1) (((P : ℤ) - n - 2 - μ - γ) + a)
                 * cbz ((a : ℤ) - μ - 1) ((a : ℤ) - (n + 2) - μ)))
-        (fun p hp => by dsimp only; rw [cbz_apply_neg (M : ℤ) hp, zero_mul])
+        (fun p hp => by (try dsimp only); rw [cbz_apply_neg (M : ℤ) hp, zero_mul])
         (fun p hp => by
-          dsimp only
+          try dsimp only
           rw [cbz_lt (by positivity) (by
             have : (M + 1 : ℤ) ≤ p := by exact_mod_cast hp
             omega), zero_mul])).symm

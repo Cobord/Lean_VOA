@@ -54,7 +54,6 @@ theorem allA2LeviRankCertificates : AllA2LeviRankCertificates := by
     change Module.finrank ℂ (StepQuot F 0) ≤
       L 0 * Module.finrank ℂ (KeyQuot F S 0)
     simp [F, S, L, StepQuot, KeyQuot]
-    exact le_rfl
   · intro i hi
     have hi0 : i = 0 := by omega
     subst i
@@ -63,7 +62,7 @@ theorem allA2LeviRankCertificates : AllA2LeviRankCertificates := by
       have htop : FiniteDimensional ℂ (⊤ : Submodule ℂ C) := inferInstance
       have hle := Submodule.finrank_quotient_le
         (s := (F 0).comap (S 0).subtype)
-      simpa [F, S, KeyQuot] using hle
+      simpa [F, S, KeyQuot] using! hle
     exact hq.trans hrank.2
   · simp [L, g, VOA.DeligneAudit.LeviTypeA.a2LeviCount_eq]
 

@@ -62,7 +62,10 @@ theorem remainderTopIdeal_succ_le (xs : List A) (N j : ℕ) (hj : j + 1 ≤ xs.l
     remainderTopIdeal xs N (j + 1) ≤ remainderTopIdeal xs N j := by
   apply Ideal.span_le.mpr
   rintro x ⟨cols, rfl⟩
-  rw [SetLike.mem_coe, remainderTopMinor, Matrix.det_succ_row_zero]
+  rw [SetLike.mem_coe, remainderTopMinor]
+  rw [Matrix.det_succ_row_zero (fun a b : Fin (j + 1) =>
+    alphabetPowerRemainder xs (N + cols b) (xs.length - (j + 1) + a.val) :
+      Matrix (Fin (j + 1)) (Fin (j + 1)) A)]
   apply Ideal.sum_mem
   intro b _
   apply Ideal.mul_mem_left
@@ -169,7 +172,7 @@ theorem fullFlagTruncationIdeal_of_high_degree (B N : ℕ) (d : ℤ) (hd : ((B *
       calc (∑ i : Fin B, s i • (1 : ℤ)) ≤ ∑ _i : Fin B, (N : ℤ) := by
             apply Finset.sum_le_sum
             intro i _
-            simpa using hle i
+            simpa using! hle i
         _ = ((B * N : ℕ) : ℤ) := by simp
     omega
   obtain ⟨i, hi⟩ := hex
@@ -177,7 +180,7 @@ theorem fullFlagTruncationIdeal_of_high_degree (B N : ℕ) (d : ℤ) (hd : ((B *
   intro l
   by_cases hl : l = i
   · subst l
-    simpa using hi
+    simpa using! hi
   · simp [Ne.symm hl]
 
 /-! ## Averaging in the colour-invariant polynomial algebra -/
@@ -323,7 +326,7 @@ theorem selectedColourPowerSum_homogeneous (selected : Finset C) (s : ℕ) :
   rw [mem_colourHomogeneousPiece, selectedColourPowerSum_val]
   apply MvPolynomial.IsWeightedHomogeneous.sum
   intro i _
-  simpa using (isWeightedHomogeneous_X ℂ (fun _ : Fin B => (1 : ℤ)) i).pow s
+  simpa using! (isWeightedHomogeneous_X ℂ (fun _ : Fin B => (1 : ℤ)) i).pow s
 
 theorem colourTruncationIdeal_le_contraction (selected : Finset C) (N j : ℕ) :
     colourTruncationIdeal colour N ≤ colourStratumContraction colour selected N j :=
@@ -340,7 +343,7 @@ theorem colourTruncatedStratum_mem_iff (selected : Finset C) (N j : ℕ)
     have hd : g - f ∈ colourTruncationIdeal colour N := Ideal.Quotient.eq.mp he
     have hd' := colourTruncationIdeal_le_contraction colour selected N j hd
     have := (colourStratumContraction colour selected N j).sub_mem hg hd'
-    simpa using this
+    simpa using! this
   · intro hf
     exact ⟨f, hf, rfl⟩
 
@@ -424,7 +427,7 @@ theorem colourTruncatedStratum_eq_bot (selected : Finset C) (N j : ℕ)
     colourTruncatedStratum colour selected N j = ⊥ := by
   rw [colourTruncatedStratum, colourStratumContraction,
     remainderTopIdeal_eq_bot_of_length_lt _ N j (by
-      simpa [fullFlagSubalphabet] using hj), sup_bot_eq]
+      simpa [fullFlagSubalphabet] using! hj), sup_bot_eq]
   exact Ideal.map_quotient_self _
 
 /-- The strata descend. -/

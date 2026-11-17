@@ -597,7 +597,7 @@ theorem dlMat_apply (hN : 0 < N) (ℓ m : ℕ) (h : (ℓ : ℤ) * m ≡ 1 [ZMOD 
     have hf : ∀ x : ℤ, e4 N (ℓ * (x + 2 * N) ^ 2) = e4 N (ℓ * x ^ 2) := fun x =>
       e4_eq_of_eq hN ⟨ℓ * x + ℓ * N, by ring⟩
     have hs := sum_fin_shift hN (fun x => e4 N (ℓ * x ^ 2)) hf (m * j)
-    simp only at hs
+    try simp only at hs
     rw [gaussG, ← hs, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← e4_add, ← e4_add]
@@ -916,7 +916,7 @@ theorem gs_four_mul (hN : 0 < N) (a : ℤ) : gs (4 * N) a = 2 * gaussG N a := by
   unfold gs gaussG
   have hsplit := sum_split (c := 4 * N) (m := 2 * N) (n := 2) (by ring) h4
     (fun x => E (4 * N) (a * x ^ 2)) (gs_periodic h4 a)
-  simp only at hsplit
+  try simp only at hsplit
   rw [hsplit, Finset.mul_sum]
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [Fin.sum_univ_two]
@@ -942,7 +942,7 @@ theorem gs_p2 {p c : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (hc : 0 < c) {b : ℤ}
   -- step 1: split `x = y + pc z`
   have hsplit := sum_split (c := p ^ 2 * c) (m := p * c) (n := p) (by ring) hP
     (fun x => E (p ^ 2 * c) (b * x ^ 2)) (gs_periodic hP b)
-  simp only at hsplit
+  try simp only at hsplit
   -- the inner sum
   have inner : ∀ y : ℤ, ∑ z : Fin p, E (p ^ 2 * c) (b * (y + ((p * c : ℕ) : ℤ) * ((z : ℕ) : ℤ)) ^ 2)
       = E (p ^ 2 * c) (b * y ^ 2) * (if (p : ℤ) ∣ y then (p : ℂ) else 0) := by
@@ -1161,7 +1161,7 @@ theorem gs_two_step (j : ℕ) {b : ℤ} (hb : Odd b) :
   -- step 1: `x = y + K z`
   have hsplit := sum_split (c := 4 * K) (m := K) (n := 4) (by ring) hP
     (fun x => E (4 * K) (b * x ^ 2)) (gs_periodic hP b)
-  simp only at hsplit
+  try simp only at hsplit
   have inner : ∀ y : ℤ, ∑ z : Fin 4, E (4 * K) (b * (y + (K : ℤ) * ((z : ℕ) : ℤ)) ^ 2) =
       E (4 * K) (b * y ^ 2) * (if (2 : ℤ) ∣ y then 4 else 0) := by
     intro y
@@ -1223,7 +1223,7 @@ theorem gs_two_step (j : ℕ) {b : ℤ} (hb : Odd b) :
   have hhalf : gs K b = 2 * ∑ w : Fin K', E K (b * ((w : ℕ) : ℤ) ^ 2) := by
     have hsplit3 := sum_split (c := K) (m := K') (n := 2) (by rw [hKK]; ring) hK0
       (fun x => E K (b * x ^ 2)) (gs_periodic hK0 b)
-    simp only at hsplit3
+    try simp only at hsplit3
     unfold gs; rw [hsplit3, Finset.mul_sum]
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [Fin.sum_univ_two]

@@ -151,7 +151,7 @@ theorem simple_normalized_word_tangent (c : ℂ)
         (wordPolynomial w).derivative.eval c * (2*α-β*c) := by
   have h := congrArg TrivSqZeroExt.snd (simple_normalized_word_pairing c D hD α β ha hb w)
   rw [VirRigidTangent.aeval_dual] at h
-  simpa [vacuumPair_apply] using h
+  simpa [vacuumPair_apply] using! h
 
 /-- Scalar specialization agrees with the actual ordinary vacuum pairing
 whenever weight one vanishes. Apply the universal construction to the zero
@@ -179,7 +179,7 @@ theorem wordPolynomial_eval (h1 : W.grading 1 = ⊥)
       inl ((wordPolynomial w).eval W.centralCharge) :=
     Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval _ _
   rw [he] at h
-  simpa [vacuumPair_apply, virWord_fst] using h.symm
+  simpa [vacuumPair_apply, virWord_fst] using! h.symm
 
 /-- The constructed word polynomials reproduce ordinary invariant-form
 pairings of arbitrary universal Virasoro descendants. This identifies the

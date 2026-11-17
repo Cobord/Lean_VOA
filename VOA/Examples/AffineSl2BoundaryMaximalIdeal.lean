@@ -270,14 +270,14 @@ private theorem locallyKilledBy_Eneg (n : ℕ) {v : WakModule k}
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]
       exact locallyKilledBy_zero _
   | succ r ih =>
       apply locallyKilledBy_of_apply
       rw [Sl2Sing.EEs]
       apply ih
-      simpa only [pow_succ, Module.End.mul_apply] using hr
+      simpa only [pow_succ, Module.End.mul_apply] using! hr
 
 /-- Horizontal `e₀`-local nilpotence is preserved by every negative `h` current. -/
 private theorem locallyKilledBy_Hneg (n : ℕ) {v : WakModule k}
@@ -286,7 +286,7 @@ private theorem locallyKilledBy_Hneg (n : ℕ) {v : WakModule k}
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]
       exact locallyKilledBy_zero _
   | succ r ih =>
@@ -295,7 +295,7 @@ private theorem locallyKilledBy_Hneg (n : ℕ) {v : WakModule k}
       rw [sub_eq_add_neg]
       apply LocallyKilledBy.add
       · apply ih
-        simpa only [pow_succ, Module.End.mul_apply] using hr
+        simpa only [pow_succ, Module.End.mul_apply] using! hr
       · simpa only [neg_smul] using
           LocallyKilledBy.smul (locallyKilledBy_Eneg k n ⟨r + 1, hr⟩) (-2)
 
@@ -306,7 +306,7 @@ private theorem locallyKilledBy_Fneg (n : ℕ) {v : WakModule k}
   obtain ⟨r, hr⟩ := hv
   induction r generalizing v with
   | zero =>
-      have hv0 : v = 0 := by simpa using hr
+      have hv0 : v = 0 := by simpa using! hr
       rw [hv0, map_zero]
       exact locallyKilledBy_zero _
   | succ r ih =>
@@ -314,7 +314,7 @@ private theorem locallyKilledBy_Fneg (n : ℕ) {v : WakModule k}
       rw [Sl2Sing.EFs k 0 (-((n : ℤ)) - 1) (-((n : ℤ)) - 1) (by ring) (by omega)]
       apply LocallyKilledBy.add
       · apply ih
-        simpa only [pow_succ, Module.End.mul_apply] using hr
+        simpa only [pow_succ, Module.End.mul_apply] using! hr
       · exact locallyKilledBy_Hneg k n ⟨r + 1, hr⟩
 
 /-- Every negative-current word is locally killed by horizontal `e₀`. -/

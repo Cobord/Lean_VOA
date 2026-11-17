@@ -90,8 +90,8 @@ theorem rawCurrentCharge_current_cGhost (A : AffineSl2Action V k) (a b : Fin 3) 
     simp only [show (-1 - 1 : ℤ) = -2 by omega, TensorProduct.smul_tmul']
   · intro n hn
     by_contra hmem
-    have hn0 : n ≠ 0 := by simpa using fun h => hmem (by simp [h])
-    have hn1 : n ≠ 1 := by simpa using fun h => hmem (by simp [h])
+    have hn0 : n ≠ 0 := by simpa using! fun h => hmem (by simp [h])
+    have hn1 : n ≠ 1 := by simpa using! fun h => hmem (by simp [h])
     change _ ≠ 0 at hn
     apply hn
     dsimp only

@@ -71,19 +71,17 @@ theorem formMap_pair (B : W.InvariantForm) (x y : V) :
       · subst b
         rw [internalProjTo_coe (unitLog W).toGW.isInternal a ⟨y,hy⟩]
         rfl
-      · rw [C2Rigid.internalProjTo_eq_zero_of_ne (unitLog W).toGW hy hab,map_zero,
-          form_orthogonal B hab hx hy]
-    · dsimp only
-      change C2Rigid.dualPairingFlip (unitLog W).toGW
+      · rw [C2Rigid.internalProjTo_eq_zero_of_ne (unitLog W).toGW hy hab]
+        refine Eq.trans ?_ (form_orthogonal B hab hx hy).symm
+        exact (formPiece B a ⟨x,hx⟩).map_zero
+    · change C2Rigid.dualPairingFlip (unitLog W).toGW
         (DirectSum.lof ℂ ℂ (fun b => Dual ℂ ((unitLog W).weight b)) a (formPiece B a ⟨x,hx⟩)) 0 = B.form x 0
       rw [map_zero,map_zero]
     · intro y z hy hz
-      dsimp only at hy hz ⊢
-      rw [C2Rigid.dualPairing_add_left,map_add,hy,hz]
-  · dsimp only
-    rw [map_zero,map_zero,map_zero,LinearMap.zero_apply]
+      exact (C2Rigid.dualPairing_add_left _ y z _).trans
+        ((congrArg₂ (· + ·) hy hz).trans (map_add (B.form x) y z).symm)
+  · rw [map_zero,map_zero,map_zero,LinearMap.zero_apply]
   · intro x z hx hz
-    dsimp only at hx hz ⊢
     rw [map_add,map_add,map_add,LinearMap.add_apply,hx,hz]
 
 /-- Left nondegeneracy makes the actual form map injective. -/

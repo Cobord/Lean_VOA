@@ -20,7 +20,7 @@ theorem fFour_source_mode_zero
     2 1 s (by omega)
       (by simp [VOA.DeligneAudit.A3Sector.weightABC])
   simpa [VOA.DeligneAudit.LeviConversion.fCurrent, leviCurrent,
-    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using hh
+    leviColour, leviSign, VOA.DeligneAudit.A3Sector.simpleF] using! hh
 
 /-- The f₄ current changes X into minus U. -/
 theorem fFour_x_comm (r s : ℕ) :
@@ -37,7 +37,7 @@ theorem fFour_x_comm (r s : ℕ) :
   have hcoef (c : Fin 28) :
       fD4 (lowerColour 1) (radicalColour 1) c =
         if c = radicalColour 2 then (-1 : ℂ) else 0 := by
-    simpa [lowerAction] using lower_coefficient 1 1 c
+    simpa [lowerAction] using! lower_coefficient 1 1 c
   simp only [hcoef, ite_smul, neg_one_smul, zero_smul,
     Finset.sum_ite_eq', Finset.mem_univ, if_true]
   simp [radicalColour]
@@ -100,9 +100,9 @@ theorem fFour_zeroXs_inert
           ρ.op (22 : Fin 28) 0
             (ρ.op (16 : Fin 28) r (radicalWord ρ w l)) =
           -ρ.op (24 : Fin 28) r (radicalWord ρ w l) := by
-        simpa [LinearMap.sub_apply, Module.End.mul_apply] using hc
+        simpa [LinearMap.sub_apply, Module.End.mul_apply] using! hc
       rw [hz] at hc'
-      simpa [zeroXs, radicalWord, wordOp, radicalColour] using hc'
+      simpa [zeroXs, radicalWord, wordOp, radicalColour] using! hc'
   | succ n ih =>
       have hc := congrArg (fun T : Module.End ℂ V =>
         T (radicalWord ρ w (zeroXs (n + 1) ++ l)))
@@ -125,7 +125,7 @@ theorem fFour_zeroXs_inert
                   (radicalWord ρ w (zeroXs (n + 1) ++ l))) =
               -ρ.op (24 : Fin 28) r
                 (radicalWord ρ w (zeroXs (n + 1) ++ l)) := by
-          simpa [LinearMap.sub_apply, Module.End.mul_apply] using hc
+          simpa [LinearMap.sub_apply, Module.End.mul_apply] using! hc
         calc
           _ = (ρ.op (16 : Fin 28) r
               (ρ.op (22 : Fin 28) 0
@@ -186,7 +186,7 @@ theorem u_zeroXs_inert_higher
   have hcoef : (-((n + 1 : ℕ) : ℂ)) ≠ 0 :=
     neg_ne_zero.mpr (by exact_mod_cast Nat.succ_ne_zero n)
   have hscaled := N.smul_mem (-((n + 1 : ℕ) : ℂ))⁻¹ hf
-  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using hscaled
+  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using! hscaled
 
 end VOA.DeligneAudit.D4Levi
 

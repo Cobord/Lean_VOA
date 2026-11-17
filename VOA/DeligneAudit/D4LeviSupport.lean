@@ -86,7 +86,8 @@ theorem keyLayer_eq_bot_of_degree_gt
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (k : RadicalKey) (hk : 2 * m * keyDepth k < k.degree) :
     keyLayer ρ w k = ⊥ := by
-  rw [keyLayer, eq_bot_iff, Submodule.span_le]
+  rw [eq_bot_iff]
+  apply Submodule.span_le.mpr
   intro z hz
   obtain ⟨l, hkey, rfl⟩ := hz
   have hbad : ∃ p ∈ l, rootModeBound m (radicalColour p.1) ≤ p.2 := by
@@ -102,9 +103,9 @@ theorem keyLayer_eq_bot_of_degree_gt
       omega
     have hs := sum_modes_le (2 * m) l hall
     have hlen : l.length = keyDepth k := by
-      simpa [← hkey] using (wordKey_depth l).symm
+      simpa [← hkey] using! (wordKey_depth l).symm
     have hdegree : (l.map Prod.snd).sum = k.degree := by
-      simpa [wordKey] using congrArg RadicalKey.degree hkey
+      simpa [wordKey] using! congrArg RadicalKey.degree hkey
     rw [hlen, hdegree] at hs
     rw [Nat.mul_comm (keyDepth k) (2 * m)] at hs
     omega

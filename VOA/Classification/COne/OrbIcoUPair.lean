@@ -99,7 +99,7 @@ include hc hzero hpos in
 theorem form_tower_pairWords (r : ℕ) :
     U.form (((A.L (-2)) ^ r) q) (((A.L (-2)) ^ r) q) =
       (pairWords c h (List.replicate r 2) (List.replicate r 2) : ℂ) * U.form q q := by
-  simpa only [virDesc_replicate, Nat.cast_ofNat] using
+  simpa only [virDesc_replicate, Nat.cast_ofNat] using!
     pairWords_sound A U q c h hc hzero hpos (List.replicate r 2) (List.replicate r 2)
 
 include hc hzero hpos in

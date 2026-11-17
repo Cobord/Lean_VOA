@@ -21,7 +21,7 @@ attribute [local instance] Gamma_normal
 /-- The natural projection from the relative central quotient onto the modular quotient. -/
 def centralProjection (N : ℕ) : CentralQuotient N →* SL2Z ⧸ Gamma N :=
   QuotientGroup.lift (relativeCommutator N) (QuotientGroup.mk' (Gamma N))
-    (by simpa only [QuotientGroup.ker_mk'] using relativeCommutator_le_gamma N)
+    (by simpa only [QuotientGroup.ker_mk'] using! relativeCommutator_le_gamma N)
 
 theorem centralProjection_surjective (N : ℕ) :
     Function.Surjective (centralProjection N) :=
@@ -80,7 +80,7 @@ theorem relativeCommutatorCongruenceSome_iff_finiteCentralDerived :
     obtain ⟨L, hL, hΓ⟩ := h (CentralQuotient N)
       (QuotientGroup.mk' (relativeCommutator N)) QuotientGroup.mk_surjective
       N hN (gamma_image_le_center N)
-    exact ⟨L, hL, by simpa only [QuotientGroup.ker_mk'] using hΓ⟩
+    exact ⟨L, hL, by simpa only [QuotientGroup.ker_mk'] using! hΓ⟩
 
 /-- The finite-group obstruction, if supplied, suffices for genuine Zhu congruence. -/
 theorem zhuCongruence_of_finiteCentralDerived

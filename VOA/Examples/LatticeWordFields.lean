@@ -77,7 +77,7 @@ theorem Yemα_isField (m : ℤ) : IsField (Yemα m) := by
       rw [map_add (Yemα m n) x y, hBx n (lt_of_lt_of_le hn (min_le_left _ _)),
         hBy n (lt_of_lt_of_le hn (min_le_right _ _)), add_zero]
   | tmul p g =>
-      induction g using Finsupp.induction_linear with
+      induction g using AddMonoidAlgebra.induction_linear with
       | zero => exact ⟨0, fun n _ => by erw [TensorProduct.tmul_zero]; exact (Yemα m n).map_zero⟩
       | add g1 g2 h1 h2 =>
           obtain ⟨B1, hB1⟩ := h1
@@ -90,8 +90,8 @@ theorem Yemα_isField (m : ℤ) : IsField (Yemα m) := by
       | single k a =>
           obtain ⟨Bp, hBp⟩ := EEC_isField (m : ℂ) p
           refine ⟨Bp + 2 * m * k, fun n hn => ?_⟩
-          rw [(Finsupp.smul_single_one k a).symm,
-            show (Finsupp.single k 1 : LatGrp) = eVec k from rfl]
+          rw [show (AddMonoidAlgebra.single k a : LatGrp) = a • eVec k by
+            rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
           erw [TensorProduct.tmul_smul, map_smul, Yemα_tmul,
             hBp (n - 2 * m * k) (by omega), TensorProduct.zero_tmul, smul_zero]
 
@@ -235,23 +235,24 @@ theorem wordStateLat_span :
     intro p m
     rw [← MvPolynomial.support_sum_monomial_coeff p, TensorProduct.sum_tmul]
     refine Submodule.sum_mem _ (fun a _ => ?_)
-    rw [show (MvPolynomial.monomial a (MvPolynomial.coeff a p))
-          = (MvPolynomial.coeff a p) • MvPolynomial.monomial a (1 : ℂ) from by
+    rw [show (MvPolynomial.monomial a (p.coeff a))
+          = (p.coeff a) • MvPolynomial.monomial a (1 : ℂ) from by
         rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one],
-      ← TensorProduct.smul_tmul' (MvPolynomial.coeff a p) (MvPolynomial.monomial a (1 : ℂ))
+      ← TensorProduct.smul_tmul' (p.coeff a) (MvPolynomial.monomial a (1 : ℂ))
         (eVec m)]
     exact Submodule.smul_mem _ _ (hmono a m)
   -- (3) span via the tensor generators (decompose `g` over the `eVec` basis by `Finsupp` induction)
   rw [hS, eq_top_iff, ← TensorProduct.span_tmul_eq_top ℂ B LatGrp, Submodule.span_le]
   rintro _ ⟨p, g, rfl⟩
   rw [SetLike.mem_coe]
-  induction g using Finsupp.induction with
+  induction g using AddMonoidAlgebra.induction_linear with
   | zero => erw [TensorProduct.tmul_zero]; exact Submodule.zero_mem _
-  | single_add n c g' _ _ ih =>
+  | add g1 g2 h1 h2 =>
       erw [TensorProduct.tmul_add]
-      refine Submodule.add_mem _ ?_ ih
-      rw [show (Finsupp.single n c : LatGrp) = c • eVec n from by
-          rw [eVec, AddMonoidAlgebra.smul_single, smul_eq_mul, mul_one]]
+      exact Submodule.add_mem _ h1 h2
+  | single n c =>
+      rw [show (AddMonoidAlgebra.single n c : LatGrp) = c • eVec n by
+          rw [eVec, AddMonoidAlgebra.smul_single', mul_one]]
       erw [TensorProduct.tmul_smul]
       exact Submodule.smul_mem _ _ (hpe p n)
 

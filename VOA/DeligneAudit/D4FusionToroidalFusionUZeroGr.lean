@@ -177,7 +177,7 @@ theorem evalUZeroGr_rank_le (hz : Function.Injective z) :
   obtain ⟨B, hB⟩ := exists_evalFbelow_top S hskew z hz
   have h := finrank_subGr_le (d1EvalAction S.f S.jacobi hskew z)
     (D1TensorG.generator S.c₀) (LinearMap.range (FusionUZero.embedCo S.n N)) B hB
-  exact ⟨h.1, by simpa only [FusionUZero.finrank_zero_source] using h.2⟩
+  exact ⟨h.1, by simpa only [FusionUZero.finrank_zero_source] using! h.2⟩
 
 theorem d4_evalUZeroGr_rank_le (N : ℕ) :
     FiniteDimensional ℂ
@@ -185,7 +185,7 @@ theorem d4_evalUZeroGr_rank_le (N : ℕ) :
     Module.finrank ℂ
       (evalUZeroGr D4sector D1SiteG.D4Check.table_skewC (D1TensorG.points N)) ≤
         28 ^ N := by
-  simpa only [D4sector] using
+  simpa only [D4sector] using!
     (evalUZeroGr_rank_le D4sector D1SiteG.D4Check.table_skewC
       (D1TensorG.points N) (D1TensorG.points_injective N))
 

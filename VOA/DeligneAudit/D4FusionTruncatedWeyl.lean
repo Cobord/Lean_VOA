@@ -74,7 +74,7 @@ theorem fusionTotalDimG_iff_truncatedDemazure :
     exact hT m V ρ w ((localWeylRelG_iff_demazure_trunc hm).mpr ⟨hs, hc⟩) B
   · intro hT m V _ _ ρ w h B
     rcases Nat.eq_zero_or_pos m with rfl | hm
-    · simpa using D4FusionContact.localWeyl_zero_total_dim h B
+    · simpa using! D4FusionContact.localWeyl_zero_total_dim h B
     · obtain ⟨hs, hc⟩ := (localWeylRelG_iff_demazure_trunc hm).mp h
       exact hT m hm V ρ w hs hc B
 

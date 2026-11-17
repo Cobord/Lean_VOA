@@ -30,7 +30,7 @@ theorem cv_span_top (ε ν ϱ : Weight) (j : ℕ) :
       induction v using Finsupp.induction_linear with
       | zero => exact Submodule.zero_mem _
       | add x y hx hy =>
-          simpa only [Submodule.Quotient.mk_add] using Submodule.add_mem _ hx hy
+          simpa only [Submodule.Quotient.mk_add] using! Submodule.add_mem _ hx hy
       | single l c =>
           have hc : Finsupp.single l c = c • UnivG.sw l := by simp [UnivG.sw]
           rw [hc, Submodule.Quotient.mk_smul]

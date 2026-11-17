@@ -18,9 +18,9 @@ private theorem two_positive_high_v (c : Fin 28)
     · exact Or.inl ⟨c, 2 * i + s, hc, rfl⟩
     · exact Or.inr (Or.inl ⟨c, 2 * i + s, hc, by omega, rfl⟩)
   interval_cases s
-  · simpa [symbolLetters, wordOpT] using two_syntax_tail [(c, 2 * i)] ht
+  · simpa [symbolLetters, wordOpT] using! two_syntax_tail [(c, 2 * i)] ht
   · have hd : (2 * i + 1) / 2 = i := by omega
-    simpa [symbolLetters, wordOpT, hd] using
+    simpa [symbolLetters, wordOpT, hd] using!
       two_syntax_tail [(c, 2 * i + 1)] ht
 
 private theorem two_negative_next (k : Fin 12) (i s : ℕ) (hs : s ≤ 1)
@@ -34,7 +34,7 @@ private theorem two_negative_next (k : Fin 12) (i s : ℕ) (hs : s ≤ 1)
   have hsum : (∑ c : Fin 28,
       D4sector.f (negativeCartan k) (negativeIndex k) c •
         (ρPTE 2).op c (i + 1) s (pTE 2)) = 0 := by
-    simpa [hh, hx, Nat.add_comm] using hcomm.symm
+    simpa [hh, hx, Nat.add_comm] using! hcomm.symm
   have htable : (∑ c : Fin 28,
       D4sector.f (negativeCartan k) (negativeIndex k) c •
         (ρPTE 2).op c (i + 1) s (pTE 2)) =
@@ -54,12 +54,12 @@ private theorem two_negative_high_v (k : Fin 12) (i s : ℕ)
     by_cases hk : k = 11
     · subst k
       interval_cases s
-      · simpa [negativeIndex] using two_theta_two_zero
-      · simpa [negativeIndex] using two_theta_two_one_zero
+      · simpa [negativeIndex] using! two_theta_two_zero
+      · simpa [negativeIndex] using! two_theta_two_one_zero
     · have hne : negativeIndex k ≠ D4sector.c₀ := by
         intro he
         have hclosed : ∀ j : Fin 12,
-            negativeIndex j = D4sector.c₀ → j = 11 := by decide +kernel
+            negativeIndex j = (27 : Fin 28) → j = 11 := by decide +kernel
         exact hk (hclosed k he)
       have h1 := two_generator_one_other_all (negativeIndex k) hne s
       exact two_negative_next k 1 s hs h1

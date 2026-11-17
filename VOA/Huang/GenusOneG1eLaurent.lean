@@ -103,7 +103,7 @@ theorem rowT_geometric (hV : StronglyRational W) (i₁ : P₁.IsIrreducibleLW)
   obtain ⟨δs, hδs, -, hs⟩ := GenusOneG1b.exists_iterateSewingRadius_holds hV i₁ i₂ iN iQ
     Y₃ Y₄ hx hy τ
   have hsz : ∀ z : ℂ, z ≠ 0 → ‖z‖ < δs → IterateSewingSummable Y₃ Y₄ x y α β z 1 τ :=
-    fun z hz hn => hs z 1 hz one_ne_zero (by simpa using hn)
+    fun z hz hn => hs z 1 hz one_ne_zero (by simpa using! hn)
   set t : ℝ := δs / 2 with ht
   have ht0 : 0 < t := by positivity
   have htl : t < δs := by linarith
@@ -142,9 +142,10 @@ theorem reidx_injective (D : ℕ) : Function.Injective (reidx D) := by
 
 theorem gTerm_reidx (α c' : ℂ) (D : ℕ) (T : ℕ → ℂ) (u : ℂ) (p : ℕ × ℕ) :
     gTerm α c' D T u (reidx D p) = fTerm α c' D T u p := by
-  simp only [gTerm, reidx, fTerm]
-  rw [if_pos (by omega), show p.1 + p.2 + D - p.2 = p.1 + D by omega,
-    show p.1 + D - D = p.1 by omega]
+  unfold gTerm
+  rw [if_pos (by simp only [reidx]; omega)]
+  simp only [reidx, fTerm]
+  rw [show p.1 + p.2 + D - p.2 = p.1 + D by omega, show p.1 + D - D = p.1 by omega]
 
 theorem gTerm_support (α c' : ℂ) (D : ℕ) (T : ℕ → ℂ) (u : ℂ) :
     Function.support (gTerm α c' D T u) ⊆ Set.range (reidx D) := by
@@ -267,7 +268,8 @@ theorem gTerm_sum_eq (hC2 : C2Cofinite W) (iQ : Q.IsIrreducibleLW)
   rw [bracketModes_eq_sum_range Y₄ hx n y (s + 1) hK]
   rw [← tfLin_apply hC2 iQ Y₃ (LWModule.hasConformalWeight N), map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun r hr => ?_
-  rw [map_smul, tfLin_apply, smul_eq_mul]
+  rw [map_smul, smul_eq_mul]
+  change _ = u ^ s * (bracketCoeff α n r * traceFunction Y₃ N.h (Y₄.val (n + r) x y) τ)
   simp only [gTerm]
   split_ifs with h
   · obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le h

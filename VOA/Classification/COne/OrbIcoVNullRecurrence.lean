@@ -72,7 +72,7 @@ theorem sixthProbe_negative (k : ℕ) (hk : 0 < k) (x : (orbifold ico).carrier) 
       (if k = 2 then (1 / 2 : ℂ) else 0) * sixthProbe x := by
   have he := sixthProbe_L (k - 1) x
   rw [show -((k - 1 : ℕ) : ℤ) - 1 = -(k : ℤ) by omega] at he
-  simpa only [show k - 1 = 1 ↔ k = 2 by omega] using he
+  simpa only [show k - 1 = 1 ↔ k = 2 by omega] using! he
 
 theorem vacuumProbe_negative (k : ℕ) (hk : 0 < k) (x : (orbifold ico).carrier) :
     vacuumProbe (Wi.L (-(k : ℤ)) x) =
@@ -94,7 +94,7 @@ private theorem virCombo_s13_zero : virCombo Wi Xico OrbIcoZ.s13v = 0 := by
 private theorem s13_positive (t : ℚ × List ℕ) (ht : t ∈ OrbIcoZ.s13v) :
     ∀ k ∈ t.2, 0 < k := by
   have hs := (OrbIcoZ.s13v_spec t ht).2.2
-  simpa only [OrbOdd.posW, List.all_eq_true, decide_eq_true_eq] using hs
+  simpa only [OrbOdd.posW, List.all_eq_true, decide_eq_true_eq] using! hs
 
 /-- The vacuum channel obeys the genuine level-thirteen null-vector identity. -/
 theorem vacuum_null_equation (m : ℤ) :

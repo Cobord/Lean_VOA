@@ -14,6 +14,8 @@ energy, so its constant coefficient vanishes on EVERY input polynomial.
 Consequently projecting a shifted vacuum tensor factor to its constant term
 intertwines every general creation mode with the action on the other factor.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial
@@ -28,7 +30,6 @@ theorem constantCoeff_negative_current (k lam : ℂ) (a : Fin 3) (m : ℤ) (hm :
     (P : WakFock) : constantCoeff (J k lam a m P)=0 := by
   have hmono (d : Occupation) : constantCoeff (J k lam a m (monomial d (1 : ℂ)))=0 := by
     have hc := congrArg (fun T : End ℂ WakFock => T (monomial d (1 : ℂ))) (degree_J k lam a m)
-    dsimp only at hc
     rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
       Dwt,Eul_monomial_one,weight_wtFn,map_smul,LinearMap.smul_apply] at hc
     have he := congrArg constantCoeff hc

@@ -79,7 +79,7 @@ theorem zero_zero (hJ : JacobiCoord f) (a b : Fin n) :
   apply Prod.ext
   · have hh := congrArg (fun T : Module.End ℂ (Co n) => T u.1) (coOp_comm f hJ a b)
     simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply, zeroOp_apply, Prod.fst_sub, Prod.fst_sum, Prod.smul_fst] using hh
+      LinearMap.smul_apply, zeroOp_apply, Prod.fst_sub, Prod.fst_sum, Prod.smul_fst] using! hh
   · simp [Prod.snd_sum]
 
 theorem zero_one (a b : Fin n) :
@@ -121,7 +121,7 @@ theorem op_comm (hJ : JacobiCoord f) (hskew : ∀ a b c, f a b c = -f b a c)
     · rcases s with _ | s
       · exact one_zero f hskew a b
       · rcases s with _ | s
-        · simpa only [op, smul_zero, Finset.sum_const_zero] using one_one a b
+        · simpa only [op, smul_zero, Finset.sum_const_zero] using! one_one a b
         · simp [op]
     · have he : r + 1 + 1 + s = (r + s) + 2 := by omega
       change (0 : Module.End ℂ (Space n)) * op f b s - op f b s * 0 =
@@ -136,7 +136,7 @@ def rep (hJ : JacobiCoord f) (hskew : ∀ a b c, f a b c = -f b a c) :
   comm a b r s v := by
     have hh := congrArg (fun T : Module.End ℂ (Space n) => T v) (op_comm f hJ hskew a b r s)
     simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply] using hh
+      LinearMap.smul_apply] using! hh
 
 def w (c₀ : Fin n) : Space n := (Pi.single c₀ 1, 0)
 def vac (n : ℕ) : Space n := (0, 1)

@@ -101,7 +101,7 @@ theorem goodVal_int_div {p : ℕ} (hN : 0 < N) {m : ℤ} {K : ℕ} (hm : ¬ (p :
     rcases habs with h | h
     · rwa [h] at hinv
     · rw [h, inv_neg] at hinv
-      simpa using A.neg_mem hinv
+      simpa using! A.neg_mem hinv
 
 /-! ## Good constant terms -/
 
@@ -143,7 +143,7 @@ theorem goodVal_Cval_cot (x : Fin 2 → ZMod N) (hx0 : x 0 = 0) (h2 : 2 * x 1 �
     rw [(stdRoot_isPrimitiveRoot N).pow_eq_one_iff_dvd] at h
     apply h2
     have : ((2 * b : ℕ) : ZMod N) = 0 := (ZMod.natCast_eq_zero_iff _ _).mpr h
-    simpa [b, ZMod.natCast_zmod_val] using this
+    simpa [b, ZMod.natCast_zmod_val] using! this
   have hC : Cval x = (1 + ζ ^ b) / (2 * (1 - ζ ^ b)) := by simp [Cval, hx0, hx1, ζ, b]
   have hs1 : (1 : ℂ) - ζ ^ b ≠ 0 := sub_ne_zero.mpr (Ne.symm hb1)
   have hs2 : (1 : ℂ) - ζ ^ (2 * b) ≠ 0 := sub_ne_zero.mpr (Ne.symm hb2)
@@ -269,7 +269,7 @@ theorem sep_caseA_cot (h24 : 24 ∣ N) (g : SL(2, ℤ))
       have h4' : (4 : ℤ) ∣ 2 * a11 := by
         have : (4 : ℤ) ∣ (N : ℤ) * a01 := ⟨q4 * a01, by rw [hq4]; push_cast; ring⟩
         have := dvd_sub h4 this
-        simpa using this
+        simpa using! this
       obtain ⟨m, hm⟩ := hodd1
       omega
 
@@ -356,8 +356,8 @@ theorem sep_caseA (hp : p.Prime) (hpN : ¬ p ∣ N) (h24 : 24 ∣ N) (g : SL(2, 
     by_cases hb : (p : ℤ) ∣ ((N : ℤ) - 2 * ρ)
     · refine hgood (ρ + d * 1) (by omega) (by omega) ?_ (hreach 1)
       intro hb'
-      exact hpair ρ hb (by simpa using hb')
-    · exact hgood (ρ + d * 0) (by omega) (by omega) (by simpa using hb) (hreach 0)
+      exact hpair ρ hb (by simpa using! hb')
+    · exact hgood (ρ + d * 0) (by omega) (by omega) (by simpa using! hb) (hreach 0)
   · push Not at hρ0
     rcases h2d' with h2d' | h3d
     · -- cotangent case: `g₁₀ ≡ N/2`
@@ -366,7 +366,7 @@ theorem sep_caseA (hp : p.Prime) (hpN : ¬ p ∣ N) (h24 : 24 ∣ N) (g : SL(2, 
       · refine hgood (ρ + d * 2) (by omega) (by omega) ?_ (hreach 2)
         intro hb'
         exact hpair d hb (by rw [hρ0] at hb'; convert hb' using 3; push_cast; ring)
-      · exact hgood (ρ + d * 1) (by omega) (by omega) (by rw [hρ0]; simpa using hb) (hreach 1)
+      · exact hgood (ρ + d * 1) (by omega) (by omega) (by rw [hρ0]; simpa using! hb) (hreach 1)
 
 end CaseA
 
@@ -463,7 +463,7 @@ theorem sep_caseB (hp : p.Prime) (hpN : ¬ p ∣ N) (h24 : 24 ∣ N) (g : SL(2, 
   have hunit : ∀ r : ZMod N, r * α = 0 → r = 0 := by
     intro r hr
     have := congrArg (· * δ) hr
-    simpa [mul_assoc, hdet] using this
+    simpa [mul_assoc, hdet] using! this
   -- the fixed vector `v = (N/2 - 1, 0)`
   set h := N / 2 with hh
   have hhN : 2 * h = N := Nat.mul_div_cancel' h2
@@ -546,7 +546,7 @@ theorem sep_caseB (hp : p.Prime) (hpN : ¬ p ∣ N) (h24 : 24 ∣ N) (g : SL(2, 
     have h4N : (p : ℤ) ∣ 4 * N := by convert d3 using 1; ring
     have h4N' : p ∣ 4 * N := by exact_mod_cast h4N
     rcases (Nat.Prime.dvd_mul hp).mp h4N' with h' | h'
-    · have : p ∣ 2 ^ 2 := by simpa using h'
+    · have : p ∣ 2 ^ 2 := by simpa using! h'
       exact hp2 ((Nat.prime_dvd_prime_iff_eq hp Nat.prime_two).mp (hp.dvd_of_dvd_pow this))
     · exact hpN h'
   obtain ⟨r, hr1, hrN, hpr⟩ := hex
@@ -555,7 +555,7 @@ theorem sep_caseB (hp : p.Prime) (hpN : ¬ p ∣ N) (h24 : 24 ∣ N) (g : SL(2, 
   have hp4 : ¬ p ∣ 4 * N ^ 2 := by
     intro hd
     rcases (Nat.Prime.dvd_mul hp).mp hd with h' | h'
-    · have : p ∣ 2 ^ 2 := by simpa using h'
+    · have : p ∣ 2 ^ 2 := by simpa using! h'
       exact hp2 ((Nat.prime_dvd_prime_iff_eq hp Nat.prime_two).mp (hp.dvd_of_dvd_pow this))
     · exact hpN (hp.dvd_of_dvd_pow h')
   have hN2 : 1 ≤ 4 * N ^ 2 := by nlinarith
@@ -601,6 +601,6 @@ theorem exists_sep_bin [NeZero N] {p : ℕ} (hp : p.Prime) (hpN : ¬ p ∣ N) (h
     exact hvw
   · obtain ⟨v, hv0, hv⟩ := sep_caseA hp hpN h24 g hγ
     refine ⟨⟨1, v, 0, 0⟩, A.one_mem, A.zero_mem, by simp [hv0], ?_⟩
-    simpa [Bin.act] using hv
+    simpa [Bin.act] using! hv
 
 end VOA.Classification.COne.SSHecke

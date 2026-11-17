@@ -61,7 +61,7 @@ theorem topAlgHom_injective (P : ι → LWModule W)
   have ha' : topAlgHom P a = 0 := ha
   let S := {I : Submodule (VOA.A W) (VOA.A W) // IsSimpleModule (VOA.A W) I}
   have htop : (⨆ I : S, I.val) = ⊤ := by
-    simpa only [sSup_eq_iSup, iSup_subtype'] using
+    simpa only [sSup_eq_iSup, iSup_subtype'] using!
       IsSemisimpleModule.sSup_simples_eq_top (VOA.A W) (VOA.A W)
   have hkill (I : S) (x : VOA.A W) (hx : x ∈ I.val) : a * x = 0 := by
     have hI : IsSimpleAMod (leftIdealAMod I.val) := by
@@ -76,8 +76,8 @@ theorem topAlgHom_injective (P : ι → LWModule W)
   have h1 : (1 : VOA.A W) ∈ ⨆ I : S, I.val := by rw [htop]; trivial
   have hh : a * (1 : VOA.A W) = 0 :=
     Submodule.iSup_induction _ (motive := fun x => a * x = 0) h1 hkill
-      (mul_zero a) (fun x y hx hy => by dsimp only at hx hy ⊢; rw [mul_add, hx, hy, add_zero])
-  simpa using hh
+      (mul_zero a) (fun x y hx hy => by rw [mul_add, hx, hy, add_zero])
+  simpa using! hh
 
 /-- Rationality supplies semisimplicity; completeness supplies faithfulness. -/
 theorem topAlgHom_injective_of_admissiblyRational

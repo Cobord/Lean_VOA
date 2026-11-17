@@ -92,7 +92,7 @@ theorem minimalThreeNormCoefficient_scaled_recursion (p : ℕ) (hp : 2≤p)
         ∑ j : Fin r, minimalThreeWardKernel (vermaBSAWeight 3 ((3:ℂ)/(p:ℂ))) r j *
           minimalThreeNormCoefficient p j)=0 := by
     rw [mul_add,← mul_assoc _ (vermaBSAWeight 3 ((3:ℂ)/(p:ℂ))+1),hc]
-    simpa only [mul_assoc] using hh
+    simpa only [mul_assoc] using! hh
   exact (mul_eq_zero.mp he).resolve_left (div_ne_zero (pow_ne_zero _ ht) (by norm_num))
 
 /-- Reindexing by the mode distance k exposes the kernel's quadratic

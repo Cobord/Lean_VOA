@@ -26,15 +26,15 @@ theorem a3_effective_rank_of_target (a b c : ℕ) (k : A3RadicalKey)
       a3EffectiveMultiplicity a b c k := by
   by_cases hs : k.d₁ ≤ a ∧ k.d₂ ≤ b ∧ k.d₃ ≤ c
   · have hspan' : a3KeyLayer ρ w k ≤ a3ThreeBoxTarget ρ w a b c k := by
-      simpa only [a3EffectiveTarget, if_pos hs] using hspan
-    simpa only [a3EffectiveMultiplicity, if_pos hs] using
+      simpa only [a3EffectiveTarget, if_pos hs] using! hspan
+    simpa only [a3EffectiveMultiplicity, if_pos hs] using!
       a3_key_rank_of_target ρ w a b c k hspan'
   · have hspan' : a3KeyLayer ρ w k ≤ a3HigherLeviClosure ρ w b c k := by
-      simpa only [a3EffectiveTarget, if_neg hs] using hspan
+      simpa only [a3EffectiveTarget, if_neg hs] using! hspan
     have hz := a3_quotient_finrank_le_finset
       (a3HigherLeviClosure ρ w b c k) (a3KeyLayer ρ w k)
-      (∅ : Finset V) (by simpa using hspan')
-    simpa only [a3EffectiveMultiplicity, if_neg hs, Finset.card_empty] using hz
+      (∅ : Finset V) (by simpa using! hspan')
+    simpa only [a3EffectiveMultiplicity, if_neg hs, Finset.card_empty] using! hz
 
 /-- It remains to put each radical key layer in the effective target. -/
 theorem a3_fixedKeyKS_of_effective_span

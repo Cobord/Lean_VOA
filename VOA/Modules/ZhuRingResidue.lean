@@ -68,8 +68,8 @@ theorem vandermonde_range (m n k : ℤ) {N : ℕ} (hk : k < (N : ℤ)) :
     ∑ i ∈ Finset.range N, cbz m (i : ℤ) * cbz n (k - (i : ℤ)) = cbz (m + n) k := by
   rw [← cbz_vandermonde m n k, cbzConvol,
     finsumZ_eq_range_sum (N := N) (fun i : ℤ => cbz m i * cbz n (k - i))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg m hp, zero_mul])
-      (fun p hp => by dsimp only; rw [cbz_apply_neg n (by omega), mul_zero])]
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg m hp, zero_mul])
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg n (by omega), mul_zero])]
 
 /-! ## The sign row `C(-1, t) = (-1)^t`. -/
 
@@ -128,8 +128,8 @@ theorem stepB (K : ℕ) (p s : ℤ) :
 theorem stepC (a M T s : ℤ) {N : ℕ} (ha : 0 ≤ a) (hs : 0 ≤ s) (hN : a + s < (N : ℤ)) :
     ∑ p ∈ Finset.range N, cbz a ((p : ℤ) - s) * cbz M (T - (p : ℤ)) = cbz (a + M) (T - s) := by
   rw [← finsumZ_eq_range_sum (N := N) (fun p : ℤ => cbz a (p - s) * cbz M (T - p))
-      (fun p hp => by dsimp only; rw [cbz_apply_neg a (by omega : p - s < 0), zero_mul])
-      (fun p hp => by dsimp only; rw [cbz_lt ha (by omega : a < p - s), zero_mul])]
+      (fun p hp => by (try dsimp only); rw [cbz_apply_neg a (by omega : p - s < 0), zero_mul])
+      (fun p hp => by (try dsimp only); rw [cbz_lt ha (by omega : a < p - s), zero_mul])]
   rw [← finsum_comp_equiv (Equiv.addRight s)
       (f := fun p : ℤ => cbz a (p - s) * cbz M (T - p))]
   simp only [Equiv.coe_addRight]

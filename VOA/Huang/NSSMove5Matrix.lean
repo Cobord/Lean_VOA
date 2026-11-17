@@ -31,7 +31,7 @@ theorem hom_eq_sum_channelMatrixEntry (F : SphericalFusion C) (X Y : C) (f : X �
       (f ≫ F.traceDualBasis (F.simpleHomBasis Y t) β),
       ← Category.assoc, F.traceDualBasis_pair]
     rfl
-  simpa only [he] using F.hom_eq_sum_trace_channels
+  simpa only [he] using! F.hom_eq_sum_trace_channels
     (F.simpleHomBasis X) (F.simpleHomBasis Y) f
 
 /-- A genuine S-loop acts on each entry by its simple-channel eigenvalue. -/

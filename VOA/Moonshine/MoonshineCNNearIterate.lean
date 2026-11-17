@@ -9,6 +9,10 @@ open Module (End)
 open scoped BigOperators
 open VertexOperatorAlgebra (deriv_pow_apply posfac_eq negfac_eq neg_one_zpow_negsucc
   finsum_split_nat_neg gBinom_natCast_eq_zero prod_one_add_factorial)
+
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 

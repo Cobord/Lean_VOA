@@ -13,6 +13,8 @@ Adjacent exchanges differ by a shorter creation word. Induction on length
 therefore proves spanning for exactly those representatives, regardless of
 the order chosen by Multiset.toList.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA.HighestModule
 open Module (End)
 open HighestNormalOrdering
@@ -56,9 +58,8 @@ theorem indexedWord_adjacent (k h : ℂ) (pre post : List (Fin 3×ℕ)) (a b : F
   | nil =>
       have hc := congrArg (fun T : End ℂ (Verma k h) => T (indexedWord k h post))
         (creationMode_comm k h a b)
-      dsimp only at hc
       simpa only [List.nil_append,indexedWord_cons,Ring.lie_def,
-        LinearMap.sub_apply,Module.End.mul_apply,LinearMap.sum_apply,LinearMap.smul_apply] using hc
+        LinearMap.sub_apply,Module.End.mul_apply,LinearMap.sum_apply,LinearMap.smul_apply] using! hc
   | cons x pre ih =>
       simp only [List.cons_append,indexedWord_cons]
       rw [← map_sub,ih,map_sum]
@@ -81,7 +82,7 @@ theorem perm_difference_mem (k h : ℂ) (S : Submodule ℂ (Verma k h))
   | nil => intro pre hb; rw [sub_self]; exact S.zero_mem
   | cons a hp ih =>
       intro pre hb
-      simpa only [List.append_assoc,List.singleton_append] using
+      simpa only [List.append_assoc,List.singleton_append] using!
         ih (pre++[a]) (by simp only [List.length_append,List.length_singleton,List.length_cons,List.length_nil] at *; omega)
   | swap a b w =>
       intro pre hb
@@ -94,8 +95,8 @@ theorem perm_difference_mem (k h : ℂ) (S : Submodule ℂ (Verma k h))
       omega
   | trans hp hq ihp ihq =>
       intro pre hb
-      have hh := S.add_mem (ihp pre hb) (ihq pre (by simpa only [← hp.length_eq] using hb))
-      simpa only [sub_add_sub_cancel] using hh
+      have hh := S.add_mem (ihp pre hb) (ihq pre (by simpa only [← hp.length_eq] using! hb))
+      simpa only [sub_add_sub_cancel] using! hh
 
 /-- Every indexed creation word lies in the span of its fixed occupation
 representatives. Commutator corrections strictly decrease word length. -/
@@ -113,8 +114,8 @@ theorem indexedWord_mem_occupationSpan (k h : ℂ) (w : List (Fin 3×ℕ)) :
       have hd : indexedWord k h d.toMultiset.toList∈occupationSpan k h :=
         Submodule.subset_span ⟨d,rfl⟩
       have he := perm_difference_mem k h (occupationSpan k h) n
-        (fun v hv => ih v.length hv v rfl) hp [] (by simpa using hn.le)
-      simpa only [List.nil_append,sub_add_cancel] using (occupationSpan k h).add_mem he hd
+        (fun v hv => ih v.length hv v rfl) hp [] (by simpa using! hn.le)
+      simpa only [List.nil_append,sub_add_cancel] using! (occupationSpan k h).add_mem he hd
   exact H w.length w rfl
 
 /-- Recover the occupation depth from any genuine creation letter. -/

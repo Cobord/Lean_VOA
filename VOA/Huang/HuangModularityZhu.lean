@@ -131,7 +131,7 @@ theorem sum_fusion_d (hW : Nice W) (D : VOA.Classification.COne.ModularData W)
   have hS : (D.S00 : ℂ) ≠ 0 := by exact_mod_cast hD.S00_pos.ne'
   have hl : eigval hE a D.vac = (D.d a : ℂ) := by
     have h2' : (D.S00 : ℂ) * (D.d a : ℂ) = eigval hE a D.vac * (D.S00 : ℂ) := by
-      push_cast at h2; simpa using h2
+      push_cast at h2; simpa using! h2
     have : (D.S00 : ℂ) * ((D.d a : ℂ) - eigval hE a D.vac) = 0 := by linear_combination h2'
     rcases mul_eq_zero.mp this with h0 | h0
     · exact absurd h0 hS

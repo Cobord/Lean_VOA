@@ -130,7 +130,7 @@ theorem minimalThree_actual_norm_hasDerivAt (p : ℕ) (hp : 2≤p) (hcop : Nat.C
     HasDerivAt (fun d : ℂ => (VirGram4.canB d).form
       (minimalThreeChargeVacuum p hp hcop d) (minimalThreeChargeVacuum p hp hcop d))
       ((minimalThreeNormPolynomial p hp hcop).derivative.eval c) c := by
-  simpa only [minimalThreeNormPolynomial_eval] using
+  simpa only [minimalThreeNormPolynomial_eval] using!
     (minimalThreeNormPolynomial p hp hcop).hasDerivAt c
 
 /-- The actual source supplies the radical relation internally. A nonzero

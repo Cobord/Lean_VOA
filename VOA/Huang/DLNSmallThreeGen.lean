@@ -33,11 +33,11 @@ theorem layerN_le_closure (hk : 1 ≤ k) :
   set q : ZMod (3 ^ (k + 1)) := 3 ^ k with hqdef
   have hq : q * q = 0 := three_pow_mul_self hk
   have e00 : n 0 0 = 1 + q * W 0 0 := by
-    have := congrFun (congrFun hW 0) 0; simpa using this
+    have := congrFun (congrFun hW 0) 0; simpa using! this
   have e01 : n 0 1 = q * W 0 1 := by
-    have := congrFun (congrFun hW 0) 1; simpa using this
+    have := congrFun (congrFun hW 0) 1; simpa using! this
   have e10 : n 1 0 = q * W 1 0 := by
-    have := congrFun (congrFun hW 1) 0; simpa using this
+    have := congrFun (congrFun hW 1) 0; simpa using! this
   let u0 : (ZMod (3 ^ (k + 1)))ˣ :=
     ⟨1 + q * W 0 0, 1 - q * W 0 0, by linear_combination (-(W 0 0) ^ 2) * hq,
       by linear_combination (-(W 0 0) ^ 2) * hq⟩
@@ -90,11 +90,11 @@ theorem levelOne_le_closure (hk : 1 ≤ k) :
   set C := Subgroup.closure {x3 k, y3 k, t4 k}
   obtain ⟨V, hV⟩ := (mem_levelOne_iff g).mp hg
   have e00 : g 0 0 = 1 + 3 * V 0 0 := by
-    have := congrFun (congrFun hV 0) 0; simpa using this
+    have := congrFun (congrFun hV 0) 0; simpa using! this
   have e01 : g 0 1 = 3 * V 0 1 := by
-    have := congrFun (congrFun hV 0) 1; simpa using this
+    have := congrFun (congrFun hV 0) 1; simpa using! this
   have e10 : g 1 0 = 3 * V 1 0 := by
-    have := congrFun (congrFun hV 1) 0; simpa using this
+    have := congrFun (congrFun hV 1) 0; simpa using! this
   have hnil : IsNilpotent (3 * V 0 0 : ZMod (3 ^ (k + 1))) :=
     ⟨k + 1, by rw [mul_pow, three_pow_succ_eq_zero, zero_mul]⟩
   obtain ⟨u0, hu0'⟩ := hnil.isUnit_one_add
@@ -128,7 +128,7 @@ theorem levelOne_le_closure (hk : 1 ≤ k) :
     refine C.mul_mem (C.pow_mem ht4 _) ?_
     rw [torus_eq_four_roots b 3 _ hbval]
     refine C.mul_mem (C.mul_mem (C.mul_mem ?_ ?_) ?_) ?_
-    · simpa using hup 1
+    · simpa using! hup 1
     · exact hlow _
     · rw [show -3 * ((b⁻¹ : (ZMod (3 ^ (k + 1)))ˣ) : ZMod (3 ^ (k + 1))) =
         3 * (-((b⁻¹ : (ZMod (3 ^ (k + 1)))ˣ) : ZMod (3 ^ (k + 1)))) by ring]

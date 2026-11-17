@@ -46,8 +46,8 @@ theorem rxMixedSeed_mem (a b c s : ℕ) :
   · intro r
     rw [rxMixedSlot_psum]
     exact (pairSourceSymmetric a b c).add_mem
-      (by simpa [pairSourcePower] using pairSourcePower_mem a b c 2 r)
-      (by simpa [pairSourcePower] using pairSourcePower_mem a b c 0 r)
+      (by simpa [pairSourcePower] using! pairSourcePower_mem a b c 2 r)
+      (by simpa [pairSourcePower] using! pairSourcePower_mem a b c 0 r)
   · exact hsymm_isSymmetric (Fin c ⊕ (Fin b ⊕ Fin a)) ℂ s
 
 theorem ryMixedSeed_mem (a b c s : ℕ) :
@@ -58,8 +58,8 @@ theorem ryMixedSeed_mem (a b c s : ℕ) :
   · intro r
     rw [ryMixedSlot_psum]
     exact (pairSourceSymmetric a b c).add_mem
-      (by simpa [pairSourcePower] using pairSourcePower_mem a b c 2 r)
-      (by simpa [pairSourcePower] using pairSourcePower_mem a b c 1 r)
+      (by simpa [pairSourcePower] using! pairSourcePower_mem a b c 2 r)
+      (by simpa [pairSourcePower] using! pairSourcePower_mem a b c 1 r)
   · exact hsymm_isSymmetric (Fin c ⊕ Fin b) ℂ s
 
 end VOA.DeligneAudit.D4Levi

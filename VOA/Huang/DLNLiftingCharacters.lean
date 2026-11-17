@@ -17,12 +17,12 @@ open VOA.Huang.DLN VOA.Huang.DLNBridge
 private theorem S_four : ModularGroup.S ^ 4 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [ModularGroup.S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [ModularGroup.coe_S, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 
 private theorem ST_three : (ModularGroup.S * ModularGroup.T) ^ 3 = ModularGroup.S ^ 2 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [ModularGroup.S, ModularGroup.T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [ModularGroup.coe_S, ModularGroup.coe_T, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Every character into a commutative group has exponent dividing 12. -/
 theorem character_pow_twelve {A : Type*} [CommGroup A] (χ : SL2Z →* A) (γ : SL2Z) :
@@ -36,10 +36,10 @@ theorem character_pow_twelve {A : Type*} [CommGroup A] (χ : SL2Z →* A) (γ : 
       χ ModularGroup.S ^ 2 * (χ ModularGroup.S * χ ModularGroup.T ^ 3) =
           χ ModularGroup.S ^ 3 * χ ModularGroup.T ^ 3 := by
             rw [← mul_assoc, ← pow_succ]
-      _ = χ ModularGroup.S ^ 2 * 1 := by simpa using h
+      _ = χ ModularGroup.S ^ 2 * 1 := by simpa using! h
   have hT : χ ModularGroup.T ^ 12 = 1 := by
     have h := congrArg (fun a : A => a ^ 4) hST
-    simpa only [mul_pow, hS, one_mul, ← pow_mul, one_pow] using h
+    simpa only [mul_pow, hS, one_mul, ← pow_mul, one_pow] using! h
   have hγ : γ ∈ Subgroup.closure {ModularGroup.S, ModularGroup.T} := by
     rw [SpecialLinearGroup.SL2Z_generators]
     exact Subgroup.mem_top γ
@@ -70,7 +70,7 @@ theorem scalar_pow_card_mul_twelve {κ : Type*} [Fintype κ] [DecidableEq κ]
     (ρ : SL2Z →* Matrix κ κ ℂ) (γ : SL2Z) {c : ℂ}
     (hc : ρ γ = c • (1 : Matrix κ κ ℂ)) : c ^ (Fintype.card κ * 12) = 1 := by
   have h := det_pow_twelve ρ γ
-  simpa [hc, Matrix.det_smul, ← pow_mul] using h
+  simpa [hc, Matrix.det_smul, ← pow_mul] using! h
 
 /-- A dimension-dependent power of every matrix on the projective kernel is the identity. -/
 theorem projective_pow_card_mul_twelve {κ : Type*} [Fintype κ] [DecidableEq κ]
@@ -92,9 +92,9 @@ theorem projective_T_pow {κ : Type*} [Fintype κ] [DecidableEq κ]
     (ρ : SL2Z →* Matrix κ κ ℂ) {N : ℕ} (hp : MatrixProjectiveCongruence ρ N) :
     ρ ModularGroup.T ^ (N * (Fintype.card κ * 12)) = 1 := by
   have hmem : ModularGroup.T ^ N ∈ CongruenceSubgroup.Gamma N := by
-    simpa only [zpow_natCast] using NSFinish.T_pow_mem_Gamma N
+    simpa only [zpow_natCast] using! NSFinish.T_pow_mem_Gamma N
   have h := projective_pow_card_mul_twelve ρ hp (ModularGroup.T ^ N) hmem
-  simpa only [map_pow, ← pow_mul] using h
+  simpa only [map_pow, ← pow_mul] using! h
 
 /-- Finite order of `ρ(T)` follows without assuming genuine congruence in advance. -/
 theorem projective_T_isOfFinOrder {κ : Type*} [Fintype κ] [DecidableEq κ]

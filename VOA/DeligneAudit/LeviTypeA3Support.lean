@@ -86,7 +86,7 @@ theorem a3KeyLayer_eq_bot_of_degree_gt (a b c : ℕ) (k : A3RadicalKey)
       omega
     have hs := sum_modes_le (a + b + c) l hall
     have hs' : k.degree ≤ (a + b + c) * (k.d₁ + k.d₂ + k.d₃) := by
-      simpa only [hlen, hdegree, Nat.mul_comm] using hs
+      simpa only [hlen, hdegree, Nat.mul_comm] using! hs
     omega
   rw [radicalWord_high_zero ρ w a b c h l hbad]
   exact Submodule.zero_mem _

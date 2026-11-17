@@ -53,6 +53,11 @@ the `V₀⁺`-module `V₃⁺`; numerically supported) and `TopPairs D`
 (finite, open).  Reached from the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -172,7 +177,7 @@ theorem commData_sig {p : ℕ} {a : V0Sub.carrier} (ha : (a : VPlus) ∈ leechVO
     exact V3_eq_zero_of_lt (actV_stab (sig a) (Set.mem_univ _) j b hb.1)
       (leechVOAPlus.smul_mem_grading (sig_mem_grading ha) hb.2 j) (by omega)
   have := act_comm plusModule.toWeakModule ((sig a : V0Sub.carrier) : VPlus) b r n m p hJ
-  simpa only [WeakModule.act_def] using this
+  first | simpa only [WeakModule.act_def] using this | exact this
 
 /-- `(Ψy)₍ᵣ₎ Φ(v) = 0` above the top mode `r = k − 1` (output weight `< 2`). -/
 theorem hlow_Phi {b : VPlus} (hb2 : b ∈ leechVOAPlus.grading 2) {v : VPlus} (hv : v ∈ frameSector 1)
@@ -367,7 +372,7 @@ theorem keyTopAll_of_FZ (hgen : BimodGenV3) (htop : TopPairs D) : KeyTopAll D :=
       change Fy D y ((fzRes MV3.toWeakModule p k' a m : frameSector 1) : VPlus) = 0
       rw [coe_fzRes]
       refine MV3_induction (fun x => Fy D y (resV p k' a x) = 0) (by simp)
-        (fun x x' hx hx' => by simp only at hx hx' ⊢; rw [Submodule.coe_add, map_add, map_add, hx, hx', add_zero])
+        (fun x x' hx hx' => by (try simp only at hx hx' ⊢); rw [Submodule.coe_add, map_add, map_add, hx, hx', add_zero])
         (fun k x hx => Fy_resV D ha' hy x.2 hx) m
     · intro x hx y hy
       have hx2 : (x : VPlus) ∈ leechVOAPlus.grading 2 := mem_MV3_weight_two.mp hx

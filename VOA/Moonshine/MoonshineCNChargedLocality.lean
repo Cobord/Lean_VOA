@@ -51,6 +51,13 @@ noncomputable def lorentzianChargeCommutationFactors : ChargeCommutationFactors 
 
 variable {L : IntegralLattice} (F : ComplexLatticeFrame L) (C : ChargeCommutationFactors L)
 
+/-- Unfolding of `bracketDist` for charged fields; stated separately so that `rw`/`simp` match it
+without unifying `FormalDist` against the function type of `chargedField`. -/
+theorem bracketDist_chargedField_apply (α β : L.carrier) (j k : ℤ) :
+    bracketDist (chargedField F C.value α) (chargedField F C.value β) j k
+      = chargedField F C.value α j * chargedField F C.value β k
+        - chargedField F C.value β k * chargedField F C.value α j := rfl
+
 theorem local_of_bracket_on_state (L : IntegralLattice) {F G : FormalDist (End ℂ (LatModuleGen L))}
     (h : ∀ (j k : ℤ) (γ : L.carrier) (p : FockN (rank L)),
       bracketDist F G j k (latStateGen L p γ) = 0) : Local F G := by
@@ -76,7 +83,7 @@ theorem chargedField_nonnegative_pairing_bracket_on_state  (α β : L.carrier)
     (hsign : 0 ≤ L.form α β) (j k : ℤ) (γ : L.carrier) (p : FockN (rank L)) :
     bracketDist (chargedField F C.value α) (chargedField F C.value β) j k (latStateGen L p γ) = 0 := by
   obtain ⟨P, hP⟩ : ∃ P : ℕ, (P : ℤ) = L.form α β := ⟨(L.form α β).toNat, by omega⟩
-  simp only [bracketDist_apply, LinearMap.sub_apply, Module.End.mul_apply, chargedField_tmul, map_smul]
+  simp only [bracketDist_chargedField_apply, LinearMap.sub_apply, Module.End.mul_apply, chargedField_tmul, map_smul]
   
   have hEE : dressingField F α (j - L.form α (β + γ)) (dressingField F β (k - L.form β γ) p)
       = (-1 : ℂ) ^ P • dressingField F β (k - L.form β (α + γ)) (dressingField F α (j - L.form α γ) p) := by
@@ -118,7 +125,7 @@ theorem chargedField_bracket_on_state (α β : L.carrier) (j k : ℤ) (γ : L.ca
           - (C.value α γ * C.value β (α + γ)) •
             dressingField F β ((k - L.form β γ) - L.form α β) (dressingField F α (j - L.form α γ) p))
         ⊗ₜ[ℂ] eGen L (α + β + γ) := by
-  rw [bracketDist_apply, LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
+  rw [bracketDist_chargedField_apply, LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
     chargedField_tmul, map_smul, chargedField_tmul, chargedField_tmul, map_smul, chargedField_tmul, smul_smul, smul_smul,
     show α + (β + γ) = α + β + γ from by abel, show β + (α + γ) = α + β + γ from by abel,
     show j - L.form α (β + γ) = (j - L.form α γ) - L.form α β from by rw [map_add]; ring,

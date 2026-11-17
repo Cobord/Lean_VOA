@@ -58,7 +58,7 @@ theorem pureAnnihilation_mem (k : ℂ) (v : Fin 3×ℕ) {d : ℤ} {P : WakFock}
     pureAnnihilation k v P∈bosonAtLeast 1 (d-(if v.1=2 then 1 else 0)) := by
   rw [pureAnnihilation,LinearMap.smul_apply,dV_apply]
   apply Submodule.smul_mem
-  simpa [bosonWeight] using boson_pderiv 1 v hP
+  simpa [bosonWeight] using! boson_pderiv 1 v hP
 
 /-- The actual leading adjoint has the same lower bound: its beta-gamma
 correction preserves boson count and hence satisfies the weaker estimate. -/
@@ -71,8 +71,8 @@ theorem leadingAnnihilation_mem (k : ℂ) (v : Fin 3×ℕ) {d : ℤ} {P : WakFoc
     apply Submodule.add_mem
     · apply bosonAtLeast_mono 1 (show d-1≤d by omega)
       exact Submodule.smul_mem _ _ (boson_BG 1 _ hP)
-    · simpa [hv] using pureAnnihilation_mem k v hP
-  · simpa [hv] using pureAnnihilation_mem k v hP
+    · simpa [hv] using! pureAnnihilation_mem k v hP
+  · simpa [hv] using! pureAnnihilation_mem k v hP
 
 /-- Literal product of the pure oscillator adjoints in a supplied order. -/
 def pureAnnihilationWord (k : ℂ) : List (Fin 3×ℕ)→Module.End ℂ WakFock
@@ -90,22 +90,22 @@ theorem pureAnnihilationWord_mem (k : ℂ) (w : List (Fin 3×ℕ)) {d : ℤ} {P 
     (hP : P∈bosonAtLeast 1 d) :
     pureAnnihilationWord k w P∈bosonAtLeast 1 (d-(bosonCount w : ℤ)) := by
   induction w with
-  | nil => simpa [pureAnnihilationWord,bosonCount] using hP
+  | nil => simpa [pureAnnihilationWord,bosonCount] using! hP
   | cons v w ih =>
     have hb := pureAnnihilation_mem k v ih
     change pureAnnihilation k v (pureAnnihilationWord k w P)∈_
-    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using hb
+    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using! hb
 
 /-- The actual leading adjoint has the same global boson-removal bound. -/
 theorem leadingAnnihilationWord_mem (k : ℂ) (w : List (Fin 3×ℕ)) {d : ℤ} {P : WakFock}
     (hP : P∈bosonAtLeast 1 d) :
     leadingAnnihilationWord k w P∈bosonAtLeast 1 (d-(bosonCount w : ℤ)) := by
   induction w with
-  | nil => simpa [leadingAnnihilationWord,bosonCount] using hP
+  | nil => simpa [leadingAnnihilationWord,bosonCount] using! hP
   | cons v w ih =>
     have hb := leadingAnnihilation_mem k v ih
     change leadingAnnihilation k v (leadingAnnihilationWord k w P)∈_
-    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using hb
+    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using! hb
 
 /-- Every correction to the pure adjoint leaves at least one additional
 boson. Equal-count constant coefficients therefore see only pure derivatives. -/
@@ -134,7 +134,7 @@ theorem leadingAnnihilationWord_error (k : ℂ) (w : List (Fin 3×ℕ)) {d : ℤ
           (-2 : ℂ) (boson_BG 1 ((v.2 : ℤ)+1) hQ)
         convert hh using 1 <;> simp [bosonCount,hv,Q] <;> congr 1 <;> omega
     · apply Submodule.add_mem
-      · simpa [bosonCount,hv] using he
+      · simpa [bosonCount,hv] using! he
       · rw [leadingAnnihilation_eq,if_neg hv,sub_self]
         exact Submodule.zero_mem _
 

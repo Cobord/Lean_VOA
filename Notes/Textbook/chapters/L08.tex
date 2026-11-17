@@ -2495,7 +2495,7 @@ noncomputable def integrand (r q M : ℕ) : Auxiliary r :=
     ∏ m ∈ Finset.range (r*(q-1)), exponentialFactor r (r*(q-1)) M (m+1)
 
 noncomputable def state (r q M : ℕ) : WakFock :=
-  integrand r q M (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
+  (integrand r q M).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
 \end{leancode}
 
 \begin{dictionary}

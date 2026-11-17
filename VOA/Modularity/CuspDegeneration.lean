@@ -48,17 +48,17 @@ open PowerSeries
 `B·(e^z−1) = z` again. -/
 theorem bernoulliSq_mul_exp :
     (bernoulliPowerSeries ℂ) ^ 2 * exp ℂ
-      = bernoulliPowerSeries ℂ - X * derivative ℂ (bernoulliPowerSeries ℂ) := by
+      = bernoulliPowerSeries ℂ - X * derivative (R := ℂ) (bernoulliPowerSeries ℂ) := by
   have hBE : bernoulliPowerSeries ℂ * (exp ℂ - 1) = X := bernoulliPowerSeries_mul_exp_sub_one ℂ
-  have hd := congrArg (derivative ℂ) hBE
+  have hd := congrArg (derivative (R := ℂ)) hBE
   rw [Derivation.leibniz, map_sub, derivative_exp, Derivation.map_one_eq_zero, sub_zero,
     derivative_X, smul_eq_mul, smul_eq_mul] at hd
   -- hd : B * exp + (exp - 1) * B' = 1
   have hmul := congrArg (fun f => bernoulliPowerSeries ℂ * f) hd
   simp only [mul_add, mul_one] at hmul
   -- B*(B*exp) + B*((exp-1)*B') = B
-  have hrw : bernoulliPowerSeries ℂ * ((exp ℂ - 1) * derivative ℂ (bernoulliPowerSeries ℂ))
-      = X * derivative ℂ (bernoulliPowerSeries ℂ) := by
+  have hrw : bernoulliPowerSeries ℂ * ((exp ℂ - 1) * derivative (R := ℂ) (bernoulliPowerSeries ℂ))
+      = X * derivative (R := ℂ) (bernoulliPowerSeries ℂ) := by
     rw [← mul_assoc, hBE]
   rw [hrw] at hmul
   have hsq : bernoulliPowerSeries ℂ * (bernoulliPowerSeries ℂ * exp ℂ)
@@ -298,8 +298,9 @@ theorem pres_zero_eq_sum_Ico {k : ℕ} (a v : 𝒱) {P : ℕ}
     Pres W k a v 0
       = ∑ i ∈ Finset.Ico (-2 : ℤ) (P : ℤ), cbz (k : ℤ) (i + 2) • W.smul a i v := by
   classical
+  have hinj : Function.Injective (fun j : ℕ => (j : ℤ) - 2) := fun x y h => by simpa using h
   have hmapset : Finset.Ico (-2 : ℤ) (P : ℤ)
-      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, fun x y h => by simpa using h⟩ := by
+      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, hinj⟩ := by
     ext i
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
     constructor

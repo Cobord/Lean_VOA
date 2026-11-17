@@ -378,7 +378,7 @@ theorem gradingBG_zero : gradingBG 0 = (ℂ ∙ (1 : FockBG)) := by
   · have hh : p.IsWeightedHomogeneous bgWt 0 := mem_gradingBG.mp hp
     have hsupp : ∀ d ∈ p.support, d = 0 := fun d hd =>
       eq_zero_of_weight_bgWt_eq_zero (hh (MvPolynomial.mem_support_iff.mp hd))
-    have hpc : p = MvPolynomial.C (MvPolynomial.coeff 0 p) := by
+    have hpc : p = MvPolynomial.C (p.coeff 0) := by
       refine MvPolynomial.ext _ _ fun d => ?_
       by_cases hd0 : d = 0
       · subst hd0; simp
@@ -550,8 +550,8 @@ theorem gradingBG_le_span (c : ℂ) : gradingBG c ≤ Submodule.span ℂ (bgMonS
   refine Submodule.sum_mem _ fun d hd => ?_
   have hdw : Finsupp.weight bgWt d = c := hh (MvPolynomial.mem_support_iff.mp hd)
   have hmem : (monomial d 1 : FockBG) ∈ bgMonSet c := ⟨d, hdw, rfl⟩
-  have hscale : (monomial d (MvPolynomial.coeff d p) : FockBG)
-      = (MvPolynomial.coeff d p) • monomial d 1 := by
+  have hscale : (monomial d (p.coeff d) : FockBG)
+      = (p.coeff d) • monomial d 1 := by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
   rw [hscale]
   exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)

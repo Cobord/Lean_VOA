@@ -79,7 +79,6 @@ theorem gsl_p_mul {p : ℕ} (hp : 0 < p) (a₁ k : ℤ) :
   unfold gsl
   have hs := sum_split (m := p) (n := p) (by ring) hP
     (fun x : ℤ => E (p ^ 2) (p * a₁ * x ^ 2 + k * x)) (E_periodic_quad hP _ _)
-  simp only at hs
   rw [hs]
   have inner : ∀ y : ℤ, ∑ z : Fin p, E (p ^ 2) (p * a₁ * (y + p * ((z : ℕ) : ℤ)) ^ 2 +
       k * (y + p * ((z : ℕ) : ℤ))) =

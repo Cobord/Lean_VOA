@@ -34,7 +34,7 @@ def stableIdealQuotientAlgebraAction (ρ : G →* (A ≃ₐ[ℂ] A)) (I : Ideal 
   map_mul' g h := by
     ext x
     induction x using Submodule.Quotient.induction_on with
-    | _ p => simp [map_mul]
+    | _ p => simp [map_mul]; rfl
 
 /-- The quotient map intertwines the original and descended algebra actions. -/
 theorem stableIdealQuotientAlgebraAction_mk (ρ : G →* (A ≃ₐ[ℂ] A)) (I : Ideal A)

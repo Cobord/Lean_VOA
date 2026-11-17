@@ -13,6 +13,8 @@ Tensor sums provide the actual affine derivation, annihilating the tensor
 highest vector. This retains the degree generator needed for the universal
 induced highest module, in addition to its current commutators.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial AffineVOA

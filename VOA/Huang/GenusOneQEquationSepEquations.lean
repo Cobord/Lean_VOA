@@ -42,7 +42,7 @@ theorem diagonalFuchsian_of_series {e : ℕ → ℕ → ℂ} {f : BiSeries}
   simp only [coeff_euler_iterate] at h
   rw [coeff, map_sum, map_sum] at h
   change _ = ∑ k ∈ Finset.range s, coeff (a k * (euler e)^[k] f) i j at h
-  simpa only [coeff_mul, conv, coeff_euler_iterate] using h
+  simpa only [coeff_mul, conv, coeff_euler_iterate] using! h
 
 /-- A positive-order monic equation over a specified coefficient subalgebra. -/
 def MonicEquation (R : Subalgebra ℂ BiSeries) (e : ℕ → ℕ → ℂ) (f : BiSeries) : Prop :=
@@ -100,7 +100,7 @@ theorem monicEquation_of_descent (R : Subalgebra ℂ BiSeries) [IsNoetherianRing
     | succ n ih => rw [qIterate, ih, Function.iterate_succ_apply']
   refine ⟨s, a, hs, ?_⟩
   have h := heq φ hφ (fun _ => euler e) ht
-  simpa only [hi, Algebra.smul_def, Subalgebra.algebraMap_eq] using h
+  simpa only [hi, Algebra.smul_def, Subalgebra.algebraMap_eq] using! h
 
 /-- The algebraic genus-one step and the separate-equation majorant are
 composable without any radial equation or trace-growth assumption. -/
@@ -155,8 +155,8 @@ theorem productSeparateFuchsian_of_eulerEquations
   intro r hr
   have hs := separateSystem_of_monic bidiscAlgebra le_rfl lam mu 1 0 1 (-1) (by norm_num)
     (f := ofArray (productLevelCoeff Y₁ Y₂ w₁ w₂ α₁ α₂))
-    (by simpa using h₁) (by simpa [sub_eq_add_neg, add_assoc] using h₂) hr
-  simpa only [coeff_ofArray_fun] using hs
+    (by simpa using! h₁) (by simpa [sub_eq_add_neg, add_assoc] using! h₂) hr
+  simpa only [coeff_ofArray_fun] using! hs
 
 end Consumers
 end VOA.Huang.GenusTwoPoint.Separate

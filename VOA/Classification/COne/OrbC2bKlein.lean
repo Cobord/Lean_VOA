@@ -18,7 +18,7 @@ abbrev klein := (dihHom 1 le_rfl 2).range
 /-- The lattice has rank one and generator of norm eight (`m = 4`). -/
 theorem klein_iso_plus_four :
     VOAIsomorphic (orbifoldVOA klein) (V2mPlus 4 (by norm_num)) := by
-  simpa using orbifold_dihedral_iso 1 le_rfl 2
+  simpa using! orbifold_dihedral_iso 1 le_rfl 2
 
 /-- Unconditional strong rationality of the actual standard Klein-four fixed algebra. -/
 theorem klein_stronglyRational : StronglyRational (orbifoldVOA klein) := by

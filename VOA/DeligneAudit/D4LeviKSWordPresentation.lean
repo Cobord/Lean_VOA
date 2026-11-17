@@ -62,7 +62,7 @@ theorem exists_colour_shape {σ : Type*} [Fintype σ]
     ∃ shape : σ → Fin 6, Finset.univ.toList.map shape = cs := by
   classical
   apply nodup_map_surj Finset.univ.toList (Finset.nodup_toList _) cs
-  simpa using h.symm
+  simpa using! h.symm
 
 private theorem forall₂_fst_eq (cs : List (Fin 6))
     (ps : List (Fin 6 × ℕ))
@@ -98,7 +98,7 @@ theorem hasWordShape_of_colourPerm {σ : Type*} [Fintype σ]
   obtain ⟨f, hf⟩ := nodup_map_surj is (Finset.nodup_toList _) l' hlen
   have hfirst : ∀ i ∈ is, shape i = (f i).1 := by
     apply map_eq_on is shape (fun i => (f i).1)
-    simpa [← hf, List.map_map, Function.comp_def] using hcolour
+    simpa [← hf, List.map_map, Function.comp_def] using! hcolour
   let a : σ →₀ ℕ := Finsupp.onFinset Finset.univ (fun i => (f i).2) (by simp)
   refine ⟨a, ?_⟩
   have hword : shapedModes shape is a = l' := by

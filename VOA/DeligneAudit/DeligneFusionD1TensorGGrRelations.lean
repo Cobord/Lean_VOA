@@ -26,7 +26,7 @@ theorem local_generator_smul (j : Fin N) (A : Module.End ℂ (D1SiteG.Space S.n)
 /-- A vanishing local source relation lifts without a global operator-zero premise. -/
 theorem local_generator_zero (j : Fin N) (A : Module.End ℂ (D1SiteG.Space S.n))
     (hA : A (D1SiteG.w S.c₀) = 0) : localOp j A (generator S.c₀) = 0 := by
-  simpa only [zero_smul] using local_generator_smul S j A 0 (by simpa using hA)
+  simpa only [zero_smul] using! local_generator_smul S j A 0 (by simpa using! hA)
 
 /-- Every positive-root current kills the actual shifted tensor highest vector. -/
 theorem tensor_raising (e : Fin S.n) (he : S.raising e) (r : ℕ) :
@@ -81,11 +81,11 @@ theorem tensor_lowering (i : Fin S.n) (hi : S.lowering i) :
       (localOp j (D1SiteG.zeroOp S.f i) ^ (S.lowExp i + 1)) (generator S.c₀) = 0 := by
     intro j _
     apply localOp_pow_zero
-    simpa only [Module.End.pow_apply] using D1SiteG.site_lowering_nil S i hi
+    simpa only [Module.End.pow_apply] using! D1SiteG.site_lowering_nil S i hi
   have hn := sum_pow_apply_zero (Finset.univ : Finset (Fin N))
     (fun j => localOp j (D1SiteG.zeroOp S.f i)) (fun _ => S.lowExp i)
       (generator S.c₀) hcomm hnil
-  simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] using hn
+  simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] using! hn
 
 /-- A simple-zero site polynomial kills every non-theta fusion color on the generator. -/
 theorem tensor_polynomial_non_theta (x : Fin S.n) (hx : x ≠ S.c₀) :
@@ -109,7 +109,7 @@ theorem tensor_polynomial_square (x : Fin S.n) :
 theorem tensor_trunc_non_theta (x : Fin S.n) (hx : x ≠ S.c₀) :
     (D1TensorG.rep S.f S.jacobi hskew z).op x N (generator S.c₀) ∈
       Fbelow (D1TensorG.rep S.f S.jacobi hskew z) (generator S.c₀) N := by
-  simpa only [sitePolynomial_degree] using leading_mode_mem
+  simpa only [sitePolynomial_degree] using! leading_mode_mem
     (D1TensorG.rep S.f S.jacobi hskew z) (generator S.c₀) x (sitePolynomial z)
       (sitePolynomial_monic z) (tensor_polynomial_non_theta S hskew z x hx)
 
@@ -121,7 +121,7 @@ theorem tensor_trunc_theta :
     rw [Polynomial.natDegree_pow, sitePolynomial_degree, Nat.mul_comm]
   have hz := congrArg (fun A : Module.End ℂ (D1TensorG.Space S.n N) => A (generator S.c₀))
     (tensor_polynomial_square S hskew z S.c₀)
-  simpa only [hd] using leading_mode_mem
+  simpa only [hd] using! leading_mode_mem
     (D1TensorG.rep S.f S.jacobi hskew z) (generator S.c₀) S.c₀ ((sitePolynomial z) ^ 2)
       ((sitePolynomial_monic z).pow 2) hz
 

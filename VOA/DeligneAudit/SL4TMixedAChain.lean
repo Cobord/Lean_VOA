@@ -127,7 +127,7 @@ theorem mixedAThom_stateIdeal (q : MixedParams) (hq : MixedValid q)
     · change z * b' ∈ mixedAChain q 7
       have hm := hmem 7 6 (by decide)
       change b' * z ∈ mixedAChain q 7 at hm
-      simpa only [mul_comm] using hm
+      simpa only [mul_comm] using! hm
   · apply mul_pair_ideal_mem
     · change 1 * a ∈ mixedAChain q 8
       rw [one_mul]

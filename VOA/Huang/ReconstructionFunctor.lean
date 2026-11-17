@@ -153,7 +153,7 @@ theorem compMap_jointly_injective (W : FDRep ℂ (AutG ω)) (w : W.V)
     have h1 := hc φ
     rw [coeffMap_apply] at h1
     have := Fintype.linearIndependent_iff.mp (linearIndependent_AutG ω) _ h1 1
-    simpa using this
+    simpa using! this
   exact (Module.forall_dual_apply_eq_zero_iff ℂ w).mp hφ
 
 theorem compMap_basis_injective (W : FDRep ℂ (AutG ω)) (w : W.V)
@@ -168,7 +168,7 @@ theorem compMap_basis_injective (W : FDRep ℂ (AutG ω)) (w : W.V)
     have h1 := hc p
     rw [coeffMap_apply] at h1
     have := Fintype.linearIndependent_iff.mp (linearIndependent_AutG ω) _ h1 1
-    simpa using this
+    simpa using! this
   exact (Module.finBasis ℂ W.V).forall_coord_eq_zero_iff.mp hφ
 
 /-- The index set of the embedding. -/
@@ -198,7 +198,9 @@ theorem embMor_comm (W : FDRep ℂ (AutG ω)) (g : AutG ω) :
     Action.ρ W g ≫ embMor ω W = embMor ω W ≫ extMor ω (AutG.val ω g) (embObj ω W) := by
   simp only [embMor, Preadditive.comp_sum, Preadditive.sum_comp]
   refine Finset.sum_congr rfl fun k _ => ?_
-  rw [reassoc_of% (embComp_comm ω W k g), Category.assoc, extMor_natural]
+  rw [reassoc_of% (embComp_comm ω W k g), Category.assoc]
+  exact congrArg (embComp ω W k ≫ ·) (extMor_natural ω (AutG.val ω g) (Y := embObj ω W)
+    (biproduct.ι (fun _ : EmbIdx ω W => (regObj (D := D))) k))
 
 /-- The embedding as a morphism of representations. -/
 def embHom (W : FDRep ℂ (AutG ω)) : W ⟶ (fiberRep ω).obj (embObj ω W) :=
@@ -220,7 +222,6 @@ theorem embHom_injective (W : FDRep ℂ (AutG ω)) : Function.Injective (embHom 
   intro p j
   have h1 := congrArg (fun m : W.V ⟶ ω.obj regObj => m.hom.hom w)
     (embMor_comp_π ω W (p, j))
-  simp only at h1
   change (embComp ω W (p, j)).hom.hom w = 0
   rw [← h1, FGModuleCat.hom_hom_comp, LinearMap.comp_apply]
   have hw' : (embMor ω W).hom.hom w = 0 := hw

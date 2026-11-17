@@ -12,6 +12,8 @@ The concrete triple tensor construction includes the centre and derivation,
 not only the three current colours. It realizes arbitrary level and highest
 weight with actual independent occupation words and a nonzero highest vector.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial AffineVOA
@@ -131,7 +133,7 @@ theorem exists_independent_highest_realization (k h : ℂ) :
   · rw [highestTensorRho_degree,highestTensorDegree_vacuum]
   · intro i n hn
     rw [highestTensorRho_mode,highestTensorJ_highest a b c i n hn,hh]
-  · simpa only [highestTensorRho_mode] using highestTensor_words_independent a b c
+  · simpa only [highestTensorRho_mode] using! highestTensor_words_independent a b c
 
 end
 end VOA.Wak.Charged

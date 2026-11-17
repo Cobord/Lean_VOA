@@ -134,7 +134,7 @@ noncomputable def eulerInv : MvPolynomial ι A →ₗ[A] MvPolynomial ι A :=
 
 /-- `euler ∘ eulerInv + C ∘ coeff₀ = id`. -/
 theorem euler_eulerInv (p : MvPolynomial ι A) :
-    euler A ι (eulerInv p) + C (coeff 0 p) = p := by
+    euler A ι (eulerInv p) + C (p.coeff 0) = p := by
   have h : (euler A ι).comp eulerInv + (Algebra.linearMap A (MvPolynomial ι A)).comp (lcoeff A 0)
       = LinearMap.id := by
     refine lin_ext fun m => ?_
@@ -150,7 +150,7 @@ theorem euler_eulerInv (p : MvPolynomial ι A) :
   have := LinearMap.congr_fun h p
   simpa [algebraMap_eq] using this
 
-theorem coeff_zero_euler (p : MvPolynomial ι A) : coeff 0 (euler A ι p) = 0 := by
+theorem coeff_zero_euler (p : MvPolynomial ι A) : (euler A ι p).coeff 0 = 0 := by
   have h : (lcoeff A 0).comp (euler A ι) = 0 := by
     refine lin_ext fun m => ?_
     simp only [LinearMap.comp_apply, euler_monomial, lcoeff_apply, coeff_smul, coeff_monomial,
@@ -282,7 +282,7 @@ noncomputable def translatedAug : (translatedWeyl a).Augmentation A where
 /-- The augmentation is **evaluation at `x = -a`**: every `x_i` is eliminated as `-a_i`. -/
 theorem translatedAug_ε (p : MvPolynomial ι A) :
     (translatedAug a).ε p = eval (fun i => -a i) p := by
-  change coeff 0 (trInv a p) = _
+  change (trInv a p).coeff 0 = _
   rw [← constantCoeff_eq]
   have : (constantCoeff : MvPolynomial ι A →+* A).comp (trInv a).toRingHom =
       eval fun i => -a i := by

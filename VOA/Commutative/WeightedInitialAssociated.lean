@@ -34,7 +34,7 @@ theorem homogeneous_mul_initialRelation (w : σ → ℕ) (I : Ideal (MvPolynomia
     a*b ∈ initialRelation w (I.restrictScalars K) ⊤ (i+d) := by
   obtain ⟨f,hf⟩ := hb
   refine ⟨⟨a*f.1, ⟨⟨I.mul_mem_left a f.2.1.1, Submodule.mem_top⟩, ?_⟩⟩, ?_⟩
-  · simpa only [Nat.add_assoc] using homogeneous_mul_mem_below w ha f.2.2
+  · simpa only [Nat.add_assoc, SetLike.mem_coe] using homogeneous_mul_mem_below w ha f.2.2
   · change MvPolynomial.weightedHomogeneousComponent w (i+d) (a*f.1)=a*b
     rw [component_mul_homogeneous w ha, if_pos (Nat.le_add_right _ _), Nat.add_sub_cancel_left]
     exact congrArg (a * ·) hf

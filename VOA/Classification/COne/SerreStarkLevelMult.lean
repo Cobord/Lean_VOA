@@ -55,11 +55,11 @@ theorem eigen_pow_of_fg (hpN : Nat.Coprime p N) {a : ℕ → ℂ} {L : Submodule
     intro k
     have := hc (p ^ (2 * (k + 1)) * m)
     rw [heckeCoeff_step χ p a m k] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   suffices H : ∀ k, A k = ε ^ k * A 0 ∧ A (k + 1) = ε ^ (k + 1) * A 0 by
     have := (H j).1
     rw [hA0] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   by_cases ham : a m = 0
   · have h0 : A 0 = 0 := by rw [hA0]; exact ham
     have h1 : A 1 = 0 := by rw [h0, mul_zero, mul_zero, add_zero] at r0; exact r0
@@ -92,7 +92,7 @@ theorem eigen_pow_of_fg (hpN : Nat.Coprime p N) {a : ℕ → ℂ} {L : Submodule
       linear_combination r0
     intro k
     induction k with
-    | zero => exact ⟨by simp, by simpa using h1⟩
+    | zero => exact ⟨by simp, by simpa using! h1⟩
     | succ k ih =>
       refine ⟨ih.2, ?_⟩
       have e := rk k

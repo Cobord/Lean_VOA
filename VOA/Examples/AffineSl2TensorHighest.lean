@@ -14,6 +14,8 @@ prescribed level and highest weight. A free auxiliary scalar avoids the
 three critical factor levels. Projection to the first vacuum factor proves
 independence of ALL occupation words, including horizontal lowering.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial AffineVOA
@@ -65,7 +67,9 @@ theorem tensorCurrent_comm (A : Fin 3→ℤ→End ℂ V) (B : Fin 3→ℤ→End 
   simp only [tensorCurrent,smul_add,Finset.sum_add_distrib]
   by_cases hz : m+n=0
   · simp only [if_pos hz,map_smul,map_one]
-    dsimp [F,G,End.rTensorAlgHom,End.lTensorAlgHom]
+    have hF : ∀ x : End ℂ V,x.rTensor W=F x := fun _ => rfl
+    have hG : ∀ x : End ℂ W,x.lTensor V=G x := fun _ => rfl
+    simp only [hF,hG]
     module
   · simp only [if_neg hz,map_zero,add_zero]
     rfl

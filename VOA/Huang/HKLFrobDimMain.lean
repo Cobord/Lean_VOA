@@ -108,7 +108,7 @@ theorem hklFrobeniusDimInput_holds : HKLFrobeniusDimInput.{u} := by
     rw [this, zero_comp]
   have hge : (n : ℝ) ≤ ∑ j, D.d (lab j) := by
     have := Finset.sum_le_sum (s := Finset.univ) (fun j _ => hD.d_ge_one (lab j))
-    simpa using this
+    simpa using! this
   have hpos : (0 : ℝ) < ∑ j, D.d (lab j) :=
     lt_of_lt_of_le (by exact_mod_cast Nat.pos_of_ne_zero hn) hge
   have hs' : ((∑ j, D.d (lab j) : ℝ) : ℂ) = 0 := by push_cast; exact hs

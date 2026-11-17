@@ -12,6 +12,11 @@ corresponding to the all-ones Golay word. Its rational spin intertwiner is `1`.
 The other Golay sign changes and the Mathieu permutations remain open.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -141,12 +146,22 @@ theorem liftMonoOfUnphasedIntertwiner (hsurj : Function.Surjective ι)
     simp only [Matrix.map_apply, Matrix.smul_apply, Rat.coe_castHom, smul_eq_mul,
       Rat.cast_mul]
   have hC := congrArg (fun M => M.map (Rat.castHom ℂ)) (hinter α)
-  dsimp only at hC
+  try dsimp only at hC
   rw [Matrix.map_mul (f := Rat.castHom ℂ), hmap,
     Matrix.map_mul (f := Rat.castHom ℂ), liftMonoQmat_map, liftMonoQmat_map] at hC
-  rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
-    smul_smul, Matrix.mulVec_mulVec, hC, Matrix.smul_mulVec, smul_smul,
-    mul_comm (signRefinement _), liftMonoWeight_phase ι hι, Matrix.mulVec_mulVec]
+  first
+  | rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
+      smul_smul, Matrix.mulVec_mulVec, hC, Matrix.smul_mulVec, smul_smul,
+      mul_comm (signRefinement _), liftMonoWeight_phase ι hι, Matrix.mulVec_mulVec]
+  | (have key : ∀ w : SpinIdx → ℂ,
+        R.map (Rat.castHom ℂ) *ᵥ (spinOp (coordOfRed (red leech α)) *ᵥ w) =
+          latCob leech leech ι α •
+            (spinOp (coordOfRed (red leech (ι α))) *ᵥ (R.map (Rat.castHom ℂ) *ᵥ w)) := by
+       intro w
+       rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
+         smul_smul, Matrix.mulVec_mulVec, hC, Matrix.smul_mulVec, smul_smul,
+         mul_comm (signRefinement _), liftMonoWeight_phase ι hι, Matrix.mulVec_mulVec]
+     exact key s)
 
 end Phases
 
@@ -208,6 +223,9 @@ theorem liftMonoNegMatrix_intertwine (α : leech.carrier) (s : SpinRep) :
         (spinOp (coordOfRed (red leech (liftMonoNeg α))) *ᵥ
           (liftMonoNegMatrix.map (Rat.castHom ℂ) *ᵥ s)) := by
   simp [liftMonoNegMatrix, liftMonoNeg_latCob, liftMonoNeg_red]
+  try
+    exact congrArg (fun w : SpinIdx → ℂ => spinOp (coordOfRed (red leech α)) *ᵥ w)
+      (Matrix.one_mulVec (s : SpinIdx → ℂ)).symm
 
 /-- The chosen VOA lift of the all-coordinate sign change is liftable in the rational Monster
 framework. -/

@@ -47,7 +47,7 @@ theorem STS_eq : ModularGroup.S * ModularGroup.T * ModularGroup.S =
     ModularGroup.T⁻¹ * ModularGroup.S * ModularGroup.T⁻¹ := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [mul_apply', S_apply, T_apply, Matrix.SpecialLinearGroup.SL2_inv_expl]
+    simp [mul_apply', S_apply, T_apply, Matrix.SpecialLinearGroup.coe_inv, Matrix.adjugate_fin_two]
 
 theorem word_alt (a b : ℤ) :
     ModularGroup.T ^ a * ModularGroup.S⁻¹ * ModularGroup.T ^ b * ModularGroup.S *
@@ -55,7 +55,8 @@ theorem word_alt (a b : ℤ) :
   ext i j
   rw [coe_diagonalWord]
   fin_cases i <;> fin_cases j <;>
-    simp [mul_apply', S_apply, T_zpow_apply, Matrix.SpecialLinearGroup.SL2_inv_expl] <;> ring
+    simp [mul_apply', S_apply, T_zpow_apply, Matrix.SpecialLinearGroup.coe_inv,
+      Matrix.adjugate_fin_two] <;> ring
 
 /-! ## Consequences of congruence -/
 
@@ -69,7 +70,7 @@ theorem rho_T_zpow_congr (ρ : SL2Z →* Matrix ι ι ℂ) {n : ℕ} (hk : Kerne
       exact (Int.ModEq.dvd hkl.symm)
     rw [Gamma_mem]
     simp only [T_zpow_apply]
-    simpa using e
+    simpa using! e
   have h := hk _ hmem
   calc ρ (ModularGroup.T ^ k) = ρ (ModularGroup.T ^ (k - l) * ModularGroup.T ^ l) := by
         rw [← _root_.zpow_add, sub_add_cancel]
@@ -134,7 +135,7 @@ theorem smul_eq_self_imp {X : Matrix ι ι ℂ} (hX : IsUnit X) [Nonempty ι] {c
       _ = 1 := by rw [h, Units.mul_inv]
   let i : ι := Classical.arbitrary ι
   have := congrFun (congrFun h1 i) i
-  simpa using this
+  simpa using! this
 
 /-- **DLN §4.3: the scaled twist law forces `β = 1` and the Galois word.** -/
 theorem galoisWord_of_scaledTwist (ρ : SL2Z →* Matrix ι ι ℂ) {n : ℕ}

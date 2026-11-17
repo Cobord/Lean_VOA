@@ -137,7 +137,8 @@ theorem liFiniteJetPolynomialMap_monomial_isLiBihomogeneous
   induction d using Finsupp.induction with
   | zero =>
       intro c
-      simpa using isLiBihomogeneous_algebraMap W c
+      simp
+      exact isLiBihomogeneous_algebraMap W c
   | single_add v n d hv hn ih =>
       intro c
       rw [add_comm (Finsupp.single v n) d, map_add,

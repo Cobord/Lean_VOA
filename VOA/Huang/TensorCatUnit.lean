@@ -24,14 +24,18 @@ theorem leftUnitor_naturality {X Y : Ordinary W} (f : X ⟶ Y) :
       (leftUnitor F X).hom ≫ f := by
   apply tensor_hom_ext F
   intro n v x
-  simp only [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply,
-    leftUnitor_intertwiner]
+  change (leftUnitor F Y).hom.val ((tensorHom F (𝟙 vacuumObject) f).val _) =
+    f.val ((leftUnitor F X).hom.val _)
+  simp only [tensorHom_intertwiner, Ordinary.id_apply]
+  refine (leftUnitor_intertwiner F Y n v (f.val x)).trans
+    ((congrArg f.val (leftUnitor_intertwiner F X n v x)).symm ▸ ?_)
   change moduleModes Y.isMod n v (f.val x) = f.val (moduleModes X.isMod n v x)
   classical
   unfold moduleModes
   split_ifs with h
   · exact (f.property v h.choose x).symm
-  · simp
+  · change (0 : Y.carrier) = f.val 0
+    exact (map_zero f.val).symm
 
 /-- The chosen left unit isomorphisms form a natural isomorphism. -/
 def leftUnitorNatIso :
@@ -60,7 +64,10 @@ theorem tensorChoiceIso_naturality {X X' Y Y' : Ordinary W}
       (tensorChoiceIso F G X Y).hom ≫ tensorHom G f g := by
   apply tensor_hom_ext F
   intro n x y
+  change (tensorChoiceIso F G X' Y').hom.val ((tensorHom F f g).val _) =
+    (tensorHom G f g).val ((tensorChoiceIso F G X Y).hom.val _)
   simp
+  rfl
 
 /-- The fusion bifunctor is independent, up to canonical natural isomorphism,
 of the finite representatives and bases used to construct its products. -/

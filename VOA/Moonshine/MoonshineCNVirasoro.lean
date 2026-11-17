@@ -17,6 +17,9 @@ open scoped BigOperators TensorProduct
 open Module (End)
 open IntegralLattice HeisenbergN LatGen Reconstruction
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {L : IntegralLattice} (F : ComplexLatticeFrame L)
 
 noncomputable def frameVirasoroMode (n : ℤ) : End ℂ (LatModuleGen L) := frameSugawaraField F (-n - 2)

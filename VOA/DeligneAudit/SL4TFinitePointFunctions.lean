@@ -53,17 +53,17 @@ theorem finitePoint_indicatorPolynomial [Fintype ι] (x : ι → σ → ℂ)
   have hqi (j : ι) : finitePointEvaluation x (q j) i = 1 := by
     by_cases h : i = j
     · simp [q, h]
-    · simpa only [q, dif_neg h] using
+    · simpa only [q, dif_neg h] using!
         (finitePoint_separatingPolynomial x hx h).choose_spec.1
   have hqj (j : ι) (h : i ≠ j) : finitePointEvaluation x (q j) j = 0 := by
-    simpa only [q, dif_neg h] using
+    simpa only [q, dif_neg h] using!
       (finitePoint_separatingPolynomial x hx h).choose_spec.2
   refine ⟨∏ j, q j, fun j => ?_⟩
   change MvPolynomial.aeval (x j) (∏ a, q a) = _
   rw [map_prod]
   by_cases h : j = i
   · subst j
-    simpa only [if_pos rfl] using Finset.prod_eq_one (fun a _ => hqi a)
+    simpa only [if_pos rfl] using! Finset.prod_eq_one (fun a _ => hqi a)
   · rw [if_neg h]
     exact Finset.prod_eq_zero (Finset.mem_univ j) (hqj j (Ne.symm h))
 
@@ -109,7 +109,7 @@ def pointFunctionAction : G →* ((ι → ℂ) ≃ₐ[ℂ] (ι → ℂ)) where
       map_mul' := by intros; rfl
       commutes' := by intros; rfl }
   map_one' := by ext f i; simp
-  map_mul' g h := by ext f i; simp [mul_smul]
+  map_mul' g h := by ext f i; simp [mul_smul]; rfl
 
 /-- Invariant functions are exactly functions constant on point orbits. -/
 theorem pointFunction_fixed_iff (f : ι → ℂ) :
@@ -119,7 +119,7 @@ theorem pointFunction_fixed_iff (f : ι → ℂ) :
   · intro h g i
     have hi := congrFun (h g⁻¹) i
     change f ((g⁻¹)⁻¹ • i) = f i at hi
-    simpa only [inv_inv] using hi
+    simpa only [inv_inv] using! hi
   · intro h g
     funext i
     exact h g⁻¹ i

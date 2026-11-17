@@ -40,7 +40,7 @@ theorem vermaWeightFiltration_single (k : ℕ) (w : List ℕ) (a : ℂ)
     Finsupp.single w (a • (X^k : Polynomial ℂ))∈vermaWeightFiltration d := by
   have hm : Finsupp.single w (X^k : Polynomial ℂ)∈vermaWeightFiltration d :=
     Submodule.subset_span ⟨k,w,h,rfl⟩
-  simpa only [Finsupp.smul_single] using (vermaWeightFiltration d).smul_mem a hm
+  simpa only [Finsupp.smul_single] using! (vermaWeightFiltration d).smul_mem a hm
 
 /-- Prefixing one negative mode increases the permitted creation length by one. -/
 theorem vermaWeightFiltration_prepend (i : ℕ) {d : ℕ}
@@ -50,10 +50,10 @@ theorem vermaWeightFiltration_prepend (i : ℕ) {d : ℕ}
   | mem f hf =>
     obtain ⟨k,w,hw,rfl⟩ := hf
     simp only [polynomialPrepend,Finsupp.lmapDomain_apply,Finsupp.mapDomain_single]
-    simpa only [one_smul] using vermaWeightFiltration_single k (i::w) 1 (by simp only [List.length_cons]; omega)
+    simpa only [one_smul] using! vermaWeightFiltration_single k (i::w) 1 (by simp only [List.length_cons]; omega)
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Multiplication by p powers of highest weight increases the filtration
 bound by p, for arbitrary finite polynomial word expressions. -/
@@ -64,10 +64,10 @@ theorem vermaWeightFiltration_shift (p : ℕ) {d : ℕ}
   | mem f hf =>
     obtain ⟨k,w,hw,rfl⟩ := hf
     rw [Finsupp.smul_single,smul_eq_mul,← pow_add]
-    simpa only [one_smul] using vermaWeightFiltration_single (p+k) w 1 (by omega)
+    simpa only [one_smul] using! vermaWeightFiltration_single (p+k) w 1 (by omega)
   | zero => simp
-  | add f g _ _ hf hg => simpa only [smul_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [smul_comm (X^p : Polynomial ℂ) a] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [smul_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [smul_comm (X^p : Polynomial ℂ) a] using! Submodule.smul_mem _ a hf
 
 /-- Positive modes preserve the word-length budget. Nonpositive modes may
 increase it by one: a negative mode creates a letter and L₀ contributes the
@@ -79,36 +79,36 @@ theorem vermaModePolynomial_weightFiltration (c : ℂ) (m : ℤ) (w : List ℕ) 
   | nil =>
     by_cases hm : m<0
     · simp only [vermaModePolynomial,if_pos hm,List.length_nil,if_pos (by omega : m≤0)]
-      simpa only [pow_zero,one_smul] using
+      simpa only [pow_zero,one_smul] using!
         vermaWeightFiltration_single 0 [(-m-1).toNat] 1 (by simp)
     · by_cases hz : m=0
       · subst m
         simp only [vermaModePolynomial,lt_self_iff_false,if_false,ite_true,List.length_nil,
           le_refl,Nat.zero_add]
-        simpa only [pow_one,one_smul] using vermaWeightFiltration_single 1 [] 1 (by simp)
+        simpa only [pow_one,one_smul] using! vermaWeightFiltration_single 1 [] 1 (by simp)
       · simp [vermaModePolynomial,hm,hz]
   | cons i w ih =>
     by_cases hm : m<0
     · simp only [vermaModePolynomial,if_pos hm,if_pos (by omega : m≤0)]
-      simpa only [pow_zero,one_smul] using
+      simpa only [pow_zero,one_smul] using!
         vermaWeightFiltration_single 0 ((-m-1).toNat::i::w) 1 (by simp)
     · rw [vermaModePolynomial,if_neg hm]
       apply Submodule.add_mem
       · apply Submodule.add_mem
         · have hh := vermaWeightFiltration_prepend i (ih m)
-          simpa only [List.length_cons,Nat.add_right_comm] using hh
+          simpa only [List.length_cons,Nat.add_right_comm] using! hh
         · have hh := vermaWeightFiltration_mono
             (show w.length+(if m-(i:ℤ)-1≤0 then 1 else 0)≤
               (i::w).length+(if m≤0 then 1 else 0) by simp only [List.length_cons]; split_ifs <;> omega)
             (ih (m-(i:ℤ)-1))
-          simpa only [algebraMap_smul] using
+          simpa only [algebraMap_smul] using!
             (vermaWeightFiltration _).smul_mem ((m:ℂ)+(i:ℂ)+1) hh
       · by_cases hz : m-(i:ℤ)-1=0
         · rw [if_pos hz]
           have hh := vermaWeightFiltration_single 0 w ((((m:ℂ)^3-m)/12)*c)
             (d := (i::w).length+(if m≤0 then 1 else 0))
             (by simp only [List.length_cons]; omega)
-          simpa [Algebra.smul_def,← map_mul] using hh
+          simpa [Algebra.smul_def,← map_mul] using! hh
         · rw [if_neg hz]
           exact Submodule.zero_mem _
 
@@ -124,10 +124,10 @@ theorem polynomialModeAction_weightFiltration (c : ℂ) (m : ℤ) (hm : 0<m)
     rw [polynomialModeAction_single]
     apply vermaWeightFiltration_mono hw
     have hh := vermaWeightFiltration_shift k (vermaModePolynomial_weightFiltration c m w)
-    simpa only [if_neg (by omega : ¬m≤0),Nat.add_zero] using hh
+    simpa only [if_neg (by omega : ¬m≤0),Nat.add_zero] using! hh
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using Submodule.add_mem _ hf hg
-  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using Submodule.smul_mem _ a hf
+  | add f g _ _ hf hg => simpa only [map_add] using! Submodule.add_mem _ hf hg
+  | smul a f _ hf => simpa only [LinearMap.map_smul_of_tower] using! Submodule.smul_mem _ a hf
 
 /-- Extracting any PBW coordinate cannot increase highest-weight degree:
 negative-word straightening has constant complex coefficients. -/
@@ -140,7 +140,7 @@ theorem polynomialFormCoordinate_natDegree_le {d : ℕ}
     obtain ⟨k,w,hw,rfl⟩ := hf
     simp only [polynomialFormCoordinate,Finsupp.sum_single_index,zero_mul]
     apply natDegree_mul_le.trans
-    simpa using (show k≤d by omega)
+    simpa using! (show k≤d by omega)
   | zero => simp [polynomialFormCoordinate]
   | add f g _ _ hf hg =>
     rw [polynomialFormCoordinate_add]
@@ -168,7 +168,7 @@ the column partition length, uniformly at every fixed central charge. -/
 theorem vermaWeightGramPolynomial_natDegree_le (c : ℂ) (n : ℕ) (i j : VermaPartitions n) :
     (vermaWeightGramPolynomial c n i j).natDegree≤j.val.length := by
   apply vermaPairPolynomial_natDegree_le
-  simpa only [pow_zero,one_smul] using vermaWeightFiltration_single 0 j.val 1 (by simp)
+  simpa only [pow_zero,one_smul] using! vermaWeightFiltration_single 0 j.val 1 (by simp)
 
 /-- The actual highest-weight Gram polynomial is symmetric. Evaluation at
 all complex weights reduces this to the proved contravariant symmetry. -/

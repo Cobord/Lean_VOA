@@ -30,7 +30,7 @@ noncomputable section
 variable {K : Type*} [Field K] [CharZero K]
 
 local notation "A" => (PowerSeries K)
-local notation "dx" => PowerSeries.derivative K
+local notation "dx" => PowerSeries.derivative (R := K)
 
 /-! ## Extracting `x`-coefficients over `K` -/
 
@@ -47,7 +47,7 @@ theorem pjK_sub (j : ℕ) (F G : PowerSeries A) : pjK j (F - G) = pjK j F - pjK 
   refine PowerSeries.ext fun n => ?_; simp
 
 theorem pjK_mul (j : ℕ) (F G : PowerSeries A) :
-    pjK j (F * G) = ∑ p ∈ Finset.antidiagonal j, pjK p.1 F * pjK p.2 G := by
+    pjK j (F * G) = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, pjK p.1 F * pjK p.2 G := by
   refine PowerSeries.ext fun n => ?_
   simp only [coeff_pjK, coeff_mul, map_sum]
   rw [Finset.sum_comm]
@@ -66,14 +66,14 @@ theorem pjK_liftD (j : ℕ) (F : PowerSeries A) :
   ring
 
 theorem star_pjK (w : (PowerSeries K)ˣ) (hw : dx (w : A) = w) (j : ℕ) :
-    ∑ p ∈ Finset.antidiagonal j, (pjK p.1 1 - pjK p.1 (PowerSeries.C (w : A))) *
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, (pjK p.1 1 - pjK p.1 (PowerSeries.C (w : A))) *
         (PowerSeries.C ((p.2 : K) + 1) * pjK (p.2 + 1) (Rser w)
-          + ∑ q ∈ Finset.antidiagonal p.2, pjK q.1 (Rser w) * pjK q.2 (Rser w)
+          + ∑ q ∈ Finset.HasAntidiagonal.antidiagonal p.2, pjK q.1 (Rser w) * pjK q.2 (Rser w)
           - (pjK p.2 (Tser w) + pjK p.2 (Tser w)))
-      = ∑ p ∈ Finset.antidiagonal j, (pjK p.1 1 + pjK p.1 (PowerSeries.C (w : A))) * pjK p.2 (Rser w) := by
+      = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, (pjK p.1 1 + pjK p.1 (PowerSeries.C (w : A))) * pjK p.2 (Rser w) := by
   have h := congrArg (pjK j) (star_identity w hw)
   rw [two_mul, sq] at h
-  simpa only [pjK_mul, pjK_add, pjK_sub, pjK_liftD] using h
+  simpa only [pjK_mul, pjK_add, pjK_sub, pjK_liftD] using! h
 
 /-- Lambert series over `K`. -/
 def lamK (F : ℕ → ℕ → K) : PowerSeries K :=

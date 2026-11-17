@@ -40,7 +40,7 @@ theorem fThree_zeroXs_inert
       have hd := fThree_radicalWord ρ w m h r ((1, 0) :: l)
       have ht := fThreeDerivative_inert ρ r l w hl
       simpa [zeroXs, fThreeDerivative, fThreeLetter,
-        radicalWord, wordOp, radicalColour, ht] using hd
+        radicalWord, wordOp, radicalColour, ht] using! hd
   | succ n ih =>
       have hc := congrArg (fun T : Module.End ℂ V =>
         T (radicalWord ρ w (zeroXs (n + 1) ++ l)))
@@ -63,7 +63,7 @@ theorem fThree_zeroXs_inert
                   (radicalWord ρ w (zeroXs (n + 1) ++ l))) =
               -ρ.op (25 : Fin 28) r
                 (radicalWord ρ w (zeroXs (n + 1) ++ l)) := by
-          simpa [LinearMap.sub_apply, Module.End.mul_apply] using hc
+          simpa [LinearMap.sub_apply, Module.End.mul_apply] using! hc
         calc
           _ = (ρ.op (17 : Fin 28) r
               (ρ.op (22 : Fin 28) 0
@@ -124,7 +124,7 @@ theorem up_zeroXs_inert_higher
   have hcoef : (-((n + 1 : ℕ) : ℂ)) ≠ 0 :=
     neg_ne_zero.mpr (by exact_mod_cast Nat.succ_ne_zero n)
   have hscaled := N.smul_mem (-((n + 1 : ℕ) : ℂ))⁻¹ hf
-  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using hscaled
+  simpa only [smul_smul, inv_mul_cancel₀ hcoef, one_smul] using! hscaled
 
 end VOA.DeligneAudit.D4Levi
 

@@ -38,14 +38,14 @@ theorem complement_of_cyclicRelationObstruction (A : WeakModule W M)
   obtain ⟨y, hy, he⟩ := (liftObstruction_eq_zero_iff _ _ _).mp ho
   have hz : x - y ∉ P := by
     intro hm
-    exact hx (by simpa using P.add_mem hm hy)
+    exact hx (by simpa using! P.add_mem hm hy)
   refine ⟨cyclic A (x - y), isCompl_cyclic_of_disjoint A P hP (x - y) hz ?_⟩
   apply Submodule.disjoint_def.mpr
   intro z hzP hzQ
   obtain ⟨r, rfl⟩ := Submodule.mem_span_singleton.mp hzQ
   have hr : r • x ∈ P := by
     have ht := P.add_mem hzP (P.smul_mem r hy)
-    simpa only [smul_sub, sub_add_cancel] using ht
+    simpa only [smul_sub, sub_add_cancel] using! ht
   exact congrFun he (⟨r, hr⟩ : quotientRelations A P x)
 
 /-- A complement solves the relation-correction problem for every lift. -/

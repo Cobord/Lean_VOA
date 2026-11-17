@@ -86,7 +86,7 @@ theorem q24_grading_lt64 : ∀ N : ℤ, 0 < N → N < 64 →
       have hd1 : d ≤ 1 := by omega
       interval_cases b <;> interval_cases c <;> interval_cases d <;> omega
     rcases he with ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩
-    · simpa [genMon] using q24_seed16
-    · simpa [genMon, pow_two] using q24_seed_two
+    · simpa [genMon] using! q24_seed16
+    · simpa [genMon, pow_two] using! q24_seed_two
 
 end VOA.Classification.COne.OrbOctaZD

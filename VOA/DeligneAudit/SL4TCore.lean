@@ -75,7 +75,7 @@ theorem powerSumOfCoeff_nilpotent (d : ℕ) (e : ℕ → R)
   · exact (he (k + 1) (by omega)).smul (-((k + 1 : ℕ) : ℂ))
   · apply isNilpotent_sum
     intro i _
-    simpa only [smul_eq_mul] using
+    simpa only [smul_eq_mul] using!
       (he (i.val + 1) (by omega)).smul (powerSumOfCoeff d e (k - i.val))
 
 def grassSeries (d T : ℕ) : (GrassRing d T)[X] :=

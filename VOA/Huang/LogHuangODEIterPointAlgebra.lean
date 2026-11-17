@@ -37,7 +37,7 @@ theorem dop_iterate_mem_coupled {ι : Type*}
   induction i with
   | zero =>
     intro a t j
-    simpa using mul_mem_of_ratRing NN (X_pow_mem 0 a) (hmem t j)
+    simpa using! mul_mem_of_ratRing NN (X_pow_mem 0 a) (hmem t j)
   | succ i ih =>
     intro a t j
     rw [Function.iterate_succ_apply,
@@ -71,7 +71,7 @@ theorem exists_dop_relation_coupled {ι : Type*}
         ∑ k ∈ Finset.range m,r k*(DOp κ σ)^[k] ((1-X)^n₀*A t 0) := by
   apply exists_dop_relation NN hfg (DOp κ σ)
   intro i
-  simpa only [pow_zero,one_mul,add_zero] using
+  simpa only [pow_zero,one_mul,add_zero] using!
     dop_iterate_mem_coupled NN κ σ n₀ A next d μ hA hmem i 0 t 0
 
 end VOA.Huang.LogHuangODEIterPoint

@@ -67,7 +67,6 @@ theorem channel_injective (iR : ∀ i, (R i).IsIrreducibleLW)
     funext n
     ext x y
     have hz := congrArg (fun Z : IntertwiningOperator A₁ A₂ (R i).isMod => Z.val n x y) hf
-    dsimp only at hz
     rw [postcompose_apply, heval] at hz
     simpa only [AddSubmonoidClass.coe_finsetSum, Submodule.coe_smul, Finset.sum_apply,
       Pi.smul_apply, LinearMap.sum_apply, LinearMap.smul_apply, universalIntertwiner_apply] using hz

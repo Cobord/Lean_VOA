@@ -15,6 +15,9 @@ open scoped TensorProduct
 open Module
 namespace VOA.Moonshine.ConwayNorton
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {g : Type*} [LieRing g] [LieAlgebra ℂ g]
 variable (p : LieSubalgebra ℂ g)
 
@@ -142,7 +145,7 @@ theorem generatorMultiplication_injective_of_inducedVectorMap
   intro t₁ t₂ h
   have h' := congrArg (fun a => relativeVermaMultiplication p q (0 : p →ₗ⁅ℂ⁆ End ℂ ℂ)
     (a ⊗ₜ[ℂ] (1 : ℂ))) h
-  simp only at h'
+  try simp only at h'
   rw [← inducedVectorMap_verma_generator p S σ hσ q hSq,
     ← inducedVectorMap_verma_generator p S σ hσ q hSq] at h'
   exact (LinearEquiv.lTensor _ (Submodule.comapSubtypeEquivOfLe hSq)).injective (hV (hΦ h'))

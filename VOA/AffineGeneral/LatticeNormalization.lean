@@ -46,7 +46,8 @@ theorem sum_sq_form {n : ℕ} (G : Matrix (Fin n) (Fin n) ℤ) (hG : G.IsSymm)
     calc ∑ γ ∈ normEq (ofCartan G hG) hPos 2, ((ofCartan G hG).form β.1 γ) ^ 2
         = ∑ γ ∈ normEq (ofCartan G hG) hPos 2, g (List.ofFn (n := n) γ) := by
           refine Finset.sum_congr rfl fun γ _ => ?_
-          simp only [g, ← hform]
+          simp only [g]
+          rw [← hform β.1 γ]
           rfl
       _ = ∑ t ∈ (normEq (ofCartan G hG) hPos 2).image
             (fun v : (ofCartan G hG).carrier => List.ofFn (n := n) v), g t :=
@@ -97,8 +98,8 @@ theorem d4_sumsq : ∀ s ∈ rootList d4Rows, ((rootList d4Rows).map fun t => fo
 
 theorem e6_form (v w : Fin 6 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₆) v w = formL e6GL (List.ofFn v) (List.ofFn w) := by
-  rw [Matrix.toBilin'_apply']
-  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e6GL, List.ofFn_succ, CartanMatrix.E₆]
+  rw [CartanMatrix.E₆, CartanMatrix.E_six_eq, Matrix.toBilin'_apply']
+  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e6GL, List.ofFn_succ]
 
 theorem e6_sumsq : ∀ s ∈ rootList e6Rows, ((rootList e6Rows).map fun t => formL e6GL s t ^ 2).sum = 48 := by
   have hrows : e6Rows = Certificate.e6RowsData := rfl
@@ -113,8 +114,8 @@ theorem e6_sumsq : ∀ s ∈ rootList e6Rows, ((rootList e6Rows).map fun t => fo
 
 theorem e7_form (v w : Fin 7 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₇) v w = formL e7GL (List.ofFn v) (List.ofFn w) := by
-  rw [Matrix.toBilin'_apply']
-  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e7GL, List.ofFn_succ, CartanMatrix.E₇]
+  rw [CartanMatrix.E₇, CartanMatrix.E_seven_eq, Matrix.toBilin'_apply']
+  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e7GL, List.ofFn_succ]
 
 theorem e7_sumsq : ∀ s ∈ rootList e7Rows, ((rootList e7Rows).map fun t => formL e7GL s t ^ 2).sum = 72 := by
   have hrows : e7Rows = Certificate.e7RowsData := rfl
@@ -129,8 +130,8 @@ theorem e7_sumsq : ∀ s ∈ rootList e7Rows, ((rootList e7Rows).map fun t => fo
 
 theorem e8_form (v w : Fin 8 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₈) v w = formL e8GL (List.ofFn v) (List.ofFn w) := by
-  rw [Matrix.toBilin'_apply']
-  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e8GL, List.ofFn_succ, CartanMatrix.E₈]
+  rw [CartanMatrix.E₈, CartanMatrix.E_eight_eq, Matrix.toBilin'_apply']
+  simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ, formL, e8GL, List.ofFn_succ]
 
 theorem e8_sumsq : ∀ s ∈ rootList e8Rows, ((rootList e8Rows).map fun t => formL e8GL s t ^ 2).sum = 120 := by
   have hrows : e8Rows = Certificate.e8RowsData := rfl

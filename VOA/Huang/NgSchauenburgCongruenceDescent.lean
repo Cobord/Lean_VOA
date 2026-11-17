@@ -71,7 +71,7 @@ theorem projectiveGamma_of_tensor_action
   funext i
   have hh := hp z (fun _ => 1) i j₀
   apply mul_right_cancel₀ hne
-  simpa [mul_assoc, mul_comm, hne] using hh
+  simpa [mul_assoc, mul_comm, hne] using! hh
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] [RightRigidCategory C]
   [Preadditive C] [Linear ℂ C] [MonoidalPreadditive C] [MonoidalLinear ℂ C]

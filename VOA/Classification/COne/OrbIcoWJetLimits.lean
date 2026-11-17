@@ -37,25 +37,25 @@ theorem genericSymbolCoefficient_tendsto (self : Bool) (N n : ℕ)
     Tendsto (fun t => OrbIcoV.genericSymbolCoefficient self N t n) nonrealNhdsOne
       (𝓝 ((((valueJets self n)[0]?).getD 0 : ℚ) : ℂ)) := by
   have h := genericSymbolCoefficient_jetApprox self N n hN hn
-  simpa only [← Polynomial.coeff_zero_eq_eval_zero,coeff_zp] using
+  simpa only [← Polynomial.coeff_zero_eq_eval_zero,coeff_zp] using!
     h.tendsto (by omega) nonrealNhdsOne_le_punctured
 
 /-- Xu's two vacuum-channel constants are actual limits of normalized Ward coefficients. -/
 theorem generic_vac37_tendsto (N : ℕ) (hN : 38≤N) :
     Tendsto (fun t => OrbIcoV.genericSymbolCoefficient false N t 37) nonrealNhdsOne (𝓝 (xuU37 : ℂ)) := by
-  simpa only [vac37_value] using genericSymbolCoefficient_tendsto false N 37 hN (by decide)
+  simpa only [vac37_value] using! genericSymbolCoefficient_tendsto false N 37 hN (by decide)
 
 theorem generic_vac38_tendsto (N : ℕ) (hN : 38≤N) :
     Tendsto (fun t => OrbIcoV.genericSymbolCoefficient false N t 38) nonrealNhdsOne (𝓝 (xuU38 : ℂ)) := by
-  simpa only [vac38_value] using genericSymbolCoefficient_tendsto false N 38 hN (by decide)
+  simpa only [vac38_value] using! genericSymbolCoefficient_tendsto false N 38 hN (by decide)
 
 /-- Xu's two sixth-channel constants are actual limits of normalized Ward coefficients. -/
 theorem generic_self19_tendsto (N : ℕ) (hN : 20≤N) :
     Tendsto (fun t => OrbIcoV.genericSymbolCoefficient true N t 19) nonrealNhdsOne (𝓝 (xuV19 : ℂ)) := by
-  simpa only [self19_value] using genericSymbolCoefficient_tendsto true N 19 hN (by decide)
+  simpa only [self19_value] using! genericSymbolCoefficient_tendsto true N 19 hN (by decide)
 
 theorem generic_self20_tendsto (N : ℕ) (hN : 20≤N) :
     Tendsto (fun t => OrbIcoV.genericSymbolCoefficient true N t 20) nonrealNhdsOne (𝓝 (xuV20 : ℂ)) := by
-  simpa only [self20_value] using genericSymbolCoefficient_tendsto true N 20 hN (by decide)
+  simpa only [self20_value] using! genericSymbolCoefficient_tendsto true N 20 hN (by decide)
 
 end VOA.Classification.COne.OrbIcoW

@@ -39,7 +39,7 @@ theorem a2_key_local_weyl_rel_mod (p q : ℕ)
   · intro r hr
     exact hHigher (a2_cartan_pos_mem_higher ρ w p q h r hr k hv)
   · have hw := a2_node2_weight_key ρ w q k h.cartan_second hv
-    simpa [a2KeyHeight] using hw
+    simpa [a2KeyHeight] using! hw
 
 end VOA.DeligneAudit.A3Sector
 

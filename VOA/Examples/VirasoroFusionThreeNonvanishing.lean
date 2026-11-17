@@ -39,7 +39,7 @@ theorem fusionKernelTop_three_ne_zero (A : ℕ) (t : ℂ) (him : t.im≠0)
   induction r with
   | zero => simp
   | succ r ih =>
-    have hb := fusionKernelTop_source_below A 3 t him (by omega) (r+1) (by simpa using hr)
+    have hb := fusionKernelTop_source_below A 3 t him (by omega) (r+1) (by simpa using! hr)
     norm_num only [Nat.cast_ofNat,show (3:ℂ)-1=2 by norm_num] at hb
     rw [wardBSATopSource_label_three A t ht] at hb
     intro hz

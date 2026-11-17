@@ -55,7 +55,7 @@ theorem jointSynthesis_mem_maxIdeal_iff (k : ℂ) (hk : k + 2 ≠ 0)
     have he := hz (currentPBWBasis k hk j.val)
     simpa only [jointSynthesis, LinearMap.coe_mk, AddHom.coe_mk,
       vacuumChevalleyPolynomial_actual k hk, map_sum, map_smul,
-      LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using he
+      LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] using! he
   · intro hr
     apply (vacuumChevalley_ideal_iff k hk _).mp
     apply vacuumChevalley_kernel_ideal k hk n c r

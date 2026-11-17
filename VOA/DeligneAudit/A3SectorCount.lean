@@ -15,11 +15,11 @@ def leviCount (a b c : ℕ) : ℕ :=
 
 private theorem sum_choose_three (n : ℕ) :
     (∑ d ∈ range (n + 1), n.choose d * 3 ^ d) = 4 ^ n := by
-  simpa [mul_comm] using (add_pow (3 : ℕ) 1 n).symm
+  simpa [mul_comm] using! (add_pow (3 : ℕ) 1 n).symm
 
 private theorem sum_choose_three_rev (n : ℕ) :
     (∑ d ∈ range (n + 1), n.choose d * 3 ^ (n - d)) = 4 ^ n := by
-  simpa [mul_comm] using (add_pow (1 : ℕ) 3 n).symm
+  simpa [mul_comm] using! (add_pow (1 : ℕ) 3 n).symm
 
 /-- The type-A₃ binomial count, for every fundamental-weight triple. -/
 theorem leviCount_eq (a b c : ℕ) : leviCount a b c = 4 ^ a * 6 ^ b * 4 ^ c := by
@@ -27,7 +27,7 @@ theorem leviCount_eq (a b c : ℕ) : leviCount a b c = 4 ^ a * 6 ^ b * 4 ^ c := 
       a.choose d₀ * b.choose d₁ * c.choose d₂ * 3 ^ (b + c + d₀ - d₂) =
         (a.choose d₀ * 3 ^ d₀) * b.choose d₁ *
           (c.choose d₂ * 3 ^ (c - d₂)) * 3 ^ b := by
-    have hle : d₂ ≤ c := by simpa using hd₂
+    have hle : d₂ ≤ c := by simpa using! hd₂
     have he : b + c + d₀ - d₂ = d₀ + (c - d₂) + b := by omega
     rw [he, pow_add, pow_add]
     ring

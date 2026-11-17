@@ -91,7 +91,7 @@ theorem adjointSiteModule_finite_and_local_bound (B h : ℕ) :
   haveI : FiniteDimensional ℂ (⊤ : Submodule ℂ (AdjointSiteModule B h)) := hf
   haveI : FiniteDimensional ℂ (AdjointSiteModule B h) :=
     Module.Finite.of_surjective Submodule.topEquiv.toLinearMap Submodule.topEquiv.surjective
-  exact ⟨inferInstance, by simpa only [finrank_top] using hr⟩
+  exact ⟨inferInstance, by simpa only [finrank_top] using! hr⟩
 
 /-- **Law B at one adjoint site**: `dim W(θ + B ω₂, B - k + 1) / ⟨f₂(B - k) v⟩` is at most
 `15 · 20^k · 6^(B - 2k)`. It is asserted for `k ≥ 1` and `B ≥ 2k`; the case `k = 1` is the

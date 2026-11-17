@@ -32,7 +32,7 @@ theorem ePieri_polynomial (u : ℕ → (Polynomial R)ˣ) :
   have h := ePieri_unit (pieriLaurentUnit R)
     (fun i => Units.map (Polynomial.toLaurent : Polynomial R →+* LaurentPolynomial R) (u i))
     N lam hlam r
-  simpa only [Polynomial.toLaurent_X, pieriLaurentUnit] using h
+  simpa only [Polynomial.toLaurent_X, pieriLaurentUnit] using! h
 
 /-- Full e-Pieri: arbitrary coefficient ring, arbitrary q, every rank, weight, and degree. -/
 theorem ePieri (q : R) (u : ℕ → Rˣ) : EPieri q u := by
@@ -53,7 +53,7 @@ theorem ePieri (q : R) (u : ℕ → Rˣ) : EPieri q u := by
       pieriRHS (ev Polynomial.X)
         (fun i => Units.map ev.toMonoidHom (Units.map C.toMonoidHom (u i))) N lam r at he
   rw [hu] at he
-  simpa [ev] using he
+  simpa [ev] using! he
 
 /-- The Laurent polynomials `gtP` satisfy Lemma E in every rank. -/
 theorem gtP_ePieri (N : ℕ) (lam : Fin N → ℤ) (hlam : Antitone lam) (r : ℕ) :

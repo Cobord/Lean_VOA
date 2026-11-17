@@ -31,7 +31,7 @@ theorem a3_ordered_key_count_power (a b c : ℕ) :
       a3KeyOrbitLength b c (a3KeyEnum a b c i) *
         a3EffectiveMultiplicity a b c (a3KeyEnum a b c i)) ≤
       4 ^ a * 6 ^ b * 4 ^ c := by
-  simpa only [leviCount_eq] using a3_ordered_key_count a b c
+  simpa only [leviCount_eq] using! a3_ordered_key_count a b c
 
 end VOA.DeligneAudit.A3Sector
 

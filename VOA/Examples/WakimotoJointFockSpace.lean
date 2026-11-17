@@ -122,13 +122,13 @@ def jointIndexFintype (n : ℕ) (c : ℤ) : Fintype (JointIndex n c) := Fintype.
 /-- The actual polynomial subspace supported exactly at the given joint
 energy and charge. Its ambient carrier is the existing Wakimoto Fock space. -/
 def jointFockSpace (n : ℕ) (c : ℤ) : Submodule ℂ WakFock :=
-  Finsupp.supported ℂ ℂ {d : Occupation | occupationEnergy d=n ∧ occupationCharge d=c}
+  MvPolynomial.restrictSupport ℂ {d : Occupation | occupationEnergy d=n ∧ occupationCharge d=c}
 
 /-- Joint polynomials are exactly finite coefficient vectors on the actual
 joint monomial index set, with no quotient or faithfulness assumption. -/
 def jointFockCoefficientEquiv (n : ℕ) (c : ℤ) :
     jointFockSpace n c ≃ₗ[ℂ] (JointIndex n c→₀ℂ) :=
-  Finsupp.supportedEquivFinsupp _
+  AddMonoidAlgebra.supportedEquivFinsupp _
 
 /-- The actual joint polynomial subspace is finite-dimensional. -/
 instance jointFockSpace_finiteDimensional (n : ℕ) (c : ℤ) :

@@ -116,7 +116,7 @@ theorem pc_c0 (a : Fin 3) (x : Sl2GhostSpace) : pc a (c0 a x) = 0 := by
 theorem pc_of_b0 {a : Fin 3} {x : Sl2GhostSpace} (hx : b0 a x = 0) : pc a x = x := by
   have h := gMode_anticomm_apply a a 0 1 0 (-1) x
   rw [if_pos ⟨rfl, rfl, by ring⟩, hx, map_zero, add_zero] at h
-  simpa only [pc, Module.End.mul_apply] using h
+  simpa only [pc, Module.End.mul_apply] using! h
 
 theorem P0_apply (x : Sl2GhostSpace) : P0 x = pc 0 (pc 1 (pc 2 x)) := rfl
 
@@ -504,7 +504,7 @@ theorem bgPG_orthF : ∀ k k', k ≠ k' → ∀ x ∈ ghostDegF k, ∀ y ∈ gho
 
 theorem gvac_mem : gvac ∈ ghostDegF 0 := by
   have h := W3_mem_ghostDegF [] [] []
-  simpa [wordIdxF, wordIdx, wordR, ghNum, ghWeight] using h
+  simpa [wordIdxF, wordIdx, wordR, ghNum, ghWeight] using! h
 
 theorem ghModeWt_swapMode (p : ℕ × Fin 2) : ghModeWt (swapMode p) = ghModeWt p := by
   obtain ⟨k, e⟩ := p
@@ -532,8 +532,8 @@ theorem mem_gWt {k : KF} {y : Sl2GhostSpace} (hy : y ∈ ghostDegF k) : y ∈ gW
 theorem ghostConj_gWt {k : KF} {y : Sl2GhostSpace} (hy : y ∈ ghostDegF k) :
     ghostConj y ∈ gWt k.1.2 := by
   refine ghostDegF_induction (fun y => ghostConj y ∈ gWt k.1.2) (by simp)
-    (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
-    (fun c x hx => by simpa only [LinearMap.map_smulₛₗ] using Submodule.smul_mem _ _ hx) ?_ hy
+    (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
+    (fun c x hx => by simpa only [LinearMap.map_smulₛₗ] using! Submodule.smul_mem _ _ hx) ?_ hy
   intro i hi
   rw [ghostBasis_eq_W3, ghostConj_W]
   refine Submodule.smul_mem _ _ ?_
@@ -548,10 +548,10 @@ theorem ghostIR_mem {k : KF} {y : Sl2GhostSpace} (hy : y ∈ ghostDegF k) : ghos
 
 theorem ghostIR_gWt {h : ℂ} {y : Sl2GhostSpace} (hy : y ∈ gWt h) : ghostIR y ∈ gWt h := by
   refine Submodule.iSup_induction _ (motive := fun y => ghostIR y ∈ gWt h) hy ?_ (by simp)
-    (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
+    (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
   intro k y hy
   refine Submodule.iSup_induction _ (motive := fun y => ghostIR y ∈ gWt h) hy ?_ (by simp)
-    (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
+    (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
   intro hk y hy
   rw [← hk]; exact mem_gWt (ghostIR_mem hy)
 
@@ -575,10 +575,10 @@ theorem bgPG_gvac_gWt {h : ℂ} (hh : h ≠ 0) {y : Sl2GhostSpace} (hy : y ∈ g
 
 theorem ghostConj_gWt' {h : ℂ} {y : Sl2GhostSpace} (hy : y ∈ gWt h) : ghostConj y ∈ gWt h := by
   refine Submodule.iSup_induction _ (motive := fun y => ghostConj y ∈ gWt h) hy ?_ (by simp)
-    (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
+    (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
   intro k y hy
   refine Submodule.iSup_induction _ (motive := fun y => ghostConj y ∈ gWt h) hy ?_ (by simp)
-    (fun x y hx hy => by simpa only [map_add] using Submodule.add_mem _ hx hy)
+    (fun x y hx hy => by simpa only [map_add] using! Submodule.add_mem _ hx hy)
   intro hk y hy
   rw [← hk]; exact ghostConj_gWt hy
 

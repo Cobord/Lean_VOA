@@ -64,7 +64,7 @@ theorem rsThetaSum_succ (n : ℕ) (a : ℤ) :
     have h := Finset.sum_range_succ'
       (fun j => qbinom D4K.qq n j * rsThetaSeed (a - j)) (n + 1)
     rw [Finset.sum_range_succ] at h
-    simpa [qbinom_eq_zero_of_lt D4K.qq (Nat.lt_succ_self n)] using h.symm
+    simpa [qbinom_eq_zero_of_lt D4K.qq (Nat.lt_succ_self n)] using! h.symm
   have hterm :
       (∑ j ∈ Finset.range (n + 1),
         D4K.qq ^ (n - j) * qbinom D4K.qq n j * rsThetaSeed (a - (j + 1))) =
@@ -73,7 +73,7 @@ theorem rsThetaSum_succ (n : ℕ) (a : ℤ) :
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro j hj
-    have hjn : j ≤ n := by simpa using Finset.mem_range.mp hj
+    have hjn : j ≤ n := by simpa using! Finset.mem_range.mp hj
     rw [show a - ((j : ℤ) + 1) = (a - j) - 1 by omega, rsThetaSeed_pred]
     have hp : D4K.qq ^ (n - j) * D4K.qq ^ (1 - (a - j)) =
         D4K.qq ^ ((n : ℤ) + 1 - a) := by

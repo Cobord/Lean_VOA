@@ -228,6 +228,8 @@ namespace AffineLie
 open UniversalEnvelopingAlgebra
 open LieAlgebra LieAlgebra.IsKilling LieModule
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝔤 : Type*} [LieRing 𝔤] [LieAlgebra ℂ 𝔤] [FiniteDimensional ℂ 𝔤]
   [LieAlgebra.IsKilling ℂ 𝔤]
   (H : LieSubalgebra ℂ 𝔤) [H.IsCartanSubalgebra] [LieModule.IsTriangularizable ℂ H 𝔤]
@@ -432,7 +434,7 @@ theorem simpleHWOf_acts_central (hnz : highestVector H κ hκ b lam ≠ 0) :
   change Submodule.Quotient.mk ((ι ℂ (C κ hκ)) • m) = Submodule.Quotient.mk (lam.level • m)
   have hm := congrArg (fun f : Module.End ℂ (verma H κ hκ b lam) => f m)
     (verma_acts_central H κ hκ b lam)
-  simpa [vermaRho, Algebra.smul_def] using congrArg (Submodule.Quotient.mk) hm
+  exact congrArg (Submodule.Quotient.mk) hm
 
 /-- The conditional simple highest-weight module `L(λ)` packaged as an affine representation
 (Gannon §3.2). -/

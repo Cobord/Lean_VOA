@@ -52,6 +52,9 @@ namespace VOA
 
 open PowerSeries
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## Brick 1 — the ODE `(1+w)(u + w·u′) = 1` for `u = log(1+w)/w`
 
 `u = uSeries = Σ_i (−1)ⁱ/(i+1) wⁱ`.  Its "Euler operator" combination `u + w·u′` has the strikingly
@@ -60,6 +63,13 @@ simple coefficients `[wⁱ](u + w·u′) = (−1)ⁱ` (the geometric series `1/(
 
 /-- The geometric series `Σ_i (−1)ⁱ wⁱ = 1/(1+w)`. -/
 noncomputable def geomSeries : PowerSeries ℂ := PowerSeries.mk (fun i => (-1 : ℂ) ^ i)
+
+/-- `[wⁿ] f′ = (n+1)·[wⁿ⁺¹] f` for `derivativeFun`, stated so it typechecks on both Mathlib versions
+(on newer Mathlib `coeff_derivativeFun` is a deprecated alias phrased with `d⁄dX`). -/
+private theorem coeff_derivativeFun_dual (f : PowerSeries ℂ) (n : ℕ) :
+    PowerSeries.coeff (R := ℂ) n (derivativeFun f)
+      = PowerSeries.coeff (R := ℂ) (n + 1) f * (n + 1) :=
+  coeff_derivativeFun f n
 
 /-- `[wⁱ](u + w·u′) = (−1)ⁱ`: the Euler-operator combination of `u = log(1+w)/w` is the geometric
 series.  (For `i ≥ 1`: `(−1)ⁱ/(i+1) + i·(−1)ⁱ/(i+1) = (−1)ⁱ`; for `i = 0`: `1`.) -/
@@ -71,7 +81,7 @@ theorem coeff_uSeries_euler (i : ℕ) :
   rcases i with _ | j
   · rw [huc, PowerSeries.coeff_zero_X_mul]
     norm_num
-  · rw [huc, PowerSeries.coeff_succ_X_mul, coeff_derivativeFun, uSeries, coeff_mk]
+  · rw [huc, PowerSeries.coeff_succ_X_mul, coeff_derivativeFun_dual, uSeries, coeff_mk]
     have hne : ((↑(j + 1) : ℂ) + 1) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero (j + 1)
     rw [div_mul_eq_mul_div, ← add_div, div_eq_iff hne]
     push_cast
@@ -129,7 +139,7 @@ theorem derivativeFun_uUnit_natZpow (k : ℕ) :
       rw [show (((j + 1 : ℕ) : ℤ) - 1) = ((j : ℕ) : ℤ) by push_cast; ring, zpow_natCast,
         Units.val_pow_eq_pow_val, uUnit_coe]
     rw [hk, hk1]
-    have h := PowerSeries.derivative_pow ℂ uSeries (j + 1)
+    have h := PowerSeries.derivative_pow (g := uSeries) (n := j + 1)
     rw [Nat.add_sub_cancel] at h
     exact h
 
@@ -187,7 +197,7 @@ theorem derivativeFun_uUnit_zpow (m : ℤ) :
 /-- `d(X) = 1`. -/
 theorem derivativeFun_X : derivativeFun (PowerSeries.X : PowerSeries ℂ) = 1 := by
   ext n
-  rw [coeff_derivativeFun, PowerSeries.coeff_X]
+  rw [coeff_derivativeFun_dual, PowerSeries.coeff_X]
   rcases n with _ | j <;> simp [PowerSeries.coeff_one]
 
 /-- **The power series `P_m := (1+w)·u^{m+1}`** — the "de-Laurented" square-bracket generating series:
@@ -259,7 +269,7 @@ theorem coeff_X_mul_derivativeFun (f : PowerSeries ℂ) (k : ℕ) :
       = (k : ℂ) * PowerSeries.coeff (R := ℂ) k f := by
   rcases k with _ | s
   · rw [PowerSeries.coeff_zero_X_mul]; simp
-  · rw [PowerSeries.coeff_succ_X_mul, coeff_derivativeFun]; push_cast; ring
+  · rw [PowerSeries.coeff_succ_X_mul, coeff_derivativeFun_dual]; push_cast; ring
 
 /-! ### The vacuum square-bracket scalar `s(k) = c(0,k,−1) = δ_{k,−1}`
 
@@ -455,12 +465,12 @@ theorem sqBracketCoeff_witt_identity (m n j : ℤ) :
     · intro p hp
       rw [Finset.mem_antidiagonal] at hp
       obtain ⟨p1, p2⟩ := p
-      dsimp only
+      try dsimp only
       simp only [Prod.mk.injEq]
       refine ⟨?_, ?_⟩ <;> omega
     · intro a ha
       simp only [Finset.mem_Icc] at ha
-      dsimp only
+      try dsimp only
       rw [sqBracketCoeffZ_two_eq_coeff_Pw m a, if_pos (by omega),
         sqBracketCoeffZ_two_eq_coeff_Pw n (j - a), if_pos (by omega)]
       have hjn : ((j - a) - n).toNat = (j - n - a).toNat := by omega

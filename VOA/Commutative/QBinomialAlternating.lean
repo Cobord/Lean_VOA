@@ -269,7 +269,7 @@ theorem finite_alternating_field (q : K) (hq : q ≠ 0) (n : ℕ)
       _ = ((-1 : K) ^ (n + 1) * (-1 : K) ^ (n + 1)) *
           (q ^ ((n + 1).choose 2) * (q ^ ((n + 1).choose 2))⁻¹) * qFactorial q n ^ 2 := by ring
       _ = _ := by rw [hsign, mul_inv_cancel₀ (pow_ne_zero _ hq)]; ring
-  dsimp only at hs
+  try dsimp only at hs
   rw [hscale, sum_range_centered_pairs, Finset.mul_sum] at hs
   rw [hs]
   apply Finset.sum_congr rfl

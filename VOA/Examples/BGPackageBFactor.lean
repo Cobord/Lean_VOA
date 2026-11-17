@@ -72,7 +72,7 @@ theorem bUniversalConj_maxIdeal_stable :
   intro x hx
   apply hle
   change bUniversalConj (bUniversalConj x) ∈ I
-  simpa only [bUniversalConj_sq] using hx
+  simpa only [bUniversalConj_sq] using! hx
 
 /-- The descended compact conjugation on `L_1(sl₂)`. -/
 def bConj : BSpace →ₛₗ[starRingEnd ℂ] BSpace :=

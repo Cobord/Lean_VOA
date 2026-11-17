@@ -24,7 +24,7 @@ private theorem highModeShift_of_pairs {n : ℕ}
     | zero => exact shift_zero f R m c s j hs hx
     | succ k =>
       cases k with
-      | zero => simpa using shift_one f R m c s j hx
+      | zero => simpa using! shift_one f R m c s j hx
       | succ k =>
         let a := (pair c).1
         let b := (pair c).2
@@ -39,13 +39,13 @@ private theorem highModeShift_of_pairs {n : ℕ}
             TU f R m (j + (k + 2)) := by
           have h := shift_one f R m a 0 (j + (k + 1)) hb
           simpa only [one_mul, add_zero, Nat.add_assoc, Nat.add_left_comm,
-            Nat.add_comm] using h
+            Nat.add_comm] using! h
         have hax : (univRepG f R).op a m x ∈ TU f R m (j + 1) := by
-          simpa only [one_mul, add_zero] using shift_one f R m a 0 j hx
+          simpa only [one_mul, add_zero] using! shift_one f R m a 0 j hx
         have hab : (univRepG f R).op b ((k + 1) * m + s)
             ((univRepG f R).op a m x) ∈ TU f R m (j + (k + 2)) := by
           have h := hprev b (j + 1) _ hax
-          simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h
+          simpa only [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using! h
         have hsum (r : ℕ) (v : UModG f R) :
             (∑ e, f a b e • (univRepG f R).op e r v) =
               f a b c • (univRepG f R).op c r v := by

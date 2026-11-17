@@ -133,10 +133,8 @@ theorem onePoint_contragredient_twist (N : OrdVModule W M) (v : V) :
         (A : OrdVModule W P), onePoint A 0 = 0 := by
       intro P _ _ A
       simpa using onePoint_smul A 0 (0 : V)
-    dsimp only
     rw [map_zero, hzero, hzero]
   · intro a b ha hb
-    dsimp only at ha hb ⊢
     rw [map_add, onePoint_add, onePoint_add, ha, hb]
 
 section Transport

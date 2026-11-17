@@ -36,7 +36,7 @@ theorem jointIndex_zero_zero_card : Fintype.card (JointIndex 0 0)=1 := by
     apply Subtype.ext
     ext v
     have hh := jointIndex_multiplicity_le 0 0 d v
-    simpa using Nat.eq_zero_of_le_zero (by simpa using hh)
+    simpa using! Nat.eq_zero_of_le_zero (by simpa using! hh)
   exact Fintype.card_eq_one_iff.mpr ⟨z,hz⟩
 
 /-- Every root label in the actual finite determinant has a genuine root
@@ -82,7 +82,7 @@ theorem admissible_zero_labels (p q : ℕ) (hp : 2≤p) (hq : 0<q)
       push_cast
       linear_combination hz
     have eqn := positive_weight_zero_equation p q (m+1) (r+1) hq hz'
-    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
     obtain ⟨hm,hr⟩ := first_minus_resonance_unique hp hq (by omega) hcop eqn hb
     right
     have hm' : m=q-1 := by omega
@@ -91,15 +91,15 @@ theorem admissible_zero_labels (p q : ℕ) (hp : 2≤p) (hq : 0<q)
   · by_cases hm : m=0
     · subst m
       have hr : r=0 := by
-        have hz' : (r : ℂ)=0 := by simpa [realRootWeight,realRootSlope,realRootOffset] using hz
+        have hz' : (r : ℂ)=0 := by simpa [realRootWeight,realRootSlope,realRootOffset] using! hz
         exact_mod_cast hz'
       left; simp [hr]
     · have hz' : ((r+1 : ℕ) : ℂ)-1-(m : ℂ)*((p : ℂ)/q)=0 := by
         simpa [realRootWeight,realRootSlope,realRootOffset,Nat.cast_add,sub_eq_add_neg,
-          neg_mul,add_comm,add_left_comm,add_assoc] using hz
+          neg_mul,add_comm,add_left_comm,add_assoc] using! hz
       have eqn := negative_weight_zero_equation p q m (r+1) hq hz'
       have hs := plus_resonance_energy_gt hp hq (by omega) hcop eqn
-      have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+      have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
       omega
   · exact False.elim (hc rfl)
 
@@ -119,20 +119,20 @@ theorem admissible_minus_two_labels (p q : ℕ) (hp : 2≤p) (hq : 0<q)
       linear_combination -hz
     have eqn := negative_weight_zero_equation p q (m+1) (r+1) hq hz'
     have hs := plus_resonance_energy_gt hp hq (by omega) hcop eqn
-    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+    have hb : (m+1)*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
     omega
   · have hz' : (m : ℂ)*((p : ℂ)/q)-((r+1 : ℕ) : ℂ)-1=0 := by
       norm_num [realRootWeight,realRootSlope,realRootOffset,Fin.ext_iff] at hz
       push_cast
       linear_combination -hz
     have eqn := positive_weight_zero_equation p q m (r+1) hq hz'
-    have hm : 0<m := by
+    have hm : 0 < m := by
       by_contra hn
       have hm0 : m=0 := by omega
       simp only [hm0,zero_mul] at eqn
       have : 0<q*(r+1+1) := Nat.mul_pos hq (by omega)
       omega
-    have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using he
+    have hb : m*(r+1)≤q*(p-1) := by simpa [oscillatorEnergy,Nat.mul_comm] using! he
     obtain ⟨hm',hr⟩ := first_minus_resonance_unique hp hq hm hcop eqn hb
     have hr' : r=p-2 := by omega
     simp [hm',hr']

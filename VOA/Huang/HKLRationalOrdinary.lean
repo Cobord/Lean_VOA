@@ -58,9 +58,14 @@ theorem isModeHom_of_isLinear {M M' : Type u} [AddCommGroup M] [Module ℂ M] [A
   intro a k y
   have h := congrArg (fun g : tensorObj F A (actObj N') ⟶ actObj N =>
     g.val ((F A (actObj N')).intertwiner.val (k : ℂ) a y)) hf
-  simp only [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply,
-    act_intertwiner_int] at h
-  exact h.symm
+  have h1 : (tensorHom F (𝟙 A) f ≫ act N).val ((F A (actObj N')).intertwiner.val (k : ℂ) a y) =
+      mode (N.YM a) k (f.val y) :=
+    (Ordinary.comp_apply _ _ _).trans ((congrArg (fun z => (act N).val z)
+      (tensorHom_intertwiner F (𝟙 A) f (k : ℂ) a y)).trans (act_intertwiner_int N k a (f.val y)))
+  have h2 : (act N' ≫ f).val ((F A (actObj N')).intertwiner.val (k : ℂ) a y) =
+      f.val (mode (N'.YM a) k y) :=
+    (Ordinary.comp_apply _ _ _).trans (congrArg (fun z => f.val z) (act_intertwiner_int N' k a y))
+  exact (h1.symm.trans (h.trans h2)).symm
 
 /-! ## Submodules -/
 
@@ -90,8 +95,11 @@ theorem subIncl_linear :
     tensorHom F (𝟙 A) (subIncl N P) ≫ act N = act (OrdVModule.submodule N P) ≫ subIncl N P := by
   apply tensor_hom_ext F
   intro n a x
-  simp only [Ordinary.comp_apply, tensorHom_intertwiner, Ordinary.id_apply, act_intertwiner,
-    subIncl_val]
+  refine ((Ordinary.comp_apply _ _ _).trans ((congrArg (fun z => (act N).val z)
+    (tensorHom_intertwiner F (𝟙 A) (subIncl N P) n a x)).trans
+    ((act_intertwiner N n a _).trans ?_))).trans
+    ((Ordinary.comp_apply _ _ _).trans
+      (congrArg (fun z => (subIncl N P).val z) (act_intertwiner _ n a x))).symm
   exact (moduleModes_submodule_coe N P n a x).symm
 
 /-- `P` as a weak `V`-submodule of the restriction. -/
@@ -171,10 +179,9 @@ theorem ordinary_weakCompletelyReducible (hV : Nice V) (F : FusionChoice V) :
       apply Subtype.ext
       change ((P.carrier.projectionOnto Q.carrier hQ
         (mode (N.YM ((MonObj.one : vacuumObject ⟶ A).val u)) n x) : P.carrier) : M) = _
-      rw [projectionOnto_comm hQ (mode (N.YM ((MonObj.one : vacuumObject ⟶ A).val u)) n) ?_ ?_]
-      · exact (WeakModule.submoduleYM_mode_coe N.toWeakModule P _ n _).symm
-      · intro y hy; exact P.act_mem _ n hy
-      · intro y hy; exact Q.act_mem u n hy⟩
+      refine (projectionOnto_comm hQ (mode (N.YM ((MonObj.one : vacuumObject ⟶ A).val u)) n)
+        (fun y hy => P.act_mem _ n hy) (fun y hy => Q.act_mem u n hy) x).trans ?_
+      exact (WeakModule.submoduleYM_mode_coe N.toWeakModule P _ n _).symm⟩
   have hir : subIncl N P ≫ r = 𝟙 _ := by
     apply Ordinary.hom_ext
     intro x
@@ -190,13 +197,13 @@ theorem ordinary_weakCompletelyReducible (hV : Nice V) (F : FusionChoice V) :
     congrArg (fun g : actObj (OrdVModule.submodule N P) ⟶ actObj (OrdVModule.submodule N P) =>
       g.val x) hr'
   refine ⟨⟨LinearMap.ker r'.val, fun a k x hx => ?_⟩, ?_, ?_⟩
-  · rw [LinearMap.mem_ker] at hx ⊢
-    have h := hmode a k x
-    erw [hx, map_zero] at h
-    exact h
+  · have hx' : r'.val x = 0 := hx
+    show r'.val (N.act a k x) = 0
+    exact (hmode a k x).trans ((congrArg
+      (fun z => mode ((OrdVModule.submodule N P).toWeakModule.YM a) k z) hx').trans (map_zero _))
   · rw [disjoint_iff, eq_bot_iff]
     rintro x ⟨hxP, hxK⟩
-    rw [SetLike.mem_coe, LinearMap.mem_ker] at hxK
+    replace hxK : r'.val x = 0 := hxK
     have h : r'.val x = ⟨x, hxP⟩ := hr'x ⟨x, hxP⟩
     have h0 : (⟨x, hxP⟩ : P.carrier) = 0 := h.symm.trans hxK
     rw [Submodule.mem_bot]

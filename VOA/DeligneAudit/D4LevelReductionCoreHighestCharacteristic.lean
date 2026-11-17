@@ -45,7 +45,7 @@ theorem coreUnion_newtonCoeff (a b c n : ℕ) :
     coreGrassmannian_newtonSeries _ _ _
   rw [hl, hr, ← Polynomial.coe_mul] at he
   simpa only [SL4T.newtonCoefficientSeries, PowerSeries.coeff_mk,
-    Polynomial.coeff_coe, SL4T.S_series] using congrArg (PowerSeries.coeff n) he
+    Polynomial.coeff_coe, SL4T.S_series] using! congrArg (PowerSeries.coeff n) he
 
 /-- The highest-root Newton polynomial is the product of the two characteristic factors. -/
 theorem coreUnion_descendingPolynomial (a b c : ℕ) :

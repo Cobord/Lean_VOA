@@ -17,11 +17,11 @@ theorem coreHighest_lowering_modes [FiniteDimensional ℂ V]
     (hpos : ∀ s, 0 < s → H s v = 0) (s : ℕ) (hs : d ≤ s) : F s v = 0 := by
   have hEF : ∀ k, E 1 * F k - F k * E 1 = H (k + 1) := by
     intro k
-    simpa only [Nat.add_comm] using hS.hEF 1 k
+    simpa only [Nat.add_comm] using! hS.hEF 1 k
   have hn := coreHighest_lowering_nilpotent hS v d (hE 0) hH
   have hg := Garland.garland hEF (fun m k => hS.hHF (m + 1) k) hS.hFF
     (hE 1) (fun m => hpos (m + 1) (by omega)) 1 (by omega) hn s (by omega)
-  simpa only [pow_one, Garland.Fs, PowerSeries.coeff_mk] using hg
+  simpa only [pow_one, Garland.Fs, PowerSeries.coeff_mk] using! hg
 
 /-- Each cell union contains both of its alphabets and is contained in the ambient sites. -/
 theorem coreCellCutoff_bounds (a b c i : ℕ) (hi : i < (coreCellCatalog a b c).length) :
@@ -29,7 +29,7 @@ theorem coreCellCutoff_bounds (a b c i : ℕ) (hi : i < (coreCellCatalog a b c).
       coreCellCutoff a b c i ≤ a + b + c := by
   have hv := SL4T.cellCatalog_valid (a + b + c) (a + b) a
     ((coreCellCatalog a b c)[i]) (List.getElem_mem hi)
-  rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using hi), List.getElem_map]
+  rw [coreCellCutoff, List.getD_eq_getElem _ _ (by simpa using! hi), List.getElem_map]
   change a + b ≤ ((coreCellCatalog a b c)[i].1 ∪
     (coreCellCatalog a b c)[i].2).card ∧ _
   refine ⟨?_, ?_, ?_⟩

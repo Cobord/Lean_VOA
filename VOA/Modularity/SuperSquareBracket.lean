@@ -118,8 +118,9 @@ theorem superPres_zero_eq_sum_Ico {k : ℕ} (a v : 𝒱) {P : ℕ}
     V.superPres k a v 0
       = ∑ i ∈ Finset.Ico (-2 : ℤ) (P : ℤ), cbz (k : ℤ) (i + 2) • V.smul a i v := by
   classical
+  have hinj : Function.Injective (fun j : ℕ => (j : ℤ) - 2) := fun x y h => by simpa using h
   have hmapset : Finset.Ico (-2 : ℤ) (P : ℤ)
-      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, fun x y h => by simpa using h⟩ := by
+      = (Finset.range (P + 2)).map ⟨fun j : ℕ => (j : ℤ) - 2, hinj⟩ := by
     ext i
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_range, Function.Embedding.coeFn_mk]
     constructor

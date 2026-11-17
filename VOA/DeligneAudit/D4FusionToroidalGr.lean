@@ -26,13 +26,13 @@ theorem shift_zero (c : Fin n) (s j : ℕ) (hs : s < m) :
     TU f R m j ≤ (TU f R m (j + 0)).comap
       ((univRepG f R).op c (0 * m + s)) := by
   have h := TU_cons f R m j (c, s)
-  simpa [Nat.not_le.mpr hs] using h
+  simpa [Nat.not_le.mpr hs] using! h
 
 theorem shift_one (c : Fin n) (s j : ℕ) :
     TU f R m j ≤ (TU f R m (j + 1)).comap
       ((univRepG f R).op c (1 * m + s)) := by
   have h := TU_cons f R m j (c, m + s)
-  simpa using h
+  simpa using! h
 
 /-- The direct sum of the filtration steps. -/
 def grNumerator : Submodule ℂ (ℕ →₀ UModG f R) :=
@@ -120,7 +120,7 @@ theorem grDenominator_inv (h : HighModeShift f R m) (c : Fin n) (i s : ℕ)
   rw [liftedOp_single]
   apply Submodule.subset_span
   refine ⟨j + i, _, ?_, rfl⟩
-  simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+  simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using!
     h c i s (j + 1) hs hx
 
 theorem lifted_carry_mem (h : HighModeShift f R m) (e : Fin n)
@@ -141,7 +141,7 @@ theorem lifted_carry_mem (h : HighModeShift f R m) (e : Fin n)
     ring
   refine ⟨p + (i + j), _, ?_, rfl⟩
   rw [hmode]
-  simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+  simpa only [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using!
     h e (i + j + 1) t p ht hx
 
 /-- The lifted operator restricted to the direct-sum numerator. -/
@@ -219,7 +219,7 @@ theorem grOp_comm (h : HighModeShift f R m) (a b : Fin n)
               ∑ e, f a b e • restrictedOp f R m h e (i + j) (r + s) hc y := by
           apply Subtype.ext
           simpa only [Submodule.coe_sub, Submodule.coe_sum, Submodule.coe_smul]
-            using lifted_comm f R m a b i j r s y.1
+            using! lifted_comm f R m a b i j r s y.1
         rw [← map_sub, hsub, map_sum]
         apply Finset.sum_congr rfl
         intro e _
@@ -267,7 +267,7 @@ theorem word_mem_shift (h : HighModeShift f R m) (hm : 1 ≤ m) :
     ∀ (l : List (Ltr n)) (j : ℕ) (x : UModG f R),
       x ∈ TU f R m j →
         wordOp (univRepG f R) l x ∈ TU f R m (j + symbolDegree m l)
-  | [], j, x, hx => by simpa [symbolDegree] using hx
+  | [], j, x, hx => by simpa [symbolDegree] using! hx
   | a :: l, j, x, hx => by
       have hi := word_mem_shift h hm l j x hx
       have hs : a.2 % m < m := Nat.mod_lt _ hm
@@ -277,7 +277,7 @@ theorem word_mem_shift (h : HighModeShift f R m) (hm : 1 ≤ m) :
       have hstep := h a.1 (a.2 / m) (a.2 % m) (j + symbolDegree m l) hs hi
       rw [hmode] at hstep
       simpa only [wordOp, symbolDegree, Nat.add_assoc, Nat.add_comm,
-        Nat.add_left_comm] using hstep
+        Nat.add_left_comm] using! hstep
 
 theorem wordOpT_gr (h : HighModeShift f R m) (hm : 1 ≤ m) :
     ∀ (l : List (Ltr n)) (j : ℕ) (x : UModG f R)

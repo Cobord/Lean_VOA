@@ -213,7 +213,7 @@ theorem interpretedCreation_std (hs : Gh.IsStd)
     have h2 := (creation_shift_std L) hs hA p (-(-(i : ℤ) - 1) - 1) h1
     have h3 := (brst_to_degOn_std L) Gh hA hB hG hZ hD hK hs (n + i + 2) (hp (n + i + 2)) (p + 1)
       ((creationOp L) n i v) (by rw [creationOp_coe, mode_apply]; exact h2)
-    simpa only [Nat.cast_add, Nat.cast_one] using h3
+    simpa only [Nat.cast_add, Nat.cast_one] using! h3
   · have h1 : ((BRSTKahlerGeometry.modelUniversalCycles S n (hp n) x : LinearMap.ker (S.model n (hp
       n)).D) :
         (relativeWeight L) n) = (universalWeightRepresentative L) n x := cyclesCongr_coe _ _ _ _

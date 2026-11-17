@@ -153,6 +153,7 @@ lemma eq_one_of_fixes (g : SO3) {u w : V3} (h : u ⨯₃ w ≠ 0)
   have hdet0 : R.det ≠ 0 := by
     rw [hdet]; exact fun h0 => h (dotProduct_self_eq_zero.mp h0)
   have key : R * (g : M3)ᵀ = R := by
+    change (Matrix.of ![u, w, x] * (g : Matrix (Fin 3) (Fin 3) ℝ)ᵀ) = Matrix.of ![u, w, x]
     ext i j
     have e : ∀ v : V3, (g : M3) *ᵥ v = v → ∑ k, v k * (g : M3) j k = v j := by
       intro v hv
@@ -289,9 +290,11 @@ lemma card_fixedBy_of_ne_one (g : G) (hg : g ≠ 1) :
       · exact Subtype.ext (by
           change ((g : SO3) : M3) *ᵥ (-u) = -u
           rw [Matrix.mulVec_neg, hgu])
-  rw [hset, Nat.card_coe_set_eq, Set.ncard_pair]
-  intro h
-  exact ne_neg_of_unit hu (congrArg Subtype.val h)
+  rw [hset, Nat.card_coe_set_eq]
+  change ({(⟨u, hpu⟩ : Poles G), (⟨-u, hpmu⟩ : Poles G)} : Set (Poles G)).ncard = 2
+  exact Set.ncard_pair (by
+    intro h
+    exact ne_neg_of_unit hu (congrArg Subtype.val h))
 
 lemma card_fixedBy_one : Nat.card (MulAction.fixedBy (Poles G) (1 : G)) = Nat.card (Poles G) := by
   rw [show MulAction.fixedBy (Poles G) (1 : G) = Set.univ from
@@ -578,15 +581,17 @@ lemma exists_frame {p : V3} (hp : p ⬝ᵥ p = 1) :
   have hef : e ⬝ᵥ f = 0 := dot_cross_self p e
   have hpf : p ⬝ᵥ f = 0 := dot_self_cross p e
   refine ⟨![e, f, p], ?_, ?_⟩
-  · ext i j
+  · change Matrix.of ![e, f, p] * (Matrix.of ![e, f, p])ᵀ = (1 : Matrix (Fin 3) (Fin 3) ℝ)
+    ext i j
     rw [Matrix.mul_apply]
     have hrow : ∀ (u w : V3), ∑ k, u k * w k = u ⬝ᵥ w := fun _ _ => rfl
     fin_cases i <;> fin_cases j <;>
-      simp only [Matrix.transpose_apply, Matrix.cons_val, Fin.zero_eta, Fin.mk_one,
+      simp only [Matrix.transpose_apply, Matrix.of_apply, Matrix.cons_val, Fin.zero_eta, Fin.mk_one,
         Matrix.one_apply] <;>
       (rw [hrow]; simp [he, hef, hep, hff, hpf, hp, dotProduct_comm f e, dotProduct_comm f p,
         dotProduct_comm p e])
-  · ext i
+  · change (Matrix.of ![e, f, p]) *ᵥ p = e3
+    ext i
     fin_cases i <;> simp [e3, Matrix.mulVec, hep, hpf, hp, dotProduct_comm f p]
 
 /-- A rotation fixing `e₃` has the block form `[[a, -b, 0], [b, a, 0], [0, 0, 1]]`. -/

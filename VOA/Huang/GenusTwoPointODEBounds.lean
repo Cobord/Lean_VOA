@@ -33,7 +33,7 @@ theorem finiteInitialStrip_of_subexponential {d : ℕ → ℕ → ℂ}
     (fun j _ => hd j)
   obtain ⟨C, hC⟩ := hs a ha
   have hC0 : 0 ≤ C := le_trans (Finset.sum_nonneg fun _ _ => norm_nonneg _)
-    (by simpa using hC 0)
+    (by simpa using! hC 0)
   exact ⟨C, hC0, fun n j hj =>
     (Finset.single_le_sum (fun j _ => norm_nonneg (d n j))
       (Finset.mem_range.mpr hj)).trans (hC n)⟩
@@ -50,10 +50,10 @@ theorem twoLevelBound_of_common_fuchsian (lam : ℂ) (s : ℕ)
   refine ⟨K, fun d C a hC ha heq hinit n k => ?_⟩
   have hB : 0 ≤ C * a ^ n := mul_nonneg hC (pow_nonneg ha n)
   have h := hK (PowerSeries.mk (d n)) (C * a ^ n) (heq n) hB
-    (fun j hj => (by simpa using hinit n j hj :
+    (fun j hj => (by simpa using! hinit n j hj :
       ‖coeff j (PowerSeries.mk (d n))‖ ≤ C * a ^ n).trans
         (le_mul_of_one_le_right hB (one_le_pow₀ hb.le))) k
-  simpa only [coeff_mk] using h
+  simpa only [coeff_mk] using! h
 
 /-- A common equation upgrades separately proved row growth to joint growth.
 This is a conditional analytic criterion, NOT a claimed common VOA equation. -/
@@ -91,7 +91,6 @@ theorem productLevelCoeff_subexponential (hV : StronglyRational W)
       (isBase_canonical Q Y₂.property h₂ (b i).property))
   apply Subexponential.of_le _ (Subexponential.finsetSum Finset.univ _ (fun i _ => hs i))
   intro k
-  dsimp only at hs ⊢
   simp only [coeff_prodSeries, add_sub_cancel_right]
   unfold productLevelCoeff
   have he : α₂ + N.h + (n : ℂ) - 1 - Q.h = α₂ + β - 1 - Q.h := by dsimp [β]; ring

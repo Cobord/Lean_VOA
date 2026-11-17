@@ -24,6 +24,11 @@ eigenspaces `T₀`, `T₁` give the frame sectors `T_s⁺` used by the triality 
   `J`-eigenspace of eigenvalue `κ·(−1)^t`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.GriessDictionary
@@ -171,7 +176,12 @@ noncomputable def frameSign : ℂ := (sqrtEps leech frameW)⁻¹ * signRefinemen
 theorem spinIso_frameJ (v : SpinRep) :
     frameJL (spinIso v) = frameSign • spinIso (frameDiag *ᵥ (v : SpinIdx → ℂ) : SpinIdx → ℂ) := by
   have h := spinIso_spinOp frameW v
-  rw [coordOfRed_red_frameW, spinOp, qmatR_ΩC_thetaD, Matrix.smul_mulVec] at h
+  first
+  | rw [coordOfRed_red_frameW, spinOp, qmatR_ΩC_thetaD, Matrix.smul_mulVec] at h
+  | (rw [coordOfRed_red_frameW, spinOp, qmatR_ΩC_thetaD] at h
+     rw [show ((signRefinement (ΩC, thetaD ΩC) • frameDiag) *ᵥ v : SpinIdx → ℂ) =
+         signRefinement (ΩC, thetaD ΩC) • (frameDiag *ᵥ (v : SpinIdx → ℂ) : SpinIdx → ℂ) from
+         Matrix.smul_mulVec ..] at h)
   have h2 := spinIso_smul (signRefinement (ΩC, thetaD ΩC)) (frameDiag *ᵥ (v : SpinIdx → ℂ) : SpinIdx → ℂ)
   change (sqrtEps leech frameW)⁻¹ • eT leech leech_even leech_isUnit_det_gramMat frameW (spinIso v) = _
   rw [← h]
@@ -190,7 +200,10 @@ theorem frameSign_mul_self : frameSign * frameSign = 1 := by
     exact one_ne_zero this
   have h1 := frameJ_frameJ leech leech_even leech_isUnit_det_gramMat frameW (spinIso v)
   change frameJL (frameJL (spinIso v)) = spinIso v at h1
-  rw [spinIso_frameJ, map_smul, spinIso_frameJ, smul_smul] at h1
+  first
+  | rw [spinIso_frameJ, map_smul, spinIso_frameJ, smul_smul] at h1
+  | rw [spinIso_frameJ, map_smul,
+      spinIso_frameJ (frameDiag *ᵥ (v : SpinIdx → ℂ) : SpinIdx → ℂ), smul_smul] at h1
   erw [frameDiag_mulVec_frameDiag_mulVec] at h1
   have h3 : (frameSign * frameSign - 1) • spinIso v = 0 := by
     rw [sub_smul, one_smul, h1, sub_self]

@@ -8,6 +8,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open MvPolynomial
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem hypForm_separates_left (p q : hypFock)
     (h : ∀ r, hypForm p r = hypForm q r) : p = q := by
   apply sub_eq_zero.mp

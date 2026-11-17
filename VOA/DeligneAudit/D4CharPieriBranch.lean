@@ -74,7 +74,7 @@ theorem gtBranch_one_raise (q : Rˣ) (z : R) (v : Rˣ) {N : ℕ}
       (z ^ pieriStateSize t * pieriRowCoeff q N (pieriLower ν t) t * f ν))
   simp only [pieriLower_raise] at h
   calc
-    _ = _ := by simpa only [mul_assoc] using h
+    _ = _ := by simpa only [mul_assoc] using! h
     _ = _ := by
       apply Finset.sum_congr rfl
       intro ν _

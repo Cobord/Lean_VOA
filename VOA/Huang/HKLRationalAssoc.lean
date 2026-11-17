@@ -64,7 +64,7 @@ theorem negOnePow_mul_cbz (ℓ : ℤ) (i : ℕ) :
 theorem tsum_eq_tsum_int {f : ℂ → ℂ} (c : ℂ) (h : ∀ w, f w ≠ 0 → ∃ r : ℤ, w = c - r) :
     ∑' w, f w = ∑' r : ℤ, f (c - r) := by
   have hinj : Function.Injective fun r : ℤ => c - (r : ℂ) := fun r s hrs => by
-    simpa using hrs
+    simpa using! hrs
   refine (hinj.tsum_eq fun w hw => ?_).symm
   obtain ⟨r, rfl⟩ := h w hw
   exact ⟨r, rfl⟩
@@ -85,7 +85,9 @@ theorem iterTerm_eq (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ) :
   congr 2
   change (act N).val ((tensorHom F m (𝟙 (actObj N))).val
     ((F (tensorObj F A A) (actObj N)).intertwiner.val _ _ d.z)) = _
-  rw [tensorHom_intertwiner, Ordinary.id_apply, act_intertwiner, extIntertwiner_val]
+  refine (congrArg (fun z => (act N).val z)
+    (tensorHom_intertwiner F m (𝟙 (actObj N)) _ _ d.z)).trans ?_
+  exact act_intertwiner N _ _ d.z
 
 /-- The product summand of `(1 ⊠ act) ≫ act`. -/
 theorem prodTerm_eq (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ) :
@@ -98,7 +100,10 @@ theorem prodTerm_eq (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ) :
   congr 2
   change (act N).val ((tensorHom F (𝟙 A) (act N)).val
     ((F A (tensorObj F A (actObj N))).intertwiner.val _ d.x _)) = _
-  rw [tensorHom_intertwiner, Ordinary.id_apply, act_intertwiner, act_intertwiner]
+  refine (congrArg (fun z => (act N).val z)
+    (tensorHom_intertwiner F (𝟙 A) (act N) _ d.x _)).trans ?_
+  refine (act_intertwiner N _ _ _).trans ?_
+  exact congrArg (fun z => moduleModes N _ d.x z) (act_intertwiner N _ d.y d.z)
 
 /-- **The associator relation from the Jacobi identity of `Y_N`** (Jacobi at `m = K`, with
 `a_{K+i} x = 0` for `i ≥ 0`), after applying a functional. -/
@@ -181,7 +186,9 @@ theorem iterTerm_int (d : FourPointTest A A (actObj N) (actObj N)) {α' β' g : 
       (((α' + β' - 1 : ℤ) : ℂ) - r) + (d.γ - d.δ) - 1 by ring, hg]; push_cast; ring
   have e3 : (((α' + β' - 1 : ℤ) : ℂ) - r) - d.α - d.β = ((-r - 1 : ℤ) : ℂ) := by
     rw [hα, hβ]; push_cast; ring
-  rw [e1, e2, e3, moduleModes_apply_intCast, Complex.cpow_intCast]
+  rw [e1, e2, e3]
+  exact congrArg₂ (· * ·) (congrArg d.functional (moduleModes_apply_intCast N _ _ d.z))
+    (Complex.cpow_intCast _ _)
 
 /-- The product summand on the lattice `w = β + γ - 1 - k`. -/
 theorem prodTerm_int (d : FourPointTest A A (actObj N) (actObj N)) {α' β' g : ℤ}
@@ -198,7 +205,11 @@ theorem prodTerm_int (d : FourPointTest A A (actObj N) (actObj N)) {α' β' g : 
   have e3 : d.δ - d.α - (d.β + d.γ - 1 - k) = ((k - (α' + β' + g - 2) - 1 : ℤ) : ℂ) := by
     rw [show d.δ - d.α - (d.β + d.γ - 1 - k) = k + 1 - d.α - d.β - (d.γ - d.δ) by ring,
       hα, hβ, hg]; push_cast; ring
-  rw [e1, e2, e3, moduleModes_apply_intCast, moduleModes_apply_intCast, Complex.cpow_intCast]
+  rw [e1, e2, e3, moduleModes_apply_intCast]
+  exact congrArg₂ (· * ·) (congrArg d.functional
+    (congrArg (fun v => mode (N.YM d.x) (α' + β' + g - 2 - k) v)
+      (moduleModes_apply_intCast N _ _ d.z)))
+    (Complex.cpow_intCast _ _)
 
 /-- Support of the iterate summand. -/
 theorem iterTerm_support (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ)
@@ -210,12 +221,12 @@ theorem iterTerm_support (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ)
   · by_contra h
     push Not at h
     apply hw
-    rw [ext_eq_zero_of_not_int F m htw h, LinearMap.map_zero, LinearMap.zero_apply]
+    rw [ext_eq_zero_of_not_int F m htw h, LinearMap.map_zero, LinearMap.zero_apply (M := M) (x := d.z)]
     erw [LinearMap.map_zero, zero_mul]
   · by_contra h
     push Not at h
     apply hw
-    rw [moduleModes_of_not_int N h, LinearMap.zero_apply, LinearMap.zero_apply]
+    rw [moduleModes_of_not_int N h, LinearMap.zero_apply, LinearMap.zero_apply (M := M) (x := d.z)]
     erw [LinearMap.map_zero, zero_mul]
 
 /-- Support of the product summand. -/
@@ -228,7 +239,7 @@ theorem prodTerm_support (d : FourPointTest A A (actObj N) (actObj N)) (w : ℂ)
   · by_contra h
     push Not at h
     apply hw
-    rw [moduleModes_of_not_int N h, LinearMap.zero_apply, LinearMap.zero_apply, LinearMap.map_zero]
+    rw [moduleModes_of_not_int N h, LinearMap.zero_apply, LinearMap.zero_apply (M := M) (x := d.z), LinearMap.map_zero]
     erw [LinearMap.map_zero, zero_mul]
   · by_contra h
     push Not at h
@@ -292,15 +303,13 @@ theorem iter_eq_prod (hV : StronglyRational V) (d : FourPointTest A A (actObj N)
       ?hProd ?hIt d.positive d.less_one
     case hP =>
       intro k hk
-      simp only
       rw [hk1 k hk, LinearMap.map_zero]
       erw [LinearMap.map_zero]
     case hQ =>
       intro r hr
-      simp only
       have h0 := hr0 r hr
       rw [zero_add] at h0
-      rw [h0, map_zero, mode_zero, LinearMap.zero_apply]
+      rw [h0, map_zero, mode_zero, LinearMap.zero_apply (M := M) (x := d.z)]
       erw [LinearMap.map_zero]
     case hProd =>
       intro s hs0 hs1
@@ -310,7 +319,7 @@ theorem iter_eq_prod (hV : StronglyRational V) (d : FourPointTest A A (actObj N)
         (postcompose (F A (tensorObj F A (actObj N))).intertwiner (actObj N).isMod
           (tensorHom F (𝟙 A) (act N) ≫ act N))
       have hinj : Function.Injective fun k : ℤ => d.β + d.γ - 1 - (k : ℂ) := fun a b h => by
-        simpa using h
+        simpa using! h
       refine (hsum.comp_injective hinj).congr fun k => ?_
       simp only [Function.comp]
       rw [prodTerm_eq N d', prodTerm_int N d' hα hβ hg]
@@ -322,7 +331,7 @@ theorem iter_eq_prod (hV : StronglyRational V) (d : FourPointTest A A (actObj N)
         (postcompose (F (tensorObj F A A) (actObj N)).intertwiner (actObj N).isMod
           (tensorHom F m (𝟙 (actObj N)) ≫ act N))
       have hinj : Function.Injective fun r : ℤ => (((α' + β' - 1 : ℤ) : ℂ)) - (r : ℂ) :=
-        fun a b h => by simpa using h
+        fun a b h => by simpa using! h
       refine (hsum.comp_injective hinj).congr fun r => ?_
       simp only [Function.comp]
       rw [iterTerm_eq N d', iterTerm_int N d' hα hβ hg]
@@ -335,10 +344,10 @@ theorem iter_eq_prod (hV : StronglyRational V) (d : FourPointTest A A (actObj N)
       obtain ⟨⟨r, hr⟩, ⟨n, hn⟩⟩ := iterTerm_support N d w hw
       have hx0 : d.x ≠ 0 := fun h0 => hw (by
         rw [h0, LinearMap.map_zero, LinearMap.zero_apply, LinearMap.map_zero,
-          LinearMap.zero_apply]
+          LinearMap.zero_apply (M := M) (x := d.z)]
         erw [LinearMap.map_zero, zero_mul])
       have hy0 : d.y ≠ 0 := fun h0 => hw (by
-        rw [h0, LinearMap.map_zero, LinearMap.map_zero, LinearMap.zero_apply]
+        rw [h0, LinearMap.map_zero, LinearMap.map_zero, LinearMap.zero_apply (M := M) (x := d.z)]
         erw [LinearMap.map_zero, zero_mul])
       obtain ⟨α', hα⟩ := int_of_ne_zero htw d.hx hx0
       obtain ⟨β', hβ⟩ := int_of_ne_zero htw d.hy hy0
@@ -354,7 +363,7 @@ theorem iter_eq_prod (hV : StronglyRational V) (d : FourPointTest A A (actObj N)
         rw [h0, LinearMap.map_zero, LinearMap.zero_apply]
         erw [LinearMap.map_zero, zero_mul])
       have hy0 : d.y ≠ 0 := fun h0 => hw (by
-        rw [h0, LinearMap.map_zero, LinearMap.zero_apply, LinearMap.map_zero]
+        rw [h0, LinearMap.map_zero, LinearMap.zero_apply (M := M) (x := d.z), LinearMap.map_zero]
         erw [LinearMap.map_zero, zero_mul])
       obtain ⟨α', hα⟩ := int_of_ne_zero htw d.hx hx0
       obtain ⟨β', hβ⟩ := int_of_ne_zero htw d.hy hy0

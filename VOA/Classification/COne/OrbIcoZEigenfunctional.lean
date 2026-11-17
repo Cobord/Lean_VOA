@@ -31,7 +31,7 @@ theorem exists_bottomEigenfunctional {M : Type} [AddCommGroup M] [Module ℂ M]
     exact hlv
   · intro z
     have he := actA_omegaL_pow N hl 1 z
-    have he' : actA N hl (omegaL Wi z) = h • actA N hl z := by simpa using he
+    have he' : actA N hl (omegaL Wi z) = h • actA N hl z := by simpa using! he
     change l (actA N hl (omegaL Wi z) v) = h * l (actA N hl z v)
     rw [he', LinearMap.smul_apply, map_smul, smul_eq_mul]
 

@@ -112,7 +112,7 @@ theorem hasSum_heckeBlock {N : ℕ} (F : ReplicableFamily N) (k a d : ℕ) (ha :
     have h' : d * (s + 1) = d * (t + 1) := by
       have h1 : 1 ≤ d * (s + 1) := Nat.mul_pos hd (Nat.succ_pos s)
       have h2 : 1 ≤ d * (t + 1) := Nat.mul_pos hd (Nat.succ_pos t)
-      simp only at h
+      try simp only at h
       omega
     have := Nat.eq_of_mul_eq_mul_left hd h'
     omega

@@ -56,7 +56,7 @@ theorem radicalPowerSumWord_positions {σ : Type*}
               (radicalPositionWord ρ w)
                 (List.map (fun t => (shape t, (Finsupp.single i r + a) t)) ts)
               else 0).sum := by
-        simpa only [radicalPositionModes] using ih hts
+        simpa only [radicalPositionModes] using! ih hts
       simp only [radicalPositionModes, List.map_cons, radicalPowerSumWord,
         List.sum_cons]
       by_cases hj : j = shape t
@@ -66,7 +66,7 @@ theorem radicalPowerSumWord_positions {σ : Type*}
           simp only [List.cons.injEq]
           constructor
           · simp
-          · simpa only [radicalPositionModes] using htail_t.symm
+          · simpa only [radicalPositionModes] using! htail_t.symm
         · rw [ih', map_list_sum]
           simp only [List.map_map, Function.comp_def]
           congr 1

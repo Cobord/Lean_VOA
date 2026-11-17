@@ -67,7 +67,7 @@ theorem sum_deletedGroup_of_notMem {M : Type*} [AddCommMonoid M] {n : ℕ} (f : 
 theorem card_eq_deletedGroup {n : ℕ} (V : Finset (Fin (n + 1))) (u : Fin (n + 1)) :
     V.card = (if u ∈ V then 1 else 0) + (deletedGroup u V).card := by
   have h := sum_eq_deletedGroup (fun _ => (1 : ℕ)) V u
-  simpa only [Finset.sum_const, smul_eq_mul, mul_one] using h
+  simpa only [Finset.sum_const, smul_eq_mul, mul_one] using! h
 
 theorem deletedGroup_card_of_notMem {n : ℕ} (V : Finset (Fin (n + 1))) (u : Fin (n + 1))
     (hu : u ∉ V) : (deletedGroup u V).card = V.card := by
@@ -214,12 +214,12 @@ theorem deletedLayer_markedFlagIdeal_le_ker {n : ℕ} (r : Fin (n + 1) → C) (u
   · exact deletedLayer_elementary r u i he
   · intro S hS
     have h := layer_mk_eq_zero r u i _ (hm S hS)
-    simpa [deletedLayerRoot, map_prod] using h
+    simpa [deletedLayerRoot, map_prod] using! h
   · intro j
     exact deletedLayerRoot_pow_eq_zero r u i j _ (hc j)
   · intro s hs
     have h := layer_mk_eq_zero r u i _ (ht s hs)
-    simpa [deletedLayerRoot, map_sum] using h
+    simpa [deletedLayerRoot, map_sum] using! h
 
 end Layer
 

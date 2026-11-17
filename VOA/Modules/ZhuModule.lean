@@ -50,6 +50,9 @@ open Module (End)
 open scoped BigOperators
 open Classical
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -110,7 +113,9 @@ theorem right_ideal_of_gen (W : VertexOperatorAlgebra 𝒱) (u : 𝒱)
   have hle : O W ≤ (O W).comap (zhuR W u) := by
     rw [O_eq_span, Submodule.span_le]
     intro g hg
-    simpa [Submodule.mem_comap] using hgen g hg
+    have h := hgen g hg
+    rw [O_eq_span] at h
+    simpa [Submodule.mem_comap] using h
   have : v ∈ (O W).comap (zhuR W u) := hle hv
   simpa [Submodule.mem_comap] using this
 
@@ -121,7 +126,9 @@ theorem left_ideal_of_gen (W : VertexOperatorAlgebra 𝒱) (v : 𝒱)
   have hle : O W ≤ (O W).comap (zhuL W v) := by
     rw [O_eq_span, Submodule.span_le]
     intro g hg
-    simpa [Submodule.mem_comap] using hgen g hg
+    have h := hgen g hg
+    rw [O_eq_span] at h
+    simpa [Submodule.mem_comap] using h
   have : u ∈ (O W).comap (zhuL W v) := hle hu
   simpa [Submodule.mem_comap] using this
 

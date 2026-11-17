@@ -23,7 +23,7 @@ theorem tendsto_creation_tsum_const (A : ℕ → ℂ)
       (𝓝 (A j*(0 : ℂ)^j)) := by
     have hc : Continuous (fun r : ℝ => A j*(r : ℂ)^j) := by fun_prop
     have hh := (hc.tendsto 0).mono_left (nhdsWithin_le_nhds (s := Set.Ioi 0))
-    simpa only [Complex.ofReal_zero] using hh
+    simpa only [Complex.ofReal_zero] using! hh
   have ht := tendsto_tsum_of_dominated_convergence (𝓕 := 𝓝[>] (0 : ℝ))
     (f := fun (r : ℝ) (j : ℕ) => A j*(r : ℂ)^j) (g := fun j => A j*(0 : ℂ)^j)
     hb hpt (by
@@ -58,6 +58,6 @@ theorem tendsto_logPointPolynomial_oneAdd (K : ℕ) (hK : 0<K) (lam : ℂ) (C : 
     · intro h0
       exact (h0 (Finset.mem_range.mpr hK)).elim
   have hh := hc.tendsto.mono_left (nhdsWithin_le_nhds (s := Set.Ioi 0))
-  simpa only [Complex.ofReal_zero,he] using hh
+  simpa only [Complex.ofReal_zero,he] using! hh
 
 end VOA.Huang.LogAssocExpansion

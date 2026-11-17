@@ -14,6 +14,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open Module Finsupp
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable (L : Type*) [LieRing L] [LieAlgebra ℂ L]
 
 /-- The canonical map of a Lie algebra into its universal enveloping algebra is injective. -/
@@ -48,6 +51,7 @@ theorem envelopingEmbedding_injective :
   intro x y hxy
   apply hinj
   have h := congrArg (fun a => UniversalEnvelopingAlgebra.lift ℂ ρ a (single 0 1)) hxy
-  simpa only [UniversalEnvelopingAlgebra.lift_ι_apply] using h
+  simp only [UniversalEnvelopingAlgebra.lift_ι_apply] at h
+  exact h
 
 end VOA.Moonshine.ConwayNorton

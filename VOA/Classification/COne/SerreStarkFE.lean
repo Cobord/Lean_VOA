@@ -141,7 +141,8 @@ theorem axisFn_sub_isBigO {N : ℕ} (hN : 0 < N) {f : ℂ → ℂ} (hf : IsTheta
     rw [him] at this
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
     convert this using 3
-    ring
+    · rfl
+    · ring
   exact h1.trans (isLittleO_exp_neg_mul_rpow_atTop (by positivity) r).isBigO
 
 /-- The Fricke transform on the rescaled axis: `f(1/x) = ε_N x^{1/2} (W f)(x)`. -/
@@ -279,7 +280,7 @@ theorem mellin_axisFn {N : ℕ} (h4 : 4 ∣ N) (hN : 0 < N) {f : ℂ → ℂ}
       rw [I_sq]
       ring
   have hsum := summable_norm_coeff_div h4 hN hf hs
-  have hM := hasSum_mellin hp (by linarith) hF (by simpa [ha, hq] using hsum)
+  have hM := hasSum_mellin hp (by linarith) hF (by simpa [ha, hq] using! hsum)
   rw [← hM.tsum_eq, LSeries, ← tsum_mul_left]
   refine tsum_congr fun n => ?_
   rcases Nat.eq_zero_or_pos n with h | h

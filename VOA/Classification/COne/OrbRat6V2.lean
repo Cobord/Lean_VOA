@@ -63,8 +63,8 @@ theorem V_EF (x : Sp) : eo (fo x) - fo (eo x) = eps1 • ho x := by
 
 theorem V_HF (x : Sp) : ho (fo x) - fo (ho x) = (-2 : ℂ) • fo x := by
   rw [VertexOperatorAlgebra.zeroMode_apply, VertexOperatorAlgebra.zeroMode_apply, fo_eq, fo_eq,
-    show (1 : ℤ) - 1 = 0 by norm_num, VertexOperatorAlgebra.zeroMode_leibniz, smul_h_charge,
-    PreVertexAlgebra.smul_smul_left, add_sub_cancel_right]
+    show (1 : ℤ) - 1 = 0 by norm_num, VertexOperatorAlgebra.zeroMode_leibniz,
+    smul_h_charge (-a1 1 : (latP 1).carrier), PreVertexAlgebra.smul_smul_left, add_sub_cancel_right]
   congr 1
   show (((2 : ℤ) * (-1 : ℤ) : ℤ) : ℂ) = -2
   norm_num
@@ -77,8 +77,9 @@ theorem eo_v0 : eo v0 = 0 :=
 
 theorem ho_v0 : ho v0 = (6 : ℂ) • v0 := by
   rw [VertexOperatorAlgebra.zeroMode_apply, show (1 : ℤ) - 1 = 0 by norm_num,
-    show v0 = latStateGen (latP 1) (vacuumN _) (3 : ℤ) from rfl, smul_hSt_zero_latStateGen,
-    latP_form]
+    show v0 = latStateGen (latP 1) (vacuumN _) (3 : ℤ) from rfl]
+  refine (smul_hSt_zero_latStateGen (latP 1) _ _ (a1 1) _ (3 : ℤ)).trans ?_
+  rw [latP_form 1 (a1 1) 3]
   norm_num [a1]
 
 /-- `v_k = f₀^k e^{3β}`. -/
@@ -91,19 +92,24 @@ theorem v0_bigrad : v0 ∈ bigradα (latP 1) (0, (3 : ℤ)) := ⟨_, one_mem_Z0,
 
 theorem vv_bigrad (k : ℕ) : vv k ∈ bigradα (latP 1) ((k : ℤ) * (6 - k), (3 - k : ℤ)) := by
   induction k with
-  | zero => simpa using v0_bigrad
+  | zero => simpa using! v0_bigrad
   | succ k ih =>
     rw [vv, pow_succ', Module.End.mul_apply]
     have h := Qscr_mem_bigradα (latP 1) (-a1 1) ih
     convert h using 3
-    · rw [latP_form]; simp [a1]; push_cast; ring
+    refine Prod.ext ?_ ?_
+    · rw [latP_form 1 (-a1 1 : (latP 1).carrier) (3 - (k : ℤ))]; simp [a1]; push_cast; ring
     · change (3 - ((k + 1 : ℕ) : ℤ)) = (3 - (k : ℤ)) + -1
       push_cast; ring
 
 theorem vv_seven : vv 7 = 0 := by
   have h := vv_bigrad 7
-  rw [bigradα_eq_bot_of_neg _ _ (by norm_num), Submodule.mem_bot] at h
-  exact h
+  have hb : bigradα (latP 1) (((7 : ℕ) : ℤ) * (6 - ((7 : ℕ) : ℤ)), (3 - ((7 : ℕ) : ℤ) : ℤ)) = ⊥ :=
+    bigradα_eq_bot_of_neg _ _ (by norm_num)
+  have h' : vv 7 ∈ (⊥ : Submodule ℂ Sp) := by
+    rw [← hb]
+    exact h
+  exact (Submodule.mem_bot ℂ).mp h'
 
 theorem fo_vv (k : ℕ) : fo (vv k) = vv (k + 1) := by
   rw [vv, vv, pow_succ', Module.End.mul_apply]

@@ -22,19 +22,19 @@ theorem quotient_action_laws {X Z : C} (aX : A ⊗ X ⟶ X) (hX : IsLeftAct aX)
     (aZ : A ⊗ Z ⟶ Z) (hp : IsLinear aX aZ p) : IsLeftAct aZ := by
   have ep : Epi p := ⟨fun g h he => by
     have := congrArg (fun k => s ≫ k) he
-    simpa only [← Category.assoc, hs, Category.id_comp] using this⟩
+    simpa only [← Category.assoc, hs, Category.id_comp] using! this⟩
   have epA : Epi (A ◁ p) := ⟨fun g h he => by
     have := congrArg (fun k => (A ◁ s) ≫ k) he
     simpa only [← Category.assoc, ← whiskerLeft_comp, hs, whiskerLeft_id,
-      Category.id_comp] using this⟩
+      Category.id_comp] using! this⟩
   have epAA : Epi ((A ⊗ A) ◁ p) := ⟨fun g h he => by
     have := congrArg (fun k => ((A ⊗ A) ◁ s) ≫ k) he
     simpa only [← Category.assoc, ← whiskerLeft_comp, hs, whiskerLeft_id,
-      Category.id_comp] using this⟩
+      Category.id_comp] using! this⟩
   have epI : Epi ((𝟙_ C) ◁ p) := ⟨fun g h he => by
     have := congrArg (fun k => ((𝟙_ C) ◁ s) ≫ k) he
     simpa only [← Category.assoc, ← whiskerLeft_comp, hs, whiskerLeft_id,
-      Category.id_comp] using this⟩
+      Category.id_comp] using! this⟩
   constructor
   · apply (cancel_epi ((𝟙_ C) ◁ p)).mp
     rw [leftUnitor_naturality, ← hX.one_act]

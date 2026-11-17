@@ -47,7 +47,7 @@ theorem oppBase_bres_eq {wt : ℤ} {v : V} (hv : v ∈ W.grading wt) (φ : ℂ[T
   | C_mul_T s c =>
     rw [OppBase.bres_CT, LinearMap.smul_apply]
     change c • oppB N v s w = _
-    rw [oppB_homog N hv, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply, smul_smul,
+    rw [oppB_homog N hv, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply, smul_smul,
       Finset.smul_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     have e : T (2 * wt - 2 - (j : ℤ)) * invert (LaurentPolynomial.C c * T s)
@@ -135,7 +135,7 @@ theorem inD_of_perp {lam : Module.Dual ℂ M} (hlam : ∀ x ∈ fzO N.toWeakModu
     rcases lt_or_ge wt 0 with hw | hw
     · have hv0 : v = 0 := by
         have := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W hv (j := 0) (by omega)
-        simpa using this
+        simpa using! this
       subst hv0
       exact ⟨0, 0, fun q => by ext w; simp [OppBase.bres_zero_a]⟩
     obtain ⟨w₀, rfl⟩ : ∃ w₀ : ℕ, wt = w₀ := ⟨wt.toNat, (Int.toNat_of_nonneg hw).symm⟩
@@ -200,7 +200,7 @@ theorem yR_zero_of_perp {lam : Module.Dual ℂ M} (hlam : ∀ x ∈ fzO N.toWeak
   have hB0 : B.coeff 0 = 1 := by
     have := congrArg (Polynomial.eval 0) hAB
     rw [Polynomial.coeff_zero_eq_eval_zero]
-    simpa [lz] using this
+    simpa [lz] using! this
   have hBsplit : B = Polynomial.C 1 + Polynomial.X * B.divX := by
     rw [← hB0, add_comm, Polynomial.X_mul_divX_add]
   have hsplit : T ((w₀ : ℤ) - 1) * Polynomial.toLaurent (B * lz (-1) ^ w₀)
@@ -290,7 +290,7 @@ theorem yL_zero_of_perp {lam : Module.Dual ℂ M} (hlam : ∀ x ∈ fzO N.toWeak
   -- `B(0) (−1)^{w₀} = 1`
   have hB0 : B.eval 0 * (-1 : ℂ) ^ w₀ = 1 := by
     have := congrArg (Polynomial.eval 0) hAB
-    simpa [lz] using this
+    simpa [lz] using! this
   set β := B.eval 0
   obtain ⟨G, hG⟩ : ∃ G : ℂ[X], B.comp (Polynomial.X + Polynomial.C 1)
       = Polynomial.C β + (Polynomial.X + Polynomial.C 1) * G := by

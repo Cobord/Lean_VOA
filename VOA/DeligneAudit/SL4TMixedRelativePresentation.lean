@@ -54,7 +54,7 @@ set_option synthInstance.maxHeartbeats 100000 in
 theorem mixedRelative_signedCoefficient (φ : MixedPoly →ₐ[ℂ] R)
     (u : ℕ → MixedPoly) (i : Fin 5) (p : ℕ → R)
     (hp : ∀ n, newtonCoeff p n = (-1) ^ n * φ (u n)) (n : ℕ) :
-    (∑ z ∈ Finset.antidiagonal n, φ (mixedH i z.1) * newtonCoeff p z.2) =
+    (∑ z ∈ Finset.HasAntidiagonal.antidiagonal n, φ (mixedH i z.1) * newtonCoeff p z.2) =
       (-1) ^ n * φ (mixedConv u (fun k => (-1) ^ k * mixedH i k) n) := by
   rw [← Finset.Nat.sum_antidiagonal_swap]
   rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]

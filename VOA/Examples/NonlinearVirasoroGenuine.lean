@@ -571,5 +571,7 @@ theorem gv_linearIndependent_two (c : ℂ) :
     simpa using this
   have h := (sortedWordSt_linearIndependent_two c).comp _ hinj
   convert h using 1
+  funext k
+  exact (wstUw_mk c [k]).symm
 
 end VOA.VirModule

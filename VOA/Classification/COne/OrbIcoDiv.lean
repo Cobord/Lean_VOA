@@ -34,7 +34,7 @@ theorem eval_psi (r : Fin 2 → ℂ) (F : P3) : eval r (psi F) = eval (pt r) F :
     intro i
     fin_cases i <;> simp [psi, pt]
   have := congrArg (fun φ : P3 →ₐ[ℂ] ℂ => φ F) h
-  simpa [MvPolynomial.coe_aeval_eq_eval] using this
+  simpa [MvPolynomial.coe_aeval_eq_eval] using! this
 
 theorem eval_lin (v x : Fin 3 → ℂ) : eval x (lin v) = v ⬝ᵥ x := by
   rw [lin_apply]
@@ -126,8 +126,8 @@ theorem lf_root (a b : ℂ) : eval ![b, -a] (lf a b) = 0 := by
 theorem root_ne_zero {a b : ℂ} (h : lf a b ≠ 0) : (![b, -a] : Fin 2 → ℂ) ≠ 0 := by
   intro h0
   apply h
-  have hb : b = 0 := by simpa using congrFun h0 0
-  have ha : a = 0 := by simpa using congrFun h0 1
+  have hb : b = 0 := by simpa using! congrFun h0 0
+  have ha : a = 0 := by simpa using! congrFun h0 1
   rw [lf, ha, hb]; simp
 
 /-- The substitution `x ↦ a x + b y`, `y ↦ y` (for `a ≠ 0`), an automorphism. -/

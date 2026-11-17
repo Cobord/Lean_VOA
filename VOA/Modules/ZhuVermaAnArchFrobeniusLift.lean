@@ -194,7 +194,9 @@ noncomputable def LUUniversalData.of_universalFamily (F : LUFamily W)
 
 end InducedAssignment
 
-/-- **The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the universal-property (freeness) family.**
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**The Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` from the universal-property (freeness) family.**
 
 Packaging the end-to-end reduction with the injective half resting on the *universal-property*
 family `L : FrobeniusUniversalFamily F` — the freeness of `M(U)` on its bottom. Here **both**

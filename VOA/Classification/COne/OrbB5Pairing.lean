@@ -35,7 +35,7 @@ theorem ambient_haploid (G : Subgroup (Aut W))
   have he := f.property x (-1) (orbifoldVOA G).vacuum
   change f.val ((orbifoldVOA G).smul x (-1) (orbifoldVOA G).vacuum) =
     W.smul x.1 (-1) (f.val (orbifoldVOA G).vacuum) at he
-  rw [(orbifoldVOA G).toPreVertexAlgebra.smul_vacuum_neg_one, ← hc] at he
+  rw [(orbifoldVOA G).toPreVertexAlgebra.smul_vacuum_neg_one x, ← hc] at he
   change f.val x = c • x.1
   change f.val x = mode (W.Y x.1) (-1) (c • W.vacuum) at he
   rw [map_smul] at he
@@ -64,7 +64,7 @@ theorem retraction_inclusion_average (G : Subgroup (Aut W)) [Fintype G] :
   apply Ordinary.hom_ext
   intro x
   change (reynolds G x : V) = _
-  rw [reynolds_apply]
+  rw [reynolds_apply G x]
   change _ = (Fintype.card G : ℂ)⁻¹ • (∑ g : G, (ambientSymmetry G g).hom).val x
   congr 1
   rw [Submodule.coe_sum, LinearMap.sum_apply]
@@ -77,7 +77,7 @@ theorem symmetry_retraction (G : Subgroup (Aut W)) [Fintype G] (g : G) :
   intro x
   apply Subtype.ext
   change (reynolds G (g.1 x) : V) = (reynolds G x : V)
-  rw [reynolds_apply, reynolds_apply]
+  rw [reynolds_apply G (g.1 x), reynolds_apply G x]
   congr 1
   exact Fintype.sum_equiv (Equiv.mulRight g) _ _ (fun h => rfl)
 
@@ -117,8 +117,8 @@ theorem copairing_normalization_iff (G : Subgroup (Aut W)) [Fintype G]
     obtain ⟨a, ha⟩ := ambient_haploid G (c ≫ ambientMultiplication G F)
     have hh : a • 𝟙 (vacuumObject (W := orbifoldVOA G)) = d • 𝟙 vacuumObject := by
       simpa only [reynoldsPairing, ← Category.assoc, ha, Linear.smul_comp,
-        unitInclusion_retraction] using h
+        unitInclusion_retraction] using! h
     have he := congrArg (fun f : vacuumObject ⟶ vacuumObject => f ≫ unitInclusion G) hh
-    simpa only [Linear.smul_comp, Category.id_comp, ← ha] using he
+    simpa only [Linear.smul_comp, Category.id_comp, ← ha] using! he
 
 end VOA.Classification.COne.OrbB5

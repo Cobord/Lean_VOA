@@ -116,7 +116,7 @@ theorem middleFlagCoefficientPolynomial_series (q : MixedParams) (hq : MixedVali
       newtonCoefficientSeries (fun s => middleFlagTailSymbols q s i) := by
   ext n : 1
   rw [Polynomial.coeff_coe, middleFlagCoefficientPolynomial_coeff q hq]
-  simpa only [newtonCoefficientSeries, PowerSeries.coeff_mk] using
+  simpa only [newtonCoefficientSeries, PowerSeries.coeff_mk] using!
     (middleFlag_newtonCoeff q hq hA i n).symm
 
 /-- The four ascending flag polynomials multiply to one. -/

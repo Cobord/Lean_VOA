@@ -66,7 +66,9 @@ theorem sA_eq (d : FourPointTest A A A A) (k : ℤ) :
     prodCoef F (prodOp F μ) d (d.δ - d.α - k) =
       d.functional ((extIntertwiner F μ).val (-(k : ℂ) - 1) d.x
         ((extIntertwiner F μ).val (d.α + d.β + d.γ - d.δ + k - 1) d.y d.z)) := by
-  rw [prodCoef, prodOp_val, show d.α + (d.δ - d.α - (k : ℂ)) - d.δ - 1 = -(k : ℂ) - 1 by ring,
+  rw [prodCoef, prodOp_val F μ (d.α + (d.δ - d.α - (k : ℂ)) - d.δ - 1) d.x
+      ((F A A).intertwiner.val (d.β + d.γ - (d.δ - d.α - (k : ℂ)) - 1) d.y d.z),
+    show d.α + (d.δ - d.α - (k : ℂ)) - d.δ - 1 = -(k : ℂ) - 1 by ring,
     show d.β + d.γ - (d.δ - d.α - (k : ℂ)) - 1 = d.α + d.β + d.γ - d.δ + k - 1 by ring]
   rfl
 
@@ -76,7 +78,9 @@ theorem tC_eq (d : FourPointTest A A A A) (k : ℤ) :
         ((extIntertwiner F μ).val (-(k : ℂ) - 1) d.x d.z)) := by
   change d.functional ((prodOp F μ).val (d.β + ((k : ℂ) + d.α + d.γ) - d.δ - 1) d.y
     ((F A A).intertwiner.val (d.α + d.γ - ((k : ℂ) + d.α + d.γ) - 1) d.x d.z)) = _
-  rw [prodOp_val, show d.β + ((k : ℂ) + d.α + d.γ) - d.δ - 1 = d.α + d.β + d.γ - d.δ + k - 1 by
+  rw [prodOp_val F μ (d.β + ((k : ℂ) + d.α + d.γ) - d.δ - 1) d.y
+      ((F A A).intertwiner.val (d.α + d.γ - ((k : ℂ) + d.α + d.γ) - 1) d.x d.z),
+    show d.β + ((k : ℂ) + d.α + d.γ) - d.δ - 1 = d.α + d.β + d.γ - d.δ + k - 1 by
     ring, show d.α + d.γ - ((k : ℂ) + d.α + d.γ) - 1 = -(k : ℂ) - 1 by ring]
   rfl
 
@@ -127,6 +131,7 @@ theorem local_homog {α β : ℤ} {a b : A.carrier} (ha : a ∈ A.isMod.weight (
         rw [hδ]; push_cast
         have hij' : (i : ℂ) + j = m + n - N₀ := by exact_mod_cast hij
         linear_combination (-1 : ℂ) * hij'
+        all_goals rfl
       · have h1 := FusionTop.mem_weight (extIntertwiner F μ).property ha hcγ (((-i - 1 : ℤ)) : ℂ)
         have h2 := FusionTop.mem_weight (extIntertwiner F μ).property hb h1 (((-j - 1 : ℤ)) : ℂ)
         convert h2 using 2
@@ -134,6 +139,7 @@ theorem local_homog {α β : ℤ} {a b : A.carrier} (ha : a ∈ A.isMod.weight (
         rw [hδ]; push_cast
         have hij' : (i : ℂ) + j = m + n - N₀ := by exact_mod_cast hij
         linear_combination (-1 : ℂ) * hij'
+        all_goals rfl
     have hvmem : v ∈ A.isMod.weight (δ : ℂ) := by
       rw [hv, mulBySubPow_apply_sum, LinearMap.sum_apply]
       refine Submodule.sum_mem _ fun r hr => ?_

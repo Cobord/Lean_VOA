@@ -45,7 +45,7 @@ theorem norm_weightOneIntegralCoeff_le {N : ℕ} {ζ : ℂ} (hζ : ‖ζ‖ = 1)
   · rw [weightOneIntegralCoeff, if_neg hab, if_neg hn, norm_mul]
     have h := mul_le_mul_of_nonneg_left (norm_weightOneDivisorCoeff_le hζ a b n)
       (norm_nonneg (weightOneScale N ζ a b))
-    simpa only [mul_assoc, mul_comm, mul_left_comm] using
+    simpa only [mul_assoc, mul_comm, mul_left_comm] using!
       h.trans (le_add_of_nonneg_left (norm_nonneg _))
 
 /-- Absolute convergence throughout the open unit disc. -/
@@ -54,8 +54,8 @@ theorem summable_weightOneIntegralCoeff {N : ℕ} {ζ q : ℂ} (hζ : ‖ζ‖ =
     Summable (fun n : ℕ => ‖weightOneIntegralCoeff N ζ a b n * q ^ n‖) := by
   have hg := summable_geometric_of_lt_one (norm_nonneg q) hq
   have hng : Summable (fun n : ℕ => (n : ℝ) * ‖q‖ ^ n) := by
-    simpa using (summable_pow_mul_geometric_of_norm_lt_one 1
-      (show ‖(‖q‖ : ℝ)‖ < 1 by simpa using hq))
+    simpa using! (summable_pow_mul_geometric_of_norm_lt_one 1
+      (show ‖(‖q‖ : ℝ)‖ < 1 by simpa using! hq))
   apply Summable.of_nonneg_of_le (fun _ => norm_nonneg _)
     (f := fun n : ℕ => ‖weightOneIntegralCoeff N ζ a b 0‖ * ‖q‖ ^ n +
       (2 * ‖weightOneScale N ζ a b‖) * ((n : ℝ) * ‖q‖ ^ n))
@@ -63,7 +63,7 @@ theorem summable_weightOneIntegralCoeff {N : ℕ} {ζ q : ℂ} (hζ : ‖ζ‖ =
     rw [norm_mul, norm_pow]
     have h := mul_le_mul_of_nonneg_right (norm_weightOneIntegralCoeff_le hζ a b n)
       (pow_nonneg (norm_nonneg q) n)
-    simpa [add_mul, mul_assoc] using h
+    simpa [add_mul, mul_assoc] using! h
   · exact (hg.mul_left _).add (hng.mul_left _)
 
 /-- The analytic candidate, expressed using width-N Fourier coefficients. -/
@@ -74,13 +74,13 @@ def weightOneQSeries (N : ℕ) (ζ : ℂ) (a b : Fin N) (τ : ℍ) : ℂ :=
 theorem norm_qParam_nat_lt_one {N : ℕ} (hN : 0 < N) (τ : ℍ) :
     ‖Function.Periodic.qParam (N : ℝ) τ‖ < 1 := by
   have : 0 < 2 * Real.pi * τ.im / (N : ℝ) := by positivity
-  simpa [Function.Periodic.qParam, Complex.norm_exp, neg_div] using this
+  simpa [Function.Periodic.qParam, Complex.norm_exp, neg_div] using! this
 
 theorem hasSum_weightOneQSeries {N : ℕ} (hN : 0 < N) {ζ : ℂ}
     (hζ : IsPrimitiveRoot ζ N) (a b : Fin N) (τ : ℍ) :
     HasSum (fun n : ℕ => weightOneIntegralCoeff N ζ a b n •
       Function.Periodic.qParam (N : ℝ) τ ^ n) (weightOneQSeries N ζ a b τ) := by
-  simpa [weightOneQSeries, smul_eq_mul] using
+  simpa [weightOneQSeries, smul_eq_mul] using!
     (summable_weightOneIntegralCoeff (hζ.norm'_eq_one hN.ne') a b
       (norm_qParam_nat_lt_one hN τ)).of_norm.hasSum
 
@@ -90,9 +90,9 @@ theorem weightOneIntegralCoeff_radius {N : ℕ} {ζ : ℂ} (hζ : ‖ζ‖ = 1)
   refine le_of_forall_lt_imp_le_of_dense fun r hr => ?_
   lift r to NNReal using hr.ne_top
   apply FormalMultilinearSeries.le_radius_of_summable
-  simpa [FormalMultilinearSeries.ofScalars_norm, norm_mul, norm_pow] using
+  simpa [FormalMultilinearSeries.ofScalars_norm, norm_mul, norm_pow] using!
     summable_weightOneIntegralCoeff hζ a b
-      (q := (r : ℂ)) (by simpa using hr)
+      (q := (r : ℂ)) (by simpa using! hr)
 
 /-- The sum is analytic on the whole open unit disc, including its center. -/
 theorem analyticAt_weightOneDisc {N : ℕ} {ζ q : ℂ} (hζ : ‖ζ‖ = 1)
@@ -102,7 +102,7 @@ theorem analyticAt_weightOneDisc {N : ℕ} {ζ q : ℂ} (hζ : ‖ζ‖ = 1)
   apply FormalMultilinearSeries.analyticOnNhd
   apply Metric.eball_subset_eball (weightOneIntegralCoeff_radius hζ a b)
   rw [← ENNReal.coe_one, Metric.eball_coe]
-  simpa using hq
+  simpa using! hq
 
 theorem weightOneQSeries_eq_disc (N : ℕ) (ζ : ℂ) (a b : Fin N) (τ : ℍ) :
     weightOneQSeries N ζ a b τ =
@@ -133,7 +133,7 @@ theorem tendsto_weightOneQSeries {N : ℕ} (hN : 0 < N) {ζ : ℂ}
     (q := 0) (by simp)).continuousAt.tendsto.comp
       (qParam_tendsto_atImInfty (h := (N : ℝ)) (by exact_mod_cast hN))
   simpa only [Function.comp_def, ← weightOneQSeries_eq_disc,
-    FormalMultilinearSeries.ofScalarsSum_zero, smul_eq_mul, mul_one] using h
+    FormalMultilinearSeries.ofScalarsSum_zero, smul_eq_mul, mul_one] using! h
 
 theorem bounded_weightOneQSeries {N : ℕ} (hN : 0 < N) {ζ : ℂ}
     (hζ : IsPrimitiveRoot ζ N) (a b : Fin N) :
@@ -152,10 +152,10 @@ theorem periodic_weightOneQSeries {N : ℕ} (hN : 0 < N) (ζ : ℂ) (a b : Fin N
     exact Complex.exp_periodic _
   intro z
   by_cases! hz : 0 < z.im
-  · have hz' : 0 < (z + (N : ℂ)).im := by simpa using hz
+  · have hz' : 0 < (z + (N : ℂ)).im := by simpa using! hz
     simp only [Function.comp_apply, ofComplex_apply_of_im_pos hz',
       ofComplex_apply_of_im_pos hz, weightOneQSeries, hq]
-  · have hz' : (z + (N : ℂ)).im ≤ 0 := by simpa using hz
+  · have hz' : (z + (N : ℂ)).im ≤ 0 := by simpa using! hz
     simp [ofComplex_apply_of_im_nonpos hz', ofComplex_apply_of_im_nonpos hz]
 
 /-- Even before modularity is proved, the analytic candidate has exactly the

@@ -28,7 +28,7 @@ theorem highestRoot_radical_mem_leviTail (m N : ℕ) (hm : 1 ≤ m) (hN : m ≤ 
       by_cases htop : 2 * m ≤ r
       · rw [radical_word_high_zero ρ w m h]
         · exact map_zero q
-        · exact ⟨(5, r), by simp, by simpa [rootModeBound, radicalColour] using htop⟩
+        · exact ⟨(5, r), by simp, by simpa [rootModeBound, radicalColour] using! htop⟩
       have hhigher : ∀ s, r < s → ∀ t : List (Fin 6 × ℕ),
           q (radicalWord ρ w ((5, s) :: t)) = 0 := by
         intro s hs t
@@ -53,7 +53,7 @@ theorem highestRoot_radical_mem_leviTail (m N : ℕ) (hm : 1 ≤ m) (hN : m ≤ 
       have hz : (-(1 + (l.count (5, 0) : ℂ))) •
           q (radicalWord ρ w ((5, r) :: l)) = 0 := by
         simpa [letterWeight, keyLabel, wordKey, neg_add, add_smul,
-          radicalWord, wordOp, add_comm] using hcomm.symm
+          radicalWord, wordOp, add_comm] using! hcomm.symm
       have hne : (1 + (l.count (5, 0) : ℂ)) ≠ 0 := by
         exact_mod_cast (show 1 + l.count (5, 0) ≠ 0 by omega)
       exact (smul_eq_zero.mp hz).resolve_left (neg_ne_zero.mpr hne)
@@ -63,13 +63,13 @@ theorem source_high_current_zero (m : ℕ) (hm : 1 ≤ m)
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (c : Fin 28) (hc : c ≠ 27) (r : ℕ) (hr : m ≤ r) : ρ.op c r w = 0 := by
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   by_cases hcart : c.val < 4
   · exact rs_cartan_pos hs hcart r (by omega)
   by_cases hraise : c.val < 16
   · exact rs_raising hs (by change 4 ≤ c.val ∧ c.val < 16; omega) r
   exact source_root_mode_zero ρ w m h c (by omega) r
-    (by simpa [rootModeBound, hc] using hr)
+    (by simpa [rootModeBound, hc] using! hr)
 
 /-- The positive radical kills a high highest-root vector. -/
 theorem positive_radical_highestRoot_zero (m : ℕ) (hm : 1 ≤ m)
@@ -78,7 +78,7 @@ theorem positive_radical_highestRoot_zero (m : ℕ) (hm : 1 ≤ m)
     ρ.op a s (ρ.op (27 : Fin 28) r w) = 0 := by
   obtain ⟨i, rfl⟩ := ha
   have hs : Sat D4sector.f ρ w (ravSpec D4sector m (2 * m)) := by
-    simpa [ravFam] using h
+    simpa [ravFam] using! h
   have hraise : D4sector.raising (positiveColour i) := by
     change 4 ≤ (positiveColour i).val ∧ (positiveColour i).val < 16
     fin_cases i <;> decide
@@ -94,7 +94,7 @@ theorem positive_radical_highestRoot_zero (m : ℕ) (hm : 1 ≤ m)
         fin_cases i <;> decide
       simpa [D4sector, fD4,
         VOA.DeligneAudit.DeligneSector.Sparse.fC,
-        VOA.DeligneAudit.DeligneSector.Sparse.fZ] using
+        VOA.DeligneAudit.DeligneSector.Sparse.fZ] using!
           congrArg (fun n : ℤ => (n : ℂ)) hi
     rw [hz, zero_smul]
   · rw [source_high_current_zero ρ w m hm h c hc (s + r) (by omega), smul_zero]

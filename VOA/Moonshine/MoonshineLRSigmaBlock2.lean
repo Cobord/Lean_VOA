@@ -324,12 +324,15 @@ theorem sigmaBlockRPV_sigma {j k : Fin 24} (hjk : j ≠ k) :
         (1 / 2 : ℂ) • sigmaBlockRPV hjk -
           ((sigmaBlockRPWeight hjk * sigmaBlockRMWeight hjk / 2 : ℚ) : ℂ) •
             sigmaBlockRMV hjk := by
+  have hsub : ∀ x y, golayToV0 (x - y) = golayToV0 x - golayToV0 y := fun x y => by
+    rw [sub_eq_add_neg, LinearEquiv.map_add, ← neg_one_smul ℂ y, LinearEquiv.map_smul, neg_one_smul,
+      ← sub_eq_add_neg]
   have h : sig (golayToV0 (PPN j k)) =
       (1 / 8 : ℂ) • dV (fw j) (fw k) +
         (1 / 2 : ℂ) • golayToV0 (PPN j k) -
           (1 / 2 : ℂ) • golayToV0 (MMN j k) := by
-    rw [sig, ← golayToV0_sigma, golaySigma0_PPN hjk, map_sub, map_add,
-      map_smul, map_smul, map_smul, golayToV0_HHo, smul_smul]
+    rw [sig, ← golayToV0_sigma, golaySigma0_PPN hjk, hsub, LinearEquiv.map_add,
+      LinearEquiv.map_smul, LinearEquiv.map_smul, LinearEquiv.map_smul, golayToV0_HHo, smul_smul]
     norm_num
   rw [sigmaBlockRPV_transport hjk, sigmaBlockRMV_transport hjk, sig_smul] at h
   exact sigmaBlockRSolveP _ _ (sigmaBlockRWeight_values hjk).1 _ _ _ _ h
@@ -340,12 +343,15 @@ theorem sigmaBlockRMV_sigma {j k : Fin 24} (hjk : j ≠ k) :
       (sigmaBlockRMWeight hjk : ℂ) • ((8 : ℂ)⁻¹ • dV (fw j) (fw k)) -
         ((sigmaBlockRPWeight hjk * sigmaBlockRMWeight hjk / 2 : ℚ) : ℂ) •
           sigmaBlockRPV hjk + (1 / 2 : ℂ) • sigmaBlockRMV hjk := by
+  have hsub : ∀ x y, golayToV0 (x - y) = golayToV0 x - golayToV0 y := fun x y => by
+    rw [sub_eq_add_neg, LinearEquiv.map_add, ← neg_one_smul ℂ y, LinearEquiv.map_smul, neg_one_smul,
+      ← sub_eq_add_neg]
   have h : sig (golayToV0 (MMN j k)) =
       (1 / 8 : ℂ) • dV (fw j) (fw k) -
         (1 / 2 : ℂ) • golayToV0 (PPN j k) +
           (1 / 2 : ℂ) • golayToV0 (MMN j k) := by
-    rw [sig, ← golayToV0_sigma, golaySigma0_MMN hjk, map_add, map_sub,
-      map_smul, map_smul, map_smul, golayToV0_HHo, smul_smul]
+    rw [sig, ← golayToV0_sigma, golaySigma0_MMN hjk, LinearEquiv.map_add, hsub,
+      LinearEquiv.map_smul, LinearEquiv.map_smul, LinearEquiv.map_smul, golayToV0_HHo, smul_smul]
     norm_num
   rw [sigmaBlockRPV_transport hjk, sigmaBlockRMV_transport hjk, sig_smul] at h
   exact sigmaBlockRSolveM _ _ (sigmaBlockRWeight_values hjk).2 _ _ _ _ h

@@ -134,11 +134,11 @@ private theorem reindexToIccLGR (P : ℕ) (s Lo Hi : ℤ) (g : ℤ → ℂ) (T :
       ?_ ?_ ?_ ?_ ?_
     · intro a ha; simp only [Finset.mem_range] at ha; simp only [Finset.mem_Icc]; omega
     · intro a ha; simp only [Finset.mem_Icc] at ha; simp only [Finset.mem_range]; omega
-    · intro a ha; simp only [Finset.mem_range] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_range] at ha; try simp only []
       rw [show ((a : ℤ) - s + s) = (a : ℤ) by ring, Int.toNat_natCast]
-    · intro a ha; simp only [Finset.mem_Icc] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_Icc] at ha; try simp only []
       rw [Int.toNat_of_nonneg (by omega)]; ring
-    · intro a ha; simp only [Finset.mem_range] at ha; simp only []
+    · intro a ha; simp only [Finset.mem_range] at ha; try simp only []
       refine congr_arg₂ _ ?_ ?_
       · ring
       · ring
@@ -250,7 +250,7 @@ private theorem restInner_reindex (W : VertexOperatorAlgebra 𝒱) (n p : ℕ) {
         (by
           rw [Int.toNat_of_nonneg (show (0 : ℤ) ≤ (K : ℤ) by positivity)]
           intro μ _ hμnot; simp only [Finset.mem_Icc, not_and, not_le] at hμnot
-          simp only []
+          try simp only []
           rcases lt_or_ge (μ + ((n : ℤ) - (p : ℤ) + i + 1)) 0 with hlo | hge
           · rw [cbz_apply_neg (K : ℤ) hlo, zero_mul]
           · have hgt : (K : ℤ) < μ + ((n : ℤ) - (p : ℤ) + i + 1) := by
@@ -265,7 +265,7 @@ private theorem restInner_reindex (W : VertexOperatorAlgebra 𝒱) (n p : ℕ) {
         (by
           rw [Int.toNat_of_nonneg (show (0 : ℤ) ≤ (K : ℤ) by positivity)]
           intro μ _ hμnot; simp only [Finset.mem_Icc, not_and, not_le] at hμnot
-          simp only []
+          try simp only []
           rcases lt_or_ge (μ + ((n : ℤ) - (p : ℤ) + i + 1 + 1)) 0 with hlo | hge
           · rw [cbz_apply_neg (K : ℤ) hlo, zero_mul]
           · have hgt : (K : ℤ) < μ + ((n : ℤ) - (p : ℤ) + i + 1 + 1) := by
@@ -293,7 +293,7 @@ private theorem circ_reindex (W : VertexOperatorAlgebra 𝒱) (n p : ℕ) {K : �
             intro x hx; simp only [Finset.mem_Icc] at hx ⊢; omega)
         (by rw [Int.toNat_of_nonneg (show (0 : ℤ) ≤ (K : ℤ) by positivity)]
             intro μ _ hμnot; simp only [Finset.mem_Icc, not_and, not_le] at hμnot
-            simp only []
+            try simp only []
             rcases lt_or_ge (μ + ((n : ℤ) + 2)) 0 with hlo | hge
             · rw [cbz_apply_neg (K : ℤ) hlo]
             · have hgt : (K : ℤ) < μ + ((n : ℤ) + 2) := by have := hμnot (by omega); omega

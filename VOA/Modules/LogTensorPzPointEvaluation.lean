@@ -140,7 +140,7 @@ theorem evaluatePoint_injective (N₁ : LogVModule W M₁) (N₂ : LogVModule W 
         have he : a+b-(a+b-n-1)-1=n := by ring
         rw [he] at hp
         have hpc := congrArg (fun v : M₃ => (Complex.exp (ell*((a+b-n-1)-a-b)))⁻¹ • v) hp
-        simpa only [smul_smul,inv_mul_cancel₀ (Complex.exp_ne_zero _),one_smul] using hpc
+        simpa only [smul_smul,inv_mul_cancel₀ (Complex.exp_ne_zero _),one_smul] using! hpc
       · intro y z hy hz
         simp only [map_add,hy,hz]
     · intro x z hx hz

@@ -38,7 +38,7 @@ def univToroidalOne : ToroidalModule D4sector.f 1 U1 where
 def presentedCurrentOne : CurrentModule D4sector.f (PTE 1) where
   op c i := (ρPTE 1).op c i 0
   comm a b i j v := by
-    simpa using (ρPTE 1).comm a b i j 0 0 v
+    simpa using! (ρPTE 1).comm a b i j 0 0 v
 
 theorem symbolLetters_one (l : List (Ltr 28)) :
     symbolLetters 1 l = l.map (fun x => (x.1, x.2, 0)) := by
@@ -54,7 +54,7 @@ theorem wordOpT_univ_symbol_one (l : List (Ltr 28)) :
   | cons x l ih =>
       change (univToroidalOne.op x.1 (x.2 / 1) (x.2 % 1))
           (wordOpT univToroidalOne (symbolLetters 1 l) (wUG D4sector.f R1)) = _
-      simpa [univToroidalOne, Nat.mod_one] using
+      simpa [univToroidalOne, Nat.mod_one] using!
         congrArg ((univRepG D4sector.f R1).op x.1 x.2) ih
 
 theorem wordOp_presented_one (l : List (Ltr 28)) :
@@ -74,12 +74,10 @@ theorem wordOp_presented_one (l : List (Ltr 28)) :
 theorem presentedOne_sat :
     Sat D4sector.f presentedCurrentOne (pTE 1) R1 where
   tail t ht := by
-    rw [wordOp_presented_one]
-    change wordOpT (rhoPT D4sector.f 1 (JprimeSyntaxE 1))
-      (symbolLetters 1 t) (pPT D4sector.f 1 (JprimeSyntaxE 1)) = 0
-    rw [wordOpT_rhoPT]
-    exact mk_syntax D4sector.f 1 (JprimeSyntaxE 1)
-      (swT (symbolLetters 1 t)) (Or.inl (Or.inl ⟨t, ht, rfl⟩))
+    exact (wordOp_presented_one t).trans
+      ((wordOpT_rhoPT D4sector.f 1 (JprimeSyntaxE 1) (symbolLetters 1 t)).trans
+        (mk_syntax D4sector.f 1 (JprimeSyntaxE 1)
+          (swT (symbolLetters 1 t)) (Or.inl (Or.inl ⟨t, ht, rfl⟩))))
   eig q hq := by
     have h := mk_syntax D4sector.f 1 (JprimeSyntaxE 1)
       (swT [(q.1, 0, 0)] - q.2 • swT [])

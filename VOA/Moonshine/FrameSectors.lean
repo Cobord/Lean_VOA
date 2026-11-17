@@ -186,9 +186,8 @@ theorem frameSector_one_eq : frameSector 1 = LinearMap.ker (plusFrame + 1) := by
 /-- **`V_Λ⁺ = V₀⁺ ⊕ V₃⁺`** (internal direct sum). -/
 theorem frameSector_isInternal : DirectSum.IsInternal frameSector := by
   rw [DirectSum.isInternal_submodule_iff_isCompl frameSector (i := 0) (j := 1) (by decide)
-    (by ext k; fin_cases k <;>
-      simp only [Set.mem_univ, Set.mem_insert_iff, Set.mem_singleton_iff, true_iff] <;>
-      first | exact Or.inl rfl | exact Or.inr rfl), frameSector_zero_eq, frameSector_one_eq]
+    (Set.ext fun k => ⟨fun _ => by fin_cases k <;> first | exact Or.inl rfl | exact Or.inr rfl,
+      fun _ => Set.mem_univ _⟩), frameSector_zero_eq, frameSector_one_eq]
   exact isCompl_ker_sub_one_ker_add_one plusFrame plusFrame_plusFrame
 
 theorem leechVOAPlus_smul_smul_smul (s t : ℂ) (u : VPlus) (n : ℤ) (v : VPlus) :

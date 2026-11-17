@@ -30,8 +30,8 @@ theorem levi_inv (a : Fin 8) (s : ℕ) (ha : a2Levi a)
       exact normal_mem ρ w ((a, s) :: l) r
         (by simp only [List.forall_cons]; exact ⟨ha, hl⟩) hr
   | zero => simp
-  | add x y _ _ hx hy => simpa using (a2LeviSpan ρ w).add_mem hx hy
-  | smul c x _ hx => simpa using (a2LeviSpan ρ w).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (a2LeviSpan ρ w).add_mem hx hy
+  | smul c x _ hx => simpa using! (a2LeviSpan ρ w).smul_mem c hx
 
 theorem swap_mem (a b : Fin 8) (s t : ℕ) (v : V)
     (hleft : ρ.op b t (ρ.op a s v) ∈ a2LeviSpan ρ w)
@@ -92,8 +92,8 @@ theorem radical_inv (a : Fin 8) (s : ℕ) (ha : a2Radical a)
       obtain ⟨l, r, hl, hr, rfl⟩ := hz
       exact radical_on_normal ρ w l r hl hr a s ha
   | zero => simp
-  | add x y _ _ hx hy => simpa using (a2LeviSpan ρ w).add_mem hx hy
-  | smul c x _ hx => simpa using (a2LeviSpan ρ w).smul_mem c hx
+  | add x y _ _ hx hy => simpa using! (a2LeviSpan ρ w).add_mem hx hy
+  | smul c x _ hx => simpa using! (a2LeviSpan ρ w).smul_mem c hx
 
 end VOA.DeligneAudit.A3Sector
 

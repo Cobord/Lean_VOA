@@ -27,14 +27,14 @@ theorem rz_target_single_mem_ker
   apply pairTargetQuotientEvaluation_mem_ker_of_sat
     ρ w m i 0 0 1 s h hi hkey _ P
   · apply Subtype.ext
-    simpa [P, pairSourcePower, pairTargetPower] using
+    simpa [P, pairSourcePower, pairTargetPower] using!
       (pairRestriction_ZPsum 0 0 1 s)
   · have hz : ρ.op (27 : Fin 28) s w ∈ keyPrefix ρ w m i := by
       have hk : keyEnum m ⟨i, hi⟩ = rzKey [] [] [] 1 s := by
-        simpa [pairFinalKey, rzKey] using hkey
+        simpa [pairFinalKey, rzKey] using! hkey
       have hr := rz_top_prefix ρ w m h [] [] [] 1 s i
-        (by omega) (by omega) hi (by simpa using hk)
-      simpa [rz_single_topSum, yOp, zOp] using hr
+        (by omega) (by omega) hi (by simpa using! hk)
+      simpa [rz_single_topSum, yOp, zOp] using! hr
     have hp : (P : MvPolynomial (PairSource 0 0 1) ℂ) =
         X (Sum.inr (Sum.inr (0 : Fin 1))) ^ s := by
       simp [P, pairSourcePower, pairSourceZPsum]
@@ -62,7 +62,7 @@ theorem rz_target_single_mem_ker
       rw [hset]
       simp
     simpa [huniv, shapedModes, radicalWord, wordOp, pairSourceShape,
-      radicalColour] using hz
+      radicalColour] using! hz
 
 /-- Every separately symmetric spectator shift of the one-Z Rz relation
     remains in the target kernel at the same descending key. -/

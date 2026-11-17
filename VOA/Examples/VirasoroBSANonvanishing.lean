@@ -25,7 +25,7 @@ theorem Lld_neg_one_mem_FDeg (lam : ℂ) {d : ℕ} {p : Fock} (hp : p ∈ FDeg d
   have hh : ∀ l : List ℕ, Lvir 1 (-1) ((l.map X).prod : Fock) ∈ FDeg l.length := by
     intro l
     induction l with
-    | nil => simpa [Lvir_one_vacuum] using (FDeg 0).zero_mem
+    | nil => simpa [Lvir_one_vacuum] using! (FDeg 0).zero_mem
     | cons i l ih =>
       simp only [List.map_cons, List.prod_cons, List.length_cons]
       have he := Lvir_neg_X 0 i ((l.map X).prod : Fock)
@@ -37,8 +37,8 @@ theorem Lld_neg_one_mem_FDeg (lam : ℂ) {d : ℕ} {p : Fock} (hp : p ∈ FDeg d
   induction hp using Submodule.span_induction with
   | mem y hy => obtain ⟨l,hl,rfl⟩ := hy; exact FDeg_mono hl (hh l)
   | zero => simp
-  | add p q _ _ hp hq => simpa using (FDeg d).add_mem hp hq
-  | smul a p _ hp => simpa using (FDeg d).smul_mem a hp
+  | add p q _ _ hp hq => simpa using! (FDeg d).add_mem hp hq
+  | smul a p _ hp => simpa using! (FDeg d).smul_mem a hp
 
 /-- Evaluation in Fock space commutes with the entire BSA source sum. -/
 theorem fockMap_bsaSource {c lam : ℂ} (hlam : 1-12*lam^2=c) (N r : ℕ) :
@@ -54,7 +54,7 @@ theorem fockMap_bsaState_mem {c lam : ℂ} (hlam : 1-12*lam^2=c) (N r : ℕ) :
   | h r ih =>
     by_cases hr : r=0
     · subst r
-      simpa [bsaState_zero, vacVec, fockMap_mk] using one_mem_FDeg 0
+      simpa [bsaState_zero, vacVec, fockMap_mk] using! one_mem_FDeg 0
     rw [bsaState_eq_source c N r (by omega), map_smul, fockMap_bsaSource]
     apply Submodule.smul_mem
     apply Submodule.sum_mem
@@ -83,7 +83,7 @@ theorem fockMap_bsaSource_error {c lam : ℂ} (hlam : 1-12*lam^2=c) (N k : ℕ) 
   have hs : ∀ a b d : Fock, a+b-d=(a-d)+b := by intros; ring
   rw [hs]
   apply Submodule.add_mem
-  · simpa using errLd_mem lam 0 (fockMap_bsaState_mem hlam N k)
+  · simpa using! errLd_mem lam 0 (fockMap_bsaState_mem hlam N k)
   · apply Submodule.sum_mem
     intro j hj
     have hjn : j.val ≠ k := by
@@ -139,7 +139,7 @@ theorem fockMap_bsaState_top {c lam : ℂ} (hlam : 1-12*lam^2=c) (N k : ℕ) :
     have hh := bsaSource_top_of_state_top hlam N k ih
     rw [bsaState_eq_source c N (2*(k+1)) (by omega), map_smul, bsaTopCoefficient]
     rw [mul_smul, ← smul_sub]
-    simpa only [show 2*(k+1)-1=2*k+1 by omega] using (FDeg _).smul_mem _ hh
+    simpa only [show 2*(k+1)-1=2*k+1 by omega] using! (FDeg _).smul_mem _ hh
 
 /-- The terminal source retains the previous state's leading coefficient;
 there is no division by the zero terminal denominator. -/
@@ -173,7 +173,7 @@ theorem bsaSource_even_ne_zero (c : ℂ) (k : ℕ) :
   have hp : creationPoly 0 ≠ 0 := by
     intro hz
     have hn := tSub_creationPoly_ne_zero 2 0 (by omega)
-    simpa [hz] using hn
+    simpa [hz] using! hn
   have hn : bsaTopCoefficient (2*(k+1)) k • (creationPoly 0)^(k+1) ≠ 0 :=
     smul_ne_zero ha (pow_ne_zero _ hp)
   have hom : (bsaTopCoefficient (2*(k+1)) k • (creationPoly 0)^(k+1)).IsHomogeneous

@@ -1942,7 +1942,7 @@ noncomputable def uVar (v : ℕ × Fin r) : ℂ := -((v.1 : ℂ) + 1)
 noncomputable def uWt (d : (ℕ × Fin r) →₀ ℕ) : ℂ :=
   d.prod fun v m => uVar v ^ m * (m.factorial : ℂ)
 noncomputable def uForm (r : ℕ) : LinearMap.BilinForm ℂ (FockN r) :=
-  Finsupp.lsum ℂ fun d => LinearMap.smulRight LinearMap.id (uWt d • lcoeff ℂ d)
+  (basisMonomials (ℕ × Fin r) ℂ).constr ℂ fun d => uWt d • lcoeff ℂ d
 
 theorem uForm_symm (p q : FockN r) : uForm r p q = uForm r q p
 theorem uForm_oscN (b : Fin r) (n : ℤ) (p q : FockN r) :

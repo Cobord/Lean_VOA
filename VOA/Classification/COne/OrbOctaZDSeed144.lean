@@ -34,13 +34,13 @@ theorem psi_I6sq : psi (I6 * I6) =
     ring
   have he := congrArg (fun P : P2 => (1 / 2 : ℂ) • P) h
   simpa only [smul_smul, smul_sub, show (1 / 2 : ℂ) * 2 = 1 by norm_num,
-    show (1 / 2 : ℂ) * 54 = 27 by norm_num, one_smul] using he
+    show (1 / 2 : ℂ) * 54 = 27 by norm_num, one_smul] using! he
 
 theorem Tav_I6sq : Tav (I6 * I6) =
     (1 / 2 : ℂ) • Tav (I4 * (I4 * I4)) -
       (27 : ℂ) • Tav ((I3 * I3) * (I3 * I3)) := by
   have h := congrArg (fun P => OrbC2.average octa (Tb P)) psi_I6sq
-  simpa only [map_sub, map_smul] using h
+  simpa only [map_sub, map_smul] using! h
 
 /-- Q24 annihilates the weight-144 seed. -/
 theorem q24_seed_four :

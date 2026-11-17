@@ -88,15 +88,15 @@ theorem LamG_push_own {n : ℕ} {P : List ℕ} (hP : P ≠ [] ∧ P.length ≤ n
     (k : Fin (2 * nbL P + 1)) (ro : Rows (nbL P) k) (x : ExpL P) (g : Fin (nbL P) → Fin 4)
     (a : Fin (nbL P) → ℕ) :
     LamG n ⟨P, k, ro, x⟩ (pushN n (pblkG TPoly X (colL P) g a)) =
-      coeff (toF a) (rename (rhoL P) (fFS P x) *
-        (esymmPow (topExp P x) * Apol (msOf ro) (2 * nbL P - k) g)) := by
+      (rename (rhoL P) (fFS P x) *
+        (esymmPow (topExp P x) * Apol (msOf ro) (2 * nbL P - k) g)).coeff (toF a) := by
   rw [LamG_pos (i := ⟨P, k, ro, x⟩) hP, Φ_pblkG (fFS P x) (colL P) (sum_colL P), map_sum,
     coeff_mul]
   simp only [map_smul, smul_eq_mul, ψF_tpow (fFS_symm P x) (rhoL P) (colL P) (card_rhoL P)]
   have h := sum_piFinset_antidiagonal a (fun b d =>
-    coeff b (rename (rhoL P) (fFS P x)) *
-      coeff d (esymmPow (topExp P x) * Apol (msOf ro) (2 * nbL P - k) g))
-  simp only at h
+    (rename (rhoL P) (fFS P x)).coeff b *
+      (esymmPow (topExp P x) * Apol (msOf ro) (2 * nbL P - k) g).coeff d)
+  try simp only at h
   rw [← h]
   apply Finset.sum_congr rfl
   intro p _
@@ -127,7 +127,7 @@ theorem LamG_push_noValid {n : ℕ} (i : IdxG) {P0 : List ℕ} (hts : tsL i.1 = 
     have hzero := rename_fFS_eq_zero i.1 P0 hts i.2.2.2 hno
     rw [Finset.sum_eq_zero, map_zero]
     intro p _
-    rw [ψF_tpow (fFS_symm _ _) _ (colL P0) hρ, hzero, coeff_zero, zero_smul]
+    rw [ψF_tpow (fFS_symm _ _) _ (colL P0) hρ, hzero, MvPolynomial.coeff_zero, Finsupp.zero_apply, zero_smul]
   · rw [LamG, dif_neg h, LinearMap.zero_apply]
 
 /-! ### One profile -/
@@ -196,12 +196,12 @@ theorem rename_fFS_isHomogeneous (P : List ℕ) (x : ExpL P) :
 theorem coeff_eval_eq_zero (P : List ℕ) (x : ExpL P) (ms : Multiset ℕ) (l : ℕ)
     (hms : ∀ j ∈ ms, j ≤ l) (g : Fin (nbL P) → Fin 4) (d : Fin (nbL P) →₀ ℕ)
     (hd : ∑ i, d i + jcount g ≠ degG P x + awt (topExp P x) + ms.sum) :
-    coeff d (rename (rhoL P) (fFS P x) * (esymmPow (topExp P x) * Apol ms l g)) = 0 := by
+    (rename (rhoL P) (fFS P x) * (esymmPow (topExp P x) * Apol ms l g)).coeff d = 0 := by
   classical
   rw [coeff_mul]
   apply Finset.sum_eq_zero
   intro p hp
-  rw [Finset.mem_antidiagonal] at hp
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
   by_contra hne
   have h1 : p.1.degree = degG P x := by
     have := (rename_fFS_isHomogeneous P x) (left_ne_zero_of_mul hne)
@@ -242,7 +242,7 @@ theorem idxP_indep {n : ℕ} {P : List ℕ} (hP : P ≠ [] ∧ P.length ≤ n) {
       ∑ ro, y ro * Apol (msOf ro) (2 * nbL P - k0) w.1 = 0 := by
     intro w
     ext d
-    rw [coeff_zero, coeff_sum]
+    rw [MvPolynomial.coeff_zero, Finsupp.zero_apply, coeff_sum]
     simp only [y, Finset.sum_mul, coeff_sum, smul_mul_assoc, coeff_smul, smul_eq_mul, mul_assoc]
     apply (mul_right_injective₀ hNv)
     simp only [mul_zero, Finset.mul_sum]
@@ -262,7 +262,7 @@ theorem idxP_indep {n : ℕ} {P : List ℕ} (hP : P ≠ [] ∧ P.length ≤ n) {
         apply Finset.sum_eq_zero
         intro x _
         rw [LamG_push_own hP, Apol_eq_zero _ _ (msOf_le ro) _ (vcount_ne_of_ne k0 k hk w),
-          mul_zero, mul_zero, coeff_zero, mul_zero]
+          mul_zero, mul_zero, MvPolynomial.coeff_zero, Finsupp.zero_apply, mul_zero]
       · intro hk; exact absurd (Finset.mem_univ _) hk
     · apply Finset.sum_eq_zero
       intro ro _
@@ -393,7 +393,7 @@ theorem card_tIdxG_le_finrank {n : ℕ} (hn : 1 ≤ n) (r N : ℕ) :
       · intro j _ hj
         simp [c, hj]
     have := tIdxG_indep hn r N c hc i.1 i.2
-    simpa [c, hi] using this
+    simpa [c, hi] using! this
   have := hli.fintype_card_le_finrank
   rwa [Fintype.card_coe, Subspace.dual_finrank_eq] at this
 

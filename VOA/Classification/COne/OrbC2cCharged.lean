@@ -56,7 +56,7 @@ theorem hasC_state (m : ℕ) (hm : 1 ≤ m) :
   | .vir n a => by
     have h := hasC_normR m hm (hasC_om m hm (n+1) (hasC_state m hm a))
     change HasC m hm ((V2mPlus m hm).smul (V2mPlus m hm).conformalVector (n+1) _) _
-    simpa only [show -(n+1)-1 = -n-2 by omega] using h
+    simpa only [show -(n+1)-1 = -n-2 by omega] using! h
 
 /-- The same expression on an arbitrary charged seed; useful to state the result on E. -/
 def apply (m : ℕ) (hm : 1 ≤ m) (x : VP m hm) : ChargedExpr → VP m hm

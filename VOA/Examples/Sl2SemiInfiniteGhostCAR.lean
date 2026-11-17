@@ -68,7 +68,8 @@ theorem ghostEmbed_Y_of_ne_parity {a b : Fin 3} (hab : a ≠ b)
     change y ⊗ₜ[ℂ] SympFerm.vacSF ∈
       TensorVA.tenParity Ghost.bcGhostSVA Ghost.bcGhostSVA q
     apply TensorVA.tmul_mem_tenParity Ghost.bcGhostSVA Ghost.bcGhostSVA hy
-    simpa only [sub_self] using Ghost.bcGhostSVA.vacuum_parity
+    rw [sub_self]
+    exact Ghost.bcGhostSVA.vacuum_parity
   have hyR : SympFerm.vacSF ⊗ₜ[ℂ] y ∈ ghostPairSVA.parity q := by
     change SympFerm.vacSF ⊗ₜ[ℂ] y ∈
       TensorVA.tenParity Ghost.bcGhostSVA Ghost.bcGhostSVA q

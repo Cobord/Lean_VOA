@@ -40,6 +40,11 @@ write `u = uN N` for the character (`u_k = −1` iff `k ∈ N`, `0 ∉ N`).  On 
 the library's definitions, hence the `∃ s`.  Imported by the umbrella `VOA/Moonshine.lean`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 set_option maxRecDepth 20000
 
@@ -292,7 +297,7 @@ theorem Wop_aP00_frame {s : ZMod 2} {t : TLeechT} (hts : t ∈ leechFrameT s) (h
   have hseed := mem_chargesS (mem_chargesS_aP ht 0 0) (phiR_pair 0 0).symm
   rw [hW t hts] at hseed
   have hc := smul_left_injective ℂ ht0 hseed
-  simp only at hc
+  try simp only at hc
   rw [hW z hz, hc]
 
 theorem chiN_pair00 {N : Finset (Fin 24)} (hN0 : (0 : Fin 24) ∉ N) :
@@ -401,7 +406,10 @@ theorem valA_bAD {D : Finset (Fin 24)} (hDA : ind D ∈ Leech.subA) : valA (bAD 
 
 theorem valA_dSA {S : Finset (Fin 24)} (he : _root_.Even S.card) : valA (dSA S) = (2 : ℤ) • ind S := by
   change (show ↥Leech.subA from dSA S).1 = _
-  unfold dSA; rw [dif_pos he]
+  first
+  | (unfold dSA; rw [dif_pos he])
+  | exact congrArg Subtype.val
+      (show dSA S = (⟨(2 : ℤ) • ind S, two_ind_mem S he⟩ : ↥Leech.subA) from dif_pos he)
 
 /-- **The Golay constraint**: a nonzero joint eigenvector has a character even on every codeword. -/
 theorem golay_constraint {z : TLeechT} (hz0 : z ≠ 0) {N : Finset (Fin 24)}
@@ -423,7 +431,7 @@ theorem golay_constraint {z : TLeechT} (hz0 : z ≠ 0) {N : Finset (Fin 24)}
     rw [hbb]; exact mem_chargesU (hd D' hev) (inclN_dSA hev)
   rw [h1, xiN] at h2
   have h3 := smul_left_injective ℂ hz0 h2
-  simp only at h3
+  try simp only at h3
   rw [← chiN_ind]
   have hx := xi_ne_zero (ind D')
   exact (mul_right_eq_self₀.mp h3.symm).resolve_right hx
@@ -870,7 +878,7 @@ theorem phiTT_ZMT_aSA {s : ZMod 2} {t : TLeechT} (hts : t ∈ leechFrameT s) (ht
       = actT (sig (lV (inclΛ (aSA hDA S)) (inclΛ_mem _))) 1 (phiTT (psiOf (Bop s)) (hP (cw m) z)))
     ?_ ?_ t' ht'
   · intro x y hx hy
-    simp only at hx hy ⊢
+    try simp only at hx hy ⊢
     rw [hP_add_right, map_add, map_add, hx, hy, map_add, map_add]
   · intro z hz N hN0 hE
     exact octadTT_eig hDA hD8 hts ht0 ht h hS hz hN0 hE m

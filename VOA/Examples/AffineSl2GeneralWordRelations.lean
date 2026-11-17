@@ -159,7 +159,7 @@ theorem actual_word_relation_obstruction (D : FirstOrderDeformation (simple k hk
   dsimp only
   let v := ∑ j, d j • liftedCurrentWord k hk D (w j) ((simple k hk).vacuum, 0)
   have hv : v.1 = 0 := by
-    simpa only [v, Prod.fst_sum, Prod.smul_fst, liftedCurrentWord_fst] using hd
+    simpa only [v, Prod.fst_sum, Prod.smul_fst, liftedCurrentWord_fst] using! hd
   have he : v = (0, v.2) := Prod.ext hv rfl
   change (simpleForm k hk).form _ ((∑ i, c i • liftedAdjointCurrentWord k hk D (u i)) v).1 = 0 ∧
     (simpleForm k hk).form _ ((∑ i, c i • liftedAdjointCurrentWord k hk D (u i)) v).2 = 0

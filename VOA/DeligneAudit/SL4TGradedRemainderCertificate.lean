@@ -53,7 +53,7 @@ theorem remainderTopCorrection_homogeneous (w : σ → ℤ)
     rw [hc]
     have h := remainderRowMinor_homogeneous w xs hxs N j
       (Function.update (fun a => xs.length - j + a.val) ⟨0, hj⟩ l) cols
-    simpa only [remainderMinorDegree_update, Nat.add_zero] using h
+    simpa only [remainderMinorDegree_update, Nat.add_zero] using! h
   · have hz := Polynomial.coeff_eq_zero_of_degree_lt
       (lt_of_lt_of_le (remainderCramerPolynomial_correction_degree xs N j cols hj hjr)
         (by exact_mod_cast (show xs.length - j ≤ l by omega)))
@@ -91,7 +91,7 @@ theorem remainderTopMinor_graded_certificate (w : σ → ℤ)
     remainderTopCorrection_homogeneous w xs hxs N j cols hj hjr, ?_⟩
   · intro l
     rw [← remainderAllIdeal_eq_topIdeal xs N j hjr]
-    simpa only [Nat.add_zero] using
+    simpa only [Nat.add_zero] using!
       remainderCramerPolynomial_correction_coeff_mem xs N j cols ⟨0, hj⟩ l
   · have he : Polynomial.C (remainderTopMinor xs N j cols) *
         Polynomial.X ^ (xs.length - j) + remainderTopCorrection xs N j cols hj =

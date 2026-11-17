@@ -34,7 +34,7 @@ theorem selectedPositions_delete_first (B : ℕ) (Y : Finset (Fin (B + 1)))
   let e : Equiv.Perm (Fin (B + 1)) := Equiv.swap 0 a
   let W := Y.map e.toEmbedding
   have hzero : (0 : Fin (B + 1)) ∉ W := by
-    simpa only [W, Finset.mem_map_equiv, e, Equiv.swap_apply_left] using ha
+    simpa only [W, Finset.mem_map_equiv, e, Equiv.swap_apply_left] using! ha
   let Z : Finset (Fin B) := Finset.univ.filter fun i => i.succ ∈ W
   refine ⟨e, Z, ?_⟩
   change W = Z.map (Fin.succEmb B)

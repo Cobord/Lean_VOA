@@ -22,7 +22,7 @@ theorem hilbInt_one (N : ℕ) :
     D4K.hilbInt 1 N = if N = 0 then 28 else if N = 1 then 1 else 0 := by
   unfold D4K.hilbInt
   rw [cartanD4, VOA.DeligneAudit.DeligneCharacter.thetaD4, wordD4, charOne_eq]
-  simpa using charOne_coeff N
+  simpa using! charOne_coeff N
 
 theorem hilbInt_zero (N : ℕ) : D4K.hilbInt 0 N = if N = 0 then 1 else 0 := by
   by_cases h : N = 0
@@ -63,7 +63,7 @@ theorem demazureRealization_zero :
     have htop : cycDeg (trivialCurrent D4sector.f) 1 0 = ⊤ := by
       apply top_unique
       intro x _
-      simpa using Submodule.smul_mem _ x hm
+      simpa using! Submodule.smul_mem _ x hm
     simp [htop]
   · simp [h]
 

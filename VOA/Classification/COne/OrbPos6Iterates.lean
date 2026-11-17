@@ -39,14 +39,15 @@ theorem charge_smul (β γ ℓ : ℤ) :
       latticeCocycle (latP 1) β γ • latStateGen (latP 1)
         (if 0 ≤ -ℓ - 1 - (2 * β * γ) then vSchur (latP 1) β (-ℓ - 1 - (2 * β * γ)).toNat else 0)
         (β + γ) := by
-  simpa only [latP_form] using
+  simpa only [latP_form] using!
     Moonshine.LatticeTwisted.smul_echg_echg (latP 1) (latP_even 1)
       (latP_posDef 1 le_rfl) β γ ℓ
 
 theorem charge_smul_zero (β γ ℓ : ℤ) (h : -(2 * β * γ) ≤ ℓ) :
     (V2m 1 le_rfl).smul (latChargeGen (latP 1) β) ℓ
       (latChargeGen (latP 1) γ) = 0 := by
-  rw [charge_smul, if_neg (by omega), latStateGen_zero_boson, smul_zero]
+  rw [charge_smul, if_neg (by omega),
+    latStateGen_zero_boson (latP 1) ((β + γ : ℤ) : (latP 1).carrier), smul_zero]
 
 /-- The complete Δ correction on the ordinary product of any two exponential
 states, at every product index. This is a finite binomial convolution. -/

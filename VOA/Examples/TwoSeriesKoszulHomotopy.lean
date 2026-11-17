@@ -50,7 +50,7 @@ theorem uDer_mem (q : LexLetter) (i : (ℤ × ℤ) × ℂ) :
   · obtain ⟨t, m, rfl⟩ := hi
     have hsupp := (PhiU_support_of_mem L) hx
     have hx' : (uDer L) q x = ∑ μ ∈ ((PhiU L) x).support,
-        (PhiU L).symm (pderiv q (monomial μ (coeff μ ((PhiU L) x)))) := by
+        (PhiU L).symm (pderiv q (monomial μ (((PhiU L) x).coeff μ))) := by
       rw [uDer, LinearMap.comp_apply, LinearMap.comp_apply]
       conv_lhs => rw [show ((PhiU L).toLinearMap x) = (PhiU L) x from rfl, ((PhiU L) x).as_sum]
       simp only [map_sum, Derivation.coeFn_coe, LinearEquiv.coe_coe]
@@ -60,7 +60,7 @@ theorem uDer_mem (q : LexLetter) (i : (ℤ × ℤ) × ℂ) :
     by_cases hq : μ q = 0
     · rw [hq, Nat.cast_zero, mul_zero, monomial_zero, map_zero]; exact Submodule.zero_mem _
     · obtain ⟨hdeg, hen⟩ := hsupp μ hμ
-      have h := (PhiU_symm_monomial_mem L) (μ - Finsupp.single q 1) (coeff μ ((PhiU L) x) * (μ q : ℂ))
+      have h := (PhiU_symm_monomial_mem L) (μ - Finsupp.single q 1) (((PhiU L) x).coeff μ * (μ q : ℂ))
       have e : layerIndex (μ - Finsupp.single q 1).degree (enOf (μ - Finsupp.single q 1)) =
           layerIndex t m - eq q := by
         have h1 := degree_sub_single hq
@@ -88,7 +88,7 @@ theorem mDer_mem_matterB (q : LexLetter) (i : KF × ℤ) :
   unfold matterBK matterF at hx ⊢
   split_ifs at hx ⊢ with h1 h2 h3 h4 h3 h4
   · have := (mDer_mem L) q _ x hx
-    simpa [sub_eq_add_neg] using this
+    simpa [sub_eq_add_neg] using! this
   all_goals first
     | (rw [Submodule.mem_bot] at hx; rw [hx, map_zero]; exact Submodule.zero_mem _)
     | (simp only [Prod.snd_add, Prod.fst_add, add_zero] at *; contradiction)

@@ -261,7 +261,7 @@ theorem isAnalyticBlock_of_isFormalBlock (S : 𝒱 →ₗ[ℂ] FormalQSeries) (h
       rw [finsum_eq_finsetSum_of_support_subset _ hs]
       exact summable_qTerm_finset _ _ h z (fun m _ => hsum2 m)
     have hev := congrArg (fun χ : FormalQSeries => qEvalC χ h z) hlaw
-    simp only at hev
+    try simp only at hev
     rw [qEvalC_add _ _ _ hsum1 hsumfin, qEvalC_zero,
       qEvalC_finsum _ h hfin hsum2] at hev
     rw [anEval_of_mem _ _ _ hz, ← hev]
@@ -295,7 +295,7 @@ theorem isAnalyticBlock_of_isFormalBlock (S : 𝒱 →ₗ[ℂ] FormalQSeries) (h
       rw [finsum_eq_finsetSum_of_support_subset _ hs]
       exact summable_qTerm_finset _ _ h z (fun m _ => hsum2 m)
     have hev := congrArg (fun χ : FormalQSeries => qEvalC χ h z) hlaw
-    simp only at hev
+    try simp only at hev
     rw [qEvalC_add _ _ _ hsumD hsumfin, qEvalC_qDeriv (S v) h (hsub v) hz,
       qEvalC_finsum _ h hfin hsum2] at hev
     rw [anEval_of_mem _ _ _ hz, hev, anEval_deriv S h v hz]

@@ -137,8 +137,8 @@ theorem L1_E : (V2mPlus m hm).L 1 (EP m hm) = 0 := by
     rw [VertexOperatorAlgebra.L_def]; rfl
   rw [h]
   apply Subtype.ext
-  rw [V2mPlus_smul_coe, omega_coe, EP_coe, PreVertexAlgebra.smul_add_right, L1_charge,
-    L1_charge, add_zero]
+  rw [V2mPlus_smul_coe, omega_coe, EP_coe, PreVertexAlgebra.smul_add_right,
+    L1_charge m hm ((1 : ℤ) : (latP m).carrier), L1_charge m hm ((-1 : ℤ) : (latP m).carrier), add_zero]
   rfl
 
 theorem grading_one_eq_bot (hm2 : 2 ≤ m) : (V2mPlus m hm).grading 1 = ⊥ := by
@@ -391,14 +391,14 @@ theorem exists_eigen_in (μ : ℂ) {v : M} (hvP : v ∈ P)
   have hmem : ∀ j : ℕ, (f ^ j) v ∈ P := by
     intro j
     induction j with
-    | zero => simpa using hvP
+    | zero => simpa using! hvP
     | succ j ih =>
       rw [pow_succ', Module.End.mul_apply]
       change L0 A ((f ^ j) v) - μ • (f ^ j) v ∈ P
       exact P.sub_mem (mem_P_mode m hm A P _ 1 ih) (P.smul_of_tower_mem μ ih)
   have hex : ∃ j : ℕ, (f ^ (j + 1)) v = 0 := by
     rcases Nat.eq_zero_or_pos k with rfl | hk0
-    · exact absurd (by simpa using hk) hv0
+    · exact absurd (by simpa using! hk) hv0
     · exact ⟨k - 1, by rwa [Nat.sub_add_cancel hk0]⟩
   let j := Nat.find hex
   have hj : (f ^ (j + 1)) v = 0 := Nat.find_spec hex
@@ -421,7 +421,7 @@ theorem translation_zero_of_kernel_zero (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne
   have hzg : z ∈ (L0 A).maxGenEigenspace 0 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   have hzΩ : z ∈ Omega A := kernel_bottom_mem_Omega A P 0 hbP hzP hzg
   have hyL : L0 A (translation A z) = translation A z := by
     have hc := L0_commutator_weak A (V2mPlus m hm).conformal_mem z 0
@@ -468,7 +468,7 @@ theorem kernel_weightOne_eq_zero (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m)
   obtain ⟨v, hv, hv0⟩ := SetLike.not_le_iff_exists.mp hbP.1
   have hv0' : v ≠ 0 := fun h => hv0 (by rw [h]; exact Submodule.zero_mem _)
   obtain ⟨z, hzP, hz0, hzL⟩ := exists_eigen_in m hm A P 0 hv.1 hv.2 hv0'
-  have hzL' : L0 A z = 0 := by simpa using hzL
+  have hzL' : L0 A z = 0 := by simpa using! hzL
   have hT := translation_zero_of_kernel_zero m hm A P hm2 hw1 hbP hzP hzL'
   have hcyc : cyclic A z = P := by
     have hle : cyclic A z ≤ P := Submodule.span_le.mpr (Set.singleton_subset_iff.mpr hzP)
@@ -481,14 +481,14 @@ theorem kernel_weightOne_eq_zero (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m)
   have hzg : z ∈ (L0 A).maxGenEigenspace 0 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hzL'
+    simpa using! hzL'
   have hdeg := cyclic_inf_gen_eq_degreeSpan (V2mPlus_c2Cofinite m hm) A hzg 1
   have hw' : w ∈ homogeneousDegreeSpan A z 1 := by
     rw [← hdeg]
     refine ⟨?_, ?_⟩
     · change w ∈ cyclic A z
       rw [hcyc]; exact hwP
-    · simpa using hw
+    · simpa using! hw
   have hzero : homogeneousDegreeSpan A z 1 = ⊥ := by
     rw [eq_bot_iff]
     apply Submodule.span_le.mpr
@@ -679,7 +679,7 @@ theorem L1_kill (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m) (hP : IsAtom P)
   have hwg : w ∈ (L0 A).maxGenEigenspace 1 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   obtain ⟨ξ₁, ξ₂, hunit⟩ := exists_unit_combination m hm hm2 hw1
   obtain ⟨s₁, hs₁⟩ := VOA.mk_surjective (V2mPlus m hm) ξ₁
   obtain ⟨s₂, hs₂⟩ := VOA.mk_surjective (V2mPlus m hm) ξ₂
@@ -784,7 +784,7 @@ theorem eigen_one_mem_Omega (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m) (hP : Is
   have hwg : w ∈ (L0 A).maxGenEigenspace 1 := by
     apply Module.End.eigenspace_le_maxGenEigenspace
     apply Module.End.mem_eigenspace_iff.mpr
-    simpa using hL
+    simpa using! hL
   intro β v hv n hn
   by_cases hβ : β < 0
   · rw [(V2mPlus m hm).positivity β hβ, Submodule.mem_bot] at hv
@@ -800,7 +800,7 @@ theorem eigen_one_mem_Omega (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m) (hP : Is
       have : ((β - n - 1 : ℤ) : ℝ) < -1 := by exact_mod_cast (show β - n - 1 < -1 by omega)
       linarith
     have hP' := low_mem_P m hm A P hbQ hg (by linarith)
-    exact kernel_generalized_below_bottom_eq_zero A P 0 hbP hP' hg (by simpa using hre)
+    exact kernel_generalized_below_bottom_eq_zero A P 0 hbP hP' hg (by simpa using! hre)
 
 end Extension
 
@@ -808,8 +808,8 @@ end Extension
 theorem pairSplitting_vacuum_sign (hm2 : 2 ≤ m) (hw1 : OnlySignWeightOne m) :
     PairSplitting m hm (.inr 0) (.inr 1) := by
   intro M _ _ A P hP hQ hb ht
-  have hbP : FactorBottom A ⊥ P 0 := by simpa [weight] using hb
-  have hbQ : FactorBottom A P ⊤ 1 := by simpa [weight] using ht
+  have hbP : FactorBottom A ⊥ P 0 := by simpa [weight] using! hb
+  have hbQ : FactorBottom A P ⊤ 1 := by simpa [weight] using! ht
   apply (exists_cyclic_lift_iff_complement A P hQ 1 hbQ).mp
   obtain ⟨x, hx, hxP⟩ := exists_generalized_lift_of_factorBottom A P 1 hbQ
   -- an honest eigenvector lift

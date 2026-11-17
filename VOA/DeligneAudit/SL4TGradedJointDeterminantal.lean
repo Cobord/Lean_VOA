@@ -51,8 +51,12 @@ theorem det_linearColumns_mem_span {j : ℕ} (L : Fin j → V →ₗ[A] A) (T : 
     ext i c
     by_cases hc : c = b
     · subst hc
-      simp
-    · simp [Function.update_of_ne hc, Matrix.updateCol_ne hc]
+      simp only [Function.update_self]
+      exact (Matrix.updateCol_self (M := fun i c => L i (p c)) (j := c)
+        (c := fun i => L i x) (i := i)).symm
+    · simp only [Function.update_of_ne hc]
+      exact (Matrix.updateCol_ne (M := fun i c => L i (p c)) (c := fun i => L i x)
+        (i := i) hc).symm
   suffices h : ∀ s : Finset (Fin j), ∀ p : Fin j → V, (∀ b, p b ∈ Submodule.span A T) →
       (∀ b ∉ s, p b ∈ T) → Matrix.det (fun i b => L i (p b)) ∈ I from
     h Finset.univ p hp (fun b hb => absurd (Finset.mem_univ b) hb)
@@ -84,7 +88,10 @@ theorem det_linearColumns_mem_span {j : ℕ} (L : Fin j → V →ₗ[A] A) (T : 
               · rw [Function.update_of_ne hcb]
                 exact hT c (fun h => (Finset.mem_insert.mp h).elim hcb hc)
         | zero =>
-            rw [hupd p b 0, Matrix.det_eq_zero_of_column_eq_zero b (fun i => by simp)]
+            rw [hupd p b 0, Matrix.det_eq_zero_of_column_eq_zero
+              (A := Matrix.updateCol (fun i c => L i (p c)) b (fun i => L i 0)) b
+              (fun i => (Matrix.updateCol_self (M := fun i c => L i (p c)) (j := b)
+                (c := fun i => L i 0) (i := i)).trans (map_zero (L i)))]
             exact I.zero_mem
         | add x y _ _ hx hy =>
             rw [hupd p b x] at hx
@@ -93,7 +100,7 @@ theorem det_linearColumns_mem_span {j : ℕ} (L : Fin j → V →ₗ[A] A) (T : 
             have he : (fun i => L i (x + y)) = (fun i => L i x) + (fun i => L i y) := by
               ext i
               simp
-            rw [he, Matrix.det_updateCol_add]
+            rw [he, Matrix.det_updateCol_add (fun i c => L i (p c) : Matrix (Fin j) (Fin j) A)]
             exact I.add_mem hx hy
         | smul a x _ hx =>
             rw [hupd p b x] at hx
@@ -101,7 +108,7 @@ theorem det_linearColumns_mem_span {j : ℕ} (L : Fin j → V →ₗ[A] A) (T : 
             have he : (fun i => L i (a • x)) = a • (fun i => L i x) := by
               ext i
               simp
-            rw [he, Matrix.det_updateCol_smul]
+            rw [he, Matrix.det_updateCol_smul (fun i c => L i (p c) : Matrix (Fin j) (Fin j) A)]
             exact I.mul_mem_left a hx
       have h := key (p b) (hp b)
       rwa [Function.update_eq_self] at h
@@ -218,7 +225,8 @@ theorem polynomialSubmoduleTopIdeal_succ_le (U : Submodule A A[X]) (j : ℕ) (hj
     polynomialSubmoduleTopIdeal P r (j + 1) U ≤ polynomialSubmoduleTopIdeal P r j U := by
   apply Ideal.span_le.mpr
   rintro a ⟨p, rfl⟩
-  rw [Matrix.det_succ_row_zero]
+  rw [Matrix.det_succ_row_zero (fun i b : Fin (j + 1) =>
+    ((p b).val %ₘ P).coeff (r - (j + 1) + i.val) : Matrix (Fin (j + 1)) (Fin (j + 1)) A)]
   apply Ideal.sum_mem
   intro b _
   apply Ideal.mul_mem_left
@@ -226,7 +234,8 @@ theorem polynomialSubmoduleTopIdeal_succ_le (U : Submodule A A[X]) (j : ℕ) (hj
   refine ⟨fun c => p (b.succAbove c), ?_⟩
   congr 1
   ext i c
-  simp only [Matrix.submatrix_apply, Fin.val_succ]
+  change _ = ((p (b.succAbove c)).val %ₘ P).coeff (r - (j + 1) + (Fin.succ i).val)
+  simp only [Fin.val_succ]
   congr 1
   omega
 
@@ -382,7 +391,7 @@ theorem reducedTopMinor_certificate (hP : P.Monic) (hr : P.natDegree = r)
     · rw [polynomialSubmoduleTopIdeal_zero_eq_top]
       exact Submodule.mem_top
     · have h := hPh.sub (polynomialHomogeneous_X_pow (𝒜 := 𝒜) r) l
-      simpa using h
+      simpa using! h
     · rw [coeff_sub, coeff_X_pow]
       have hl' : r ≤ l := by omega
       rcases eq_or_lt_of_le hl' with he | hlt
@@ -425,7 +434,8 @@ theorem reducedTopMinor_certificate (hP : P.Monic) (hr : P.natDegree = r)
       by_cases ha : a = b0
       · subst ha
         simp
-      · simp [ha, M]
+      · rw [congrFun (Matrix.updateRow_ne ha) c]
+        simp [ha, M]
     · rw [hw l, Matrix.det_eq_zero_of_row_eq_zero b0 (fun c => ?_)]
       · exact Submodule.zero_mem _
       · rw [Matrix.updateRow_self]

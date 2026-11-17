@@ -69,7 +69,7 @@ theorem coeff_qSeriesLaurent_of_lt_one (c : ℕ → ℂ) {k : ℤ} (hk : k < 1) 
 noncomputable def qSeriesLaurentDeriv (c : ℕ → ℂ) : LaurentSeries ℂ :=
   HahnSeries.single (-2 : ℤ) (-1 : ℂ) * HahnSeries.ofPowerSeries ℤ ℂ (qSeriesUnit c) +
     HahnSeries.single (-1 : ℤ) (1 : ℂ) *
-      HahnSeries.ofPowerSeries ℤ ℂ (PowerSeries.derivative ℂ (qSeriesUnit c))
+      HahnSeries.ofPowerSeries ℤ ℂ (PowerSeries.derivative (R := ℂ) (qSeriesUnit c))
 
 /-- `[qⁿ] f′ = (n+1) c(n+1)` for `n ≥ 0`. -/
 theorem coeff_qSeriesLaurentDeriv_natCast (c : ℕ → ℂ) (n : ℕ) :
@@ -108,7 +108,7 @@ theorem coeff_neg_one_pow_mul_deriv (c : ℕ → ℂ) (j : ℕ) :
           HahnSeries.ofPowerSeries ℤ ℂ (qSeriesUnit c ^ (j + 1)) +
         HahnSeries.single (-(j : ℤ) - 1) (1 : ℂ) *
           HahnSeries.ofPowerSeries ℤ ℂ
-            (qSeriesUnit c ^ j * PowerSeries.derivative ℂ (qSeriesUnit c)) := by
+            (qSeriesUnit c ^ j * PowerSeries.derivative (R := ℂ) (qSeriesUnit c)) := by
     have h1 : (HahnSeries.single (-(j : ℤ) - 2) (-1 : ℂ) : LaurentSeries ℂ) =
         HahnSeries.single (-(j : ℤ)) (1 : ℂ) * HahnSeries.single (-2 : ℤ) (-1 : ℂ) := by
       rw [HahnSeries.single_mul_single, one_mul]
@@ -125,7 +125,7 @@ theorem coeff_neg_one_pow_mul_deriv (c : ℕ → ℂ) (j : ℕ) :
     show (-1 : ℤ) - (-(j : ℤ) - 1) = ((j : ℕ) : ℤ) by ring,
     HahnSeries.ofPowerSeries_apply_coeff, HahnSeries.ofPowerSeries_apply_coeff]
   set u := qSeriesUnit c
-  have hder := congrArg (PowerSeries.coeff j) (PowerSeries.derivative_pow ℂ u (j + 1))
+  have hder := congrArg (PowerSeries.coeff j) (PowerSeries.derivative_pow (g := u) (n := j + 1))
   rw [PowerSeries.coeff_derivative, Nat.add_sub_cancel, mul_assoc] at hder
   rw [show ((j + 1 : ℕ) : PowerSeries ℂ) = PowerSeries.C ((j + 1 : ℕ) : ℂ) by
       rw [map_natCast], PowerSeries.coeff_C_mul] at hder
@@ -133,7 +133,7 @@ theorem coeff_neg_one_pow_mul_deriv (c : ℕ → ℂ) (j : ℕ) :
     have : (0 : ℝ) < (j : ℝ) + 1 := by positivity
     exact_mod_cast this.ne'
   push_cast at hder
-  have : PowerSeries.coeff j (u ^ j * PowerSeries.derivative ℂ u) =
+  have : PowerSeries.coeff j (u ^ j * PowerSeries.derivative (R := ℂ) u) =
       PowerSeries.coeff (j + 1) (u ^ (j + 1)) := by
     apply mul_left_cancel₀ hj
     rw [← hder]
@@ -283,7 +283,8 @@ noncomputable def faberSeries (c : ℕ → ℂ) : PowerSeries ℂ[X] :=
 logarithmic-derivative form:
 `p · G′(p) = −G(p) · Σ_{m ≥ 1} F_m(X) pᵐ`, i.e. `log G(p) = −Σ_{m ≥ 1} F_m(X) pᵐ / m`. -/
 theorem faberGen_generating (c : ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative ℂ[X] (faberGen c) = -(faberGen c * faberSeries c) := by
+    PowerSeries.X * PowerSeries.derivative (R := ℂ[X]) (faberGen c) =
+      -(faberGen c * faberSeries c) := by
   refine PowerSeries.ext fun m => ?_
   rw [map_neg, PowerSeries.coeff_mul m (faberGen c) (faberSeries c),
     Finset.Nat.sum_antidiagonal_eq_sum_range_succ

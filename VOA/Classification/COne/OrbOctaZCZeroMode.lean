@@ -13,7 +13,7 @@ def q24L : Module.End ℂ (A W) := aeval (omegaL W) positivePolynomial
 theorem q24L_omega (a : A W) : q24L (omegaL W a) = 0 := by
   have h := congrArg (fun f : Module.End ℂ (A W) => f a) conformal_annihilator
   rw [candidatePolynomial, mul_comm X positivePolynomial] at h
-  simpa only [map_mul, aeval_X, Module.End.mul_apply, LinearMap.zero_apply] using h
+  simpa only [map_mul, aeval_X, Module.End.mul_apply, LinearMap.zero_apply] using! h
 
 def constantRel (r : ModeRel) : ModeRel :=
   r.map fun p => (p.1, [p.2.headD 0])
@@ -132,6 +132,6 @@ theorem q24_selfMode15 : q24L (selfMode 15) = 0 := by
       sing7_holds, map_zero, smul_zero, add_zero]
   have he := equalRelCheck_sound W (fun k => q24L (selfMode k)) zeroModeWitness_check
   rw [he] at h
-  simpa [evalRel, zp] using h
+  simpa [evalRel, zp] using! h
 
 end VOA.Classification.COne.OrbOctaZC

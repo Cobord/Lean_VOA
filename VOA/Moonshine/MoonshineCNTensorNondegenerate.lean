@@ -36,8 +36,8 @@ theorem lorentzianStateBasis_pair (d : LorentzianOscillatorMonomial)
       simp only [eGen, chForm_single, neg_neg, chSign_neg, one_mul,
         Finsupp.smul_apply, smul_eq_mul, lorentzianStateBasis,
         Module.Basis.tensorProduct_repr_tmul_apply]
-      change uWt d * (chSign lorentzianLattice α * (MvPolynomial.coeff d p * g α)) =
-        (uWt d * chSign lorentzianLattice α) * (g α * MvPolynomial.coeff d p)
+      change uWt d * (chSign lorentzianLattice α * (p.coeff d * g α)) =
+        (uWt d * chSign lorentzianLattice α) * (g α * p.coeff d)
       ring
 
 /-- The `V♮` coefficient at a fixed lattice basis vector. -/

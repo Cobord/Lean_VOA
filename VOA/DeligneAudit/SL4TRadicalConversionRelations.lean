@@ -54,12 +54,12 @@ theorem radicalConversion_lower_summand (k : ℕ)
     let N := higherRadicalCountClosure ρ w D
     have hspec : (zs.map fun i => ρ.op (F 2) i).prod w ∈
         a3CountSpan ρ w 0 0 zs.length := by
-      simpa using a3CountSpan_word ρ w 2 zs 0 0 0
+      simpa using! a3CountSpan_word ρ w 2 zs 0 0 0
         (a3CountSpan_zero ρ w)
     have hys : (ys.map fun i => ρ.op (F 1) i).prod
         ((zs.map fun i => ρ.op (F 2) i).prod w) ∈
         a3CountSpan ρ w 0 ys.length zs.length := by
-      simpa using a3CountSpan_word ρ w 1 ys 0 0 zs.length hspec
+      simpa using! a3CountSpan_word ρ w 1 ys 0 0 zs.length hspec
     have hb := a3_bWord_coeff_count ρ w 1 p.2 z.2 0 ys.length
       zs.length hys
     have ha := a3CountSpan_word ρ w 0 p.1 0
@@ -76,21 +76,21 @@ theorem radicalConversion_lower_summand (k : ℕ)
       apply radicalCountSpan_le_higher ρ w D p.1.length
         (ys.length + p.2.length) zs.length (by dsimp [D]; omega) hheight
       simpa [aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-        mul_smul] using ha
+        mul_smul] using! ha
     have hf := a3_fCurrent_pow_preserves ρ 0
       (⨆ t, ⨆ (_ : higherRadicalCounts D t), a3KeyLayer ρ w t) (k - p.2.length) z.1 hbase
     simpa [N, D, radicalConversionCounts, a3ConvA, a3ConvB,
-      a3ConvSpectator, mul_assoc, mul_smul] using hf
+      a3ConvSpectator, mul_assoc, mul_smul] using! hf
   · let D : Fin 3 → ℕ := ![zs.length, xs.length, ys.length + k]
     let N := higherRadicalCountClosure ρ w D
     have hspec : (zs.map fun i => ρ.op (F 0) i).prod w ∈
         a3CountSpan ρ w zs.length 0 0 := by
-      simpa using a3CountSpan_word ρ w 0 zs 0 0 0
+      simpa using! a3CountSpan_word ρ w 0 zs 0 0 0
         (a3CountSpan_zero ρ w)
     have hys : (ys.map fun i => ρ.op (F 2) i).prod
         ((zs.map fun i => ρ.op (F 0) i).prod w) ∈
         a3CountSpan ρ w zs.length 0 ys.length := by
-      simpa using a3CountSpan_word ρ w 2 ys zs.length 0 0 hspec
+      simpa using! a3CountSpan_word ρ w 2 ys zs.length 0 0 hspec
     have hb := a3_bWord_coeff_count ρ w 2 p.2 z.2 zs.length 0
       ys.length hys
     have ha := a3CountSpan_word ρ w 1 p.1 zs.length 0
@@ -107,11 +107,11 @@ theorem radicalConversion_lower_summand (k : ℕ)
       apply radicalCountSpan_le_higher ρ w D zs.length
         p.1.length (ys.length + p.2.length) (by dsimp [D]; omega) hheight
       simpa [aWord, a3ConvA, a3ConvB, a3ConvSpectator,
-        mul_smul] using ha
+        mul_smul] using! ha
     have hf := a3_fCurrent_pow_preserves ρ 1
       (⨆ t, ⨆ (_ : higherRadicalCounts D t), a3KeyLayer ρ w t) (k - p.2.length) z.1 hbase
     simpa [N, D, radicalConversionCounts, a3ConvA, a3ConvB,
-      a3ConvSpectator, mul_assoc, mul_smul] using hf
+      a3ConvSpectator, mul_assoc, mul_smul] using! hf
 /-- The full lower Wick term is absorbed in the merged quotient. -/
 theorem radicalConversion_lower_term (k s : ℕ)
     (j : Fin 2) (xs ys zs : List ℕ)
@@ -132,7 +132,7 @@ theorem radicalConversion_lower_term (k s : ℕ)
   let R : Module.End ℂ V :=
     (zs.map fun i => ρ.op (F (a3ConvSpectator j)) i).prod
   have hsum :
-      (∑ z ∈ Finset.antidiagonal s,
+      (∑ z ∈ Finset.HasAntidiagonal.antidiagonal s,
         (PowerSeries.coeff z.1 (fCurrent f ^ (k - p.2.length)) *
           aWord A p.1) * PowerSeries.coeff z.2 (bWord B p.2)) •
         (((ys.map B).prod * R) • w) ∈ N := by
@@ -142,11 +142,11 @@ theorem radicalConversion_lower_term (k s : ℕ)
     exact radicalConversion_lower_summand ρ w k j xs ys zs p hp hshort z
   have hscalar (z : ℂ) :
       (algebraMap ℂ (Module.End ℂ V) z) •
-        ((∑ x ∈ Finset.antidiagonal s,
+        ((∑ x ∈ Finset.HasAntidiagonal.antidiagonal s,
           (PowerSeries.coeff x.1 (fCurrent f ^ (k - p.2.length)) *
             aWord A p.1) * PowerSeries.coeff x.2 (bWord B p.2)) •
           (((ys.map B).prod * R) • w)) ∈ N := by
-    simpa using N.smul_mem z hsum
+    simpa using! N.smul_mem z hsum
   have hcast : ((-1 : Module.End ℂ V) ^ p.2.length *
       (k.descFactorial p.2.length : Module.End ℂ V)) =
       algebraMap ℂ (Module.End ℂ V)
@@ -154,7 +154,7 @@ theorem radicalConversion_lower_term (k s : ℕ)
     simp
   unfold conversionTerm
   rw [hcast]
-  simpa only [mul_smul] using
+  simpa only [mul_smul] using!
     hscalar ((-1 : ℂ) ^ p.2.length * (k.descFactorial p.2.length : ℂ))
 
 /-- The converted complete-function relation with zero preceding-letter modes. -/
@@ -182,7 +182,7 @@ theorem radicalConversion_zero_modes (a b c : ℕ)
     rw [gradedLowerModeSpan, Submodule.span_le]
     rintro v ⟨us, vs, hu, hv, hd, hs, rfl⟩
     simp at hs
-  simpa only [hz, bot_sup_eq] using ht
+  simpa only [hz, bot_sup_eq] using! ht
 
 end
 

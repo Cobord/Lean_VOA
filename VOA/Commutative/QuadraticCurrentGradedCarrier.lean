@@ -124,7 +124,8 @@ theorem conductor_mul_eq_zero_of_degree_lt (m d n : ℕ)
   have hcomponent : MvPolynomial.weightedHomogeneousComponent (fun _ => 1)
       (Finsupp.weight (fun _ => 1) e) q ≠ 0 := by
     intro h
-    have hcoeff := congrArg (MvPolynomial.coeff e) h
+    have hcoeff := congrArg (fun q : MvPolynomial (Particle m d) K => q.coeff e) h
+    beta_reduce at hcoeff
     simp [MvPolynomial.coeff_weightedHomogeneousComponent] at hcoeff
     exact he hcoeff
   have hzero := hp.weightedHomogeneousComponent_ne

@@ -366,7 +366,7 @@ theorem U_πI_eq (hB : ∀ g, S.BetaBound g) (p : S.ι) (x : S.V) :
   set w : S.V := (S.U p - S.ψp p • 1) (D.πI x) with hw
   suffices hw0 : w = 0 by
     rw [hw, LinearMap.sub_apply, sub_eq_zero] at hw0
-    simpa using hw0
+    simpa using! hw0
   have hp := S.prime p
   have hpR : (1 : ℝ) < p.1 := by exact_mod_cast hp.one_lt
   set sp := Real.sqrt p.1 with hsp_def
@@ -382,7 +382,7 @@ theorem U_πI_eq (hB : ∀ g, S.BetaBound g) (p : S.ι) (x : S.V) :
     have key : D.πI * ((S.U p - S.ψp p • 1) * D.πI) = (S.U p - S.ψp p • 1) * D.πI := by
       rw [← mul_assoc, hc.eq, mul_assoc, D.πI_idem]
     have := congrArg (fun A : Module.End ℂ S.V => A x) key
-    simpa only [Module.End.mul_apply, hw] using this
+    simpa only [Module.End.mul_apply, hw] using! this
   -- Claim A
   have hA : ∀ (m' : S.ι → ℤ) (j : ℕ),
       S.evalL S.t ((S.U p ^ j) w) (∏ q ∈ s', S.etaA q (m' q)) = 0 := by
@@ -529,7 +529,7 @@ theorem etaA_neg_mul_Pa (hB : ∀ g, S.BetaBound g) (T : Finset S.ι) (p : S.ι)
     have he : ((S.etaA p (-((0 : ℕ) : ℤ)) : S.opAlg) : Module.End ℂ S.V) =
         D.πK + S.ψp p • D.TD := by
       rw [coe_etaA]
-      simpa using D.eta_zero (S.ψp p) p.1
+      simpa using! D.eta_zero (S.ψp p) p.1
     rw [he, coe_Ea_zero, pow_zero, inv_one, one_smul, one_mul]
     split_ifs
     · rw [add_mul, D.KI', zero_add, smul_mul_assoc, D.TDI']
@@ -590,7 +590,6 @@ theorem gco_eq_zero_of_not_box (hB : ∀ g, S.BetaBound g) (hI : ∀ g, S.BetaIn
   rw [S.gco_PiS hB T g j, hI _ (fun p => -(j p : ℤ)) ?_, mul_zero]
   obtain ⟨p, hp⟩ := hj
   refine ⟨p, ?_⟩
-  simp only
   omega
 
 /-! ## Step 3: the box hypothesis kills `G`, hence `A` -/

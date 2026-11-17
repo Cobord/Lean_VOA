@@ -19,7 +19,7 @@ theorem boundedShiftLists_finite (m T : ℕ) : (boundedShiftLists m T).Finite :=
   let v : List (Fin m) := l.attach.map (fun x => ⟨x.val,(hl.2.2 x.val x.property).2⟩)
   refine ⟨v,?_,?_⟩
   · change v.length ≤ T
-    simpa only [v,List.length_map,List.length_attach] using hl.1
+    simpa only [v,List.length_map,List.length_attach] using! hl.1
   · change v.map Fin.val=l
     simp only [v,List.map_map,Function.comp_def]
     exact List.attach_map_subtype_val l
@@ -32,9 +32,9 @@ theorem prune_zero_sum (l : List ℕ) : (l.filter (· ≠ 0)).sum=l.sum := by
       by_cases hk : k=0
       · subst k
         simpa only [List.filter_cons,ne_eq,not_true_eq_false,decide_false,
-          Bool.false_eq_true,if_false,List.sum_cons,zero_add] using ih
+          Bool.false_eq_true,if_false,List.sum_cons,zero_add] using! ih
       · simpa only [List.filter_cons,ne_eq,hk,not_false_eq_true,decide_true,if_true,
-          List.sum_cons] using congrArg (fun n => k+n) ih
+          List.sum_cons] using! congrArg (fun n => k+n) ih
 
 /-- Every surviving pruned original seed word belongs to the finite index set. -/
 theorem pruned_shift_mem_bounded (m T : ℕ) (j : AllM.SeedIndex m) (l : List ℕ)
@@ -45,7 +45,7 @@ theorem pruned_shift_mem_bounded (m T : ℕ) (j : AllM.SeedIndex m) (l : List �
     exact hsum
   · intro k hk
     have hmem := (List.mem_filter.mp hk).1
-    have hk0 : k ≠ 0 := by simpa using (List.mem_filter.mp hk).2
+    have hk0 : k ≠ 0 := by simpa using! (List.mem_filter.mp hk).2
     exact ⟨Nat.one_le_iff_ne_zero.mpr hk0,shiftWord_seed_modes_lt m j l hne k hmem⟩
 
 /-- A surviving whole shift row is a scalar multiple of an explicitly bounded row. -/

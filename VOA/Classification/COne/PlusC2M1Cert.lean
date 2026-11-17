@@ -135,14 +135,14 @@ theorem T_mem_O₂ (b : List ℕ) (hb : Even b.length) :
   refine ⟨(M1P m hm).smul (mkW m hm b hb) (-2) (M1P m hm).vacuum,
     smul_le_neg_two_mem_O₂ _ _ _ le_rfl, ?_⟩
   have := M1P_smul_poly m hm (hasPoly_mkW m hm b hb) (hasPoly_vacuum m hm) 0 (by decide) (-2)
-  simpa using this
+  simpa using! this
 
 theorem L3_mem_O₂ (b : List ℕ) (hb : Even b.length) :
     ∃ x ∈ O₂ (M1P m hm), HasPoly m hm x (polyAct omR 1 (wWt b) [(1, b)]) := by
   refine ⟨(M1P m hm).smul (ωM m hm) (-2) (mkW m hm b hb),
     smul_le_neg_two_mem_O₂ _ _ _ le_rfl, ?_⟩
   have := M1P_smul_poly m hm (hasPoly_omega m hm) (hasPoly_mkW m hm b hb) (wWt b) (by simp) (-2)
-  simpa using this
+  simpa using! this
 
 /-- The `O₂` certificate format: `Σ cᵢ T(bᵢ) + Σ dⱼ L(−3)(b'ⱼ)`. -/
 def o2cert (Tl Ll : List (ℚ × List ℕ)) : List (ℚ × RawPoly ℕ) :=
@@ -189,7 +189,7 @@ theorem hasPoly_omIter {y : (m1Sub m hm).carrier} {P : RawPoly ℕ} (w : ℕ) (h
     refine hasPoly_normR m hm ?_
     have := M1P_smul_poly m hm (hasPoly_omega m hm)
       (hasPoly_omIter w hy k fun j hj => hk j (by omega)) (w + 2 * k) (hk k (by omega)) (-1)
-    simpa using this
+    simpa using! this
 
 theorem mk₂_omIter (y : (m1Sub m hm).carrier) (k : ℕ) :
     mk₂ (M1P m hm) ((fun x => (M1P m hm).smul (ωM m hm) (-1) x)^[k] y) =

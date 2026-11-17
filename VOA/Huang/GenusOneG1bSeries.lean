@@ -30,7 +30,7 @@ def SumAt (F : PowerSeries ℂ) (x : ℂ) : Prop :=
 theorem SumAt.add {F G : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (hG : SumAt G x) :
     SumAt (F + G) x := by
   unfold SumAt at *
-  simpa only [map_add, add_mul] using hF.add hG
+  simpa only [map_add, add_mul] using! hF.add hG
 
 theorem evS_add {F G : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (hG : SumAt G x) :
     evS (F + G) x = evS F x + evS G x := by
@@ -41,7 +41,7 @@ theorem evS_add {F G : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (hG : SumAt G
 theorem SumAt.smul {F : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (c : ℂ) :
     SumAt (c • F) x := by
   unfold SumAt at *
-  simpa only [PowerSeries.coeff_smul, smul_eq_mul, mul_assoc] using hF.mul_left c
+  simpa only [PowerSeries.coeff_smul, smul_eq_mul, mul_assoc] using! hF.mul_left c
 
 theorem evS_smul (F : PowerSeries ℂ) (x c : ℂ) : evS (c • F) x = c * evS F x := by
   unfold evS
@@ -78,7 +78,7 @@ theorem SumAt.X_pow_mul {F : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (s : �
     SumAt (PowerSeries.X ^ s * F) x := by
   unfold SumAt at *
   rw [← summable_nat_add_iff s]
-  simpa only [shift_fun] using hF.mul_left (x ^ s)
+  simpa only [shift_fun] using! hF.mul_left (x ^ s)
 
 theorem evS_X_pow_mul {F : PowerSeries ℂ} {x : ℂ} (hF : SumAt F x) (s : ℕ) :
     evS (PowerSeries.X ^ s * F) x = x ^ s * evS F x := by
@@ -227,7 +227,7 @@ def NormLe (r : ℝ) (F : PowerSeries ℂ) (A : ℝ) : Prop :=
   ∀ N, ∑ i ∈ Finset.range N, ‖PowerSeries.coeff i F‖ * r ^ i ≤ A
 
 theorem NormLe.nonneg {r A : ℝ} {F : PowerSeries ℂ} (h : NormLe r F A) : 0 ≤ A := by
-  simpa using h 0
+  simpa using! h 0
 
 theorem NormLe.mono {r A B : ℝ} {F : PowerSeries ℂ} (h : NormLe r F A) (hAB : A ≤ B) :
     NormLe r F B := fun N => (h N).trans hAB
@@ -273,38 +273,38 @@ theorem NormLe.mul {r A B : ℝ} {F G : PowerSeries ℂ} (hr : 0 ≤ r) (hF : No
   set f : ℕ → ℝ := fun i => ‖PowerSeries.coeff i F‖ * r ^ i
   set g : ℕ → ℝ := fun i => ‖PowerSeries.coeff i G‖ * r ^ i
   have hf : Summable fun i => ‖f i‖ := by
-    simpa [f, Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ _)] using hF.summable hr
+    simpa [f, Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ _)] using! hF.summable hr
   have hg : Summable fun i => ‖g i‖ := by
-    simpa [g, Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ _)] using hG.summable hr
+    simpa [g, Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ _)] using! hG.summable hr
   have hfg := summable_norm_sum_mul_antidiagonal_of_summable_norm hf hg
   have htsum := tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm hf hg
   have hterm : ∀ n, ‖PowerSeries.coeff n (F * G)‖ * r ^ n ≤
-      ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2 := by
+      ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, f kl.1 * g kl.2 := by
     intro n
     rw [PowerSeries.coeff_mul]
-    calc ‖∑ kl ∈ Finset.antidiagonal n, PowerSeries.coeff kl.1 F * PowerSeries.coeff kl.2 G‖ *
+    calc ‖∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, PowerSeries.coeff kl.1 F * PowerSeries.coeff kl.2 G‖ *
           r ^ n
-        ≤ (∑ kl ∈ Finset.antidiagonal n,
+        ≤ (∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n,
             ‖PowerSeries.coeff kl.1 F‖ * ‖PowerSeries.coeff kl.2 G‖) * r ^ n := by
           refine mul_le_mul_of_nonneg_right ?_ (by positivity)
           refine (norm_sum_le _ _).trans (le_of_eq ?_)
           simp only [norm_mul]
-      _ = ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2 := by
+      _ = ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, f kl.1 * g kl.2 := by
           rw [Finset.sum_mul]
           refine Finset.sum_congr rfl fun kl hkl => ?_
-          rw [Finset.mem_antidiagonal] at hkl
+          rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
           simp only [f, g]
           rw [← hkl, pow_add]; ring
   intro N
-  have hnn : ∀ n, 0 ≤ ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2 :=
+  have hnn : ∀ n, 0 ≤ ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, f kl.1 * g kl.2 :=
     fun n => Finset.sum_nonneg fun kl _ => by simp only [f, g]; positivity
-  have hfg' : Summable fun n => ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2 := by
+  have hfg' : Summable fun n => ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, f kl.1 * g kl.2 := by
     refine hfg.congr fun n => ?_
     exact Real.norm_of_nonneg (hnn n)
   calc ∑ i ∈ Finset.range N, ‖PowerSeries.coeff i (F * G)‖ * r ^ i
-      ≤ ∑ i ∈ Finset.range N, ∑ kl ∈ Finset.antidiagonal i, f kl.1 * g kl.2 :=
+      ≤ ∑ i ∈ Finset.range N, ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal i, f kl.1 * g kl.2 :=
         Finset.sum_le_sum fun i _ => hterm i
-    _ ≤ ∑' n, ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2 :=
+    _ ≤ ∑' n, ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, f kl.1 * g kl.2 :=
         hfg'.sum_le_tsum _ fun n _ => hnn n
     _ = (∑' n, f n) * ∑' n, g n := htsum.symm
     _ ≤ A * B := mul_le_mul (hF.tsum_le hr) (hG.tsum_le hr)

@@ -32,7 +32,7 @@ open PowerSeries
 
 /-- The Euler-operator coefficient, for the `Derivation` form of the derivative. -/
 theorem coeff_X_mul_derivative (f : PowerSeries ℂ) (k : ℕ) :
-    coeff k (X * derivative ℂ f) = (k : ℂ) * coeff k f :=
+    coeff k (X * derivative (R := ℂ) f) = (k : ℂ) * coeff k f :=
   coeff_X_mul_derivativeFun f k
 
 /-! ## ODE uniqueness for `(1+X)F′ = cF` -/
@@ -41,11 +41,11 @@ theorem coeff_X_mul_derivative (f : PowerSeries ℂ) (k : ℕ) :
 constant term agree.  Coefficientwise the ODE is `(r+1)F_{r+1} + rF_r = cF_r`, which determines
 `F_{r+1}` from `F_r`. -/
 theorem onePlusX_ode_unique (c : ℂ) (F G : PowerSeries ℂ)
-    (hF : (1 + X) * derivative ℂ F = c • F)
-    (hG : (1 + X) * derivative ℂ G = c • G)
+    (hF : (1 + X) * derivative (R := ℂ) F = c • F)
+    (hG : (1 + X) * derivative (R := ℂ) G = c • G)
     (h0 : constantCoeff F = constantCoeff G) : F = G := by
   set H := F - G with hHdef
-  have hH : (1 + X) * derivative ℂ H = c • H := by
+  have hH : (1 + X) * derivative (R := ℂ) H = c • H := by
     rw [hHdef, map_sub, mul_sub, hF, hG, smul_sub]
   have hcoeff : ∀ n : ℕ, coeff n H = 0 := by
     intro n
@@ -90,7 +90,7 @@ theorem cbz_succ_absorb (n : ℤ) (r : ℕ) :
 
 /-- The binomial series solves the ODE `(1+X)F′ = nF`. -/
 theorem binomSeries_ode (n : ℤ) :
-    (1 + X) * derivative ℂ (binomSeries n) = (n : ℂ) • binomSeries n := by
+    (1 + X) * derivative (R := ℂ) (binomSeries n) = (n : ℂ) • binomSeries n := by
   refine PowerSeries.ext (fun r => ?_)
   rw [add_mul, one_mul, map_add, coeff_derivative, coeff_X_mul_derivative, map_smul,
     coeff_binomSeries, coeff_binomSeries, smul_eq_mul]
@@ -112,12 +112,13 @@ theorem constantCoeff_binomSeries (n : ℤ) : constantCoeff (binomSeries n) = 1 
   simp
 
 /-- `(1+X)` solves the ODE with `c = 1`. -/
-theorem onePlusX_ode : (1 + X : PowerSeries ℂ) * derivative ℂ (1 + X) = 1 + X := by
+theorem onePlusX_ode : (1 + X : PowerSeries ℂ) * derivative (R := ℂ) (1 + X) = 1 + X := by
   rw [map_add, Derivation.map_one_eq_zero, derivative_X, zero_add, mul_one]
 
 /-- `(1+X)^n` for a natural `n` solves the ODE with `c = n`. -/
 theorem onePlusX_pow_ode (n : ℕ) :
-    (1 + X : PowerSeries ℂ) * derivative ℂ ((1 + X) ^ n) = (n : ℂ) • (1 + X) ^ n := by
+    (1 + X : PowerSeries ℂ) * derivative (R := ℂ) ((1 + X) ^ n)
+      = (n : ℂ) • (1 + X) ^ n := by
   induction n with
   | zero => simp
   | succ m ih =>
@@ -155,8 +156,8 @@ theorem constantCoeff_subst_of_constantCoeff_eq_zero {g : PowerSeries ℂ}
 noncomputable def expLog (c : ℂ) : PowerSeries ℂ := (exp ℂ).subst (c • log ℂ)
 
 /-- `Φ_c` solves `(1+X)F′ = cF`. -/
-theorem expLog_ode (c : ℂ) : (1 + X) * derivative ℂ (expLog c) = c • expLog c := by
-  rw [expLog, derivative_subst ℂ (hasSubst_smul_log c), derivative_exp, Derivation.map_smul,
+theorem expLog_ode (c : ℂ) : (1 + X) * derivative (R := ℂ) (expLog c) = c • expLog c := by
+  rw [expLog, derivative_subst (hg := hasSubst_smul_log c), derivative_exp, Derivation.map_smul,
     derivative_log_eq_geoAltSeries, mul_smul_comm, mul_smul_comm, ← mul_assoc,
     mul_comm (1 + X : PowerSeries ℂ), mul_assoc, onePlusX_mul_geoAltSeries, mul_one]
 
@@ -166,8 +167,9 @@ theorem constantCoeff_expLog (c : ℂ) : constantCoeff (expLog c) = 1 := by
 
 /-- The product of two ODE solutions solves the ODE with the summed constant. -/
 theorem onePlusX_ode_mul {a b : ℂ} {F G : PowerSeries ℂ}
-    (hF : (1 + X) * derivative ℂ F = a • F) (hG : (1 + X) * derivative ℂ G = b • G) :
-    (1 + X) * derivative ℂ (F * G) = (a + b) • (F * G) := by
+    (hF : (1 + X) * derivative (R := ℂ) F = a • F)
+    (hG : (1 + X) * derivative (R := ℂ) G = b • G) :
+    (1 + X) * derivative (R := ℂ) (F * G) = (a + b) • (F * G) := by
   rw [smul_eq_C_mul] at hF hG ⊢
   rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul, map_add]
   linear_combination G * hF + F * hG
@@ -214,7 +216,7 @@ This is `subst_expMinusOne_uSeries` (`u(e^z−1) = B(z)`) read backwards through
 theorem uSeries_eq_bernoulli_subst_log :
     uSeries = (bernoulliPowerSeries ℂ).subst (log ℂ) := by
   have h := congrArg (fun f : PowerSeries ℂ => f.subst (log ℂ)) subst_expMinusOne_uSeries
-  simp only at h
+  try simp only at h
   rw [subst_comp_subst_apply hasSubst_expMinusOne hasSubst_log, expMinusOne_subst_log,
     subst_X_self] at h
   exact h
@@ -333,7 +335,7 @@ theorem finsum_odd_pow_mul_sqBracketCoeff {k : ℕ} (hk : 1 ≤ k) (d : ℤ) (r 
     ← sum_pow_div_factorial_mul_sqBracketCoeff hk (-d) r, ← Finset.sum_sub_distrib,
     ← sum_range_odd_eq_finsum
       (fun n => (2 * (d : ℂ) ^ n / (n.factorial : ℂ)) * sqBracketCoeff k n r) r
-      (fun n hn => by dsimp only; rw [sqBracketCoeff_eq_zero_of_lt k hn, mul_zero])]
+      (fun n hn => by (try dsimp only); rw [sqBracketCoeff_eq_zero_of_lt k hn, mul_zero])]
   refine Finset.sum_congr rfl (fun n _ => ?_)
   by_cases hodd : Odd n
   · rw [if_pos hodd]
@@ -412,7 +414,8 @@ theorem sqBracketCoeffZ_neg_one_eq {k : ℕ} (hk : 1 ≤ k) (r : ℕ) :
   rw [Finset.sum_congr rfl (fun n _ => hterm n), Finset.sum_add_distrib,
     Finset.sum_ite_eq' (Finset.range (r + 1)) 0, if_pos (Finset.mem_range.mpr (Nat.succ_pos r)),
     sum_range_odd_eq_finsum (fun n => -(zhuG (n / 2 + 1) 0 * sqBracketCoeff k n r)) r
-      (fun n hn => by dsimp only; rw [sqBracketCoeff_eq_zero_of_lt k hn, mul_zero, neg_zero])]
+      (fun n hn => by
+        (try dsimp only); rw [sqBracketCoeff_eq_zero_of_lt k hn, mul_zero, neg_zero])]
   simp only [show ∀ m : ℕ, (2 * m + 1) / 2 = m from fun m => by omega]
   rw [finsum_neg_distrib, show ((k - 1 : ℕ) : ℤ) = (k : ℤ) - 1 from by omega]
   push_cast

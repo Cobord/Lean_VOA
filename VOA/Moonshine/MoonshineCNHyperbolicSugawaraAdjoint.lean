@@ -15,6 +15,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open MvPolynomial
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 theorem hypForm_sugawara_negative_adjoint (κ ell : ℂ) (j : ℕ) (p q : hypFock) :
     hypForm (hypSugawara κ ell (-(j + 1 : ℤ)) p) q =
       hypForm p (hypSugawara κ ell (j + 1 : ℤ) q) := by

@@ -101,7 +101,7 @@ theorem coeff_lamb (n m : ℕ) (hm : m ≤ n) : coeff m (lamb n) = coeff m (sigS
     · intro i hi
       simp only [Finset.mem_filter, Finset.mem_range] at hi
       exact Nat.mem_divisors.mpr ⟨hi.2, hm0.ne'⟩
-    · intro i _ j _ h; dsimp only at h; omega
+    · intro i _ j _ h; omega
     · intro d hd
       have hd' := Nat.mem_divisors.mp hd
       have hdpos : 0 < d := Nat.pos_of_dvd_of_pos hd'.1 hm0
@@ -110,7 +110,7 @@ theorem coeff_lamb (n m : ℕ) (hm : m ≤ n) : coeff m (lamb n) = coeff m (sigS
       · simp only [Finset.mem_filter, Finset.mem_range]
         refine ⟨by omega, ?_⟩
         rw [Nat.sub_add_cancel hdpos]; exact hd'.1
-      · dsimp only; omega
+      · omega
     · intro i _; push_cast; ring
 
 /-- **The logarithmic derivative of the Euler product**: `θP = -P·∑σ₁(n)qⁿ`. -/
@@ -123,7 +123,7 @@ theorem eulerOp_euler : eulerOp (euler : PowerSeries ℚ) = -((euler : PowerSeri
   rw [h1, eulerOp_qFactorial, map_neg, map_neg, coeff_mul, coeff_mul]
   congr 1
   refine Finset.sum_congr rfl fun p hp => ?_
-  have hp' := Finset.mem_antidiagonal.mp hp
+  have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
   rw [coeff_euler p.1 d (by omega), coeff_lamb d p.2 (by omega)]
 
 /-! ## The ODE for `G = θE₄ · P⁻¹⁰` -/
@@ -230,7 +230,7 @@ theorem g_ode (hR : RamanujanIdentities) :
   have hx : X * (288 * eulerOp (eulerOp gser) + 288 * eulerOp gser - 70 * (E4s - 1) * gser +
       48 * (1 - E2s) * eulerOp gser + 28 * (1 - E2s) * gser) = X * 0 := by
     rw [mul_zero]; linear_combination h
-  exact X_pow_mul_cancel 1 (by simpa using hx)
+  exact X_pow_mul_cancel 1 (by simpa using! hx)
 
 theorem coeff_sigS_mul (k : ℕ) (f : PowerSeries ℚ) (N : ℕ) :
     coeff N (sigS k * f) = ∑ r ∈ Finset.range N, (sigmaK k (r + 1) : ℚ) * coeff (N - (r + 1)) f := by
@@ -262,7 +262,6 @@ theorem d4E4Target_isAKSolution (hR : RamanujanIdentities) :
   constructor
   · rw [d4E4Target, gser, coeff_mk, Gser, coeff_mul, Finset.Nat.antidiagonal_succ]
     simp [constantCoeff_Qinv, E4s, sigS]
-    rw [coeff_ofNat_mul]
     simp [sigmaK]
   · intro N hN
     have h := congrArg (coeff N) (g_ode hR)
@@ -295,7 +294,7 @@ theorem d4E4Target_isAKSolution (hR : RamanujanIdentities) :
 /-- The D₄ target equals the normalized AK solution at `h∨ = 6`. -/
 theorem d4E4Target_eq_mldeCoeff (hR : RamanujanIdentities) (N : ℕ) :
     d4E4Target N = mldeCoeff 6 N := by
-  simpa using DeligneMLDE.eq_mldeCoeff_of_isAKSolution (d4E4Target_isAKSolution hR) N
+  simpa using! DeligneMLDE.eq_mldeCoeff_of_isAKSolution (d4E4Target_isAKSolution hR) N
 
 /-- **Named input**: the D₄ Schur index `½ CT_x Θ(x) M` equals `q^{-7/12}E₄′/(240η¹⁰)`.
 Proved: `D4Wp.d4SchurEqE4` (`DeligneCharacterD4Wp12.lean`). -/

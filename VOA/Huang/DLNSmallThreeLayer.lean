@@ -76,10 +76,10 @@ theorem lowerRoot_three_mul_mem_levelOne (w : ZMod (3 ^ (k + 1))) :
   ext i j; fin_cases i <;> fin_cases j <;> simp [lowerRoot]
 
 theorem x3_mem_levelOne : x3 k ∈ levelOne k := by
-  simpa using upperRoot_three_mul_mem_levelOne (k := k) 1
+  simpa using! upperRoot_three_mul_mem_levelOne (k := k) 1
 
 theorem y3_mem_levelOne : y3 k ∈ levelOne k := by
-  simpa using lowerRoot_three_mul_mem_levelOne (k := k) 1
+  simpa using! lowerRoot_three_mul_mem_levelOne (k := k) 1
 
 theorem t4_mem_levelOne : t4 k ∈ levelOne k := by
   rw [mem_levelOne_iff]
@@ -103,10 +103,10 @@ theorem lowerRoot_pow_mul_mem_layerN (w : ZMod (3 ^ (k + 1))) :
   ext i j; fin_cases i <;> fin_cases j <;> simp [lowerRoot]
 
 theorem nE_mem_layerN : nE k ∈ layerN k := by
-  simpa using upperRoot_pow_mul_mem_layerN (k := k) 1
+  simpa using! upperRoot_pow_mul_mem_layerN (k := k) 1
 
 theorem nF_mem_layerN : nF k ∈ layerN k := by
-  simpa using lowerRoot_pow_mul_mem_layerN (k := k) 1
+  simpa using! lowerRoot_pow_mul_mem_layerN (k := k) 1
 
 theorem nH_mem_layerN (hk : 1 ≤ k) : nH k ∈ layerN k := by
   rw [mem_layerN_iff]

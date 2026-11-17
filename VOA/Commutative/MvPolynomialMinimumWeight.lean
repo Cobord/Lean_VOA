@@ -109,7 +109,7 @@ theorem eq_zero_of_isWeightedHomogeneous_of_mem_minimumWeightIdeal
     (hmem : p ∈ minimumWeightIdeal w n) (hmn : m < n) : p = 0 := by
   apply MvPolynomial.ext
   intro d
-  by_cases hd : MvPolynomial.coeff d p = 0
+  by_cases hd : p.coeff d = 0
   · exact hd
   · have hweight := hp hd
     have hmin := hmem d (MvPolynomial.mem_support_iff.mpr hd)

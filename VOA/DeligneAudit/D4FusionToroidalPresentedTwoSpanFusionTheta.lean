@@ -14,15 +14,15 @@ theorem twoGen_one_theta_fusion :
     rw [(ρPTE 2).high_zero D4sector.c₀ 1 2 (by omega)]
     rfl
   have h := two_garland_one_zero 2 (by omega)
-  simpa [Psym_one, Finset.antidiagonal, twoCurrent, twoGen, hz,
-    (ρPTE 2).high_zero D4sector.c₀ 0 2 (by omega)] using h
+  simpa [Psym_one, Finset.HasAntidiagonal.antidiagonal, twoCurrent, twoGen, hz,
+    (ρPTE 2).high_zero D4sector.c₀ 0 2 (by omega)] using! h
 
 theorem twoGen_zero_theta_fusion_mem :
     twoCurrent.op D4sector.c₀ 1 (twoGen 0) ∈ twoM 1 := by
   have hp :
       (ρPTE 2).op D4sector.c₀ 0 0 (twoGen 1) +
         (ρPTE 2).op D4sector.c₀ 0 1 (twoGen 0) = 0 := by
-    simpa [Psym_one, Finset.antidiagonal, twoGen] using
+    simpa [Psym_one, Finset.HasAntidiagonal.antidiagonal, twoGen] using!
       two_garland_one_zero 1 (by omega)
   have hleft : (ρPTE 2).op D4sector.c₀ 0 0 (twoGen 1) ∈ twoM 1 :=
     twoM_op_zero 1 D4sector.c₀ 0 (twoM_word 1 [] rfl)
@@ -30,7 +30,7 @@ theorem twoGen_zero_theta_fusion_mem :
     have heq := eq_neg_of_add_eq_zero_right hp
     rw [heq]
     exact Submodule.neg_mem _ hleft
-  simpa [twoCurrent] using hright
+  simpa [twoCurrent] using! hright
 
 theorem twoOne_theta_fusion :
     twoOneCurrent.op D4sector.c₀ 1 twoOneGen = 0 := by

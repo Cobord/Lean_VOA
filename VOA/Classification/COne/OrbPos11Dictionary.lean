@@ -25,7 +25,7 @@ theorem sectorRealization_of_twisted
     SectorRealization G X := by
   by_cases hg : g = 1
   · subst g
-    have hn : N = 1 := by simpa using ho.symm
+    have hn : N = 1 := by simpa using! ho.symm
     clear ho
     subst N
     refine Or.inl ⟨X.carrier, inferInstance, inferInstance,
@@ -38,7 +38,7 @@ theorem sectorRealization_of_twisted
     rw [mode_restrictedFields] at he
     change e.toLinearEquiv (mode (X.isMod.YM v) k x) =
       mode ((identityTwistedOrdinary T).YM v.1) k (e.toLinearEquiv x)
-    simpa only [identityTwistedOrdinary_mode, Nat.cast_one, one_mul] using he
+    simpa only [identityTwistedOrdinary_mode, Nat.cast_one, one_mul] using! he
   · refine Or.inr ⟨g, N, hN, ho, ?_, X.carrier, inferInstance, inferInstance, T, hi, ⟨e⟩⟩
     intro h
     exact hg (Subtype.ext h)

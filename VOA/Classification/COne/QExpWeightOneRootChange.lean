@@ -20,10 +20,10 @@ theorem weightOne_root_index_zero_iff {N : ℕ} {ζ ξ : ℂ}
   constructor
   · intro h
     by_contra h'
-    exact hξ.pow_ne_one_of_pos_of_lt h' b'.isLt (by simpa [h] using hb.symm)
+    exact hξ.pow_ne_one_of_pos_of_lt h' b'.isLt (by simpa [h] using! hb.symm)
   · intro h
     by_contra h'
-    exact hζ.pow_ne_one_of_pos_of_lt h' b.isLt (by simpa [h] using hb)
+    exact hζ.pow_ne_one_of_pos_of_lt h' b.isLt (by simpa [h] using! hb)
 
 theorem weightOneScale_rootChange {N : ℕ} {ζ ξ : ℂ}
     (hζ : IsPrimitiveRoot ζ N) (hξ : IsPrimitiveRoot ξ N) (a b b' : Fin N)

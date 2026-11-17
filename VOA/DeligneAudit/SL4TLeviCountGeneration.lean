@@ -21,7 +21,7 @@ theorem secondLevi_radicalWord_mem_count (φ : B) (l : List (Fin 8 × ℕ))
     induction l with
     | nil =>
       exact ⟨a2WordKey [], by
-        simpa [wordOp, radicalWord] using radicalWord_mem_own_key Q (β φ) []⟩
+        simpa [wordOp, radicalWord] using! radicalWord_mem_own_key Q (β φ) []⟩
     | cons x l ih =>
       simp only [List.forall_cons] at hl
       obtain ⟨k, hk⟩ := ih hl.2

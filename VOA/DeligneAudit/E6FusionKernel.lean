@@ -573,11 +573,14 @@ theorem e6_raisTheta (e : Fin 78) (he : E6sector.raising e) (c : Fin 78)
   · exact Or.inl h
   · exact Or.inr ⟨(fusion_iff c).mpr h1, h2⟩
 
-theorem e6_cartTheta (h : Fin 78) (hh : E6sector.cartan h) (c : Fin 78) :
+theorem e6_cartTheta (h : Fin 78) (hh : E6sector.cartan h) (c : Fin E6sector.n) :
     E6sector.f h E6sector.c₀ c = if c = E6sector.c₀ then -(E6sector.thetaH h : ℂ) else 0 := by
-  show ((fZ brK h 77 c : ℤ) : ℂ) = if c = 77 then -((thetaH h : ℕ) : ℂ) else 0
-  rw [e6_cartThetaZ h c hh]
-  split_ifs <;> simp
+  have key : ∀ c' : Fin 78,
+      ((fZ brK h 77 c' : ℤ) : ℂ) = if c' = 77 then -((thetaH h : ℕ) : ℂ) else 0 := by
+    intro c'
+    rw [e6_cartThetaZ h c' hh]
+    split_ifs <;> simp
+  exact key c
 
 theorem e6_lowComm (x : Fin 78) (hx : E6sector.fusion x ∨ E6sector.lowering x) (c : Fin 78) :
     E6sector.f x E6sector.c₀ c = 0 := by

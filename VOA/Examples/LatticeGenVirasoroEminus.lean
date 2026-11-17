@@ -175,7 +175,7 @@ theorem LvirN_comm_EminusVec (β : L.carrier) :
             = ∑ m ∈ Finset.range (n + 1),
               ((m : ℂ) + 1) • ((fun i : ℕ => chargeOsc L β (-((i : ℤ) + 1)) * EminusVec L β ((n + 1) - i)) (m + 1))
           from Finset.sum_congr rfl fun m _ => by
-            simp only []
+            (try simp only [])
             rw [show (((m : ℤ) + 1) + 1 : ℤ) = ((m + 1 : ℕ) : ℤ) + 1 from by push_cast; ring],
         combinePQGen L n (fun i : ℕ => chargeOsc L β (-((i : ℤ) + 1)) * EminusVec L β ((n + 1) - i)),
         ← Finset.mul_sum, ← hR₀]

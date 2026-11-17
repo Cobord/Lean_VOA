@@ -45,7 +45,7 @@ set_option synthInstance.maxHeartbeats 200000
 theorem eq_zero_of_isWeightedHomogeneous_neg {F : MvPolynomial ℕ ℂ} {D : ℤ} (hD : D < 0)
     (hF : IsWeightedHomogeneous modeWeightZ F D) : F = 0 := by
   ext α
-  rw [coeff_zero]
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
   by_contra hne
   have := hF hne
   have := weight_modeWeightZ_nonneg α
@@ -179,7 +179,7 @@ theorem finrank_le_of_heisenberg (D : CyclicDual ρ hz hpos Mdeg r)
   have hcharge : ∀ v, σ hz (y v) = (2 * (r : ℂ)) • y v := by
     intro v
     have := charge_contract_π D (hinv v) 1
-    simpa only [map_one, LinearMap.comp_id] using this
+    simpa only [map_one, LinearMap.comp_id] using! this
   refine finrank_le_gapTwoCoefficient_of_dual N r Ψ ?_ ?_
   · rw [← LinearMap.ker_eq_bot, eq_bot_iff]
     intro v hv
@@ -237,10 +237,10 @@ def heisenbergSeparation_of_fock (Φ : FockCoordinates σ hz hpos Bdeg r)
     apply Φ.inj E b hb hc
     have hdeg := Φ.degree E b hb hc
     ext α
-    rw [coeff_zero]
+    simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
     by_cases hα : Finsupp.weight modeWeightZ α = E - (r : ℤ) * r
     · have h1 := hβ (monomial α 1) (isWeightedHomogeneous_monomial _ _ _ hα)
-      change coeff 0 (Φ.φ (πB (monomial α 1) b)) = 0 at h1
+      change (Φ.φ (πB (monomial α 1) b)).coeff 0 = 0 at h1
       rw [← constantCoeff_eq, hφ, constantCoeff_oscD, modePairing_monomial] at h1
       exact (mul_eq_zero.mp h1).resolve_right (pairConst_ne_zero α)
     · by_contra hne
@@ -308,7 +308,7 @@ abbrev BCartanAlg : Subalgebra ℂ (Module.End ℂ BSpace) :=
 instance bCartanAlg_isMulCommutative : IsMulCommutative BCartanAlg :=
   Algebra.isMulCommutative_adjoin ℂ (by
     rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
-    exact (bHPos_commute i j).eq)
+    exact fun _ => bHPos_commute i j)
 
 open scoped IsMulCommutative
 
@@ -371,8 +371,7 @@ theorem bMode_mem_bWeight (k : Fin 3 × ℕ) {E : ℤ} {b : BSpace} (hb : b ∈ 
     bMode k b ∈ bWeight (E - k.2) := by
   have h := BSVA.grading_mode _ (bAction.current_weight k.1) b hb (k.2 : ℤ)
   unfold bWeight
-  convert h using 2
-  push_cast; ring
+  convert h using 2 <;> first | (push_cast; ring; done) | rfl
 
 /-- Intrinsic level-one input (proved: `LevelOneHeis.levelOneBottomDetected`,
 `LevelOneHeisBottom.lean`): **the charge-`r` bottom space is detected by one functional** —
@@ -410,7 +409,7 @@ theorem levelOneHeisenbergSeparation_of_singular (hbot : LevelOneBottomDetected)
       intro i
       refine IH (E - ((i : ℤ) + 1)) (by omega) _ ?_ ?_ ?_
       · have := bMode_mem_bWeight (bHPos i) hb
-        simpa using this
+        simpa using! this
       · rw [← Module.End.mul_apply, (bHZero_commute i).eq, Module.End.mul_apply, hc, map_smul]
       · intro F hF'
         have hdeg : IsWeightedHomogeneous modeWeightZ (F * X i) (E - (r : ℤ) * r) := by

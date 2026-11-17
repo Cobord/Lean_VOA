@@ -28,7 +28,7 @@ theorem oneTop_killed_high (c : Fin 28) (r : ℕ) (hr : 2 ≤ r) :
     rw [hk e (r + 1) (by omega)]
     simp
   rw [hk c r hr, map_zero, hz, sub_zero] at hc
-  simpa [oneTop, ρ, w] using hc
+  simpa [oneTop, ρ, w] using! hc
 
 def oneTopLine : Submodule ℂ OneU := Submodule.span ℂ {oneTop}
 
@@ -57,14 +57,14 @@ private def oneQuotGen : OneU ⧸ oneTopLine :=
 theorem oneQuot_localWeyl (h : OneTopLineKilled) :
     LocalWeylRelG D4sector (oneQuotRep h) oneQuotGen 1 := by
   have hs : SpecStep OneR (ravSpec D4sector 1 1) [(D4sector.c₀, 1)] := by
-    simpa [OneR, ravFam_zero_right] using ravSpec_step D4sector 1 2 1
+    simpa [OneR, ravFam_zero_right] using! ravSpec_step D4sector 1 2 1
   have hk : wordOp (univRepG D4sector.f OneR) [(D4sector.c₀, 1)]
       (wUG D4sector.f OneR) ∈ oneTopLine := by
     exact Submodule.subset_span (Set.mem_singleton oneTop)
   have hq := sat_quotG oneTopLine (oneTopLine_inv h)
     (univG_sat D4sector.f OneR) hs hk
   apply (localWeylRelG_iff D4sector (oneQuotRep h) oneQuotGen 1).mpr
-  simpa only [ravSpec_self] using hq
+  simpa only [ravSpec_self] using! hq
 
 theorem oneQuot_cycZero_top (h : OneTopLineKilled) :
     cycDeg (oneQuotRep h) oneQuotGen 0 = ⊤ := by
@@ -97,8 +97,8 @@ theorem oneQuot_cycZero_top (h : OneTopLineKilled) :
           (oneTopLine_inv h) (wUG D4sector.f OneR) l]
         exact hw l
     | zero => exact Submodule.zero_mem Q
-    | add x y _ _ hx hy => simpa only [map_add] using Submodule.add_mem Q hx hy
-    | smul a x _ hx => simpa only [map_smul] using Submodule.smul_mem Q a hx
+    | add x y _ _ hx hy => simpa only [map_add] using! Submodule.add_mem Q hx hy
+    | smul a x _ hx => simpa only [map_smul] using! Submodule.smul_mem Q a hx
   apply top_unique
   intro x _
   obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective oneTopLine x
@@ -114,9 +114,9 @@ theorem oneUniv_rank_of_line_killed (h : OneTopLineKilled) :
         cycDeg (oneQuotRep h) oneQuotGen 0 := by
       rw [oneQuot_cycZero_top h]
     have hr := (Submodule.finrank_mono hle).trans h0.2
-    simpa using hr
+    simpa using! hr
   have hl : Module.finrank ℂ oneTopLine ≤ 1 := by
-    simpa [oneTopLine] using
+    simpa [oneTopLine] using!
       (finrank_span_le_card (R := ℂ) (s := ({oneTop} : Set OneU)))
   calc
     Module.finrank ℂ OneU =
@@ -131,7 +131,7 @@ theorem presentedRankBoundE_one_of_line_killed (h : OneTopLineKilled) :
   letI : FiniteDimensional ℂ (PTE 1) := Module.Finite.equiv presentedOneEquiv.symm
   change FiniteDimensional ℂ (PTE 1) ∧ Module.finrank ℂ (PTE 1) ≤ 29 ^ 1
   refine ⟨inferInstance, ?_⟩
-  simpa only [pow_one, presentedOneEquiv.finrank_eq] using
+  simpa only [pow_one, presentedOneEquiv.finrank_eq] using!
     oneUniv_rank_of_line_killed h
 
 end

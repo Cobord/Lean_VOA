@@ -4,6 +4,11 @@ import VOA.Moonshine.MoonshineLRCommutant3
 # Coordinate certificates and scalar transport for the Griess commutant
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -912,14 +917,18 @@ theorem commutF_octad_eigen_perm (T : SpaceB →ₗ[ℚ] SpaceB)
   obtain ⟨ε, hε, he⟩ := commutF_short_action _ _ l k (commutF_octad_index σ hσ o)
   have hv : T (0, Xlift (labelElt l), 0) =
       a • ((0, Xlift (labelElt l), 0) : SpaceB) := by
-    simpa only [tbasis_oct] using ho (Octad.cls (octSupp o) ∅)
+    first
+      | simpa only [tbasis_oct] using ho (Octad.cls (octSupp o) ∅)
+      | (have h' := ho (Octad.cls (octSupp o) ∅); simp only [tbasis_oct] at h'; exact h')
   have hvw : ((g : AutO) : SpaceB ≃ₗ[ℚ] SpaceB) (0, Xlift (labelElt l), 0) =
       ε • ((0, Xlift (labelElt k), 0) : SpaceB) := by
     rw [hb, he]
     simp only [map_zero, Matrix.mul_zero, Matrix.zero_mul, Prod.smul_mk, smul_zero]
   have ht := commutL_eigen_transport T h _ hg _ _ a ε hε hv hvw
   apply commutF_octad_extend T h _ a (Octad.cls _ ∅) _ w
-  simpa only [tbasis_oct] using ht
+  first
+    | simpa only [tbasis_oct] using ht
+    | (simp only [tbasis_oct]; exact ht)
 
 /-- Every octad block has the common odd-line eigenvalue. -/
 theorem commutF_octads_scalar (T : SpaceB →ₗ[ℚ] SpaceB)
@@ -1341,7 +1350,9 @@ theorem commutF_short_scalar (T : SpaceB →ₗ[ℚ] SpaceB)
   · exact (commutF_pair_short_scalar T h p).1
   · exact (commutF_pair_short_scalar T h p).2
   · exact (commutL_spin_odd_scalar T h).2 c i
-  · simpa only [tbasis_oct] using commutF_octads_scalar T h o v
+  · first
+      | simpa only [tbasis_oct] using commutF_octads_scalar T h o v
+      | (have h' := commutF_octads_scalar T h o v; simp only [tbasis_oct] at h'; exact h')
 
 /-- The full short-coordinate space has the common odd-line scalar. -/
 theorem commutF_X_scalar (T : SpaceB →ₗ[ℚ] SpaceB)

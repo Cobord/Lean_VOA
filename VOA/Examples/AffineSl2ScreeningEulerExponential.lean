@@ -79,8 +79,8 @@ theorem auxiliaryEuler_exponential_product_error (r N M : ℕ) (i : Fin r) :
     (fun j => (-(M : ℂ)) • (single (((j+1 : ℕ) : ℤ) • unitExponent r i) (X (2,j)) : Auxiliary r))
     (fun j _ => exponentialFactor_lower r N M (j+1)) (by
       intro j hj
-      simpa only [Nat.add_sub_cancel] using auxiliaryEuler_exponential_error r N M (j+1) (by omega) i)
-  simpa only [← Finset.smul_sum,bosonAuxiliarySeries] using h
+      simpa only [Nat.add_sub_cancel] using! auxiliaryEuler_exponential_error r N M (j+1) (by omega) i)
+  simpa only [← Finset.smul_sum,bosonAuxiliarySeries] using! h
 
 end
 end VOA.Wak.Screening

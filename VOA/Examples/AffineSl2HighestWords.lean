@@ -13,6 +13,8 @@ An occupation index supplies negative E,H modes and nonpositive F modes.
 The horizontal F_0 corresponds to the gamma-zero occupation. Reversing the
 word and applying the Chevalley involution gives only positive modes and E_0.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open MvPolynomial
 open Module (End)
@@ -65,7 +67,7 @@ theorem occupation_list_weight {A : Type*} [AddCommMonoid A]
     | add e f he hf => rw [Finsupp.toMultiset_add,Multiset.map_add,Multiset.sum_add,map_add,he,hf]
     | single v n => simp [Finsupp.toMultiset_single,Finsupp.weight_single,
         Multiset.map_nsmul,Multiset.sum_nsmul]
-  simpa only [← Multiset.sum_coe,← Multiset.map_coe,Multiset.coe_toList] using h d
+  simpa only [← Multiset.sum_coe,← Multiset.map_coe,Multiset.coe_toList] using! h d
 
 /-- Energy increment of a literal current word. -/
 def wordEnergy (w : List (Fin 3×ℤ)) : ℤ := (w.map (fun an => -an.2)).sum
@@ -82,7 +84,6 @@ theorem currentWord_energy (k lam : ℂ) (w : List (Fin 3×ℤ)) :
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ WakFock => T (currentWord (J k lam) w 1))
         (degree_J k lam an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply] at hc
       simp only [currentWord,Module.End.mul_apply,wordEnergy,List.map_cons,List.sum_cons,
@@ -99,7 +100,6 @@ theorem currentWord_charge (k lam : ℂ) (w : List (Fin 3×ℤ)) :
   | cons an w ih =>
       have hc := congrArg (fun T : End ℂ WakFock => T (currentWord (J k lam) w 1))
         (charge_J k lam an.1 an.2)
-      dsimp only at hc
       rw [Ring.lie_def,LinearMap.sub_apply,Module.End.mul_apply,Module.End.mul_apply,
         ih,map_smul,LinearMap.smul_apply] at hc
       simp only [currentWord,Module.End.mul_apply,wordCharge,List.map_cons,List.sum_cons,
@@ -167,7 +167,7 @@ theorem currentWord_kills_of_letters {E : Type*} [AddCommGroup E] [Module ℂ E]
   | nil => exact False.elim (hw rfl)
   | cons an w ih =>
       cases w with
-      | nil => simpa [currentWord] using h an (by simp)
+      | nil => simpa [currentWord] using! h an (by simp)
       | cons bn w =>
           rw [currentWord,Module.End.mul_apply,ih (by simp) (fun cn hc => h cn (by simp [hc])),map_zero]
 
@@ -179,7 +179,7 @@ theorem adjoint_occupation_kills_screening (r q M : ℕ) (hr : 0<r) (hq : 0<q)
       (adjointWord (occupationWord d.val)) (Screening.state r q M)=0 := by
   apply currentWord_kills_of_letters
   · intro he
-    have hw : occupationWord d.val=[] := by simpa [adjointWord] using he
+    have hw : occupationWord d.val=[] := by simpa [adjointWord] using! he
     have hd := occupationWord_energy d.val
     rw [hw,wordEnergy,List.map_nil,List.sum_nil,d.property.1] at hd
     have hp : 0<r*q := Nat.mul_pos hr hq

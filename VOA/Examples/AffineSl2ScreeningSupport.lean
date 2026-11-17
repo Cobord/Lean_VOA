@@ -27,7 +27,7 @@ def exponentDegree (r : ℕ) : (Fin r → ℤ) →+ ℤ where
 /-- A Laurent expression has lower degree d when all coefficients of
 smaller total degree vanish. Negative exponents are permitted in the carrier. -/
 def LowerDegree {r : ℕ} (d : ℤ) (P : Auxiliary r) : Prop :=
-  ∀ g, exponentDegree r g<d → P g=0
+  ∀ g, exponentDegree r g<d → P.coeff g=0
 
 /-- Zero satisfies every auxiliary lower-degree bound. -/
 theorem LowerDegree.zero (r : ℕ) (d : ℤ) : LowerDegree d (0 : Auxiliary r) := by
@@ -40,6 +40,7 @@ theorem LowerDegree.single (r : ℕ) (d : ℤ) (g : Fin r → ℤ) (p : WakFock)
   classical
   intro x hx
   have hne : g≠x := by intro he; subst x; omega
+  rw [coeff_single]
   exact Finsupp.single_eq_of_ne hne.symm
 
 /-- Finite sums preserve a common lower-degree bound. -/
@@ -48,11 +49,11 @@ theorem LowerDegree.sum {r : ℕ} {I : Type*} (d : ℤ) (S : Finset I)
     LowerDegree d (∑ i∈S, P i) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using LowerDegree.zero r d
+  | empty => simpa using! LowerDegree.zero r d
   | @insert i S hi ih =>
       rw [Finset.sum_insert hi]
       intro g hg
-      change P i g + (∑ j∈S, P j) g=0
+      rw [coeff_add, Finsupp.add_apply]
       rw [h i (by simp) g hg,ih (fun j hj => h j (by simp [hj])) g hg,add_zero]
 
 /-- Products add lower-degree bounds, by finite Laurent convolution. -/
@@ -60,7 +61,7 @@ theorem LowerDegree.mul {r : ℕ} {a b : ℤ} {P Q : Auxiliary r}
     (hP : LowerDegree a P) (hQ : LowerDegree b Q) : LowerDegree (a+b) (P*Q) := by
   classical
   intro g hg
-  rw [AddMonoidAlgebra.mul_apply]
+  rw [AddMonoidAlgebra.coeff_mul]
   apply Finset.sum_eq_zero
   intro x hx
   apply Finset.sum_eq_zero
@@ -86,7 +87,7 @@ theorem LowerDegree.prod {r : ℕ} {I : Type*} (S : Finset I) (d : I → ℤ)
     LowerDegree (∑ i∈S, d i) (∏ i∈S, P i) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using LowerDegree.one r
+  | empty => simpa using! LowerDegree.one r
   | @insert i S hi ih =>
       rw [Finset.sum_insert hi,Finset.prod_insert hi]
       exact (h i (by simp)).mul (ih (fun j hj => h j (by simp [hj])))
@@ -95,7 +96,7 @@ theorem LowerDegree.prod {r : ℕ} {I : Type*} (S : Finset I) (d : I → ℤ)
 theorem LowerDegree.pow {r : ℕ} {d : ℤ} {P : Auxiliary r}
     (h : LowerDegree d P) (n : ℕ) : LowerDegree ((n : ℤ)*d) (P^n) := by
   induction n with
-  | zero => simpa using LowerDegree.one r
+  | zero => simpa using! LowerDegree.one r
   | succ n ih =>
       convert ih.mul h using 1 <;> simp [pow_succ,Nat.cast_add,add_mul]
 
@@ -103,7 +104,7 @@ theorem LowerDegree.pow {r : ℕ} {d : ℤ} {P : Auxiliary r}
 theorem LowerDegree.sub {r : ℕ} {d : ℤ} {P Q : Auxiliary r}
     (hP : LowerDegree d P) (hQ : LowerDegree d Q) : LowerDegree d (P-Q) := by
   intro g hg
-  change P g-Q g=0
+  rw [coeff_sub, Finsupp.sub_apply]
   rw [hP g hg,hQ g hg,sub_zero]
 
 /-- A stronger lower-degree bound implies every weaker one. -/
@@ -148,7 +149,7 @@ theorem exponentialTerm_lower (r M m ell : ℕ) :
     LowerDegree ((ell : ℤ)*m)
       (single 0 (MvPolynomial.C (((-(M : ℂ)/(m : ℂ))^ell)/(ell.factorial : ℂ))) *
         bosonPower r m ^ ell) := by
-  simpa using (constant_lower r _).mul ((bosonPower_lower r m).pow ell)
+  simpa using! (constant_lower r _).mul ((bosonPower_lower r m).pow ell)
 
 /-- Truncated boson exponentials have no negative auxiliary degree. -/
 theorem exponentialFactor_lower (r D M m : ℕ) :
@@ -165,14 +166,14 @@ theorem delta_lower (r : ℕ) : LowerDegree ((variablePairs r).card : ℤ) (delt
     (by
       intro ij hij
       apply LowerDegree.sub <;> apply LowerDegree.single <;> simp [exponentDegree_unit])
-  simpa using h
+  simpa using! h
 
 /-- The endpoint count for all Vandermonde pairs in integer arithmetic. -/
 theorem twice_pair_card_int (r : ℕ) :
     (2 : ℤ)*(variablePairs r).card = (r : ℤ)*((r-1 : ℕ) : ℤ) := by
   have h := congrArg (exponentDegree r) (variablePairs_exponent_sum r)
   simp only [map_sum,map_add,exponentDegree_unit] at h
-  simpa [exponentDegree,mul_comm,two_mul] using h
+  simpa [exponentDegree,mul_comm,two_mul] using! h
 
 /-- The even Vandermonde power consumes exactly its full r(r-1)M degree
 before the screening coefficient can see any beta or boson term. -/
@@ -192,14 +193,14 @@ theorem screening_factors_lower (r q M : ℕ) :
   have he := LowerDegree.prod (Finset.range (r*(q-1))) (fun _ => (0 : ℤ))
     (fun m => exponentialFactor r (r*(q-1)) M (m+1))
     (fun m _ => exponentialFactor_lower r _ M _)
-  simpa using hb.mul he
+  simpa using! hb.mul he
 
 /-- Any remaining error of total degree greater than r(q-1) makes ZERO
 contribution to the actual selected screening coefficient after multiplying
 by the Vandermonde. This is the finite truncation exclusion bound. -/
 theorem screening_high_degree_zero (r q M : ℕ) (hq : 0<q) (P : Auxiliary r)
     (hP : LowerDegree ((r : ℤ)*(q-1)+1) P) :
-    (delta r^(2*M)*P) (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
+    (delta r^(2*M)*P).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   apply ((delta_power_lower r M).mul hP)
   have hn : (r-1)*M+q-1 = (r-1)*M+(q-1) := by omega
   have hq' : ((q-1 : ℕ) : ℤ) = (q : ℤ)-1 := by omega
@@ -213,16 +214,16 @@ factors still cannot affect the selected coefficient. -/
 theorem screening_high_degree_product_zero (r q M : ℕ) (hq : 0<q)
     (P Q : Auxiliary r) (hP : LowerDegree ((r : ℤ)*(q-1)+1) P)
     (hQ : LowerDegree 0 Q) :
-    (delta r^(2*M)*(P*Q)) (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
+    (delta r^(2*M)*(P*Q)).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   apply screening_high_degree_zero r q M hq
-  simpa using hP.mul hQ
+  simpa using! hP.mul hQ
 
 /-- An omitted beta summand beyond the remaining degree has zero
 selected coefficient, even after multiplying by any nonnegative-degree factors. -/
 theorem screening_beta_tail_zero (r q M j : ℕ) (hq : 0<q) (i : Fin r)
     (hj : r*(q-1)<j) (Q : Auxiliary r) (hQ : LowerDegree 0 Q) :
     (delta r^(2*M)*(single ((j : ℤ) • unitExponent r i)
-      (MvPolynomial.X (0,j) : WakFock)*Q))
+      (MvPolynomial.X (0,j) : WakFock)*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   apply screening_high_degree_product_zero r q M hq _ Q _ hQ
   apply LowerDegree.single
@@ -239,7 +240,7 @@ theorem screening_exponential_tail_zero (r q M m ell : ℕ) (hq : 0<q)
     (hm : 0<m) (hell : r*(q-1)<ell) (Q : Auxiliary r) (hQ : LowerDegree 0 Q) :
     (delta r^(2*M)*(((single 0
       (MvPolynomial.C (((-(M : ℂ)/(m : ℂ))^ell)/(ell.factorial : ℂ))) : Auxiliary r) *
-        bosonPower r m ^ ell)*Q))
+        bosonPower r m ^ ell)*Q)).coeff
       (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))=0 := by
   apply screening_high_degree_product_zero r q M hq _ Q _ hQ
   apply (exponentialTerm_lower r M m ell).mono

@@ -37,7 +37,7 @@ theorem kacWeightProduct_one_minimal_ne (p q n : ℕ) (hq : 2 ≤ q)
   have hone : VirMinimalArithmetic.minimalKacWeight p q (i.1.val+1) (i.2.val+1) = 1 := by
     apply Rat.cast_injective (α := ℂ)
     rw [← fusionKacWeight_minimal p q _ _ (by omega) (by omega)]
-    simpa only [Nat.cast_add,Nat.cast_one,Rat.cast_one] using he.symm
+    simpa only [Nat.cast_add,Nat.cast_one,Rat.cast_one] using! he.symm
   have hh := VirMinimalArithmetic.minimalKacWeight_one_above_vacuum_level
     hq hpq (by omega) (by omega) hcop hone
   have hi' := (Finset.mem_filter.mp hi).2
@@ -51,14 +51,14 @@ theorem vermaKacGramDet_differentiableAt (n : ℕ) (h t : ℂ) (ht : t ≠ 0) :
       (fun z => MvPolynomial.eval (fun i : Fin 2 => if i=0 then vermaBSACharge z else h)
         (vermaGramPolynomial n).det) := by
     funext z
-    simpa using (vermaGramPolynomial_det_eval (vermaBSACharge z) h n).symm
+    simpa using! (vermaGramPolynomial_det_eval (vermaBSACharge z) h n).symm
   rw [he]
   have hd (P : MvPolynomial (Fin 2) ℂ) :
       DifferentiableAt ℂ (fun z => MvPolynomial.eval
         (fun i : Fin 2 => if i=0 then vermaBSACharge z else h) P) t := by
     induction P using MvPolynomial.induction_on with
     | C a => simp only [MvPolynomial.eval_C]; fun_prop
-    | add P Q hP hQ => simpa only [map_add] using hP.add hQ
+    | add P Q hP hQ => simpa only [map_add] using! hP.add hQ
     | mul_X P i hP =>
       simp only [map_mul,MvPolynomial.eval_X]
       apply hP.mul
@@ -79,7 +79,7 @@ theorem polynomial_simple_of_curve_product (P : Polynomial ℂ)
     P.eval (c t) = 0 ∧ P.derivative.eval (c t) ≠ 0 := by
   have he0 := he.eq_of_nhds
   have hz : P.eval (c t) = 0 := by
-    have hh : A * P.eval (c t) * g t = 0 := by simpa [hs0] using he0
+    have hh : A * P.eval (c t) * g t = 0 := by simpa [hs0] using! he0
     exact (mul_eq_zero.mp ((mul_eq_zero.mp hh).resolve_right hgn)).resolve_left hA
   refine ⟨hz, ?_⟩
   intro hd
@@ -87,7 +87,7 @@ theorem polynomial_simple_of_curve_product (P : Polynomial ℂ)
   have hright := hs.hasDerivAt.const_mul B
   have hdEq := (hleft.congr_of_eventuallyEq he.symm).unique hright
   have hh : B * _root_.deriv s t = 0 := by
-    simpa [hz,hd] using hdEq.symm
+    simpa [hz,hd] using! hdEq.symm
   exact (mul_ne_zero hB hsd) hh
 
 /-- The full ordinary Verma Kac formula through the first vacuum level

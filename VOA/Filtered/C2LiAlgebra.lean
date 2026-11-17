@@ -55,7 +55,7 @@ theorem stateToLiZero_O₂ (x : V) (hx : x ∈ O₂ W) : stateToLiZero W x = 0 :
       have hg := gen_mem_grading W ha hb
       by_cases hn : 0 ≤ p+q+1
       · have hg' : W.smul a (-2) b ∈ W.grading (((p+q+1).toNat : ℕ) : ℤ) := by
-          simpa [Int.toNat_of_nonneg hn] using hg
+          simpa [Int.toNat_of_nonneg hn] using! hg
         rw [stateToLiZero_homogeneous W _ ⟨_,hg'⟩]
         exact liDegreeZeroClass_eq_zero_of_mem_O₂ W _ _ (Submodule.subset_span ⟨a,b,rfl⟩)
       · have hz : W.smul a (-2) b = 0 := by
@@ -89,10 +89,10 @@ theorem stateToLiZero_mul (x y : V) :
     · apply LinearMap.ext_on (span_homog_eq_top W)
       rintro b ⟨q,hq⟩
       by_cases hqn : 0 ≤ q
-      · have ha : a ∈ W.grading ((p.toNat : ℕ) : ℤ) := by simpa [Int.toNat_of_nonneg hpn] using hp
-        have hb : b ∈ W.grading ((q.toNat : ℕ) : ℤ) := by simpa [Int.toNat_of_nonneg hqn] using hq
+      · have ha : a ∈ W.grading ((p.toNat : ℕ) : ℤ) := by simpa [Int.toNat_of_nonneg hpn] using! hp
+        have hb : b ∈ W.grading ((q.toNat : ℕ) : ℤ) := by simpa [Int.toNat_of_nonneg hqn] using! hq
         have hab : W.smul a (-1) b ∈ W.grading ((p.toNat+q.toNat : ℕ) : ℤ) := by
-          simpa using W.smul_mem_grading ha hb (-1)
+          simpa using! W.smul_mem_grading ha hb (-1)
         change stateToLiZero W (W.smul a (-1) b) = stateToLiZero W a * stateToLiZero W b
         rw [stateToLiZero_homogeneous W _ ⟨_,hab⟩,
           stateToLiZero_homogeneous W _ ⟨_,ha⟩,stateToLiZero_homogeneous W _ ⟨_,hb⟩]

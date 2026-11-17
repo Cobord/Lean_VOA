@@ -72,7 +72,7 @@ theorem coeff_of_fourPoint (hV : StronglyRational W)
   have hσ : α₁ + α₂ + β - β - 2 = α₁ + α₂ - 2 := by ring
   have hcast : ((1 + s : ℝ) : ℂ) = 1 + (s : ℂ) := by push_cast; ring
   rw [hcast]
-  simpa only [d, hσ] using h
+  simpa only [d, hσ] using! h
 
 /-- **Genus-one identity on the complex half-disc from a real coefficient identity.** -/
 theorem genusOne_of_coeff (hV : StronglyRational W)

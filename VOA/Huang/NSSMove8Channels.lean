@@ -32,7 +32,7 @@ theorem dualInteraction_channel (F : SphericalFusion C) (R : Ribbon F.toPivotal)
     (f ≫ F.simple b ◁ (F.dualLabelIso r).hom)
   simp only [R.twistScalar_dualLabel] at h
   apply (cancel_mono (F.simple b ◁ (F.dualLabelIso r).hom)).mp
-  simpa [dualInteractionEigenvalue, monodromy, Category.assoc] using h
+  simpa [dualInteractionEigenvalue, monodromy, Category.assoc] using! h
 
 /-- The whole monodromy is the weighted sum of the intrinsic isotypic projectors.
 No trace is taken; this retains every multiplicity entry. -/

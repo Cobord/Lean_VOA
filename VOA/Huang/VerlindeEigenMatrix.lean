@@ -191,7 +191,7 @@ theorem col_of_row {S : ι → ι → ℂ} {Ω : ι → ℂ} {L : ι → ι → 
       _ = T * Matrix.diagonal Ω := by rw [hST, Matrix.mul_one]
   have h := congrFun (congrFun key x) w
   rw [Matrix.mul_apply, Matrix.mul_diagonal] at h
-  simpa [hLm] using h
+  simpa [hLm] using! h
 
 /-- **Huang Thm 5.2, row form** (the convention of Prop. 4.5, `S·β = diag(Ω)·S`, with
 `β_yz = f·N_{ay}^z`). With `T = S·P_σ` a two-sided inverse (charge conjugation) the columns of

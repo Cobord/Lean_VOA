@@ -126,10 +126,12 @@ theorem quadNT_apply (a b : Fin r) (x : FockT r) (K : ℕ) (hK : ∀ v ∈ x.var
     pderiv_eq_zero_of_notMem_vars fun hv => absurd (hK _ hv) (by simp only; omega)
   let eP : ℕ ↪ ℤ := ⟨fun k => (k : ℤ), fun x y h => by simpa using h⟩
   let eN : ℕ ↪ ℤ := ⟨fun k => -(k : ℤ) - 1, fun x y h => by simp only at h; omega⟩
+  have heP : ∀ k : ℕ, eP k = (k : ℤ) := fun _ => rfl
+  have heN : ∀ k : ℕ, eN k = -(k : ℤ) - 1 := fun _ => rfl
   have hdisj : Disjoint ((Finset.range K).map eP) ((Finset.range K).map eN) := by
     rw [Finset.disjoint_left]
     intro m hm hm'
-    simp only [Finset.mem_map, Finset.mem_range, eP, eN, Function.Embedding.coeFn_mk] at hm hm'
+    simp only [Finset.mem_map, Finset.mem_range, heP, heN] at hm hm'
     obtain ⟨x, -, rfl⟩ := hm
     obtain ⟨y, -, hy⟩ := hm'
     omega
@@ -137,7 +139,7 @@ theorem quadNT_apply (a b : Fin r) (x : FockT r) (K : ℕ) (hK : ∀ v ∈ x.var
     intro m hm
     rw [Function.mem_support] at hm
     simp only [Finset.coe_union, Finset.coe_map, Set.mem_union, Set.mem_image, Finset.mem_coe,
-      Finset.mem_range, eP, eN, Function.Embedding.coeFn_mk]
+      Finset.mem_range, heP, heN]
     rcases lt_or_ge m 0 with hlt | hge
     · refine Or.inr ⟨(-m - 1).toNat, ?_, by omega⟩
       by_contra hk
@@ -152,17 +154,15 @@ theorem quadNT_apply (a b : Fin r) (x : FockT r) (K : ℕ) (hK : ∀ v ∈ x.var
   rw [finsum_eq_sum_of_support_subset f hsupp, Finset.sum_union hdisj, Finset.sum_map,
     Finset.sum_map, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [eP, eN, Function.Embedding.coeFn_mk]
-  rw [hpos, hneg, smul_add]
+  rw [heP, heN, hpos, hneg, smul_add]
 
 /-- `N^tw_ab` is symmetric in `a, b`. -/
 theorem quadNT_comm (a b : Fin r) : quadNT r a b = quadNT r b a := by
   refine LinearMap.ext fun x => ?_
   obtain ⟨K, hK⟩ := exists_levelBound r x
-  rw [quadNT_apply r a b x K hK, quadNT_apply r b a x K hK]
+  refine (quadNT_apply r a b x K hK).trans (Eq.trans ?_ (quadNT_apply r b a x K hK).symm)
   refine Finset.sum_congr rfl fun k _ => ?_
-  congr 1
-  exact add_comm _ _
+  rw [add_comm (X (k, a) * pderiv (k, b) x)]
 
 /-- ⭐ **Mode `0` of the twisted word field of `h_a(−1)h_b(−1)𝟙`**: the normal-ordered product
 plus the `Δ_z` constant `δ_ab/8`. -/

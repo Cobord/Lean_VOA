@@ -39,7 +39,7 @@ theorem PiCharacteristic.mul (F : ℕ → Module.End ℂ V) (π : R →ₗ[ℂ] 
     piCurrentMap F π (q * P) = 0 := by
   induction q using Polynomial.induction_on' with
   | add q q' hq hq' => rw [add_mul, map_add, hq, hq', add_zero]
-  | monomial s a => simpa only [C_mul_X_pow_eq_monomial] using h a s
+  | monomial s a => simpa only [C_mul_X_pow_eq_monomial] using! h a s
 
 theorem piCurrentMap_truncation (F : ℕ → Module.End ℂ V) (π : R →ₗ[ℂ] V)
     (M : ℕ) (h : ∀ s, M ≤ s → ∀ a, F s (π a) = 0) :

@@ -54,7 +54,7 @@ theorem widthH_jetApprox (P : ℕ) : JetApproxPL (P+1) widthH (jetH P) := by
   let E := Polynomial.C (42 : ℂ)-Polynomial.C 6*D-D*J
   have he0 : JetApprox (P+1) (fun t : ℂ => E.eval (t-1)) 0 :=
     (JetApprox.polynomial (P+1) E).of_remainder (by
-      simpa only [sub_zero,E,D,J] using jetH_error_divisible P)
+      simpa only [sub_zero,E,D,J] using! jetH_error_divisible P)
   have hn : ∀ᶠ t in 𝓝[≠] (1 : ℂ), t≠0 :=
     (continuousAt_id.eventually_ne (by norm_num : (1 : ℂ)≠0)).filter_mono nhdsWithin_le_nhds
   have herr : JetApprox (P+1) (fun t => t*(widthH t-J.eval (t-1))) 0 := by
@@ -66,6 +66,6 @@ theorem widthH_jetApprox (P : ℕ) : JetApproxPL (P+1) widthH (jetH P) := by
     ring
   have h := JetApprox.cancel_pivot hden (v := 0) (by omega)
     (by intro i hi; omega) (by simp [D]) herr
-  simpa only [Nat.sub_zero,J] using h
+  simpa only [Nat.sub_zero,J] using! h
 
 end VOA.Classification.COne.OrbIcoW

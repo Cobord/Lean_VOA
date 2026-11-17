@@ -99,7 +99,7 @@ theorem mixedCoeff_commutator (F G : ℕ → Module.End ℂ V) (X : Module.End �
   have hYZ : Fs F * Fs G = Fs G * Fs F := current_series_commute hFG
   have h := congrArg (PowerSeries.coeff s) (mixed_power_commutator hXY hXZ hYZ p q)
   simpa only [map_sub, map_nsmul, PowerSeries.coeff_C_mul,
-    PowerSeries.coeff_mul_C, mixedCoeff] using h
+    PowerSeries.coeff_mul_C, mixedCoeff] using! h
 
 /-- Polarize a single vanishing coefficient; all powers have the same total
 power and current degree as that source coefficient. -/
@@ -115,7 +115,7 @@ theorem mixedCoeff_zero_of_Q (F G : ℕ → Module.End ℂ V) (X : Module.End �
       intro q hq
       have hrq : r = q := by omega
       rw [hrq] at hQ
-      simpa only [mixedCoeff, pow_zero, one_mul, Q] using hQ
+      simpa only [mixedCoeff, pow_zero, one_mul, Q] using! hQ
   | succ p ih =>
       intro q hpq
       have hprev : mixedCoeff G F p (q + 1) s w = 0 := ih (q + 1) (by omega)

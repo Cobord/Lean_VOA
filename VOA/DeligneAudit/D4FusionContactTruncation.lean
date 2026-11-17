@@ -28,7 +28,7 @@ theorem negative_high_zero (h : HighestRel R w m)
     (i : Fin 12) (r : ℕ) (hr : m ≤ r) : R.op (negativeIndex i) r w = 0 := by
   obtain ⟨k, rfl⟩ : ∃ k, r = m + k := ⟨r - m, by omega⟩
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · simpa using hf i
+  · simpa using! hf i
   have hc := R.comm (negativeCartan i) (negativeIndex i) k m w
   rw [hf i, map_zero, h.cartan_pos _ (negativeCartan_lt_four i) k hk,
     map_zero, sub_zero] at hc
@@ -99,7 +99,7 @@ private theorem word_degree_zero : ∀ (l : List (Fin 28 × ℕ)),
   | (c,r) :: l, ht => by
       have hr : r = 0 := by have := ht (c,r) (by simp); dsimp at this; omega
       have hl := word_degree_zero l (fun x hx => ht x (by simp [hx]))
-      simpa [VOA.DeligneAudit.SectorGraded.wordDeg, hr] using hl
+      simpa [VOA.DeligneAudit.SectorGraded.wordDeg, hr] using! hl
 
 /-- Every positive current degree of the actual m=1 source is zero. -/
 theorem localWeyl_one_cycDeg_eq_bot (h : LocalWeylRelG D4sector R w 1)

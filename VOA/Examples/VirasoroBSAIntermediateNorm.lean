@@ -24,7 +24,7 @@ theorem bsaState_higher_positive (N m r : ℕ) (hr : r+m+2<N) :
       ((r:ℂ)+(m:ℂ)+2+((m:ℂ)+1)*bsaL2Offset N+(m:ℂ)) •
         bsaState (bsaCharge N) N r := by
   induction m generalizing r with
-  | zero => simpa using bsaState_L2 N r hr
+  | zero => simpa using! bsaState_L2 N r hr
   | succ m ih =>
     have hA := ih (r+1) (by omega)
     have hB := ih r (by omega)
@@ -67,7 +67,7 @@ theorem bsaState_positive_to (N r j : ℕ) (hj : j<r) (hr : r<N) :
       bsaWardCoefficient N r j • bsaState (bsaCharge N) N j := by
   by_cases he : j+1=r
   · subst r
-    simpa [bsaWardCoefficient] using bsaState_L1 (bsaCharge N) N j hr
+    simpa [bsaWardCoefficient] using! bsaState_L1 (bsaCharge N) N j hr
   · have hle : j+2≤r := by omega
     have hh := bsaState_higher_positive N (r-j-2) j (by omega)
     rw [show j+(r-j-2)+2=r by omega] at hh

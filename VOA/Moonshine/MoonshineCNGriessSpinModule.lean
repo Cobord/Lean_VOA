@@ -35,6 +35,11 @@ This is the `T`-factor of the twisted block of the Griess dictionary: `(T⁺)₂
 matched with `SpaceW = ℚ^{SpinIdx × 24}` through `Ψ ⊗ π`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.GriessDictionary
@@ -188,11 +193,12 @@ theorem finrank_C₀ : Module.finrank (ZMod 2) C₀ = 11 := by
   omega
 
 theorem card_spinIdx : Fintype.card SpinIdx = 4096 := by
-  rw [Fintype.card_prod, ZMod.card]
-  have h : Fintype.card C₀ = 2 ^ 11 := by
-    rw [Module.card_eq_pow_finrank (K := ZMod 2) (V := C₀), ZMod.card, finrank_C₀]
-  rw [h]
-  norm_num
+  -- Work with `Nat.card` throughout, so no `Fintype C₀` instance mismatch reaches the kernel.
+  have h : Nat.card C₀ = 2 ^ 11 := by
+    rw [Nat.card_congr (Module.finBasisOfFinrankEq (ZMod 2) C₀ finrank_C₀).equivFun.toEquiv,
+      Nat.card_fun, Nat.card_zmod, Nat.card_eq_fintype_card, Fintype.card_fin]
+  rw [Fintype.card_eq_nat_card, Nat.card_prod, Nat.card_zmod, h]
+  rfl
 
 theorem spinAlgHom_surjective : Function.Surjective spinAlgHom := by
   have hdim : Module.finrank ℂ (alg (cocMat leech)) = Module.finrank ℂ (Module.End ℂ (SpinIdx → ℂ)) := by
@@ -224,7 +230,8 @@ theorem spinRep_smul_def (a : alg (cocMat leech)) (v : SpinRep) :
 instance : IsScalarTower ℂ (alg (cocMat leech)) SpinRep where
   smul_assoc c a v := by
     change (spinAlgHom (c • a) : Module.End ℂ (SpinIdx → ℂ)) v = c • (spinAlgHom a : Module.End ℂ (SpinIdx → ℂ)) v
-    rw [map_smul, LinearMap.smul_apply]
+    rw [map_smul]
+    exact LinearMap.smul_apply _ _ _
 
 instance : Nontrivial SpinRep := inferInstanceAs (Nontrivial (SpinIdx → ℂ))
 
@@ -252,7 +259,7 @@ theorem spinIso_spinOp (α : leech.carrier) (v : SpinRep) :
     spinIso ((spinOp (coordOfRed (red leech α))).mulVec v : SpinIdx → ℂ)
       = eT leech leech_even leech_isUnit_det_gramMat α (spinIso v) := by
   have h := spinIso.map_smul (eA leech α) v
-  rw [spinRep_smul_def, spinAlgHom_eA, Matrix.toLinAlgEquiv'_apply] at h
+  rw [spinRep_smul_def, spinAlgHom_eA] at h
   rw [IntegralLattice.eT_apply]
   exact h
 

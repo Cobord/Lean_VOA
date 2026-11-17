@@ -24,10 +24,10 @@ def vnatSectorEval : (Vnat ⊗[ℂ] hypFock) →ₗ[ℂ] Vnat :=
   (Finsupp.lapply 0).comp hypTensorCoordinates.toLinearMap
 
 theorem vnatSectorEval_tmul (v : Vnat) (p : hypFock) :
-    vnatSectorEval (v ⊗ₜ[ℂ] p) = coeff 0 p • v := hypTensorCoordinates_tmul v p 0
+    vnatSectorEval (v ⊗ₜ[ℂ] p) = p.coeff 0 • v := hypTensorCoordinates_tmul v p 0
 
 theorem hypLevel_constantCoeff_eq_zero (j : ℤ) (hj : j ≠ 0) (p : hypFock)
-    (hp : p ∈ hypLevel j) : coeff 0 p = 0 := by
+    (hp : p ∈ hypLevel j) : p.coeff 0 = 0 := by
   have h := congrArg constantCoeff (hypSugawara_zero_level 0 0 j p hp)
   rw [hypSugawara_zero_constantCoeff, constantCoeff_smul] at h
   simp only [zero_mul, zero_add, smul_eq_mul] at h
@@ -65,7 +65,7 @@ theorem vnatSectorEval_oneFamily_form (a : Fin 2) (u v : Vnat ⊗[ℂ] hypFock)
     · intro v z hv hz; simp only [map_add, hv, hz]
     · intro z q hq
       rw [vnatSectorEval_tmul, vnatSectorEval_tmul]
-      change hypForm p q * natForm w z = natForm (coeff 0 p • w) (coeff 0 q • z)
+      change hypForm p q * natForm w z = natForm (p.coeff 0 • w) (q.coeff 0 • z)
       rw [hypOneFamily_form a p q hp hq, LinearMap.map_smul₂, map_smul]
       simp only [smul_eq_mul]
       ring

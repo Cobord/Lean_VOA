@@ -59,9 +59,17 @@ theorem tensorLeftUnit_natural (N : LogVModule W R) (P : LogVModule W X)
         finGen_adjoint hP (weakIdentity (adjointModule W).toWeakModule) f)).toLinearMap=
     (homComp f (tensorLeftUnitHom hC2 N hN)).toLinearMap := by
   apply tensor_morphism_ext hC2 (adjointModule W).toLog N finGen_adjoint hN P
-  rw [postcompose_homComp', postcompose_homComp', tensorMap_intertwiner,
-    postcompose_precompose', tensorLeftUnit_intertwiner, tensorLeftUnit_intertwiner]
-  exact (logModuleIntertwiner_natural N P f).symm
+  rw [postcompose_homComp', postcompose_homComp']
+  -- 4.35: `finGen_adjoint` is typed at `(adjointModule W).toWeakModule`, not at
+  -- `(adjointModule W).toLog.toWeakModule`, so the naturality chain is applied in term mode.
+  refine (congrArg (postcompose (tensorLeftUnitHom hC2 P hP))
+    (tensorMap_intertwiner hC2 (adjointModule W).toLog N finGen_adjoint hN
+      (adjointModule W).toLog P finGen_adjoint hP
+      (weakIdentity (adjointModule W).toWeakModule) f)).trans ?_
+  refine (postcompose_precompose' _ _ _ _).trans ?_
+  refine (congrArg (precompose _ _) (tensorLeftUnit_intertwiner hC2 P hP)).trans ?_
+  exact (logModuleIntertwiner_natural N P f).symm.trans
+    (congrArg (postcompose f) (tensorLeftUnit_intertwiner hC2 N hN).symm)
 
 /-- The actual right vacuum unit is natural. -/
 theorem tensorRightUnit_natural (N : LogVModule W R) (P : LogVModule W X)
@@ -72,9 +80,17 @@ theorem tensorRightUnit_natural (N : LogVModule W R) (P : LogVModule W X)
         hP finGen_adjoint f (weakIdentity (adjointModule W).toWeakModule))).toLinearMap=
     (homComp f (tensorRightUnitHom hC2 N hN)).toLinearMap := by
   apply tensor_morphism_ext hC2 N (adjointModule W).toLog hN finGen_adjoint P
-  rw [postcompose_homComp', postcompose_homComp', tensorMap_intertwiner,
-    postcompose_precompose', tensorRightUnit_intertwiner, tensorRightUnit_intertwiner]
-  exact (rightUnitIntertwiner_natural N P f).symm
+  rw [postcompose_homComp', postcompose_homComp']
+  -- 4.35: `finGen_adjoint` is typed at `(adjointModule W).toWeakModule`, not at
+  -- `(adjointModule W).toLog.toWeakModule`, so the naturality chain is applied in term mode.
+  refine (congrArg (postcompose (tensorRightUnitHom hC2 P hP))
+    (tensorMap_intertwiner hC2 N (adjointModule W).toLog hN finGen_adjoint
+      P (adjointModule W).toLog hP finGen_adjoint
+      f (weakIdentity (adjointModule W).toWeakModule))).trans ?_
+  refine (postcompose_precompose' _ _ _ _).trans ?_
+  refine (congrArg (precompose _ _) (tensorRightUnit_intertwiner hC2 P hP)).trans ?_
+  exact (rightUnitIntertwiner_natural N P f).symm.trans
+    (congrArg (postcompose f) (tensorRightUnit_intertwiner hC2 N hN).symm)
 
 end VOA.C2Rigid.LocalInjective
 

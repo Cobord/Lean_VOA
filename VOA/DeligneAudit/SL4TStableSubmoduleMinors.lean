@@ -31,8 +31,8 @@ theorem polynomialSubmodule_variable_pow_mem (U : Submodule A (Polynomial A))
     (hU : ∀ p ∈ U, X * p ∈ U) (p : Polynomial A) (hp : p ∈ U) (n : ℕ) :
     X ^ n * p ∈ U := by
   induction n with
-  | zero => simpa only [pow_zero, one_mul] using hp
-  | succ n ih => simpa only [pow_succ', mul_assoc] using hU _ ih
+  | zero => simpa only [pow_zero, one_mul] using! hp
+  | succ n ih => simpa only [pow_succ', mul_assoc] using! hU _ ih
 
 /-- Consecutive highest-coordinate moments belong to the top coefficient ideal. -/
 theorem stableSubmodule_consecutive_moment_minor_mem (P : Polynomial A) (r j : ℕ)

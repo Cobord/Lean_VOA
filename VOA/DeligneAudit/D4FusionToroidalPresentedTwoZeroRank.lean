@@ -30,7 +30,8 @@ theorem two_pure_word (l : List (TLtr 28)) (hl : twoUDeg l = 0) :
       change (twoN 1).mkQ _ =
         (quotRepG twoCurrent (twoN 1) twoCurrent_inv).op x.1 x.2.2
           ((twoN 1).mkQ (wordOpT (ρPTE 2) l (pTE 2)))
-      rw [quotRepG_op]
+      refine Eq.trans ?_
+        (quotRepG_op twoCurrent (twoN 1) twoCurrent_inv x.1 x.2.2 _).symm
       by_cases hs : x.2.2 < 2
       · have hs' : x.2.2 ≤ 1 := by omega
         simp [twoCurrent, hi, hs']
@@ -58,8 +59,8 @@ theorem two_zero_cyclic : cycSubG twoZeroCurrent twoZeroGen = ⊤ := by
           rw [two_pure_word l hzero]
           exact wordOp_mem_cycSubG twoZeroCurrent twoZeroGen _
     | zero => exact Submodule.zero_mem _
-    | add x y _ _ hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
-    | smul a x _ hx => simpa only [map_smul] using Submodule.smul_mem _ a hx
+    | add x y _ _ hx hy => simpa only [map_add] using! Submodule.add_mem _ hx hy
+    | smul a x _ hx => simpa only [map_smul] using! Submodule.smul_mem _ a hx
   apply top_unique
   intro x _
   obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective (twoN 1) x

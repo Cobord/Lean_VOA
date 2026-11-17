@@ -81,7 +81,7 @@ theorem vacuumVermaPartition_injective (n : ℕ) : Function.Injective (vacuumVer
   intro a b hab
   apply Subtype.ext
   have he := congrArg (fun w : List ℕ => w.map Nat.pred) (congrArg Subtype.val hab)
-  simpa [vacuumVermaPartition, List.map_map, Function.comp_def] using he
+  simpa [vacuumVermaPartition, List.map_map, Function.comp_def] using! he
 
 /-- The actual vacuum Gram matrix is the corresponding submatrix of the
 actual highest-weight-zero Verma Gram matrix, with precisely the same form
@@ -95,7 +95,8 @@ theorem vermaGramMatrix_vacuum_submatrix (c : ℂ) (n : ℕ) :
     (partitionGramPolynomial n i j).eval c
   rw [vermaContravariant_vacuum, vacuumProjection_succ_word, vacuumProjection_succ_word]
   have he := congrFun (congrFun (partitionGramPolynomial_eval c n) i) j
-  simp only [Matrix.map_apply, GramMat.gramMatrix_apply] at he
+  simp only [Matrix.map_apply] at he
+  replace he := he.trans (GramMat.gramMatrix_apply _ _ _ i j)
   change (partitionGramPolynomial n i j).eval c =
     (VirGram4.canB c).form (gradedBasis c n i) (gradedBasis c n j) at he
   rw [gradedBasis_apply, gradedBasis_apply, gradedWord_val, gradedWord_val] at he

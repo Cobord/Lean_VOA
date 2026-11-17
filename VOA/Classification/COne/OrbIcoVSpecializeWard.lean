@@ -89,11 +89,12 @@ def finiteSecondDefect (self : Bool) (R : ℕ) (a : FiniteFockPBW self R)
 def finiteWardRowMap (self : Bool) (R : ℕ) (a : FiniteFockPBW self R)
     (s : ℂ) : (FiniteFockColumns self R → ℂ) →ₗ[ℂ] (FiniteFockRows R → ℂ) where
   toFun v row := match row with
-    | Sum.inl ⟨n,d⟩ => coeff d.val (finiteFirstDefect self R a s n v)
-    | Sum.inr ⟨n,d⟩ => coeff d.val (finiteSecondDefect self R a s n v)
+    | Sum.inl ⟨n,d⟩ => (finiteFirstDefect self R a s n v).coeff d.val
+    | Sum.inr ⟨n,d⟩ => (finiteSecondDefect self R a s n v).coeff d.val
   map_add' v w := by
     funext row
-    rcases row with ⟨n,d⟩ | ⟨n,d⟩ <;> simp only [map_add,coeff_add,Pi.add_apply]
+    rcases row with ⟨n,d⟩ | ⟨n,d⟩ <;>
+      simp only [map_add,AddMonoidAlgebra.coeff_add,Finsupp.add_apply,Pi.add_apply]
   map_smul' z v := by
     funext row
     rcases row with ⟨n,d⟩ | ⟨n,d⟩ <;> simp only [map_smul,coeff_smul,Pi.smul_apply,RingHom.id_apply]
@@ -143,15 +144,16 @@ theorem incomingWeight_square_continuousAt (s : ℂ) (hs : s≠0) :
 theorem symbolLevel_mode_coeff_continuousAt (self : Bool) (N : ℕ)
     (a : VermaPartitions N → ℂ) (s : ℂ) (hs : s≠0) (k : ℤ) (hk : k≠0)
     (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (sectorVirasoro (familyBackground s)
+    ContinuousAt (fun s => (sectorVirasoro (familyBackground s)
       (symbolFamilyMomentum self s) k (symbolFamilyMap self s
-        (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N a)))) s := by
+        (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N a))).coeff d) s := by
   have hnear : ∀ᶠ z in 𝓝 s, z≠0 := continuousAt_id.eventually_ne hs
   cases self
-  · change ContinuousAt (fun z => coeff d (sectorVirasoro (familyBackground z) 0 k
-      (vacFamilyMap z (vermaLevelState (familyCharge z) (vacFamilyWeight z) N a)))) s
-    have hc : ContinuousAt (fun z => ∑ w : VermaPartitions N, a w * coeff d
-        (sectorVirasoro (familyBackground z) 0 k (fockRawEval z (vacDescData w.val)))) s := by
+  · change ContinuousAt (fun z => (sectorVirasoro (familyBackground z) 0 k
+      (vacFamilyMap z (vermaLevelState (familyCharge z) (vacFamilyWeight z) N a))).coeff d) s
+    have hc : ContinuousAt (fun z => ∑ w : VermaPartitions N, a w *
+        (sectorVirasoro (familyBackground z) 0 k
+          (fockRawEval z (vacDescData w.val))).coeff d) s := by
       apply tendsto_finsetSum
       intro w hw
       exact continuousAt_const.mul (sector_mode_coefficient_continuousAt
@@ -161,12 +163,12 @@ theorem symbolLevel_mode_coeff_continuousAt (self : Bool) (N : ℕ)
     filter_upwards [hnear] with z hz
     simp only [vermaLevelState,map_sum,map_smul,coeff_sum,coeff_smul,
       vacDescData_sound z hz,smul_eq_mul]
-  · change ContinuousAt (fun z => coeff d (sectorVirasoro (familyBackground z)
+  · change ContinuousAt (fun z => (sectorVirasoro (familyBackground z)
       (familyMomentum z) k
-      (familyMap z (vermaLevelState (familyCharge z) (familyWeight z) N a)))) s
-    have hc : ContinuousAt (fun z => ∑ w : VermaPartitions N, a w * coeff d
+      (familyMap z (vermaLevelState (familyCharge z) (familyWeight z) N a))).coeff d) s
+    have hc : ContinuousAt (fun z => ∑ w : VermaPartitions N, a w *
         (sectorVirasoro (familyBackground z) (familyMomentum z) k
-          (fockRawEval z (fockDescData w.val)))) s := by
+          (fockRawEval z (fockDescData w.val))).coeff d) s := by
       apply tendsto_finsetSum
       intro w hw
       exact continuousAt_const.mul (sector_mode_coefficient_continuousAt
@@ -180,8 +182,8 @@ theorem symbolLevel_mode_coeff_continuousAt (self : Bool) (N : ℕ)
 theorem symbolLevel_coeff_continuousAt (self : Bool) (N : ℕ)
     (a : VermaPartitions N → ℂ) (s : ℂ) (hs : s≠0)
     (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (symbolFamilyMap self s
-      (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N a))) s := by
+    ContinuousAt (fun s => (symbolFamilyMap self s
+      (vermaLevelState (familyCharge s) (symbolFamilyWeight self s) N a)).coeff d) s := by
   have hnear : ∀ᶠ z in 𝓝 s, z≠0 := continuousAt_id.eventually_ne hs
   cases self
   · apply (vacLevelCoefficient_continuousAt N a s hs d).congr_of_eventuallyEq
@@ -194,15 +196,15 @@ theorem symbolLevel_coeff_continuousAt (self : Bool) (N : ℕ)
 theorem finiteBlockFock_coeff_continuousAt (self : Bool) (R : ℕ)
     (a : FiniteFockPBW self R) (n : Fin (R+1)) (v : FiniteFockColumns self R → ℂ)
     (s : ℂ) (hs : s≠0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (finiteBlockFock self R a s n v)) s := by
-  have he (z : ℂ) : coeff d (finiteBlockFock self R a z n v) =
-      ∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ * coeff d
-        (symbolFamilyMap self z
-          (vermaLevelState (familyCharge z) (symbolFamilyWeight self z) n.val (a n j))) := by
-    change coeff d (symbolFamilyMap self z (finiteBlockVerma self R a z n v)) = _
-    have hm := congrArg (coeff d)
+    ContinuousAt (fun s => (finiteBlockFock self R a s n v).coeff d) s := by
+  have he (z : ℂ) : (finiteBlockFock self R a z n v).coeff d =
+      ∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ * (symbolFamilyMap self z
+          (vermaLevelState (familyCharge z) (symbolFamilyWeight self z) n.val
+            (a n j))).coeff d := by
+    change (symbolFamilyMap self z (finiteBlockVerma self R a z n v)).coeff d = _
+    have hm := congrArg (fun p : FF => p.coeff d)
       (map_finiteBlockVerma self R a z n v (symbolFamilyMap self z))
-    simpa only [coeff_sum,coeff_smul,smul_eq_mul] using hm
+    simpa only [coeff_sum,coeff_smul,smul_eq_mul] using! hm
   simp_rw [he]
   apply tendsto_finsetSum
   intro j hj
@@ -211,20 +213,21 @@ theorem finiteBlockFock_coeff_continuousAt (self : Bool) (R : ℕ)
 theorem finiteBlockFock_mode_coeff_continuousAt (self : Bool) (R : ℕ)
     (a : FiniteFockPBW self R) (n : Fin (R+1)) (v : FiniteFockColumns self R → ℂ)
     (s : ℂ) (hs : s≠0) (k : ℤ) (hk : k≠0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (sectorVirasoro (familyBackground s)
-      (symbolFamilyMomentum self s) k (finiteBlockFock self R a s n v))) s := by
-  have he (z : ℂ) : coeff d (sectorVirasoro (familyBackground z)
-      (symbolFamilyMomentum self z) k (finiteBlockFock self R a z n v)) =
-      ∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ * coeff d
+    ContinuousAt (fun s => (sectorVirasoro (familyBackground s)
+      (symbolFamilyMomentum self s) k (finiteBlockFock self R a s n v)).coeff d) s := by
+  have he (z : ℂ) : (sectorVirasoro (familyBackground z)
+      (symbolFamilyMomentum self z) k (finiteBlockFock self R a z n v)).coeff d =
+      ∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ *
         (sectorVirasoro (familyBackground z) (symbolFamilyMomentum self z) k
           (symbolFamilyMap self z
-            (vermaLevelState (familyCharge z) (symbolFamilyWeight self z) n.val (a n j)))) := by
-    change coeff d (((sectorVirasoro (familyBackground z) (symbolFamilyMomentum self z) k).comp
-      (symbolFamilyMap self z)) (finiteBlockVerma self R a z n v)) = _
-    have hm := congrArg (coeff d) (map_finiteBlockVerma self R a z n v
+            (vermaLevelState (familyCharge z) (symbolFamilyWeight self z) n.val
+              (a n j)))).coeff d := by
+    change (((sectorVirasoro (familyBackground z) (symbolFamilyMomentum self z) k).comp
+      (symbolFamilyMap self z)) (finiteBlockVerma self R a z n v)).coeff d = _
+    have hm := congrArg (fun p : FF => p.coeff d) (map_finiteBlockVerma self R a z n v
       ((sectorVirasoro (familyBackground z) (symbolFamilyMomentum self z) k).comp
         (symbolFamilyMap self z)))
-    simpa only [coeff_sum,coeff_smul,smul_eq_mul,LinearMap.comp_apply] using hm
+    simpa only [coeff_sum,coeff_smul,smul_eq_mul,LinearMap.comp_apply] using! hm
   simp_rw [he]
   apply tendsto_finsetSum
   intro j hj
@@ -234,7 +237,7 @@ theorem finiteBlockFock_mode_coeff_continuousAt (self : Bool) (R : ℕ)
 theorem finiteFirstDefect_coeff_continuousAt (self : Bool) (R : ℕ)
     (a : FiniteFockPBW self R) (n : Fin R) (v : FiniteFockColumns self R → ℂ)
     (s : ℂ) (hs : s≠0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (finiteFirstDefect self R a s n v)) s := by
+    ContinuousAt (fun s => (finiteFirstDefect self R a s n v).coeff d) s := by
   simp only [finiteFirstDefect,LinearMap.sub_apply,LinearMap.comp_apply,
     LinearMap.smul_apply,coeff_sub,coeff_smul,smul_eq_mul]
   exact (finiteBlockFock_mode_coeff_continuousAt self R a _ v s hs 1 (by norm_num) d).sub
@@ -244,7 +247,7 @@ theorem finiteFirstDefect_coeff_continuousAt (self : Bool) (R : ℕ)
 theorem finiteSecondDefect_coeff_continuousAt (self : Bool) (R : ℕ)
     (a : FiniteFockPBW self R) (n : Fin (R-1)) (v : FiniteFockColumns self R → ℂ)
     (s : ℂ) (hs : s≠0) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (finiteSecondDefect self R a s n v)) s := by
+    ContinuousAt (fun s => (finiteSecondDefect self R a s n v).coeff d) s := by
   simp only [finiteSecondDefect,LinearMap.sub_apply,LinearMap.comp_apply,
     LinearMap.smul_apply,coeff_sub,coeff_smul,smul_eq_mul]
   exact (finiteBlockFock_mode_coeff_continuousAt self R a _ v s hs 2 (by norm_num) d).sub
@@ -323,7 +326,7 @@ theorem finiteSecondDefect_level (self : Bool) (R : ℕ) (a : FiniteFockPBW self
       (map_smul (chargedFockMap (familyBackground s) (symbolFamilyMomentum self s)) _ _))
 
 theorem fock_level_zero_of_coeff (N : ℕ) (f : FF) (hf : f ∈ gradingWN 1 N)
-    (hz : ∀ d : FockOccupations N, coeff d.val f=0) : f=0 := by
+    (hz : ∀ d : FockOccupations N, f.coeff d.val=0) : f=0 := by
   have he : fockCoordinates N (⟨f,hf⟩ : gradingWN 1 N) = 0 := by
     funext d
     exact hz d
@@ -350,10 +353,10 @@ theorem finiteWardRowMap_eq_zero_iff (self : Bool) (R : ℕ) (a : FiniteFockPBW 
   · rintro ⟨h1,h2⟩
     funext row
     rcases row with ⟨n,d⟩ | ⟨n,d⟩
-    · change coeff d.val (finiteFirstDefect self R a s n v)=0
-      simp only [h1,coeff_zero]
-    · change coeff d.val (finiteSecondDefect self R a s n v)=0
-      simp only [h2,coeff_zero]
+    · change (finiteFirstDefect self R a s n v).coeff d.val=0
+      simp only [h1,AddMonoidAlgebra.coeff_zero,Finsupp.coe_zero,Pi.zero_apply]
+    · change (finiteSecondDefect self R a s n v).coeff d.val=0
+      simp only [h2,AddMonoidAlgebra.coeff_zero,Finsupp.coe_zero,Pi.zero_apply]
 
 /-- Compact specialization preserves the leading scalar and both specified scalar rows.
 The ground-injectivity hypothesis is discharged on the actual c=1 channel. -/

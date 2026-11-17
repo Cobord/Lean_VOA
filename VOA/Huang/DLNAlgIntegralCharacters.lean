@@ -48,11 +48,11 @@ theorem dlnCongruenceInput_of_integralQSeries
     dsimp [r]
     push_cast
     apply (div_eq_iff hn).mpr
-    simpa only [mul_comm] using (hk a).symm
+    simpa only [mul_comm] using! (hk a).symm
   apply h D.ι r
     (fun a n => (Module.finrank ℂ ((D.module a).weight ((D.h a : ℂ) + n)) : ℤ)) D.ch D.S
   · intro a τ hτ
-    simpa only [Int.cast_natCast, he, sub_add_eq_add_sub] using hD.char a τ hτ
+    simpa only [Int.cast_natCast, he, sub_add_eq_add_sub] using! hD.char a τ hτ
   · exact hD.S_transform
   · exact hN.1
   · intro a

@@ -85,7 +85,7 @@ theorem vandermondeLaurent_ne_zero (r : ℕ) : vandermondeLaurent r ≠ 0 := by
 Each variable's exponent is (r-1)t. This is a finite uniform theorem, not
 merely a checked list of small screening parameters. -/
 theorem vandermonde_central_coefficient_ne_zero (r t : ℕ) :
-    (vandermondeLaurent r ^ (2*t))
+    (vandermondeLaurent r ^ (2*t)).coeff
       (fun _ : Fin r => (((r-1)*t:ℕ):ℤ)) ≠ 0 := by
   have h := binomial_product_central_ne_zero (variablePairs r)
     (fun ij => unitExponent r ij.1) (fun ij => unitExponent r ij.2)

@@ -42,7 +42,7 @@ theorem exists_DualC1Graded (hC2 : C2Cofinite W) (N : LogVModule W M)
   by_cases hmn : m + 1 - d ≤ (n : ℤ)
   · apply Submodule.subset_span
     refine ⟨d.toNat,m.toNat,v,g,by omega,by omega,by omega,?_,?_⟩
-    · simpa only [hdc] using hv
+    · simpa only [hdc] using! hv
     · simp only [hmc]
   · have hz : (g ∘ₗ mode (N.YM v) m).domRestrict (N.weight (h+n))=0 := by
       ext x

@@ -96,7 +96,9 @@ theorem topIdeal_one_power_complement (Y : Finset (Fin n)) (hY : Y.Nonempty) (L 
       exact mul_mem_span_X_pow_mul _ g
     · intro u hu
       obtain ⟨c, hc⟩ := hu 0
-      simp only [Matrix.det_fin_one, topRowFunctional_apply, Fin.val_zero, Nat.add_zero]
+      rw [Matrix.det_fin_one
+        (fun i b => topRowFunctional (alphabetCharacteristic (Y.toList.map x)) Y.card 1 i (u b))]
+      simp only [topRowFunctional_apply, Fin.val_zero, Nat.add_zero]
       rw [hc, ← pow_add, topRemainder_eq_complement x hE Y hY]
       split_ifs with hm
       · exact Ideal.subset_span ⟨c + L + 1 - Y.card, by omega, rfl⟩
@@ -110,7 +112,9 @@ theorem topIdeal_one_power_complement (Y : Finset (Fin n)) (hY : Y.Nonempty) (L 
           show (X : C[X]) ^ (k + Y.card - 1) = X ^ (k + Y.card - 1 - L) * X ^ L by
             rw [← pow_add, Nat.sub_add_cancel (by omega)]]
         exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _))
-    simp only [Matrix.det_fin_one, topRowFunctional_apply, Fin.val_zero, Nat.add_zero] at hmem
+    rw [Matrix.det_fin_one (fun i _ => topRowFunctional (alphabetCharacteristic (Y.toList.map x))
+      Y.card 1 i ((X : C[X]) ^ (k + Y.card - 1)))] at hmem
+    simp only [topRowFunctional_apply, Fin.val_zero, Nat.add_zero] at hmem
     rw [topRemainder_eq_complement x hE Y hY, if_pos (by omega),
       show k + Y.card - 1 + 1 - Y.card = k by omega] at hmem
     exact hmem

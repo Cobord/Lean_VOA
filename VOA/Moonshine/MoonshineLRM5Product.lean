@@ -44,7 +44,7 @@ noncomputable def coneProd (e : ℕ → ℕ → ℂ) : PowerSeries (LaurentSerie
   odeSol (coneLog e)
 
 theorem coneProd_spec (e : ℕ → ℕ → ℂ) :
-    PowerSeries.X * PowerSeries.derivative (LaurentSeries ℂ) (coneProd e) =
+    PowerSeries.X * PowerSeries.derivative (R := LaurentSeries ℂ) (coneProd e) =
       coneProd e * coneLog e :=
   odeSol_spec _ (constantCoeff_coneLog e)
 

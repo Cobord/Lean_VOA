@@ -20,7 +20,7 @@ theorem coefficient_product_of_descending (f g u v : ℕ → R) (d e j k : ℕ)
     ← reflect_mul _ _ (coefficientPoly_degree _ _) (coefficientPoly_degree _ _)] at h
   rw [hlen] at h
   have ht := congrArg (reflect (j + k)) h
-  simpa only [reflect_reflect] using ht
+  simpa only [reflect_reflect] using! ht
 
 /-- Complementary characteristic factors give inverse ascending coefficient series. -/
 theorem coefficient_product_one_of_descending (f g : ℕ → R) (d e : ℕ)
@@ -29,7 +29,7 @@ theorem coefficient_product_one_of_descending (f g : ℕ → R) (d e : ℕ)
   unfold descendingPoly at h
   rw [← reflect_mul _ _ (coefficientPoly_degree _ _) (coefficientPoly_degree _ _)] at h
   have ht := congrArg (reflect (d + e)) h
-  simpa only [reflect_reflect, reflect_monomial, revAt_le le_rfl, Nat.sub_self, pow_zero] using ht
+  simpa only [reflect_reflect, reflect_monomial, revAt_le le_rfl, Nat.sub_self, pow_zero] using! ht
 
 /-- Both ascending series of a base alphabet are units. -/
 theorem mixedBase_series_units (q : MixedParams) (hq : MixedValid q) (i : Fin 3) :

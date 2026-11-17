@@ -11,11 +11,14 @@ variable {A : Type*} [CommRing A]
 /-- Pair a polynomial with independent sequences of moments in its variables. -/
 def polynomialMomentPairing {j : ℕ} (v : Fin j → ℕ → A) :
     MvPolynomial (Fin j) A →ₗ[A] A :=
-  Finsupp.linearCombination A (fun d : Fin j →₀ ℕ => ∏ b, v b (d b))
+  Finsupp.linearCombination A (fun d : Fin j →₀ ℕ => ∏ b, v b (d b)) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv A).toLinearMap
 
 theorem polynomialMomentPairing_monomial {j : ℕ} (v : Fin j → ℕ → A)
     (d : Fin j →₀ ℕ) (a : A) :
     polynomialMomentPairing v (MvPolynomial.monomial d a) = a * ∏ b, v b (d b) := by
+  change Finsupp.linearCombination A (fun d : Fin j →₀ ℕ => ∏ b, v b (d b))
+    (Finsupp.single d a) = _
   exact Finsupp.linearCombination_single A a d
 
 /-- A monomial translates each of the moment indices independently. -/
@@ -46,8 +49,9 @@ theorem polynomialMomentPairing_power_determinant {j : ℕ} (v : Fin j → ℕ �
         (Matrix.det fun a b : Fin j => (MvPolynomial.X b) ^ rows a) =
       Matrix.det (fun a b : Fin j => v b (rows a)) := by
   classical
-  simp only [Matrix.det_apply, Units.smul_def, map_sum, map_zsmul,
-    polynomialMomentPairing_power_product]
+  rw [Matrix.det_apply (fun a b : Fin j => (MvPolynomial.X b : MvPolynomial (Fin j) A) ^ rows a),
+    Matrix.det_apply (fun a b : Fin j => v b (rows a))]
+  simp only [Units.smul_def, map_sum, map_zsmul, polynomialMomentPairing_power_product]
 
 /-- Consecutive-row minors of all shifted columns control every choice of moment rows. -/
 theorem moment_determinant_mem_of_consecutive {j : ℕ} (v : Fin j → ℕ → A)

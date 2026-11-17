@@ -89,7 +89,9 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
 /-! ## PHASE 4 FINAL — the single Zhu bijection from `CrossCFirstDiffTowerEq` -/
 
-/-- **`zhuBijection_phase4` — the FINAL Phase-4 theorem: the Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` whose
+/-- **VACUOUS — do not cite.** The hypothesis `F` ranges over an EMPTY type: `VHat.CarrierBridgeFamily W` and `VHat.CarrierBridgeDataFamily W` are uninhabited for every `W` (`VHat.CarrierBridgeFamily.false`, `VHat.CarrierBridgeDataFamily.false` in `ZhuVermaAnArchCarrierBridgeVacuity.lean`: their `hvac` cannot hold on `M̄(U)`, which has no vacuum normalisation). So this statement proves nothing. Superseded MU track; kept only for provenance.
+
+**`zhuBijection_phase4` — the FINAL Phase-4 theorem: the Zhu bijection `Φ(𝒱) ↔ Irr A(𝒱)` whose
 ONLY genuine mathematical hypothesis is the single gate `CrossCFirstDiffTowerEq`.**
 
 Given

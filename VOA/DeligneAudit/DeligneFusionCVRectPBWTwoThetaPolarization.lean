@@ -29,9 +29,9 @@ theorem mixedCoeff_one_zero_of_Q_on_successor
     (hQw : Q F (r + 1) s w = 0) (hQu : Q F (r + 1) s u = 0) :
     mixedCoeff G F 1 r s w = 0 := by
   have hmw : mixedCoeff G F 0 (r + 1) s w = 0 := by
-    simpa only [mixedCoeff, pow_zero, one_mul, Q] using hQw
+    simpa only [mixedCoeff, pow_zero, one_mul, Q] using! hQw
   have hmu : mixedCoeff G F 0 (r + 1) s u = 0 := by
-    simpa only [mixedCoeff, pow_zero, one_mul, Q] using hQu
+    simpa only [mixedCoeff, pow_zero, one_mul, Q] using! hQu
   have he := congrArg (fun T : Module.End ℂ V => T w)
     (mixedCoeff_commutator F G X hXF hXG hFG 0 r s)
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.smul_apply,

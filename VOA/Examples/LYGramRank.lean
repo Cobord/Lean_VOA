@@ -328,7 +328,6 @@ theorem rank_bound (m : ℕ) :
     have hL1 : dT t0 ^ 2 * K * GRly m t0 ≠ 0 :=
       mul_ne_zero (mul_ne_zero (pow_ne_zero _ hM) (diag_ne _)) (GRly_ne m)
     apply hL1
-    simp only at hlim
     rw [hlim]
     simp only [sub_self, zero_pow hr0.ne', zero_mul]
   -- rank–nullity for the complement block

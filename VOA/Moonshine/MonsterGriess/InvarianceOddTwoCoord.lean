@@ -45,6 +45,11 @@ set_option linter.style.show false
 
 /-! ### From `CFSG/Monster/Spin/Defs.lean` -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess.Spin
 
 open VOA.Moonshine.MonsterGriess.Code
@@ -423,7 +428,7 @@ theorem tau_idxOdd_idxOdd_idxMinus (c c' : C₀) (i j : Fin 24) (p : LtPair) :
     obtain ⟨rfl, h1, -⟩ := h
     show sgn (pair (coordOf (rOdd c j)).1 (coordOf (rOdd c i)).2) = 1
     rw [coordOf_rOdd, coordOf_rOdd]
-    dsimp only
+    try dsimp only
     rw [pair_aOdd_thetaD_aOdd, h1, sgn_zero]
   · rw [if_neg (fun h' => h ((coordOf_rMinus_eq_iff c c' i j p).1 h')), if_neg h]
 
@@ -440,7 +445,7 @@ theorem tau_idxOdd_idxOdd_idxPlus (c c' : C₀) (i j : Fin 24) (p : LtPair) :
     obtain ⟨rfl, h1, -⟩ := h
     show sgn (pair (coordOf (rOdd c j)).1 (coordOf (rOdd c i)).2) = -1
     rw [coordOf_rOdd, coordOf_rOdd]
-    dsimp only
+    try dsimp only
     rw [pair_aOdd_thetaD_aOdd, h1]
     rfl
   · rw [if_neg (fun h' => h ((coordOf_rPlus_eq_iff c c' i j p).1 h')), if_neg h]

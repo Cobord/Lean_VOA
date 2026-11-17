@@ -81,7 +81,7 @@ theorem simple_regular_iff_pole_parameter_zero (D : FirstOrderDeformation (simpl
     intro a ha b hb
     refine ⟨hnorm a ha b hb, ?_⟩
     have h := hδ ⟨a, ha⟩ ⟨b, hb⟩
-    simpa only [hz, mul_zero, zero_smul] using h
+    simpa only [hz, mul_zero, zero_smul] using! h
 
 
 /-- If the scalar extracted from an actual normalized deformation is zero,

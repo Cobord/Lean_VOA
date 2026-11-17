@@ -31,7 +31,7 @@ theorem forwardBlockOperator_trace_pair (F : SphericalFusion C) (A : Center C)
       F.scalarTrace (U ⊗ W) (g ▷ W ≫ (A.2.β W).hom ≫ W ◁ f ≫ R) := by
   change F.scalarTrace U (F.toPivotal.partialTraceLeft W _ ≫ f) = _
   rw [← F.toPivotal.partialTraceLeft_postcomp, F.scalarTrace_partialTraceLeft]
-  simpa only [Category.assoc] using F.scalarTrace_comp_comm R
+  simpa only [Category.assoc] using! F.scalarTrace_comp_comm R
     (g ▷ W ≫ (A.2.β W).hom ≫ W ◁ f)
 
 /-- Resolve the exterior strand of a forward half-braiding. -/

@@ -40,6 +40,9 @@ All declarations `sorry`-free; `#print axioms` gives `[propext, Classical.choice
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace Moonshine
 
 open MvPolynomial TwistedHeisenberg HeisenbergN TwistedReduction

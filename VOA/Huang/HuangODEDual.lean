@@ -85,7 +85,7 @@ theorem term_mem (A : OrdVModule W M) (h : ℂ) {N d : ℕ} (hd : 1 ≤ d) (hdN 
         LinearMap.coe_mk, AddHom.coe_mk]
       rw [hidx]
   · -- `j = d`: a mode of `V₀ = ℂ𝟙` at index `d − 1 ≠ −1` vanishes
-    have h0 : (W.L 1 ^ j) u ∈ W.grading 0 := by simpa using hv
+    have h0 : (W.L 1 ^ j) u ∈ W.grading 0 := by simpa using! hv
     rw [W.vacuum_grade, Submodule.mem_span_singleton] at h0
     obtain ⟨c, hc⟩ := h0
     have hz : restrictToWeight A (h + N)
@@ -127,7 +127,7 @@ theorem dualC1Graded_of_contragredient (A : OrdVModule W M) {h : ℂ} {B : ℕ}
           φ = (g ∘ₗ mode (A.YM u) (m : ℤ)).domRestrict (A.weight (h + N))} by
       convert H using 1
       exact DirectSum.component.lof_self ℂ _ _
-    simp only [dualCompMap, LinearMap.smul_apply, LinearMap.coeFn_sum, Finset.sum_apply,
+    simp only [dualCompMap, LinearMap.smul_apply, LinearMap.coe_sum, Finset.sum_apply,
       map_smul, map_sum]
     refine Submodule.smul_mem _ _ (Submodule.sum_mem _ fun j hj => Submodule.smul_mem _ _ ?_)
     simp only [Finset.mem_range, Int.toNat_natCast] at hj

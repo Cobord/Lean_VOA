@@ -7,6 +7,9 @@ namespace VOA.Moonshine.ConwayNorton
 
 open AutMonster
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] vnatStringWeightAddCommGroup vnatStringSliceAddCommGroup
 attribute [local instance] monsterPhysicalAddCommGroup
 
@@ -46,8 +49,11 @@ theorem monsterLieRootSpaceEquiv_equivariant (x y : ℤ) (h : x ≠ 0 ∨ y ≠ 
     monsterLieRootSpaceEquiv x y h
       ⟨monsterLieAut g u, monsterLieAut_momentum g _ u u.property⟩ =
       GriessAut.autRestrict g (1 - x * y) (monsterLieRootSpaceEquiv x y h u) := by
-  simp only [monsterLieRootSpaceEquiv, LinearEquiv.trans_apply,
-    monsterLieSectorQuotientEquiv_symm_equivariant]
-  exact stringSectorNoGhostEquiv_equivariant x y h g _
+  -- Lean 4.35 port: the `simp only` unfolding timed out in `whnf`; compose the two
+  -- equivariance facts as terms (`LinearEquiv.trans_apply` is definitional).
+  have h1 := monsterLieSectorQuotientEquiv_symm_equivariant x y (stringSectorFamily x y h) g u
+  have h2 := stringSectorNoGhostEquiv_equivariant x y h g
+    ((monsterLieSectorQuotientEquiv x y (stringSectorFamily x y h)).symm u)
+  exact (congrArg (stringSectorNoGhostEquiv x y h) h1).trans h2
 
 end VOA.Moonshine.ConwayNorton

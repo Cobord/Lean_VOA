@@ -26,7 +26,7 @@ theorem a2_finite_terminal_of_steps (n : ℕ) (F : ℕ → Submodule ℂ M)
         let T : Submodule ℂ (F (j + 1)) :=
           (F j).comap (F (j + 1)).subtype
         have hm : T.map (F (j + 1)).subtype = F j := by
-          simpa [T, inf_eq_right.mpr (hmono j (by omega))] using
+          simpa [T, inf_eq_right.mpr (hmono j (by omega))] using!
             (Submodule.map_comap_subtype (p := F (j + 1)) (p' := F j))
         haveI : FiniteDimensional ℂ (T.map (F (j + 1)).subtype) := by
           rw [hm]
@@ -62,7 +62,7 @@ theorem a2_terminal_finrank_le_sum (n : ℕ)
     have heq : Module.finrank ℂ (F i) = Module.finrank ℂ T := by
       rw [← Submodule.finrank_map_subtype_eq]
       have hm : T.map (F (i + 1)).subtype = F i := by
-        simpa [T, inf_eq_right.mpr (hmono i hi)] using
+        simpa [T, inf_eq_right.mpr (hmono i hi)] using!
           (Submodule.map_comap_subtype (p := F (i + 1)) (p' := F i))
       rw [hm]
     letI : FiniteDimensional ℂ (F (i + 1)) := hfin (i + 1) (by omega)

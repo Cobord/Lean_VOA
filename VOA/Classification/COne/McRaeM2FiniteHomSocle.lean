@@ -66,10 +66,10 @@ theorem modeMap_le_basisImageSum (f : moduleHomSpace A B) :
   have he : (∑ j, (b.repr f j) • (b j : X →ₗ[ℂ] M)) = f.1 :=
     by
       have h := congrArg (moduleHomSpace A B).subtype (b.sum_repr f)
-      simpa only [map_sum,map_smul] using h
+      simpa only [map_sum,map_smul] using! h
   have hv : (∑ j, (b.repr f j) • ((b j : X →ₗ[ℂ] M) x)) = f.1 x := by
     have h := DFunLike.congr_fun he x
-    simpa only [LinearMap.sum_apply,LinearMap.smul_apply] using h
+    simpa only [LinearMap.sum_apply,LinearMap.smul_apply] using! h
   change f.1 x ∈ basisImageSum A B
   rw [← hv]
   apply Submodule.sum_mem

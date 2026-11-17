@@ -23,14 +23,14 @@ theorem theta_unitSquare_not_lattice (τ : ℍ) {α β : ℝ}
   have hk0 : 0 ≤ k := by exact_mod_cast (hk ▸ hα0)
   have hk1 : k < 1 := by exact_mod_cast (hk ▸ hα1)
   have hkz : k = 0 := by omega
-  have hα : α = 0 := by simpa [hkz] using hk
+  have hα : α = 0 := by simpa [hkz] using! hk
   have hr := congrArg Complex.re he
   simp only [hα, hkz, ofReal_zero, Int.cast_zero, zero_mul, zero_add, add_zero,
     ofReal_re, intCast_re] at hr
   have hm0 : 0 ≤ m := by exact_mod_cast (hr ▸ hβ0)
   have hm1 : m < 1 := by exact_mod_cast (hr ▸ hβ1)
   have hmz : m = 0 := by omega
-  exact hab ⟨hα, by simpa [hmz] using hr⟩
+  exact hab ⟨hα, by simpa [hmz] using! hr⟩
 
 /-- Nonzero torsion indices avoid the lattice, also on the boundary `a=0`. -/
 theorem theta_torsion_not_lattice {N : ℕ} (hN : 0 < N) (a b : Fin N)
@@ -45,7 +45,7 @@ theorem theta_torsion_not_lattice {N : ℕ} (hN : 0 < N) (a b : Fin N)
     constructor
     · exact_mod_cast (div_eq_zero_iff.mp ha0).resolve_right hNR.ne'
     · exact_mod_cast (div_eq_zero_iff.mp hb0).resolve_right hNR.ne'
-  simpa only [ofReal_div, ofReal_natCast] using
+  simpa only [ofReal_div, ofReal_natCast] using!
     theta_unitSquare_not_lattice τ (α := (a.val : ℝ) / N) (β := (b.val : ℝ) / N)
       (by positivity) ha (by positivity) hb hn m k
 

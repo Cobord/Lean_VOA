@@ -247,7 +247,7 @@ theorem exists_coeff_of_rank_le {V : Type*} [AddCommGroup V] [Module ℂ V]
     (hrank : Module.rank ℂ 𝔄 ≤ (Fintype.card ι : Cardinal)) :
     ∀ x ∈ 𝔄, ∃ c : ι → ℂ, x = ∑ i, c i • t i := by
   have hlt : Module.rank ℂ 𝔄 < Cardinal.aleph0 :=
-    lt_of_le_of_lt hrank (Cardinal.nat_lt_aleph0 _)
+    lt_of_le_of_lt hrank Cardinal.natCast_lt_aleph0
   haveI : FiniteDimensional ℂ 𝔄 := by
     rw [FiniteDimensional, ← Module.rank_lt_aleph0_iff]; exact hlt
   have hsub : Submodule.span ℂ (Set.range t) ≤ 𝔄 := by
@@ -349,7 +349,7 @@ theorem blockSpannedByTraces_of_rank_le
       ≤ (Fintype.card ι : Cardinal)) :
     BlockSpannedByTraces Mfam h := by
   have hlt : Module.rank ℂ (Submodule.map restrictImGT (gradedBlocks W)) < Cardinal.aleph0 :=
-    lt_of_le_of_lt hrank (Cardinal.nat_lt_aleph0 _)
+    lt_of_le_of_lt hrank Cardinal.natCast_lt_aleph0
   haveI : FiniteDimensional ℂ (Submodule.map restrictImGT (gradedBlocks W)) := by
     rw [FiniteDimensional, ← Module.rank_lt_aleph0_iff]
     exact hlt

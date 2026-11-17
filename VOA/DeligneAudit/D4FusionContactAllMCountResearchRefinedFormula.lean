@@ -68,7 +68,7 @@ theorem piece_middle_sub_leading_mem (ha : b.lower.val + 1 < b.top.val)
           LinearMap.smul_apply,LinearMap.comp_apply,LinearMap.mulLeft_apply,
           hzero,mul_zero,smul_zero]
       rw [he,map_zero]
-      simpa only [pieceLeading,sub_zero] using (refinedLowSpan b).zero_mem
+      simpa only [pieceLeading,sub_zero] using! (refinedLowSpan b).zero_mem
 
 
 def piecesLeading (b : BoundaryPair m) : List WheelPiece → MvPolynomial (Vars m) ℂ

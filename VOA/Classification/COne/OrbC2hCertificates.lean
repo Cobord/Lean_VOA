@@ -28,7 +28,7 @@ theorem vector_eq_of_certificate (S T : SectorVector) (h : VectorCertificate S T
   have hh := evaluate_zero_of_polys _ h
   rw [evaluate_compact, evaluate_append, evaluate_scaleVector] at hh
   norm_num only [Rat.cast_neg, Rat.cast_one, neg_one_smul] at hh
-  exact eq_of_sub_eq_zero (by simpa only [sub_eq_add_neg] using hh)
+  exact eq_of_sub_eq_zero (by simpa only [sub_eq_add_neg] using! hh)
 
 theorem neutral_value (Q : RawPoly ℕ) (n : ℤ) (S T : SectorVector)
     (h : VectorCertificate (neutralS Q n S) T) :

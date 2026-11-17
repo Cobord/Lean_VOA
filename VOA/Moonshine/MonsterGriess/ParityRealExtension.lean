@@ -48,6 +48,11 @@ import Mathlib.Tactic.LinearCombination
   `Jordan.symmetric_matrix_isometric_jordan_automorphisms`, `Parity.eq_or_eq_neg_of_conj_eq_rat`.
 -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 set_option linter.style.longLine false
 
 namespace VOA.Moonshine.MonsterGriess.Jordan

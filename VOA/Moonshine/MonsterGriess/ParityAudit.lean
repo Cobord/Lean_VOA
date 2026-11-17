@@ -19,6 +19,11 @@ One `#print axioms` per public theorem of the port of Axiom Math's
 `[propext, Classical.choice, Quot.sound]` (or a subset), no `sorryAx`.
 -/
 
+-- Lean 4.35 port: restored from the Axiom source (these Mathlib instances do not exist in v4.30, where the
+-- line was dropped; the module docstring's port notes predate this).
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace VOA.Moonshine.MonsterGriess
 
 /-! ## Headline -/

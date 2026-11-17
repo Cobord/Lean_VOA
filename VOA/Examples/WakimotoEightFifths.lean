@@ -103,6 +103,8 @@ is not used**: `#print axioms sl2SingularLY_ne_zero` reports
 * `Examples/WakimotoFree.lean` §26, the same argument at `k = -4/3`.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.WakLY
 
 open VOA VOA.Wak

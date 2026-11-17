@@ -133,7 +133,7 @@ theorem Fdw_le_span (D : ℕ) (w : ℤ) :
   rw [p.as_sum]
   refine sum_mem fun s hs => ?_
   have hdw : wt s = w.toNat := hpw (mem_support_iff.mp hs)
-  rw [show (monomial s (coeff s p) : Fk) = coeff s p • monomial s 1 by
+  rw [show (monomial s (p.coeff s) : Fk) = p.coeff s • monomial s 1 by
     rw [smul_monomial, smul_eq_mul, mul_one]]
   refine smul_mem _ _ (subset_span ⟨s, ?_, by omega, rfl⟩)
   refine le_trans ?_ (hp.1)

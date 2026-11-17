@@ -25,7 +25,7 @@ theorem particlePolynomial_mem_functionalModel (m D : ℕ) (color : ι → Fin 3
   by_cases hr : r.degree = D
   · rw [coeff_particleMap _ _ _ _ _ hr, coeff_particlePolynomial, if_pos hr]
     rfl
-  · change coeff r (particlePolynomial D _ color) = _
+  · change (particlePolynomial D _ color).coeff r = _
     simp [coeff_particlePolynomial, hr]
 
 /-- Color-preserving equivalences of particle labels transport the actual functional model. -/
@@ -44,7 +44,7 @@ def functionalModelEquiv (m D : ℕ) (color : ι → Fin 3) (other : κ → Fin 
     functionalModel (K := K) m D color ≃ₗ[K] functionalModel (K := K) m D other where
   toFun F := ⟨rename e F.val, rename_mem_functionalModel m D color other e he F.val F.property⟩
   invFun F := ⟨rename e.symm F.val, rename_mem_functionalModel m D other color e.symm
-    (fun i ↦ by simpa using (he (e.symm i)).symm) F.val F.property⟩
+    (fun i ↦ by simpa using! (he (e.symm i)).symm) F.val F.property⟩
   left_inv F := by apply Subtype.ext; simp [rename_rename]
   right_inv F := by apply Subtype.ext; simp [rename_rename]
   map_add' F G := by apply Subtype.ext; simp

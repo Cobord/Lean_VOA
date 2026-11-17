@@ -73,7 +73,8 @@ theorem neg_one_div_mem_imGT {z : ℂ} (hz : z ∈ imGT 0) : -1 / z ∈ imGT 0 :
 
 theorem add_one_mem_imGT {z : ℂ} (hz : z ∈ imGT 0) : z + 1 ∈ imGT 0 := by
   change (0 : ℝ) < (z + 1).im
-  simpa using hz
+  have hz' : (0 : ℝ) < z.im := hz
+  simpa using hz'
 
 /-- **`S`-equivariance of the iterated Serre derivative for an `S`-closed family.** -/
 theorem amSerreIter_S {n : ℕ} {f : Fin n → ℂ → ℂ} (hf : ∀ j, ∀ z ∈ imGT 0, AnalyticAt ℂ (f j) z)
@@ -91,7 +92,7 @@ theorem amSerreIter_S {n : ℕ} {f : Fin n → ℂ → ℂ} (hf : ∀ j, ∀ z �
       have hw0 : w ≠ 0 := ne_zero_of_mem_imGT hw
       rw [slashC, mobiusC_S, denomC_S, ih i hw, mul_comm, ← mul_assoc,
         show (w : ℂ) ^ (-(2 * (m : ℤ))) * w ^ (2 * m) = 1 from by
-          rw [zpow_neg, show (2 * (m : ℤ)) = ((2 * m : ℕ) : ℤ) from by push_cast; ring,
+          rw [_root_.zpow_neg, show (2 * (m : ℤ)) = ((2 * m : ℕ) : ℤ) from by push_cast; ring,
             zpow_natCast, inv_mul_cancel₀ (pow_ne_zero _ hw0)], one_mul]
     have hdiff : DifferentiableAt ℂ (amSerreIter m (f i)) (mobiusC ModularGroup.S z) :=
       (analyticAt_amSerreIter m (hf i) (mobiusC_mem_imGT _ hz)).differentiableAt
@@ -118,7 +119,7 @@ theorem amSerreIter_S {n : ℕ} {f : Fin n → ℂ → ℂ} (hf : ∀ j, ∀ z �
     rw [hsum, slashC, mobiusC_S, denomC_S] at hkey
     simp only [amSerreIter_succ]
     rw [← hkey, show ((2 * (m : ℤ) + 2)) = ((2 * (m + 1) : ℕ) : ℤ) from by push_cast; ring,
-      zpow_neg,
+      _root_.zpow_neg,
       zpow_natCast]
     field_simp
 /-! ## The Wronskian and its Cramer minors -/

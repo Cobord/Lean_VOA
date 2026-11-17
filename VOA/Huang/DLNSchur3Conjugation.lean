@@ -35,8 +35,8 @@ theorem conj_of_commutator_normalization (h3 : Nat.Coprime 3 n)
   have hx := hX h b s hh hb
   rw [hst] at hx
   rw [← hx, conjugate_commutatorElement]
-  have ht' : π (g * h * g⁻¹) = T' := by simpa [hh] using hT
-  have hu' : π (g * b * g⁻¹) = V (c * s) := by simpa [hb] using hU s
+  have ht' : π (g * h * g⁻¹) = T' := by simpa [hh] using! hT
+  have hu' : π (g * b * g⁻¹) = V (c * s) := by simpa [hb] using! hU s
   rw [hY _ _ _ ht' hu']
   congr 2
   calc
@@ -81,7 +81,7 @@ theorem normalized_weyl_upper_conj (g : E) (u : (ZMod n)ˣ)
   have h := conj_of_commutator_normalization h3 π hs _ _ _ _ X Y hn.1 hn.2 g
     (-((↑u⁻¹ : ZMod n) ^ 2)) (by rw [hg, weyl_torus_conj])
     (by intro s; rw [hg, weyl_upper_conj, neg_mul]) t
-  simpa only [neg_mul] using h
+  simpa only [neg_mul] using! h
 
 /-- The reverse Weyl conjugation identity. -/
 theorem normalized_weyl_lower_conj (g : E) (u : (ZMod n)ˣ)
@@ -91,7 +91,7 @@ theorem normalized_weyl_lower_conj (g : E) (u : (ZMod n)ˣ)
   have h := conj_of_commutator_normalization h3 π hs _ _ _ _ Y X hn.2 hn.1 g
     (-((u : ZMod n) ^ 2)) (by rw [hg, weyl_torus_conj, inv_inv])
     (by intro s; rw [hg, weyl_lower_conj, neg_mul]) t
-  simpa only [neg_mul] using h
+  simpa only [neg_mul] using! h
 
 end Covariance
 

@@ -113,7 +113,7 @@ theorem weight_zero_ne_bot (A : OrdVModule W M) [Nontrivial M]
     rw [WeakModule.act_def, WeakModule.act_def] at h
     have hL : mode ((adjointModule W).YM W.conformalVector) 1 W.vacuum = (0 : ℂ) • W.vacuum := by
       have := W.L0_grading W.vacuum W.vacuum_mem_grading_zero
-      simpa using this
+      simpa using! this
     rw [hL, map_smul] at h
     rw [hx0, ← h]
   intro hbot

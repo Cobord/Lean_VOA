@@ -18,10 +18,10 @@ theorem two_seed_raising_v (c : Fin 28) (hc : D4sector.raising c)
   · interval_cases s
     · have ht : [(c, 0)] ∈ (ravFam D4sector 2 0).tails :=
         Or.inl ⟨c, 0, hc, rfl⟩
-      simpa [symbolLetters, wordOpT] using two_syntax_tail [(c, 0)] ht
+      simpa [symbolLetters, wordOpT] using! two_syntax_tail [(c, 0)] ht
     · have ht : [(c, 1)] ∈ (ravFam D4sector 2 0).tails :=
         Or.inl ⟨c, 1, hc, rfl⟩
-      simpa [symbolLetters, wordOpT] using two_syntax_tail [(c, 1)] ht
+      simpa [symbolLetters, wordOpT] using! two_syntax_tail [(c, 1)] ht
   · rw [(ρPTE 2).high_zero c 0 s (by omega)]
     rfl
 
@@ -39,7 +39,7 @@ theorem two_seed_raising_zero (c : Fin 28) (hc : D4sector.raising c)
       Y (G x) - G (Y x) = Z x := by
     have h := (ρPTE 2).comm c D4sector.c₀ 0 1 s 0 x
     rw [if_pos (by omega)] at h
-    simpa [Y, G, Z] using h
+    simpa [Y, G, Z] using! h
   have hZv : Z (pTE 2) = 0 := by
     simp only [Z, LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply]
     apply Finset.sum_eq_zero
@@ -86,11 +86,11 @@ theorem two_seed_cartan_v (c : Fin 28) (hc : D4sector.cartan c) :
     (JT D4sector.f 2 (JprimeSyntaxE 2)).mkQ (swT [(q.1, 0, 0)]) at h1
   change pTE 2 = (JT D4sector.f 2 (JprimeSyntaxE 2)).mkQ (swT []) at h0
   rw [← h1, ← h0] at h
-  simpa [q] using (sub_eq_zero.mp h)
+  simpa [q] using! (sub_eq_zero.mp h)
 
 private theorem cartan_theta_table : ∀ c e : Fin 28,
-    c.val < 4 → D4sector.f c D4sector.c₀ e =
-      if e = D4sector.c₀ then -(thetaD4 c : ℂ) else 0 := by
+    c.val < 4 → fD4 c (27 : Fin 28) e =
+      if e = (27 : Fin 28) then -(thetaD4 c : ℂ) else 0 := by
   intro c e hc
   change (fZ br c 27 e : ℂ) = _
   have hz : fZ br c 27 e =
@@ -100,7 +100,7 @@ private theorem cartan_theta_table : ∀ c e : Fin 28,
       decide +kernel
     exact ht c e hc
   rw [hz]
-  simp [D4sector]
+  split_ifs <;> simp
 
 theorem two_seed_cartan_zero (c : Fin 28) (hc : D4sector.cartan c)
     (s : ℕ) (hs : s ≤ 1) :
@@ -113,6 +113,8 @@ theorem two_seed_cartan_zero (c : Fin 28) (hc : D4sector.cartan c)
         (∑ e : Fin 28, D4sector.f c D4sector.c₀ e •
           (ρPTE 2).op e 1 s x) =
           (-(thetaD4 c : ℂ)) • (ρPTE 2).op D4sector.c₀ 1 s x := by
+      change (∑ e : Fin 28, fD4 c (27 : Fin 28) e • (ρPTE 2).op e 1 s x) =
+        (-(thetaD4 c : ℂ)) • (ρPTE 2).op (27 : Fin 28) 1 s x
       simp only [cartan_theta_table c _ hc, ite_smul, zero_smul,
         Finset.sum_ite_eq', Finset.mem_univ, if_true]
     have h := (ρPTE 2).comm c D4sector.c₀ 0 1 s 0 x
@@ -121,7 +123,7 @@ theorem two_seed_cartan_zero (c : Fin 28) (hc : D4sector.cartan c)
         (ρPTE 2).op c 0 s (G x) - G ((ρPTE 2).op c 0 s x) =
           ∑ e : Fin 28, D4sector.f c D4sector.c₀ e •
             (ρPTE 2).op e 1 s x := by
-      simpa only [G, Nat.zero_add, Nat.add_zero] using h
+      simpa only [G, Nat.zero_add, Nat.add_zero] using! h
     exact h'.trans hsum
   interval_cases s
   · have hv := two_seed_cartan_v c hc

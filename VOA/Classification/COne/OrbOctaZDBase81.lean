@@ -59,10 +59,11 @@ theorem fo_charge_six : fo (latChargeGen (latP 1) (6 : ℤ)) =
   rw [fo_eq]
   change V2v.smul (latChargeGen (latP 1) (-1 : ℤ)) 0
     (latStateGen (latP 1) (vacuumN _) (6 : ℤ)) = _
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_pos (by norm_num),
-    PlusCharacterTable.rankOne_cocycle, one_smul]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) ((-1 : ℤ) : (latP 1).carrier),
+    latP_form 1 (-1 : ℤ) (6 : ℤ), if_pos (by norm_num),
+    PlusCharacterTable.rankOne_cocycle 1 ((-1 : ℤ) : (latP 1).carrier)
+      ((6 : ℤ) : (latP 1).carrier), one_smul]
   norm_num
-  rfl
 
 theorem EEVec_four_schur11 :
     EEVec (latP 1) (4 : ℤ) (-11) (vSchur (latP 1) (-1 : ℤ) 11) =
@@ -72,9 +73,10 @@ theorem EEVec_four_schur11 :
   rw [show max (0 : ℤ) (-11) = 0 by norm_num,
     show ((11 : ℕ) : ℤ) + (-11) = 0 by norm_num,
     Finset.Icc_self, Finset.sum_singleton, show ((0 : ℤ) - (-11)).toNat = 11 by rfl,
-    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero, one_mul,
-    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) _ _ 11 11 le_rfl,
-    Nat.sub_self, vSchur_zero, latP_form]
+    show (0 : ℤ).toNat = 0 by rfl, vSchur_zero (latP 1) ((4 : ℤ) : (latP 1).carrier), one_mul,
+    aExpVec_vSchur (latP 1) (latP_posDef 1 le_rfl) ((-1 : ℤ) : (latP 1).carrier)
+      ((4 : ℤ) : (latP 1).carrier) 11 11 le_rfl,
+    Nat.sub_self, vSchur_zero (latP 1) ((-1 : ℤ) : (latP 1).carrier), latP_form 1 (-1 : ℤ) (4 : ℤ)]
   norm_num only [Nat.cast_one, mul_one, Int.cast_mul, Int.cast_neg, Int.cast_one,
     Int.cast_ofNat, mul_neg, one_mul]
   rw [g11]
@@ -84,7 +86,8 @@ theorem base46_00 : V2v.smul (wv 4 0) (-30) (wv 6 0) = 0 := by
   rw [wv_zero, wv_zero]
   change V2v.smul (latChargeGen (latP 1) (4 : ℤ)) (-30)
     (latStateGen (latP 1) (vacuumN _) (6 : ℤ)) = 0
-  rw [smul_chargeGen_state, EEVec_vacuum, latP_form, if_neg (by norm_num)]
+  rw [smul_chargeGen_state, EEVec_vacuum (latP 1) ((4 : ℤ) : (latP 1).carrier),
+    latP_form 1 (4 : ℤ) (6 : ℤ), if_neg (by norm_num)]
   simp [latStateGen]
 
 theorem base46_01 : V2v.smul (wv 4 0) (-30) (wv 6 1) = (2652 : ℂ) • wv 9 0 := by
@@ -92,9 +95,11 @@ theorem base46_01 : V2v.smul (wv 4 0) (-30) (wv 6 1) = (2652 : ℂ) • wv 9 0 :
     rw [wv, cnk, vn]
     norm_num [Nat.factorial]
   rw [h, fo_charge_six, wv_zero, PreVertexAlgebra.smul_smul_right,
-    smul_chargeGen_state, PlusCharacterTable.rankOne_cocycle, one_smul, latP_form]
+    smul_chargeGen_state,
+    PlusCharacterTable.rankOne_cocycle 1 (((4 : ℕ) : ℤ) : (latP 1).carrier)
+      ((5 : ℤ) : (latP 1).carrier), one_smul, latP_form 1 ((4 : ℕ) : ℤ) (5 : ℤ)]
   norm_num only [Nat.cast_ofNat, Int.reduceMul, Int.reduceNeg, Int.reduceSub, Int.reduceAdd]
-  rw [EEVec_four_schur11, latStateGen_csmul, smul_smul, wv_zero]
+  rw [EEVec_four_schur11, latStateGen_csmul (latP 1) _ _ ((9 : ℤ) : (latP 1).carrier), smul_smul, wv_zero]
   norm_num
   rfl
 

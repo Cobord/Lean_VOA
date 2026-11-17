@@ -55,7 +55,7 @@ theorem cfT_YTL_one (γ : L.carrier) (k : ℤ) (t : Rep (cocMat L) (isUnit_det_c
       = ((2 : ℂ) ^ (-(L.form γ γ)) * (if -k - 2 + L.form γ γ = 0 then 1 else 0))
         • eT L hEven hU γ t := by
   rw [YTL_tmul, map_smul, cfT_tmul, DD_one, smul_smul,
-    show coeff 0 (sMz (chargeCoord L γ) (-k - 2 + L.form γ γ))
+    show (sMz (chargeCoord L γ) (-k - 2 + L.form γ γ)).coeff 0
       = constantCoeff (sMz (chargeCoord L γ) (-k - 2 + L.form γ γ)) by
         rw [MvPolynomial.constantCoeff_eq], constantCoeff_sMz]
 

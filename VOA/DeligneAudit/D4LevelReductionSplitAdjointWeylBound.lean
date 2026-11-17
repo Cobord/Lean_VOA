@@ -20,7 +20,7 @@ theorem truncatedWeyl_sl4_splitAdjoint_rank_le (a b j : ℕ) (hj : j ≤ a) :
   refine ⟨(truncatedLabelModule_finite_and_local_bound a b a (a + b + j)).1, ?_⟩
   induction j generalizing a with
   | zero =>
-    simpa only [Nat.add_zero, Nat.sub_zero, pow_zero, one_mul] using
+    simpa only [Nat.add_zero, Nat.sub_zero, pow_zero, one_mul] using!
       (truncatedWeyl_sl4_mixed_rank_le a b).2
   | succ j ih =>
     have ha : 1 ≤ a := by omega

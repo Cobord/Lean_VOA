@@ -76,7 +76,7 @@ theorem middleRaisingProduct_word_zero (m : ℕ)
       have hz := hk (simple_raise_word_span ρ w m h 1 r l)
       simpa only [middleRaisingProduct, List.map_append, List.map_cons, List.map_nil,
         List.prod_append, List.prod_cons, List.prod_nil, mul_one, Module.End.mul_apply,
-        LinearMap.mem_ker] using hz
+        LinearMap.mem_ker] using! hz
 
 /-- The positional bottom word has precisely the prescribed number of central letters. -/
 theorem bottomMode_centralCount (a c : ℕ) (d : BottomModeSlot a c →₀ ℕ) :
@@ -176,7 +176,7 @@ theorem middlePositionEvaluation_word {B : Type*} [CommRing B] [Algebra ℂ B]
   | nil => rfl
   | cons i is ih =>
       simpa only [SL4T.positionModeProduct, List.map_cons, List.prod_cons,
-        Module.End.mul_apply, wordOp] using congrArg (Q.op 3 (u i)) ih
+        Module.End.mul_apply, wordOp] using! congrArg (Q.op 3 (u i)) ih
 
 /-- The converted evaluator is zero when its raising length exceeds the central count. -/
 theorem universalCoreEvaluation_raising_overfull (a b c j : ℕ) (hj : c < j) :
@@ -189,7 +189,7 @@ theorem universalCoreEvaluation_raising_overfull (a b c j : ℕ) (hj : c < j) :
       change SL4T.positionModeEvaluation (fun _ s => (universalCoreCurrent a b c).op 3 s)
         (List.finRange j) (universalCoreEvaluation a b c) (monomial u z) = 0
       rw [middlePositionEvaluation_word]
-      exact coreGrassmannianEvaluation_overfull _ _ a b c _ _ (by simpa using hj) z
+      exact coreGrassmannianEvaluation_overfull _ _ a b c _ _ (by simpa using! hj) z
   | add P Q hP hQ => simp only [map_add, hP, hQ, add_zero, LinearMap.zero_apply]
 
 end

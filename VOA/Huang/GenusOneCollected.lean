@@ -24,7 +24,7 @@ theorem intertwiner_eventually_zero_on_weight (Y : IntertwiningOperator A N N)
     have hki : (K : ℝ) ≤ i := by exact_mod_cast hi
     simp only [Complex.sub_re, Complex.add_re, Complex.intCast_re, Complex.one_re] at hb
     linarith
-  simpa only [hbot, Submodule.mem_bot] using hmem
+  simpa only [hbot, Submodule.mem_bot] using! hmem
 
 noncomputable def tracePair (Y : IntertwiningOperator A N N) (a : V) (w : M₁)
     (k : ℤ) (α : ℂ) (p : ℤ) : Module.End ℂ M :=
@@ -101,7 +101,7 @@ theorem zeroMode_neg_one_eq_finsum_tracePair (ha : a ∈ W.grading ka) (hv : v �
       rw [hNa _ (by omega), map_zero]
   have hsplit := finsum_int_split_two (fun p => tracePair Y a v ka l p x) hfinP
     (fun j : ℕ => (j : ℤ))
-    (fun j : ℕ => -1 - j) Nat.cast_injective (fun a b h => by simpa using h) ?_ ?_
+    (fun j : ℕ => -1 - j) Nat.cast_injective (fun a b h => by simpa using! h) ?_ ?_
   · rw [hsplit, add_comm]
     congr 1
     · refine finsum_congr (fun j => ?_)
@@ -194,8 +194,8 @@ theorem trace_pair_geom (i : ℤ) (ha : a ∈ W.grading ka) (hv : v ∈ A.weight
         cbz i r * trace Y (mode (A.YM a) r v) (e - ((j : ℂ) + 1) * ((ka : ℂ) - i - 1)) := by
   have h := gradedTrace_geomSolve _ (fun e =>
     -(∑ᶠ r : ℤ, cbz i r * trace Y (mode (A.YM a) r v) e)) _
-    (fun e => by simpa only [sub_eq_add_neg] using trace_pair_step Y ha hv i e) e n hz
-  simpa only [Finset.sum_neg_distrib] using h
+    (fun e => by simpa only [sub_eq_add_neg] using! trace_pair_step Y ha hv i e) e n hz
+  simpa only [Finset.sum_neg_distrib] using! h
 
 theorem trace_pair_geom_up (i : ℤ) (ha : a ∈ W.grading ka) (hv : v ∈ A.weight l)
     (e : ℂ) (n : ℕ)
@@ -206,8 +206,8 @@ theorem trace_pair_geom_up (i : ℤ) (ha : a ∈ W.grading ka) (hv : v ∈ A.wei
         cbz i r * trace Y (mode (A.YM a) r v) (e + (j : ℂ) * ((ka : ℂ) - i - 1)) := by
   have h := gradedTrace_geomSolve_up _ (fun e =>
     -(∑ᶠ r : ℤ, cbz i r * trace Y (mode (A.YM a) r v) e)) _
-    (fun e => by simpa only [sub_eq_add_neg] using trace_pair_step Y ha hv i e) e n hz
-  simpa only [Finset.sum_neg_distrib, neg_neg] using h
+    (fun e => by simpa only [sub_eq_add_neg] using! trace_pair_step Y ha hv i e) e n hz
+  simpa only [Finset.sum_neg_distrib, neg_neg] using! h
 
 theorem trace_reversed_pair (ha : a ∈ W.grading ka) (hv : v ∈ A.weight l)
     (i : ℤ) (e : ℂ) :

@@ -35,10 +35,10 @@ theorem left_eq_zero_of_coefficient_products {ι : Type v} [Fintype ι]
     apply Submodule.span_le.mpr
     rintro _ ⟨n, y, w, rfl⟩
     change L (coefficientVector B n y w) = 0
-    simpa [L, coefficientVector] using hzero p n x y w
+    simpa [L, coefficientVector] using! hzero p n x y w
   rw [coefficientSpan_eq_top iQ B hB] at hL
   have he : L (Pi.single j z) = 0 := hL (Submodule.mem_top)
-  simpa [L, Pi.single_apply, apply_ite] using he
+  simpa [L, Pi.single_apply, apply_ite] using! he
 
 /-- All vector-valued product coefficients, with two independent mode indices. -/
 abbrev FormalProductData (P₁ P₂ P₃ : LWModule W) :=

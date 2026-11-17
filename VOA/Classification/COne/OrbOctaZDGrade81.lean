@@ -16,11 +16,12 @@ theorem q24_XX_negative (m : ℕ) : q24L (selfMode (-((m : ℤ) + 1))) = 0 := by
   intro k hk hk16
   have hg : W.smul X k X ∈ W.grading (31 - k) := by
     convert W.grading_mode _ X_grading _ X_grading k using 2 ; ring
+    rfl
   exact q24_grading_lt36 (by omega) (by omega) hg
 
 theorem q24_I4sq : q24L (mk W (Tav (I4 * I4))) = 0 :=
   q24_top inv_I4 inv_I4 I4_hom I4_hom q24_grading_lt64
-    (by simpa using q24_XX_negative 32)
+    (by simpa using! q24_XX_negative 32)
 
 theorem q24_grading_lt81 : ∀ N : ℤ, 0 < N → N < 81 →
     ∀ y ∈ W.grading N, q24L (mk W y) = 0 := by
@@ -41,9 +42,9 @@ theorem q24_grading_lt81 : ∀ N : ℤ, 0 < N → N < 81 →
       have hd1 : d ≤ 1 := by omega
       interval_cases b <;> interval_cases c <;> interval_cases d <;> omega
     rcases he with ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩
-    · simpa [genMon] using q24_seed16
-    · simpa [genMon, pow_two] using q24_seed_two
-    · simpa [genMon, pow_two] using q24_I4sq
+    · simpa [genMon] using! q24_seed16
+    · simpa [genMon, pow_two] using! q24_seed_two
+    · simpa [genMon, pow_two] using! q24_I4sq
 
 theorem q24_XY_negative (m : ℕ) :
     q24L (mk W (W.smul X (-((m : ℤ) + 1)) (octaSeeds 2))) = 0 := by
@@ -52,6 +53,7 @@ theorem q24_XY_negative (m : ℕ) :
   have hg36 : octaSeeds 2 ∈ W.grading (36 : ℤ) := OrbOctaZ.seeds_homogeneous 2
   have hg : W.smul X k (octaSeeds 2) ∈ W.grading (51 - k) := by
     convert W.grading_mode _ X_grading _ hg36 k using 2 ; ring
+    rfl
   exact q24_grading_lt64 _ (by omega) (by omega) _ hg
 
 end VOA.Classification.COne.OrbOctaZD

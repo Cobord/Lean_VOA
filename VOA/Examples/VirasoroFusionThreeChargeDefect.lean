@@ -16,6 +16,8 @@ the resulting response has a nonzero canonical pairing.
 -/
 set_option maxHeartbeats 800000
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- The seed-three error on the first positive input defect is an explicit

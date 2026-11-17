@@ -82,8 +82,8 @@ theorem simple_eval_mem_grading (D : FirstOrderDeformation (simple k hk))
   have h2 := congrArg Prod.snd h
   simp only [grading_eq_L_zero_eigenspace, Module.End.mem_eigenspace_iff]
   constructor
-  · simpa [liftedDegree_apply] using congrArg Neg.neg h1.symm
-  · simpa [liftedDegree_apply] using congrArg Neg.neg h2.symm
+  · simpa [liftedDegree_apply] using! congrArg Neg.neg h1.symm
+  · simpa [liftedDegree_apply] using! congrArg Neg.neg h2.symm
 
 /-- A projection to a different weight kills an already homogeneous state. -/
 private theorem gradePart_ne {n j : ℤ} {v : WakModule k ⧸ I}
@@ -116,7 +116,7 @@ theorem simple_eval_gradeClosed (D : FirstOrderDeformation (simple k hk))
       exact LinearMap.mem_range_self F v
     · rw [(gradePart_ne k hk) hkn h1, (gradePart_ne k hk) hkn h2]
       exact (LinearMap.range F).zero_mem
-  · simpa only [map_zero] using (LinearMap.range F).zero_mem
+  · simpa only [map_zero] using! (LinearMap.range F).zero_mem
   · intro x y hx hy
     rw [map_add, map_add]
     exact (LinearMap.range F).add_mem hx hy

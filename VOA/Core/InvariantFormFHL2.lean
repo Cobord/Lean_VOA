@@ -33,6 +33,9 @@ open Classical
 variable {V : Type*} [AddCommGroup V] [Module ℂ V] {W : VertexOperatorAlgebra V}
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- (I) sl₂ decomposition, as a named Prop.  Proved under `L₁𝒱₁ = 0` by `qpDecomp`
 (`Core.QuasiPrimaryDecomp`). -/
 def DecompHyp (W : VertexOperatorAlgebra V) : Prop :=

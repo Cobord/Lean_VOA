@@ -44,7 +44,7 @@ theorem f4_hc : ((F4data.n : ℕ) : ℂ) * (-5/2) / (-5/2 + f4CertData.h) =
 theorem kappaInv_eq (a c : Fin 52) :
     f4CertData.kappaInv a c = (f4D a : ℂ)⁻¹ * (coef (f4dl a) c : ℂ) := by
   change (Pi.basisFun ℂ (Fin 52)).repr (dualV f4Checks f4dl f4D a) c = _
-  rw [Pi.basisFun_repr]
+  erw [Pi.basisFun_repr]
   rfl
 
 /-- `2 / Dᵢ`. -/
@@ -70,7 +70,7 @@ theorem row_gen (i : Fin 52) (d : ℂ) (l : List (ℕ × ℤ)) :
         rw [coef_cons, Int.cast_add, mul_add, map_add, add_mul]
       rw [Finset.sum_congr rfl (fun j _ => hsplit j), Finset.sum_add_distrib, ih, List.map_cons,
         List.sum_cons, mul_add]
-      congr 1
+      refine congrArg₂ (· + ·) ?_ rfl
       by_cases ht : t.1 < 52
       · rw [Finset.sum_eq_single ⟨t.1, ht⟩]
         · rw [if_pos rfl, Xn, dif_pos ht, map_mul, map_intCast]
@@ -144,7 +144,7 @@ theorem sym_hw : F4C.sym (∑ s, (cz s : ℂ) • (X (ta s) * X (tb s))) = 0 := 
   refine sym_singular f4CertData (-5/2) f4_level_ne (fun s => (cz s : ℂ)) ta tb ?_ ?_ ?_
   · have h := f4sv_proj
     rw [f4sv, quadState] at h
-    simpa [termsZC, f4svTerms, Fin.sum_univ_four, cz, ta, tb, add_assoc] using h
+    simpa [termsZC, f4svTerms, Fin.sum_univ_four, cz, ta, tb, add_assoc] using! h
   · intro e
     have h := hw_bracket_shadowZ e
     simp only [f4scZ] at h

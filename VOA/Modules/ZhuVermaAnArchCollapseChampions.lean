@@ -155,7 +155,9 @@ theorem mUGradedAction_of_cores (W : VertexOperatorAlgebra 𝒱) (h : CollapseCo
 
 /-! ## The honest headline — the faithful main theorem and its EXACT residual. -/
 
-/-- **`zhuBijection_champions` — the faithful Zhu bijection, honestly conditioned.**
+/-- **VACUOUS — do not cite.** The signature involves `FaithfulScorecard W`, a type the library proves EMPTY (`VOA.not_nonempty_faithfulScorecard`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_champions` — the faithful Zhu bijection, honestly conditioned.**
 
 `Function.Bijective (forwardMapIrr W)` (Gannon Thm 5.3.4, the faithful `Φ(𝒱) ↔ Irr A(𝒱)`),
 delivered from the full `FaithfulScorecard W` via the proven `FaithfulScorecard.bijectiveIrr`.

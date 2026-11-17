@@ -30,7 +30,7 @@ theorem vermaBSASource_two_L2 (t : ℂ) (ht : t≠0) :
     norm_num
     field_simp
     <;> ring
-  simpa [vermaBSASource, hc] using hh
+  simpa [vermaBSASource, hc] using! hh
 
 /-- The actual terminal BSA source satisfies both positive generator
 relations at every positive level, including the translation boundary. -/
@@ -43,7 +43,7 @@ theorem vermaBSASource_one_two_all (t : ℂ) (N : ℕ) (ht : t≠0) (hN : 0<N) :
   · subst N
     have hw : vermaBSAWeight 1 t=0 := by simp [vermaBSAWeight]
     rw [hw]
-    simpa [vermaBSASource] using
+    simpa [vermaBSASource] using!
       And.intro ((translation_highest (vermaBSACharge t)).pos_annihilate 1 (by norm_num))
         ((translation_highest (vermaBSACharge t)).pos_annihilate 2 (by norm_num))
   · refine ⟨vermaBSASource_L1_terminal _ t N ht (by omega), ?_⟩

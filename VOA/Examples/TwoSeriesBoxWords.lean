@@ -171,7 +171,7 @@ theorem bnd_rot_castSucc (q r : ℕ) {B : ℕ} (_hr : r ≤ B) (hqr : 1 ≤ q �
 theorem bnd_rot_last (q r : ℕ) {B : ℕ} (hr : r ≤ B) (hqr : 1 ≤ q ∨ 1 ≤ r) :
     bnd (if 1 ≤ r then q else q - 1) (if 1 ≤ r then r - 1 else B) (Fin.last B) + 1 =
       bnd q r (0 : Fin (B + 1)) := by
-  simp only [bnd, Fin.val_last, Fin.val_zero]
+  simp only [bnd, Fin.val_last, Fin.val_zero, Nat.one_le_iff_ne_zero, Nat.pos_iff_ne_zero]
   split_ifs <;> omega
 
 /-- **The count recursion** (split by the first letter: `0`, or rotate). -/
@@ -243,7 +243,7 @@ theorem wcF_succ (B q r m D : ℕ) (hr : r ≤ B) (hqr : 1 ≤ q ∨ 1 ≤ r) :
         refine ⟨⟨fun i => ?_, ?_⟩, ?_⟩
         · rw [← bnd_succ]; exact hb i.succ
         · rw [Fin.sum_univ_succ, h0] at hs
-          simpa [Fin.tail] using hs
+          simpa [Fin.tail] using! hs
         · rw [hx', statF_cons_zero] at hst
           have hmul : (m + 1) * (B + 1) = (m + 1) * B + (m + 1) := by ring
           omega
@@ -254,7 +254,7 @@ theorem wcF_succ (B q r m D : ℕ) (hr : r ≤ B) (hqr : 1 ≤ q ∨ 1 ≤ r) :
         · refine Fin.cases ?_ (fun i => ?_) j
           · simp
           · rw [Fin.cons_succ, bnd_succ]; exact hb i
-        · rw [Fin.sum_univ_succ]; simpa using hs
+        · rw [Fin.sum_univ_succ]; simpa using! hs
         · rw [statF_cons_zero]
           have hmul : (m + 1) * (B + 1) = (m + 1) * B + (m + 1) := by ring
           omega
@@ -326,7 +326,7 @@ theorem wcF_le_socleCount (n N m D : ℕ) (hn : 1 ≤ n) :
     rw [hF, Finset.mem_filter, mem_wordsF] at hx
     refine ⟨fun j => ?_, hx.1.2, hx.2⟩
     have := hx.1.1 j
-    simpa [bnd] using this
+    simpa [bnd] using! this
   let toW : (Fin N → ℕ) → (Fin N → Fin n) := fun x j => ⟨min (x j) (n - 1), by omega⟩
   have hval : ∀ x ∈ F, ∀ j, ((toW x j : Fin n) : ℕ) = x j := by
     intro x hx j

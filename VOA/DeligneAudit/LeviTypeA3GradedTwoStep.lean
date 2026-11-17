@@ -32,7 +32,7 @@ theorem a3_two_box_word_one_step (a b c : ℕ)
       Finsupp.degree_apply, Finsupp.sum, Prod.fst_sum] using
       congrArg Prod.fst hwf
   have hsum : xs.sum = r := by
-    simpa [xs, a2_lst_sum] using congrArg Prod.snd hwf
+    simpa [xs, a2_lst_sum] using! congrArg Prod.snd hwf
   have hstep := a3_pair_word_one_step ρ w a b c h 0 xs ys zs
   have hbox : a3PairBoxSpan ρ w 0 xs zs b ys.length ys.sum ≤
       a3TwoBoxKeySpan ρ w a b k := by
@@ -47,7 +47,7 @@ theorem a3_two_box_word_one_step (a b c : ℕ)
               (r + ys.sum) r ⊔ a3HigherLeviClosure ρ w b c k) := by
     simpa only [a3ConvA, a3ConvB, a3ConvSpectator, weightABC,
       Fin.succ_zero_eq_one, hlen, hsum, k, mul_assoc,
-      Module.End.mul_apply, Nat.add_assoc] using hstep
+      Module.End.mul_apply, Nat.add_assoc] using! hstep
   exact (sup_le (hbox.trans le_sup_left) le_sup_right) hstep'
 
 end VOA.DeligneAudit.A3Sector

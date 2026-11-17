@@ -28,6 +28,9 @@ variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
 
 namespace ZhuHR
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## Step 1: right-target expansion. -/
 
 /-- `zhuMul W u (a∘b) = ∑_p ∑_i (cbz K p * cbz M i) • u₍ₚ₋₁₎(a₍ᵢ₋₂₎b)`. -/

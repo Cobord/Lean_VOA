@@ -59,7 +59,8 @@ theorem ambientProbe_EE (q : FockN (VOA.IntegralLattice.rank (latP 1)))
     (b d n : ℤ) (hd : 4 ≠ b + d) :
     ambientProbe q ((V2m 1 le_rfl).smul (latChargeGen (latP 1) b) n
       (latChargeGen (latP 1) d)) = 0 := by
-  rw [V2m_charge_smul_charge, PlusCharacterTable.rankOne_cocycle, one_smul]
+  rw [V2m_charge_smul_charge 1 le_rfl (b : (latP 1).carrier) (d : (latP 1).carrier) n,
+    PlusCharacterTable.rankOne_cocycle 1 (b : (latP 1).carrier) (d : (latP 1).carrier), one_smul]
   change ambientProbe q (sector (b + d) _) = 0
   rw [ambientProbe_sector, if_neg hd]
 
@@ -67,7 +68,8 @@ theorem ambientProbe_EN (q : FockN (VOA.IntegralLattice.rank (latP 1)))
     (b n : ℤ) (P : RawPoly ℕ) (hb : 4 ≠ b) :
     ambientProbe q ((V2m 1 le_rfl).smul (latChargeGen (latP 1) b) n (ls 1 P)) = 0 := by
   have h := V2m_charge_smul_evRc 1 le_rfl b 0 n (liftR P)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul, add_zero] at h
+  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle 1 b 0, one_smul,
+    add_zero (M := (latP 1).carrier) b] at h
   rw [show ls 1 P = latStateGen (latP 1) (evR (a0 1) P) 0 from rfl, h]
   change ambientProbe q (sector b _) = 0
   rw [ambientProbe_sector, if_neg hb]

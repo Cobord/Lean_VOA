@@ -78,7 +78,7 @@ theorem finiteDimensional_insertionBlockSpace
 theorem finrank_insertionBlockSpace_le {U : Finset M} (hU : InsertionDetermining A U)
     (τ : UpperHalfPlane) : Module.finrank ℂ (insertionBlockSpace A) ≤ U.card := by
   classical
-  simpa using LinearMap.finrank_le_finrank_of_injective
+  simpa using! LinearMap.finrank_le_finrank_of_injective
     (insertionBlockEval_injective hU τ)
 
 variable {ι : Type u} [Fintype ι]

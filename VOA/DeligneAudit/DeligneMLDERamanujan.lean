@@ -45,7 +45,7 @@ theorem pj_sub (j : ℕ) (F G : PowerSeries A) : pj j (F - G) = pj j F - pj j G 
   refine PowerSeries.ext fun n => ?_; simp
 
 theorem pj_mul (j : ℕ) (F G : PowerSeries A) :
-    pj j (F * G) = ∑ p ∈ Finset.antidiagonal j, pj p.1 F * pj p.2 G := by
+    pj j (F * G) = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, pj p.1 F * pj p.2 G := by
   refine PowerSeries.ext fun n => ?_
   simp only [coeff_pj, coeff_mul, map_sum]
   rw [Finset.sum_comm]
@@ -127,7 +127,7 @@ theorem coeff_uU_inv_pow (j k : ℕ) :
 
 theorem coeff_uU (j : ℕ) : coeff j ((uU ε hε : Aˣ) : A) = ε / (j.factorial : ℚ) := by
   have := coeff_uU_pow ε hε j 1
-  simpa [one_pow, pow_one] using this
+  rw [div_eq_mul_inv]; simpa [one_pow, pow_one] using this
 
 /-- `π_j R`. -/
 theorem pj_R (j : ℕ) :
@@ -167,11 +167,11 @@ theorem pj_T (j : ℕ) :
 /-! ## Expanding (*) at order `xʲ` -/
 
 theorem star_pj (w : Aˣ) (hw : dx (w : A) = w) (j : ℕ) :
-    ∑ p ∈ Finset.antidiagonal j, (pj p.1 1 - pj p.1 (C (w : A))) *
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, (pj p.1 1 - pj p.1 (C (w : A))) *
         (C ((p.2 : ℚ) + 1) * pj (p.2 + 1) (Rser w)
-          + ∑ q ∈ Finset.antidiagonal p.2, pj q.1 (Rser w) * pj q.2 (Rser w)
+          + ∑ q ∈ Finset.HasAntidiagonal.antidiagonal p.2, pj q.1 (Rser w) * pj q.2 (Rser w)
           - (pj p.2 (Tser w) + pj p.2 (Tser w)))
-      = ∑ p ∈ Finset.antidiagonal j, (pj p.1 1 + pj p.1 (C (w : A))) * pj p.2 (Rser w) := by
+      = ∑ p ∈ Finset.HasAntidiagonal.antidiagonal j, (pj p.1 1 + pj p.1 (C (w : A))) * pj p.2 (Rser w) := by
   have h := congrArg (pj j) (star_identity w hw)
   rw [two_mul, sq] at h
   simpa only [pj_mul, pj_add, pj_sub, pj_liftD] using h

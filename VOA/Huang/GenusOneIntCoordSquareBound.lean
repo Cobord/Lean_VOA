@@ -39,12 +39,12 @@ theorem squarePart_eq_zero_of_mem_gradeLE (m n : ℕ) (hmn : m ≤ n)
     squarePart (W := W) v n = 0 := by
   induction m generalizing v with
   | zero =>
-    have hv0 : v = 0 := by simpa [gradeLE_eq_bot W (by norm_num : (-1 : ℤ) < 0)] using hv
+    have hv0 : v = 0 := by simpa [gradeLE_eq_bot W (by norm_num : (-1 : ℤ) < 0)] using! hv
     rw [hv0, squarePart_zero]
   | succ m ih =>
     have hv' : v ∈ W.grading (m : ℤ) ⊔ gradeLE W ((m : ℤ) - 1) := by
       rw [← gradeLE_split]
-      simpa only [Nat.cast_add, Nat.cast_one, add_sub_cancel_right] using hv
+      simpa only [Nat.cast_add, Nat.cast_one, add_sub_cancel_right] using! hv
     obtain ⟨x, hx, y, hy, rfl⟩ := Submodule.mem_sup.mp hv'
     rw [squarePart_add, ih (by omega) hy, add_zero]
     have hw := Lsq_zero_sub_smul_mem_gradeLE W hx
@@ -79,7 +79,7 @@ theorem squareTraceMass_eq_sum_range (hC2 : C2Cofinite W)
   apply tsum_eq_sum
   intro n hn
   rw [squarePart_eq_zero_of_grading_lt (vacuumInnerCoeff_mem_grading Y hwa hwb k)
-    (by simpa using hn)]
+    (by simpa using! hn)]
   change ‖traceFunStateLinear D hC2 x τ 0‖ = 0
   rw [map_zero, norm_zero]
 

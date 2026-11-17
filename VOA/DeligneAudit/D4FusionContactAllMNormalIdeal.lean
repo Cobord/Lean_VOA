@@ -70,7 +70,7 @@ theorem center_power_mem (m : ℕ) : cVar m 0 ^ (2 * m + 1) ∈ AllM.candidateId
   have h := AllM.seed_mem_candidate m j
   change PowerSeries.coeff 0 (AllM.current m 8 ^ (2 * m + 1)) ∈ AllM.candidateIdeal m at h
   rw [PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow] at h
-  simpa only [AllM.current, PowerSeries.constantCoeff_mk, cVar] using h
+  simpa only [AllM.current, PowerSeries.constantCoeff_mk, cVar] using! h
 
 theorem a_center_word_mem (m : ℕ) (a : List (Fin 8 × ℕ)) (c : List ℕ) (n : ℕ)
     (hlen : a.length + c.length + n = 2 * m + 1) :
@@ -131,7 +131,7 @@ theorem polyWord_exact_mem (m : ℕ) (l : List (Vars m)) (hl : l.length = 2 * m 
     polyWord l ∈ AllM.candidateIdeal m := by
   obtain ⟨a, c, hlen, hp⟩ := split_polyWord m l
   rw [hp]
-  simpa only [pow_zero, mul_one] using a_center_word_mem m a c 0 (by omega)
+  simpa only [pow_zero, mul_one] using! a_center_word_mem m a c 0 (by omega)
 
 theorem polyWord_high_mem (m : ℕ) (l : List (Vars m)) (hl : 2 * m + 1 ≤ l.length) :
     polyWord l ∈ AllM.candidateIdeal m := by

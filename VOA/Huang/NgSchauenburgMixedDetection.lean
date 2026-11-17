@@ -42,7 +42,7 @@ theorem matrixDouble_row_invariant_iff (A : (Matrix I I ℂ)ˣ) (H : Matrix I I 
     have hh : (A : Matrix I I ℂ).transpose * H * (↑A⁻¹ : Matrix I I ℂ).transpose = H :=
       Matrix.ext h
     have h' := congrArg (fun B => B * (A : Matrix I I ℂ).transpose) hh
-    simpa only [Matrix.mul_assoc, hl, Matrix.mul_one] using h'
+    simpa only [Matrix.mul_assoc, hl, Matrix.mul_one] using! h'
   · intro h k l
     have hh : (A : Matrix I I ℂ).transpose * H * (↑A⁻¹ : Matrix I I ℂ).transpose = H := by
       rw [h, Matrix.mul_assoc, hr, Matrix.mul_one]
@@ -98,7 +98,7 @@ theorem fusion_commutant_of_mixed_indicator_invariance (F : SphericalFusion C)
   intro i
   have hi := congrArg (fun B => chargeConjugation F * B) (hh i)
   rw [← Matrix.mul_assoc (A : Matrix F.Label F.Label ℂ).transpose, hc] at hi
-  simpa only [← Matrix.mul_assoc, chargeConjugation_sq, Matrix.one_mul] using hi
+  simpa only [← Matrix.mul_assoc, chargeConjugation_sq, Matrix.one_mul] using! hi
 
 open Classical in
 /-- The exact separation needed for the modular route: (1,0)-row invariance
@@ -129,10 +129,10 @@ theorem scalar_of_mixed_indicator_invariance (F : SphericalFusion C) (M : Modula
   obtain ⟨c, hc⟩ := scalar_of_fusion_and_S_commutants F M
     (A : Matrix F.Label F.Label ℂ).transpose
     (fusion_commutant_of_mixed_indicator_invariance F A h)
-    (fun i => by simpa only [Matrix.mul_assoc] using ht i)
+    (fun i => by simpa only [Matrix.mul_assoc] using! ht i)
   have ha : (A : Matrix F.Label F.Label ℂ) = c • 1 := by
     have he := congrArg Matrix.transpose hc
-    simpa only [Matrix.transpose_transpose, Matrix.transpose_smul, Matrix.transpose_one] using he
+    simpa only [Matrix.transpose_transpose, Matrix.transpose_smul, Matrix.transpose_one] using! he
   refine ⟨c, ?_, ha⟩
   intro hz
   have hone : (1 : Matrix F.Label F.Label ℂ) = 0 := by

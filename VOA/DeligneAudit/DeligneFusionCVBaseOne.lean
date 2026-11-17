@@ -81,14 +81,14 @@ theorem central_square_descendant {X Y Z : Module.End ℂ V} {w : V}
     (hX2 : (X ^ 2) w = 0) (hY2 : (Y ^ 2) w = 0) : (Z ^ 2) (X w) = 0 := by
   have hYX : Y * X - X * Y = -Z := by rw [← hXY]; noncomm_ring
   have hXZ' : X * (-Z) = (-Z) * X := by
-    simpa only [mul_neg, neg_mul] using congrArg Neg.neg hXZ
+    simpa only [mul_neg, neg_mul] using! congrArg Neg.neg hXZ
   have hYZ' : Y * (-Z) = (-Z) * Y := by
-    simpa only [mul_neg, neg_mul] using congrArg Neg.neg hYZ
+    simpa only [mul_neg, neg_mul] using! congrArg Neg.neg hYZ
   have hX3 : (X ^ 3) w = 0 := by
     rw [show (3 : ℕ) = 2 + 1 by decide, pow_succ', Module.End.mul_apply, hX2, map_zero]
   have hX3Y : (X ^ 3) (Y w) = 0 := by
-    simpa only [Nat.reduceAdd, pow_one] using Garland.Ypow_Xpow_apply hYX hXZ' hX2 1
-  have hY2' : Y (Y w) = 0 := by simpa only [pow_two, Module.End.mul_apply] using hY2
+    simpa only [Nat.reduceAdd, pow_one] using! Garland.Ypow_Xpow_apply hYX hXZ' hX2 1
+  have hY2' : Y (Y w) = 0 := by simpa only [pow_two, Module.End.mul_apply] using! hY2
   have had : (Garland.adX Y (Garland.adX Y (X ^ 3))) w = 0 := by
     simp only [Garland.adX, LinearMap.sub_apply, Module.End.mul_apply,
       hX3, hX3Y, hY2', map_zero, sub_self]
@@ -98,10 +98,9 @@ theorem central_square_descendant {X Y Z : Module.End ℂ V} {w : V}
       Nat.descFactorial, neg_sq] at he
     exact he
   have he := congrArg (fun T : Module.End ℂ V => T w) hf
-  dsimp only at he
   rw [had] at he
   have hz : (6 : ℕ) • (Z ^ 2) (X w) = 0 := by
-    simpa only [LinearMap.smul_apply, Module.End.mul_apply] using he.symm
+    simpa only [LinearMap.smul_apply, Module.End.mul_apply] using! he.symm
   rw [← Nat.cast_smul_eq_nsmul ℂ, smul_eq_zero] at hz
   exact hz.resolve_left (by norm_num)
 
@@ -109,13 +108,13 @@ variable {R : CurrentModule bracketTable V} {w : V} {ν ϱ : Weight}
 
 private theorem first_square (h : CV3Rel R w (0, 0) ν ϱ 1) :
     (R.op 3 (ν.1 + ϱ.1) ^ 2) w = 0 := by
-  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.1 ν.1] using
+  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.1 ν.1] using!
     top_square_of_cvrel (r := ϱ.1) (n := ν.1) (j := 1)
       (CVRoots.sl2_first R).hFF le_rfl h.first
 
 private theorem second_square (h : CV3Rel R w (0, 0) ν ϱ 1) :
     (R.op 4 (ν.2 + ϱ.2) ^ 2) w = 0 := by
-  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.2 ν.2] using
+  simpa only [Nat.add_sub_cancel_right, Nat.add_comm ϱ.2 ν.2] using!
     top_square_of_cvrel (r := ϱ.2) (n := ν.2) (j := 1)
       (CVRoots.sl2_second R).hFF le_rfl h.second
 
@@ -131,11 +130,11 @@ theorem kernel_theta_square (h : CV3Rel R w (0, 0) ν ϱ 1) :
     simp [Fin.sum_univ_eight, bracketTable, Z]
   have hXZ : X * (-Z) = (-Z) * X := by
     have hc : X * Z = Z * X := by ext v; exact op3_op5 _ _ v
-    simpa only [mul_neg, neg_mul] using congrArg Neg.neg hc
+    simpa only [mul_neg, neg_mul] using! congrArg Neg.neg hc
   have hYZ : Y * (-Z) = (-Z) * Y := by
     have hc : Y * Z = Z * Y := by ext v; exact op4_op5 _ _ v
-    simpa only [mul_neg, neg_mul] using congrArg Neg.neg hc
-  simpa only [neg_sq] using
+    simpa only [mul_neg, neg_mul] using! congrArg Neg.neg hc
+  simpa only [neg_sq] using!
     central_square_descendant hXY hXZ hYZ (first_square h) (second_square h)
 
 /-- In the quotient by the kernel generator, the same top square kills `w`. -/
@@ -150,18 +149,18 @@ theorem quotient_theta_square (h : CV3Rel R w (0, 0) ν ϱ 1)
     simp [Fin.sum_univ_eight, bracketTable, Z]
   have hXZ : X * (-Z) = (-Z) * X := by
     have hc : X * Z = Z * X := by ext v; exact op3_op5 _ _ v
-    simpa only [mul_neg, neg_mul] using congrArg Neg.neg hc
+    simpa only [mul_neg, neg_mul] using! congrArg Neg.neg hc
   have hXw : X w = 0 := htop
   have hz := VOA.DeligneAudit.CVTransport.square_kill_of_commutator X Y (-Z) hXY hXZ w
     (second_square h) (by rw [hXw, map_zero])
     (by simp only [pow_two, Module.End.mul_apply, hXw, map_zero])
-  simpa only [neg_sq] using hz
+  simpa only [neg_sq] using! hz
 
 theorem quotient_first_trunc (h : CV3Rel R w (0, 0) ν ϱ 1)
     (htop : R.op 3 (ν.1 + ϱ.1) w = 0) (q : ℕ) (hq : ν.1 + ϱ.1 ≤ q) :
     R.op 3 q w = 0 := by
   by_cases heq : q = ν.1 + ϱ.1
-  · simpa only [heq] using htop
+  · simpa only [heq] using! htop
   · apply trunc_of_cvrel h.first q
     rw [parts_length]
     omega
@@ -244,7 +243,7 @@ theorem kernel_first_cv (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1) :
     (by rw [hp]; exact h.first)
   simp only [List.length_replicate] at hs
   rw [show ϱ.1 + (ν.1 - 1) + 1 = ν.1 + ϱ.1 by omega] at hs
-  simpa [Pm, parts] using hs
+  simpa [Pm, parts] using! hs
 
 theorem kernel_raising (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1)
     (e : Fin 8) (he : e.val < 3) (k : ℕ) :
@@ -260,7 +259,7 @@ theorem kernel_raising (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1)
 theorem kernel_cartan_pos (h : CV3Rel R w (0, 0) ν ϱ 1)
     (hh : Fin 8) (hhh : 6 ≤ hh.val) (k : ℕ) (hk : 1 ≤ k) :
     R.op hh k (R.op 3 (ν.1 + ϱ.1) w) = 0 := by
-  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using
+  simpa only [Nat.add_zero, Nat.add_sub_cancel_right] using!
     CVKernelGeneralHW.first_cartan_pos h hh hhh k hk
 
 theorem kernel_cartan_first (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1) :
@@ -316,12 +315,12 @@ theorem kernel_lowering_highest (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1)
   have hEF : ∀ x, R.op 2 0 (R.op 5 0 x) - R.op 5 0 (R.op 2 0 x) = H x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hEF 0 0)
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using hc
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply, Nat.zero_add] using! hc
   have hHF : ∀ x, H (R.op 5 0 x) - R.op 5 0 (H x) = (-2 : ℂ) • R.op 5 0 x := by
     intro x
     have hc := congrArg (fun T : Module.End ℂ V => T x) ((CVRoots.sl2_highest R).hHF 0 0)
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply,
-      Module.End.mul_apply, Nat.zero_add] using hc
+      Module.End.mul_apply, Nat.zero_add] using! hc
   have hn : (R.op 5 0)^[3 * (ϱ.1 + ϱ.2) + 2 * (ν.1 + ν.2 + 1) + 1] u = 0 := by
     have hc : Commute (R.op 5 0) (R.op 3 (ν.1 + ϱ.1)) := by
       ext x
@@ -332,14 +331,14 @@ theorem kernel_lowering_highest (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1)
     dsimp only [u]
     rw [← Module.End.mul_apply, (hc.pow_left _).eq, Module.End.mul_apply]
     have hnil' : (R.op 5 0 ^ (3 * (ϱ.1 + ϱ.2) + 2 * (ν.1 + ν.2 + 1) + 1)) w = 0 := by
-      simpa only [Nat.add_zero] using hnil
+      simpa only [Nat.add_zero] using! hnil
     rw [hnil', map_zero]
   have hs := (CLFilt.hw_pow (R.op 2 0) (R.op 5 0) H hEF hHF hE hH _ hn).2
     (by positivity)
   have he : l₁ + l₂ + 1 = 3 * (ϱ.1 + ϱ.2) + 2 * (ν.1 + ν.2) + 2 := by
     dsimp only [l₁, l₂]
     omega
-  simpa only [Int.toNat_natCast, he] using hs
+  simpa only [Int.toNat_natCast, he] using! hs
 
 theorem kernel_second_trunc (h : CV3Rel R w (0, 0) ν ϱ 1)
     (q : ℕ) (hq : ν.2 + ϱ.2 + 1 ≤ q) :
@@ -387,13 +386,13 @@ theorem kernel_rel (h : CV3Rel R w (0, 0) ν ϱ 1) (hν : 0 < ν.1) :
       (1, 0) (ν - (1, 0) + (0, 1)) ϱ 0 := by
   refine ⟨kernel_raising h hν, kernel_cartan_pos h, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · change R.op 6 0 _ = ((1 + 2 * (ν.1 - 1) + 3 * ϱ.1 + 0 : ℕ) : ℂ) • _
-    simpa only [Nat.add_zero] using kernel_cartan_first h hν
+    simpa only [Nat.add_zero] using! kernel_cartan_first h hν
   · change R.op 7 0 _ = ((0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + 0 : ℕ) : ℂ) • _
-    simpa only [Nat.add_zero, Nat.zero_add] using kernel_cartan_second h
+    simpa only [Nat.add_zero, Nat.zero_add] using! kernel_cartan_second h
   · change (R.op 3 0)^[1 + 2 * (ν.1 - 1) + 3 * ϱ.1 + 0 + 1] _ = 0
-    simpa only [Nat.add_zero] using kernel_lowering_first h hν
+    simpa only [Nat.add_zero] using! kernel_lowering_first h hν
   · change (R.op 4 0)^[0 + 2 * (ν.2 + 1) + 3 * ϱ.2 + 0 + 1] _ = 0
-    simpa only [Nat.add_zero, Nat.zero_add] using kernel_lowering_second h
+    simpa only [Nat.add_zero, Nat.zero_add] using! kernel_lowering_second h
   · change CVRel (R.op 3) (parts ϱ.1 (ν.1 - 1) (1 + 0)) _
     exact kernel_first_cv h hν
   · change CVRel (R.op 4) (parts ϱ.2 (ν.2 + 1) (0 + 0)) _

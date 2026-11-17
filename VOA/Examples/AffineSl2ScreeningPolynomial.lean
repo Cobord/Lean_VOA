@@ -57,7 +57,7 @@ noncomputable def integrand (r q M : ℕ) : Auxiliary r :=
 /-- The actual polynomial vector obtained by selecting the common auxiliary
 exponent (r-1)M+q-1. Its nonvanishing below needs positive rank and q. -/
 noncomputable def state (r q M : ℕ) : WakFock :=
-  integrand r q M (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
+  (integrand r q M).coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))
 
 /-- Test a screening vector by setting beta at depth q-1 to one and every
 other oscillator to zero. This is a ring homomorphism, not an inner product. -/
@@ -95,14 +95,12 @@ theorem test_betaFactor (r D q : ℕ) (i : Fin r) (h : q-1≤D) :
   · simp
   · intro b hb hbq
     simp [hbq]
-    rfl
   · simp [Finset.mem_range,Nat.lt_succ_of_le h]
 
 /-- All boson variables vanish under the survival test. -/
 theorem test_bosonPower (r q m : ℕ) : test r q (bosonPower r m)=0 := by
   classical
   simp [test,bosonPower,show (2 : Fin 3)≠0 by decide]
-  exact Or.inr rfl
 
 /-- Each truncated exponential has tested value one: all positive powers
 contain a boson variable, and its constant term is one. -/
@@ -141,17 +139,16 @@ theorem test_integrand (r q M : ℕ) (hr : 0 < r) :
 Vandermonde coefficient. No normalization product is assumed. -/
 theorem survival_state (r q M : ℕ) (hr : 0 < r) (hq : 0 < q) :
     survival q (state r q M) =
-      ((vandermondeLaurent r^(2*M)) (fun _ => (((r-1)*M : ℕ) : ℤ)) : ℂ) := by
+      ((vandermondeLaurent r^(2*M)).coeff (fun _ => (((r-1)*M : ℕ) : ℤ)) : ℂ) := by
   have h := congrArg (fun P : AddMonoidAlgebra ℂ (Fin r → ℤ) =>
-    P (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) (test_integrand r q M hr)
-  dsimp only at h
-  rw [AddMonoidAlgebra.mul_single_apply] at h
+    P.coeff (fun _ => (((r-1)*M+q-1 : ℕ) : ℤ))) (test_integrand r q M hr)
+  rw [AddMonoidAlgebra.coeff_mul_single_apply] at h
   have he : (fun _ : Fin r => (((r-1)*M+q-1 : ℕ) : ℤ)) -
       (fun _ => ((q-1 : ℕ) : ℤ)) = fun _ => (((r-1)*M : ℕ) : ℤ) := by
     ext i
     simp only [Pi.sub_apply]
     omega
-  rw [← sub_eq_add_neg,he,AddMonoidAlgebra.mapRingHom_apply,mul_one] at h
+  rw [← sub_eq_add_neg,he,AddMonoidAlgebra.coeff_mapRingHom,mul_one] at h
   exact h
 
 /-- A genuine nonzero vector in the charged Wakimoto polynomial space at

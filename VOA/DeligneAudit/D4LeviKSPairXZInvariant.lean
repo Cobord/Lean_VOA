@@ -11,8 +11,8 @@ theorem pairYCoeff_swap_xz (a b c : ℕ)
     (P : MvPolynomial (PairSource a b c) ℂ)
     (hP : P ∈ pairSourceSymmetric a b c) (d : Fin b →₀ ℕ) :
     rename (Equiv.swap (Sum.inl s) (Sum.inl t))
-        (coeff d (pairSplitAlgebra a b c P)) =
-      coeff d (pairSplitAlgebra a b c P) := by
+        ((pairSplitAlgebra a b c P).coeff d) =
+      (pairSplitAlgebra a b c P).coeff d := by
   rw [← Equiv.Perm.sumCongr_swap_refl]
   exact pairYCoeff_rename_x a b c (Equiv.swap s t) P hP d
 

@@ -144,9 +144,9 @@ variable (L hPos)
 theorem gradingWN_one_le :
     gradingWN (rank L) 1 ≤ span ℂ (Set.range fun a : Fin (rank L) => (X ((0 : ℕ), a) : FockN (rank L))) := by
   intro p hp
-  have hp' : p ∈ Finsupp.supported ℂ ℂ {d : (ℕ × Fin (rank L)) →₀ ℕ | Finsupp.weight weightFnN d = 1} := by
+  have hp' : p ∈ AddMonoidAlgebra.supported ℂ ℂ {d : (ℕ × Fin (rank L)) →₀ ℕ | Finsupp.weight weightFnN d = 1} := by
     rw [← weightedHomogeneousSubmodule_eq_finsupp_supported]; exact hp
-  rw [Finsupp.supported_eq_span_single] at hp'
+  rw [AddMonoidAlgebra.supported_eq_span_single] at hp'
   refine (span_le.mpr ?_) hp'
   rintro _ ⟨d, hd, rfl⟩
   obtain ⟨a, rfl⟩ := weight_eq_one (rank L) d hd
@@ -330,7 +330,7 @@ theorem conn_of_simple {ι : Type*} (s : ι → Root L hPos)
   obtain ⟨j, hj⟩ := hadj β
   have hmid : Relation.ReflTransGen (fun a b : Root L hPos => ((L.form a.1 b.1 : ℤ) : ℂ) ≠ 0)
       (s i) (s j) :=
-    Relation.ReflTransGen.lift s (fun a b h => by exact_mod_cast h) (hsconn i j)
+    Relation.ReflTransGen.lift s (fun a b h => by exact_mod_cast h) i j (hsconn i j)
   have h1 : ((L.form α.1 (s i).1 : ℤ) : ℂ) ≠ 0 := by exact_mod_cast hi
   have h3 : ((L.form (s j).1 β.1 : ℤ) : ℂ) ≠ 0 := by rw [form_comm]; exact_mod_cast hj
   exact Relation.ReflTransGen.head h1 (Relation.ReflTransGen.tail hmid h3)

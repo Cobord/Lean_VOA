@@ -20,6 +20,6 @@ theorem detTermSecond2_check :
 theorem detTermSecond2_sound : zp detTermSecond2 =
     -(zp matrixEntry9_2 * zp commonMinor2) := by
   have hh := (zp_eq_of_trim detTermSecond2_check).symm
-  simpa [zp_pscaleL, zp_pmulL] using hh
+  simpa [zp_pscaleL, zp_pmulL] using! hh
 
 end VOA.Classification.COne.OrbIcoZ

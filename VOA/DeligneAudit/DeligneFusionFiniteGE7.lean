@@ -36,7 +36,7 @@ theorem e7_kn : ∀ c : Fin 133, e7Kn c = true → E7sector.raising c ∨ E7sect
   change ∀ c : Fin 133, e7Kn c = true →
     (7 ≤ c.val ∧ c.val < 70) ∨ (c.val ∈ ([76, 75, 74, 73, 72, 71, 70] : List ℕ))
   intro c h
-  simpa [e7Kn] using h
+  simpa [e7Kn] using! h
 
 theorem e7_hfz : ∀ a b c, E7sector.f a b c = (e7Fz a b c : ℂ) := fun _ _ _ => rfl
 

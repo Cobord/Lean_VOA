@@ -62,7 +62,7 @@ theorem finsupp_induction_single {P : ((ℕ × Fin (rank (latP m))) →₀ ℕ) 
   | single_add a b f _ hb ih =>
     clear hb
     induction b with
-    | zero => simpa using ih
+    | zero => simpa using! ih
     | succ b ihb =>
       rw [show Finsupp.single a (b + 1) + f = Finsupp.single a 1 + (Finsupp.single a b + f) by
         rw [← add_assoc, ← Finsupp.single_add, add_comm 1 b]]
@@ -75,7 +75,7 @@ theorem o4_mono (s : (ℕ × Fin (rank (latP m))) →₀ ℕ) :
   induction s using finsupp_induction_single m with
   | h0 =>
     have := o4_vac m hm t
-    simpa [monoT, wtT] using this
+    simpa [monoT, wtT] using! this
   | hs v s ih =>
     rw [monoT_add_single m hm t, comm_H4 m hm t _ ⟨-(v.1 : ℤ) - 1, by ring⟩, ih, map_smul,
       wtT_add_single, ← add_smul]
@@ -90,7 +90,7 @@ theorem o6_mono (s : (ℕ × Fin (rank (latP m))) →₀ ℕ) :
   induction s using finsupp_induction_single m with
   | h0 =>
     have := o6_vac m hm t
-    simpa [monoT, wtT] using this
+    simpa [monoT, wtT] using! this
   | hs v s ih =>
     rw [monoT_add_single m hm t, comm_H6 m hm t _ ⟨-(v.1 : ℤ) - 1, by ring⟩, ih, map_smul,
       wtT_add_single, ← add_smul]

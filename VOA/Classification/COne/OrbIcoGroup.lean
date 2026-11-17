@@ -53,8 +53,8 @@ theorem closure_sigC_sigR :
       have := K.index_mul_card
       rw [h, nat_card_A5] at this
       omega
-    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal K (Subgroup.normal_of_index_eq_two hi)
-      with hb | ht
+    haveI : K.Normal := Subgroup.normal_of_index_eq_two hi
+    rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal K with hb | ht
     · rw [hb, Subgroup.card_bot] at h
       omega
     · exact ht
@@ -143,7 +143,8 @@ def IcoInv (F : P3) : Prop := ∀ g ∈ ico, phiE g F = F
 
 theorem icoInv_of_gen {F : P3} (hC : phiE rotC F = F) (hR : phiE rotR F = F) : IcoInv F :=
   ico_induction (p := fun g => phiE g F = F) (by change phiHom 1 F = F; rw [map_one]; rfl)
-    (fun x y hx hy => by simp only at hx hy ⊢; rw [phiE_mul, hy, hx]) hC (phiE_inv_of_fix hC) hR (phiE_inv_of_fix hR)
+    (fun x y (hx : phiE x F = F) (hy : phiE y F = F) =>
+      show phiE (x * y) F = F by rw [phiE_mul, hy, hx]) hC (phiE_inv_of_fix hC) hR (phiE_inv_of_fix hR)
 
 theorem IcoInv.mul {F G : P3} (hF : IcoInv F) (hG : IcoInv G) : IcoInv (F * G) :=
   fun g hg => by rw [map_mul, hF g hg, hG g hg]
@@ -168,7 +169,7 @@ theorem card_ico_ne_zero : (Fintype.card ico : ℂ) ≠ 0 := by
 theorem reyI_fix (F : P3) {h : Aut V1} (hh : h ∈ ico) : phiE h (reyI F) = reyI F := by
   unfold reyI
   rw [map_smul, map_sum]
-  congr 1
+  refine congrArg (((Fintype.card ico : ℂ)⁻¹) • ·) ?_
   rw [← Equiv.sum_comp (Equiv.mulLeft (⟨h, hh⟩ : ico)) (fun g : ico => phiE g.1 F)]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [Equiv.coe_mulLeft, Subgroup.coe_mul, phiE_mul]

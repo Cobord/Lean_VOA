@@ -105,7 +105,7 @@ theorem negativeDressing_right_difference (Pn : ℕ) (α β : L.carrier)
       (fun i _ => (normalOrderedFourField_antidiag_shift_finite F Pn α β u v (i : ℤ) p).subset
         (fun s hs => by
           rw [Function.mem_support] at hs ⊢
-          simp only at hs ⊢
+          (try simp only at hs ⊢)
           exact fun h => hs (by rw [mul_smul, h, smul_zero])))]
   rw [show (∑ᶠ s : ℤ, ∑ i ∈ Finset.range (Pn + 1),
             (wt Pn i * kZ (-(Pn : ℂ)) (s - (i : ℤ))) • normalOrderedFourField F α β (u + s) (v - s) p)
@@ -146,7 +146,7 @@ theorem negativeDressing_left_difference (Pn : ℕ) (α β : L.carrier)
       (fun i _ => (normalOrderedFourField_antidiag_negshift_finite F Pn α β u v (i : ℤ) p).subset
         (fun s hs => by
           rw [Function.mem_support] at hs ⊢
-          simp only at hs ⊢
+          (try simp only at hs ⊢)
           exact fun h => hs (by rw [mul_smul, h, smul_zero])))]
   rw [show (∑ᶠ s : ℤ, ∑ i ∈ Finset.range (Pn + 1),
             (wt Pn i * kZ (-(Pn : ℂ)) ((-s) - (i : ℤ))) • normalOrderedFourField F α β (u + s) (v - s) p)
@@ -174,8 +174,8 @@ theorem negativeDressing_reversed_difference (Pn : ℕ) (α β : L.carrier)
     refine Finset.sum_nbij' (i := fun i => Pn - i) (j := fun i => Pn - i) ?_ ?_ ?_ ?_ ?_
     · intro i hi; simp only [Finset.mem_range] at hi ⊢; omega
     · intro i hi; simp only [Finset.mem_range] at hi ⊢; omega
-    · intro i hi; simp only [Finset.mem_range] at hi; simp only []; omega
-    · intro i hi; simp only [Finset.mem_range] at hi; simp only []; omega
+    · intro i hi; simp only [Finset.mem_range] at hi; (try simp only []); omega
+    · intro i hi; simp only [Finset.mem_range] at hi; (try simp only []); omega
     · intro i hi
       simp only [Finset.mem_range] at hi
       have hcast : ((Pn - i : ℕ) : ℤ) = (Pn : ℤ) - (i : ℤ) := by omega

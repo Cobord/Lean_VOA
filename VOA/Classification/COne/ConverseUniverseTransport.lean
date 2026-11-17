@@ -13,6 +13,8 @@ The algebraic invariants do not quantify over module carriers. Their transport p
 Rationality and pseudo-unitarity require separate arguments about module universes.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Classification.COne.ConverseUniverse
 
 open VOA Module

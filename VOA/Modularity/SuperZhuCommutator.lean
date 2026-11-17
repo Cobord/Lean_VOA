@@ -571,7 +571,9 @@ theorem superZhu_supercommutator_mem_superCuspRelSpan_of_parity
       exact (V.superCuspRelSpan hV).zero_mem
     · subst hk
       have hugrade : u ∈ W.grading 0 := by
-        simpa [V, SuperNearVOA.gradingZ_apply] using hu.1
+        have h1 : u ∈ W.toSuperNearVOA.grading 0 := by
+          simpa [V, SuperNearVOA.gradingZ_apply] using hu.1
+        exact h1
       rw [W.vacuum_grade, Submodule.mem_span_singleton] at hugrade
       obtain ⟨c, rfl⟩ := hugrade
       rw [show W.vacuum = V.vacuum from rfl] at hu ⊢

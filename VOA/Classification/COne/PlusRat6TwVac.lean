@@ -35,7 +35,7 @@ theorem L_neg_one_mem_grading {k : ℤ} {v : LatModuleGen (latP m)} (hv : v ∈ 
 
 theorem Lh_mem (p : ℕ) : Lh m hm p ∈ (V2m m hm).grading ((p : ℤ) + 1) := by
   induction p with
-  | zero => simpa using h_mem_grading m hm
+  | zero => simpa using! h_mem_grading m hm
   | succ p ih =>
     rw [Lh, Function.iterate_succ_apply']
     have := L_neg_one_mem_grading m hm ih
@@ -98,7 +98,7 @@ theorem iter_eq (n p : ℕ) (hn : 1 ≤ n)
   rw [Finset.sum_range_add, Finset.sum_range_succ, Finset.sum_eq_zero (s := Finset.range (p + 1))
     (fun k hk => by
       rw [show (-(n : ℤ) + ((n + k : ℕ) : ℤ)) = ((k : ℕ) : ℤ) by push_cast; ring,
-        hz k (by simpa [Nat.lt_succ_iff] using Finset.mem_range.mp hk), map_zero, Pi.zero_apply,
+        hz k (by simpa [Nat.lt_succ_iff] using! Finset.mem_range.mp hk), map_zero, Pi.zero_apply,
         LinearMap.zero_apply, smul_zero]), zero_add] at J
   rw [show (-(n : ℤ) + ((n + (p + 1) : ℕ) : ℤ)) = ((p + 1 : ℕ) : ℤ) by push_cast; ring, hv,
     map_smul, Pi.smul_apply, LinearMap.smul_apply,

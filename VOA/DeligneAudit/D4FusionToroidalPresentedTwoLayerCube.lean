@@ -19,12 +19,12 @@ theorem two_h1_generator_zero : H (pTE 2) = 0 := by
 theorem two_h1_g0_zero : H (G (pTE 2)) = 0 := by
   have hc := two_h_theta_comm 1 1 0 0 (pTE 2) (by omega)
   have hh := two_high_op_eq_zero D4sector.c₀ 2 0 (by omega)
-  simpa [H, G, two_h1_generator_zero, hh] using hc
+  simpa [H, G, two_h1_generator_zero, hh] using! hc
 
 theorem two_h1_seed_zero : H twoQuadraticSeed = 0 := by
   have hc := two_h_theta_comm 1 1 0 0 (G (pTE 2)) (by omega)
   have hh := two_high_op_eq_zero D4sector.c₀ 2 0 (by omega)
-  simpa [H, G, twoQuadraticSeed, two_h1_g0_zero, hh] using hc
+  simpa [H, G, twoQuadraticSeed, two_h1_g0_zero, hh] using! hc
 
 theorem two_g0_cube_zero_of_stability
     (hstable : ∀ (c : Fin 28) (s : ℕ),

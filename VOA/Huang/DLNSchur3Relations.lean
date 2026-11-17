@@ -27,7 +27,7 @@ theorem map_mul_of_right_transitions {G E : Type*} [Group G] [Group E]
       rw [← mul_assoc, hz, hy, hz, mul_assoc]
     | inv y _ hy =>
       intro x
-      have hinv : f y⁻¹ * f y = 1 := by simpa [hf] using (hy y⁻¹).symm
+      have hinv : f y⁻¹ * f y = 1 := by simpa [hf] using! (hy y⁻¹).symm
       apply mul_right_cancel (b := f y)
       calc
         f (x * y⁻¹) * f y = f ((x * y⁻¹) * y) := (hy _).symm

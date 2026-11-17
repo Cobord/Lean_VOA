@@ -10,6 +10,9 @@ namespace VOA.Moonshine.ConwayNorton
 open AutMonster Nondeg SimpleNat LatGen
 open scoped TensorProduct
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] monsterPhysicalAddCommGroup
 
 theorem moonshineMatterForm_spurious_primary (u : moonshineMatterSpace)

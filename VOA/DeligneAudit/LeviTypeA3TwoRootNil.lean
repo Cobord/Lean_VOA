@@ -22,7 +22,7 @@ theorem two_root_nil_large (X Y Z : Module.End ℂ V) (w : V) (p q : ℕ)
   have hYpow : ∀ b : ℕ, (Y ^ (p + 1 + 2 * b)) ((X ^ b) w) = 0 := by
     intro b
     induction b with
-    | zero => simpa using hY
+    | zero => simpa using! hY
     | succ b ih =>
         have ht := pow_kill_of_ad Y X 2 (p + 1 + 2 * b) ((X ^ b) w)
           hYYX ih
@@ -30,14 +30,14 @@ theorem two_root_nil_large (X Y Z : Module.End ℂ V) (w : V) (p q : ℕ)
         rw [hexp, pow_add, pow_succ' X b]
         rw [show p + 1 + 2 * b + 2 = 2 + (p + 1 + 2 * b) by omega,
           pow_add] at ht
-        simpa only [pow_two, Module.End.mul_apply] using ht
+        simpa only [pow_two, Module.End.mul_apply] using! ht
   have hYN : ∀ b < q + 1,
       (Y ^ (p + 1 + 2 * q)) ((X ^ b) w) = 0 := by
     intro b hb
     exact pow_kill_mono Y (hYpow b) (by omega)
   have ht := top_nil X Y 1 (q + 1) (p + 1 + 2 * q) w
     hXXY hX hYN
-  simpa only [Function.iterate_one, hXY] using ht
+  simpa only [Function.iterate_one, hXY] using! ht
 
 end VOA.DeligneAudit.A3Sector
 

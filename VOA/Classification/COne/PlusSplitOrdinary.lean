@@ -47,10 +47,10 @@ theorem exists_isCompl_of_nonintegral_lift (A : WeakModule W M)
       change f (x - (y : M)) = 0
       rw [map_sub, show f (y : M) = f x from hy, sub_self]
     simpa only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply,
-      sub_eq_zero] using he
+      sub_eq_zero] using! he
   have hnot : x - (y : M) ∉ P := by
     intro hh
-    exact hx (by simpa using P.add_mem hh y.property)
+    exact hx (by simpa using! P.add_mem hh y.property)
   have hother : P ≤ otherCosets A k := by
     apply hdiag.trans
     apply iSup_le
@@ -93,7 +93,7 @@ theorem exists_isCompl_of_ordinary_kernel (A : WeakModule W M)
     apply iSup_le
     intro μ v hv
     by_cases hμ : O.weight μ = ⊥
-    · have hv0 : v = 0 := by simpa [hμ] using hv
+    · have hv0 : v = 0 := by simpa [hμ] using! hv
       rw [hv0]
       exact Submodule.zero_mem _
     · have hcos := O.weight_eq_coset_of_irreducible hirr hh hμ

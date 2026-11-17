@@ -18,11 +18,11 @@ theorem a3KeyEnum_injective (a b c : ℕ) :
   rcases lt_trichotomy i j with hlt | heq | hgt
   · have hless := a3KeyEnum_descending a b c i j hlt
     exact False.elim ((a3KeyLess_irrefl b c (a3KeyEnum a b c i))
-      (by simpa [hij] using hless))
+      (by simpa [hij] using! hless))
   · exact heq
   · have hless := a3KeyEnum_descending a b c j i hgt
     exact False.elim ((a3KeyLess_irrefl b c (a3KeyEnum a b c i))
-      (by simpa [hij] using hless))
+      (by simpa [hij] using! hless))
 
 /-- For fixed colour counts, no two distinct keys claim the same box degree. -/
 theorem a3_boxTriples_aggregate (a b c n d₁ d₂ d₃ : ℕ)

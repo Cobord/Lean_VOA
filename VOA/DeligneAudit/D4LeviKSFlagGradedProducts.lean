@@ -75,10 +75,10 @@ theorem ksFlag_homogeneous_mem_products (a b c d : ℕ)
         exact ksFlag_pure_component_mem a b c d F
     | zero => simp
     | add P Q hP hQ ihP ihQ =>
-        simpa only [map_add] using Submodule.add_mem _ ihP ihQ
+        simpa only [map_add] using! Submodule.add_mem _ ihP ihQ
     | smul t P hP ihP =>
-        simpa only [map_smul] using Submodule.smul_mem _ t ihP
-  simpa only [homogeneousComponent_of_mem hd, if_pos rfl] using hc
+        simpa only [map_smul] using! Submodule.smul_mem _ t ihP
+  simpa only [homogeneousComponent_of_mem hd, if_pos rfl] using! hc
 
 end VOA.DeligneAudit.D4Levi
 

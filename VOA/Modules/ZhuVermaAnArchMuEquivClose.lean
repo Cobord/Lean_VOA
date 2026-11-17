@@ -236,7 +236,9 @@ end InducedAssignment
 
 /-! ## The headline — `zhuBijection_assembled` on the genuine `M(φ)=1⊗φ` + the single DJ datum -/
 
-/-- **`zhuBijection_assembled_firstFactor` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu
+/-- **VACUOUS — do not cite.** The signature involves `InducedAssignment W`, a type the library proves EMPTY (`VOA.not_nonempty_inducedAssignment`), so any statement with such a hypothesis is vacuous (registry: `scripts/audit/vacuous_hypotheses.py`).
+
+**`zhuBijection_assembled_firstFactor` — the unconditional `Φ(𝒱) ↔ Irr A(𝒱)` bijection of Zhu
 Theorem 5.3.4, with `hiso` resting on the genuine Dong–Jiang map `M(φ) = 1 ⊗ φ` and the single
 Construction-A datum `MUFirstFactorData F`.**
 

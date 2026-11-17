@@ -66,7 +66,7 @@ theorem bform_self_eq_zero {u : SpaceB} (h : bform u u = 0) : u = 0 := by
       rwa [transpose_apply] at this
     rw [hs]
   rw [bform_apply] at h
-  simp only at h
+  try simp only at h
   rw [hA] at h
   have h1 : 0 ≤ ∑ i, ∑ j, (A : Matrix (Fin 24) (Fin 24) ℚ) i j * (A : Matrix (Fin 24) (Fin 24) ℚ) i j :=
     Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => mul_self_nonneg _

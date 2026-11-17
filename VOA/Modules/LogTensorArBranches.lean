@@ -45,7 +45,6 @@ theorem branchTurn_mode_homogeneous (N : LogVModule W M₁) (r : ℤ)
     rw [he]
   · simp only [map_zero]
   · intro x z hx hz
-    dsimp only at hx hz ⊢
     simp only [map_add,LinearMap.add_apply,hx,hz]
 
 /-- The actual branch turn commutes with every module mode. -/

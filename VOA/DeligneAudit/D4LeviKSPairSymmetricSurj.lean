@@ -12,22 +12,22 @@ private theorem pairTargetPower_has_preimage (a b c : ℕ) (j : Fin 3) (r : ℕ)
         ⟨pairTargetPower a b c j r, pairTargetPower_mem a b c j r⟩ := by
   fin_cases j
   · have hX : pairSourceXPsum a b c r ∈ pairSourceSymmetric a b c := by
-      simpa [pairSourcePower] using pairSourcePower_mem a b c 0 r
+      simpa [pairSourcePower] using! pairSourcePower_mem a b c 0 r
     have hY : sourceYPsum a b c r ∈ pairSourceSymmetric a b c := by
-      simpa [pairSourcePower] using pairSourcePower_mem a b c 1 r
+      simpa [pairSourcePower] using! pairSourcePower_mem a b c 1 r
     refine ⟨⟨pairSourceXPsum a b c r - sourceYPsum a b c r,
       (pairSourceSymmetric a b c).sub_mem hX hY⟩, ?_⟩
     apply Subtype.ext
     simp [pairSymmetricRestriction_apply, pairRestriction_XPsum,
       pairRestriction_sourceYPsum, pairTargetPower]
   · have hY : sourceYPsum a b c r ∈ pairSourceSymmetric a b c := by
-      simpa [pairSourcePower] using pairSourcePower_mem a b c 1 r
+      simpa [pairSourcePower] using! pairSourcePower_mem a b c 1 r
     refine ⟨⟨sourceYPsum a b c r, hY⟩, ?_⟩
     apply Subtype.ext
     simp [pairSymmetricRestriction_apply, pairRestriction_sourceYPsum,
       pairTargetPower]
   · have hZ : pairSourceZPsum a b c r ∈ pairSourceSymmetric a b c := by
-      simpa [pairSourcePower] using pairSourcePower_mem a b c 2 r
+      simpa [pairSourcePower] using! pairSourcePower_mem a b c 2 r
     refine ⟨⟨pairSourceZPsum a b c r, hZ⟩, ?_⟩
     apply Subtype.ext
     simp [pairSymmetricRestriction_apply, pairRestriction_ZPsum,
@@ -73,10 +73,10 @@ theorem pairSymmetricRestriction_kernel_iff (a b c : ℕ)
   constructor
   · intro h
     have hv := congrArg Subtype.val h
-    simpa [pairSymmetricRestriction_apply] using hv
+    simpa [pairSymmetricRestriction_apply] using! hv
   · intro h
     apply Subtype.ext
-    simpa [pairSymmetricRestriction_apply] using h
+    simpa [pairSymmetricRestriction_apply] using! h
 
 end VOA.DeligneAudit.D4Levi
 

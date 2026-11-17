@@ -60,7 +60,7 @@ theorem grProj_pieceDegSum (d : ℕ) (s : Finset ℕ)
     grProj R w i.1 (pieceDegSum R w d s x) = x i := by
   change grProj R w i.1 (∑ j, (x j : Gr R w)) = x i
   rw [map_sum, Finset.sum_eq_single i]
-  · simpa using grProj_piece R w i.1 i.1 (PieceDeg_le_Piece R w d i.1 (x i).property)
+  · simpa using! grProj_piece R w i.1 i.1 (PieceDeg_le_Piece R w d i.1 (x i).property)
   · intro j _ hji
     rw [grProj_piece R w i.1 j.1 (PieceDeg_le_Piece R w d j.1 (x j).property),
       if_neg (fun h => hji (Subtype.ext h))]
@@ -72,7 +72,7 @@ theorem pieceDegSum_injective (d : ℕ) (s : Finset ℕ) :
   funext i
   apply Subtype.ext
   have hh := congrArg (grProj R w i.1) hxy
-  simpa only [grProj_pieceDegSum] using hh
+  simpa only [grProj_pieceDegSum] using! hh
 
 /-- The PBW-length pieces of one current degree are independent inside it. -/
 theorem sum_finrank_pieceDeg_le (d : ℕ) (s : Finset ℕ) [FiniteDimensional ℂ (Gr R w)] :

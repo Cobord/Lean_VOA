@@ -53,6 +53,7 @@ theorem centerRotation_join_step (P : Pivotal C) (A : Center C) (V : C) (a b : �
   rw [centerRotation_tensor]
   simp
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Iterated single central rotations equal the tensor-block rotation. -/
 theorem generalizedRotation_iterate_join (P : Pivotal C) (A : Center C) (V : C) (a b : ℕ)
     (f : A.1 ⟶ tensorPower V (a + 1) ⊗ tensorPower V (b + 1)) :
@@ -82,7 +83,6 @@ theorem generalizedRotation_iterate_join (P : Pivotal C) (A : Center C) (V : C) 
     erw [ih]
     simp only [Category.assoc, eqToHom_trans, joinPower_succ]
     dsimp only [tensorPower]
-    simp only [Category.assoc, eqToHom_trans]
     simp only [← Category.assoc]
     erw [generalizedRotation_cast P A V (show b + a + 2 = a + 1 + b + 1 by omega)]
     erw [centerRotation_join_step]
@@ -91,6 +91,7 @@ theorem generalizedRotation_iterate_join (P : Pivotal C) (A : Center C) (V : C) 
     simp [g]
     rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- One full turn acts by the central Drinfeld morphism followed by the pivotal inverse. -/
 theorem generalizedRotation_iterate_full (P : Pivotal C) (A : Center C) (V : C) (n : ℕ)
     (f : A.1 ⟶ tensorPower V (n + 1)) :

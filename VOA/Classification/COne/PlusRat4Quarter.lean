@@ -44,7 +44,7 @@ theorem H4_4_omega (hm2 : 2 ≤ m) : (V2mPlus m hm).smul (HP m hm 2) 4 (HP m hm 
   have hg : (V2mPlus m hm).smul (HP m hm 2) 4 (HP m hm 1) ∈ (V2mPlus m hm).grading 1 := by
     have := (V2mPlus m hm).toPreVertexAlgebra.smul_mem_grading
       (HP_mem_grading m hm 2 (by norm_num) (by norm_num)) (V2mPlus m hm).conformal_mem 4
-    simpa using this
+    simpa using! this
   rw [grading_one_eq_bot m hm hm2, Submodule.mem_bot] at hg
   exact hg
 
@@ -276,7 +276,6 @@ theorem Q12_indep (hyΩ : y ∈ Omega B) (hLy0 : mode (B.YM (V2mPlus m hm).confo
       t • mode (B.YM (HP m hm 2)) 1 y = 0) : s = 0 ∧ t = 0 := by
   have e1 := congrArg (fun v => mode (B.YM (V2mPlus m hm).conformalVector) 2 v) hst
   have e2 := congrArg (fun v => mode (B.YM (HP m hm 2)) 4 v) hst
-  simp only at e1 e2
   have q1 := L1_Q1 m hm B hyΩ hm2
   have q2 := L1_Q2 m hm B hyΩ hp2
   have r1 := H44_Q1 m hm B hyΩ hp2 hm2
@@ -488,7 +487,7 @@ theorem pairSplitting_quarter (r : Fin (m - 1)) (i : Label m) (hq : hC m r = 1 /
     change chiT m hm hm2 (.inl r) (VOA.mk (V2mPlus m hm) (EP m hm)) = _ at hv
     rw [hv] at h1
     simp [values] at h1
-    simpa using h1
+    simpa using! h1
   -- degree one
   have hD1 : Deg1Line A x := by
     intro j c hc

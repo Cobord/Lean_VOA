@@ -68,7 +68,7 @@ theorem weightedHomogeneousComponent_mul_left
         MvPolynomial I K) =
       C * ((MvPolynomial.weightedDecomposition K w).decompose' q r :
         MvPolynomial I K)) at h
-  simpa only [MvPolynomial.weightedDecomposition.decompose'_apply] using h
+  simpa only [MvPolynomial.weightedDecomposition.decompose'_apply] using! h
 
 /-- A nonzero weighted-homogeneous factor can be cancelled from a weighted-homogeneous product;
 the quotient has the residual weighted degree. -/
@@ -82,7 +82,8 @@ theorem quotient_weightedHomogeneous_of_factorization
   have hcomponentQ :
       MvPolynomial.weightedHomogeneousComponent w (Finsupp.weight w d) q ≠ 0 := by
     intro hzero
-    have hcoeff := congrArg (MvPolynomial.coeff d) hzero
+    have hcoeff := congrArg (fun q : MvPolynomial I K => q.coeff d) hzero
+    beta_reduce at hcoeff
     simp [MvPolynomial.coeff_weightedHomogeneousComponent] at hcoeff
     exact hd hcoeff
   have hcomponentProduct :
@@ -108,7 +109,7 @@ theorem quotient_weightedHomogeneous_of_factorization_sub
     q.IsWeightedHomogeneous w (n - c) := by
   apply quotient_weightedHomogeneous_of_factorization w C p q c (n - c)
     hC0 hC
-  · simpa [Nat.add_sub_of_le hcn] using hp
+  · simpa [Nat.add_sub_of_le hcn] using! hp
   · exact hfac
 
 end WeightedCancellation
@@ -128,7 +129,7 @@ def invariantPolynomialSubmodule (action : G → Equiv.Perm I) :
     rw [map_add, hp g, hq g]
   smul_mem' := by
     intro k p hp g
-    simpa using congrArg (fun q : MvPolynomial I K ↦ k • q) (hp g)
+    simpa using! congrArg (fun q : MvPolynomial I K ↦ k • q) (hp g)
 
 @[simp] theorem mem_invariantPolynomialSubmodule
     (action : G → Equiv.Perm I) (p : MvPolynomial I K) :
@@ -256,9 +257,12 @@ theorem p3BoundarySpeciesPermutation_toSourceRelabeling
     (boundarySpeciesPermutationToSourceRelabeling a b c d g)
     (⟨A, i⟩ : SpeciesLabel (boundaryMultiplicity a b c d))
   cases A <;>
-    simpa [boundarySpeciesPermutationToSourceRelabeling,
-      boundarySpeciesPermutationCurrentEquiv, speciesLabelEquiv,
-      SourceRelabeling.sumEquiv, currentSpecies, p3BoundaryRootEquiv] using h
+    · simp [boundarySpeciesPermutationToSourceRelabeling,
+        boundarySpeciesPermutationCurrentEquiv, speciesLabelEquiv,
+        SourceRelabeling.sumEquiv, currentSpecies, p3BoundaryRootEquiv] at h
+      first
+        | exact eq_of_heq (Sigma.mk.inj_iff.mp (Sum.inl_injective h)).2
+        | exact Sum.inr_injective h
 
 /-- Ordinary total polynomial degree, presented as the constant-one weight. -/
 def particleWeightOne {I : Type*} : I → ℕ := fun _ ↦ 1

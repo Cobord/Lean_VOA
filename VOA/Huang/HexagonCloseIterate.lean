@@ -73,14 +73,15 @@ theorem iterateWeightTerm_braid (p : Phase) (M : IterateSpace F Y X Z T)
       map_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     congr 1
-    rw [sTerm, map_smul, LinearMap.smul_apply, map_smul, smul_eq_mul]
+    erw [sTerm, map_smul, LinearMap.smul_apply, map_smul, smul_eq_mul]
     have hY := Y_Lm1_pow M.property k m ((F Y X).intertwiner.val (n + k) d.y d.x)
     change sc k * d.functional ((M.val m ((Lm1 (F Y X).isMod.toWeakModule ^ k)
       ((F Y X).intertwiner.val (n + k) d.y d.x))) d.z) = _
     rw [hY, LinearMap.smul_apply, map_smul, smul_eq_mul, ← mul_assoc, sc_mul_prod,
       iterCoef_swapM, show m - k = w - k + d.γ - d.δ - 1 by rw [hm]; ring,
       show n + k = d.β + d.α - (w - k) - 1 by rw [hn]; ring]
-  rw [iterateWeightTerm_eq, hcoef, Finset.sum_mul]
+  rw [iterateWeightTerm_eq F (restrictInputs (braidingP p F X Y).hom (𝟙 Z) M) d w, hcoef,
+    Finset.sum_mul]
   have hfin : ∀ k ∉ Finset.range K₀, braidTerm F p M d (shear (w, k)) = 0 := by
     intro k hk
     rw [Finset.mem_range, not_lt] at hk

@@ -72,7 +72,7 @@ theorem wordWt_eq (w : List (Generator × ℕ)) : wordWt w = wordJetWt w + w.len
 theorem correctedWordState_mem_grading (w : List (Generator × ℕ)) :
     correctedWordState k hk w ∈ (affineSl2VOA_closed k hk).grading (wordWt w) := by
   induction w with
-  | nil => simpa [wordWt] using (affineSl2VOA_closed k hk).vacuum_mem_grading_zero
+  | nil => simpa [wordWt] using! (affineSl2VOA_closed k hk).vacuum_mem_grading_zero
   | cons l w ih =>
     obtain ⟨g, n⟩ := l
     rw [correctedWordState_cons]
@@ -80,14 +80,14 @@ theorem correctedWordState_mem_grading (w : List (Generator × ℕ)) :
     | current a =>
       have h := (affineSl2VOA_closed k hk).grading_mode (currentState k a)
         (currentState_mem_grading k hk a) _ ih (-(n : ℤ) - 1)
-      convert h using 2
-      simp only [wordWt, List.map_cons, List.sum_cons, letterWt]; ring
+      convert h using 2 <;> first
+        | (simp only [wordWt, List.map_cons, List.sum_cons, letterWt]; ring; done) | rfl
     | sugawara =>
       have h := (affineSl2VOA_closed k hk).grading_mode
         (affineSl2VOA_closed k hk).conformalVector
         (affineSl2VOA_closed k hk).conformalVector_mem_grading_two _ ih (-(n : ℤ) - 1)
-      convert h using 2
-      simp only [wordWt, List.map_cons, List.sum_cons, letterWt]; ring
+      convert h using 2 <;> first
+        | (simp only [wordWt, List.map_cons, List.sum_cons, letterWt]; ring; done) | rfl
 
 /-- The span of the corrected words of length `≤ r` and weight `d`. -/
 def wordSpanWt (r : ℕ) (d : ℤ) : Submodule ℂ (WakModule k) :=
@@ -296,7 +296,8 @@ theorem σU_J (a : Fin 3) (μ : ℕ) {z : WakModule ALevel} (hz : z ∈ UP r) :
       rw [D.σU_lower hJ, D.σU_lower (word_mem_lowerP _ _ w hlt), map_zero]
     · have h := J_word_mem_symMod ALevel aNoncritical a μ w
       rw [heq] at h
-      rw [D.σU_of_symMod h, D.σU_of_symMod (heq ▸ word_mem_symMod _ _ w)]
+      rw [D.σU_of_symMod h]
+      exact congrArg (jetDer (a, μ)) (D.σU_of_symMod (heq ▸ word_mem_symMod _ _ w) _).symm
   | zero =>
     simp only [map_zero]
     rw [show (⟨0, _⟩ : UP r) = 0 from rfl, map_zero, map_zero]
@@ -436,7 +437,7 @@ theorem singular_symbol_vanishes :
   simp only [wordSym, List.map_cons, List.map_nil, List.prod_cons, List.prod_nil, mul_one,
     letterSym, curSer, xSer, ySer, jSer, map_neg, map_add, map_sub, PowerSeries.coeff_mul,
     PowerSeries.coeff_derivative, colSer, PowerSeries.coeff_mk]
-  simp [Finset.antidiagonal_zero, Finset.Nat.antidiagonal_succ]
+  simp [Finset.Nat.antidiagonal_zero, Finset.Nat.antidiagonal_succ]
   ring
 
 /-! ### The endpoint -/

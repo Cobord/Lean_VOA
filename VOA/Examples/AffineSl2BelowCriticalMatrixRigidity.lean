@@ -299,7 +299,7 @@ theorem schur_ker (hnext : (stepMatrix ℓ G (r + 1)).det ≠ 0) (b : {i // ℓ 
     funext i
     change ∑ j : {i // ℓ i < r + 1}, G i j * y j = 0
     rw [sum_subtype_of_vanish (fun j => ℓ j < r + 1) (fun j => G i j * y j) (fun j hj => by
-      simp only
+      try simp only
       rw [show y j = 0 from extend_gt b (by omega), mul_zero])]
     exact hy i.1 i.2
   have hz0 := Matrix.eq_zero_of_mulVec_eq_zero hnext hz
@@ -372,7 +372,7 @@ theorem matrixLayerSign_rigid {X : Type*} [TopologicalSpace X] [PreconnectedSpac
     rw [h1]
     exact (hstep.matrix_det.inv₀ (fun t => hnd t r)).smul hstep.matrix_adjugate
   have hS : Continuous fun t => (-1 : ℂ) ^ r • schur ℓ (H t) r := by
-    refine continuous_const.smul ?_
+    refine (continuous_const : Continuous (fun _ : X => (-1 : ℂ) ^ r)).smul ?_
     unfold schur blkEE blkEL blkLE
     exact (hc.matrix_submatrix _ _).sub
       (((hc.matrix_submatrix _ _).matrix_mul hinv).matrix_mul (hc.matrix_submatrix _ _))

@@ -17,7 +17,7 @@ theorem rsSpectator_mon (v : D4K.V) (hv : v 0 = 0) (c : D4K.Kq) :
     rsSpectator (D4K.mon v c) := by
   have h : D4K.ctTheta ∘ₗ LinearMap.mulLeft D4K.Kq (D4K.mon v c) =
       LinearMap.mulLeft D4K.Kq (D4K.mon v c) ∘ₗ D4K.ctTheta := by
-    apply Finsupp.lhom_ext
+    apply D4K.lhom_ext_mon
     intro w d
     change D4K.ctTheta (D4K.mon v c * D4K.mon w d) =
       D4K.mon v c * D4K.ctTheta (D4K.mon w d)

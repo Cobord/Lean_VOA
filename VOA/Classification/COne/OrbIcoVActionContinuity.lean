@@ -12,19 +12,19 @@ open VOA HeisenbergN MvPolynomial VOA.SparseRational VOA.VirasoroScreening
 
 theorem fockRawEval_end_coeff_continuousAt (A : Module.End ℂ FF)
     (s₀ : ℂ) (hs : s₀ ≠ 0) (P : RawPoly ℕ) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (A (fockRawEval s P))) s₀ := by
+    ContinuousAt (fun s => (A (fockRawEval s P)).coeff d) s₀ := by
   induction P with
-  | nil => simpa [fockRawEval,evalRaw] using (continuousAt_const :
+  | nil => simpa [fockRawEval,evalRaw] using! (continuousAt_const :
       ContinuousAt (fun _ : ℂ => (0 : ℂ)) s₀)
   | cons t P ih =>
     rcases t with ⟨q,w⟩
-    have he (s : ℂ) : coeff d (A (fockRawEval s ((q,w)::P))) =
-        (q:ℂ)*fockWordScalar s w*coeff d (A (evalWord fockBaseVar w)) +
-          coeff d (A (fockRawEval s P)) := by
-      change coeff d (A (algebraMap ℚ FF q*evalWord (fockRawVar s) w+
-        fockRawEval s P)) = _
+    have he (s : ℂ) : (A (fockRawEval s ((q,w)::P))).coeff d =
+        (q:ℂ)*fockWordScalar s w*(A (evalWord fockBaseVar w)).coeff d +
+          (A (fockRawEval s P)).coeff d := by
+      change (A (algebraMap ℚ FF q*evalWord (fockRawVar s) w+
+        fockRawEval s P)).coeff d = _
       rw [fock_rat_mul,fockWord_scalar,map_add,map_smul,map_smul,
-        coeff_add,coeff_smul,coeff_smul]
+        AddMonoidAlgebra.coeff_add,Finsupp.add_apply,coeff_smul,coeff_smul]
       simp only [smul_eq_mul]
       ring
     simp_rw [he]
@@ -34,15 +34,16 @@ theorem fockRawEval_end_coeff_continuousAt (A : Module.End ℂ FF)
 theorem sector_mode_coefficient_continuousAt (ell p : ℂ → ℂ)
     (s₀ : ℂ) (hs : s₀ ≠ 0) (he : ContinuousAt ell s₀) (hp : ContinuousAt p s₀)
     (m : ℤ) (hm : m ≠ 0) (P : RawPoly ℕ) (d : (ℕ × Fin 1) →₀ ℕ) :
-    ContinuousAt (fun s => coeff d (sectorVirasoro (ell s) (p s) m
-      (fockRawEval s P))) s₀ := by
-  have hf (s : ℂ) : coeff d (sectorVirasoro (ell s) (p s) m (fockRawEval s P)) =
-      coeff d (LvirN 1 2 m (fockRawEval s P))+
-        p s*coeff d (alphaMode m (fockRawEval s P))-
-        ((m:ℂ)+1)*ell s*coeff d (alphaMode m (fockRawEval s P)) := by
+    ContinuousAt (fun s => (sectorVirasoro (ell s) (p s) m
+      (fockRawEval s P)).coeff d) s₀ := by
+  have hf (s : ℂ) : (sectorVirasoro (ell s) (p s) m (fockRawEval s P)).coeff d =
+      (LvirN 1 2 m (fockRawEval s P)).coeff d+
+        p s*(alphaMode m (fockRawEval s P)).coeff d-
+        ((m:ℂ)+1)*ell s*(alphaMode m (fockRawEval s P)).coeff d := by
     simp only [sectorVirasoro,sectorSugawara,sectorBackgroundCurrent,sectorCurrent,
       if_neg hm,zero_smul,add_zero,LinearMap.sub_apply,LinearMap.add_apply,
-      LinearMap.smul_apply,coeff_sub,coeff_add,coeff_smul,smul_eq_mul]
+      LinearMap.smul_apply,coeff_sub,AddMonoidAlgebra.coeff_add,Finsupp.add_apply,coeff_smul,
+      smul_eq_mul]
     ring
   simp_rw [hf]
   exact ((fockRawEval_end_coeff_continuousAt _ s₀ hs P d).add

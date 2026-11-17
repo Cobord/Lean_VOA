@@ -13,6 +13,8 @@ A seed with the specified weight and zero positive Ward defects therefore
 has terminal BSA output with zero positive defects. Neither existence of
 such a nonzero seed nor nonvanishing of the output is asserted here.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 
 /-- The integer-indexed operators required for BSA transport. Indices above
@@ -36,7 +38,9 @@ theorem wardTransportMode_comm (c h b : ℂ) (m n : ℤ) (hm : 0≤m) (hm2 : m�
   obtain ⟨k,rfl⟩ := Int.eq_negSucc_of_lt_zero hn
   interval_cases m
   · cases k with
-    | zero => convert wardWeight_A c h b using 1 <;> norm_num [wardTransportMode] <;> module
+    | zero =>
+      convert wardWeight_A c h b using 1 <;> simp only [zero_add, wardTransportMode] <;>
+        norm_num <;> module
     | succ k => convert wardWeight_negative c h b k using 1 <;> norm_num [wardTransportMode] <;> module
   · cases k with
     | zero =>
@@ -80,7 +84,7 @@ noncomputable def wardTransportSystem (c h b a : ℂ) (f : ℂ → wardSequenceS
       (wardTransportMode_comm c h b m n hm hm2 hn)
     change wardTransportMode c h b m (wardTransportMode c h b n v)-
       wardTransportMode c h b n (wardTransportMode c h b m v)=_ at hh
-    simpa only [LinearMap.add_apply,LinearMap.smul_apply,LinearMap.id_apply,add_assoc] using
+    simpa only [LinearMap.add_apply,LinearMap.smul_apply,LinearMap.id_apply,add_assoc] using!
       (sub_eq_iff_eq_add.mp hh).trans (add_comm _ _)
 
 /-- The explicit terminal BSA expression in actual descendant operators.

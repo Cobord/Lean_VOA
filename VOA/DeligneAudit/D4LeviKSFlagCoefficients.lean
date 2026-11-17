@@ -80,8 +80,19 @@ theorem ksFlagRelationImage_mul (m a b c d : ℕ)
     (U T : MvPolynomial (PairTarget a b c) ℂ)
     (hU : U ∈ pairTargetSymmetric a b c) (hT : T ∈ ksFlagRelationImage m a b c d) :
     U * T ∈ ksFlagRelationImage m a b c d := by
-  obtain ⟨Q, hQ, rfl⟩ := hT
-  exact ⟨⟨U, hU⟩ * Q, ksFlagMaximalRelationSpan_mul_mem m a b c d ⟨U, hU⟩ Q hQ, rfl⟩
+  -- Lean 4.35: the anonymous-constructor/`rfl` proof timed out in `whnf`; go through
+  -- `Submodule.mem_map` and `map_mul` of the inclusion explicitly.
+  unfold ksFlagRelationImage at hT ⊢
+  obtain ⟨Q, hQ, hQT⟩ := Submodule.mem_map.mp hT
+  have hmem := Submodule.mem_map_of_mem
+    (f := (Subalgebra.val (pairTargetSymmetric a b c)).toLinearMap)
+    (ksFlagMaximalRelationSpan_mul_mem m a b c d ⟨U, hU⟩ Q hQ)
+  have heq : (Subalgebra.val (pairTargetSymmetric a b c)).toLinearMap
+      ((⟨U, hU⟩ : pairTargetSymmetric a b c) * Q) = U * T := by
+    rw [← hQT, AlgHom.toLinearMap_apply, AlgHom.toLinearMap_apply, map_mul]
+    simp only [Subalgebra.coe_val]
+  rw [heq] at hmem
+  exact hmem
 
 theorem ksFlagRelationImage_mono (m a b c d e : ℕ) (hde : d ≤ e) :
     ksFlagRelationImage m a b c d ≤ ksFlagRelationImage m a b c e :=

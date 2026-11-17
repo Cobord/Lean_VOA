@@ -31,9 +31,9 @@ would exceed the total degree of the input. -/
 theorem coeff_iterate_pderiv_eq_zero (Q : MvPolynomial σ ℂ) (a : σ)
     (r : ℕ) (d : σ →₀ ℕ)
     (h : Q.totalDegree < d.sum (fun _ n => n) + r) :
-    coeff d ((pderiv a)^[r] Q) = 0 := by
+    ((pderiv a)^[r] Q).coeff d = 0 := by
   induction r generalizing d with
-  | zero => exact coeff_eq_zero_of_totalDegree_lt (by simpa using h)
+  | zero => exact coeff_eq_zero_of_totalDegree_lt (by simpa [Finsupp.sum] using h)
   | succ r ih =>
     rw [Function.iterate_succ_apply', VOA.VirasoroScreening.screening_pderiv_coeff]
     rw [ih (d + Finsupp.single a 1) (by rw [degree_add_single]; omega), mul_zero]
@@ -59,9 +59,9 @@ theorem top_support_is_pure (Q : MvPolynomial σ ℂ) (a : σ)
       · simp [e, hv]
     have hed : e.sum (fun _ n => n) + 1 = Q.totalDegree := by
       rw [← degree_add_single e j, he, hdeg]
-    have hz : coeff e ((pderiv a)^[r] Q) = 0 :=
+    have hz : ((pderiv a)^[r] Q).coeff e = 0 :=
       coeff_iterate_pderiv_eq_zero Q a r e (by omega)
-    have hc := congrArg (coeff e) hpde
+    have hc := congrArg (fun p : MvPolynomial σ ℂ => p.coeff e) hpde
     rw [VOA.VirasoroScreening.screening_pderiv_coeff, he, coeff_smul, hz, smul_zero] at hc
     exact (mul_ne_zero (Nat.cast_ne_zero.mpr (Nat.succ_ne_zero _)) (mem_support_iff.mp hd)) hc
   ext j
@@ -75,10 +75,10 @@ theorem exists_pure_coefficient_ne_zero (Q : MvPolynomial σ ℂ) (a : σ)
     (hQ : Q ≠ 0)
     (hPDE : ∀ j, j ≠ a → ∃ (r : ℕ) (c : ℂ), 2 ≤ r ∧
       pderiv j Q = c • ((pderiv a)^[r] Q)) :
-    ∃ n : ℕ, coeff (Finsupp.single a n) Q ≠ 0 := by
+    ∃ n : ℕ, Q.coeff (Finsupp.single a n) ≠ 0 := by
   classical
   obtain ⟨d, hd, hdeg⟩ := Q.support.exists_mem_eq_sup
-    (Finsupp.support_nonempty_iff.mpr hQ) (fun d => d.sum (fun _ n => n))
+    (MvPolynomial.support_nonempty.mpr hQ) (fun d => d.sum (fun _ n => n))
   have he := top_support_is_pure Q a hPDE d hd (by simpa [totalDegree] using hdeg.symm)
   exact ⟨d a, he ▸ mem_support_iff.mp hd⟩
 

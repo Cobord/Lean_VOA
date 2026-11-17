@@ -41,7 +41,7 @@ theorem wordDeg_one_shape (L : List (Sl3 × ℕ)) (hL : wordDeg L=1) :
 theorem currentState_mem_grading (k : ℂ) (x : Sl3) :
     currentState k x ∈ gradingZA k 1 := by
   have h := negWord_mem_eigenspace form form_invariant k [(x,0)]
-  simpa [currentState,current,negWord,wordDeg,gradingZA,ell0OpA,vacuumA] using h
+  simpa [currentState,current,negWord,wordDeg,gradingZA,ell0OpA,vacuumA] using! h
 
 /-- Every energy-one vacuum vector is a single matrix current state;
 only creation-word spanning, not ordered-word independence, is used. -/

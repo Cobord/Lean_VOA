@@ -89,7 +89,7 @@ theorem generalizedIndicatorEquivariance_iff_S_entries (F : SphericalFusion C)
   · intro h ρ hr V m l i
     have hi := h ρ hr V m l (Pi.single i 1)
     rw [equivariantIndicator_basis, equivariantIndicator_S_inv F Z M ρ hr] at hi
-    simpa [Pi.single_apply] using hi
+    simpa [Pi.single_apply] using! hi
   · intro h ρ hr V m l z
     rw [equivariantIndicator_S_inv F Z M ρ hr]
     change (∑ i, z i * generalizedIndicatorAll F (Z.simple i) V l (-m)) = _

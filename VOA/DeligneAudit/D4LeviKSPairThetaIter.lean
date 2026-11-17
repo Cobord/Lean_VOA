@@ -26,13 +26,13 @@ theorem pairAdjoint_zero (F : ℕ → Module.End ℂ V) (rs : List ℕ) :
     pairAdjoint F rs 0 = 0 := by
   induction rs with
   | nil => rfl
-  | cons r rs ih => simpa [pairAdjoint] using ih
+  | cons r rs ih => simpa [pairAdjoint] using! ih
 
 theorem pairAdjoint_list_sum (F : ℕ → Module.End ℂ V)
     (rs : List ℕ) (As : List (Module.End ℂ V)) :
     pairAdjoint F rs As.sum = (As.map (pairAdjoint F rs)).sum := by
   induction As with
-  | nil => simpa using pairAdjoint_zero F rs
+  | nil => simpa using! pairAdjoint_zero F rs
   | cons A As ih =>
       simp only [List.sum_cons, List.map_cons, pairAdjoint_add, ih]
 
@@ -75,7 +75,7 @@ theorem fThree_adjoint_iter_radicalWord
         ((threeWordsIter rs l).map (radicalWord ρ v)).sum := by
   have h := congrArg (fun A : Module.End ℂ V => A v)
     (fThree_adjoint_iter_radicalOp ρ rs l)
-  simpa only [LinearMap.smul_apply, pairRadicalOp_sum_apply] using h
+  simpa only [LinearMap.smul_apply, pairRadicalOp_sum_apply] using! h
 
 end VOA.DeligneAudit.D4Levi
 

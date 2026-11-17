@@ -68,8 +68,8 @@ theorem charThetaCoeff_self {T : ℕ} (hT : 1 ≤ T) :
         · exact h
         · nlinarith
       rcases Int.natAbs_eq_iff.1 h2 with h | h
-      · left; simpa using h
-      · right; simpa using h
+      · left; simpa using! h
+      · right; simpa using! h
     · rintro (rfl | rfl) <;> simp
   rw [charThetaCoeff, tsum_congr_set_coe (fun b : ℤ => ψ (b : ZMod r)) hset,
     Finset.tsum_subtype' ({1, -1} : Finset ℤ) (fun b : ℤ => ψ (b : ZMod r)),
@@ -155,7 +155,7 @@ theorem thetaType_eq_zero_of_coeff_pos {N : ℕ} (hN : 0 < N) (h4 : 4 ∣ N) {f 
       refine hasSum_single 0 fun n hn => ?_
       rw [hg n (Nat.pos_of_ne_zero hn), zero_mul]
     have := hs.unique hs'
-    simpa using this
+    simpa using! this
   have ha0 : a0 = 0 := by
     by_contra h0
     have hI : (0 : ℝ) < (I : ℂ).im := by simp
@@ -205,7 +205,7 @@ theorem IsClassForm.zero {N r : ℕ} (ψ : DirichletCharacter ℂ r) (t : ℕ) :
     IsClassForm N r ψ t (fun _ => 0) := by
   have h0 : ∀ n, thetaTypeCoeff (fun _ : ℂ => (0 : ℂ)) n = 0 := fun n =>
     (IsThetaTypeForm.zero (N := N)).coeff_eq_of_hasSum (c := fun _ => 0)
-      (fun τ _ => by simpa using hasSum_zero) n
+      (fun τ _ => by simpa using! hasSum_zero) n
   exact ⟨IsThetaTypeForm.zero, fun n _ h => absurd (h0 n) h, fun n v _ _ => by simp [h0]⟩
 
 theorem IsClassForm.add_smul {N r : ℕ} {ψ : DirichletCharacter ℂ r} {t : ℕ} {f g : ℂ → ℂ}
@@ -266,10 +266,10 @@ theorem exists_box_sub {N r t : ℕ} (h24 : 24 ∣ N) (hr : 0 < r) (ht : 1 ≤ t
     obtain ⟨h, hh, hspan, hvan⟩ := ih
     have hfh : IsClassForm N r ψ t (f - h) := by
       have := hf.add_smul hh (-1)
-      simpa [sub_eq_add_neg] using this
+      simpa [sub_eq_add_neg] using! this
     by_cases hbox : InBox N r ψ t (K + 1)
     · set T := t * (K + 1) ^ 2 with hT
-      have hdiv : 4 * T * r ^ 2 ∣ N := by rw [hT]; simpa [mul_assoc] using hbox.2
+      have hdiv : 4 * T * r ^ 2 ∣ N := by rw [hT]; simpa [mul_assoc] using! hbox.2
       have hθ := isClassForm_charTheta h24 hr ht (Nat.succ_pos K) hdiv ψ
       set c := thetaTypeCoeff (f - h) T / 2 with hc
       refine ⟨h + c • charTheta r ψ (T : ℕ), hh.add_smul hθ c, ?_, ?_⟩
@@ -290,7 +290,7 @@ theorem exists_box_sub {N r t : ℕ} (h24 : 24 ∣ N) (hr : 0 < r) (ht : 1 ≤ t
           have hev : ψ (-1 : ℤ) = 1 := by
             have := hbox.1
             rw [DirichletCharacter.Even] at this
-            simpa using this
+            simpa using! this
           rw [show ψ ((1 : ℤ) : ZMod r) = 1 by simp, hev, hc]
           ring
     · refine ⟨h, hh, hspan, fun S hS1 hSK hSbox => ?_⟩
@@ -337,7 +337,7 @@ theorem mem_span_of_levelBox (hL : SerreStarkLevelBox24) {N r t : ℕ} (hN : 0 <
   obtain ⟨h, hh, hspan, hvan⟩ := exists_box_sub h24 hr ht1 hprim hf N
   have hfh : IsClassForm N r ψ t (f - h) := by
     have := hf.add_smul hh (-1)
-    simpa [sub_eq_add_neg] using this
+    simpa [sub_eq_add_neg] using! this
   have hbox : ∀ S, 1 ≤ S → InBox N r ψ t S → thetaTypeCoeff (f - h) (t * S ^ 2) = 0 := by
     intro S hS hSb
     refine hvan S hS ?_ hSb
@@ -351,7 +351,7 @@ theorem mem_span_of_levelBox (hL : SerreStarkLevelBox24) {N r t : ℕ} (hN : 0 <
     funext τ
     have := hzero τ τ.2
     simp only [Pi.sub_apply, sub_eq_zero] at this
-    simpa [restrictUpper_apply] using this
+    simpa [restrictUpper_apply] using! this
   rw [this]
   exact hspan
 

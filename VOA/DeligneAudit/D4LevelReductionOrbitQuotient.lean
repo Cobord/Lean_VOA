@@ -46,7 +46,7 @@ theorem quotient_unsignedLevi_mem (v : V)
   have hs := leviSign_square_eq_one a
   have hh := (cycSubG (quotRepG (leviCurrent ρ) N (quotientLevi_invariant ρ N hN))
     (N.mkQ v)).smul_mem (leviSign a : ℂ) hq
-  simpa only [smul_smul, hs, one_smul] using hh
+  simpa only [smul_smul, hs, one_smul] using! hh
 
 private theorem quotient_extraCartan_comm_mem (v u : V)
     (a : Fin 15) (r s : ℕ)

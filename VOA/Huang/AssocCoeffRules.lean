@@ -76,7 +76,7 @@ theorem hasLogExp_sum {ι : Type*} (S : Finset ι) {F : ι → ℂ → ℂ}
     (hF : ∀ i ∈ S, HasLogExp U (F i)) : HasLogExp U (fun t => ∑ i ∈ S, F i t) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using (hasLogExp_zero (U := U))
+  | empty => simpa using! (hasLogExp_zero (U := U))
   | insert i S hi ih =>
     have h := hasLogExp_add (hF i (Finset.mem_insert_self i S))
       (ih fun j hj => hF j (Finset.mem_insert_of_mem hj))
@@ -96,7 +96,7 @@ theorem logCoeff_sum (hU : IsOpen U) (hsub : U ⊆ halfPlane) (hne : U.Nonempty)
     (k : ℕ) : logCoeff U (fun t => ∑ i ∈ S, F i t) μ k = ∑ i ∈ S, logCoeff U (F i) μ k := by
   classical
   induction S using Finset.induction_on with
-  | empty => simpa using logCoeff_zero hU hsub hne μ k
+  | empty => simpa using! logCoeff_zero hU hsub hne μ k
   | insert i S hi ih =>
     have hS : HasLogExp U (fun t => ∑ j ∈ S, F j t) :=
       hasLogExp_sum S fun j hj => hF j (Finset.mem_insert_of_mem hj)

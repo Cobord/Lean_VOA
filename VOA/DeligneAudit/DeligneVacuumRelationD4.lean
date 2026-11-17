@@ -49,7 +49,7 @@ theorem sym4_hw (r : Fin 3) :
   refine sym_singular d4CertData (-2) hk4 (fun i => (cz r i : ℂ)) (ta r) (tb r) ?_ ?_ ?_
   · have h := simpleProjection_sv r
     rw [sv] at h
-    simpa [w2] using h
+    simpa [w2] using! h
   · intro e
     have h := hw_bracket_shadowZ r e
     simp only [structureConstant_eq]

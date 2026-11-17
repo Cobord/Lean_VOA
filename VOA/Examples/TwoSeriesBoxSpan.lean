@@ -50,7 +50,7 @@ theorem list_sum_map_succ (l : List ℕ) :
 theorem degree_eq_sum {k : ℕ} (β : Fin k →₀ ℕ) : Finsupp.degree β = ∑ i, β i := by
   rw [Finsupp.degree_apply]
   exact Finset.sum_subset (Finset.subset_univ _) fun i _ hi => by
-    simpa using hi
+    simpa using! hi
 
 /-- **The box image is spanned by reversed monomials.** -/
 theorem boxW_le_span_psiMono (n N k : ℕ) (e : ℤ) :

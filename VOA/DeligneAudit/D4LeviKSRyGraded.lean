@@ -21,7 +21,7 @@ theorem ry_lower_term (xs ys zs : List ℕ) (k s d : ℕ)
         higherOrbit ρ w m (rzKey xs ys zs k d) := by
   let N := higherOrbit ρ w m (rzKey xs ys zs k d)
   have hsum :
-      (∑ q ∈ Finset.antidiagonal s,
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         (PowerSeries.coeff q.1
           (fCurrent (fTopOp ρ) ^ (k - p.2.length)) *
             aWord (xOp ρ) p.1) *
@@ -33,13 +33,13 @@ theorem ry_lower_term (xs ys zs : List ℕ) (k s d : ℕ)
     exact ry_lower_base ρ w m xs ys zs k p hp hshort q d
   have hscalar (c : ℂ) :
       (algebraMap ℂ (Module.End ℂ V) c) •
-        ((∑ q ∈ Finset.antidiagonal s,
+        ((∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
           (PowerSeries.coeff q.1
             (fCurrent (fTopOp ρ) ^ (k - p.2.length)) *
               aWord (xOp ρ) p.1) *
             PowerSeries.coeff q.2 (bWord (zOp ρ) p.2)) •
           (((ys.map (yOp ρ)).prod * (zs.map (zOp ρ)).prod) • w)) ∈ N := by
-    simpa using N.smul_mem c hsum
+    simpa using! N.smul_mem c hsum
   have hcast : ((-1 : Module.End ℂ V) ^ p.2.length *
       (k.descFactorial p.2.length : Module.End ℂ V)) =
       algebraMap ℂ (Module.End ℂ V)
@@ -47,7 +47,7 @@ theorem ry_lower_term (xs ys zs : List ℕ) (k s d : ℕ)
     simp
   unfold conversionTerm
   rw [hcast]
-  simpa only [mul_smul] using
+  simpa only [mul_smul] using!
     hscalar ((-1 : ℂ) ^ p.2.length * (k.descFactorial p.2.length : ℂ))
 
 theorem ry_lower_sum (xs ys zs : List ℕ) (k s d : ℕ) :
@@ -125,7 +125,7 @@ theorem ry_top_higher
   have hab : ∀ i j, xOp ρ i * zOp ρ j = zOp ρ j * xOp ρ i := by
     intro i j
     ext v
-    simpa [xOp, zOp] using radical_ops_comm ρ 1 5 i j v
+    simpa [xOp, zOp] using! radical_ops_comm ρ 1 5 i j v
   exact topSum_mem_higher_linear (fTopOp ρ) (xOp ρ) (zOp ρ)
     (fTop_x_comm ρ) (fTop_z_comm ρ) hab
     k s (xs ++ List.replicate k 0)

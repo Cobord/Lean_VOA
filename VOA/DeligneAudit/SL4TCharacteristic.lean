@@ -81,7 +81,7 @@ theorem grass_coefficient_product (d T : ℕ) :
     coefficientPoly (fun i => (-1) ^ i * eClass d T i) d *
       coefficientPoly (hClass d T) T = 1 := by
   have he := coefficientPoly_coeff_of_tail (fun i => (-1) ^ i * eClass d T i) d
-    (fun j hj => by dsimp; rw [eClass_eq_zero d T j hj, mul_zero])
+    (fun j hj => by rw [eClass_eq_zero d T j hj, mul_zero])
   have hh := coefficientPoly_coeff_of_tail (hClass d T) T
     (fun j hj => hClass_eq_zero d T j hj)
   ext n
@@ -103,7 +103,7 @@ theorem grass_characteristic_product (d T : ℕ) :
 /-- The requested identity in the original Grassmannian coordinates. -/
 theorem H_characteristic_product (d M : ℕ) (hdM : d ≤ M) :
     grassP d (M - d) * grassPbar d (M - d) = X ^ M := by
-  simpa only [Nat.add_sub_of_le hdM] using grass_characteristic_product d (M - d)
+  simpa only [Nat.add_sub_of_le hdM] using! grass_characteristic_product d (M - d)
 
 end
 

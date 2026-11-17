@@ -94,9 +94,9 @@ theorem middleFlagRemovedPolynomial_map (q : MixedParams) (hq : MixedValid q)
   by_cases hk : k = i
   · simp only [hk, if_true, pow_one] at hp
     rw [middleFlagRemovedPolynomial, if_pos hk]
-    simpa only [hk] using polynomial_map_divX_of_zero_root
+    simpa only [hk] using! polynomial_map_divX_of_zero_root
       (mixedBProjection q hq (mixedBOrder i) hs) _ _ hp
-  · simpa only [middleFlagRemovedPolynomial, hk, if_false, pow_zero, one_mul] using hp
+  · simpa only [middleFlagRemovedPolynomial, hk, if_false, pow_zero, one_mul] using! hp
 
 /-- The polynomial lift after two roots, allowing both to belong to the same block. -/
 def middleFlagTwiceRemovedPolynomial (q : MixedParams) (i j k : Fin 4) :
@@ -125,7 +125,7 @@ theorem middleFlagTwiceRemovedPolynomial_map (q : MixedParams) (hq : MixedValid 
         if_true]
       rw [polynomial_map_divX]
       have h := middleFlagRemovedPolynomial_map q hq i j hi
-      simpa only [middleFlagRemovedPolynomial, hk] using congrArg Polynomial.divX h
+      simpa only [middleFlagRemovedPolynomial, hk] using! congrArg Polynomial.divX h
     · rw [middleFlagTwiceRemovedPolynomial, if_neg hk,
         middleFlagRemovedPolynomial_map q hq i k hi, middleFlagRemovedPolynomial, if_neg hk]
   rw [he]

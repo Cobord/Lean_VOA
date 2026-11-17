@@ -17,7 +17,7 @@ theorem thetaEulerProduct_ne_zero_of_norm_lt_one {r u : ℂ}
     calc
       ‖u‖ * ‖r‖ ^ n ≤ ‖u‖ * 1 :=
         mul_le_mul_of_nonneg_left (pow_le_one₀ (norm_nonneg r) hr.le) (norm_nonneg u)
-      _ < 1 := by simpa using hu
+      _ < 1 := by simpa using! hu
   rw [hn, norm_one] at hb
   exact lt_irrefl _ hb
 
@@ -92,7 +92,7 @@ theorem thetaShiftedProduct_deriv_add_one (τ : ℍ) (x : ℂ) :
     ((hasDerivAt_id x).add_const 1)
   have he : (fun y => thetaShiftedProduct (y + 1) τ) =
       (fun y => thetaShiftedProduct y τ) := funext (fun y => thetaShiftedProduct_add_one y τ)
-  simpa only [Function.comp_def, id_eq, mul_one, he] using hd.deriv.symm
+  simpa only [Function.comp_def, id_eq, mul_one, he] using! hd.deriv.symm
 
 /-- At a zero, the extra term in the differentiated quasi-period law vanishes. -/
 theorem thetaShiftedProduct_deriv_add_tau_of_zero (τ : ℍ) (x : ℂ)
@@ -110,8 +110,8 @@ theorem thetaShiftedProduct_deriv_add_tau_of_zero (τ : ℍ) (x : ℂ)
     funext (fun y => thetaShiftedProduct_add_tau y τ)
   have hleft' : HasDerivAt (fun y => -(thetaExp y)⁻¹ * thetaShiftedProduct y τ)
       (_root_.deriv (fun y => thetaShiftedProduct y τ) (x + τ)) x := by
-    simpa only [Function.comp_def, id_eq, mul_one, he] using hleft
-  simpa only [hx, mul_zero, zero_add] using hleft'.unique hright
+    simpa only [Function.comp_def, id_eq, mul_one, he] using! hleft
+  simpa only [hx, mul_zero, zero_add] using! hleft'.unique hright
 
 /-- Every zero of the product is simple. -/
 theorem thetaShiftedProduct_deriv_ne_zero_of_zero (τ : ℍ) (x : ℂ)
@@ -141,7 +141,7 @@ theorem thetaShiftedProduct_deriv_ne_zero_of_zero (τ : ℍ) (x : ℂ)
       rw [thetaShiftedProduct_deriv_add_tau_of_zero τ y hy]
       exact mul_ne_zero hc hd
   obtain ⟨m, k, rfl⟩ := (thetaShiftedProduct_eq_zero_iff τ x).mp hx
-  have h0 : H 0 := ⟨by simpa using thetaShiftedProduct_lattice_zero (τ : ℂ) 0 0,
+  have h0 : H 0 := ⟨by simpa using! thetaShiftedProduct_lattice_zero (τ : ℂ) 0 0,
     thetaShiftedProduct_deriv_zero_ne_zero τ⟩
   have hp := (h1.int_mul m).add_period (ht.int_mul k)
   have hh := hp.eq

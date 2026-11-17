@@ -7,6 +7,8 @@ Its Cartan element is twice the node-one fundamental coweight, so its single
 reflection suffices for grade symmetry without reflecting the Levi-level filtration.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.DeligneAudit.D4LevelReduction
 
 open VOA.DeligneAudit.SectorWeyl
@@ -40,7 +42,7 @@ theorem gradeRaisingLowering_comm :
       decide +kernel
     change fD4 7 19 z - fD4 7 27 z + fD4 15 19 z - fD4 15 27 z = _
     simpa only [fD4, fC, Int.cast_sub, Int.cast_add, Int.cast_ite,
-      Int.cast_ofNat, Int.cast_one, Int.cast_zero] using
+      Int.cast_ofNat, Int.cast_one, Int.cast_zero] using!
       congrArg (fun n : ℤ => (n : ℂ)) (hi z)
   ext v
   change gradeRaisingOperator ρ (gradeLoweringOperator ρ v) -
@@ -61,7 +63,8 @@ theorem gradeRaisingLowering_comm :
         (D4sector.f (7 : Fin 28) (19 : Fin 28) z - D4sector.f (7 : Fin 28) (27 : Fin 28) z +
           D4sector.f (15 : Fin 28) (19 : Fin 28) z - D4sector.f (15 : Fin 28) (27 : Fin 28) z) •
             ρ.op z 0 v := by
-      rw [ρ.comm, ρ.comm, ρ.comm, ρ.comm]
+      rw [ρ.comm (7 : Fin 28) (19 : Fin 28) 0 0 v, ρ.comm (7 : Fin 28) (27 : Fin 28) 0 0 v,
+        ρ.comm (15 : Fin 28) (19 : Fin 28) 0 0 v, ρ.comm (15 : Fin 28) (27 : Fin 28) 0 0 v]
       simp only [zero_add, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib,
         ← sub_smul, ← add_smul]
       rfl
@@ -105,11 +108,11 @@ theorem truncatedGradeSpace_finrank_neg (m : ℕ) (hm : 1 ≤ m) (κ : ℤ) :
   have hE : IsNilpotent (gradeRaisingOperator ρ) := by
     apply truncatedGrade_commutator_nilpotent m hm _ 1 (Or.inl rfl)
     intro v
-    simpa using LinearMap.congr_fun (gradeCartan_raising_comm ρ) v
+    simpa using! LinearMap.congr_fun (gradeCartan_raising_comm ρ) v
   have hF : IsNilpotent (gradeLoweringOperator ρ) := by
     apply truncatedGrade_commutator_nilpotent m hm _ (-1) (Or.inr rfl)
     intro v
-    simpa using LinearMap.congr_fun (gradeCartan_lowering_comm ρ) v
+    simpa using! LinearMap.congr_fun (gradeCartan_lowering_comm ρ) v
   have he := sl2_nilpotent_eigenspace_finrank_eq (doubledGradeCartan ρ)
     (gradeRaisingOperator ρ) (gradeLoweringOperator ρ) (gradeRaisingLowering_comm ρ)
     (gradeCartan_raising_comm ρ) (gradeCartan_lowering_comm ρ) hE hF (2 * (κ : ℂ))

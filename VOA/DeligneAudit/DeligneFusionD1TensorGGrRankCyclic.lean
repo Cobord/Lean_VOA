@@ -40,7 +40,7 @@ def cyclicRep : CurrentModule f (cyclicGr R w) where
   comm a b r s x := by
     apply Subtype.ext
     simpa only [LinearMap.coe_restrict_apply, Submodule.coe_sub, Submodule.coe_sum,
-      Submodule.coe_smul] using (grRep R w).comm a b r s (x : GrSpace R w)
+      Submodule.coe_smul] using! (grRep R w).comm a b r s (x : GrSpace R w)
 
 def cyclicGenerator : cyclicGr R w :=
   ⟨wg R w, word_mem_cyclicGr R w []⟩

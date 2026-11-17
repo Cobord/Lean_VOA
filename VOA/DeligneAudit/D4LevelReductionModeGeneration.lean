@@ -33,21 +33,33 @@ theorem threeColour_symmetric_le_powerSum (a j c : ℕ) :
         simp [pairTargetPower, pairTargetXPsum, targetYPsum, pairTargetZPsum]
   | succ r =>
       fin_cases i
-      · convert (Algebra.subset_adjoin ⟨1, r + 1, by simp, by omega, rfl⟩ :
-          colourPsum (threeColourModeShape a j c) 1 (r + 1) ∈
-            xyzPowerSumAlgebra (threeColourModeShape a j c)) using 1
-        simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
-          threeColourModeShape, pairTargetPower, pairTargetXPsum]
-      · convert (Algebra.subset_adjoin ⟨4, r + 1, by simp, by omega, rfl⟩ :
-          colourPsum (threeColourModeShape a j c) 4 (r + 1) ∈
-            xyzPowerSumAlgebra (threeColourModeShape a j c)) using 1
-        simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
-          threeColourModeShape, pairTargetPower, targetYPsum]
-      · convert (Algebra.subset_adjoin ⟨5, r + 1, by simp, by omega, rfl⟩ :
-          colourPsum (threeColourModeShape a j c) 5 (r + 1) ∈
-            xyzPowerSumAlgebra (threeColourModeShape a j c)) using 1
-        simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
-          threeColourModeShape, pairTargetPower, pairTargetZPsum]
+      · have hm : colourPsum (threeColourModeShape a j c) 1 (r + 1) ∈
+            xyzPowerSumAlgebra (threeColourModeShape a j c) :=
+          Algebra.subset_adjoin ⟨1, r + 1, by simp, by omega, rfl⟩
+        have he : pairTargetPower a j c 0 (r + 1) =
+            colourPsum (threeColourModeShape a j c) 1 (r + 1) := by
+          simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
+            threeColourModeShape, pairTargetPower, pairTargetXPsum]
+        rw [← he] at hm
+        exact hm
+      · have hm : colourPsum (threeColourModeShape a j c) 4 (r + 1) ∈
+            xyzPowerSumAlgebra (threeColourModeShape a j c) :=
+          Algebra.subset_adjoin ⟨4, r + 1, by simp, by omega, rfl⟩
+        have he : pairTargetPower a j c 1 (r + 1) =
+            colourPsum (threeColourModeShape a j c) 4 (r + 1) := by
+          simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
+            threeColourModeShape, pairTargetPower, targetYPsum]
+        rw [← he] at hm
+        exact hm
+      · have hm : colourPsum (threeColourModeShape a j c) 5 (r + 1) ∈
+            xyzPowerSumAlgebra (threeColourModeShape a j c) :=
+          Algebra.subset_adjoin ⟨5, r + 1, by simp, by omega, rfl⟩
+        have he : pairTargetPower a j c 2 (r + 1) =
+            colourPsum (threeColourModeShape a j c) 5 (r + 1) := by
+          simp [colourPsum, Finset.sum_map_toList, Fintype.sum_sum_type,
+            threeColourModeShape, pairTargetPower, pairTargetZPsum]
+        rw [← he] at hm
+        exact hm
 
 def threeColourBlockPermutation (a b c : ℕ) (ex : Equiv.Perm (Fin a))
     (ey : Equiv.Perm (Fin b)) (ez : Equiv.Perm (Fin c)) :

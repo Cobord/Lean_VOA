@@ -86,7 +86,7 @@ theorem rot2_conj_tetra {x : Aut V1} (hx : x ∈ tetra) : rot2⁻¹ * x * rot2 �
   obtain ⟨s, hs, rfl⟩ := hx
   refine ⟨transposition⁻¹ * s * transposition, ?_, ?_⟩
   · have := (inferInstance : (alternatingGroup (Fin 4)).Normal).conj_mem s hs transposition⁻¹
-    simpa using this
+    simpa using! this
   · change (octHom (transposition⁻¹ * s * transposition) : Aut V1) = rot2⁻¹ * octHom s * rot2
     rw [map_mul, map_mul, map_inv, octHom_transposition]
 
@@ -122,7 +122,7 @@ theorem autL_injective {g h : Aut V1} (hgh : ∀ v, autL g v = autL h v) : g = h
   apply rho_injective
   ext i j
   have := congrFun (hgh (Pi.single j 1)) i
-  simpa [rho, LinearMap.toMatrix'_apply] using this
+  simpa [rho, LinearMap.toMatrix'_apply] using! this
 
 theorem unitI_sq : unitI * unitI = -1 := by
   ext; simp [unitI]
@@ -617,7 +617,7 @@ theorem icosahedralConjugacy (G : Subgroup (Aut V1))
       intro k hk
       have : (⟨y, hy⟩ : G') ^ k = 1 := by
         apply e'.injective; rw [map_pow, hk, map_one]
-      exact congrArg Subtype.val this |>.trans rfl |> fun h' => by simpa using h'
+      exact congrArg Subtype.val this |>.trans rfl |> fun h' => by simpa using! h'
     rcases h with h | h | h | h
     · left
       have : (⟨y, hy⟩ : G') = 1 := by apply e'.injective; rw [h, map_one]
@@ -628,7 +628,7 @@ theorem icosahedralConjugacy (G : Subgroup (Aut V1))
   -- the inverting involution
   have hx3 : (e' ⟨rotC, hC⟩) ^ 3 = 1 := by
     rw [← map_pow]
-    have : (⟨rotC, hC⟩ : G') ^ 3 = 1 := Subtype.ext (by simpa using rotC_cube')
+    have : (⟨rotC, hC⟩ : G') ^ 3 = 1 := Subtype.ext (by simpa using! rotC_cube')
     rw [this, map_one]
   have hx1 : e' ⟨rotC, hC⟩ ≠ 1 := by
     intro h
@@ -659,13 +659,13 @@ theorem icosahedralConjugacy (G : Subgroup (Aut V1))
     obtain ⟨τ⟩ := tetra_group
     have h := A4_no_inverter (τ ⟨σ, hσt⟩) (τ ⟨rotC, rotC_mem_tetra⟩)
       (by rw [← map_pow]; rw [show (⟨rotC, rotC_mem_tetra⟩ : tetra) ^ 3 = 1 from
-        Subtype.ext (by simpa using rotC_cube'), map_one])
+        Subtype.ext (by simpa using! rotC_cube'), map_one])
       (by intro h; apply rotC_ne_one
           have : (⟨rotC, rotC_mem_tetra⟩ : tetra) = 1 := by
             apply τ.injective; rw [h, map_one]
           exact congrArg Subtype.val this)
       (by rw [← map_pow, show (⟨σ, hσt⟩ : tetra) ^ 2 = 1 from
-        Subtype.ext (by simpa [pow_two] using hσ2), map_one])
+        Subtype.ext (by simpa [pow_two] using! hσ2), map_one])
       (by rw [← map_mul, ← map_mul, ← map_inv]; congr 1; exact Subtype.ext hσC)
     apply hσ1
     have : (⟨σ, hσt⟩ : tetra) = 1 := by apply τ.injective; rw [h, map_one]
@@ -682,7 +682,7 @@ theorem icosahedralConjugacy (G : Subgroup (Aut V1))
     apply rotC_ne_one
     have h2' : rotC * rotC = 1 := by
       have := congrArg (·⁻¹) h2
-      simpa [mul_inv_rev] using this
+      simpa [mul_inv_rev] using! this
     calc rotC = (rotC * rotC * rotC) * (rotC * rotC)⁻¹ := by group
       _ = 1 := by rw [rotC_cube, h2', inv_one, one_mul]
   have hsum : u 0 + u 1 + u 2 = 0 := by

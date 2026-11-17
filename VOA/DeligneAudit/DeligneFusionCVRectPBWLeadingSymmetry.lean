@@ -53,7 +53,7 @@ private theorem Pbelow_swap_le (n : ℕ) : Pbelow (swapRep R) w n ≤ Pbelow R w
 /-- The checked Dynkin involution preserves the actual PBW filtration. -/
 theorem Pbelow_swap (n : ℕ) : Pbelow (swapRep R) w n = Pbelow R w n := by
   apply le_antisymm (Pbelow_swap_le R w n)
-  simpa only [swapRep_swapRep] using Pbelow_swap_le (swapRep R) w n
+  simpa only [swapRep_swapRep] using! Pbelow_swap_le (swapRep R) w n
 
 /-- Any proved swapped graded coefficient relation transfers to the original
 actual graded representation, with its two simple colors exchanged. -/
@@ -74,7 +74,7 @@ theorem gradedOrderedCoeff_zero_of_swap (p q r s : ℕ)
     (List.replicate r 2 ++ List.replicate q 1 ++ List.replicate p 0) s (by
       simpa only [currentProduct_append, currentProduct_replicate, List.length_append,
         List.length_replicate, negRoot, Matrix.cons_val_two, Matrix.cons_val_one,
-        Matrix.cons_val_zero] using hm')
+        Matrix.cons_val_zero] using! hm')
   have hseries (a b : Fin 3) : Commute (Garland.Fs (grOp R w a))
       (Garland.Fs (grOp R w b)) := current_series_commute (grOp_commute R w a b)
   have he : Garland.Fs (grOp R w 2) ^ r * Garland.Fs (grOp R w 1) ^ q *
@@ -99,7 +99,7 @@ theorem first_theta_second_mirror (h : CV3Rel R w ε ν ϱ 0) (p s : ℕ)
     gradedOrderedCoeff R w p 1 1 s = 0 := by
   apply gradedOrderedCoeff_zero_of_swap R w p 1 1 s
   apply first_theta_second (cv3Rel_swap h) p s
-  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using hs
+  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using! hs
 
 /-- The exact one-theta source relation in graded coefficient form. -/
 theorem theta_second_one_graded (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
@@ -112,7 +112,7 @@ theorem theta_second_one_graded (h : CV3Rel R w ε ν ϱ 0) (r s : ℕ)
     norm_num
   have hz := theta_second_one h r s (by rwa [← hc])
   have he : orderedCoeff R w 0 1 r s = 0 := by
-    simpa only [orderedCoeff, pow_zero, one_mul, pow_one, mixedCoeff] using hz
+    simpa only [orderedCoeff, pow_zero, one_mul, pow_one, mixedCoeff] using! hz
   rw [he]
   exact Submodule.zero_mem _
 
@@ -123,7 +123,7 @@ theorem first_theta_one_graded (h : CV3Rel R w ε ν ϱ 0) (p s : ℕ)
     gradedOrderedCoeff R w p 1 0 s = 0 := by
   apply gradedOrderedCoeff_zero_of_swap R w p 1 0 s
   apply theta_second_one_graded (cv3Rel_swap h) p s
-  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using hs
+  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using! hs
 
 /-- The two-theta no-first-one source relation in graded form. -/
 theorem theta_second_two_no_one_graded {e : ℕ}
@@ -132,9 +132,9 @@ theorem theta_second_two_no_one_graded {e : ℕ}
       clippedSum (parts ϱ.2 ν.2 e) (r + 2) < s + r + 2) :
     gradedOrderedCoeff R w 0 2 r s = 0 := by
   apply gradedOrderedCoeff_zero R w 0 2 r s
-  have hz := theta_second_two_no_one_clipped h r s (by simpa only [Nat.add_assoc] using hs)
+  have hz := theta_second_two_no_one_clipped h r s (by simpa only [Nat.add_assoc] using! hs)
   have he : orderedCoeff R w 0 2 r s = 0 := by
-    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using hz
+    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using! hz
   rw [he]
   exact Submodule.zero_mem _
 
@@ -145,9 +145,9 @@ theorem theta_second_two_one_graded
       clippedSum (parts ϱ.2 ν.2 0) (r + 2) < s + r + 2) :
     gradedOrderedCoeff R w 0 2 r s = 0 := by
   apply gradedOrderedCoeff_zero R w 0 2 r s
-  have hz := theta_second_two_one_clipped h r s (by simpa only [Nat.add_assoc] using hs)
+  have hz := theta_second_two_one_clipped h r s (by simpa only [Nat.add_assoc] using! hs)
   have he : orderedCoeff R w 0 2 r s = 0 := by
-    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using hz
+    simpa only [orderedCoeff, pow_zero, one_mul, mixedCoeff] using! hz
   rw [he]
   exact Submodule.zero_mem _
 
@@ -159,7 +159,7 @@ theorem first_theta_two_no_one_graded {e : ℕ}
     gradedOrderedCoeff R w p 2 0 s = 0 := by
   apply gradedOrderedCoeff_zero_of_swap R w p 2 0 s
   apply theta_second_two_no_one_graded (cv3Rel_swap h) p s
-  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using hs
+  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using! hs
 
 /-- The mirror unique-one two-theta family. -/
 theorem first_theta_two_one_graded
@@ -169,7 +169,7 @@ theorem first_theta_two_one_graded
     gradedOrderedCoeff R w p 2 0 s = 0 := by
   apply gradedOrderedCoeff_zero_of_swap R w p 2 0 s
   apply theta_second_two_one_graded (cv3Rel_swap h) p s
-  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using hs
+  simpa only [Prod.fst, Prod.snd, Nat.add_comm] using! hs
 
 end
 end VOA.DeligneAudit.A2.CVRectPBWLeading

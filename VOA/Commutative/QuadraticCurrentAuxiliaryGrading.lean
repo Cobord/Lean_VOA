@@ -63,8 +63,8 @@ private theorem iterToSum_monomial_monomial
 private theorem coeff_iterToSum
     {R A B : Type*} [CommSemiring R]
     (P : MvPolynomial A (MvPolynomial B R)) (e : A →₀ ℕ) (f : B →₀ ℕ) :
-    MvPolynomial.coeff (e.sumElim f) (MvPolynomial.iterToSum R A B P) =
-      MvPolynomial.coeff f (MvPolynomial.coeff e P) := by
+    (MvPolynomial.iterToSum R A B P).coeff (e.sumElim f) =
+      (P.coeff e).coeff f := by
   induction P using MvPolynomial.induction_on' with
   | add P Q hP hQ =>
       simp only [map_add, MvPolynomial.coeff_add]
@@ -87,24 +87,31 @@ private theorem coeff_iterToSum
             · have hsum : e.sumElim v ≠ e.sumElim f := by
                 intro h
                 apply hv
-                simpa using congrArg (fun w =>
+                simpa using! congrArg (fun w =>
                   Finsupp.comapDomain Sum.inr w Sum.inr_injective.injOn) h
               simp [hv, hsum]
           · have hsum : u.sumElim v ≠ e.sumElim f := by
               intro h
               apply hu
-              simpa using congrArg (fun w =>
+              simpa using! congrArg (fun w =>
                 Finsupp.comapDomain Sum.inl w Sum.inl_injective.injOn) h
             simp [hu, hsum]
 
 private theorem coeff_sumAlgEquiv
     {R A B : Type*} [CommSemiring R]
     (p : MvPolynomial (A ⊕ B) R) (e : A →₀ ℕ) (f : B →₀ ℕ) :
-    MvPolynomial.coeff f ((MvPolynomial.sumAlgEquiv R A B p).coeff e) =
-      MvPolynomial.coeff (e.sumElim f) p := by
+    ((MvPolynomial.sumAlgEquiv R A B p).coeff e).coeff f =
+      p.coeff (e.sumElim f) := by
+  have hinv : (MvPolynomial.iterToSum R A B).comp
+      ((MvPolynomial.sumAlgEquiv R A B : MvPolynomial (A ⊕ B) R ≃ₐ[R] _) :
+        MvPolynomial (A ⊕ B) R →+* MvPolynomial A (MvPolynomial B R)) = RingHom.id _ := by
+    apply MvPolynomial.ringHom_ext
+    · intro r
+      simp [MvPolynomial.iterToSum_C_C]
+    · rintro (s | s) <;> simp [MvPolynomial.iterToSum_X, MvPolynomial.iterToSum_C_X]
   rw [← coeff_iterToSum]
-  exact congrArg (MvPolynomial.coeff (e.sumElim f))
-    ((MvPolynomial.sumRingEquiv R A B).left_inv p)
+  exact congrArg (fun q : MvPolynomial (A ⊕ B) R => q.coeff (e.sumElim f))
+    (RingHom.congr_fun hinv p)
 
 omit [Fintype σ] in
 /-- A coefficient after splitting is the coefficient at the joined exponent
@@ -112,14 +119,12 @@ before splitting. -/
 theorem coeff_auxiliaryCoefficient {m d : ℕ} (a : Fin d →₀ ℕ)
     (f : Fin m →₀ ℕ) (p : TensorPolynomial (K := K) (σ := σ) m d)
     (t : Fin m → σ) :
-    MvPolynomial.coeff f (auxiliaryCoefficient a p t) =
-      MvPolynomial.coeff (combinedExponent m d f a) (p t) := by
+    (auxiliaryCoefficient a p t).coeff f =
+      (p t).coeff (combinedExponent m d f a) := by
   rw [auxiliaryCoefficient, split]
-  change MvPolynomial.coeff f
-      (MvPolynomial.coeff a
-        (MvPolynomial.sumAlgEquiv K (Fin d) (Fin m)
-          (MvPolynomial.rename
-            (finSumFinEquiv.symm.trans (Equiv.sumComm (Fin m) (Fin d))) (p t)))) = _
+  change ((MvPolynomial.sumAlgEquiv K (Fin d) (Fin m)
+      (MvPolynomial.rename
+        (finSumFinEquiv.symm.trans (Equiv.sumComm (Fin m) (Fin d))) (p t))).coeff a).coeff f = _
   rw [coeff_sumAlgEquiv]
   let E : Particle m d ≃ (Fin d ⊕ Fin m) :=
     finSumFinEquiv.symm.trans (Equiv.sumComm (Fin m) (Fin d))
@@ -152,7 +157,7 @@ theorem auxiliaryCoefficient_isWeightedHomogeneous {m d r : ℕ}
     (auxiliaryCoefficient a p t).IsWeightedHomogeneous
       (fun _ => 1) (r - a.degree) := by
   intro f hf
-  have hsource : MvPolynomial.coeff (combinedExponent m d f a) (p t) ≠ 0 := by
+  have hsource : (p t).coeff (combinedExponent m d f a) ≠ 0 := by
     rwa [← coeff_auxiliaryCoefficient]
   have hweight := hp t hsource
   rw [← Finsupp.degree_eq_weight_one] at hweight ⊢
@@ -170,12 +175,11 @@ theorem auxiliaryCoefficient_eq_zero_of_degree_lt {m d r : ℕ}
   funext t
   apply MvPolynomial.ext
   intro f
-  change MvPolynomial.coeff f (auxiliaryCoefficient a p t) = 0
+  change (auxiliaryCoefficient a p t).coeff f = 0
   rw [coeff_auxiliaryCoefficient]
   apply (hp t).coeff_eq_zero
   rw [← Finsupp.degree_eq_weight_one]
-  rw [show (combinedExponent (m + 0) d f a).degree = f.degree + a.degree by
-    simpa only [Nat.add_zero] using combinedExponent_degree m d f a]
+  rw [combinedExponent_degree]
   omega
 
 omit [Fintype σ] in
@@ -198,14 +202,14 @@ theorem isWeightedHomogeneous_of_auxiliaryCoefficients {m d r : ℕ}
     rw [combinedExponent, hv]
     ext i
     simp [v, Finsupp.mapDomain_equiv_apply]
-  have hcoefficient : MvPolynomial.coeff f (auxiliaryCoefficient a p t) ≠ 0 := by
+  have hcoefficient : (auxiliaryCoefficient a p t).coeff f ≠ 0 := by
     rw [coeff_auxiliaryCoefficient, hjoin]
     exact hu
   have har : a.degree ≤ r := by
     by_contra hle
     have hra : r < a.degree := Nat.lt_of_not_ge hle
     have hz := congrFun (hzero a hra) t
-    have hz' : auxiliaryCoefficient a p t = 0 := by simpa using hz
+    have hz' : auxiliaryCoefficient a p t = 0 := by simpa using! hz
     rw [hz', MvPolynomial.coeff_zero] at hcoefficient
     exact hcoefficient rfl
   have hf := hhom a t hcoefficient
@@ -222,7 +226,7 @@ theorem rename_isWeightedHomogeneous_one {I J : Type*} (f : I → J)
     (MvPolynomial.rename f p).IsWeightedHomogeneous (fun _ => 1) r := by
   induction hp using MvPolynomial.IsWeightedHomogeneous.induction_on with
   | zero => exact MvPolynomial.isWeightedHomogeneous_zero K _ r
-  | add p q hp hq ihp ihq => simpa using ihp.add ihq
+  | add p q hp hq ihp ihq => simpa using! ihp.add ihq
   | monomial e k hk =>
       rw [MvPolynomial.rename_monomial]
       apply MvPolynomial.isWeightedHomogeneous_monomial

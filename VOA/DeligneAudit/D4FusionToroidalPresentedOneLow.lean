@@ -17,7 +17,7 @@ theorem oneTopLowKilled : OneTopLowKilled := by
     by_cases h16 : c.val < 16
     · exact one_top_mode_zero_raising c ⟨by omega, h16⟩
     obtain ⟨i, hi⟩ := negativeIndex_covers c (by omega)
-    simpa only [hi] using one_top_mode_zero_lowering i
+    simpa only [hi] using! one_top_mode_zero_lowering i
   · by_cases hc : c = D4sector.c₀
     · subst c
       exact one_top_mode_one_theta

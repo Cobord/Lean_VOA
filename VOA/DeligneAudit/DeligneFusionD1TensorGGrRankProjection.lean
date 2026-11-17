@@ -24,10 +24,11 @@ def keepDegree (d : ℕ) : (ℕ →₀ T) →ₗ[ℂ] (ℕ →₀ T) :=
 theorem keepDegree_single (d e : ℕ) (v : T) :
     keepDegree d (Finsupp.single e v) =
       if d = e then Finsupp.single e v else 0 := by
+  have hev : evalAt d (Finsupp.single e v) = Finsupp.single e v d := rfl
   by_cases h : d = e
   · subst e
-    simp [keepDegree, evalAt]
-  · simp [keepDegree, evalAt, h]
+    simp [keepDegree, hev]
+  · simp [keepDegree, hev, h, Finsupp.single_apply, Ne.symm h]
 
 theorem Lsub_keepDegree (d : ℕ) :
     Lsub R w ≤ (Lsub R w).comap (keepDegree d) := by

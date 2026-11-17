@@ -68,7 +68,7 @@ theorem ksFlag_z_box_step (m a b c d e : ℕ)
   · have hb : ksFlagZMultiplication a b c U B ∈
         (Submodule.span ℂ (ksBlockBoxPolys m c d : Set _)).map
           (ksFlagZMultiplication a b c U) := ⟨B, hB, rfl⟩
-    simpa only [Submodule.map_span] using hb
+    simpa only [Submodule.map_span] using! hb
   · exact ksBlockMaximal_z_mul_le_flag m a b c d e hde U ⟨C, hC, rfl⟩
 
 end VOA.DeligneAudit.D4Levi

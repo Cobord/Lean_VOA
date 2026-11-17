@@ -139,7 +139,7 @@ omit [Algebra ℂ R] in
 theorem C_mul_pow_eq_zero {τ : R} {q : ℕ} (h : MvPolynomial.C τ * X (1, 0) ^ q = (0 : MPoly R)) :
     τ = 0 := by
   have := congrArg (fun P => (evV R P).coeff q) h
-  simpa using this
+  simpa using! this
 
 /-- **The membership spaces vanish in odd `v₀`-degree.** -/
 theorem vMem_odd {q : ℕ} (hq : Odd q) (r : ℕ) (d : ℤ) : vMem R t r d q = ⊥ := by

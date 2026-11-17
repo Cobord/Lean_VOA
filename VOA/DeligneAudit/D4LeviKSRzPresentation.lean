@@ -44,7 +44,7 @@ theorem rz_topSum_presentation
   have hsum := rz_topSum_eq_wordSum ρ w xs ys zs k s
   have hW' : xyzEvaluation ρ w shape W =
       ((rzTopWords xs ys zs k s).map (radicalWord ρ w)).sum := by
-    simpa only [List.map_map, Function.comp_def, one_smul] using hW
+    simpa only [List.map_map, Function.comp_def, one_smul] using! hW
   exact hW'.trans hsum.symm
 
 /-- The full graded Rz family has arbitrary independent symmetric

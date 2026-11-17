@@ -44,7 +44,7 @@ theorem edgePair_ne (m : ℕ) (f : ρ → τ)
     (e : Edge (α := α) (β := β) (γ := γ) m f) :
     (edgePair m f e).1 ≠ (edgePair m f e).2 := by
   rcases e with ij | (ud | xy)
-  · simpa [edgePair] using ij.property.ne
+  · simpa [edgePair] using! ij.property.ne
   · simp [edgePair]
   · simp [edgePair, eLabel, fLabel]
 
@@ -97,7 +97,7 @@ theorem fullDivisor_isHomogeneous (m : ℕ) (f : ρ → τ) :
       (edgePair m f e).2).IsHomogeneous 1 :=
     (isHomogeneous_X K (edgePair m f e).1).sub
       (isHomogeneous_X K (edgePair m f e).2)
-  simpa using h.pow (edgeExponent m f e)
+  simpa using! h.pow (edgeExponent m f e)
 
 /-- The full divisor follows from the genuine auxiliary functional model, next-pair
 kernels, and the genuine lexicographic Gordon kernels. -/
@@ -136,7 +136,7 @@ theorem fullDivisor_dvd [CharZero K] (m D : ℕ) (f : ρ → τ)
       change residualEval f (collisionFactor (K := K) (eLabel xy.1) (fLabel xy.2)) ∣
         residualEval f (pairEval F) at hm
       rw [← clusterEval_eq] at hm
-      simpa [residualEval, collisionFactor, eLabel, fLabel] using hm
+      simpa [residualEval, collisionFactor, eLabel, fLabel] using! hm
 
 end
 end VOA.GordonFullDivisor

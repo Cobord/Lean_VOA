@@ -59,8 +59,8 @@ variable (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) {M : Type} [AddCommGroup M] [M
 
 /-- `span(L(-1)²x, L(-2)x)`. -/
 abbrev RQspan (A : WeakModule (V2mPlus m hm) M) (x : M) : Submodule ℂ M :=
-  Submodule.span ℂ {mode (A.YM (V2mPlus m hm).conformalVector) 0
-    (mode (A.YM (V2mPlus m hm).conformalVector) 0 x),
+  Submodule.span ℂ {(mode (A.YM (V2mPlus m hm).conformalVector) 0
+    (mode (A.YM (V2mPlus m hm).conformalVector) 0 x)),
     mode (A.YM (V2mPlus m hm).conformalVector) (-1) x}
 
 include hm2 in

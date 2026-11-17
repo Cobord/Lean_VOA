@@ -71,11 +71,11 @@ theorem conv_mono {P : PowerSeries ℂ} {ρ ρ' : ℝ} (h : PSConv P ρ) (h0 : 0
 
 theorem coeff_mul_norm_le (P Q : PowerSeries ℂ) {ρ : ℝ} (hρ : 0 ≤ ρ) (n : ℕ) :
     ‖PowerSeries.coeff n (P * Q)‖ * ρ ^ n ≤
-      ∑ kl ∈ Finset.antidiagonal n, (‖PowerSeries.coeff kl.1 P‖ * ρ ^ kl.1) *
+      ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, (‖PowerSeries.coeff kl.1 P‖ * ρ ^ kl.1) *
         (‖PowerSeries.coeff kl.2 Q‖ * ρ ^ kl.2) := by
   rw [PowerSeries.coeff_mul]
-  calc ‖∑ kl ∈ Finset.antidiagonal n, PowerSeries.coeff kl.1 P * PowerSeries.coeff kl.2 Q‖ *
-        ρ ^ n ≤ (∑ kl ∈ Finset.antidiagonal n,
+  calc ‖∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n, PowerSeries.coeff kl.1 P * PowerSeries.coeff kl.2 Q‖ *
+        ρ ^ n ≤ (∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n,
           ‖PowerSeries.coeff kl.1 P‖ * ‖PowerSeries.coeff kl.2 Q‖) * ρ ^ n := by
         refine mul_le_mul_of_nonneg_right ?_ (pow_nonneg hρ n)
         refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun kl _ => ?_)
@@ -83,7 +83,7 @@ theorem coeff_mul_norm_le (P Q : PowerSeries ℂ) {ρ : ℝ} (hρ : 0 ≤ ρ) (n
     _ = _ := by
         rw [Finset.sum_mul]
         refine Finset.sum_congr rfl fun kl hkl => ?_
-        rw [Finset.mem_antidiagonal] at hkl
+        rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
         rw [← hkl, pow_add]; ring
 
 theorem conv_mul {P Q : PowerSeries ℂ} {ρ : ℝ} (hρ : 0 ≤ ρ) (hP : PSConv P ρ)
@@ -93,7 +93,7 @@ theorem conv_mul {P Q : PowerSeries ℂ} {ρ : ℝ} (hρ : 0 ≤ ρ) (hP : PSCon
   have hg : Summable fun r => ‖‖PowerSeries.coeff r Q‖ * ρ ^ r‖ :=
     hQ.congr fun r => (Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg hρ r))).symm
   have hfg := summable_norm_sum_mul_antidiagonal_of_summable_norm hf hg
-  have hfg' : Summable fun n => ∑ kl ∈ Finset.antidiagonal n,
+  have hfg' : Summable fun n => ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n,
       (‖PowerSeries.coeff kl.1 P‖ * ρ ^ kl.1) * (‖PowerSeries.coeff kl.2 Q‖ * ρ ^ kl.2) :=
     hfg.of_norm
   have hc : PSConv (P * Q) ρ :=
@@ -114,7 +114,7 @@ theorem psEval_mul {P Q : PowerSeries ℂ} {ρ : ℝ} (hP : PSConv P ρ) (hQ : P
   refine tsum_congr fun n => ?_
   rw [PowerSeries.coeff_mul, Finset.sum_mul]
   refine Finset.sum_congr rfl fun kl hkl => ?_
-  rw [Finset.mem_antidiagonal] at hkl
+  rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
   rw [← hkl, pow_add]; ring
 
 theorem conv_one (ρ : ℝ) : PSConv 1 ρ := by
@@ -244,7 +244,7 @@ theorem psEval_unit_mul {ρ : ℝ} (hρ : 0 ≤ ρ) (hρ1 : ρ < 1) {u : ℂ} (h
     have he := NormedSpace.expSeries_div_hasSum_exp u
     rw [← Complex.exp_eq_exp_ℂ] at he
     have := (hasSum_nat_add_iff' 1).mpr he
-    simpa using this
+    simpa using! this
   have h3 := h.mul_left u
   refine h3.unique (h2.congr_fun fun r => ?_)
   rw [coeff_unit, pow_succ]; field_simp

@@ -30,7 +30,6 @@ theorem exists_generator_cutoff (D : GenData W) (A : WeakModule W M) (x : M) :
   apply hb i n
   have hi := Finset.le_sup (f := fun i => (b i).toNat) (Finset.mem_univ i)
   have hbNat : b i ≤ ((b i).toNat : ℤ) := by omega
-  dsimp only at hi
   omega
 
 /-- In a sorted word, a mode above the cutoff forces the innermost action to vanish. -/

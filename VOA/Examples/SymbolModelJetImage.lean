@@ -39,7 +39,7 @@ abbrev JetSer : Type := PowerSeries JetPoly
 abbrev sX : JetSer := PowerSeries.X
 
 /-- `d/ds`. -/
-abbrev dS : Derivation JetPoly JetSer JetSer := PowerSeries.derivative JetPoly
+abbrev dS : Derivation JetPoly JetSer JetSer := PowerSeries.derivative (R := JetPoly)
 
 /-- The column series: `u(s)` for `b = 0`, `v(s)` for `b = 1`. -/
 def colSer (b : Fin 2) : JetSer := PowerSeries.mk fun j => X (b, j)
@@ -202,7 +202,7 @@ theorem inGen_serD_e (m : ℕ) (g : Fin 4) :
     InGen (serD (jetDer (0, m)).toLinearMap (genSer g)) := by
   fin_cases g
   · change InGen (serD _ xSer)
-    rw [serD_xSer, serD_e_u]; simpa using inGen_zero
+    rw [serD_xSer, serD_e_u]; simpa using! inGen_zero
   · change InGen (serD _ ySer)
     rw [serD_ySer, serD_e_u, serD_e_v]
     have : (0 : JetSer) * colSer 1 + colSer 0 * (sX ^ m * colSer 0) = sX ^ m * genSer 0 := by
@@ -237,7 +237,7 @@ theorem inGen_serD_f (m : ℕ) (g : Fin 4) :
       rw [genSer_two, zSer]; ring
     rw [this]; exact inGen_X_pow_mul m (inGen_gen 2)
   · change InGen (serD _ zSer)
-    rw [serD_zSer, serD_f_v]; simpa using inGen_zero
+    rw [serD_zSer, serD_f_v]; simpa using! inGen_zero
   · change InGen (serD _ jSer)
     rw [serD_jSer, serD_f_u, serD_f_v, map_zero, Derivation.leibniz]
     have : (sX ^ m • dS (colSer 1) + colSer 1 • dS (sX ^ m)) * colSer 1 + dS (colSer 0) * 0 -

@@ -29,25 +29,25 @@ theorem span_eq_top_of_reductions (g : G → R) (b : I → R)
     induction hy using Submodule.span_induction with
     | mem y hy => obtain ⟨j, rfl⟩ := hy; exact hred i j
     | zero => simp only [mul_zero]; exact S.zero_mem
-    | add y z _ _ hy hz => simpa [mul_add] using S.add_mem hy hz
-    | smul c y _ hy => simpa [mul_smul_comm] using S.smul_mem c hy
+    | add y z _ _ hy hz => simpa [mul_add] using! S.add_mem hy hz
+    | smul c y _ hy => simpa [mul_smul_comm] using! S.smul_mem c hy
   have hall : ∀ x ∈ Algebra.adjoin K (Set.range g), ∀ y ∈ S, x*y ∈ S := by
     intro x hx
     induction hx using Algebra.adjoin_induction with
     | mem x hx => obtain ⟨i, rfl⟩ := hx; exact hmul i
     | algebraMap c =>
       intro y hy
-      simpa only [Algebra.smul_def] using S.smul_mem c hy
+      simpa only [Algebra.smul_def] using! S.smul_mem c hy
     | add x z _ _ hx hz =>
       intro y hy
-      simpa [add_mul] using S.add_mem (hx y hy) (hz y hy)
+      simpa [add_mul] using! S.add_mem (hx y hy) (hz y hy)
     | mul x z _ _ hx hz =>
       intro y hy
-      simpa [mul_assoc] using hx (z*y) (hz y hy)
+      simpa [mul_assoc] using! hx (z*y) (hz y hy)
   apply top_unique
   intro x _
   have hx : x ∈ Algebra.adjoin K (Set.range g) := by rw [hgen]; trivial
-  simpa using hall x hx 1 h1
+  simpa using! hall x hx 1 h1
 
 theorem finrank_le_of_reductions [Fintype I] (g : G → R) (b : I → R)
     (hgen : Algebra.adjoin K (Set.range g) = ⊤)
@@ -124,6 +124,6 @@ theorem zhuDimensionBound_of_normalFormReductions
   letI := instAlgebraA (V2mPlus m hm)
   have h := finrank_le_of_reductions (generator m hm) (monomial m hm)
     (V2mPlus_zhu_adjoin_generators m hm hm2) (one_mem_span m hm) (hred m hm hm2)
-  simpa only [card_index] using h
+  simpa only [card_index] using! h
 
 end VOA.Classification.COne

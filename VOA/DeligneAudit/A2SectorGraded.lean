@@ -84,7 +84,7 @@ theorem isHomT_projT (b : ℕ) (p : TensorPolynomial (K := K) (σ := σ) m 0) :
 theorem rename_homogeneousComponent {A B : Type*} (g : A → B) (b : ℕ) (P : MvPolynomial A K) :
     rename g (homogeneousComponent b P) = homogeneousComponent b (rename g P) := by
   have h := homogeneousComponent_map_shift (rename g).toLinearMap 0
-    (fun c P hP => by simpa using hP.rename_isHomogeneous) b P
+    (fun c P hP => by simpa using! hP.rename_isHomogeneous) b P
   simp only [AlgHom.toLinearMap_apply, Nat.zero_le, if_true, Nat.sub_zero] at h
   exact h.symm
 
@@ -126,7 +126,7 @@ theorem isHomT_loopOp {c : ℕ} {p : TensorPolynomial (K := K) (σ := σ) m 0} (
   rw [← mem_homogeneousSubmodule]
   refine Submodule.sum_mem _ fun d _ => ?_
   rw [mem_homogeneousSubmodule]
-  simpa using (isHomogeneous_C _ _).mul (hp (Function.update t i d))
+  simpa using! (isHomogeneous_C _ _).mul (hp (Function.update t i d))
 
 omit [Fintype σ] in
 theorem isHomT_deltaVec (c₀ : σ) : IsHomT 0 (deltaVec (K := K) m c₀) := by
@@ -141,7 +141,7 @@ theorem isHomT_applyWord (c₀ : σ) :
   | [] => isHomT_deltaVec c₀
   | (xs :: l) => by
       have h := isHomT_loopOp f (isHomT_applyWord c₀ l) xs.1 xs.2
-      simpa [wordDeg, applyWord, add_comm] using h
+      simpa [wordDeg, applyWord, add_comm] using! h
 
 /-- The span of the loop words of `t`-degree `b`. -/
 def wordSpan (c₀ : σ) (b : ℕ) : Submodule K (TensorPolynomial (K := K) (σ := σ) m 0) :=

@@ -11,6 +11,11 @@ The invariant form forces its square to be one, proving rationality of the seed,
 all odd columns, and triality on the full Griess dictionary, hence liftability.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -73,8 +78,17 @@ theorem sigmaBOddRoot_character {v : SpinRep} (hv : IsSeed (spinIso v))
         (2 * kM (piPerm.symm i) (piPerm.symm j))⁻¹ := by
     apply mul_right_cancel₀ hk
     have h := congrFun he k
-    simpa only [Matrix.smul_mulVec, Matrix.mulVec_diagonal, Pi.smul_apply,
-      smul_eq_mul, ← mul_assoc] using h
+    first
+    | simpa only [Matrix.smul_mulVec, Matrix.mulVec_diagonal, Pi.smul_apply,
+        smul_eq_mul, ← mul_assoc] using h
+    | (have key : ∀ w : SpinIdx → ℂ,
+          ((signRefinement (0, deltaPair i j) • Matrix.diagonal
+            (fun a : SpinIdx => sgnR ℂ (a.2.1.1 i + a.2.1.1 j))) *ᵥ w) k =
+            signRefinement (0, deltaPair i j) * sgnR ℂ (k.2.1.1 i + k.2.1.1 j) * w k :=
+         fun w => by
+           simp only [Matrix.smul_mulVec, Pi.smul_apply, Matrix.mulVec_diagonal, smul_eq_mul,
+             mul_assoc]
+       exact (key v).symm.trans (h.trans rfl))
   apply sgnR_injective (by norm_num : (2 : ℂ) ≠ 0)
   have hz : signRefinement (0, deltaPair i j) ≠ 0 := by
     intro hz
@@ -122,8 +136,13 @@ theorem sigmaBOddFrame_separates {v : SpinRep} {s : ZMod 2}
       frameSign * sgnR ℂ k.1 = Extraspecial.sgn s := by
     apply mul_right_cancel₀ hk
     have h := congrFun he' k
-    simpa only [frameDiag, Matrix.mulVec_diagonal, Pi.smul_apply,
-      smul_eq_mul, ← mul_assoc] using h
+    first
+    | simpa only [frameDiag, Matrix.mulVec_diagonal, Pi.smul_apply,
+        smul_eq_mul, ← mul_assoc] using h
+    | (have key : ∀ w : SpinIdx → ℂ, (frameDiag *ᵥ w) k = sgnR ℂ k.1 * w k := fun w => by
+         rw [frameDiag, Matrix.mulVec_diagonal]
+       exact (mul_assoc _ _ _).trans
+         ((congrArg (HMul.hMul frameSign) (key v)).symm.trans (h.trans rfl)))
   apply sgnR_injective (by norm_num : (2 : ℂ) ≠ 0)
   have hz : frameSign ≠ 0 := by
     intro h
@@ -209,10 +228,16 @@ theorem sigmaBOddSeed_support {a b : SpinIdx}
 theorem sigmaBOddSpin_action (c : ShortIdx) (v : SpinRep) :
     fullShortSign c • eL (shortVec c) (spinIso v) =
       spinIso (((Rmat c).map (Rat.castHom ℂ)) *ᵥ v) := by
-  rw [← spinIso_spinOp, ← spinIso_smul]
-  congr 1
-  change fullShortSign c • ((spinOp (coordOfRed (red leech (shortVec c)))) *ᵥ v) = _
-  rw [← Matrix.smul_mulVec, fullShortSign_smul_spinOp]
+  first
+  | (rw [← spinIso_spinOp, ← spinIso_smul]
+     congr 1
+     change fullShortSign c • ((spinOp (coordOfRed (red leech (shortVec c)))) *ᵥ v) = _
+     rw [← Matrix.smul_mulVec, fullShortSign_smul_spinOp])
+  | exact (congrArg (HSMul.hSMul (fullShortSign c)) (spinIso_spinOp (shortVec c) v).symm).trans
+      ((spinIso_smul _ _).symm.trans (congrArg (fun x : SpinRep => spinIso x)
+        ((Matrix.smul_mulVec (fullShortSign c) (spinOp (coordOfRed (red leech (shortVec c))))
+          (v : SpinIdx → ℂ)).symm.trans
+          (congrArg (fun M => M *ᵥ (v : SpinIdx → ℂ)) (fullShortSign_smul_spinOp c)))))
 
 /-- Exact phased odd-column formula, with all charge coordinates in the spin model. -/
 theorem sigmaBOddColumn_hP (c : ShortIdx) (hc : sigmaBlockParity c = 1) :
@@ -235,15 +260,22 @@ theorem sigmaBOddRmat_form (c : ShortIdx) (v : SpinRep) :
     (((Rmat c).map (Rat.castHom ℂ)) *ᵥ v) ⬝ᵥ
       (((Rmat c).map (Rat.castHom ℂ)) *ᵥ v) = v ⬝ᵥ v := by
   rw [Rmat_map]
-  rw [← dotProduct_transpose_mulVec, mulVec_mulVec,
-    qmatR_transpose_mul_self, Matrix.one_mulVec]
+  first
+  | rw [← dotProduct_transpose_mulVec, mulVec_mulVec,
+      qmatR_transpose_mul_self, Matrix.one_mulVec]
+  | (have key : ∀ (M : Matrix SpinIdx SpinIdx ℂ), Mᵀ * M = 1 →
+         ∀ w : SpinIdx → ℂ, (M *ᵥ w) ⬝ᵥ (M *ᵥ w) = w ⬝ᵥ w := fun M hM w => by
+       rw [← dotProduct_transpose_mulVec, mulVec_mulVec, hM, Matrix.one_mulVec]
+     exact key _ (qmatR_transpose_mul_self _ _ _) v)
 
 /-- The form normalization converts an oscillator column to twice its dot square. -/
 theorem sigmaBOddColumn_form (b : Fin 24) (v : SpinRep) :
     TPForm (spinDictScale • hP (cw b) (spinIso v))
       (spinDictScale • hP (cw b) (spinIso v)) = 2 * (v ⬝ᵥ v) := by
   simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
-  rw [TPForm_hP_cw, if_pos rfl, TForm_spinIso]
+  first
+  | rw [TPForm_hP_cw, if_pos rfl, TForm_spinIso]
+  | (rw [TPForm_hP_cw, if_pos rfl]; erw [TForm_spinIso])
   calc
     _ = (-4 * spinFormScale * spinDictScale ^ 2) * (v ⬝ᵥ v) := by ring
     _ = 2 * (v ⬝ᵥ v) := by
@@ -271,17 +303,32 @@ theorem sigmaBOddPhi_form (c : ShortIdx) (hc : sigmaBlockParity c = 1) :
 theorem sigmaBOddSeed_form : sigmaBOddSeed ⬝ᵥ sigmaBOddSeed = 1 := by
   obtain ⟨c, hc⟩ := sigmaBOddIndex_exists
   have hf := sigmaBOddPhi_form c hc
-  rw [sigmaBOddColumn_hP c hc, sigmaBOddColumn_form,
-    smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul,
-    sigmaBOddRmat_form] at hf
+  first
+  | rw [sigmaBOddColumn_hP c hc, sigmaBOddColumn_form,
+      smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul,
+      sigmaBOddRmat_form] at hf
+  | (rw [sigmaBOddColumn_hP c hc] at hf
+     have hS : ∀ (x : ℂ) (w : SpinIdx → ℂ), (x • w) ⬝ᵥ (x • w) = x * (x * (w ⬝ᵥ w)) :=
+       fun x w => by rw [smul_dotProduct, dotProduct_smul, smul_eq_mul, smul_eq_mul]
+     have hR := sigmaBOddRmat_form c sigmaBOddSeed
+     have hf' := (sigmaBOddColumn_form _ _).symm.trans hf
+     replace hf : 2 * ((sigmaBOddPhase (shortVec c) : ℂ) * ((sigmaBOddPhase (shortVec c) : ℂ) *
+         (sigmaBOddSeed ⬝ᵥ sigmaBOddSeed))) = 2 := by
+       rw [← hR, ← hS]
+       exact hf'
+     clear hf')
   have hp : (sigmaBOddPhase (shortVec c) : ℂ) ^ 2 = 1 := by
     exact_mod_cast sigmaBOddPhase_sq (sigmaBOdd_not_mem c hc) (shortVec_norm c)
   linear_combination hf / 2 - (sigmaBOddSeed ⬝ᵥ sigmaBOddSeed) * hp
 
 theorem sigmaBOddSeed_coord_sq (j : SpinIdx) (hj : sigmaBOddSeed j ≠ 0) :
     sigmaBOddSeed j ^ 2 = 1 := by
-  rw [← sigmaBOddSeed_form, dotProduct,
-    Finset.sum_eq_single j, pow_two]
+  first
+  | rw [← sigmaBOddSeed_form, dotProduct,
+      Finset.sum_eq_single j, pow_two]
+  | (rw [← sigmaBOddSeed_form]
+     change sigmaBOddSeed j ^ 2 = ∑ i : SpinIdx, sigmaBOddSeed i * sigmaBOddSeed i
+     rw [Finset.sum_eq_single j, pow_two])
   · intro k _ hkj
     have hk : sigmaBOddSeed k = 0 := by
       by_contra hk
@@ -339,10 +386,15 @@ theorem sigmaBOddColumn_nat (v : SpinIdx → ℚ)
     (hv : ∀ j, sigmaBOddSeed j = (v j : ℂ))
     (c : ShortIdx) (hc : sigmaBlockParity c = 1) :
     fullShortSign c • Dnat.Φ (frameX0P (shortVec c)) = spinDict (sigmaBOddColumn v c) := by
-  rw [sigmaBOddColumn_hP c hc, spinDict_apply, sigmaBOddColumn_conway,
-    sigmaBOddEmbed_hP]
-  have he : sigmaBOddSeed = (fun j => (v j : ℂ) : SpinRep) := funext hv
-  rw [he]
+  first
+  | (rw [sigmaBOddColumn_hP c hc, spinDict_apply, sigmaBOddColumn_conway,
+      sigmaBOddEmbed_hP]
+     have he : sigmaBOddSeed = (fun j => (v j : ℂ) : SpinRep) := funext hv
+     rw [he])
+  | (rw [sigmaBOddColumn_hP c hc, spinDict_apply, sigmaBOddColumn_conway]
+     have he : sigmaBOddSeed = (fun j => (v j : ℂ) : SpinRep) := funext hv
+     rw [he]
+     exact congrArg (HSMul.hSMul spinDictScale) (sigmaBOddEmbed_hP _ _).symm)
 
 theorem sigmaBOdd_rational_of_seed (v : SpinIdx → ℚ)
     (hv : ∀ j, sigmaBOddSeed j = (v j : ℂ)) :

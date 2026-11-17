@@ -152,12 +152,12 @@ theorem rawFirst_sound (P : RawPoly ℕ) :
 theorem neutralProbe_sector (d : ℤ) (p : FockN (VOA.IntegralLattice.rank (latP 1))) :
     OrbOctaR.neutralProbe (sector d p) = if 0 = d then ρ p else 0 := by
   change ρ (coordEα (latP 1) 0 (latStateGen (latP 1) p d)) = _
-  simp only [latStateGen, coordEα_apply, apply_ite, map_zero]
+  have hc := coordEα_apply (latP 1) (0 : (latP 1).carrier) (d : (latP 1).carrier) p
   by_cases h : (0 : ℤ) = d
-  · simp only [if_pos h]
-    exact if_pos h
-  · simp only [if_neg h]
-    exact if_neg h
+  · rw [if_pos h]
+    exact congrArg ρ (hc.trans (if_pos h))
+  · rw [if_neg h]
+    exact (congrArg ρ (hc.trans (if_neg h))).trans (map_zero ρ)
 
 theorem neutralProbe_NN (P Q : RawPoly ℕ) (n : ℤ) (hn : n ≤ -1) :
     OrbOctaR.neutralProbe ((V2m 1 le_rfl).smul (ls 1 P) n (ls 1 Q)) =
@@ -175,7 +175,8 @@ theorem neutralProbe_NN (P Q : RawPoly ℕ) (n : ℤ) (hn : n ≤ -1) :
 theorem neutralProbe_EE_zero (b d n : ℤ) (hd : 0 ≠ b + d) :
     OrbOctaR.neutralProbe ((V2m 1 le_rfl).smul (latChargeGen (latP 1) b) n
       (latChargeGen (latP 1) d)) = 0 := by
-  rw [V2m_charge_smul_charge, PlusCharacterTable.rankOne_cocycle, one_smul]
+  rw [V2m_charge_smul_charge 1 le_rfl (b : (latP 1).carrier) (d : (latP 1).carrier) n,
+    PlusCharacterTable.rankOne_cocycle 1 (b : (latP 1).carrier) (d : (latP 1).carrier), one_smul]
   change OrbOctaR.neutralProbe (sector (b + d) _) = 0
   rw [neutralProbe_sector, if_neg hd]
 
@@ -183,7 +184,8 @@ theorem neutralProbe_EN_zero (b n : ℤ) (P : RawPoly ℕ) (hb : 0 ≠ b) :
     OrbOctaR.neutralProbe
       ((V2m 1 le_rfl).smul (latChargeGen (latP 1) b) n (ls 1 P)) = 0 := by
   have h := V2m_charge_smul_evRc 1 le_rfl b 0 n (liftR P)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul, add_zero] at h
+  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle 1 b 0, one_smul,
+    add_zero (M := (latP 1).carrier) b] at h
   rw [show ls 1 P = latStateGen (latP 1) (evR (a0 1) P) 0 from rfl, h]
   change OrbOctaR.neutralProbe (sector b _) = 0
   rw [neutralProbe_sector, if_neg hb]
@@ -206,7 +208,10 @@ theorem neutralProbe_opposite (b : ℤ) (hb : b * b = 16) (j : ℕ) :
   have hform : (latP 1).form b (-b) = -32 := by
     rw [latP_form, Nat.cast_one, mul_one]
     nlinarith [hb]
-  rw [V2m_charge_smul_charge, PlusCharacterTable.rankOne_cocycle, one_smul, hform,
+  rw [V2m_charge_smul_charge 1 le_rfl (b : (latP 1).carrier) (-b : (latP 1).carrier)
+      (31 - (j : ℤ)),
+    PlusCharacterTable.rankOne_cocycle 1 (b : (latP 1).carrier) (-b : (latP 1).carrier),
+    one_smul, hform,
     show -(31 - (j : ℤ)) - 1 - (-32) = (j : ℤ) by ring,
     if_pos (Nat.cast_nonneg j), Int.toNat_natCast]
   change OrbOctaR.neutralProbe (sector ((b : ℤ) + -b)

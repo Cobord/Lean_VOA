@@ -24,6 +24,8 @@ For `B_{AB} = B_A ⊗ B_B` on `A ⊗ B` and coset vectors `x, y`:
 Everything is proved outright.
 -/
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.ConcreteHodge
 
 open Sl2CosetConcrete Sl2SemiInfinite AffineSl2GeneralRigidity AffineSl2BelowCritical Sl2Coset

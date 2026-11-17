@@ -20,7 +20,7 @@ theorem power_mul_central {Z X Y : A} (hZX : Z * X - X * Z = Y)
   | succ n =>
       have hXZ : X * Z - Z * X = -Y := by rw [← hZX]; noncomm_ring
       have hZY' : Z * (-Y) = (-Y) * Z := by simp only [mul_neg, neg_mul, hZY]
-      simpa only [Nat.add_sub_cancel, neg_mul, smul_neg, sub_neg_eq_add] using
+      simpa only [Nat.add_sub_cancel, neg_mul, smul_neg, sub_neg_eq_add] using!
         CVPolarization.power_mul_operator hXZ hZY' n
 
 /-- The commutator with a quadratic coefficient has a single-contraction

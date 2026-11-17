@@ -103,8 +103,9 @@ theorem E_second_neg (s : ℕ) (hs : s ≤ m) (n p : ℕ) (hnp : n + 1 + p = s)
   have h22 : ((2 * m - 2 : ℕ) : ℤ) = 2 * m - 2 := by omega
   rw [YM_Ec, latticeModule_latChargeGen, latticeModule_latChargeGen,
     EEVec_eq_zero_of_lt (latP m) ((-1 : ℤ) : (latP m).carrier) hq (by rw [h22]; omega)]
-  rw [show latStateGen (latP m) (0 : FockN (rank (latP m))) _ = 0 by simp [latStateGen],
-    smul_zero, add_zero]
+  have hz : ∀ c : (latP m).carrier,
+      latStateGen (latP m) (0 : FockN (rank (latP m))) c = 0 := fun c => by simp [latStateGen]
+  rw [hz (((-1 : ℤ) : (latP m).carrier) + ((-1 : ℤ) : (latP m).carrier)), smul_zero, add_zero]
   congr 2
   congr 1
   congr 1; rw [h22]; omega
@@ -120,8 +121,9 @@ theorem E_second_zero (n p : ℕ) (hnp : n + 1 + p = m)
   have h22 : ((2 * m - 2 : ℕ) : ℤ) = 2 * m - 2 := by omega
   rw [YM_Ec, latticeModule_latChargeGen, latticeModule_latChargeGen,
     EEVec_eq_zero_of_lt (latP m) ((1 : ℤ) : (latP m).carrier) hq (by rw [h22]; omega)]
-  rw [show latStateGen (latP m) (0 : FockN (rank (latP m))) _ = 0 by simp [latStateGen],
-    smul_zero, zero_add]
+  have hz : ∀ c : (latP m).carrier,
+      latStateGen (latP m) (0 : FockN (rank (latP m))) c = 0 := fun c => by simp [latStateGen]
+  rw [hz (((1 : ℤ) : (latP m).carrier) + ((0 : ℤ) : (latP m).carrier)), smul_zero, zero_add]
   congr 2
   congr 1
   congr 1; rw [h22]; omega
@@ -137,8 +139,10 @@ theorem E_comp_zero (s : ℕ) (hs : s ≤ m) (n : ℕ) :
     E_first_zero]
   split_ifs with hn
   · rw [map_smul, E_second_neg m hm s hs n (s - 1 - n) (by omega)
-      (vSchur_mem_gradingWN (latP m) _ _), EEVec_neg_vSchur (latP m) (latP_posDef m hm),
-      latStateGen_csmul, smul_smul, smul_smul, latP_form, kZ_nonneg _ (by positivity),
+      (vSchur_mem_gradingWN (latP m) ((-1 : ℤ) : (latP m).carrier) _),
+      EEVec_neg_vSchur (latP m) (latP_posDef m hm) ((1 : ℤ) : (latP m).carrier)
+        ((-1 : ℤ) : (latP m).carrier),
+      latStateGen_csmul (latP m) _ _ ((0 : ℤ) : (latP m).carrier), smul_smul, smul_smul, latP_form, kZ_nonneg _ (by positivity),
       Int.toNat_natCast]
     congr 1
     push_cast
@@ -153,8 +157,10 @@ theorem E_comp_neg (n : ℕ) (hn : n < m) :
       (kap m m (-1) 0 * kap m m 1 (-1) * kappa (-(2 * m : ℂ)) (m - 1 - n)) •
         latStateGen (latP m) (vacuumN _) ((-1 : ℤ) : (latP m).carrier) := by
   rw [E_first_neg m hm n hn, map_smul, E_second_zero m hm n (m - 1 - n) (by omega)
-      (vSchur_mem_gradingWN (latP m) _ _), EEVec_neg_vSchur (latP m) (latP_posDef m hm),
-      latStateGen_csmul, smul_smul, smul_smul, latP_form, kZ_nonneg _ (by positivity),
+      (vSchur_mem_gradingWN (latP m) ((1 : ℤ) : (latP m).carrier) _),
+      EEVec_neg_vSchur (latP m) (latP_posDef m hm) ((-1 : ℤ) : (latP m).carrier)
+        ((1 : ℤ) : (latP m).carrier),
+      latStateGen_csmul (latP m) _ _ ((-1 : ℤ) : (latP m).carrier), smul_smul, smul_smul, latP_form, kZ_nonneg _ (by positivity),
       Int.toNat_natCast]
   congr 1
   push_cast
@@ -185,7 +191,7 @@ theorem telescope_charged (s : ℕ) (hs1 : 1 ≤ s) (hs : s ≤ m) :
     intro n _
     ring
   · intro n _ hn
-    rw [if_neg (by simpa using hn), mul_zero]
+    rw [if_neg (by simpa using! hn), mul_zero]
 
 
 /-- The `E`-telescope on the half-lattice top vectors (`s = m`): eigenvalue `m`. -/

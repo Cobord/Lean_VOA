@@ -26,7 +26,7 @@ theorem boundaryKey_word_colours (m : ℕ) (l : List (Fin 6 × ℕ))
   have hzero (j : Fin 6) (hj : l.countP (fun p => p.1 = j) = 0) : q.1 ≠ j := by
     intro heq
     have hpos : 0 < l.countP (fun p => p.1 = j) :=
-      List.countP_pos_iff.mpr ⟨q, hq, by simpa using heq⟩
+      List.countP_pos_iff.mpr ⟨q, hq, by simpa using! heq⟩
     omega
   have he := hzero 0 hcounts.1
   have hx := hzero 1 hcounts.2.1
@@ -60,8 +60,8 @@ theorem boundaryYWord_mem_next (m : ℕ)
   have htail := fThreeDerivative_yz_zero ρ 0 l w hl
   have hneg : -radicalWord ρ w ((4, r) :: l) ∈
       levelFiltration ρ w m κ (κ + 1) := by
-    simpa [fThreeDerivative, fThreeLetter, htail, radicalWord, radicalColour, wordOp] using hd
-  simpa using (levelFiltration ρ w m κ (κ + 1)).neg_mem hneg
+    simpa [fThreeDerivative, fThreeLetter, htail, radicalWord, radicalColour, wordOp] using! hd
+  simpa using! (levelFiltration ρ w m κ (κ + 1)).neg_mem hneg
 
 /-- Every boundary key containing a Y letter is absorbed by the next level. -/
 theorem boundaryKey_le_next_of_Y (m : ℕ)
@@ -69,10 +69,10 @@ theorem boundaryKey_le_next_of_Y (m : ℕ)
     (hg : keyAlphaGrade m k = κ) (hp : keyLeviLevel m k = κ) (hy : 0 < k.y) :
     keyOrbit ρ w k ≤ levelFiltration ρ w m κ (κ + 1) := by
   apply keyOrbit_le_levelFiltration_of_layer
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hl, rfl⟩
   have hcount : 0 < l.countP (fun q => q.1 = 4) := by
-    simpa only [← hl, wordKey] using hy
+    simpa only [← hl, wordKey] using! hy
   obtain ⟨⟨j, r⟩, hmem, hj⟩ := List.countP_pos_iff.mp hcount
   have hj' : j = 4 := of_decide_eq_true hj
   subst j

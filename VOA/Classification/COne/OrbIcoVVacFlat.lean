@@ -58,10 +58,10 @@ theorem exists_local_vac_first_row_basis (m : ℕ) :
   have hcols (j : J) : vacColumns N a 1 j = fockCoordinates N (B j).val := by
     funext d
     rw [vacColumns, ← vacLevelCoefficient_sound N (a j) 1 one_ne_zero d.val]
-    change coeff d.val (vacFamilyMap 1 (vermaLevelState _ _ N
-      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))) = _
+    change (vacFamilyMap 1 (vermaLevelState _ _ N
+      (fun w => (vermaLevelBasis _ _ N).repr (u j) w))).coeff d.val = _
     rw [vermaLevelState_coordinates]
-    exact congrArg (fun v : gradingWN 1 N => coeff d.val v.val) (hu j)
+    exact congrArg (fun v : gradingWN 1 N => (v.val).coeff d.val) (hu j)
   let K : LinearMap.range F →ₗ[ℂ] (FockOccupations N → ℂ) :=
     (fockCoordinates N).comp (LinearMap.range F).subtype
   have hK : Function.Injective K :=
@@ -78,7 +78,7 @@ theorem exists_local_vac_first_row_basis (m : ℕ) :
     (fun s : NonzeroParameter => vacColumns N a s.val)
     (fun s : NonzeroParameter => vacCoordinateImage N s.val)
     (Fintype.card (VermaPartitions m)) (Fintype.card (VermaPartitions N))
-  · simpa [J, N] using vacFirstRowBasisSize_partition m
+  · simpa [J, N] using! vacFirstRowBasisSize_partition m
   · have hh : ContinuousAt (fun s : NonzeroParameter => s.val) parameterOne :=
       continuous_subtype_val.continuousAt
     exact (vacColumns_continuousAt N a 1 one_ne_zero).comp_of_eq hh rfl

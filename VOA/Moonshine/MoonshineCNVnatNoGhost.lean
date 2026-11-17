@@ -53,8 +53,13 @@ theorem stringSectorNoGhostEquiv_equivariant (x y : ℤ) (h : x ≠ 0 ∨ y ≠ 
       ((stringSectorAction x y h).stableWeightQuotientAction _
         (stringSectorAction x y h).action_preserves_physical 1 g u) =
       GriessAut.autRestrict g (1 - x * y) (stringSectorNoGhostEquiv x y h u) := by
-  simp only [stringSectorNoGhostEquiv, LinearEquiv.trans_apply]
-  rw [(stringSectorAction x y h).physicalKQuotientEquiv_equivariant]
-  exact vnatKVacuumQuotientEquiv_equivariant x y (stringSectorFamily x y h) 1 g _
+  -- `LinearEquiv.trans_apply` no longer fires on the unfolded composite (the middle quotient's
+  -- instances differ syntactically), so compose the two equivariance facts as terms.
+  have h1 := (stringSectorAction x y h).physicalKQuotientEquiv_equivariant
+    (stringSector_charge x y h) (stringSector_lightConeSplit x y h) g u
+  have h2 := vnatKVacuumQuotientEquiv_equivariant x y (stringSectorFamily x y h) 1 g
+    ((stringSector x y h).physicalKQuotientEquiv (stringSector_charge x y h)
+      (stringSector_lightConeSplit x y h) u)
+  exact (congrArg (vnatKVacuumQuotientEquiv x y (stringSectorFamily x y h) 1) h1).trans h2
 
 end VOA.Moonshine.ConwayNorton

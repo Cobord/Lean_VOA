@@ -27,7 +27,7 @@ theorem coreOuter_characteristic [FiniteDimensional ℂ V] :
   apply SL4T.piCharacteristic_of_highest (coreOuter_currentRelations Q) π
     (coreAdjointPowerSum a b c) (fun s φ => h.parabolic 0 (by decide) (by decide) s φ)
   · intro s hs φ
-    simpa [coreCartanSymbol, A3Sector.simpleH] using h.cartan 0 s hs φ
+    simpa [coreCartanSymbol, A3Sector.simpleH] using! h.cartan 0 s hs φ
   · intro φ
     apply coreHighest_lowering_nilpotent (coreOuter_currentRelations Q) (π φ) a
       (h.parabolic 0 (by decide) (by decide) 0 φ)
@@ -69,7 +69,7 @@ theorem coreRaising_adjoint_characteristic [FiniteDimensional ℂ V] :
   have he := coreRaising_polynomial_from_outer a b c Q π h
     (Polynomial.C φ * X ^ s * SL4T.rightP (a + b + c) (a + b) a)
   rw [coreOuter_characteristic a b c Q π h φ s, map_zero, eq_neg_iff_add_eq_zero] at he
-  simpa using he
+  simpa using! he
 
 omit h
 

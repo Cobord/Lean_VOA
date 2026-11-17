@@ -21,6 +21,11 @@ The rational spin matrix is noncomputably chosen. An entrywise Hadamard formula
 and bounds on its denominators are not asserted here.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -135,7 +140,10 @@ theorem liftXiCol_parity {u : Fin 24 → ℤ} {m : ℤ} {d : Fin 24 → ZMod 2}
   have hp : (∑ r : Fin 4, bitLift (d (MonsterGriess.Code.coord r j))) % 2 =
       (∑ k : Fin 6, bitLift (d (MonsterGriess.Code.coord 0 k))) % 2 := by
     apply (ZMod.intCast_eq_intCast_iff' _ _ 2).mp
-    simpa only [Int.cast_sum, MonsterGriess.Code.bitLift_cast] using hd.2 j
+    first
+    | simpa only [Int.cast_sum, MonsterGriess.Code.bitLift_cast] using hd.2 j
+    | simpa only [Int.cast_sum, MonsterGriess.Code.bitLift_cast,
+        MonsterGriess.Code.topParity] using hd.2 j
   have h0 := hu (MonsterGriess.Code.coord 0 j)
   have h1 := hu (MonsterGriess.Code.coord 1 j)
   have h2 := hu (MonsterGriess.Code.coord 2 j)
@@ -412,8 +420,24 @@ theorem liftXiCharge_cube_intertwine (α : leech.carrier) (v : SpinRep) :
         liftMonoWeight liftXi (liftXi (liftXi α)) : ℚ) : ℂ) •
       ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ
         liftXiCharge (liftXiCharge (liftXiCharge v))) := by
-  simp only [liftXiCharge_intertwine, liftXiCharge_smul, smul_smul, liftXi_cube,
-    Rat.cast_mul]
+  first
+  | (simp only [liftXiCharge_intertwine, liftXiCharge_smul, smul_smul, liftXi_cube,
+      Rat.cast_mul]; done)
+  | (have key : ∀ (β : leech.carrier) (w : SpinIdx → ℂ),
+        liftXiCharge ((liftMonoQmat β).map (Rat.castHom ℂ) *ᵥ w) =
+          (liftMonoWeight liftXi β : ℂ) •
+            ((liftMonoQmat (liftXi β)).map (Rat.castHom ℂ) *ᵥ liftXiCharge w) :=
+       fun β w => liftXiCharge_intertwine β w
+     have key2 : ∀ w : SpinIdx → ℂ,
+         liftXiCharge (liftXiCharge (liftXiCharge
+           ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ w))) =
+           ((liftMonoWeight liftXi α * liftMonoWeight liftXi (liftXi α) *
+             liftMonoWeight liftXi (liftXi (liftXi α)) : ℚ) : ℂ) •
+           ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ
+             liftXiCharge (liftXiCharge (liftXiCharge w))) := by
+       intro w
+       simp only [key, liftXiCharge_smul, smul_smul, liftXi_cube, Rat.cast_mul]
+     exact key2 v)
 
 /-- The cube of the normalized charge operator is a rational signed permutation. -/
 theorem liftXiCharge_cube_signed :
@@ -429,7 +453,11 @@ theorem liftXiCharge_cube_signed :
     (fun v u => by
       change liftXiCharge (liftXiCharge (liftXiCharge v)) ⬝ᵥ
         liftXiCharge (liftXiCharge (liftXiCharge u)) = _
-      rw [liftXiCharge_dot, liftXiCharge_dot, liftXiCharge_dot])
+      first
+      | rw [liftXiCharge_dot, liftXiCharge_dot, liftXiCharge_dot]
+      | (have key : ∀ a b : SpinIdx → ℂ, liftXiCharge a ⬝ᵥ liftXiCharge b = a ⬝ᵥ b :=
+           fun a b => liftXiCharge_dot a b
+         rw [key, key, key]))
     liftSpinTestValue (fun t i => (w t : ℂ) * liftSpinTestValue t i) _
     liftSpinTest_separates
   intro t v
@@ -471,13 +499,25 @@ theorem liftXiUnphased_to_phased (T : Matrix SpinIdx SpinIdx ℚ)
       (w • N).map (Rat.castHom ℂ) = (w : ℂ) • N.map (Rat.castHom ℂ) := by
     ext i j
     simp
-  dsimp only at h
+  try dsimp only at h
   rw [Matrix.map_mul (f := Rat.castHom ℂ), hm,
     Matrix.map_mul (f := Rat.castHom ℂ), liftMonoQmat_map, liftMonoQmat_map] at h
-  rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
-    smul_smul, Matrix.mulVec_mulVec, h, Matrix.smul_mulVec, smul_smul,
-    mul_comm (signRefinement _), liftMonoWeight_phase liftXi liftXi_isometry,
-    Matrix.mulVec_mulVec]
+  first
+  | rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
+      smul_smul, Matrix.mulVec_mulVec, h, Matrix.smul_mulVec, smul_smul,
+      mul_comm (signRefinement _), liftMonoWeight_phase liftXi liftXi_isometry,
+      Matrix.mulVec_mulVec]
+  | (have key : ∀ w : SpinIdx → ℂ,
+        T.map (Rat.castHom ℂ) *ᵥ (spinOp (coordOfRed (red leech α)) *ᵥ w) =
+          latCob leech leech liftXi α •
+            (spinOp (coordOfRed (red leech (liftXi α))) *ᵥ
+              (T.map (Rat.castHom ℂ) *ᵥ w)) := by
+       intro w
+       rw [spinOp, spinOp, Matrix.smul_mulVec, Matrix.mulVec_smul, Matrix.smul_mulVec,
+         smul_smul, Matrix.mulVec_mulVec, h, Matrix.smul_mulVec, smul_smul,
+         mul_comm (signRefinement _), liftMonoWeight_phase liftXi liftXi_isometry,
+         Matrix.mulVec_mulVec]
+     exact key v)
 
 /-- The normalized spin action is projectively defined over the rationals. -/
 theorem liftXiCharge_projective :
@@ -502,8 +542,16 @@ theorem liftXiCharge_projective :
     ext i j
     have h := congrFun (liftXiCharge_intertwine α (Pi.single j 1)) i
     rw [← hM, ← hM] at h
-    simpa only [Matrix.mulVec_mulVec, Matrix.mulVec_single_one,
-      Matrix.smul_apply, Pi.smul_apply, smul_eq_mul] using h
+    first
+    | simpa only [Matrix.mulVec_mulVec, Matrix.mulVec_single_one,
+        Matrix.smul_apply, Pi.smul_apply, smul_eq_mul] using h
+    | (have h' : (M *ᵥ ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ
+            (Pi.single j 1 : SpinIdx → ℂ))) i =
+          (liftMonoWeight liftXi α : ℂ) * ((liftMonoQmat (liftXi α)).map (Rat.castHom ℂ) *ᵥ
+            (M *ᵥ (Pi.single j 1 : SpinIdx → ℂ))) i := h
+       rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec] at h'
+       simpa only [Matrix.mulVec_single_one, Matrix.col_apply,
+         Matrix.smul_apply, Pi.smul_apply, smul_eq_mul] using h')
   have htc (α : leech.carrier) (v : SpinIdx → ℂ) :
       T.map (Rat.castHom ℂ) *ᵥ ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ v) =
         (liftMonoWeight liftXi α : ℂ) •
@@ -515,7 +563,7 @@ theorem liftXiCharge_projective :
         (w • N).map (Rat.castHom ℂ) = (w : ℂ) • N.map (Rat.castHom ℂ) := by
       ext i j
       simp
-    dsimp only at h
+    try dsimp only at h
     rw [Matrix.map_mul (f := Rat.castHom ℂ), hm,
       Matrix.map_mul (f := Rat.castHom ℂ)] at h
     rw [Matrix.mulVec_mulVec, h, Matrix.smul_mulVec, Matrix.mulVec_mulVec]
@@ -528,14 +576,32 @@ theorem liftXiCharge_projective :
       F ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ v) =
         (liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ F v := by
     apply liftXiCharge.injective
-    rw [hef, htc, liftXiCharge_intertwine, hef]
+    first
+    | rw [hef, htc, liftXiCharge_intertwine, hef]
+    | (have key : ∀ (β : leech.carrier) (w : SpinIdx → ℂ),
+          liftXiCharge ((liftMonoQmat β).map (Rat.castHom ℂ) *ᵥ w) =
+            (liftMonoWeight liftXi β : ℂ) •
+              ((liftMonoQmat (liftXi β)).map (Rat.castHom ℂ) *ᵥ liftXiCharge w) :=
+         fun β w => liftXiCharge_intertwine β w
+       rw [hef, htc, key, hef])
   obtain ⟨z, hz⟩ := liftLiftableSpinCommuteScalar F (fun α v => by
-    rw [spinOp, Matrix.smul_mulVec, map_smul, ← liftMonoQmat_map, hcomm,
-      Matrix.smul_mulVec])
+    first
+    | rw [spinOp, Matrix.smul_mulVec, map_smul, ← liftMonoQmat_map, hcomm,
+        Matrix.smul_mulVec]
+    | (have key : ∀ w : SpinIdx → ℂ,
+          F (spinOp (coordOfRed (red leech α)) *ᵥ w) =
+            spinOp (coordOfRed (red leech α)) *ᵥ F w := by
+         intro w
+         rw [spinOp, Matrix.smul_mulVec, map_smul, ← liftMonoQmat_map, hcomm,
+           Matrix.smul_mulVec]
+       exact key v))
   have hspec (v : SpinIdx → ℂ) :
       T.map (Rat.castHom ℂ) *ᵥ v = z • liftXiCharge v := by
-    rw [← hef, hz]
-    exact liftXiCharge_smul z v
+    first
+    | (rw [← hef, hz]
+       exact liftXiCharge_smul z v)
+    | (rw [← hef]
+       exact (congrArg liftXiCharge (hz v)).trans (liftXiCharge_smul z v))
   refine ⟨T, z, ?_, hspec⟩
   intro hzero
   have hh := congrFun (hspec (Pi.single spinIdxBase 1)) i₀
@@ -554,10 +620,16 @@ theorem liftXiCharge_rational :
   have hq₂ : (q₂ : ℂ) = z ^ 2 := by
     have hh : (T.map (Rat.castHom ℂ) *ᵥ e) ⬝ᵥ (T.map (Rat.castHom ℂ) *ᵥ e) =
         z ^ 2 := by
-      rw [hT, smul_dotProduct, dotProduct_smul, liftXiCharge_dot]
-      simp [e, pow_two]
-    simpa only [e, Matrix.mulVec_single_one, dotProduct, Matrix.map_apply,
-      Rat.coe_castHom, q₂, Rat.cast_sum, Rat.cast_mul] using hh
+      first
+      | (rw [hT, smul_dotProduct, dotProduct_smul, liftXiCharge_dot]
+         simp [e, pow_two])
+      | (rw [hT, smul_dotProduct, dotProduct_smul, liftXiCharge_dot e e]
+         simp [e, pow_two])
+    first
+    | simpa only [e, Matrix.mulVec_single_one, dotProduct, Matrix.map_apply,
+        Rat.coe_castHom, q₂, Rat.cast_sum, Rat.cast_mul] using hh
+    | simpa only [e, Matrix.mulVec_single_one, Matrix.col_apply, dotProduct, Matrix.map_apply,
+        Rat.coe_castHom, q₂, Rat.cast_sum, Rat.cast_mul] using hh
   have hpow (v : SpinIdx → ℂ) :
       (T * T * T).map (Rat.castHom ℂ) *ᵥ v =
         z ^ 3 • liftXiCharge (liftXiCharge (liftXiCharge v)) := by
@@ -569,7 +641,9 @@ theorem liftXiCharge_rational :
   let q₃ : ℚ := (T * T * T) spinIdxBase (σ spinIdxBase) * sgnR ℚ (ε spinIdxBase)
   have hq₃ : (q₃ : ℂ) = z ^ 3 := by
     have hh := congrFun (hpow (Pi.single (σ spinIdxBase) 1)) spinIdxBase
-    rw [hcube] at hh
+    first
+    | rw [hcube] at hh
+    | rw [hcube (Pi.single (σ spinIdxBase) 1)] at hh
     simp only [Matrix.mulVec_single_one, Matrix.col_apply, Matrix.map_apply, Rat.coe_castHom,
       Pi.smul_apply, smul_eq_mul, liftGenSignedMatrix, spm_apply, if_true] at hh
     dsimp only [q₃]
@@ -630,8 +704,16 @@ theorem liftXiSpinMatrix_intertwine (α : leech.carrier) :
   ext i j
   have h := congrFun (liftXiCharge_intertwine α (Pi.single j 1)) i
   rw [liftXiSpinMatrix_spec, liftXiSpinMatrix_spec] at h
-  simpa only [Matrix.mulVec_mulVec, Matrix.mulVec_single_one, Pi.smul_apply,
-    Matrix.smul_apply, smul_eq_mul] using h
+  first
+  | simpa only [Matrix.mulVec_mulVec, Matrix.mulVec_single_one, Pi.smul_apply,
+      Matrix.smul_apply, smul_eq_mul] using h
+  | (have h' : (liftXiSpinMatrix.map (Rat.castHom ℂ) *ᵥ
+          ((liftMonoQmat α).map (Rat.castHom ℂ) *ᵥ (Pi.single j 1 : SpinIdx → ℂ))) i =
+        (liftMonoWeight liftXi α : ℂ) * ((liftMonoQmat (liftXi α)).map (Rat.castHom ℂ) *ᵥ
+          (liftXiSpinMatrix.map (Rat.castHom ℂ) *ᵥ (Pi.single j 1 : SpinIdx → ℂ))) i := h
+     rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec] at h'
+     simpa only [Matrix.mulVec_single_one, Matrix.col_apply,
+       Pi.smul_apply, Matrix.smul_apply, smul_eq_mul] using h')
 
 /-- The nonmonomial Conway generator has a lift in the rational Monster framework. -/
 theorem liftXi_liftable : ∃ g : liftableSubgroup,

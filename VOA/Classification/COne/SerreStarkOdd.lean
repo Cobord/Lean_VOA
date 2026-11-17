@@ -67,7 +67,7 @@ theorem coeff_eq_zero_of_LSeries_nat {b : ℕ → ℂ} (hb : abscissaOfAbsConv b
           rw [hL, show ((k : ℝ) : ℂ) = (k : ℂ) by push_cast; rfl, h k hk, mul_zero]
         exact tendsto_nhds_unique (ht'.congr' hzero) tendsto_const_nhds
   have := key n n le_rfl
-  simpa [hb', hn] using this
+  simpa [hb', hn] using! this
 
 namespace ClassSetup
 
@@ -182,7 +182,7 @@ theorem serreStarkOddVanish24 : SerreStarkOddVanish24 := by
     exact lt_of_le_of_lt (hs.abscissaOfAbsConv_le) (by simp)
   have hWc : ∀ m, 0 < m → thetaTypeCoeff (fricke N f) m = 0 := fun m hm =>
     coeff_eq_zero_of_LSeries_nat hab (K := K + 2) (fun k hk => by
-      have := hLk k hk; simpa using this) m hm.ne'
+      have := hLk k hk; simpa using! this) m hm.ne'
   have hW0 := thetaType_eq_zero_of_coeff_pos hN h4 hW hWc
   -- `f = 0` on `ℍ`
   have hf0 : ∀ τ : ℂ, 0 < τ.im → f τ = 0 := by

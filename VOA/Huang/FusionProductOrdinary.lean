@@ -47,7 +47,7 @@ theorem boundedMult_ordinary (AN : OrdVModule W N) : BoundedMult AN.toWeakModule
   refine ⟨Module.finrank ℂ (homSpace R.isMod AN), fun n ψ hψ hli => ?_⟩
   let φ : Fin n → homSpace R.isMod AN := fun k => ⟨ψ k, hψ k⟩
   have hφ : LinearIndependent ℂ φ := LinearIndependent.of_comp (homSpace R.isMod AN).subtype hli
-  simpa using hφ.fintype_card_le_finrank
+  simpa using! hφ.fintype_card_le_finrank
 
 /-- A complete family finitely dominates every ordinary module of a strongly
 rational VOA, with finiteness of the set of irreducibles explicit. -/
@@ -82,7 +82,7 @@ theorem finiteTargets_of_stronglyRational (hV : StronglyRational W)
       exact (e j).map_act a n (χ j x)⟩
   refine ⟨r, lab, inc, proj, fun x => ?_⟩
   simpa only [inc, proj, LinearMap.comp_apply, LinearEquiv.coe_coe,
-    LinearEquiv.symm_apply_apply] using htotal x
+    LinearEquiv.symm_apply_apply] using! htotal x
 
 /-- Version with the PBW datum discharged by the theorem `VOA.pbw`; it adds no axiom. -/
 theorem finiteTargets_of_stronglyRational_pbw (hV : StronglyRational W)

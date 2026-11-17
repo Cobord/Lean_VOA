@@ -67,7 +67,7 @@ theorem zero_mode_comm (k : ℕ) (X b : V) (n : ℤ) (y : M) :
 theorem T_mode (a : V) (n : ℤ) (y : M) :
     mode (A.YM (W.L (-1) a)) n y = (-(n : ℂ)) • mode (A.YM a) (n - 1) y := by
   have := act_T_covariance A a n y
-  simpa only [WeakModule.act_def] using this
+  simpa only [WeakModule.act_def] using! this
 
 /-- `(L(-1)^k a)₍ₙ₎ = fall n k · a₍ₙ₋ₖ₎` with `fall n k = Π_{i<k} (-(n - i))`. -/
 def fallC (n : ℤ) : ℕ → ℂ

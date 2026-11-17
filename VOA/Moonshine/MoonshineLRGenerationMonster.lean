@@ -21,6 +21,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module AutMonster
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- The Monster Lie algebra as Borcherds pre-data. -/
 def monsterLiePreData : BorcherdsPreData monsterLieAlgebra where
   weightSpace := monsterLieBorcherdsWeight
@@ -76,7 +79,11 @@ theorem monsterLiePreData_KNZ : monsterLiePreData.KNZ := by
   have h2 : knzSeries (fun j : ℕ =>
       (finrank ℂ (monsterLiePreData.weightSpace (1, (j : ℤ))) : ℂ)) = knzSeries cJ :=
     knzSeries_congr fun j hj => by
-      simpa using finrank_monsterLieBorcherdsWeight_cone 1 j one_pos hj
+      first
+        | simpa using finrank_monsterLieBorcherdsWeight_cone 1 j one_pos hj
+        | (have h := finrank_monsterLieBorcherdsWeight_cone 1 j one_pos hj
+           rw [Nat.cast_one, one_mul] at h
+           exact h)
   rw [BorcherdsPreData.KNZ, h1, h2]
   exact knz_product
 

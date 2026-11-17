@@ -38,11 +38,11 @@ theorem mixedSameSignFourier_of_diagrams (F : SphericalFusion C)
   rcases mul_pos_iff.mp hp with ⟨hm, hl⟩ | ⟨hm, hl⟩
   · obtain ⟨n, rfl⟩ : ∃ n : ℕ, m = (n : ℤ) + 1 := ⟨m.toNat - 1, by omega⟩
     obtain ⟨k, rfl⟩ : ∃ k : ℕ, l = (k : ℤ) + 1 := ⟨l.toNat - 1, by omega⟩
-    simpa only [generalizedIndicatorAll_positive] using
+    simpa only [generalizedIndicatorAll_positive] using!
       mixedPositiveFourier_of_diagrams F htrace hex V n k a b
   · obtain ⟨n, rfl⟩ : ∃ n : ℕ, m = -((n : ℤ) + 1) := ⟨(-m).toNat - 1, by omega⟩
     obtain ⟨k, rfl⟩ : ∃ k : ℕ, l = -((k : ℤ) + 1) := ⟨(-l).toNat - 1, by omega⟩
-    simpa only [indicator_negative_degree, neg_neg] using
+    simpa only [indicator_negative_degree, neg_neg] using!
       mixedPositiveFourier_of_diagrams F htrace hex Vᘁ n k a b
 
 /-- The precise finite-sum residual, from the explicit diagrams. -/

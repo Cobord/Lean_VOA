@@ -116,9 +116,9 @@ theorem exists_symbol_ward_sequence (self : Bool) (t : ℂ) (him : t.im ≠ 0) (
     (symbol_diagonal_initial self t ht) (fun r hr _ => hd r hr)
     ⟨highestVector _ _,highest_mem_level_zero _ _⟩
   refine ⟨f,hf0,hf,?_,?_⟩
-  · simpa using nonresonant_first_below (symbolTargetWeight self t) (incomingWeight t)
+  · simpa using! nonresonant_first_below (symbolTargetWeight self t) (incomingWeight t)
       t 13 (R+3) ht (by norm_num) f hf (fun r hr _ => hd r hr)
-  · simpa using nonresonant_second_below (symbolTargetWeight self t) (incomingWeight t)
+  · simpa using! nonresonant_second_below (symbolTargetWeight self t) (incomingWeight t)
       t 13 (R+3) ht (by norm_num) f hf (fun r hr _ => hd r hr)
 
 end VOA.Classification.COne.OrbIcoV

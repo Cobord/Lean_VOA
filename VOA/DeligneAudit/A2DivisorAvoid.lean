@@ -154,7 +154,8 @@ theorem divisor_of_dvd_linear (i j : Fin (m + 0)) {f : MvPolynomial (Fin (m + 0)
       push Not at hlt
       have h0 : (X i - X j : MvPolynomial (Fin (m + 0)) ℂ).totalDegree = 0 := by omega
       rw [totalDegree_eq_zero_iff_eq_C] at h0
-      have := congrArg (MvPolynomial.coeff (Finsupp.single i 1)) h0
+      have := congrArg (fun q : MvPolynomial (Fin (m + 0)) ℂ => q.coeff (Finsupp.single i 1)) h0
+      beta_reduce at this
       rw [coeff_sub, coeff_X, coeff_X', coeff_C] at this
       simp [Finsupp.single_eq_single_iff, Ne.symm hij] at this
   have hfdeg : f.totalDegree ≠ 0 := by

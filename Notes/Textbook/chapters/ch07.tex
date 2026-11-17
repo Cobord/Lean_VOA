@@ -1282,7 +1282,7 @@ noncomputable def YTmon (m : (ℕ × Fin r) →₀ ℕ) : ℤ → End ℂ (FockT
   else 0
 
 noncomputable def YT : FockN r →ₗ[ℂ] (ℤ → End ℂ (FockT r)) :=
-  Finsupp.linearCombination ℂ (YTmon r)
+  (Finsupp.linearCombination ℂ (YTmon r)).comp (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 \end{leancode}
 
 \begin{dictionary}

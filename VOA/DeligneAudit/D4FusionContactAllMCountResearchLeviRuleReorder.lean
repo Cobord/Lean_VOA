@@ -21,7 +21,7 @@ theorem zero_bracket_commute (m : ℕ) (a b : Fin 18) (h : bracketCoeff a b = 0)
   have hh := congrArg (fun D : Derivation K (Ring K m) (Ring K m) => D p)
     (deriv_bracket K m a b k l)
   apply sub_eq_zero.mp
-  simpa only [Derivation.commutator_apply,Derivation.smul_apply,h,zero_zsmul] using hh
+  simpa only [Derivation.commutator_apply,Derivation.smul_apply,h,zero_zsmul] using! hh
 
 /-- Reordering an entire commuting color block preserves its whole polynomial. -/
 theorem color_word_perm {ι : Type*} (m : ℕ) (color : ι → Fin 18)

@@ -41,8 +41,8 @@ theorem icoSymbolRelations_iff_coefficients : IcoSymbolRelations ↔
         _ = b' * (xuV19 : ℂ) := hb
     refine ⟨a / xuU37, b / xuV19, div_ne_zero ha0 xuU37_ne_zero,
       div_ne_zero hb0 xuV19_ne_zero, ?_, ?_⟩
-    · simpa only [div_mul_cancel₀ _ xuU37_ne_zero, div_mul_cancel₀ _ xuV19_ne_zero] using h74
-    · simpa only [ha', hb'] using h76
+    · simpa only [div_mul_cancel₀ _ xuU37_ne_zero, div_mul_cancel₀ _ xuV19_ne_zero] using! h74
+    · simpa only [ha', hb'] using! h76
 
 /-- Intrinsic Virasoro remainders with the required scalar compatibility finish B4. -/
 theorem icoSymbolRelations_of_remainders (a b a' b' : ℂ) (hab : a * b ≠ 0)

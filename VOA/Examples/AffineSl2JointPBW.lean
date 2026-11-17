@@ -166,7 +166,7 @@ theorem jointSpace_le_grading (n h : ℤ) : jointSpace k hk n h ≤ (universal k
   rw [currentPBWBasis_apply]
   have hi := creation_state_grading k hk (orderedPBWColorWord i.val)
   change _ ∈ (universal k hk).grading (currentEnergy i.val) at hi
-  simpa only [i.property.1] using hi
+  simpa only [i.property.1] using! hi
 
 /-- Joint spaces are finite-dimensional, as subspaces of a VOA energy grade. -/
 instance jointSpace_finiteDimensional (n h : ℤ) : FiniteDimensional ℂ (jointSpace k hk n h) := by

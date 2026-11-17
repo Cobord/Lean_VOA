@@ -42,19 +42,19 @@ variable (R : Type) [CommRing R] [Algebra ℂ R] (t : ℕ → R)
 theorem gS_one_sq : gS R 1 * gS R 1 = gS R 0 * gS R 2 := by
   have h : ySer * ySer = xSer * zSer := by simp only [xSer, ySer, zSer]; ring
   have := congrArg (PowerSeries.map (ι R).toRingHom) h
-  simpa only [map_mul] using this
+  simpa only [map_mul] using! this
 
 theorem gS_one_sq_deriv :
     (2 : PowerSeries (MPoly R)) * (gS R 1 * dG R 1) = dG R 0 * gS R 2 + gS R 0 * dG R 2 := by
-  have h := congrArg (PowerSeries.derivative (MPoly R)) (gS_one_sq R)
+  have h := congrArg (PowerSeries.derivative (R := MPoly R)) (gS_one_sq R)
   simp only [Derivation.leibniz, smul_eq_mul] at h
   rw [dG, dG, dG]
   linear_combination h
 
 /-- **The conic pairing** `Y'(T^c Y)' - ½ X'(T^c Z)' - ½ Z'(T^c X)' = T^c J²`. -/
 theorem conic_pairing (c : ℕ) :
-    dG R 1 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 1) - (1 / 2 : ℂ) • (dG R 0 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 2)) -
-        (1 / 2 : ℂ) • (dG R 2 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 0)) =
+    dG R 1 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 1) - (1 / 2 : ℂ) • (dG R 0 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 2)) -
+        (1 / 2 : ℂ) • (dG R 2 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 0)) =
       tS R t ^ c * (gS R 3 * gS R 3) := by
   rw [gS_three_mul_gS_three]
   simp only [Derivation.leibniz, smul_eq_mul, Algebra.smul_def]
@@ -62,11 +62,11 @@ theorem conic_pairing (c : ℕ) :
     rw [← map_ofNat (algebraMap ℂ (PowerSeries (MPoly R))) 2, ← map_mul]; norm_num
   have h2 := gS_one_sq_deriv R
   rw [dG, dG, dG] at h2 ⊢
-  linear_combination (-(tS R t ^ c * PowerSeries.derivative (MPoly R) (gS R 0) *
-      PowerSeries.derivative (MPoly R) (gS R 2) + PowerSeries.derivative (MPoly R) (tS R t ^ c) *
-        gS R 1 * PowerSeries.derivative (MPoly R) (gS R 1))) * hc +
+  linear_combination (-(tS R t ^ c * PowerSeries.derivative (R := MPoly R) (gS R 0) *
+      PowerSeries.derivative (R := MPoly R) (gS R 2) + PowerSeries.derivative (R := MPoly R) (tS R t ^ c) *
+        gS R 1 * PowerSeries.derivative (R := MPoly R) (gS R 1))) * hc +
     (algebraMap ℂ (PowerSeries (MPoly R)) (1 / 2) *
-      PowerSeries.derivative (MPoly R) (tS R t ^ c)) * h2
+      PowerSeries.derivative (R := MPoly R) (tS R t ^ c)) * h2
 
 theorem InS.mul' {r r' rr : ℕ} {w w' ww : ℤ} {F G : PowerSeries (MPoly R)}
     (hF : InS R t r w F) (hG : InS R t r' w' G) (hr : r + r' = rr) (hw : w + w' = ww) :
@@ -127,9 +127,9 @@ def qS (c : ℕ) : PowerSeries (MPoly R) :=
   tS R t ^ (c + 1) - ((c + 1 : ℕ) : ℂ) • (tS R t ^ c * gS R 3)
 
 theorem qS_succ (c : ℕ) : qS R t (c + 1) = (tS R t - gS R 3) * qS R t c -
-    ((c + 1 : ℕ) : ℂ) • (dG R 1 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 1) -
-      (1 / 2 : ℂ) • (dG R 0 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 2)) -
-        (1 / 2 : ℂ) • (dG R 2 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 0))) := by
+    ((c + 1 : ℕ) : ℂ) • (dG R 1 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 1) -
+      (1 / 2 : ℂ) • (dG R 0 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 2)) -
+        (1 / 2 : ℂ) • (dG R 2 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 0))) := by
   rw [conic_pairing, qS, qS]
   simp only [Algebra.smul_def]
   push_cast
@@ -149,13 +149,13 @@ theorem qS_inS : ∀ c : ℕ, InS R t (c + 1) (2 + 2 * (c : ℤ)) (qS R t c)
     have A : InS R t (c + 1 + 1) (4 + 2 * (c : ℤ)) ((tS R t - gS R 3) * qS R t c) :=
       hW.mul' R t ih (by ring) (by ring)
     have B1 : InS R t (c + 1 + 1) (4 + 2 * (c : ℤ))
-        (dG R 1 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 1)) :=
+        (dG R 1 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 1)) :=
       d1.mul' R t h1.deriv (by ring) hw
     have B2 : InS R t (c + 1 + 1) (4 + 2 * (c : ℤ))
-        (dG R 0 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 2)) :=
+        (dG R 0 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 2)) :=
       d0.mul' R t h2.deriv (by ring) hw
     have B3 : InS R t (c + 1 + 1) (4 + 2 * (c : ℤ))
-        (dG R 2 * PowerSeries.derivative (MPoly R) (tS R t ^ c * gS R 0)) :=
+        (dG R 2 * PowerSeries.derivative (R := MPoly R) (tS R t ^ c * gS R 0)) :=
       d2.mul' R t h0.deriv (by ring) hw
     refine (A.sub (((B1.sub (B2.smul _)).sub (B3.smul _)).smul _)).congr (qS_succ R t c).symm ?_
     push_cast; ring
@@ -199,7 +199,7 @@ def pblkG {K : ℕ} (c : Fin K → ℕ) (g : Fin K → Fin 4) (a : Fin K → ℕ
 /-- Products of block coefficients of every colour lie in the model. -/
 theorem pblkG_mem : ∀ {K : ℕ} (c : Fin K → ℕ) (g : Fin K → Fin 4) (a : Fin K → ℕ),
     pblkG R t c g a ∈ modelDeg R t (∑ i, (c i + 1)) (∑ i, ((a i : ℤ) + bwtG (c i) (g i)))
-  | 0, c, g, a => by simpa [pblkG] using one_mem_modelDeg R t
+  | 0, c, g, a => by simpa [pblkG] using! one_mem_modelDeg R t
   | K + 1, c, g, a => by
     rw [pblkG, Fin.prod_univ_succ, Fin.sum_univ_succ, Fin.sum_univ_succ]
     exact mul_mem_modelDeg R t (blkG_inS R t (c 0) (g 0) (a 0))
@@ -227,7 +227,7 @@ theorem coeff_tS_pow (c b : ℕ) :
 
 /-- The lowest part `Σ_{b+d=a} [T^c]_b · G_{g,d}`. -/
 def lowG (c : ℕ) (g : Fin 4) (a : ℕ) : MPoly TPoly :=
-  ∑ p ∈ Finset.antidiagonal a,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal a,
     MvPolynomial.C (PowerSeries.coeff p.1 (tSer ^ c)) * ι TPoly (genCoeff g p.2)
 
 theorem lowG_lowM (c : ℕ) (g : Fin 4) (a : ℕ) : LowM c (lowG c g a) :=
@@ -251,7 +251,7 @@ theorem blkG_coeff_sub_lowM (c : ℕ) (g : Fin 4) (a : ℕ) :
   · rw [coeff_tpow_gS, sub_self]; exact LowM.zero _
 
 theorem prod_lowG {K : ℕ} (c : Fin K → ℕ) (g : Fin K → Fin 4) (a : Fin K → ℕ) :
-    ∏ i, lowG (c i) (g i) (a i) = ∑ p ∈ Fintype.piFinset (fun i => Finset.antidiagonal (a i)),
+    ∏ i, lowG (c i) (g i) (a i) = ∑ p ∈ Fintype.piFinset (fun i => Finset.HasAntidiagonal.antidiagonal (a i)),
       MvPolynomial.C (∏ i, PowerSeries.coeff (p i).1 (tSer ^ c i)) *
         ι TPoly (Pga g (toF fun i => (p i).2)) := by
   simp only [lowG]
@@ -271,7 +271,7 @@ theorem pblkG_lowM {K : ℕ} (c : Fin K → ℕ) (g : Fin K → Fin 4) (a : Fin 
 theorem Φ_pblkG {K S : ℕ} (F : MvPolynomial (Fin S) ℂ) (c : Fin K → ℕ) (hc : ∑ i, c i = S)
     (g : Fin K → Fin 4) (a : Fin K → ℕ) :
     VOA.TwoSeries.StrictModel.Φ TPoly (ψF F) (pblkG TPoly X c g a) =
-      ∑ p ∈ Fintype.piFinset (fun i => Finset.antidiagonal (a i)),
+      ∑ p ∈ Fintype.piFinset (fun i => Finset.HasAntidiagonal.antidiagonal (a i)),
         ψF F (∏ i, PowerSeries.coeff (p i).1 (tSer ^ c i)) • Pga g (toF fun i => (p i).2) := by
   have hlow := (prod_sub_lowM c (fun i => lowG (c i) (g i) (a i))
     (fun i => PowerSeries.coeff (a i) (blkG TPoly X (c i) (g i)))

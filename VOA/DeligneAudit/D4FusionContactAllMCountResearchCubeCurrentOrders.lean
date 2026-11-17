@@ -59,7 +59,7 @@ theorem order_chainTerm_coefficient_mem (m : ℕ) (o : Fin 6) (r a b c s : ℕ)
     (order_orbit_sub_chainTerm_mem ℂ o r a b c ha hb hc)
   rw [map_sub,map_sub] at hlow
   exact by
-    simpa only [sub_sub_cancel] using Submodule.sub_mem _ hsource (Submodule.mem_sup_right hlow)
+    simpa only [sub_sub_cancel] using! Submodule.sub_mem _ hsource (Submodule.mem_sup_right hlow)
 
 theorem order_chain_coefficient_mem (m : ℕ) (o : Fin 6) (r a b c s : ℕ)
     (hr : 1 ≤ r) (hs : m < r + s) (ha : a ≤ r) (hb : b ≤ a) (hc : c ≤ b) :
@@ -122,7 +122,7 @@ theorem raw_order_chain_counts_mem (m : ℕ) (o : Fin 6) (u v w z s : ℕ)
   have h1 : v+w+z-(w+z) = v := by omega
   have h2 : w+z-z = w := by omega
   have he : v+w+z+3*(w+z)+5*z = v+4*w+9*z := by omega
-  simpa only [rawOrderChainCurrentProduct,h0,h1,h2,he] using h
+  simpa only [rawOrderChainCurrentProduct,h0,h1,h2,he] using! h
 
 /-- Transfer to every actual D4 local-Weyl source. The only model premise is
 its original defining relation, not a presentation or dimension statement. -/

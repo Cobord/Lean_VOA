@@ -29,7 +29,7 @@ theorem generalizedIndicatorAll_zero_twist (F : SphericalFusion C) (A : Center C
     ext f
     exact hf _
   have h := congrArg (LinearMap.trace ℂ (A.1 ⟶ 𝟙_ C)) he
-  simpa [generalizedIndicatorAll, map_smul] using h.symm
+  simpa [generalizedIndicatorAll, map_smul] using! h.symm
 
 /-- The twist shift holds for every integer pair, including negative and zero degrees. -/
 theorem generalizedIndicatorAll_add_degree (F : SphericalFusion C) (A : Center C)
@@ -39,10 +39,10 @@ theorem generalizedIndicatorAll_add_degree (F : SphericalFusion C) (A : Center C
       t⁻¹ * generalizedIndicatorAll F A V m l := by
   rcases lt_trichotomy 0 m with hm | hm | hm
   · have hc : ((m.toNat - 1 + 1 : ℕ) : ℤ) = m := by omega
-    simpa only [generalizedIndicatorAll, if_pos hm, hc] using
+    simpa only [generalizedIndicatorAll, if_pos hm, hc] using!
       generalizedIndicatorInt_add_degree F A V (m.toNat - 1) ht hj l
   · subst m
-    simpa using generalizedIndicatorAll_zero_twist F A V ht hj l
+    simpa using! generalizedIndicatorAll_zero_twist F A V ht hj l
   · have hpos : ¬ 0 < m := by omega
     have hzero : ¬ m = 0 := by omega
     have hc : - (l + m) = -l + (m.natAbs - 1 + 1 : ℕ) := by omega
@@ -62,7 +62,7 @@ theorem equivariantIndicator_T (F : SphericalFusion C)
     equivariantIndicator F Z.simple V m (l + m) z =
       equivariantIndicator F Z.simple V m l (ρ ModularGroup.T⁻¹ z) := by
   have hi (i : Z.Label) : ρ ModularGroup.T⁻¹ z i = (M.twistScalar i)⁻¹ * z i := by
-    simpa using canonicalCenter_T_zpow F Z M ρ hr (-1) z i
+    simpa using! canonicalCenter_T_zpow F Z M ρ hr (-1) z i
   simp only [equivariantIndicator, LinearMap.coe_mk, AddHom.coe_mk, hi]
   apply Finset.sum_congr rfl
   intro i _
@@ -91,14 +91,14 @@ theorem generalizedIndicator_center_cyclotomic (F : SphericalFusion C)
     (ρ : SL(2, ℤ) →* ((Z.Label → ℂ) ≃ₗ[ℂ] (Z.Label → ℂ)))
     (hr : CanonicalCenterRepresentation F Z M ρ) (V : C) (i : Z.Label) (n l : ℕ) :
     generalizedIndicator F.toPivotal (Z.simple i) V n l ∈
-      Algebra.adjoin ℤ ({Complex.exp
-        (2 * Real.pi * Complex.I / ((n + 1) * M.toRibbon.twistOrder))} : Set ℂ) := by
+      Algebra.adjoin ℤ ({(Complex.exp
+        (2 * Real.pi * Complex.I / ((n + 1) * M.toRibbon.twistOrder)))} : Set ℂ) := by
   letI := F.homFinite (Z.simple i).1 (tensorPower V (n + 1))
   obtain ⟨hp, he⟩ := generalizedRotation_center_period F Z M ρ hr V i n
   have hel : ((generalizedRotation F.toPivotal (Z.simple i) V n).toLinearMap ^ l) ^
       ((n + 1) * M.toRibbon.twistOrder) = 1 := by
     rw [← pow_mul, Nat.mul_comm l, pow_mul, he, one_pow]
-  simpa only [Nat.cast_mul, Nat.cast_add, Nat.cast_one] using
+  simpa only [Nat.cast_mul, Nat.cast_add, Nat.cast_one] using!
     trace_mem_standardCyclotomicIntegers _ hp hel
 
 /-- The Galois consumer does not need an assumed rotation-order identity.

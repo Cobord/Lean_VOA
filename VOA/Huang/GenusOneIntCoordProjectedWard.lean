@@ -43,7 +43,7 @@ theorem squareProj_mem (n : ℤ) (v : V) :
     squareProj (W := W) n v ∈ sqWeightSpace W (n : ℂ) := by
   by_cases hn : 0 ≤ n
   · obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le hn
-    simpa only [squareProj_nat, Int.cast_natCast] using squarePart_mem (W := W) v k
+    simpa only [squareProj_nat, Int.cast_natCast] using! squarePart_mem (W := W) v k
   · simp [squareProj, hn]
 
 theorem squareProj_of_mem {m : ℤ} {v : V}
@@ -57,7 +57,7 @@ theorem squareProj_of_mem {m : ℤ} {v : V}
       rw [squareProj_nat]
       by_cases hkl : k = l
       · subst l
-        simpa using squarePart_of_mem_sqWeightSpace hv
+        simpa using! squarePart_of_mem_sqWeightSpace hv
       · rw [if_neg (by exact_mod_cast hkl)]
         exact squarePart_eq_zero_of_mem_sqWeightSpace hv hkl
     · simp [squareProj, hn, show (k : ℤ) ≠ n by omega]
@@ -89,9 +89,9 @@ theorem squareProj_sqMode {K : ℤ} {a : V}
       sqMode W j a (squareProj (W := W) (n - K + j + 1) v) := by
   have h := squareProj_comp_of_degree (sqMode W j a) (K - j - 1)
     (fun m v hv => by
-      simpa only [show K + m - j - 1 = m + (K - j - 1) by ring] using
+      simpa only [show K + m - j - 1 = m + (K - j - 1) by ring] using!
         sqMode_mem_sqWeightSpace W ha hv j) n v
-  simpa only [show n - (K - j - 1) = n - K + j + 1 by ring] using h
+  simpa only [show n - (K - j - 1) = n - K + j + 1 by ring] using! h
 
 /-- The Virasoro version: `L[j]` shifts the component index by `j`. -/
 theorem squareProj_Lsq (j n : ℤ) (v : V) :
@@ -99,9 +99,9 @@ theorem squareProj_Lsq (j n : ℤ) (v : V) :
       Lsq W j (squareProj (W := W) (n + j) v) := by
   have h := squareProj_comp_of_degree (Lsq W j) (-j)
     (fun m v hv => by
-      simpa only [Int.cast_add, Int.cast_neg, sub_eq_add_neg] using
+      simpa only [Int.cast_add, Int.cast_neg, sub_eq_add_neg] using!
         Lsq_mem_sqWeightSpace W hv j) n v
-  simpa only [sub_neg_eq_add] using h
+  simpa only [sub_neg_eq_add] using! h
 
 /-- The fixed-index commutation shortcut already fails on the vacuum at
 nonzero central charge. This uses only the square Virasoro relation. -/

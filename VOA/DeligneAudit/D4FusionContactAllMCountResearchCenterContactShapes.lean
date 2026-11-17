@@ -102,7 +102,7 @@ theorem coeff_tail_one {A : Type*} [CommRing A] (B Q : PowerSeries A) (T : ℕ) 
       PowerSeries.coeff T (B * Q) - PowerSeries.coeff 0 B * PowerSeries.coeff T Q := by
   have h := Cube.coeff_tailSeries_mul B Q (T - 1) 1
   rw [Nat.sub_add_cancel hT] at h
-  simpa only [Finset.range_one,Finset.sum_singleton,Nat.sub_zero] using h
+  simpa only [Finset.range_one,Finset.sum_singleton,Nat.sub_zero] using! h
 
 /-- (SD) One mode-one contact and four static contacts, at coefficient T-1. -/
 theorem single_contact_shift_mem (m : ℕ) (hm : 2 ≤ m) (x : Fin 8 × ℕ) (hx : x.2 = 1)
@@ -120,11 +120,11 @@ theorem single_contact_shift_mem (m : ℕ) (hm : 2 ≤ m) (x : Fin 8 × ℕ) (hx
         · exact hrest y hy)
     rw [contactProduct_cons,tailSeries_zero] at hs
     rw [hs]
-    exact quintic_static_coeff_mem m _ (by simpa [contactWord] using hshape)
+    exact quintic_static_coeff_mem m _ (by simpa [contactWord] using! hshape)
   · apply Ideal.mul_mem_left
     rw [contactProduct_static m rest hrest]
     apply quartic_static_coeff_mem m
-    exact quarticShape_of_quinticShape_cons _ _ (by simpa [contactWord] using hshape)
+    exact quarticShape_of_quinticShape_cons _ _ (by simpa [contactWord] using! hshape)
 
 theorem monoShift_monoMode (m k r : ℕ) :
     monoShift ℂ m k (monoMode ℂ m r) = monoMode ℂ m (k + r) := by

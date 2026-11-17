@@ -48,12 +48,12 @@ theorem add (hA : HasAbsEvalAt A q α) (hB : HasAbsEvalAt B q β) :
 theorem mul (hA : HasAbsEvalAt A q α) (hB : HasAbsEvalAt B q β) :
     HasAbsEvalAt (A * B) q (α * β) := by
   have hterm : ∀ n, PowerSeries.coeff n (A * B) * q ^ n =
-      ∑ kl ∈ Finset.antidiagonal n,
+      ∑ kl ∈ Finset.HasAntidiagonal.antidiagonal n,
         (PowerSeries.coeff kl.1 A * q ^ kl.1) * (PowerSeries.coeff kl.2 B * q ^ kl.2) := by
     intro n
     rw [PowerSeries.coeff_mul, Finset.sum_mul]
     refine Finset.sum_congr rfl fun kl hkl => ?_
-    rw [Finset.mem_antidiagonal] at hkl
+    rw [Finset.HasAntidiagonal.mem_antidiagonal] at hkl
     rw [← hkl, pow_add]
     ring
   have hs := summable_norm_sum_mul_antidiagonal_of_summable_norm hA.1 hB.1

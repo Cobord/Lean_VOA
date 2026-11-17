@@ -60,7 +60,7 @@ def colorRank : Fin 3 → Fin 3
 
 theorem rankColor_injective : Function.Injective rankColor := by
   intro a b h
-  simpa using congrArg colorRank h
+  simpa using! congrArg colorRank h
 
 /-- Colour of a rank letter. -/
 def col (q : RLetter) : Fin 3 := rankColor (ofLex q).1
@@ -134,7 +134,7 @@ theorem inversionCount_swap (pre post : List RLetter) (a b : RLetter) (hba : b <
   | cons q pre ih =>
       simp only [List.cons_append, inversionCount, List.filter_append, List.length_append,
         List.filter_cons]
-      split_ifs <;> simp only [List.length_cons] at ih ⊢ <;> omega
+      split_ifs <;> (try simp only [List.length_cons] at ih ⊢) <;> omega
 
 theorem exists_adjacent_inversion_of_not_pairwise :
     ∀ l : List RLetter, ¬l.Pairwise (fun a b => a ≤ b) →
@@ -213,7 +213,7 @@ theorem flatMap_replicate_coe {α β : Type*} [LinearOrder α] (ν : α →₀ �
 theorem expWord_toMultiset (μ : RLetter →₀ ℕ) :
     (expWord μ : Multiset RLetter) = Finsupp.toMultiset μ := by
   have h := flatMap_replicate_coe μ id
-  simpa [expWord] using h
+  simpa [expWord] using! h
 
 theorem expWord_pairwise (μ : RLetter →₀ ℕ) :
     (expWord μ).Pairwise (fun a b => a ≤ b) := by
@@ -275,10 +275,10 @@ theorem rword_mem_span_Fvec (l : List RLetter) :
     rword k l ∈ Submodule.span ℂ (Set.range (Fvec k)) := by
   refine straighten (P := fun l => rword k l ∈ Submodule.span ℂ (Set.range (Fvec k)))
     (fun l hl => ?_) (fun pre a b post _ hswap hbr => ?_) l
-  · dsimp only
+  · try dsimp only
     rw [rword_sorted k l hl]
     exact Submodule.subset_span ⟨_, rfl⟩
-  · dsimp only at hswap hbr ⊢
+  · try dsimp only at hswap hbr ⊢
     rw [rword_swap]
     refine Submodule.add_mem _ hswap (Submodule.sum_mem _ fun c _ => ?_)
     by_cases hc : fabc (col a) (col b) c = 0

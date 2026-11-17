@@ -29,6 +29,10 @@ namespace VOA.SymbolModel
 
 open MvPolynomial
 
+-- Lean 4.35 port (dual-compatible): newer Mathlib states `MvPolynomial.coeff_zero` as a function equality.
+private theorem mvCoeff_zero {σ R : Type*} [CommSemiring R] (m : σ →₀ ℕ) :
+    (0 : MvPolynomial σ R).coeff m = 0 := rfl
+
 noncomputable section
 
 variable {σ : Type*}
@@ -36,7 +40,7 @@ variable {σ : Type*}
 /-! ### Coefficients of partial derivatives -/
 
 theorem coeff_pderiv_eq (i : σ) (P : MvPolynomial σ ℂ) (t : σ →₀ ℕ) :
-    coeff t (pderiv i P) = coeff (t + Finsupp.single i 1) P * ((t i : ℂ) + 1) := by
+    (pderiv i P).coeff t = P.coeff (t + Finsupp.single i 1) * ((t i : ℂ) + 1) := by
   classical
   induction P using MvPolynomial.induction_on' with
   | monomial s a =>
@@ -59,10 +63,10 @@ theorem coeff_pderiv_eq (i : σ) (P : MvPolynomial σ ℂ) (t : σ →₀ ℕ) :
           · simp [Ne.symm hj] at this ⊢; omega
         rw [hsi, Nat.cast_zero, mul_zero]
       · rfl
-  | add p q hp hq => rw [map_add, coeff_add, hp, hq, coeff_add, add_mul]
+  | add p q hp hq => rw [map_add, MvPolynomial.coeff_add, hp, hq, MvPolynomial.coeff_add, add_mul]
 
 theorem eq_C_of_pderiv_eq_zero (P : MvPolynomial σ ℂ) (h : ∀ i, pderiv i P = 0) :
-    P = C (coeff 0 P) := by
+    P = C (P.coeff 0) := by
   classical
   ext t
   rw [coeff_C]
@@ -78,7 +82,7 @@ theorem eq_C_of_pderiv_eq_zero (P : MvPolynomial σ ℂ) (h : ∀ i, pderiv i P 
       · subst hj; simp; omega
       · simp [Finsupp.single_apply, Ne.symm hj]
     have hc := coeff_pderiv_eq i P (t - Finsupp.single i 1)
-    rw [h i, coeff_zero, e] at hc
+    rw [h i, mvCoeff_zero, e] at hc
     have hne : (((t - Finsupp.single i 1 : σ →₀ ℕ) i : ℕ) : ℂ) + 1 ≠ 0 := by
       exact_mod_cast Nat.succ_ne_zero ((t - Finsupp.single i (1 : ℕ) : σ →₀ ℕ) i)
     exact (mul_eq_zero.mp hc.symm).resolve_right hne
@@ -86,7 +90,7 @@ theorem eq_C_of_pderiv_eq_zero (P : MvPolynomial σ ℂ) (h : ∀ i, pderiv i P 
 theorem eq_zero_of_isHomogeneous_of_pderiv {P : MvPolynomial σ ℂ} {k : ℕ}
     (hP : P.IsHomogeneous (k + 1)) (h : ∀ i, pderiv i P = 0) : P = 0 := by
   have hC := eq_C_of_pderiv_eq_zero P h
-  have h0 : coeff 0 P = 0 := by
+  have h0 : P.coeff 0 = 0 := by
     by_contra hne
     have := hP hne
     simp at this
@@ -213,7 +217,7 @@ theorem derivation_isHomogeneous (E : Derivation ℂ (MvPolynomial σ ℂ) (MvPo
   rw [Q.as_sum, map_sum]
   refine IsHomogeneous.sum _ _ _ fun s hs => ?_
   have hsd : Finsupp.weight 1 s = d := hQ (mem_support_iff.mp hs)
-  rw [show monomial s (coeff s Q) = coeff s Q • monomial s (1 : ℂ) by
+  rw [show monomial s (Q.coeff s) = Q.coeff s • monomial s (1 : ℂ) by
     rw [smul_monomial, smul_eq_mul, mul_one], E.map_smul, ← mem_homogeneousSubmodule]
   refine Submodule.smul_mem _ _ ?_
   rw [mem_homogeneousSubmodule, ← hsd]

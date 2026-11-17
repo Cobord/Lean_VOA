@@ -43,7 +43,7 @@ theorem det_of_scalar_coordinates {J : Type*} [Fintype J]
   rw [← LinearMap.det_conj f e]
   apply det_of_scalar_components
   intro x i
-  simpa using h (e.symm x) i
+  simpa using! h (e.symm x) i
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C]
   [Preadditive C] [Linear ℂ C] [MonoidalPreadditive C] [MonoidalLinear ℂ C]

@@ -39,6 +39,9 @@ namespace VOA
 
 open scoped BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -96,7 +99,7 @@ instance gradingS_finrank (n : ℤ) : FiniteDimensional ℂ (S.gradingS n) := by
     (S.carrier.subtype.comp (S.gradingS n).subtype) (fun x => x.2)) ?_
   intro x y hxy
   have := congrArg Subtype.val hxy
-  simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at this
+  try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at this
   exact Subtype.ext (Subtype.ext this)
 
 /-- The induced grading is an internal direct sum. -/

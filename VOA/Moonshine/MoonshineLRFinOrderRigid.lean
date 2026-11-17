@@ -459,7 +459,7 @@ private theorem isingRigid_scalar_step_of_neg (g : AutVnat)
     (hc' : g ((frameX0P (α + γ), 0) : Vnat) = c' • ((frameX0P (α + γ), 0) : Vnat)) : c = c' := by
   have hε : latticeCocycle leech α γ ≠ 0 := latticeCocycle_ne_zero leech α γ
   have key := congrArg (fun v => g v) (VnatVOA_smul_xN_of_neg α γ h)
-  simp only at key
+  try simp only at key
   rw [Aut.map_smul, hg α hα, hc, PreVertexAlgebra.smul_smul_right,
     VnatVOA_smul_xN_of_neg α γ h, map_smul, hc', smul_comm c] at key
   have key2 := smul_right_injective Vnat hε key
@@ -602,7 +602,7 @@ theorem aut_isingVec_periodic (g : AutVnat) {α : leech.carrier}
     e he (isingVec_rigid hα s hs)
   refine ⟨K, hK, ?_⟩
   have h := congrArg (fun z : VnatVOA.grading 2 => (z : Vnat)) hfix
-  dsimp only at h
+  try dsimp only at h
   rwa [isingRigid_restrict_pow] at h
 
 private theorem isingRigid_pow_fix (g : AutVnat) (x : Vnat) (hx : g x = x) (n : ℕ) :

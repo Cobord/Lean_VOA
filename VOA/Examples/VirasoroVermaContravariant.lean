@@ -14,6 +14,8 @@ Virasoro representation contains the highest-coordinate functional as a
 highest-weight vector. The Verma universal property therefore constructs the
 contravariant form, with no determinant or nondegeneracy assumption.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.InverseDS.VirasoroVerma
 open VirModule VirDeformModes Module LeeYangWardClosure
 
@@ -194,7 +196,7 @@ theorem vermaContravariant_symm (c h : ℂ) (u v : Verma c h) :
     intro w
     apply LinearMap.ext
     intro v
-    simpa only [LinearMap.flip_apply, vermaSortedBasis_apply] using hw w.val v
+    simpa only [LinearMap.flip_apply, vermaSortedBasis_apply] using! hw w.val v
   exact LinearMap.congr_fun (LinearMap.congr_fun he u) v
 
 /-- Distinct actual relative levels are orthogonal. The two eigenvalues of
@@ -242,7 +244,7 @@ theorem vermaContravariant_singular_radical (c h : ℂ) (n : ℕ) (hn : 0 < n)
     have he := vermaContravariant_adj c h ((i : ℤ)+1) u (negWord c h w)
     have hz := hall ((i : ℤ)+1) (by omega)
     rw [hz, map_zero, LinearMap.zero_apply] at he
-    simpa only [neg_add_rev, neg_add, neg_neg, sub_eq_add_neg, add_comm] using he.symm
+    simpa only [neg_add_rev, neg_add, neg_neg, sub_eq_add_neg, add_comm] using! he.symm
 
 
 /-- Normalization and opposite-mode adjointness uniquely determine the
@@ -258,14 +260,14 @@ theorem vermaContravariant_unique (c h : ℂ)
     intro w
     rw [vermaSortedBasis_apply]
     cases hw : w.val with
-    | nil => simpa using hnorm
+    | nil => simpa using! hnorm
     | cons i w =>
       rw [vermaHighestCoordinate_cons, negWord_cons]
       have he := hadj ((i : ℤ)+1) (highestVector c h) (negWord c h w)
       have hz : vermaMode c h ((i : ℤ)+1) (highestVector c h) = 0 :=
         verma_pos_annihilate c h _ (by omega)
       rw [hz, map_zero, LinearMap.zero_apply] at he
-      simpa only [neg_add, sub_eq_add_neg] using he.symm
+      simpa only [neg_add, sub_eq_add_neg] using! he.symm
   have hw : ∀ w : List ℕ, ∀ v : Verma c h,
       B (negWord c h w) v = vermaContravariant c h (negWord c h w) v := by
     intro w
@@ -276,7 +278,7 @@ theorem vermaContravariant_unique (c h : ℂ)
   intro w
   apply LinearMap.ext
   intro v
-  simpa only [vermaSortedBasis_apply] using hw w.val v
+  simpa only [vermaSortedBasis_apply] using! hw w.val v
 
 /-- The first translation descendant has squared norm 2h. In particular,
 its norm vanishes simply in the highest-weight parameter at h=0; this fixes

@@ -22,6 +22,9 @@ namespace VOA.Moonshine.ConwayNorton.M8
 
 open Module
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- `(m, n) ↦ (m, n) ∈ ℤ × ℤ`. -/
 def natWeight (γ : ℕ × ℕ) : ℤ × ℤ := ((γ.1 : ℤ), (γ.2 : ℤ))
 
@@ -68,7 +71,7 @@ instance (γ : ℕ × ℕ) : FiniteDimensional ℂ (positiveWeight D γ) := by
       (D.weightSpace (natWeight γ)) fun x => x.2)
     fun x y h => by
       have h' := congrArg Subtype.val h
-      simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at h'
+      try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at h'
       exact Subtype.ext (Subtype.ext h')
 
 theorem positiveWeight_cone (γ : ℕ × ℕ) (hne : positiveWeight D γ ≠ ⊥) :
@@ -144,7 +147,7 @@ instance (e : g) (γ : ℕ × ℕ) : FiniteDimensional ℂ (positiveGenWeight D 
       (positiveWeight D γ) fun x => x.2)
     fun x y h => by
       have h' := congrArg Subtype.val h
-      simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at h'
+      try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply] at h'
       exact Subtype.ext (Subtype.ext h')
 
 /-- **The PBW character of `𝔲⁺` (blueprint: the character identity in `MOON_BKM`) for Borcherds

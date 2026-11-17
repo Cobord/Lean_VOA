@@ -25,7 +25,7 @@ theorem center_positiveDerived_mem (i : Fin 8) (r : ℕ) (hr : 0 < r)
       obtain ⟨s, l, hl, hp, rfl⟩ := hv
       have he : currentCenter R r (currentRoot R i s (ECalc.Fw (currentCenter R) l w)) =
           currentRoot R i s (ECalc.Fw (currentCenter R) (r::l) w) := by
-        simpa only [ECalc.Fw, Module.End.mul_apply] using
+        simpa only [ECalc.Fw, Module.End.mul_apply] using!
           congrArg (fun T : Module.End ℂ V => T (ECalc.Fw (currentCenter R) l w))
             (current_center_root_comm R i r s)
       rw [he]

@@ -188,7 +188,7 @@ theorem iteratedDeriv_transEval {M : LogModes M₅ M₃ M₄} (hM : IsLogIntertw
       have h := ((hasDerivAt_id u).const_add 1).clog (one_add_mem_slitPlane hu')
       have h' := h.const_add ℓ
       convert h' using 1
-      try simp
+      all_goals first | rfl | simp
     have hd : HasDerivAt (fun u => Complex.exp (j*ℓ) *
         psiJ M K g z c β δ w (Lm1 A₅) j (ℓ+Complex.log (1+u)))
         (Complex.exp (j*ℓ) * (Complex.exp (ℓ+Complex.log (1+u)) *
@@ -235,6 +235,6 @@ theorem norm_outerEval_taylor_le {M : LogModes M₅ M₃ M₄} (hM : IsLogIntert
   have h := Complex.norm_iteratedDeriv_le_of_forall_mem_sphere_norm_le j hR hd
     (fun v hv => hC v hv)
   rw [iteratedDeriv_transEval hM hK g z c β ℓ δ w j 0 (Metric.mem_ball_self one_pos)] at h
-  simpa only [add_zero, Complex.log_one, psiJ] using h
+  simpa only [add_zero, Complex.log_one, psiJ] using! h
 
 end VOA.Huang.LogBraided

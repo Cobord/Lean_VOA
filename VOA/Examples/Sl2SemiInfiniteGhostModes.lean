@@ -52,7 +52,8 @@ theorem lftF_anticomm (V : SuperVertexAlgebra X) (W : SuperVertexAlgebra Y)
     TensorVA.lftF V W a m * TensorVA.lftF V W b n +
       TensorVA.lftF V W b n * TensorVA.lftF V W a m = 0 := by
   have hh := congrArg (TensorVA.mapLeftHom V W) h
-  simpa only [map_add, TensorVA.mapLeftHom_mul, map_zero] using hh
+  simp only [map_add, TensorVA.mapLeftHom_mul, map_zero] at hh
+  exact hh
 
 /-- The right tensor lift preserves anticommutators that vanish. -/
 theorem rgtF_anticomm (V : SuperVertexAlgebra X) (W : SuperVertexAlgebra Y)

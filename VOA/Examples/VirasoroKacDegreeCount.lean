@@ -99,7 +99,7 @@ theorem vermaMultisetPartitions_card_le (n : ℕ) (s : VermaMultisetPartitions n
 theorem vermaMultisetPartitions_mem_lt (n : ℕ) (s : VermaMultisetPartitions n)
     (a : ℕ) (ha : a∈s.val) : a<n := by
   have hh := vermaPartMultiplicity_energy_le n a 1 s
-    (by simpa only [Nat.succ_le_iff] using (Multiset.count_pos.mpr ha))
+    (by simpa only [Nat.succ_le_iff] using! (Multiset.count_pos.mpr ha))
   omega
 
 /-- Removing k copies of a fixed part and adding them back is a bijection.
@@ -191,7 +191,7 @@ theorem verma_partition_lengths_eq_kac_count (n : ℕ) :
     _ = _ := by
       apply Finset.sum_congr rfl
       intro a ha
-      simpa only [Nat.mul_comm] using verma_sum_partCount n a
+      simpa only [Nat.mul_comm] using! verma_sum_partCount n a
 
 /-- The actual Verma determinant degree equals the sum of the expected full
 Verma descendant multiplicities over all positive Kac label pairs rs≤n.

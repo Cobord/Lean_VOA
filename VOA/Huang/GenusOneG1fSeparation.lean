@@ -62,12 +62,12 @@ theorem exists_weight_family (P : LWModule W) (u : P.carrier) :
     refine ⟨m₁ + m₂, Fin.append w₁ w₂, Fin.append α₁ α₂, ?_, ?_, ?_⟩
     · intro i
       refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-      · simpa using h₁ i
-      · simpa using h₂ i
+      · simpa using! h₁ i
+      · simpa using! h₂ i
     · intro i
       refine Fin.addCases (fun i => ?_) (fun i => ?_) i
-      · simpa using l₁ i
-      · simpa using l₂ i
+      · simpa using! l₁ i
+      · simpa using! l₂ i
     · rw [Fin.sum_univ_add]
       simp [s₁, s₂]
   · intro α x hx
@@ -202,7 +202,6 @@ theorem extract {m : ℕ} (cs nn αα ββ : Fin m → ℂ) (ww : Fin m → (lwO
         ββ i • normalizedCoordinateChange (lwOf D b) (xx i) := by
       rw [normalizedModuleZeroConjugation_holds (lwOf D b) (xx i),
         (lwOf D b).isMod.L0_weight _ _ (hxx i), map_smul]
-    simp only
     rw [map_bvec]
     exact bracketModes_weight _ hCw hCx (nn i)
   · rw [← hsum, map_sum]
@@ -274,7 +273,7 @@ theorem traceSeparation_holds (hNice : Nice W) (hirr : Irredundant D.Mfam)
   -- the vacuum side
   have hεv : c.ε.val (η'.val v) = v := by
     have := congrArg (fun f : (vacuumObject : Ordinary W) ⟶ vacuumObject => f.val v) hη'
-    simpa using this
+    simpa using! this
   have hvw : sqL (vacuumLW W hv).isMod 0 v = (k : ℂ) • v := by
     change sqL (adjointModule W) 0 v = _
     rw [VOA.Huang.GenusOneG1e.sqL_adjoint_zero]
@@ -290,7 +289,7 @@ theorem traceSeparation_holds (hNice : Nice W) (hirr : Irredundant D.Mfam)
     intro C
     have hq0 : C.q.val (η'.val v) = 0 := by
       have := congrArg (fun f : (vacuumObject : Ordinary W) ⟶ famObj D C.k => f.val v) C.hq
-      simpa using this
+      simpa using! this
     have h := hext (lwOf D C.k) C.q (hz0 _ _ hq0)
     erw [hq0] at h
     exact h
@@ -305,7 +304,7 @@ theorem traceSeparation_holds (hNice : Nice W) (hirr : Irredundant D.Mfam)
         rw [← Category.assoc, hμ, Linear.smul_comp]
       rw [B.hq, smul_zero] at h1
       have := congrArg (fun f : (vacuumObject : Ordinary W) ⟶ famObj D B.k => f.val v) h1
-      simpa using this
+      simpa using! this
     have h := hext (lwOf D B.k) (braidR F D a b ≫ B.q) (hz0 _ _ hq0)
     erw [hq0] at h
     exact h
@@ -375,10 +374,12 @@ theorem traceSeparation_holds (hNice : Nice W) (hirr : Irredundant D.Mfam)
         coef z * ∑ i ∈ kept αα ββ nn (k : ℂ), cs i *
           ℓ (c.ε.val (bvec F D a b (nn i) (ww i) (xx i))) := by
       rw [Finset.mul_sum]
-      exact Finset.sum_congr rfl fun i _ => by rw [hℓ]; ring
-    rw [this, sum_linear ℓ]
+      exact Finset.sum_congr rfl fun i _ => by
+        rw [hℓ (c.ε.val (bvec F D a b (nn i) (ww i) (xx i)))]; ring
+    rw [this, sum_linear ℓ (kept αα ββ nn (k : ℂ)) cs
+      (fun i => c.ε.val (bvec F D a b (nn i) (ww i) (xx i)))]
     erw [hε]
-    rw [hℓ]
+    rw [hℓ v]
   have hR : ∑ i ∈ kept αα ββ nn (k : ℂ), cs i * ∑ l, lam l * genTerm (G l) (ins i) (nn i) τ =
       0 := by
     simp only [Finset.mul_sum]

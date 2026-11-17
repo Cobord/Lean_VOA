@@ -19,7 +19,7 @@ theorem oscillatorTop_mem (m : ℕ) (odd : Bool) :
   · change (1 : FockT _) ∈ gradingT _ 0
     rw [gradingT_zero]
     exact Submodule.mem_span_singleton_self _
-  · simpa [oscillatorTop, gradingT, wT] using
+  · simpa [oscillatorTop, gradingT, wT] using!
       isWeightedHomogeneous_X ℂ (wT (r := rank (latP m))) (0, LatMod.a0 m)
 
 theorem oscillatorTop_ne_zero (m : ℕ) (odd : Bool) : oscillatorTop m odd ≠ 0 := by
@@ -44,9 +44,10 @@ theorem topTensor_ne_zero (m : ℕ) (odd : Bool) : topTensor m odd ≠ 0 := by
 def topVector (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (odd : Bool) :
     plusSub (parityLift (latP m) (latP_even m) (charge m t) (latP_posDef m hm) odd) :=
   ⟨topTensor m odd, by
-    rw [mem_plusSub, parityLift_op_grade (latP m) (latP_even m) (charge m t) (latP_posDef m hm)
-      odd odd.toNat _ (topTensor_mem m odd),
-      (show Even (odd.toNat + odd.toNat) from ⟨odd.toNat, rfl⟩).neg_one_pow, one_smul]⟩
+    refine (mem_plusSub _).mpr ((parityLift_op_grade (latP m) (latP_even m) (charge m t)
+      (latP_posDef m hm) odd odd.toNat (topTensor m odd) (topTensor_mem m odd)).trans ?_)
+    rw [(show Even (odd.toNat + odd.toNat) from ⟨odd.toNat, rfl⟩).neg_one_pow]
+    exact one_smul ℂ _⟩
 
 theorem topVector_mem (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (odd : Bool) :
     topVector m hm t odd ∈ (fourModules m hm t odd).weight (bottom odd) := by
@@ -95,9 +96,12 @@ theorem YML_charge (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (a k : ℤ) :
   rw [VOA.Moonshine.LatticeTwistedGeneral.YML_apply]
   change mode (VOA.Moonshine.LatticeTwistedGeneral.FL (latP m) (latP_even m) (charge m t)
     k (echg (latP m) a)).1 0 = _
-  rw [VOA.Moonshine.LatticeTwistedGeneral.FL_echg _ _ _ (latP_posDef m hm),
-    VOA.Moonshine.LatticeTwistedGeneral.mode_YTLFld]
-  simp only [mul_zero, zero_add]
+  refine (congrArg (fun F => mode (Subtype.val F) 0)
+    (VOA.Moonshine.LatticeTwistedGeneral.FL_echg (latP m) (latP_even m) (charge m t)
+      (latP_posDef m hm) k (a : (latP m).carrier))).trans ?_
+  refine (VOA.Moonshine.LatticeTwistedGeneral.mode_YTLFld (latP m) (latP_even m) (charge m t)
+    (a : (latP m).carrier) k 0).trans ?_
+  rw [mul_zero, zero_add]
 
 theorem YML_E (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) :
     VOA.Moonshine.LatticeTwistedGeneral.YML (latP m) (latP_even m) (charge m t)
@@ -117,7 +121,9 @@ theorem E_topTensor (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (odd : Bool) :
     VOA.Moonshine.LatticeTwistedGeneral.YML (latP m) (latP_even m) (charge m t)
       (EP m hm).1 (2 * ((m : ℤ) - 1)) (topTensor m odd) =
     eValue m t odd • topTensor m odd := by
-  rw [YML_E, LinearMap.smul_apply, topTensor]
+  rw [YML_E]
+  erw [LinearMap.smul_apply]
+  rw [topTensor]
   erw [
     VOA.Moonshine.LatticeTwistedGeneral.YTL_tmul (latP m) (latP_even m)
       (charge m t) (1 : ℤ) _ (oscillatorTop m odd) (1 : ℂ)]
@@ -153,7 +159,7 @@ theorem topVector_E (m : ℕ) (hm : 1 ≤ m) (t : ZMod 2) (odd : Bool) :
   change ((mode ((parityModule (latP m) (latP_even m) (charge m t)
     (latP_posDef m hm) odd).YM (EP m hm)) ((m : ℤ) - 1)
     (topVector m hm t odd) : plusSub _) : VOA.Moonshine.LatticeTwistedGeneral.MT (latP m) (latP_even m) (charge m t)) = _
-  rw [mode_parityModule]
-  exact E_topTensor m hm t odd
+  exact (mode_parityModule (latP m) (latP_even m) (charge m t) (latP_posDef m hm) odd
+    (EP m hm) ((m : ℤ) - 1) (topVector m hm t odd)).trans (E_topTensor m hm t odd)
 
 end VOA.Classification.COne.PlusTwistLattice

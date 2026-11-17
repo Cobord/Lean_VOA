@@ -15,6 +15,8 @@ requiring and verifying its commutation with both currents and degree.
 It does not quotient by a fixed-level vacuum relation, which would incorrectly
 kill the tangent level parameter.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA
 open Module (End)
 open VOA.AffineLie

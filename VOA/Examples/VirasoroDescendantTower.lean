@@ -35,7 +35,7 @@ operator has its expected weight n+2. -/
 theorem weight_tower (H A B : L) (hA : ⁅H,A⁆=A) (hB : ⁅H,B⁆=(2:ℂ) • B) (n : ℕ) :
     ⁅H,tower A B n⁆=((n:ℂ)+2) • tower A B n := by
   induction n with
-  | zero => simpa using hB
+  | zero => simpa using! hB
   | succ n ih =>
     rw [tower,lie_smul,leibniz_lie,hA,ih,lie_smul]
     simp only [Nat.cast_add,Nat.cast_one]

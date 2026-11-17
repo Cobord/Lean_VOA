@@ -53,7 +53,7 @@ private theorem mem_of_neg_add_copies (N : Submodule ℂ V) (v s : V)
   have hne : (-((n + 1 : ℕ) : ℂ)) ≠ 0 := by
     exact neg_ne_zero.mpr (by exact_mod_cast Nat.succ_ne_zero n)
   have hi := N.smul_mem (-((n + 1 : ℕ) : ℂ))⁻¹ hscaled
-  simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using hi
+  simpa only [smul_smul, inv_mul_cancel₀ hne, one_smul] using! hi
 
 /-- S1 for a word with the selected U' already at the front. -/
 theorem three_step_cons
@@ -89,7 +89,7 @@ theorem three_step_cons
       ρ.op (22 : Fin 28) 0
         (((threeWords r rest).map (radicalWord ρ w)).sum) = L.sum := by
     simpa only [L, List.map_map, Function.comp_def, radicalWord,
-      List.map_cons, wordOp, radicalColour] using
+      List.map_cons, wordOp, radicalColour] using!
       (map_list_sum (ρ.op (22 : Fin 28) 0)
         ((threeWords r rest).map (radicalWord ρ w)))
   have hsource := fThree_xzero_higher ρ w m h k r rest
@@ -98,7 +98,7 @@ theorem three_step_cons
     rw [fThreeDerivative_eq_sum ρ w r rest, map_neg, hmap] at hsource
     have hv : ρ.op (25 : Fin 28) r (radicalWord ρ w rest) = v := rfl
     rw [hv] at hsource
-    simpa only [sub_eq_add_neg] using
+    simpa only [sub_eq_add_neg] using!
       (Submodule.mem_sup_right hsource : -v + -L.sum ∈ N)
   exact mem_of_neg_add_copies N v L.sum hrel n hn
 
@@ -136,7 +136,7 @@ theorem four_step_cons
       ρ.op (22 : Fin 28) 0
         (((fourWords r rest).map (radicalWord ρ w)).sum) = L.sum := by
     simpa only [L, List.map_map, Function.comp_def, radicalWord,
-      List.map_cons, wordOp, radicalColour] using
+      List.map_cons, wordOp, radicalColour] using!
       (map_list_sum (ρ.op (22 : Fin 28) 0)
         ((fourWords r rest).map (radicalWord ρ w)))
   have hsource := fFour_xzero_higher ρ w m h k r rest
@@ -145,7 +145,7 @@ theorem four_step_cons
     rw [fFourDerivative_eq_sum ρ w r rest, map_neg, hmap] at hsource
     have hv : ρ.op (24 : Fin 28) r (radicalWord ρ w rest) = v := rfl
     rw [hv] at hsource
-    simpa only [sub_eq_add_neg] using
+    simpa only [sub_eq_add_neg] using!
       (Submodule.mem_sup_right hsource : -v + -L.sum ∈ N)
   exact mem_of_neg_add_copies N v L.sum hrel n hn
 
@@ -169,7 +169,7 @@ theorem three_step
   have hword := radicalWord_perm ρ w hp
   have hs := three_step_cons ρ w m h r rest
   rw [← hkey, ← hmeasure, ← hword] at hs
-  simpa only [hk] using hs
+  simpa only [hk] using! hs
 
 /-- S2: a selected U reduces to smaller-measure words and higher keys. -/
 theorem four_step
@@ -185,7 +185,7 @@ theorem four_step
   have hword := radicalWord_perm ρ w hp
   have hs := four_step_cons ρ w m h r rest
   rw [← hkey, ← hmeasure, ← hword] at hs
-  simpa only [hk] using hs
+  simpa only [hk] using! hs
 
 /-- S3: every exact-key radical word reduces to XYZ and higher keys. -/
 theorem lemmaZero_word
@@ -205,10 +205,10 @@ theorem lemmaZero_word
           have hup : q.countP (fun p => p.1 = 3) = 0 := by
             simp only [cntUU] at hzero
             omega
-          have hku : k.u = 0 := by simpa [← hq, wordKey] using hu
-          have hkup : k.up = 0 := by simpa [← hq, wordKey] using hup
+          have hku : k.u = 0 := by simpa [← hq, wordKey] using! hu
+          have hkup : k.up = 0 := by simpa [← hq, wordKey] using! hup
           have hmem : radicalWord ρ w q ∈ keyLayer ρ w k := by
-            simpa only [hq] using radicalWord_mem_key ρ w q
+            simpa only [hq] using! radicalWord_mem_key ρ w q
           exact Submodule.mem_sup_left
             (keyLayer_le_xyzSpan_of_no_U ρ w m h k hku hkup hmem)
         · have hsmall : measureLowerSpan ρ w k n ≤ N := by
@@ -243,7 +243,7 @@ theorem keyLayer_le_xyzSpan_sup_higher
     (h : Sat D4sector.f ρ w (ravFam D4sector m 0))
     (k : RadicalKey) :
     keyLayer ρ w k ≤ xyzSpan ρ w k ⊔ higherOrbit ρ w m k := by
-  rw [keyLayer, Submodule.span_le]
+  apply Submodule.span_le.mpr
   rintro v ⟨l, hk, rfl⟩
   exact lemmaZero_word ρ w m h k l hk
 

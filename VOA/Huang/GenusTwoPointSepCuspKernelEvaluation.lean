@@ -47,8 +47,8 @@ theorem hasSum_ellipticCusp (d : ℕ) {rho x q : ℂ}
     refine ⟨fun n => (summable_of_hasFiniteSupport (hfn n)).norm, ?_⟩
     apply Summable.of_nonneg_of_le (fun n => tsum_nonneg (fun _ => norm_nonneg _)) hnorm
     have hp := (summable_pow_mul_geometric_of_norm_lt_one (r := ‖q‖) (d + 1)
-      (by simpa only [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg q)] using hq)).mul_left 2
-    simpa only [mul_assoc] using hp
+      (by simpa only [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg q)] using! hq)).mul_left 2
+    simpa only [mul_assoc] using! hp
   have hrow (n : ℕ) : (∑' k, f n k) =
       PowerSeries.coeff n (lambertCuspSeries (ellipticCoeff d x) rho) * q ^ n := by
     rw [tsum_eq_sum (hfzero n), coeff_lambertCuspSeries, Finset.sum_mul]
@@ -89,7 +89,7 @@ theorem hasSum_ellipticCusp (d : ℕ) {rho x q : ℂ}
       ring
     change HasSum (fun j => f (g j) k) _
     simp_rw [he]
-    simpa only [div_eq_mul_inv] using
+    simpa only [div_eq_mul_inv] using!
       (hasSum_geometric_of_norm_lt_one hp).mul_left
         (ellipticCoeff d x k * (rho * q) ^ (k + 1))
   have he : (∑' n, PowerSeries.coeff n
@@ -112,7 +112,7 @@ theorem hasSum_eisensteinCusp (j : ℕ) {rho q : ℂ}
     exact (mul_le_of_le_one_left (norm_nonneg q) hr).trans_lt hq
   have hs : Summable (fun n => zhuG j n * (rho * q) ^ n) := by
     apply Summable.of_norm
-    simpa only [norm_mul, norm_pow] using summable_of_subexponential
+    simpa only [norm_mul, norm_pow] using! summable_of_subexponential
       (fun n => norm_nonneg (zhuG j n)) (subexponential_zhuG j)
       (norm_nonneg _) hrq
   convert hs.hasSum.mul_left ((2 * (Real.pi : ℂ) * Complex.I) ^ (2 * j)) using 1
@@ -120,6 +120,7 @@ theorem hasSum_eisensteinCusp (j : ℕ) {rho q : ℂ}
   simp only [eisensteinCuspSeries, PowerSeries.coeff_smul, PowerSeries.coeff_rescale,
     PowerSeries.coeff_mk, smul_eq_mul, mul_pow]
   ring
+  rfl
 
 private theorem hasSum_constantCusp (c q : ℂ) :
     HasSum (fun n => PowerSeries.coeff n (PowerSeries.C c) * q ^ n) c := by
@@ -146,6 +147,7 @@ theorem hasSum_wpTwoCusp {rho x q : ℂ} (hr : ‖rho‖ ≤ 1)
     simp only [wpCuspSeries, elliptic_constant_one hx₁]
     norm_num [map_add, map_sub, PowerSeries.coeff_smul, smul_eq_mul]
     ring
+  · rfl
 
 /-- The odd Fourier model retains its factorial normalization. -/
 theorem hasSum_wpThreeCusp {rho x q : ℂ} (hr : ‖rho‖ ≤ 1)
@@ -160,6 +162,7 @@ theorem hasSum_wpThreeCusp {rho x q : ℂ} (hr : ‖rho‖ ≤ 1)
   simp only [wpCuspSeries, elliptic_constant_two hx₁]
   norm_num [map_add, PowerSeries.coeff_smul, smul_eq_mul]
   ring
+  rfl
 
 /-- The wp₁ correction has the same admissible radius; the additive coordinate
 and the constant -pi*i are included. -/
@@ -171,7 +174,7 @@ theorem hasSum_wpOneCusp {rho x q : ℂ} (t : ℂ) (hr : ‖rho‖ ≤ 1)
         (x / (1 - x) + lambertTail (ellipticCoeff 0 x) (rho * q)) +
         t * huangEisensteinQ 1 (rho * q) - (Real.pi : ℂ) * Complex.I) := by
   have hc : (∑' k : ℕ, (k + 1 : ℂ) ^ 0 * x ^ (k + 1)) = x / (1 - x) := by
-    simpa only [pow_zero, one_mul, pow_succ', div_eq_mul_inv] using
+    simpa only [pow_zero, one_mul, pow_succ', div_eq_mul_inv] using!
       ((hasSum_geometric_of_norm_lt_one hx₁).mul_left x).tsum_eq
   have h := (hasSum_constantCusp (x / (1 - x)) q).add
     (hasSum_ellipticCusp 0 hr hx hxi hq)

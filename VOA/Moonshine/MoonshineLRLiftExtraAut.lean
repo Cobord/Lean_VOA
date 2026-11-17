@@ -22,7 +22,9 @@ def extraVnatAut (μ : leech.carrier) : AutVnat :=
 
 theorem extraVnatAut_apply (μ : leech.carrier) (u : SkewVP) (t : TP) :
     extraVnatAut μ ((u, t) : Vnat) = (extraLeechPlusAut μ u, extraPlusIsometry μ t) := by
-  rw [extraVnatAut, vnatAutOfPair_apply]
-  rfl
+  first
+    | (rw [extraVnatAut, vnatAutOfPair_apply]; rfl)
+    | exact (vnatAutOfPair_apply _ _ _ _ u t).trans rfl
+    | rfl
 
 end VOA.Moonshine.ConwayNorton.M8

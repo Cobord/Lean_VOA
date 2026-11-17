@@ -733,7 +733,7 @@ theorem gradingH_finiteDimensional (h : ℂ) : FiniteDimensional ℂ (C.gradingH
       (fun x => x.2)) ?_
     intro x y hxy
     have hcoe := congrArg Subtype.val hxy
-    simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply,
+    try simp only [LinearMap.codRestrict_apply, LinearMap.comp_apply,
       Submodule.subtype_apply] at hcoe
     exact Subtype.ext (Subtype.ext hcoe)
   have hrange : C.gradingH h
@@ -1026,7 +1026,7 @@ theorem translation_ker (x : C.kerQ) (k : ℤ) :
   refine LinearMap.ext fun y => Subtype.ext ?_
   rw [Yker_coe, modeK_coe, confK_coe, LinearMap.smul_apply, Submodule.coe_smul, Yker_coe]
   have h := congrArg (fun F : (Module.End ℂ 𝒲)⟦z^±⟧ => F k) (W.translation (x : 𝒲))
-  simp only at h
+  try simp only at h
   rw [h, deriv_apply, ← Int.cast_smul_eq_zsmul ℂ]
   rfl
 

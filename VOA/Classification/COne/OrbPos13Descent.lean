@@ -48,7 +48,7 @@ theorem descendedMonodromy_eq_id {A X : C} (η : 𝟙_ C ⟶ A)
       _ = (η ▷ X) ≫ (g ▷ X) ≫ a := by rw [hM]
       _ = (λ_ X).hom := by rw [← Category.assoc, ← comp_whiskerRight, hg, ha]
   have he' : (λ_ X).hom ≫ f = (λ_ X).hom ≫ 𝟙 X := by
-    simpa only [← Category.assoc, ha, Category.comp_id] using he.symm.trans hunit
+    simpa only [← Category.assoc, ha, Category.comp_id] using! he.symm.trans hunit
   exact (cancel_epi (λ_ X).hom).mp he'
 
 end Abstract
@@ -71,13 +71,13 @@ theorem actionMonodromyThrough_iff_factors
   letI := E.monoid
   constructor
   · intro h
-    exact ⟨𝟙 X, by simpa only [Category.comp_id] using h⟩
+    exact ⟨𝟙 X, by simpa only [Category.comp_id] using! h⟩
   · rintro ⟨f, hf⟩
     have hunit : (unitInclusion G ▷ X) ≫ a = (λ_ X).hom := by
-      simpa only [E.one_eq] using ha.one_act
+      simpa only [E.one_eq] using! ha.one_act
     have hid := descendedMonodromy_eq_id (unitInclusion G) a hunit
       (ambientSymmetry G g).hom (ambientSymmetry_unit G g) f hf
-    simpa only [hid, Category.comp_id] using hf
+    simpa only [hid, Category.comp_id] using! hf
 
 /-- On simple actions, the existing sector-projection target is equivalent
 to existence of a group monodromy label: the converse uses a singleton family.
@@ -94,6 +94,6 @@ theorem exceptionalSectorProjections_iff_monodromy :
   intro k hk
   have hk : k = g := Finset.mem_singleton.mp hk
   subst k
-  exact ⟨by simp, isLinear_id Q.act, by simpa only [Category.comp_id] using hg⟩
+  exact ⟨by simp, isLinear_id Q.act, by simpa only [Category.comp_id] using! hg⟩
 
 end VOA.Classification.COne.OrbPos13

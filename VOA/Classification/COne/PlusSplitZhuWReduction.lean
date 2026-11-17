@@ -29,7 +29,7 @@ theorem mk_incl_monoE (i j : ℕ) :
       rfl
   rw [monoE]
   induction j with
-  | zero => simpa using hω i
+  | zero => simpa using! hω i
   | succ j ih =>
     rw [Function.iterate_succ_apply', hφ.map_zhuMul (WM_mem_grading m hm),
       mk_zhuMul, ih]
@@ -46,7 +46,7 @@ theorem mk_incl_lcE (L : MonoList) :
   | nil => simp [lcE, evalZhuML]
   | cons t L ih =>
     simpa only [lcE, evalZhuML, List.map_cons, List.sum_cons, map_add, map_smul,
-      mk_incl_monoE] using congrArg (fun z => (t.1 : ℂ) •
+      mk_incl_monoE] using! congrArg (fun z => (t.1 : ℂ) •
         (generator m hm 0 ^ t.2.1 * generator m hm 1 ^ t.2.2) + z) ih
 
 /-- Both certified Heisenberg relations hold in the actual quotient, not
@@ -115,13 +115,13 @@ theorem W_squared_mem (hw : 3 ≤ wCount m) (ho : 4 ≤ omegaCount m) :
     generator m hm 1 ^ 2 ∈ Submodule.span ℂ (Set.range (monomial m hm)) := by
   rw [W_squared]
   have hW : generator m hm 1 ∈ Submodule.span ℂ (Set.range (monomial m hm)) := by
-    simpa using omega_power_W_mem m hm 0 (by omega)
+    simpa using! omega_power_W_mem m hm 0 (by omega)
   exact Submodule.add_mem _ (Submodule.add_mem _
     (Submodule.sub_mem _ (Submodule.sub_mem _ (Submodule.add_mem _
       (Submodule.smul_mem _ _ (omega_power_mem m hm 3 (by omega)))
       (Submodule.smul_mem _ _ hW))
-      (Submodule.smul_mem _ _ (by simpa using omega_power_mem m hm 1 (by omega))))
-      (Submodule.smul_mem _ _ (by simpa using omega_power_W_mem m hm 1 (by omega))))
+      (Submodule.smul_mem _ _ (by simpa using! omega_power_mem m hm 1 (by omega))))
+      (Submodule.smul_mem _ _ (by simpa using! omega_power_W_mem m hm 1 (by omega))))
     (Submodule.smul_mem _ _ (omega_power_mem m hm 2 (by omega))))
     (Submodule.smul_mem _ _ (omega_power_W_mem m hm 2 (by omega)))
 
@@ -130,7 +130,7 @@ theorem omega_cubed_W_mem (hw : 3 ≤ wCount m) (ho : 5 ≤ omegaCount m) :
       Submodule.span ℂ (Set.range (monomial m hm)) := by
   rw [omega_cubed_W]
   have hW : generator m hm 1 ∈ Submodule.span ℂ (Set.range (monomial m hm)) := by
-    simpa using omega_power_W_mem m hm 0 (by omega)
+    simpa using! omega_power_W_mem m hm 0 (by omega)
   have hw1 := omega_power_W_mem m hm 1 (by omega)
   have hw2 := omega_power_W_mem m hm 2 (by omega)
   have h1 := omega_power_mem m hm 1 (by omega)
@@ -151,9 +151,9 @@ theorem omega_mul_W_monomial_mem (hw : wCount m = 3) (ho : 5 ≤ omegaCount m)
     generator m hm 0 * monomial m hm (.inr (.inl i)) ∈
       Submodule.span ℂ (Set.range (monomial m hm)) := by
   by_cases hi : i.val + 1 < wCount m
-  · simpa only [monomial, pow_succ', mul_assoc] using omega_power_W_mem m hm (i.val + 1) hi
+  · simpa only [monomial, pow_succ', mul_assoc] using! omega_power_W_mem m hm (i.val + 1) hi
   · have he : i.val = 2 := by have := i.isLt; omega
-    simpa only [monomial, he, pow_succ', mul_assoc] using
+    simpa only [monomial, he, pow_succ', mul_assoc] using!
       omega_cubed_W_mem m hm (by omega) ho
 
 /-- All omega powers times E reduce to its three columns. -/
@@ -166,8 +166,8 @@ theorem omega_power_E_mem (hm2 : 2 ≤ m) (n : ℕ) :
   have hf (i : Fin 3) : f i ∈ S := Submodule.subset_span ⟨i, rfl⟩
   have h3 : generator m hm 0 ^ 3 * generator m hm 2 ∈ S := by
     rw [omega_cubed_E m hm hm2]
-    have h0 : generator m hm 2 ∈ S := by simpa [f] using hf 0
-    have h1 : generator m hm 0 * generator m hm 2 ∈ S := by simpa [f] using hf 1
+    have h0 : generator m hm 2 ∈ S := by simpa [f] using! hf 0
+    have h1 : generator m hm 0 * generator m hm 2 ∈ S := by simpa [f] using! hf 1
     have h2 : generator m hm 0 ^ 2 * generator m hm 2 ∈ S := hf 2
     exact S.add_mem (S.sub_mem (S.smul_mem _ h2) (S.smul_mem _ h1)) (S.smul_mem _ h0)
   have hs : ∀ x ∈ S, generator m hm 0 * x ∈ S := by
@@ -176,16 +176,16 @@ theorem omega_power_E_mem (hm2 : 2 ≤ m) (n : ℕ) :
     | mem x hx =>
       obtain ⟨i, rfl⟩ := hx
       fin_cases i
-      · simpa [f] using hf 1
-      · simpa [f, pow_succ', mul_assoc] using hf 2
-      · simpa [f, pow_succ', mul_assoc] using h3
+      · simpa [f] using! hf 1
+      · simpa [f, pow_succ', mul_assoc] using! hf 2
+      · simpa [f, pow_succ', mul_assoc] using! h3
     | zero => simp
-    | add x y _ _ hx hy => simpa only [mul_add] using S.add_mem hx hy
-    | smul c x _ hx => simpa only [mul_smul_comm] using S.smul_mem c hx
+    | add x y _ _ hx hy => simpa only [mul_add] using! S.add_mem hx hy
+    | smul c x _ hx => simpa only [mul_smul_comm] using! S.smul_mem c hx
   have hn : generator m hm 0 ^ n * generator m hm 2 ∈ S := by
     induction n with
     | zero => exact hf 0
-    | succ n ih => simpa only [pow_succ', mul_assoc] using hs _ ih
+    | succ n ih => simpa only [pow_succ', mul_assoc] using! hs _ ih
   have hle : S ≤ Submodule.span ℂ (Set.range (monomial m hm)) := by
     apply Submodule.span_le.mpr
     rintro x ⟨i, rfl⟩

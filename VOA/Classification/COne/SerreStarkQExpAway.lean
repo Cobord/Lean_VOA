@@ -57,7 +57,7 @@ theorem isIntegral_of_pow_mul_mem_R {R : Subalgebra ℤ ℂ} [IsNoetherianRing R
   · intro hbot
     have : x ^ 0 * y ∈ S := Submodule.subset_span ⟨0, rfl⟩
     rw [hbot, Submodule.mem_bot] at this
-    exact hy (by simpa using this)
+    exact hy (by simpa using! this)
   · intro n hn
     refine Submodule.span_induction (p := fun n _ => x • n ∈ S) ?_ ?_ ?_ ?_ hn
     · rintro _ ⟨k, rfl⟩
@@ -74,7 +74,7 @@ abbrev zInv (M : ℕ) : Subalgebra ℤ ℂ := Algebra.adjoin ℤ {((M : ℂ))⁻
 
 instance (M : ℕ) : IsNoetherianRing (zInv M) :=
   isNoetherianRing_of_fg (by
-    simpa using Subalgebra.fg_adjoin_finset (R := ℤ) ({((M : ℂ))⁻¹} : Finset ℂ))
+    simpa using! Subalgebra.fg_adjoin_finset (R := ℤ) ({((M : ℂ))⁻¹} : Finset ℂ))
 
 theorem mem_zInv {M : ℕ} (hM : M ≠ 0) {z : ℂ} (hz : z ∈ zInv M) :
     ∃ (a : ℤ) (e : ℕ), z = a / (M : ℂ) ^ e := by
@@ -178,7 +178,7 @@ def awaySat (M : ℕ) (L : Submodule ℤ ℂ) : Submodule ℤ ℂ where
     exact ⟨e, by rw [mul_smul_comm]; exact L.smul_mem c he⟩
 
 theorem mem_awaySat_of_mem {M : ℕ} {L : Submodule ℤ ℂ} {z : ℂ} (hz : z ∈ L) : z ∈ awaySat M L :=
-  ⟨0, by simpa using hz⟩
+  ⟨0, by simpa using! hz⟩
 
 /-- **Residual (bounded coefficients away from the tower prime).** For `24 ∣ N`, every
 `g ∈ M_{1/2}(N, χ)` and every prime `p ∤ N`, there are `M` with `p ∤ M` and a finitely generated
@@ -284,7 +284,7 @@ theorem eigenvalue_of_fgR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : �
     intro k
     have := hc (p ^ (2 * (k + 1)) * m)
     rw [heckeCoeff_step χ p a m k] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   -- the roots `β, γ` of `X² − cX + x²/p`
   obtain ⟨β, hβ⟩ : ∃ β : ℂ, β * β - c * β + x ^ 2 / p = 0 := by
     obtain ⟨s, hs⟩ := IsAlgClosed.exists_eq_mul_self (discrim 1 (-c) (x ^ 2 / p))
@@ -390,11 +390,11 @@ theorem eigen_pow_of_fgR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : �
     intro k
     have := hc (p ^ (2 * (k + 1)) * m)
     rw [heckeCoeff_step χ p a m k] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   suffices H : ∀ k, A k = ε ^ k * A 0 ∧ A (k + 1) = ε ^ (k + 1) * A 0 by
     have := (H j).1
     rw [hA0] at this
-    simpa [hA] using this
+    simpa [hA] using! this
   by_cases ham : a m = 0
   · have h0 : A 0 = 0 := by rw [hA0]; exact ham
     have h1 : A 1 = 0 := by rw [h0, mul_zero, mul_zero, add_zero] at r0; exact r0
@@ -427,7 +427,7 @@ theorem eigen_pow_of_fgR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : �
       linear_combination r0
     intro k
     induction k with
-    | zero => exact ⟨by simp, by simpa using h1⟩
+    | zero => exact ⟨by simp, by simpa using! h1⟩
     | succ k ih =>
       refine ⟨ih.2, ?_⟩
       have e := rk k
@@ -523,7 +523,7 @@ theorem jordan_coeff_zeroR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : 
       intro k
       have := ha (p ^ (2 * (k + 1)) * m)
       rw [heckeCoeff_step χ p a m k] at this
-      simpa [hA, hB] using this
+      simpa [hA, hB] using! this
     have rB0 : B 1 + ε / p * B 0 = c * B 0 := by
       have := hb m
       rw [heckeCoeff_base χ p b hm] at this
@@ -534,7 +534,7 @@ theorem jordan_coeff_zeroR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : 
       intro k
       have := hb (p ^ (2 * (k + 1)) * m)
       rw [heckeCoeff_step χ p b m k] at this
-      simpa [hB] using this
+      simpa [hB] using! this
     -- `B_{k+1} = ε B_k`
     have hBs : ∀ k, B (k + 1) = ε * B k := by
       intro k
@@ -617,7 +617,7 @@ theorem jordan_coeff_zeroR (hpN : Nat.Coprime p N) (hpR : ¬ IsIntegral R ((p : 
           exact ih _ ((Nat.div_le_self _ _).trans_lt hlt) hq
         · rfl
       rw [h2] at e1
-      simpa using e1
+      simpa using! e1
     · exact step1 n hdvd
 
 end JordanR
@@ -856,7 +856,7 @@ def rankOneCoeff (n₀ r : ℤ) (t k : ℕ) : ℂ := ∑' _b : rIdx n₀ r t ⁻
 theorem finite_rIdx_fiber (n₀ : ℤ) {r : ℤ} (hr : r ≠ 0) {t : ℕ} (ht : 1 ≤ t) (k : ℕ) :
     (rIdx n₀ r t ⁻¹' {k}).Finite := by
   have hinj : Function.Injective fun m : ℤ => n₀ + r * m := fun a b h => by
-    have : r * a = r * b := by simpa using h
+    have : r * a = r * b := by simpa using! h
     exact mul_left_cancel₀ hr this
   refine ((Set.finite_Icc (-(k : ℤ)) k).preimage hinj.injOn).subset fun m hm => ?_
   simp only [Set.mem_preimage, Set.mem_singleton_iff, rIdx] at hm
@@ -996,12 +996,12 @@ theorem boundedCoeff24_of_qExpPrinciple24Away (j : ℕ) (hQ : QExpPrinciple24Awa
 /-- Katz's form over `ℤ[1/N]`, weight two. -/
 theorem boundedCoeff24_of_qExpPrinciple24OverZInvN_two (hQ : QExpPrinciple24OverZInvN 2) :
     SerreStarkBoundedCoeff24 :=
-  boundedCoeff24_of_qExpPrinciple24Away 1 (by simpa using qExpPrinciple24Away_of_overZInvN hQ)
+  boundedCoeff24_of_qExpPrinciple24Away 1 (by simpa using! qExpPrinciple24Away_of_overZInvN hQ)
 
 /-- Weight two. -/
 theorem boundedCoeff24_of_qExpPrinciple24Away_two (hQ : QExpPrinciple24Away 2) :
     SerreStarkBoundedCoeff24 :=
-  boundedCoeff24_of_qExpPrinciple24Away 1 (by simpa using hQ)
+  boundedCoeff24_of_qExpPrinciple24Away 1 (by simpa using! hQ)
 
 end SSHecke
 

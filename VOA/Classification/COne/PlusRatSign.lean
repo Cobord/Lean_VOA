@@ -23,7 +23,7 @@ abbrev cc : ℂ := chargeCoord (latP m) ((1 : ℤ) : (latP m).carrier) (a0 m)
 include hm in
 theorem cc_ne_zero : cc m ≠ 0 := by
   have := chargeCoord_nat_ne_zero m hm 1 le_rfl
-  simpa [cc] using this
+  simpa [cc] using! this
 
 theorem chargeCoord_negOne :
     chargeCoord (latP m) ((-1 : ℤ) : (latP m).carrier) (a0 m) = -cc m :=
@@ -58,8 +58,9 @@ theorem charge_zero_boson (a : (latP m).carrier) :
 theorem E_pos_sign (n : ℤ) (hn : 0 < n) :
     (V2m m hm).smul ((EP m hm : VP m hm) : LatModuleGen (latP m)) n
       (bosonState (latP m) (a0 m)) = 0 := by
-  rw [EP_coe, PreVertexAlgebra.smul_add_left, charge_positive_boson m hm _ _ hn,
-    charge_positive_boson m hm _ _ hn, zero_add]
+  rw [EP_coe, PreVertexAlgebra.smul_add_left,
+    charge_positive_boson m hm ((1 : ℤ) : (latP m).carrier) _ hn,
+    charge_positive_boson m hm ((-1 : ℤ) : (latP m).carrier) _ hn, zero_add]
 
 /-- `E_0 u = -c(e^α - e^{-α})`. -/
 theorem E_zero_sign :
@@ -67,8 +68,8 @@ theorem E_zero_sign :
       (bosonState (latP m) (a0 m)) =
       -(cc m • latChargeGen (latP m) ((1 : ℤ) : (latP m).carrier)) +
         cc m • latChargeGen (latP m) ((-1 : ℤ) : (latP m).carrier) := by
-  rw [EP_coe, PreVertexAlgebra.smul_add_left, charge_zero_boson, charge_zero_boson,
-    chargeCoord_negOne, neg_smul, neg_neg]
+  rw [EP_coe, PreVertexAlgebra.smul_add_left, charge_zero_boson m hm ((1 : ℤ) : (latP m).carrier),
+    charge_zero_boson m hm ((-1 : ℤ) : (latP m).carrier), chargeCoord_negOne, neg_smul, neg_neg]
 
 /-- `S_1(a) ⊗ e^0 = c_a u`. -/
 theorem schur_one_state (a : (latP m).carrier) :
@@ -111,7 +112,7 @@ theorem E_top_E_zero_sign :
   rw [PreVertexAlgebra.smul_def] at e1 e2
   rw [E_zero_sign, PreVertexAlgebra.smul_def, map_add, map_neg, map_smul, map_smul]
   erw [e1, e2]
-  rw [schur_one_state, schur_one_state]
+  rw [schur_one_state m ((-1 : ℤ) : (latP m).carrier), schur_one_state m ((- -1 : ℤ) : (latP m).carrier)]
   have h1 : chargeCoord (latP m) ((-(1 : ℤ) : ℤ) : (latP m).carrier) (a0 m) = -cc m :=
     chargeCoord_negOne m
   have h2 : chargeCoord (latP m) ((-(-1 : ℤ) : ℤ) : (latP m).carrier) (a0 m) = cc m := by

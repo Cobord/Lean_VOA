@@ -119,7 +119,7 @@ theorem e8_tree (i : ℕ) (hi : i < 61504) :
 
 theorem e8_dep (i : ℕ) (hi : i < 61504) : (par i).2.2.2.1 ≤ 4 := by
   have h := rangeAll_sound e8_depthAll (Nat.zero_le _) hi
-  simpa [depthP] using h
+  simpa [depthP] using! h
 
 theorem levOK_comb {ℓ : ℕ} (L : List (ℕ × ℤ)) (h : levOf L ℓ = true) :
     LevOK 4 ℓ (castQZ (S := E8sector) (combQ tab L)) := by
@@ -130,7 +130,9 @@ theorem levOK_comb {ℓ : ℕ} (L : List (ℕ × ℤ)) (h : levOf L ℓ = true) 
 
 /-! ## Elementary tables -/
 
-theorem castQZ_antiQ (c d : Fin 248) : castQZ (S := E8sector) (antiQ c d) = antiZ c d := by
+/-- Generic form of `castQZ_antiQ` over an arbitrary sector (no `Fin 248` / `Fin E8sector.n` alias). -/
+private theorem castQZ_antiQ_gen {S : DeligneSectorData} (c d : Fin S.n) :
+    castQZ (S := S) (antiQ c d) = antiZ c d := by
   funext c' d'
   simp only [castQZ, antiQ, qget_cons, qget_nil, add_zero, antiZ, Fin.val_inj]
   have h1 : (c = c' ∧ d = d') ↔ (c' = c ∧ d' = d) :=
@@ -140,7 +142,12 @@ theorem castQZ_antiQ (c d : Fin 248) : castQZ (S := E8sector) (antiQ c d) = anti
   simp only [h1, h2]
   split_ifs <;> ring
 
-theorem castQZ_symQ (c d : Fin 248) : castQZ (S := E8sector) (symQ c d) = symZ c d := by
+theorem castQZ_antiQ (c d : Fin 248) : castQZ (S := E8sector) (antiQ c d) = antiZ c d :=
+  castQZ_antiQ_gen (S := E8sector) c d
+
+/-- Generic form of `castQZ_symQ` over an arbitrary sector (no `Fin 248` / `Fin E8sector.n` alias). -/
+private theorem castQZ_symQ_gen {S : DeligneSectorData} (c d : Fin S.n) :
+    castQZ (S := S) (symQ c d) = symZ c d := by
   funext c' d'
   simp only [castQZ, symQ, qget_cons, qget_nil, add_zero, symZ, Fin.val_inj]
   have h1 : (c = c' ∧ d = d') ↔ (c' = c ∧ d' = d) :=
@@ -148,6 +155,9 @@ theorem castQZ_symQ (c d : Fin 248) : castQZ (S := E8sector) (symQ c d) = symZ c
   have h2 : (d = c' ∧ c = d') ↔ (c' = d ∧ d' = c) :=
     ⟨fun ⟨a, b⟩ => ⟨a.symm, b.symm⟩, fun ⟨a, b⟩ => ⟨a.symm, b.symm⟩⟩
   simp only [h1, h2]
+
+theorem castQZ_symQ (c d : Fin 248) : castQZ (S := E8sector) (symQ c d) = symZ c d :=
+  castQZ_symQ_gen (S := E8sector) c d
 
 theorem castQZ_flatMap {α : Type*} (L : List α) (F : α → QV) :
     castQZ (S := E8sector) (L.flatMap F) = (L.map fun x => castQZ (S := E8sector) (F x)).sum := by
@@ -256,14 +266,14 @@ theorem castQZ_psi (c d : Fin 248) (hcd : c ≤ d) (hnd : (psiT c d).Nodup)
     ∑ k ∈ Finset.range 3876, (psiZ k c d) • castQZ (S := E8sector) (Uq k) from
       sum_option_idx (fun k => (psiZ k c d) • castQZ (S := E8sector) (Uq k))]
   have hsub : (psiT c d).toFinset ⊆ Finset.range 3876 := by
-    intro k hk; simpa using hlt k (List.mem_toFinset.mp hk)
+    intro k hk; simpa using! hlt k (List.mem_toFinset.mp hk)
   rw [← Finset.sum_subset hsub, List.sum_toFinset _ hnd]
   · congr 1
     refine List.map_congr_left fun k _ => ?_
     simp only [tabX, show ¬ (61504 + k < 61504) by omega, if_false, show 61504 + k - 61504 = k by omega,
       castQZ_smulQ]
   · intro k hk hnot
-    rw [psiZ_eq_zero c d hcd k (by simpa using hk) (fun h => hnot (List.mem_toFinset.mpr h)),
+    rw [psiZ_eq_zero c d hcd k (by simpa using! hk) (fun h => hnot (List.mem_toFinset.mpr h)),
       zero_smul]
 
 theorem combQ_tabX (L : List (ℕ × ℤ)) (h : ∀ p ∈ L, p.1 < 61504) : combQ tabX L = combQ tab L := by
@@ -284,7 +294,7 @@ theorem hV8 (c d : Fin 248) (hcd : c ≤ d) :
   have hlev' := hlev
   simp only [levOf, List.all_eq_true, Bool.and_eq_true, decide_eq_true_eq] at hlev'
   rw [symCertX, combQ, List.flatMap_append, ← combQ, ← combQ, castQZ_append,
-    combQ_tabX _ fun p hp => (hlev' p hp).1, castQZ_psi c d hcd (by simpa using hnd) hlt,
+    combQ_tabX _ fun p hp => (hlev' p hp).1, castQZ_psi c d hcd (by simpa using! hnd) hlt,
     castQZ_smulQ, castQZ_symQ] at heq
   rw [show (((96 : ℕ) : ℤ)) = 96 from rfl, heq, add_sub_cancel_right]
   exact levOK_comb _ hlev

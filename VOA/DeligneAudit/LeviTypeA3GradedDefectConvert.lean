@@ -62,7 +62,7 @@ theorem a3_explicit_defect_reduces (a b c : ℕ)
   rw [htarget]
   have hconv := a3_box_conversion_graded ρ w a b c h j k s hk hks
     xs ys zs (xs.sum + d + zs.sum)
-  simpa only [A, B, R, ys, hdegree] using hconv
+  simpa only [A, B, R, ys, hdegree] using! hconv
 
 end VOA.DeligneAudit.A3Sector
 

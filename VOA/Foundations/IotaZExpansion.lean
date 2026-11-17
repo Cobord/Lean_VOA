@@ -152,7 +152,7 @@ theorem cbzConvol_pascal (m n k : ℤ) :
   congr 1
   rw [← finsum_int_succ_shift (fun i : ℤ => cbz m (i - 1) * cbz n (k - i))]
   refine finsum_congr fun i => ?_
-  dsimp only
+  try dsimp only
   rw [show i + 1 - 1 = i from by ring, show k - (i + 1) = k - 1 - i from by ring]
 
 /-- `V(0,n,k) = C(n,k)`: the zeroth row collapses to the second factor. -/

@@ -109,8 +109,8 @@ theorem pcountLe_mul_pow_le (g n : ℕ) {t : ℝ} (ht0 : 0 < t) (ht1 : t < 1) :
   -- Step 3: each factor `≤ (1 − t^{p.2+1})⁻¹`
   have hstep3 : (∏ p : Fin g × Fin n, ∑ j : Fin (n + 1), (t ^ (p.2 + 1 : ℕ)) ^ (j : ℕ))
       ≤ ∏ p : Fin g × Fin n, (1 - t ^ (p.2 + 1 : ℕ))⁻¹ := by
-    refine Finset.prod_le_prod (fun p _ => Finset.sum_nonneg (fun j _ => by positivity))
-      (fun p _ => ?_)
+    -- Lean 4.35 port: `Finset.prod_le_prod` changed signature; `gcongr` is version-stable.
+    gcongr with p _
     have hx0 : 0 ≤ t ^ (p.2 + 1 : ℕ) := by positivity
     have hx1 : t ^ (p.2 + 1 : ℕ) < 1 := pow_lt_one₀ ht0.le ht1 (Nat.succ_ne_zero _)
     rw [Fin.sum_univ_eq_sum_range (fun j => (t ^ (p.2 + 1 : ℕ)) ^ j) (n + 1),
@@ -122,13 +122,21 @@ theorem pcountLe_mul_pow_le (g n : ℕ) {t : ℝ} (ht0 : 0 < t) (ht1 : t < 1) :
   have hstep4 : (∏ p : Fin g × Fin n, (1 - t ^ (p.2 + 1 : ℕ))⁻¹)
       ≤ Real.exp (g * ∑ k : Fin n, t ^ (k + 1 : ℕ) / (1 - t ^ (k + 1 : ℕ))) := by
     rw [Fintype.prod_prod_type_right, Finset.mul_sum, Real.exp_sum]
-    dsimp only
-    refine Finset.prod_le_prod (fun k _ => Finset.prod_nonneg (fun _ _ => ?_)) (fun k _ => ?_)
-    · exact inv_nonneg.mpr (sub_pos.mpr (pow_lt_one₀ ht0.le ht1 (Nat.succ_ne_zero _))).le
-    · rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, Real.exp_nat_mul]
+    try dsimp only
+    have hnn : ∀ k ∈ (Finset.univ : Finset (Fin n)),
+        0 ≤ ∏ _x : Fin g, (1 - t ^ (k + 1 : ℕ))⁻¹ := fun k _ =>
+      Finset.prod_nonneg fun _ _ =>
+        inv_nonneg.mpr (sub_pos.mpr (pow_lt_one₀ ht0.le ht1 (Nat.succ_ne_zero _))).le
+    have hle : ∀ k ∈ (Finset.univ : Finset (Fin n)), ∏ _x : Fin g, (1 - t ^ (k + 1 : ℕ))⁻¹
+        ≤ Real.exp ((g : ℝ) * (t ^ (k + 1 : ℕ) / (1 - t ^ (k + 1 : ℕ)))) := by
+      intro k _
+      rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, Real.exp_nat_mul]
       have hx1 : t ^ (k + 1 : ℕ) < 1 := pow_lt_one₀ ht0.le ht1 (Nat.succ_ne_zero _)
       exact pow_le_pow_left₀ (inv_nonneg.mpr (sub_pos.mpr hx1).le)
         (inv_one_sub_le_exp hx1) g
+    -- Lean 4.35 port: `Finset.prod_le_prod` changed signature; `gcongr` is version-stable.
+    gcongr with k hk
+    all_goals first | exact hnn | exact hnn k hk | exact hle k hk
   -- Step 5: `Σ_k t^{k+1}/(1−t^{k+1}) ≤ t/(1−t)²`
   have hstep5 : (∑ k : Fin n, t ^ (k + 1 : ℕ) / (1 - t ^ (k + 1 : ℕ))) ≤ t / (1 - t) ^ 2 := by
     have hle : ∀ k : Fin n, t ^ (k + 1 : ℕ) / (1 - t ^ (k + 1 : ℕ)) ≤ t ^ (k + 1 : ℕ) / (1 - t) := by

@@ -142,7 +142,7 @@ theorem bottomMode_evaluation_one (a c : ℕ) :
   have he := bottomCentral_complete_evaluation ρ w a c 0
   simpa [hsymm_zero, fCurrent, bottomVector, bottomRadicalWord, radicalWord_eq_prod,
     List.map_append, List.map_replicate, List.prod_append, List.prod_replicate,
-    xOp, zOp, radicalColour] using he
+    xOp, zOp, radicalColour] using! he
 
 /-- The bottom Cartan span is preserved by every reductive Cartan mode. -/
 theorem bottomCartanSpan_rawCartan (a c : ℕ) (i : Fin 4) (r : ℕ) :
@@ -187,7 +187,7 @@ theorem bottomSymmetric_evaluation_mem_cartan (m a c : ℕ)
     change xyzEvaluation ρ w (bottomModeShape a c) 1 ∈ bottomCartanSpan ρ w a c
     rw [bottomMode_evaluation_one]
     exact Submodule.subset_span ⟨[], rfl⟩
-  simpa only [symmetricShiftAction_apply, mul_one] using hsub P.property 1 hone
+  simpa only [symmetricShiftAction_apply, mul_one] using! hsub P.property 1 hone
 
 end
 

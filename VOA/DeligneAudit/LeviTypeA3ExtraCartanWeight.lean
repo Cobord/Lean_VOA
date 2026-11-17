@@ -47,7 +47,7 @@ theorem a3_extra_cartan_weight_word (a : ℕ)
       a3ExtraKeyLabel a (a3WordKey l) •
         (radicalWord (radicalOp ρ) l • w) := by
   induction l with
-  | nil => simpa [radicalWord, a3WordKey, a3ExtraKeyLabel] using hw
+  | nil => simpa [radicalWord, a3WordKey, a3ExtraKeyLabel] using! hw
   | cons x l ih =>
       rcases x with ⟨j, s⟩
       have hc := a3_extra_cartan_comm ρ j 0 s
@@ -69,7 +69,7 @@ theorem a3_extra_cartan_weight_key (a b c : ℕ)
     (k : A3RadicalKey) {v : V} (hv : v ∈ a3KeyLayer ρ w k) :
     ρ.op 12 0 v = a3ExtraKeyLabel a k • v := by
   have hw : ρ.op 12 0 w = (a : ℂ) • w := by
-    simpa [simpleH, weightABC] using h.cartan_zero 0
+    simpa [simpleH, weightABC] using! h.cartan_zero 0
   induction hv using Submodule.span_induction with
   | mem z hz =>
       obtain ⟨l, hd₁, hd₂, hd₃, hdeg, _, rfl⟩ := hz

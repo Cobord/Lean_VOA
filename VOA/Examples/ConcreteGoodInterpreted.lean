@@ -75,7 +75,7 @@ def zeroGhost (V : Type u) [AddCommGroup V] [Module ℂ V] (g : ℤ) : Submodule
 
 theorem eq_zero_of_mem_zeroGhost {V : Type u} [AddCommGroup V] [Module ℂ V] {g : ℤ} {x : V}
     (hg : g ≠ 0) (hx : x ∈ zeroGhost V g) : x = 0 := by
-  simpa [zeroGhost, hg] using hx
+  simpa [zeroGhost, hg] using! hx
 
 /-- The ghost-number projection of an index `((2R, gh), weight)`. -/
 def ghIndex : (ℤ × ℤ) × ℂ →+ ℤ :=

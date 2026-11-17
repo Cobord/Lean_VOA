@@ -26,7 +26,7 @@ theorem c_sourceWord_bit_degree (m : ℕ) (j : AllM.SeedIndex m) (hj : j.val.1 =
   simp only [hcolor,mul_zero,zero_mul,add_zero] at hp
   have hh := word_graded ℂ m (bitWeight d) 0 (contactBitIncrement d) l
     (fun x hx i => contact_bit_rule x.1 d i ((category_zero_iff x.1).mp (hl x hx))) hp
-  simpa only [zero_add] using hh
+  simpa only [zero_add] using! hh
 
 def orbitSourceBitDegree (m : ℕ) (i : OrbitSourceIndex m) (d : Fin 3) : ℤ :=
   if i.seed.val.1 then wordGrade (contactBitIncrement d) 0 i.outer
@@ -39,14 +39,14 @@ theorem orbitSourcePoly_bit_graded (m : ℕ) (i : OrbitSourceIndex m) (d : Fin 3
   | false =>
       have hl : ∀ x ∈ i.outer, category x.1 = 1 := by
         intro x hx
-        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using i.branch x hx
-      simpa only [orbitSourceBitDegree,hb,Bool.false_eq_true,if_false] using
+        simpa only [branchCategory,hb,Bool.false_eq_true,if_false] using! i.branch x hx
+      simpa only [orbitSourceBitDegree,hb,Bool.false_eq_true,if_false] using!
         u_sourceWord_axis_degree m i.seed hb i.shifts i.outer hl d
   | true =>
       have hl : ∀ x ∈ i.outer, category x.1 = 0 := by
         intro x hx
-        simpa only [branchCategory,hb,if_true] using i.branch x hx
-      simpa only [orbitSourceBitDegree,hb,if_true] using
+        simpa only [branchCategory,hb,if_true] using! i.branch x hx
+      simpa only [orbitSourceBitDegree,hb,if_true] using!
         c_sourceWord_bit_degree m i.seed hb i.shifts i.outer hl d
 
 /-- PBW, current, C, then the three actual Boolean-color bit weights. -/
@@ -106,7 +106,7 @@ theorem color_matching_base (m : ℕ) (i : OrbitSourceIndex m) (e : Fin 9 × Fin
       fun j => n (Fin.castAdd 3 j) := by
   funext j
   have hh := congrFun hm (Fin.castAdd 3 j)
-  simpa only [Pi.add_apply,color_monomial_weight_base,orbitSourceColorDegree_base] using hh
+  simpa only [Pi.add_apply,color_monomial_weight_base,orbitSourceColorDegree_base] using! hh
 
 /-- The stored quintic Cartan-weight block, expressed in actual bit coordinates. -/
 def quinticColorDegree (m : ℕ) : Fin 6 → ℤ := ![5,((2*m-3 : ℕ) : ℤ),0,2,2,2]

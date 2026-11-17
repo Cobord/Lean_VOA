@@ -38,7 +38,7 @@ theorem firstOscillator_leadWord (w : List ℕ) :
       rw [leadWord, evRc_prependC, evalWordC_cons, map_mul, map_mul, ih]
     | succ i =>
       cases i with
-      | zero => simpa [leadWord, evalWordC_cons, xvc, firstOscillator] using ih
+      | zero => simpa [leadWord, evalWordC_cons, xvc, firstOscillator] using! ih
       | succ i => simp [leadWord, evRc_nil, evalWordC_cons, xvc, firstOscillator]
 
 theorem firstOscillator_leadPoly (P : RawPoly ℕ) :
@@ -69,7 +69,7 @@ theorem coord_evaluate (S : SectorVector) :
     rw [evaluate, map_add, List.flatMap_cons, evRc_append, ih]
     congr 1
     change coordEα (latP 4) 0 (latStateGen (latP 4) _ d) = _
-    rw [latStateGen, coordEα_apply]
+    refine (coordEα_apply (latP 4) ((0 : ℤ) : (latP 4).carrier) (d : (latP 4).carrier) _).trans ?_
     by_cases hd : d = 0
     · subst d
       split_ifs with h₁ h₂

@@ -154,7 +154,7 @@ theorem YfullGen_neutralFieldLift (hEven : L.Even) (hPos : L.PosDef)
   rw [← MvPolynomial.support_sum_monomial_coeff p]
   simp only [map_sum]
   exact NeutralFieldLift.finsetSum p.support
-    (fun a _ => YfullGen_monomial_neutralFieldLift hEven hPos a (MvPolynomial.coeff a p))
+    (fun a _ => YfullGen_monomial_neutralFieldLift hEven hPos a (p.coeff a))
 
 /-! ## Explicit rank-one conformal coordinates -/
 

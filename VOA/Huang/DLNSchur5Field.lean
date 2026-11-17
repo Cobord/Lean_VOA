@@ -51,21 +51,27 @@ theorem lower_torus_upper_unit_mul_weyl (r : R) (u v : Rˣ) :
     calc
       _ = (↑u⁻¹ : R) * ((u : R) * (↑u⁻¹ : R)) * ((v : R) * (↑v⁻¹ : R)) := by ring
       _ = _ := by simp
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two,
-      pow_two, mul_add, mul_assoc, mul_comm, he, add_comm]
+      pow_two, mul_add, mul_assoc, mul_comm, he, add_comm] <;> ring1
 
 theorem lower_torus_mul_weyl (r : R) (u : Rˣ) :
     (lowerRoot r * torus u) * weyl 1 =
       weyl u * upperRoot (-((u : R) ^ 2 * r)) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two,
       pow_two, mul_assoc, mul_comm]
 
 theorem weyl_upper_mul_weyl (u : Rˣ) (t : R) :
     (weyl u * upperRoot t) * weyl 1 =
       lowerRoot (-((↑u⁻¹ : R) ^ 2 * t)) * torus (-u) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
+  ext i j
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
+  fin_cases i <;> fin_cases j <;>
     simp [lowerRoot, torus, upperRoot, weyl, Matrix.mul_apply, Fin.sum_univ_two,
       pow_two, mul_assoc, mul_comm, mul_left_comm]
 
@@ -76,15 +82,25 @@ theorem gaussLift_weyl_upper [Nontrivial R] (X Y : Multiplicative R →* E)
       weylWord X Y u * X (Multiplicative.ofAdd t) := by
   classical
   have h00 : (weyl u * upperRoot t) 0 0 = 0 := by
+    rw [Matrix.SpecialLinearGroup.coe_mul]
     simp [weyl, upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have h10 : (weyl u * upperRoot t) 1 0 = (-u⁻¹ : Rˣ) := by
+    rw [Matrix.SpecialLinearGroup.coe_mul]
     simp [weyl, upperRoot, Matrix.mul_apply, Fin.sum_univ_two]
   have hu : IsUnit ((weyl u * upperRoot t) 1 0) := h10 ▸ (-u⁻¹).isUnit
   have he : hu.unit = -u⁻¹ := Units.ext ((IsUnit.unit_spec hu).trans h10)
   simp only [gaussLift, h00, dif_neg not_isUnit_zero, dif_pos hu, he]
+  simp only [Matrix.SpecialLinearGroup.coe_mul]
   simp [weyl, upperRoot, Matrix.mul_apply, Fin.sum_univ_two, mul_comm, mul_left_comm]
 
 end Matrices
+
+/-- Generic ring arithmetic, stated over an arbitrary commutative ring so that it applies
+to `ZMod n` regardless of which instance path (e.g. through `Fact n.Prime`) is in scope. -/
+private theorem unit_one_arith (R : Type*) [CommRing R] :
+    (1 : R) = -((↑(1⁻¹ : Rˣ) : R) ^ 2 * -1) := by
+  simp only [inv_one, Units.val_one]
+  ring
 
 section Normalized
 variable {n : ℕ} {E : Type*} [Group E]
@@ -144,7 +160,7 @@ theorem gaussLift_lower_torus_mul_weyl [Nontrivial (ZMod n)]
   rw [lower_torus_mul_weyl, gaussLift_weyl_upper]
   have hg : gaussLift X Y (lowerRoot r * torus u) =
       Y (Multiplicative.ofAdd r) * torusWord X Y u := by
-    simpa using gaussLift_lower_torus_upper X Y r 0 u
+    simpa using! gaussLift_lower_torus_upper X Y r 0 u
   rw [hg]
   have hc := weylWord_upper_conj h2 h3 π hs X Y hX hY hn u
     (-((u : ZMod n) ^ 2 * r))
@@ -162,7 +178,7 @@ theorem gaussLift_weyl_upper_mul_weyl [Nontrivial (ZMod n)]
       (lowerRoot (-((↑u⁻¹ : ZMod n) ^ 2 * t)) * torus (-u)) =
       Y (Multiplicative.ofAdd (-((↑u⁻¹ : ZMod n) ^ 2 * t))) *
         torusWord X Y (-u) := by
-    simpa using gaussLift_lower_torus_upper X Y (-((↑u⁻¹ : ZMod n) ^ 2 * t)) 0 (-u)
+    simpa using! gaussLift_lower_torus_upper X Y (-((↑u⁻¹ : ZMod n) ^ 2 * t)) 0 (-u)
   rw [hg, ← weylWord_mul_one_of_defect_eq_one X Y hz,
     ← weylWord_upper_conj h2 h3 π hs X Y hX hY hn u t]
   group
@@ -175,7 +191,7 @@ theorem gaussLift_mul_weyl_prime [Fact n.Prime]
   · have hc : g 1 0 ≠ 0 := by
       intro hc
       have hd : g 0 0 * g 1 1 - g 0 1 * g 1 0 = 1 := by
-        simpa only [Matrix.det_fin_two] using g.2
+        simpa only [Matrix.det_fin_two] using! g.2
       simp [ha, hc] at hd
     let u := Units.mk0 (g 1 0) hc
     have hg := gauss_of_unit_lower_left g u rfl
@@ -206,7 +222,9 @@ theorem gaussLift_mul_lower_one_prime [Fact n.Prime]
     rw [h]; group
   have hm : lowerRoot (1 : ZMod n) =
       weyl 1 * upperRoot (-1) * (weyl 1)⁻¹ := by
-    simpa using (weyl_upper_conj (1 : (ZMod n)ˣ) (-1)).symm
+    refine Eq.trans ?_ (weyl_upper_conj (1 : (ZMod n)ˣ) (-1)).symm
+    refine congrArg lowerRoot ?_
+    exact unit_one_arith _
   have hu : ∀ q : Matrix.SpecialLinearGroup (Fin 2) (ZMod n),
       IsUnit (q 0 0) ∨ IsUnit (q 1 0) := by
     intro q
@@ -215,11 +233,13 @@ theorem gaussLift_mul_lower_one_prime [Fact n.Prime]
       apply isUnit_iff_ne_zero.mpr
       intro hc
       have hd : q 0 0 * q 1 1 - q 0 1 * q 1 0 = 1 := by
-        simpa only [Matrix.det_fin_two] using q.2
+        simpa only [Matrix.det_fin_two] using! q.2
       simp [ha, hc] at hd
     · exact Or.inl (isUnit_iff_ne_zero.mpr ha)
-  have he := weylWord_upper_conj h2 h3 π hs X Y hX hY hn 1 (-1)
-  simp only [inv_one, Units.val_one, one_pow, one_mul, neg_neg] at he
+  have he : weylWord X Y 1 * X (Multiplicative.ofAdd (-1)) * (weylWord X Y 1)⁻¹ =
+      Y (Multiplicative.ofAdd 1) := by
+    refine (weylWord_upper_conj h2 h3 π hs X Y hX hY hn 1 (-1)).trans
+      (congrArg (fun t : ZMod n => Y (Multiplicative.ofAdd t)) (unit_one_arith _).symm)
   rw [hm, ← mul_assoc, ← mul_assoc, hwi,
     gaussLift_mul_upper X Y _ (hu _) (-1), hw]
   rw [← he]; group
@@ -245,16 +265,16 @@ theorem schurTrivial_SL_prime_mod_four_one {p : ℕ} (hp : p.Prime)
     (hp5 : 5 ≤ p) (hp4 : p % 4 = 1) :
     VOA.Huang.DLNBeyl.SchurTrivial (Matrix.SpecialLinearGroup (Fin 2) (ZMod p)) := by
   have h2 : Nat.Coprime 2 p := by
-    simpa only [pow_one] using (primePower_coprime_two_three (k := 1) hp hp5).1
+    simpa only [pow_one] using! (primePower_coprime_two_three (k := 1) hp hp5).1
   have h3 : Nat.Coprime 3 p := by
-    simpa only [pow_one] using (primePower_coprime_two_three (k := 1) hp hp5).2
+    simpa only [pow_one] using! (primePower_coprime_two_three (k := 1) hp hp5).2
   have ht : TorusGeneratorRelations p h2 := by
-    simpa only [pow_one] using torusGeneratorRelations_primePower_mod_four_one
+    simpa only [pow_one] using! torusGeneratorRelations_primePower_mod_four_one
       (k := 1) hp hp5 hp4 (by omega)
   have hl := gaussLowerRelations_prime_of_torusGeneratorRelations hp h2 h3 ht
   convert! schurTrivial_of_gaussLowerRelations hp (k := 1) (by omega)
-    (by simpa only [pow_one] using h2) (by simpa only [pow_one] using h3)
-    (by simpa only [pow_one] using hl) using 1
+    (by simpa only [pow_one] using! h2) (by simpa only [pow_one] using! h3)
+    (by simpa only [pow_one] using! hl) using 1
   rw [pow_one]
 
 end VOA.Huang.DLNSchur

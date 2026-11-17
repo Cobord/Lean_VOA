@@ -43,7 +43,7 @@ theorem relabelled_variable_product (f : Fin 3×ℕ→Fin 3×ℕ) (d : Occupatio
     | single v n =>
         simp [Finsupp.toMultiset_single,Multiset.map_nsmul,Multiset.prod_nsmul,
           relabelledExponent,Finsupp.mapDomain_single,X_pow_eq_monomial]
-  simpa only [← Multiset.prod_coe,← Multiset.map_coe,Multiset.coe_toList] using h d
+  simpa only [← Multiset.prod_coe,← Multiset.map_coe,Multiset.coe_toList] using! h d
 
 /-- Every literal classical word is the substitution of its abstract
 commutative variable product, without a sorting assumption. -/
@@ -82,7 +82,7 @@ theorem classical_relabelled_independent (k : ℂ) (f : Fin 3×ℕ→Fin 3×ℕ)
     (LinearMap.ker_eq_bot.mpr (classicalSubstitution_injective k))
   change LinearIndependent ℂ (fun d : Occupation =>
     classicalSubstitution k (monomial (relabelledExponent f d) 1)) at himage
-  simpa only [← classical_relabelled_monomial] using himage
+  simpa only [← classical_relabelled_monomial] using! himage
 
 /-- ACTUAL Wakimoto words attached to any injective creation-mode
 relabelling are independent, regardless of the finite order chosen for each

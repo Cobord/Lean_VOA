@@ -28,7 +28,7 @@ theorem gtGP_two (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
       rw [gtCauchyTwoCoeff, Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro b hb
-      have hb : b ≤ min k (c - d) := by simpa using hb
+      have hb : b ≤ min k (c - d) := by simpa using! hb
       rw [gtQ, ← mul_assoc, gtGP_two_normalized q h c d k b hd hb]
       have hs : c + k - b = k + (c - d) - b + d := by omega
       have hr : gtTwoRow 0 (k + (c - d) - b) b =
@@ -41,14 +41,14 @@ theorem gtGP_two (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
 
 /-- Every upper partition in the paper's rank-two gP sum, with no extra support cutoff. -/
 def gtGPUppersTwo (c d k : ℕ) : Finset (ℕ × ℕ) :=
-  (Finset.antidiagonal (c + d + k)).filter fun p =>
+  (Finset.HasAntidiagonal.antidiagonal (c + d + k)).filter fun p =>
     (![(c : ℤ), (d : ℤ)] : Fin 2 → ℤ) ∈
       gtRows ![(p.1 : ℤ), (p.2 : ℤ), 0]
 
 theorem mem_gtGPUppersTwo (c d k : ℕ) (p : ℕ × ℕ) :
     p ∈ gtGPUppersTwo c d k ↔ p.1 + p.2 = c + d + k ∧
       d ≤ p.2 ∧ p.2 ≤ c ∧ c ≤ p.1 := by
-  simp only [gtGPUppersTwo, Finset.mem_filter, Finset.mem_antidiagonal, mem_gtRows]
+  simp only [gtGPUppersTwo, Finset.mem_filter, Finset.HasAntidiagonal.mem_antidiagonal, mem_gtRows]
   constructor
   · rintro ⟨hs, hi⟩
     have h₀ := hi 0
@@ -77,7 +77,7 @@ theorem sum_gtGPUppersTwo {A : Type*} [AddCommMonoid A]
     simp only [Finset.mem_range]
     omega
   · intro b hb
-    have hb : b ≤ min k (c - d) := by simpa using hb
+    have hb : b ≤ min k (c - d) := by simpa using! hb
     apply (mem_gtGPUppersTwo c d k _).mpr
     dsimp
     omega

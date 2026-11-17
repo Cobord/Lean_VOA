@@ -36,7 +36,7 @@ theorem rectangular_eventually_zero_on_weight
     have hi' : (I : ℝ) ≤ i := by exact_mod_cast hi
     simp only [Complex.sub_re, Complex.add_re, Complex.intCast_re, Complex.one_re] at h
     linarith
-  simpa only [hb, Submodule.mem_bot] using hm
+  simpa only [hb, Submodule.mem_bot] using! hm
 
 /-- Agreement only on the traced weight space is enough; the operators need
 not agree on the whole ordinary module. -/
@@ -101,7 +101,7 @@ theorem trace_product_mode_iterate
     have h := HuangODEModes.iterate_range Y₁.property a w₁ (Y₂.val n₂ w₂ x) ell n₁ I
       (fun i hi => hI i hi x hx)
     simpa only [T, LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply,
-      LinearMap.sub_apply, Module.End.mul_apply] using h
+      LinearMap.sub_apply, Module.End.mul_apply] using! h
   refine ⟨I, ?_⟩
   change gradedTraceOp N _ e = _
   rw [he, ← gradedTraceAt_apply, map_sum]

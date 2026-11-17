@@ -24,7 +24,6 @@ theorem rsEvOne_Cdem_coeff (n N : ℕ) :
 /-- The exact L4 target, proved for every highest weight and every graded degree. -/
 theorem d4_hilbInt_eq_levi (n N : ℕ) : D4K.hilbInt n N = (d4LeviHilb n N : ℤ) := by
   have hh := congrArg (fun z : D4K.Kq => z.coeff (2 * (N : ℤ))) (rsEvOne_Cdem n)
-  dsimp only at hh
   rw [rsEvOne_Cdem_coeff, rsPolyMap_coeff, coeff_d4LeviPoly] at hh
   exact_mod_cast hh
 

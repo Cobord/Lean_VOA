@@ -32,7 +32,7 @@ theorem fullFlagSymmetricIdeal_finite (B : ℕ) :
     · have he : MvPolynomial.esymm (Fin B) ℂ s = 0 := by
         rw [MvPolynomial.esymm, Finset.powersetCard_eq_empty.mpr]
         · exact Finset.sum_empty
-        · simpa using (show B < s by omega)
+        · simpa using! (show B < s by omega)
       rw [he]
       exact Ideal.zero_mem _
   · apply Ideal.span_le.mpr
@@ -122,7 +122,7 @@ theorem alphabetElementary_delete_root (xs : List A) (z : A)
     rw [mul_comm]
     exact h
   have hc := congrArg (PowerSeries.coeff s) (alphabetComplete_eq_complement [z] xs he)
-  simpa [D4Levi.ksHSeries, D4Levi.ksGeometricSeries] using hc.symm
+  simpa [D4Levi.ksHSeries, D4Levi.ksGeometricSeries] using! hc.symm
 
 /-- The complete function of two roots is the usual sum of monomials. -/
 theorem twoRoot_complete (x y : A) (s : ℕ) :

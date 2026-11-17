@@ -25,7 +25,7 @@ theorem truncatedGradeSpace_interval_isInternal (m : ℕ) (hm : 1 ≤ m) :
       (fun κ : {κ : ℤ // κ ∈ Finset.Icc (-(m : ℤ)) m} => truncatedGradeSpace m κ) := by
   apply DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
   · exact (truncatedGradeSpace_independent m).comp Subtype.val_injective
-  · simpa only [iSup_subtype] using truncatedGradeSpace_interval_spans m hm
+  · simpa only [iSup_subtype] using! truncatedGradeSpace_interval_spans m hm
 
 /-- The dimension of the truncated module is the sum of its intrinsic grade dimensions. -/
 theorem truncatedModule_finrank_eq_gradeSum (m : ℕ) (hm : 1 ≤ m) :

@@ -67,7 +67,7 @@ theorem huangModifiedModeTrace_support_left
   refine ⟨S, fun j hj t => ?_⟩
   rw [huangModifiedModeTrace_eq]
   have ht : huangU P₁ t w₁ = moduleWeightExp P₁.isMod t (huangU P₁ 0 w₁) := by
-    simpa using huangU_add P₁ t 0 w₁
+    simpa using! huangU_add P₁ t 0 w₁
   rw [ht]
   change Complex.exp _ * productTracePair Y₁ Y₂ (b + j) n₂ e _ _ = 0
   rw [hS j hj t, mul_zero]
@@ -168,7 +168,7 @@ theorem huangModifiedModeTrace_support_right
   refine ⟨S, fun j hj t => ?_⟩
   rw [huangModifiedModeTrace_eq]
   have ht : huangU P₂ t w₂ = moduleWeightExp P₂.isMod t (huangU P₂ 0 w₂) := by
-    simpa using huangU_add P₂ t 0 w₂
+    simpa using! huangU_add P₂ t 0 w₂
   rw [ht]
   change Complex.exp _ * productTracePair Y₁ Y₂ n₁ (b + j) e _ _ = 0
   rw [hS j hj t, mul_zero]

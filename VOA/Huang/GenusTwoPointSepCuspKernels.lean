@@ -31,7 +31,7 @@ theorem rescaled_power_bound {rho x : ℂ} (hr : ‖rho‖ ≤ 1)
   have h : ‖rho‖ ^ (n - k) * (‖rho‖ * ‖x‖) ^ k ≤ 1 :=
     mul_le_one₀ (pow_le_one₀ (norm_nonneg _) hr) (by positivity)
       (pow_le_one₀ (by positivity) hx)
-  simpa only [mul_pow, mul_assoc] using h
+  simpa only [mul_pow, mul_assoc] using! h
 
 /-- A polynomial bound for both oriented elliptic numerators. -/
 theorem rescaled_ellipticCoeff_bound (d : ℕ) {rho x : ℂ}
@@ -47,7 +47,7 @@ theorem rescaled_ellipticCoeff_bound (d : ℕ) {rho x : ℂ}
     ring
   rw [he, norm_mul, norm_pow,
     show ‖(k + 1 : ℂ)‖ = (k + 1 : ℝ) by
-      simpa only [Nat.cast_add, Nat.cast_one] using Complex.norm_natCast (k + 1)]
+      simpa only [Nat.cast_add, Nat.cast_one] using! Complex.norm_natCast (k + 1)]
   have hb : ‖rho ^ n * x ^ (k + 1) -
       (-1 : ℂ) ^ d * (rho ^ n * (x⁻¹) ^ (k + 1))‖ ≤ 2 := by
     have h := norm_sub_le (rho ^ n * x ^ (k + 1))
@@ -116,7 +116,7 @@ theorem ellipticCusp_inv_mem_subexp_annulus (d : ℕ) {z₁ z₂ rho : ℂ}
     (hz₂ : z₂ ≠ 0) (hz : ‖z₂‖ < ‖z₁‖) (hr : ‖rho‖ ≤ ‖z₂ / z₁‖) :
     lambertCuspSeries (ellipticCoeff d (z₂ / z₁)⁻¹) rho ∈ SubexpPS := by
   obtain ⟨h₁, h₂, h₃⟩ := annulus_kernel_conditions hz₂ hz hr
-  exact ellipticCusp_mem_subexp d h₁ h₃ (by simpa using h₂)
+  exact ellipticCusp_mem_subexp d h₁ h₃ (by simpa using! h₂)
 
 /-- Coefficientwise collection of the geometric denominators. Every coefficient
 has finite support in the mode index; this is an identity of formal kernels. -/

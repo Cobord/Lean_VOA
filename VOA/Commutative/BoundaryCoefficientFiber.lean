@@ -24,6 +24,12 @@ open VOA.MultispeciesParticlePolynomial
 
 noncomputable section
 
+/-- Labels in different species are distinct. -/
+private theorem sigmaLabel_ne_of_fst_ne {m : BoundarySpecies → ℕ} {A B : BoundarySpecies}
+    (h : A ≠ B) (i : Fin (m A)) (j : Fin (m B)) :
+    (⟨A, i⟩ : SpeciesLabel m) ≠ ⟨B, j⟩ :=
+  fun e ↦ h (congrArg Sigma.fst e)
+
 /-- The only `XZ` labels mapping to the collision coordinate are the inserted `X` and `Z`
 labels. -/
 theorem xzToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
@@ -33,15 +39,27 @@ theorem xzToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
   rcases i with ⟨A, i⟩
   cases A
   · refine Fin.cases ?_ (fun j ↦ ?_) i
-    · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
-    · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
-      exact Fin.succ_ne_zero j
-  · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
+    · exact iff_of_true rfl (Or.inl rfl)
+    · have h1 : xzToDiagonalLabel a b c d ⟨.X, j.succ⟩ = Sum.inr ⟨.X, j⟩ := rfl
+      rw [h1]
+      refine iff_of_false Sum.inr_ne_inl ?_
+      rintro (h | h)
+      · have hv := congrArg (fun q : XZLabel a b c d ↦ (q.2 : ℕ)) h
+        simp [newXZLabelX] at hv
+      · exact absurd (congrArg Sigma.fst h) (by simp [newXZLabelZ])
+  · refine iff_of_false (by simp [xzToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
   · refine Fin.cases ?_ (fun j ↦ ?_) i
-    · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
-    · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
-      exact Fin.succ_ne_zero j
-  · simp [xzToDiagonalLabel, newXZLabelX, newXZLabelZ]
+    · exact iff_of_true rfl (Or.inr rfl)
+    · have h1 : xzToDiagonalLabel a b c d ⟨.Z, j.succ⟩ = Sum.inr ⟨.Z, j⟩ := rfl
+      rw [h1]
+      refine iff_of_false Sum.inr_ne_inl ?_
+      rintro (h | h)
+      · exact absurd (congrArg Sigma.fst h) (by simp [newXZLabelX])
+      · have hv := congrArg (fun q : XZLabel a b c d ↦ (q.2 : ℕ)) h
+        simp [newXZLabelZ] at hv
+  · refine iff_of_false (by simp [xzToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
 
 /-- Every passive `XZ` coordinate has exactly one preimage. -/
 theorem xzToDiagonalLabel_eq_passive_iff (a b c d : ℕ)
@@ -75,9 +93,10 @@ theorem yyToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
       i = newYYLabelZero a b c d ∨ i = newYYLabelOne a b c d := by
   rcases i with ⟨A, i⟩
   cases A
-  · simp [yyToDiagonalLabel, newYYLabelZero, newYYLabelOne]
+  · refine iff_of_false (by simp [yyToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
   · refine Fin.cases ?_ (fun j ↦ ?_) i
-    · simp [yyToDiagonalLabel, newYYLabelZero, newYYLabelOne]
+    · exact iff_of_true rfl (Or.inl rfl)
     · refine Fin.cases ?_ (fun k ↦ ?_) j
       · simpa [newYYLabelOne] using yyToDiagonalLabel_newY_one a b c d
       · constructor
@@ -91,8 +110,10 @@ theorem yyToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
           · have hv := congrArg
               (fun q : YYLabel a b c d ↦ (q.2 : ℕ)) h
             simp [newYYLabelOne] at hv
-  · simp [yyToDiagonalLabel, newYYLabelZero, newYYLabelOne]
-  · simp [yyToDiagonalLabel, newYYLabelZero, newYYLabelOne]
+  · refine iff_of_false (by simp [yyToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
+  · refine iff_of_false (by simp [yyToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
 
 /-- Every passive `YY` coordinate has exactly one preimage. -/
 theorem yyToDiagonalLabel_eq_passive_iff (a b c d : ℕ)
@@ -243,7 +264,7 @@ theorem mapDomain_xzToDiagonalLabel_eq_iff (a b c d q : ℕ)
         ((Finsupp.single (Sum.inl ()) q + Finsupp.mapDomain Sum.inr v :
           BoundaryDiagonalLabel a b c d →₀ ℕ) (Sum.inr j)) at hp
       rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j] at hp
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j] at hp
       simpa using hp
   · rintro ⟨hc, hp⟩
     ext i
@@ -254,7 +275,7 @@ theorem mapDomain_xzToDiagonalLabel_eq_iff (a b c d q : ℕ)
         Finsupp.mapDomain_notin_range v _ (by simp)
       simpa [hzero] using hc
     · rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j]
       simpa using hp j
 
 /-- Complete fiber classification for the `YY` exponent map. -/
@@ -282,7 +303,7 @@ theorem mapDomain_yyToDiagonalLabel_eq_iff (a b c d q : ℕ)
         ((Finsupp.single (Sum.inl ()) q + Finsupp.mapDomain Sum.inr v :
           BoundaryDiagonalLabel a b c d →₀ ℕ) (Sum.inr j)) at hp
       rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j] at hp
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j] at hp
       simpa using hp
   · rintro ⟨hc, hp⟩
     ext i
@@ -293,7 +314,7 @@ theorem mapDomain_yyToDiagonalLabel_eq_iff (a b c d q : ℕ)
         Finsupp.mapDomain_notin_range v _ (by simp)
       simpa [hzero] using hc
     · rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j]
       simpa using hp j
 
 end ExponentFibers
@@ -311,9 +332,8 @@ theorem coeff_xzDiagonalSubstitution_shiftedMultispeciesParticlePolynomial
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b (c + 1) d))
     (target : BoundaryDiagonalLabel a b c d →₀ ℕ) :
-    MvPolynomial.coeff target
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity (a + 1) b (c + 1) d),
         if Finsupp.mapDomain (xzToDiagonalLabel a b c d)
@@ -334,9 +354,8 @@ theorem coeff_yyDiagonalSubstitution_shiftedMultispeciesParticlePolynomial
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a (b + 2) c d))
     (target : BoundaryDiagonalLabel a b c d →₀ ℕ) :
-    MvPolynomial.coeff target
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity a (b + 2) c d),
         if Finsupp.mapDomain (yyToDiagonalLabel a b c d)
@@ -356,11 +375,10 @@ theorem coeff_xzDiagonalSubstitution_eq_fiberSum
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b (c + 1) d))
     (v : SpeciesLabel (boundaryMultiplicity a b c d) →₀ ℕ) :
-    MvPolynomial.coeff
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
         (Finsupp.single (Sum.inl () : BoundaryDiagonalLabel a b c d) q +
-          Finsupp.mapDomain Sum.inr v)
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+          Finsupp.mapDomain Sum.inr v) =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity (a + 1) b (c + 1) d),
         if
@@ -383,11 +401,10 @@ theorem coeff_yyDiagonalSubstitution_eq_fiberSum
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a (b + 2) c d))
     (v : SpeciesLabel (boundaryMultiplicity a b c d) →₀ ℕ) :
-    MvPolynomial.coeff
+    (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
         (Finsupp.single (Sum.inl () : BoundaryDiagonalLabel a b c d) q +
-          Finsupp.mapDomain Sum.inr v)
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+          Finsupp.mapDomain Sum.inr v) =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity a (b + 2) c d),
         if
@@ -542,6 +559,7 @@ theorem shiftedExponent_xzModeTupleEquiv_symm_activeX
         (newXZLabelX a b c d) = rs.1 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, xzModeTupleEquiv, newXZLabelX, boundarySpeciesShift]
+  rfl
 
 @[simp]
 theorem shiftedExponent_xzModeTupleEquiv_symm_activeZ
@@ -552,6 +570,7 @@ theorem shiftedExponent_xzModeTupleEquiv_symm_activeZ
         (newXZLabelZ a b c d) = rs.2 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, xzModeTupleEquiv, newXZLabelZ, boundarySpeciesShift]
+  rfl
 
 @[simp]
 theorem shiftedExponent_xzModeTupleEquiv_symm_passive
@@ -581,6 +600,7 @@ theorem shiftedExponent_yyModeTupleEquiv_symm_activeZero
         (newYYLabelZero a b c d) = rs.1 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, yyModeTupleEquiv, newYYLabelZero, boundarySpeciesShift]
+  rfl
 
 @[simp]
 theorem shiftedExponent_yyModeTupleEquiv_symm_activeOne
@@ -591,6 +611,7 @@ theorem shiftedExponent_yyModeTupleEquiv_symm_activeOne
         (newYYLabelOne a b c d) = rs.2 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, yyModeTupleEquiv, newYYLabelOne, boundarySpeciesShift]
+  rfl
 
 @[simp]
 theorem shiftedExponent_yyModeTupleEquiv_symm_passive
@@ -708,10 +729,9 @@ theorem coeff_xzDiagonalSubstitution_eq_orderedConvolution
     (s : ModeConfiguration jetOrder d)
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b (c + 1) d)) :
-    MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
       ∑ rs ∈ coefficientPairs jetOrder q,
         F (boundaryModeConfiguration
           (rs.1 ::ₛ bx) byy (rs.2 ::ₛ bz) s) := by
@@ -793,10 +813,9 @@ theorem coeff_yyDiagonalSubstitution_eq_orderedConvolution
     (s : ModeConfiguration jetOrder d)
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a (b + 2) c d)) :
-    MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
       ∑ rs ∈ coefficientPairs jetOrder q,
         F (boundaryModeConfiguration
           bx (rs.1 ::ₛ rs.2 ::ₛ byy) bz s) := by
@@ -874,9 +893,8 @@ theorem coeff_xzDiagonalSubstitution_tupleExponent
     (t₀ : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d))
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b (c + 1) d)) :
-    MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff (boundaryDiagonalTupleExponent q t₀) =
       ∑ rs ∈ coefficientPairs jetOrder q,
         F (boundaryModeConfiguration
           (rs.1 ::ₛ unorderedModeBlock (t₀ .X))
@@ -946,9 +964,8 @@ theorem coeff_yyDiagonalSubstitution_tupleExponent
     (t₀ : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d))
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a (b + 2) c d)) :
-    MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff (boundaryDiagonalTupleExponent q t₀) =
       ∑ rs ∈ coefficientPairs jetOrder q,
         F (boundaryModeConfiguration
           (unorderedModeBlock (t₀ .X))
@@ -1019,12 +1036,10 @@ theorem typedPolynomial_tupleCoefficient_eq_iff_polarizedDiagonalCoefficient_eq
     {jetOrder a b c d : ℕ} (q : ℕ)
     (t₀ : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d))
     (F : BoundaryPolarizedCoefficientSpace (K := K) jetOrder a b c d) :
-    MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-          (xzDiagonalSubstitution (K := K) a b c d
-            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)) =
-        MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-          (yyDiagonalSubstitution (K := K) a b c d
-            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)) ↔
+    (xzDiagonalSubstitution (K := K) a b c d
+            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)).coeff (boundaryDiagonalTupleExponent q t₀) =
+        (yyDiagonalSubstitution (K := K) a b c d
+            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)).coeff (boundaryDiagonalTupleExponent q t₀) ↔
       polarizedXZDiagonalCoefficient q
           (unorderedModeBlock (t₀ .X)) (unorderedModeBlock (t₀ .Y))
           (unorderedModeBlock (t₀ .Z))
@@ -1044,9 +1059,8 @@ theorem exists_boundaryDiagonalTupleExponent_of_xz_coeff_ne_zero
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b (c + 1) d))
     (target : BoundaryDiagonalLabel a b c d →₀ ℕ)
-    (hcoeff : MvPolynomial.coeff target
-      (xzDiagonalSubstitution (K := K) a b c d
-        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) ≠ 0) :
+    (hcoeff : (xzDiagonalSubstitution (K := K) a b c d
+        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target ≠ 0) :
     ∃ q, ∃ t : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d),
       target = boundaryDiagonalTupleExponent q t := by
   classical
@@ -1084,9 +1098,8 @@ theorem exists_boundaryDiagonalTupleExponent_of_yy_coeff_ne_zero
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a (b + 2) c d))
     (target : BoundaryDiagonalLabel a b c d →₀ ℕ)
-    (hcoeff : MvPolynomial.coeff target
-      (yyDiagonalSubstitution (K := K) a b c d
-        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) ≠ 0) :
+    (hcoeff : (yyDiagonalSubstitution (K := K) a b c d
+        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target ≠ 0) :
     ∃ q, ∃ t : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d),
       target = boundaryDiagonalTupleExponent q t := by
   classical
@@ -1129,9 +1142,8 @@ theorem boundaryPolarizedOrthogonal_typedPolynomial_eq
         (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2) := by
   apply MvPolynomial.ext
   intro target
-  by_cases hx : MvPolynomial.coeff target
-      (xzDiagonalSubstitution (K := K) a b c d
-        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)) ≠ 0
+  by_cases hx : (xzDiagonalSubstitution (K := K) a b c d
+        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)).coeff target ≠ 0
   · obtain ⟨q, t, rfl⟩ :=
       exists_boundaryDiagonalTupleExponent_of_xz_coeff_ne_zero F.1 target hx
     apply (typedPolynomial_tupleCoefficient_eq_iff_polarizedDiagonalCoefficient_eq q t F).2
@@ -1139,9 +1151,8 @@ theorem boundaryPolarizedOrthogonal_typedPolynomial_eq
       (unorderedModeBlock (t .S)) q
       (unorderedModeBlock (t .X)) (unorderedModeBlock (t .Y))
       (unorderedModeBlock (t .Z))
-  · by_cases hy : MvPolynomial.coeff target
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)) ≠ 0
+  · by_cases hy : (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)).coeff target ≠ 0
     · obtain ⟨q, t, rfl⟩ :=
         exists_boundaryDiagonalTupleExponent_of_yy_coeff_ne_zero F.2 target hy
       apply (typedPolynomial_tupleCoefficient_eq_iff_polarizedDiagonalCoefficient_eq q t F).2
@@ -1159,10 +1170,9 @@ theorem coeff_xzDiagonalSubstitution_eq_polarizedXZDiagonalCoefficient
     (bz : ModeConfiguration jetOrder c)
     (s : ModeConfiguration jetOrder d)
     (F : BoundaryPolarizedCoefficientSpace (K := K) jetOrder a b c d) :
-    MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)) =
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
       polarizedXZDiagonalCoefficient q bx byy bz (slicePolarizedAtS F s) := by
   rw [coeff_xzDiagonalSubstitution_eq_orderedConvolution]
   rfl
@@ -1176,10 +1186,9 @@ theorem coeff_yyDiagonalSubstitution_eq_polarizedYYDiagonalCoefficient
     (bz : ModeConfiguration jetOrder c)
     (s : ModeConfiguration jetOrder d)
     (F : BoundaryPolarizedCoefficientSpace (K := K) jetOrder a b c d) :
-    MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)) =
+    (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
       polarizedYYDiagonalCoefficient q bx byy bz (slicePolarizedAtS F s) := by
   rw [coeff_yyDiagonalSubstitution_eq_orderedConvolution]
   rfl
@@ -1193,14 +1202,12 @@ theorem typedPolynomialCoefficient_eq_iff_polarizedDiagonalCoefficient_eq
     (bz : ModeConfiguration jetOrder c)
     (s : ModeConfiguration jetOrder d)
     (F : BoundaryPolarizedCoefficientSpace (K := K) jetOrder a b c d) :
-    MvPolynomial.coeff
-          (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-          (xzDiagonalSubstitution (K := K) a b c d
-            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)) =
-        MvPolynomial.coeff
-          (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-          (yyDiagonalSubstitution (K := K) a b c d
-            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)) ↔
+    (xzDiagonalSubstitution (K := K) a b c d
+            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)).coeff
+          (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
+        (yyDiagonalSubstitution (K := K) a b c d
+            (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)).coeff
+          (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) ↔
       polarizedXZDiagonalCoefficient q bx byy bz (slicePolarizedAtS F s) =
         polarizedYYDiagonalCoefficient q bx byy bz (slicePolarizedAtS F s) := by
   rw [coeff_xzDiagonalSubstitution_eq_polarizedXZDiagonalCoefficient,
@@ -1217,14 +1224,12 @@ theorem boundaryPolarizedOrthogonal_typedPolynomialCoefficient_eq
     (byy : ModeConfiguration jetOrder b)
     (bz : ModeConfiguration jetOrder c)
     (s : ModeConfiguration jetOrder d) :
-    MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (xzDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)) =
-      MvPolynomial.coeff
-        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s))
-        (yyDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)) := by
+    (xzDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.1)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) =
+      (yyDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F.2)).coeff
+        (boundaryDiagonalModeExponent q (boundaryModeConfiguration bx byy bz s)) := by
   rw [typedPolynomialCoefficient_eq_iff_polarizedDiagonalCoefficient_eq]
   exact (boundaryPolarized_orthogonal_iff_diagonal F).1 hF s q bx byy bz
 

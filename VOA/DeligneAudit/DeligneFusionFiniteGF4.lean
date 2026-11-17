@@ -68,7 +68,7 @@ theorem f4_kn : ∀ c : Fin 52, f4Kn c = true → F4sector.raising c ∨ F4secto
   change ∀ c : Fin 52, f4Kn c = true →
     (c.val ∈ posL) ∨ (c.val ∈ ([26, 13, 46, 47] : List ℕ))
   intro c h
-  simpa [f4Kn] using h
+  simpa [f4Kn] using! h
 
 /-- **The finiteness table facts for `F4`.** -/
 theorem f4_finiteTable : FiniteTableG F4sector :=

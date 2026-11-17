@@ -12,11 +12,11 @@ variable {m : ℕ} (b : BoundaryPair m)
 
 /-- Only two ordered pairs survive the positive Cartan shift. -/
 theorem shifted_mixed_sum (a c : Fin 9) :
-    (∑ x ∈ Finset.antidiagonal (b.lower.val+b.top.val),
+    (∑ x ∈ Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val),
       modeX m a (b.top.val-b.lower.val-1+x.1) * modeX m c x.2) =
       modeX m a (b.top.val-1) * modeX m c b.top.val +
         modeX m a b.top.val * modeX m c (b.top.val-1) := by
-  let S := Finset.antidiagonal (b.lower.val+b.top.val)
+  let S := Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)
   let f := fun x : ℕ × ℕ =>
     modeX m a (b.top.val-b.lower.val-1+x.1) * modeX m c x.2
   have hlt := b.lt
@@ -29,7 +29,7 @@ theorem shifted_mixed_sum (a c : Fin 9) :
     · intro he
       have := congrArg Prod.fst he
       omega
-    · simp only [S,Finset.mem_antidiagonal]
+    · simp only [S,Finset.HasAntidiagonal.mem_antidiagonal]
       omega
   have hs0 := Finset.add_sum_erase S f h0
   have hs1 := Finset.add_sum_erase (S.erase (b.lower.val,b.top.val)) f h1
@@ -37,7 +37,7 @@ theorem shifted_mixed_sum (a c : Fin 9) :
       (b.lower.val+1,b.top.val-1), f x = 0 := by
     apply Finset.sum_eq_zero
     intro x hx
-    simp only [Finset.mem_erase,S,Finset.mem_antidiagonal] at hx
+    simp only [Finset.mem_erase,S,Finset.HasAntidiagonal.mem_antidiagonal] at hx
     have hn0 : ¬ (x.1=b.lower.val ∧ x.2=b.top.val) := by
       intro he
       exact hx.2.1 (Prod.ext he.1 he.2)
@@ -64,7 +64,7 @@ theorem h0Deriv_mixed_coefficient (a c : Fin 9) :
         (modeX m a (b.top.val-1) * modeX m c b.top.val +
          modeX m a b.top.val * modeX m c (b.top.val-1)) := by
   let k := (refinementMode b).val
-  let S := Finset.antidiagonal (b.lower.val+b.top.val)
+  let S := Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val)
   let Q := modeX m a (b.top.val-1) * modeX m c b.top.val +
     modeX m a b.top.val * modeX m c (b.top.val-1)
   have hfirst : (∑ x ∈ S, modeX m a x.1 * modeX m c (k+x.2)) = Q := by
@@ -73,9 +73,9 @@ theorem h0Deriv_mixed_coefficient (a c : Fin 9) :
       have hh := Finset.Nat.sum_antidiagonal_swap
         (n := b.lower.val+b.top.val)
         (f := fun x : ℕ × ℕ => modeX m a x.1 * modeX m c (k+x.2))
-      simpa only [S,Prod.swap,mul_comm] using hh.symm
+      simpa only [S,Prod.swap,mul_comm] using! hh.symm
     rw [hs]
-    change (∑ x ∈ Finset.antidiagonal (b.lower.val+b.top.val),
+    change (∑ x ∈ Finset.HasAntidiagonal.antidiagonal (b.lower.val+b.top.val),
       modeX m c (b.top.val-b.lower.val-1+x.1) * modeX m a x.2) = Q
     rw [shifted_mixed_sum]
     dsimp [Q]

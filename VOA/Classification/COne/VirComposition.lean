@@ -34,6 +34,8 @@ No hypothesis beyond those of `VirLocalCompositionSeries` is used.
 
 open Finset
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 
 namespace VOA.Classification.COne.VirComposition
@@ -202,7 +204,7 @@ def wordAct (Lm : ℤ → Module.End ℂ M) : List ℕ → M → M
 
 theorem wordAct_mem_grading (H : Hyp c G Lm) {h : ℕ} {v : M} (hv : v ∈ G (h : ℤ)) :
     ∀ w : List ℕ, wordAct Lm w v ∈ G ((h + energyHW w : ℕ) : ℤ)
-  | [] => by simpa [wordAct] using hv
+  | [] => by simpa [wordAct] using! hv
   | i :: w => by
     have := H.deg (-(i : ℤ) - 1) _ _ (wordAct_mem_grading H hv w)
     rw [wordAct]

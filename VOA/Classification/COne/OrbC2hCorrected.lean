@@ -71,7 +71,7 @@ theorem tetrahedralModeDecomposition_of_corrected (h : CubicSeedRemaindersCorrec
   let r : ℂ := normalizationSquare
   have hr : r ≠ 0 := by norm_num [r, normalizationSquare]
   obtain ⟨s,hs⟩ := IsAlgClosed.exists_pow_nat_eq r (show 0 < 2 by norm_num)
-  have hs' : s*s = r := by simpa only [pow_two] using hs
+  have hs' : s*s = r := by simpa only [pow_two] using! hs
   have hs0 : s ≠ 0 := by intro h0; rw [h0, zero_mul] at hs'; exact hr hs'.symm
   let U' : (orbifold (Subgroup.zpowers plusCubic)).carrier :=
     ⟨s • normalizedNine, (mem_orbifold_zpowers_iff _ _).mpr (by

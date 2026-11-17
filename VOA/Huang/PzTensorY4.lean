@@ -105,7 +105,7 @@ theorem twist_twist {wt : ℤ} {u : 𝒱} (hu : u ∈ W.grading wt) (k : ℤ)
   rcases lt_or_ge wt 0 with hw | hw
   · have hu0 : u = 0 := by
       have := VOA.VertexOperatorAlgebra.L_one_pow_eq_zero W hu (j := 0) (by omega)
-      simpa using this
+      simpa using! this
     subst hu0
     simp [tauHat, rhoL_zero_state]
   obtain ⟨w, rfl⟩ : ∃ w : ℕ, wt = w := ⟨wt.toNat, (Int.toNat_of_nonneg hw).symm⟩
@@ -248,7 +248,7 @@ theorem isIntertwining_of_homog {Y : IntertwiningModes P₁.carrier P₂.carrier
     have := eq_zero_of_homog (fun y z => Y n (P₁.isMod.Lm1 y) z - (-n) • Y (n - 1) y z)
       (fun y y' z => by simp only [map_add, LinearMap.add_apply, smul_add]; abel)
       (fun y z z' => by simp only [map_add, smul_add]; abel)
-      (fun α₁ α₂ y z hy hz => by dsimp only; rw [hL α₁ α₂ y z hy hz n, sub_self]) w₁ z
+      (fun α₁ α₂ y z hy hz => by rw [hL α₁ α₂ y z hy hz n, sub_self]) w₁ z
     exact sub_eq_zero.mp this
   · intro u w₁ w₂ ℓ m n
     -- the defect is additive in each argument
@@ -364,27 +364,23 @@ noncomputable def block4 (hE : TauEmb R ψ) (n : ℂ) (α₁ α₂ : ℂ) :
     (fun a b => DirectSum.lof ℂ ℂ (fun γ => Module.Dual ℂ (R.isMod.weight γ))
       (α₁ + α₂ - n - 1) (evalFun ψ (α₁ + α₂ - n - 1) a b))
     (fun a a' b => by
-      dsimp only
       have h : evalFun ψ (α₁ + α₂ - n - 1) (a + a') b
           = evalFun ψ (α₁ + α₂ - n - 1) a b + evalFun ψ (α₁ + α₂ - n - 1) a' b := by
         ext r; simp only [evalFun_apply, LinearMap.add_apply]
         exact (hE.bil r.1 α₁ α₂).1 a a' b
       rw [h, map_add]; rfl)
     (fun c a b => by
-      dsimp only
       have h : evalFun ψ (α₁ + α₂ - n - 1) (c • a) b = c • evalFun ψ (α₁ + α₂ - n - 1) a b := by
         ext r; simp only [evalFun_apply, LinearMap.smul_apply, smul_eq_mul]
         exact (hE.bil r.1 α₁ α₂).2.1 c a b
       rw [h, map_smul]; rfl)
     (fun a b b' => by
-      dsimp only
       have h : evalFun ψ (α₁ + α₂ - n - 1) a (b + b')
           = evalFun ψ (α₁ + α₂ - n - 1) a b + evalFun ψ (α₁ + α₂ - n - 1) a b' := by
         ext r; simp only [evalFun_apply, LinearMap.add_apply]
         exact (hE.bil r.1 α₁ α₂).2.2.1 a b b'
       rw [h, map_add]; rfl)
     (fun c a b => by
-      dsimp only
       have h : evalFun ψ (α₁ + α₂ - n - 1) a (c • b) = c • evalFun ψ (α₁ + α₂ - n - 1) a b := by
         ext r; simp only [evalFun_apply, LinearMap.smul_apply, smul_eq_mul]
         exact (hE.bil r.1 α₁ α₂).2.2.2 c a b

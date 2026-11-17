@@ -35,7 +35,7 @@ theorem VerlindeSystem.isIntegral_fusionCharacter (H : VerlindeSystem N S v0) (a
   · rw [Matrix.sub_mulVec]
     apply sub_eq_zero.mpr
     ext b
-    simpa [A, Matrix.mulVec, dotProduct, Matrix.scalar, Matrix.diagonal] using
+    simpa [A, Matrix.map, Matrix.mulVec, dotProduct, Matrix.scalar, Matrix.diagonal] using
       (H.eigen a b x).symm
 
 variable [CharZero K]

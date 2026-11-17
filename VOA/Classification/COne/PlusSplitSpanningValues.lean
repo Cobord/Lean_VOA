@@ -22,13 +22,11 @@ theorem omegaIter_mem_grading {d : ℤ} {v : ↥(PlusC2.VP m hm)}
     (hv : v ∈ (V2mPlus m hm).grading d) (n : ℕ) :
     omegaIter m hm v n ∈ (V2mPlus m hm).grading (d + 2 * n) := by
   induction n with
-  | zero => simpa [omegaIter] using hv
+  | zero => simpa [omegaIter] using! hv
   | succ n ih =>
     have h := (V2mPlus m hm).smul_mem_grading (V2mPlus m hm).conformal_mem ih (-1)
     convert h using 1
-    congr 1
-    push_cast
-    ring
+    all_goals first | rfl | (congr 1; push_cast; ring)
 
 /-- The actual Zhu product differs from the negative-one product by weight. -/
 theorem omega_mul_mk {d : ℤ} {v : ↥(PlusC2.VP m hm)}
@@ -43,9 +41,9 @@ theorem omega_mul_mk {d : ℤ} {v : ↥(PlusC2.VP m hm)}
     simp only [show (2 : ℤ).toNat + 1 = 3 from rfl, Finset.sum_range_succ,
       Finset.sum_range_zero, zero_add]
     have hb1 : cbz 2 1 = 2 := by
-      simpa using cbz_natCast_eq_choose (show 1 ≤ 2 by omega)
+      simpa using! cbz_natCast_eq_choose (show 1 ≤ 2 by omega)
     have hb2 : cbz 2 2 = 1 := by
-      simpa using cbz_natCast_eq_choose (show 2 ≤ 2 by omega)
+      simpa using! cbz_natCast_eq_choose (show 2 ≤ 2 by omega)
     norm_num [hb1, hb2, cbz_zero]
     rfl
   have ht := zhuLgen_mem_O (V2mPlus m hm) v
@@ -99,13 +97,13 @@ theorem character_spanningClass (χ : VOA.A (V2mPlus m hm) →ₐ[ℂ] ℂ)
   rcases j with (j | j) | j
   · have h := character_omegaIter m hm χ (V2mPlus m hm).vacuum_mem_grading_zero j.val
     have hunit : χ (VOA.mk (V2mPlus m hm) (V2mPlus m hm).vacuum) = 1 := map_one χ
-    simpa [spanningClass, spanningState, candidateValues, h0, hunit] using h
-  · simpa [spanningClass, spanningState, candidateValues, h0, h1] using
+    simpa [spanningClass, spanningState, candidateValues, h0, hunit] using! h
+  · simpa [spanningClass, spanningState, candidateValues, h0, h1] using!
       character_omegaIter m hm χ (WP_mem_grading m hm) j.val
   · have hv : y0 m hm ∈ (V2mPlus m hm).grading m := by
       rw [hy]
       exact Submodule.smul_mem _ _ (EP_mem_grading m hm)
-    simpa [spanningClass, spanningState, candidateValues, h0, h2] using
+    simpa [spanningClass, spanningState, candidateValues, h0, h2] using!
       character_omegaIter m hm χ hv j.val
 
 /-- The actual spanning theorem implies uniqueness, but does not imply

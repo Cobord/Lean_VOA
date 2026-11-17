@@ -117,7 +117,7 @@ theorem w_mem_Fbelow {d : ℕ} (hd : 1 ≤ d) : w ∈ Fbelow ρ w d :=
 theorem grRep_op_wg (c : Fin 8) (k : ℕ) :
     (grRep ρ w).op c k (wg ρ w) = (Lsub ρ w).mkQ (Finsupp.single k (ρ.op c k w)) := by
   have := grRep_wordOp ρ w [(c, k)]
-  simpa [SectorGraded.wordDeg] using this
+  simpa [SectorGraded.wordDeg] using! this
 
 /-- The associated graded satisfies the relations of `M_{N,0}`. -/
 theorem mabRel_gr {N : ℕ} (h : FiltRel ρ w N) : MabRel (grRep ρ w) (wg ρ w) N 0 where
@@ -160,7 +160,7 @@ def readD (d : ℕ) : ((ℕ →₀ T) ⧸ Lsub ρ w) →ₗ[ℂ] (T ⧸ Fbelow �
     simp only [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.coe_comp, Function.comp_apply,
       Finsupp.lapply_apply, Finsupp.single_apply]
     split_ifs with he
-    · subst he; simpa using hv
+    · subst he; simpa using! hv
     · simp)
 
 theorem readD_mk (d p : ℕ) (v : T) :
@@ -222,7 +222,7 @@ theorem finrank_Fle_le_sum (D : ℕ) :
   | zero =>
       have := finrank_gr_ge ρ w 0
       rw [Fbelow_zero, finrank_bot] at this
-      simpa using this
+      simpa using! this
   | succ D ih =>
       have := finrank_gr_ge ρ w (D + 1)
       rw [Finset.sum_range_succ]

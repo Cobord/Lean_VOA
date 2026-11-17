@@ -74,7 +74,7 @@ theorem coeff_generatorSeries_aeval (m n : ℕ) (hn : n ≤ m) (f : MvPolynomial
 
 theorem mapSeries_generatorSeries (i : σ) :
     mapSeries (polynomialTranslation (R := R)) (generatorSeries i) =
-      PowerSeries.derivative (JetPoly R σ) (generatorSeries i) := by
+      PowerSeries.derivative (R := JetPoly R σ) (generatorSeries i) := by
   apply PowerSeries.ext
   intro n
   simp only [coeff_mapSeries, coeff_generatorSeries, polynomialTranslation_X,
@@ -86,7 +86,7 @@ theorem mapSeries_generatorSeries (i : σ) :
 theorem mapSeries_aeval_generatorSeries (f : MvPolynomial σ R) :
     mapSeries (polynomialTranslation (R := R))
         (MvPolynomial.aeval (generatorSeries (R := R)) f) =
-      PowerSeries.derivative (JetPoly R σ)
+      PowerSeries.derivative (R := JetPoly R σ)
         (MvPolynomial.aeval (generatorSeries (R := R)) f) := by
   induction f using MvPolynomial.induction_on with
   | C r => simp [PowerSeries.algebraMap_apply]
@@ -170,18 +170,18 @@ def translation (I : Ideal (MvPolynomial σ R)) :
 theorem mapSeries_translation_universalArc (I : Ideal (MvPolynomial σ R))
     (a : MvPolynomial σ R ⧸ I) :
     mapSeries (translation I) (universalArc I a) =
-      PowerSeries.derivative (PresentedJet I) (universalArc I a) := by
+      PowerSeries.derivative (R := PresentedJet I) (universalArc I a) := by
   obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective a
   change mapSeries (translation I)
     (MvPolynomial.aeval (pointSeries I (AlgHom.id R (PresentedJet I))) f) =
-      PowerSeries.derivative (PresentedJet I)
+      PowerSeries.derivative (R := PresentedJet I)
         (MvPolynomial.aeval (pointSeries I (AlgHom.id R (PresentedJet I))) f)
   induction f using MvPolynomial.induction_on with
   | C r => simp [PowerSeries.algebraMap_apply]
   | add f g hf hg => simp only [map_add, mapSeries_add, hf, hg]
   | mul_X f i hf =>
       have hi : mapSeries (translation I) (pointSeries I (AlgHom.id R (PresentedJet I)) i) =
-          PowerSeries.derivative (PresentedJet I)
+          PowerSeries.derivative (R := PresentedJet I)
             (pointSeries I (AlgHom.id R (PresentedJet I)) i) := by
         apply PowerSeries.ext
         intro n

@@ -78,7 +78,7 @@ theorem radicalElementaryModes_grassIdeal (d : Fin 3 → ℕ) (j : Fin 3) :
     change radicalMultiplicityEvaluation ρ w d (radicalElementaryModes d j (elementary s)) = 0
     rw [radicalElementaryModes_val, elementarySpecialization_elementary]
     have he : esymm (Fin (d j)) ℂ s = 0 := by
-      have hc : (Finset.univ : Finset (Fin (d j))).card < s := by simpa using hs
+      have hc : (Finset.univ : Finset (Fin (d j))).card < s := by simpa using! hs
       simp only [esymm, Finset.powersetCard_eq_empty.mpr hc, Finset.sum_empty]
     rw [he, map_zero, map_zero]
   · apply (tailIdeal_le_iff _ _ _).mpr

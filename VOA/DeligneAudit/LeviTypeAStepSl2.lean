@@ -16,7 +16,7 @@ theorem sl2_lowering_of_nilpotent (E F H : V →ₗ[ℂ] V)
   induction N using Nat.strong_induction_on with
   | h N ih =>
     by_cases heq : N = m + 1
-    · simpa [heq] using hN
+    · simpa [heq] using! hN
     have hlt : m + 1 < N := by omega
     let k := N - 1
     have hk : N = k + 1 := by omega

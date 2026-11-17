@@ -24,7 +24,7 @@ theorem current_comm_end (ρ : CurrentModule f W) (a b : σ) (r s : ℕ) :
     ρ.op a r * ρ.op b s - ρ.op b s * ρ.op a r = ∑ e, f a b e • ρ.op e (r + s) := by
   ext v
   simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-    LinearMap.smul_apply] using ρ.comm a b r s v
+    LinearMap.smul_apply] using! ρ.comm a b r s v
 
 /-- Sum the actual current actions over tensor factors. -/
 def tensorOp (ρ : ι → CurrentModule f W) (c : σ) (k : ℕ) :
@@ -73,7 +73,7 @@ def tensorRep (ρ : ι → CurrentModule f W) :
   comm a b r s v := by
     have hh := congrArg (fun A => A v) (tensorOp_comm ρ a b r s)
     simpa only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply] using hh
+      LinearMap.smul_apply] using! hh
 
 @[simp] theorem tensorRep_op (ρ : ι → CurrentModule f W) (c : σ) (k : ℕ) :
     (tensorRep ρ).op c k = tensorOp ρ c k := rfl

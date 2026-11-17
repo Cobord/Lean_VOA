@@ -70,7 +70,7 @@ theorem completedLogProduct_eq_infinitySpectrum (hC2 : C2Cofinite W)
     ring
   have hs (r : ℂ) (k : ℕ) : Summable fun n : ℕ =>
       PowerSeries.coeff n (productInfinitySeries Y₁.1 Y₂.1 f x y z a b c β r k)*(Complex.exp σ)^n := by
-    simpa only [productInfinitySeries,PowerSeries.coeff_mk] using
+    simpa only [productInfinitySeries,PowerSeries.coeff_mk] using!
       summable_log_product_series hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂
         f x y z (a+r-β-1) (b+c-r-1) k 0
         (by rw [Complex.norm_exp]; exact Real.exp_lt_one_iff.mpr hσ)

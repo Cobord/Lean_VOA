@@ -12,7 +12,7 @@ variable (ρ : CurrentModule bracketTable V) (w : V)
 
 theorem a3_first_comm (i j : ℕ) :
     ρ.op (F 0) i * ρ.op (F 0) j = ρ.op (F 0) j * ρ.op (F 0) i := by
-  simpa [radicalOp] using radicalOp_comm ρ 0 i 0 j
+  simpa [radicalOp] using! radicalOp_comm ρ 0 i 0 j
 
 /-- At fixed first-colour length and mode degree, every radical spectator word
 may be carried through the node-one Garland box. -/
@@ -30,7 +30,7 @@ theorem a3_first_box_graded_with_spectators (a b c : ℕ)
   let B : Module.End ℂ V := (ys.map fun x => radicalOp ρ x.1 x.2).prod
   have hFF : ∀ i j, Fm i * Fm j = Fm j * Fm i := by
     intro i j
-    simpa [Fm, radicalOp] using radicalOp_comm ρ 0 i 0 j
+    simpa [Fm, radicalOp] using! radicalOp_comm ρ 0 i 0 j
   have hBF : ∀ i, B * Fm i = Fm i * B := by
     intro i
     induction ys with
@@ -39,7 +39,7 @@ theorem a3_first_box_graded_with_spectators (a b c : ℕ)
         simp only [B, List.map_cons, List.prod_cons] at *
         have hc : radicalOp ρ x.1 x.2 * Fm i =
             Fm i * radicalOp ρ x.1 x.2 := by
-          simpa [Fm, radicalOp] using radicalOp_comm ρ x.1 x.2 0 i
+          simpa [Fm, radicalOp] using! radicalOp_comm ρ x.1 x.2 0 i
         calc
           (radicalOp ρ x.1 x.2 * (xs.map fun y => radicalOp ρ y.1 y.2).prod) * Fm i =
               radicalOp ρ x.1 x.2 *
@@ -70,7 +70,7 @@ theorem a3_first_box_graded_with_spectators (a b c : ℕ)
       ρ.op x (m + 1 + k) v) = (-2 : ℂ) • ρ.op (simpleF 0) (m + 1 + k) v
     simp [simple_hf_table]
   have hN : (Fm 0 ^ (a + 1)) w = 0 := by
-    simpa [Fm, simpleF_zero, weightABC, Module.End.pow_apply] using h.lowering 0
+    simpa [Fm, simpleF_zero, weightABC, Module.End.pow_apply] using! h.lowering 0
   have hk : ∀ r s, 1 ≤ r → a + 1 ≤ r + s →
       (PowerSeries.coeff s (VOA.DeligneAudit.Garland.Fs Fm ^ r)) w = 0 := by
     intro r s hr hrs

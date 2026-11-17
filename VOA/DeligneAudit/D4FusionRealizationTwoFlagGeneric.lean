@@ -61,7 +61,7 @@ theorem word_mem_flag (hw : w ∈ flag b level 0) :
   | nil => exact hw
   | cons x l ih =>
       have h := flag_op R b level cut hlevel hcritical x.1 x.2 (degree l) ih
-      simpa only [wordOp, degree_cons, Nat.add_comm] using h
+      simpa only [wordOp, degree_cons, Nat.add_comm] using! h
 
 /-- Only the finite low-level action coefficients are needed for the upper flag inclusion. -/
 theorem Fbelow_le_flag (hw : w ∈ flag b level 0) (d : ℕ) :

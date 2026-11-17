@@ -97,7 +97,8 @@ theorem hypFock_lightConeSplit_swapped (κ ell : ℂ) (hell : ell ≠ 0) :
     have hK : hypSwapPolynomial p ∈ hypOneFamily 0 := hypSwapPolynomial_oneFamily 1 p hp.2
     have hz : hypSwapPolynomial p = 0 := hbase.disjoint.le_bot ⟨hS, hK⟩
     have he := congrArg hypSwapPolynomial hz
-    simpa only [hypSwapPolynomial_involutive, map_zero] using he
+    simp only [hypSwapPolynomial_involutive, map_zero] at he
+    exact (Submodule.mem_bot ℂ).mpr he
   · rw [codisjoint_iff, eq_top_iff]
     intro p _
     have hp : hypSwapPolynomial p ∈ hypNegativeSpurious ell κ ⊔ hypOneFamily 0 := by

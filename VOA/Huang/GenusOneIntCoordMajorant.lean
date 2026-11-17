@@ -31,7 +31,7 @@ theorem expSubOneCoeff_eq_real (k r : ℕ) :
     expSubOneCoeff k r =
       Complex.ofReal (PowerSeries.coeff r ((PowerSeries.exp ℝ - 1) ^ k)) := by
   rw [expSubOneCoeff_eq_coeff]
-  simpa using PowerSeries.coeff_map Complex.ofRealHom r ((PowerSeries.exp ℝ - 1) ^ k)
+  simpa using! PowerSeries.coeff_map Complex.ofRealHom r ((PowerSeries.exp ℝ - 1) ^ k)
 
 theorem expSubOne_real_nonneg (k r : ℕ) :
     0 ≤ PowerSeries.coeff r ((PowerSeries.exp ℝ - 1) ^ k) := by
@@ -74,12 +74,12 @@ theorem summable_expSubOneCoeff_mul_iff (a : ℕ → ℕ → ℂ)
     ‖expSubOneCoeff p.1 p.2.2 * y ^ p.2.2 * a p.1 p.2.1‖
   have hscalar (k n : ℕ) : HasSum (fun r => f (k, n, r))
       ((Real.exp ‖y‖ - 1) ^ k * ‖a k n‖) := by
-    simpa only [f, norm_mul] using (hasSum_norm_expSubOneCoeff k y).mul_right ‖a k n‖
+    simpa only [f, norm_mul] using! (hasSum_norm_expSubOneCoeff k y).mul_right ‖a k n‖
   have hrow (k : ℕ) : Summable (fun p : ℕ × ℕ => f (k, p)) := by
     apply (summable_prod_of_nonneg (f := fun p : ℕ × ℕ => f (k, p))
       (fun _ => norm_nonneg _)).mpr
     refine ⟨fun n => (hscalar k n).summable, ?_⟩
-    simpa only [(hscalar k _).tsum_eq] using (ha k).mul_left ((Real.exp ‖y‖ - 1) ^ k)
+    simpa only [(hscalar k _).tsum_eq] using! (ha k).mul_left ((Real.exp ‖y‖ - 1) ^ k)
   have hsum (k : ℕ) : (∑' p : ℕ × ℕ, f (k, p)) =
       (Real.exp ‖y‖ - 1) ^ k * ∑' n, ‖a k n‖ := by
     rw [(hrow k).tsum_prod]
@@ -101,8 +101,8 @@ theorem exists_logMajorant_radius {R : ℝ} (hR : 0 < R) :
     apply ContinuousAt.norm
     apply ContinuousAt.clog (continuousAt_const.add continuousAt_id)
     simp
-  have he := hc.eventually (gt_mem_nhds (by simpa using hR))
+  have he := hc.eventually (gt_mem_nhds (by simpa using! hR))
   obtain ⟨δ, hδ, hd⟩ := Metric.eventually_nhds_iff.mp he
-  exact ⟨δ, hδ, fun z hz => hd (by simpa [dist_zero_right] using hz)⟩
+  exact ⟨δ, hδ, fun z hz => hd (by simpa [dist_zero_right] using! hz)⟩
 
 end VOA.Huang.GenusOne.IntCoord

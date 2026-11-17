@@ -21,32 +21,31 @@ open AddMonoidAlgebra
 /-- Euler differentiation in one auxiliary variable, on finite Laurent expressions. -/
 noncomputable def laurentEuler {r : ℕ} (i : Fin r) :
     Laurent (Fin r → ℤ) →ₗ[ℚ] Laurent (Fin r → ℤ) :=
-  Finsupp.lsum ℚ (fun e => (e i : ℚ) • Finsupp.lsingle e)
+  (Finsupp.lsum ℚ (fun e : Fin r → ℤ => (e i : ℚ) • AddMonoidAlgebra.lsingle (R := ℚ) e)) ∘ₗ
+    (AddMonoidAlgebra.coeffLinearEquiv ℚ).toLinearMap
 
 /-- A Laurent monomial is an Euler eigenvector with its signed integer exponent. -/
 theorem laurentEuler_single {r : ℕ} (i : Fin r) (e : Fin r → ℤ) (q : ℚ) :
     laurentEuler i (single e q) = single e ((e i : ℚ)*q) := by
-  change (Finsupp.lsum ℚ (fun e : Fin r → ℤ => (e i : ℚ) • Finsupp.lsingle e))
+  change (Finsupp.lsum ℚ (fun e : Fin r → ℤ => (e i : ℚ) • AddMonoidAlgebra.lsingle (R := ℚ) e))
     (Finsupp.single e q) = _
-  rw [Finsupp.lsum_single]
-  change (e i : ℚ) • (Finsupp.single e q : (Fin r → ℤ) →₀ ℚ) =
-    Finsupp.single e ((e i : ℚ) * q)
-  exact Finsupp.smul_single _ _ _
+  rw [Finsupp.lsum_single, LinearMap.smul_apply, AddMonoidAlgebra.lsingle_apply,
+    AddMonoidAlgebra.smul_single']
 
 /-- Euler differentiation acts coefficient by coefficient, including negative exponents. -/
 theorem laurentEuler_apply {r : ℕ} (i : Fin r) (P : Laurent (Fin r → ℤ))
-    (e : Fin r → ℤ) : laurentEuler i P e = (e i : ℚ)*P e := by
+    (e : Fin r → ℤ) : (laurentEuler i P).coeff e = (e i : ℚ)*P.coeff e := by
+  classical
   induction P using AddMonoidAlgebra.induction_linear with
-  | zero =>
-    rw [map_zero]
-    change (0 : ℚ) = _ * 0
-    ring
-  | add P Q hP hQ => simp [map_add, hP, hQ, mul_add]
+  | zero => simp
+  | add P Q hP hQ =>
+    rw [map_add, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
+      Finsupp.add_apply, hP, hQ, mul_add]
   | single a q =>
-    rw [laurentEuler_single]
+    rw [laurentEuler_single, AddMonoidAlgebra.coeff_single, AddMonoidAlgebra.coeff_single]
     by_cases h : a = e
     · subst a; simp
-    · simp [single_apply, h]
+    · simp [Finsupp.single_apply, h]
 
 /-- Euler differentiation satisfies the product rule in the actual Laurent algebra. -/
 theorem laurentEuler_mul {r : ℕ} (i : Fin r) (P Q : Laurent (Fin r → ℤ)) :
@@ -84,16 +83,13 @@ theorem screeningVectorField_mul (r : ℕ) (n : ℤ) (P Q : Laurent (Fin r → �
 uses e_i-n at the shifted exponent. The subtraction is genuinely integral. -/
 theorem screeningVectorField_apply (r : ℕ) (n : ℤ) (P : Laurent (Fin r → ℤ))
     (e : Fin r → ℤ) :
-    screeningVectorField r n P e =
-      ∑ i : Fin r, ((e i - n : ℤ) : ℚ) * P (e - n • unitExponent r i) := by
+    (screeningVectorField r n P).coeff e =
+      ∑ i : Fin r, ((e i - n : ℤ) : ℚ) * P.coeff (e - n • unitExponent r i) := by
   classical
   simp only [screeningVectorField, LinearMap.sum_apply, LinearMap.comp_apply,
     LinearMap.mulLeft_apply]
-  change (AddMonoidAlgebra.coeff (∑ i : Fin r,
-    single (n • unitExponent r i) 1 * laurentEuler i P)) e = _
   rw [AddMonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
-  change (∑ i : Fin r, ((single (n • unitExponent r i) 1 * laurentEuler i P : Laurent (Fin r → ℤ))) e) = _
-  simp only [single_mul_apply, one_mul, laurentEuler_apply]
+  simp only [AddMonoidAlgebra.coeff_single_mul_apply, one_mul, laurentEuler_apply]
   apply Finset.sum_congr rfl
   intro i hi
   simp [unitExponent, sub_eq_add_neg, add_comm]

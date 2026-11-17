@@ -25,7 +25,7 @@ theorem map_plus_fixed :
   · intro hv
     refine ⟨plusToKlein.symm v, ?_, plusToKlein.apply_symm_apply v⟩
     apply (plusToKlein_fixed_iff _).mp
-    simpa only [LinearEquiv.apply_symm_apply] using hv
+    simpa only [LinearEquiv.apply_symm_apply] using! hv
 
 def fixedEquivKlein : (orbifold (Subgroup.zpowers plusCubic)).carrier ≃ₗ[ℂ]
     (orbifold (Subgroup.zpowers kleinCubic)).carrier :=

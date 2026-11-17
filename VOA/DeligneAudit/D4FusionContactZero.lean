@@ -20,7 +20,7 @@ theorem localWeyl_zero_kills (h : LocalWeylRelG D4sector R w 0) :
   intro c r
   by_cases hc : c.val < 4
   · rcases Nat.eq_zero_or_pos r with rfl | hr
-    · simpa using hH.cartan_zero c hc
+    · simpa using! hH.cartan_zero c hc
     · exact hH.cartan_pos c hc r hr
   by_cases he : c.val < 16
   · exact hH.raising c (by omega) r
@@ -30,7 +30,7 @@ theorem localWeyl_zero_kills (h : LocalWeylRelG D4sector R w 0) :
 private theorem zero_word (h : LocalWeylRelG D4sector R w 0)
     (c : Fin 28) (r : ℕ) (l : List (Fin 28 × ℕ)) : wordOp R ((c,r)::l) w = 0 := by
   exact wordOp_eq_zero_of_mem R (contact_truncIdeal 0)
-    (fun a n _ => localWeyl_zero_kills h a n) ((c,r)::l) ⟨(c,r), by simp, by omega⟩
+    (fun a n _ => localWeyl_zero_kills h a n) ((c,r)::l) ⟨(c,r), List.mem_cons.mpr (Or.inl rfl), by omega⟩
 
 theorem localWeyl_zero_degree_le (h : LocalWeylRelG D4sector R w 0) :
     cycDeg R w 0 ≤ Submodule.span ℂ ({w} : Set V) := by
@@ -59,7 +59,7 @@ theorem localWeyl_zero_degree_bound (h : LocalWeylRelG D4sector R w 0) :
   have hle := localWeyl_zero_degree_le h
   haveI : FiniteDimensional ℂ (cycDeg R w 0) := Submodule.finiteDimensional_of_le hle
   refine ⟨inferInstance, (Submodule.finrank_mono hle).trans ?_⟩
-  simpa using finrank_span_le_card ({w} : Set V)
+  simpa using! finrank_span_le_card ({w} : Set V)
 
 theorem localWeyl_zero_total_dim (h : LocalWeylRelG D4sector R w 0) (B : ℕ) :
     ∑ d ∈ Finset.range B, Module.finrank ℂ (cycDeg R w d) ≤ 1 := by

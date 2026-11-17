@@ -23,7 +23,7 @@ theorem d4_word_mem (m : ℕ) (hm : 1 ≤ m) (l : List (Ltr 28)) (j : ℕ)
   have h := word_mem_shift D4sector.f (ravFam D4sector m 0) m
     (highModeShift_D4 (ravFam D4sector m 0) m hm) hm l 0 (d4Gen m)
     (by rw [TU_zero]; trivial)
-  exact TU_mono _ _ _ (by simpa using hj) (by simpa using h)
+  exact TU_mono _ _ _ (by simpa using! hj) (by simpa using! h)
 
 /-- A word with one more unit of symbol degree has zero class in grade `j`. -/
 theorem d4_word_symbol_zero (m : ℕ) (hm : 1 ≤ m) (l : List (Ltr 28)) (j : ℕ)
@@ -43,7 +43,7 @@ theorem d4_high_step_mem (m : ℕ) (hm : 1 ≤ m) (s j : ℕ)
   have hd := d4_div_ge_one m hm s
   have h' : d4Ftheta m (m + s) x ∈
       TU D4sector.f (ravFam D4sector m 0) m (j + (m + s) / m) := by
-    simpa [wordOp, symbolDegree, d4Ftheta] using h
+    simpa [wordOp, symbolDegree, d4Ftheta] using! h
   exact TU_mono _ _ _ (by omega) h'
 
 /-- An out-of-range residual high mode gives zero in its nominal graded step. -/
@@ -57,7 +57,7 @@ theorem d4_high_step_deep (m : ℕ) (hm : 1 ≤ m) (s j : ℕ) (hs : m ≤ s)
   have hd := d4_div_ge_two m hm s hs
   have h' : d4Ftheta m (m + s) x ∈
       TU D4sector.f (ravFam D4sector m 0) m (j + (m + s) / m) := by
-    simpa [wordOp, symbolDegree, d4Ftheta] using h
+    simpa [wordOp, symbolDegree, d4Ftheta] using! h
   exact TU_mono _ _ _ (by omega) h'
 
 /-- The high theta symbol agrees with its shifted lift on every homogeneous class. -/
@@ -68,13 +68,13 @@ theorem d4_grOp_high_single (m : ℕ) (hm : 1 ≤ m) (s j : ℕ)
       symbL m (j + 1) ⟨d4Ftheta m (m + s) x,
         d4_high_step_mem m hm s j x hx⟩ := by
   by_cases hs : s < m
-  · rw [grToroidal_D4_op, symbL_apply,
+  · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 1) (s := s), symbL_apply,
       grOp_single D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 1 s j x hs hx,
       symbL_apply]
     congr 1
     apply Subtype.ext
     simp [gradedSingle, d4Ftheta]
-  · rw [grToroidal_D4_op,
+  · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 1) (s := s),
       grOp_high_zero D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 1 s
         (Nat.le_of_not_lt hs), LinearMap.zero_apply]
     exact (symbL_zero m (j + 1) _
@@ -85,7 +85,7 @@ def d4_highPow (m : ℕ) : ℕ → ℕ →
     UModG D4sector.f (ravFam D4sector m 0) →
       UModG D4sector.f (ravFam D4sector m 0)
   | 0, s, x => if s = 0 then x else 0
-  | j + 1, s, x => ∑ p ∈ Finset.antidiagonal s,
+  | j + 1, s, x => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
       d4Ftheta m (m + p.1) (d4_highPow m j p.2 x)
 
 /-- The high-mode sum raises the filtration by at least `j`. -/
@@ -99,19 +99,19 @@ theorem d4_highPow_mem (m : ℕ) (hm : 1 ≤ m) :
       · exact hx
       · exact Submodule.zero_mem _
   | j + 1, s, k, x, hx => by
-      change (∑ p ∈ Finset.antidiagonal s,
+      change (∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
         d4Ftheta m (m + p.1) (d4_highPow m j p.2 x)) ∈
           TU D4sector.f (ravFam D4sector m 0) m (k + (j + 1))
       apply Submodule.sum_mem
       intro p hp
       have h := d4_high_step_mem m hm p.1 (k + j) (d4_highPow m j p.2 x)
         (d4_highPow_mem m hm j p.2 k x hx)
-      simpa only [Nat.add_assoc] using h
+      simpa only [Nat.add_assoc] using! h
 
 theorem d4_highPow_gen_mem (m : ℕ) (hm : 1 ≤ m) (j s : ℕ) :
     d4_highPow m j s (d4Gen m) ∈
       TU D4sector.f (ravFam D4sector m 0) m j := by
-  simpa using d4_highPow_mem m hm j s 0 (d4Gen m) (by rw [TU_zero]; trivial)
+  simpa using! d4_highPow_mem m hm j s 0 (d4Gen m) (by rw [TU_zero]; trivial)
 
 /-- The toroidal high-mode power is the graded class of its universal lift. -/
 theorem d4_gpow_symbol (m : ℕ) (hm : 1 ≤ m) : ∀ j s,
@@ -129,11 +129,11 @@ theorem d4_gpow_symbol (m : ℕ) (hm : 1 ≤ m) : ∀ j s,
           symbL m 0 (0 : TU D4sector.f (ravFam D4sector m 0) m 0)
         simp
   | j + 1, s => by
-      change (∑ p ∈ Finset.antidiagonal s,
+      change (∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
         (grToroidal_D4 m hm).op D4sector.c₀ 1 p.1
           (gpow (grToroidal_D4 m hm) D4sector.c₀ j p.2
             (grGenerator D4sector.f (ravFam D4sector m 0) m))) =
-        symbL m (j + 1) ⟨∑ p ∈ Finset.antidiagonal s,
+        symbL m (j + 1) ⟨∑ p ∈ Finset.HasAntidiagonal.antidiagonal s,
           d4Ftheta m (m + p.1) (d4_highPow m j p.2 (d4Gen m)),
           d4_highPow_gen_mem m hm (j + 1) s⟩
       simp_rw [d4_gpow_symbol m hm j]
@@ -154,7 +154,7 @@ theorem d4_low_step_mem (m : ℕ) (hm : 1 ≤ m) (r j : ℕ)
     [(D4sector.c₀, r)] j x hx
   have h' : d4Ftheta m r x ∈
       TU D4sector.f (ravFam D4sector m 0) m (j + r / m) := by
-    simpa [wordOp, symbolDegree, d4Ftheta] using h
+    simpa [wordOp, symbolDegree, d4Ftheta] using! h
   exact TU_mono _ _ _ (Nat.le_add_right j (r / m)) h'
 
 /-- A theta mode at least `m` lies one step deeper than its nominal low symbol. -/
@@ -168,7 +168,7 @@ theorem d4_low_step_deep (m : ℕ) (hm : 1 ≤ m) (r j : ℕ) (hr : m ≤ r)
   have hd := d4_div_ge_one' m hm r hr
   have h' : d4Ftheta m r x ∈
       TU D4sector.f (ravFam D4sector m 0) m (j + r / m) := by
-    simpa [wordOp, symbolDegree, d4Ftheta] using h
+    simpa [wordOp, symbolDegree, d4Ftheta] using! h
   exact TU_mono _ _ _ (by omega) h'
 
 /-- The low theta symbol agrees with its lift on every homogeneous class. -/
@@ -178,13 +178,13 @@ theorem d4_grOp_low_single (m : ℕ) (hm : 1 ≤ m) (r j : ℕ)
     (grToroidal_D4 m hm).op D4sector.c₀ 0 r (symbL m j ⟨x, hx⟩) =
       symbL m j ⟨d4Ftheta m r x, d4_low_step_mem m hm r j x hx⟩ := by
   by_cases hr : r < m
-  · rw [grToroidal_D4_op, symbL_apply,
+  · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 0) (s := r), symbL_apply,
       grOp_single D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 0 r j x hr hx,
       symbL_apply]
     congr 1
     apply Subtype.ext
     simp [gradedSingle, d4Ftheta]
-  · rw [grToroidal_D4_op,
+  · rw [grToroidal_D4_op (c := D4sector.c₀) (i := 0) (s := r),
       grOp_high_zero D4sector.f (ravFam D4sector m 0) m _ D4sector.c₀ 0 r
         (Nat.le_of_not_lt hr), LinearMap.zero_apply]
     exact (symbL_zero m j _
@@ -192,7 +192,7 @@ theorem d4_grOp_low_single (m : ℕ) (hm : 1 ≤ m) (r j : ℕ)
 
 /-- The universal lift of the full symbol `P^(j)_N`. -/
 def d4_PsymLift (m j N : ℕ) : UModG D4sector.f (ravFam D4sector m 0) :=
-  ∑ p ∈ Finset.antidiagonal N,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
     d4Ftheta m p.1 (d4_highPow m j p.2 (d4Gen m))
 
 theorem d4_PsymLift_mem (m : ℕ) (hm : 1 ≤ m) (j N : ℕ) :
@@ -207,7 +207,7 @@ theorem d4_Psym_symbol (m : ℕ) (hm : 1 ≤ m) (j N : ℕ) :
     Psym (grToroidal_D4 m hm) D4sector.c₀ j N
       (grGenerator D4sector.f (ravFam D4sector m 0) m) =
       symbL m j ⟨d4_PsymLift m j N, d4_PsymLift_mem m hm j N⟩ := by
-  change (∑ p ∈ Finset.antidiagonal N,
+  change (∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
     (grToroidal_D4 m hm).op D4sector.c₀ 0 p.1
       (gpow (grToroidal_D4 m hm) D4sector.c₀ j p.2
         (grGenerator D4sector.f (ravFam D4sector m 0) m))) = _
@@ -221,12 +221,12 @@ theorem d4_Psym_symbol (m : ℕ) (hm : 1 ≤ m) (j N : ℕ) :
 
 /-- The part of the lift whose outer theta mode is below `m`. -/
 def d4_lowLift (m j N : ℕ) : UModG D4sector.f (ravFam D4sector m 0) :=
-  ∑ p ∈ Finset.antidiagonal N,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
     if p.1 < m then d4Ftheta m p.1 (d4_highPow m j p.2 (d4Gen m)) else 0
 
 /-- The outer-high terms, which are invisible in grade `j`. -/
 def d4_outerHigh (m j N : ℕ) : UModG D4sector.f (ravFam D4sector m 0) :=
-  ∑ p ∈ Finset.antidiagonal N,
+  ∑ p ∈ Finset.HasAntidiagonal.antidiagonal N,
     if m ≤ p.1 then d4Ftheta m p.1 (d4_highPow m j p.2 (d4Gen m)) else 0
 
 theorem d4_PsymLift_split (m j N : ℕ) :
@@ -292,7 +292,7 @@ theorem d4_PsymLift_deep_of_corrected_zero (m : ℕ) (hm : 1 ≤ m) (j N : ℕ)
 theorem d4Ftheta_high_zero (m r : ℕ) (hr : 2 * m ≤ r) :
     d4Ftheta m r (d4Gen m) = 0 := by
   have h := d4_garland_univ m 1 r (by omega) (by omega)
-  simpa only [garlandVec_one] using h
+  simpa only [garlandVec_one] using! h
 
 /-- An `a`-fold low-mode multiplication of a Garland coefficient. -/
 def d4_lowGarland (m k : ℕ) : ℕ → ℕ →
@@ -308,7 +308,7 @@ theorem d4_lowGarland_zero (m k a M : ℕ) (hm : 1 ≤ m) (hk : 1 ≤ k)
   induction a generalizing M with
   | zero =>
       change garlandVec (d4Ftheta m) k M (d4Gen m) = 0
-      exact d4_garland_univ m k M hk (by simpa using hM)
+      exact d4_garland_univ m k M hk (by simpa using! hM)
   | succ a ih =>
       change (∑ r ∈ Finset.range m,
         if r ≤ M then d4Ftheta m r (d4_lowGarland m k a (M - r)) else 0) = 0
@@ -335,7 +335,7 @@ theorem d4_lowGarland_target_zero (m j N a : ℕ) (hm : 1 ≤ m)
       a * (m - 1) + a = a * ((m - 1) + 1) := by ring
       _ = a * m := by rw [Nat.sub_add_cancel hm]
   have hjm : a * m + m ≤ j * m := by
-    simpa only [add_mul, one_mul] using Nat.mul_le_mul_right m hja
+    simpa only [add_mul, one_mul] using! Nat.mul_le_mul_right m hja
   have hk : 1 ≤ j + 1 - a := by omega
   apply d4_lowGarland_zero m (j + 1 - a) a (N + j * m) hm hk
   omega

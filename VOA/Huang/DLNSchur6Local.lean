@@ -28,7 +28,7 @@ theorem gaussLift_upper_one_mul_top (r t : ZMod n) (u v : (ZMod n)ˣ)
       X (Multiplicative.ofAdd 1) *
         gaussLift X Y (lowerRoot r * torus u * upperRoot t) := by
   have hm := upper_unit_mul_lower_of_defect_eq_one h2 h3 π hs X Y hX hY hn hz
-    1 v r (by simpa using hv)
+    1 v r (by simpa using! hv)
   simp only [Units.val_one, one_mul] at hm
   have hc := torusWord_upper_conj h2 h3 π hs X Y hX hY hn u
     ((↑u⁻¹ : ZMod n) ^ 2 * (↑v⁻¹ : ZMod n))
@@ -151,7 +151,7 @@ theorem map_mul_of_left_transitions {G E : Type*} [Group G] [Group E]
       rw [mul_assoc, hy, hz, hy, mul_assoc]
     | inv y _ hy =>
       intro x
-      have hinv : f y * f y⁻¹ = 1 := by simpa [hf] using (hy y⁻¹).symm
+      have hinv : f y * f y⁻¹ = 1 := by simpa [hf] using! (hy y⁻¹).symm
       apply mul_left_cancel (a := f y)
       calc
         f y * f (y⁻¹ * x) = f (y * (y⁻¹ * x)) := (hy _).symm

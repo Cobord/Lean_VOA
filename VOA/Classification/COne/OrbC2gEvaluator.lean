@@ -111,7 +111,7 @@ theorem chargeCoord_four (d : ℤ) :
   have h (k : ℕ) : chargeCoord (latP 4) (k : ℤ) (a0 4) = (k : ℂ) * cα 4 := by
     induction k with
     | zero =>
-      simpa only [Nat.cast_zero, zero_mul] using chargeCoord_zero (latP 4) (a0 4)
+      simpa only [Nat.cast_zero, zero_mul] using! chargeCoord_zero (latP 4) (a0 4)
     | succ k ih =>
       have hh := chargeCoord_add (latP 4) ((k : ℤ) : (latP 4).carrier)
         ((1 : ℤ) : (latP 4).carrier) (a0 4)
@@ -168,8 +168,9 @@ theorem exponentialAction_sound (b d n : ℤ) (P : RawPoly ℕ) :
   norm_cast
   rw [← chargeCoord_four]
   have h := V2m_charge_smul_evRc 4 four_ge_one b d n (liftR R)
-  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle, one_smul] at h
-  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*4=8 by norm_num] using h.symm
+  rw [evRc_liftR, PlusCharacterTable.rankOne_cocycle 4 (b : (latP 4).carrier) (d : (latP 4).carrier),
+    one_smul] at h
+  simpa only [latP_form, Nat.cast_ofNat, show (2 : ℤ)*4=8 by norm_num] using! h.symm
 
 end VOA.Classification.COne.OrbC2g
 

@@ -182,7 +182,7 @@ theorem isSimpleSub_of_gradedMinimal (hC2 : C2Cofinite W) (N : AdmissibleModule 
   haveI : Nontrivial S := ⟨⟨⟨x0, hx0P, hx0k⟩, 0, fun h => hk (congrArg Subtype.val h)⟩⟩
   have hpres : ∀ y ∈ S, L0 N.toWeakModule y ∈ S := by
     intro y hy
-    exact ⟨P.act_mem W.conformalVector 1 hy.1, by simpa using N.act_lev W.conformal_mem hy.2 (p := 1)⟩
+    exact ⟨P.act_mem W.conformalVector 1 hy.1, by simpa using! N.act_lev W.conformal_mem hy.2 (p := 1)⟩
   let f : Module.End ℂ S := (L0 N.toWeakModule).restrict hpres
   obtain ⟨c, hc⟩ := f.exists_eigenvalue
   obtain ⟨xs, hxs⟩ := hc.exists_hasEigenvector
@@ -231,7 +231,7 @@ theorem isSimpleSub_of_gradedMinimal (hC2 : C2Cofinite W) (N : AdmissibleModule 
     exact DirectSum.sum_support_decompose N.lev y
   have hcomp := mem_of_eigen_sum (L0 N.toWeakModule) Q.carrier
     (fun z hz => Q.act_mem W.conformalVector 1 hz)
-    (fun i => c - (k : ℂ) + (i : ℂ)) (fun a b h => by simpa using h) s
+    (fun i => c - (k : ℂ) + (i : ℂ)) (fun a b h => by simpa using! h) s
     (fun i => N.levProj i y)
     (fun i _ => hscalar i _ (hPg i y hyP) (N.levProj_mem i y)) (by rw [hsum]; exact hyQ)
   by_cases hj : j ∈ s

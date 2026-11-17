@@ -164,13 +164,13 @@ theorem finite_coinvariants (A : AdmissibleModule W M₁) (B : AdmissibleModule 
     clear hz
     obtain ⟨t, rfl⟩ := J.mkQ_surjective z
     induction t using TensorProduct.induction_on with
-    | zero => simpa only [map_zero] using T.zero_mem
-    | add x y hx hy => simpa only [map_add] using T.add_mem hx hy
+    | zero => simpa only [map_zero] using! T.zero_mem
+    | add x y hx hy => simpa only [map_add] using! T.add_mem hx hy
     | tmul r v =>
       induction v using TensorProduct.induction_on with
       | zero => simp only [TensorProduct.tmul_zero, map_zero]; exact T.zero_mem
       | add x y hx hy =>
-        simpa only [TensorProduct.tmul_add, map_add] using T.add_mem hx hy
+        simpa only [TensorProduct.tmul_add, map_add] using! T.add_mem hx hy
       | tmul x y =>
         have he : J.mkQ (r ⊗ₜ[ℂ] (x ⊗ₜ[ℂ] y)) = r • S x y := by
           change J.mkQ (r ⊗ₜ[ℂ] (x ⊗ₜ[ℂ] y)) =

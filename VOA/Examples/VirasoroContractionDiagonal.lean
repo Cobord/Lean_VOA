@@ -115,7 +115,7 @@ theorem applyContractions_append (u v : List ℤ) (f : NormalForm) :
   induction u with
   | nil => rfl
   | cons m u ih =>
-    simpa only [List.cons_append, applyContractions, LinearMap.comp_apply] using
+    simpa only [List.cons_append, applyContractions, LinearMap.comp_apply] using!
       congrArg (actContraction m) ih
 
 /-- The first contraction of a sorted creation word adds one central factor

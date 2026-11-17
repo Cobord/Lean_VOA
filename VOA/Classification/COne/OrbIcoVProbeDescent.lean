@@ -85,8 +85,11 @@ theorem chargedFockLevel_kernel_finrank (ell p : ℂ) (N : ℕ) :
       LinearMap.ker (chargedFockMap ell p)) : Submodule ℂ (Verma (1-24*ell^2) (p^2-2*ell*p))) =
       Module.finrank ℂ (LinearMap.ker (chargedFockLevelMap ell p N)) := by
   rw [← Submodule.map_comap_subtype, Submodule.finrank_map_subtype_eq]
-  unfold chargedFockLevelMap
-  rw [LinearMap.ker_codRestrict, LinearMap.ker_comp]
+  have hk : LinearMap.ker (chargedFockLevelMap ell p N) =
+      LinearMap.ker ((chargedFockMap ell p).comp
+        (sortedSpan (1-24*ell^2) (p^2-2*ell*p) N).subtype) :=
+    LinearMap.ker_codRestrict _ _ _
+  rw [hk, LinearMap.ker_comp]
 
 theorem family_uniformProbe_kills_kernel_near (m : ℕ) :
     ∀ᶠ s : NonzeroParameter in 𝓝 parameterOne,

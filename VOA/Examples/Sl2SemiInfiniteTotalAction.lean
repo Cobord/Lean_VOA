@@ -101,9 +101,9 @@ noncomputable def totalAffineAction (A : AffineSl2Action V k)
   current := totalCurrentState A
   current_weight a := by
     apply Submodule.add_mem
-    · simpa only [add_zero] using tmul_mem_tenGrading_add V sl2GhostSVA
+    · simpa only [add_zero] using! tmul_mem_tenGrading_add V sl2GhostSVA
         (A.current_weight a) sl2GhostSVA.vacuum_mem
-    · simpa only [zero_add] using tmul_mem_tenGrading_add V sl2GhostSVA
+    · simpa only [zero_add] using! tmul_mem_tenGrading_add V sl2GhostSVA
         V.vacuum_mem (ghostCurrent_weight a)
   current_even := totalCurrentState_even A
   current_comm := totalCurrentMode_commutator A

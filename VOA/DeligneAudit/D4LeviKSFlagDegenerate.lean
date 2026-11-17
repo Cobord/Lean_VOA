@@ -67,10 +67,10 @@ theorem ksFlagMaximalRelationSpan_mul_mem
           by simp [mul_assoc]⟩)
   | zero => simp
   | add T W hT hW ihT ihW =>
-      simpa only [mul_add] using
+      simpa only [mul_add] using!
         (ksFlagMaximalRelationSpan m a b c d).add_mem ihT ihW
   | smul r T hT ih =>
-      simpa only [mul_smul_comm] using
+      simpa only [mul_smul_comm] using!
         (ksFlagMaximalRelationSpan m a b c d).smul_mem r ih
 
 /-- Increasing the final degree retains every maximal relation. -/

@@ -276,7 +276,7 @@ theorem fourTransform_recurrence (p : ℂ) (k : ℕ) :
     show (k:ℂ)+2+1=(k:ℂ)+3 by ring,
     show (k:ℂ)+1+1=(k:ℂ)+2 by ring,
     show (k:ℂ)+2+7=(k:ℂ)+9 by ring,
-    show (k:ℂ)+2-1=(k:ℂ)+1 by ring] using hh
+    show (k:ℂ)+2-1=(k:ℂ)+1 by ring] using! hh
 
 /-- The two initial identities and the recurrence determine every shifted
 coefficient up to any index where the lower factors are nonzero. -/
@@ -285,12 +285,12 @@ theorem four_shift_scaled (p : ℂ) (M : ℕ)
     (k : ℕ) (hk : k+1≤M) :
     fourF p*vacuumFourContinuant (p+4) (k+7)=fourG p*fourTransform p k := by
   induction k using Nat.twoStepInduction with
-  | zero => simpa [fourTransform] using four_shift_base_one p
-  | one => simpa only [fourTransform,Nat.cast_one,show (1:ℂ)+1=2 by norm_num] using four_shift_base_two p
+  | zero => simpa [fourTransform] using! four_shift_base_one p
+  | one => simpa only [fourTransform,Nat.cast_one,show (1:ℂ)+1=2 by norm_num] using! four_shift_base_two p
   | more k ih0 ih1 =>
     have ht := fourTransform_recurrence p k
     have hn : fourC p ((k:ℂ)+2)≠0 := by
-      simpa only [Nat.cast_add,Nat.cast_ofNat] using hC (k+2) (by omega) (by omega)
+      simpa only [Nat.cast_add,Nat.cast_ofNat] using! hC (k+2) (by omega) (by omega)
     have ht' := (mul_eq_zero.mp ht).resolve_left hn
     have hz := four_Z_step (p+4) (k+7)
     simp only [Nat.cast_add,Nat.cast_ofNat,show (k:ℂ)+7+2=(k:ℂ)+9 by ring] at hz
@@ -382,7 +382,7 @@ theorem fourTerminalInteger_step (p : ℕ) (hp : 3≤p) (ho : Odd p) :
   have hh := four_terminal_shift_complex p (fourTerminalIndex p) hM2 hterm hF
     (fun n hn hnM => fourC_ne_zero p _ n hp ho hM hn hnM)
   simpa only [fourTerminalInteger,vacuumFourIntegerContinuant_cast,Int.cast_natCast,
-    Nat.cast_add,Nat.cast_ofNat,Int.cast_add,Int.cast_ofNat,Int.cast_natCast,fourTerminalIndex_step p hp] using hh
+    Nat.cast_add,Nat.cast_ofNat,Int.cast_add,Int.cast_ofNat,Int.cast_natCast,fourTerminalIndex_step p hp] using! hh
 
 /-- Every factor in the terminal shift multiplier is nonzero at labels
 at least three. Its sign is irrelevant to the nonvanishing induction. -/

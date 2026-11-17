@@ -110,7 +110,7 @@ theorem simpleProjector_eq_sum_loops (F : SphericalFusion C) (M : Modular F)
   have hm : (∑ i, (categoricalS F)⁻¹ j i * categoricalS F i k) = if j = k then 1 else 0 := by
     have h := congrArg (fun A : Matrix F.Label F.Label ℂ => A j k)
       (Matrix.nonsing_inv_mul (categoricalS F) (isUnit_iff_ne_zero.mpr M.nondegenerate))
-    simpa only [Matrix.mul_apply, Matrix.one_apply] using h
+    simpa only [Matrix.mul_apply, Matrix.one_apply] using! h
   have he : (∑ i, (F.dimension (F.simple j) * (categoricalS F)⁻¹ j i) *
       (categoricalS F i k / F.dimension (F.simple k))) =
       (F.dimension (F.simple j) / F.dimension (F.simple k)) *

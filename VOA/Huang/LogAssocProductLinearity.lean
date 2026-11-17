@@ -57,7 +57,7 @@ theorem fullCoset_sum_inputs (hC2 : C2Cofinite W)
         (X α) (Y β)
         (Z γ) (a+b) b (1+Complex.exp t) 1) :=
     summable_log_product_integerCoset hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
-      Y₁ Y₂ f _ _ _ (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using one_lt_norm ht)
+      Y₁ Y₂ f _ _ _ (a+b) b k 0 one_ne_zero (by simpa only [norm_one] using! one_lt_norm ht)
   simp_rw [← Summable.tsum_finsetSum (fun γ _ => hsum _ _ γ)]
   simp_rw [← Summable.tsum_finsetSum (fun β _ => summable_sum fun γ _ => hsum _ β γ)]
   rw [← Summable.tsum_finsetSum (fun α _ => summable_sum fun β _ =>
@@ -147,7 +147,7 @@ theorem fullCoset_add_left (hC2 : C2Cofinite W)
         logProductFullCosetFun Y₁.1 Y₂.1 f x' y z a b t := by
   have hh := fullCoset_sum_inputs hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
     Y₁ Y₂ f a b (Finset.univ : Finset (Fin 2)) (Finset.univ : Finset Unit) (Finset.univ : Finset Unit) ![x,x'] (fun _ => y) (fun _ => z) ht
-  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using hh.symm
+  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using! hh.symm
 
 /-- Actual additivity on the convergent overlap. -/
 theorem fullCoset_add_right (hC2 : C2Cofinite W)
@@ -164,6 +164,6 @@ theorem fullCoset_add_right (hC2 : C2Cofinite W)
         logProductFullCosetFun Y₁.1 Y₂.1 f x y' z a b t := by
   have hh := fullCoset_sum_inputs hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅
     Y₁ Y₂ f a b (Finset.univ : Finset Unit) (Finset.univ : Finset (Fin 2)) (Finset.univ : Finset Unit) (fun _ => x) ![y,y'] (fun _ => z) ht
-  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using hh.symm
+  simpa only [Fin.sum_univ_two,Fintype.sum_unique,Matrix.cons_val_zero,Matrix.cons_val_one] using! hh.symm
 
 end VOA.Huang.LogAssocExpansion

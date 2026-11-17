@@ -61,7 +61,10 @@ theorem mckayThompson_coeff_zero (g : AutVnat) :
     intro x
     apply Subtype.ext
     have hx := (gradedAutAction VnatVOA 1 g x).property
-    simpa only [VnatVOA_grading_one, Submodule.mem_bot] using hx
+    first
+      | simpa only [VnatVOA_grading_one, Submodule.mem_bot] using hx
+      | simpa only [VnatVOA_grading_one, Submodule.mem_bot, LinearMap.zero_apply,
+          ZeroMemClass.coe_zero] using hx
   rw [heq, map_zero]
 
 theorem mckayThompson_conjugate (g h : AutVnat) :
@@ -74,8 +77,10 @@ theorem mckayThompson_one :
     mckayThompson 1 = PowerSeries.mk (fun n => PowerSeries.coeff (n + 1) JShift) := by
   ext n
   rw [mckayThompson_coeff, gradedAutTrace_one, PowerSeries.coeff_mk]
-  simpa only [VnatVOA_grading, Nat.cast_add, Nat.cast_one] using
-    finrank_gradingNat_eq_coeff_JShift (n + 1)
+  first
+    | simpa only [VnatVOA_grading, Nat.cast_add, Nat.cast_one] using
+        finrank_gradingNat_eq_coeff_JShift (n + 1)
+    | exact finrank_gradingNat_eq_coeff_JShift (n + 1)
 
 /-- The power series `q T_g`, in the same normalization as `JShift`. -/
 noncomputable def mckayThompsonShift (g : AutVnat) : PowerSeries ℂ :=

@@ -19,6 +19,8 @@ namespace VOA.AffineSl3.FreeField
 noncomputable section
 open MvPolynomial
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Eight oscillator species, separated so that mixed derivatives vanish. -/
 inductive Colour
   | beta : Fin 3 → Colour

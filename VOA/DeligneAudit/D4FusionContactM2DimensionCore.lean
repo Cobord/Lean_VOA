@@ -32,7 +32,7 @@ theorem finite_finrank_le_of_span_fin (v : Fin N → V)
   have hr := finrank_range_le_card (R := ℂ) v
   change Module.finrank ℂ (Submodule.span ℂ (Set.range v)) ≤ Fintype.card (Fin N) at hr
   rw [hspan,finrank_top] at hr
-  simpa only [Fintype.card_fin] using hr
+  simpa only [Fintype.card_fin] using! hr
 
 end
 end VOA.DeligneAudit.D4FusionContact.M2Certificate

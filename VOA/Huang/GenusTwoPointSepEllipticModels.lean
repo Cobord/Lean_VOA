@@ -15,8 +15,9 @@ open scoped BigOperators
 
 theorem summable_elliptic_constant (d : ℕ) {y : ℂ} (hy : ‖y‖ < 1) :
     Summable (fun r : ℕ => (r + 1 : ℂ) ^ d * y ^ (r + 1)) := by
-  simpa only [Nat.cast_add, Nat.cast_one] using
-    (summable_nat_add_iff 1).mpr (summable_pow_mul_geometric_of_norm_lt_one d hy)
+  have h := (summable_nat_add_iff (f := fun n : ℕ => (n : ℂ) ^ d * y ^ n) 1).mpr
+    (summable_pow_mul_geometric_of_norm_lt_one d hy)
+  simpa only [Nat.cast_add, Nat.cast_one] using h
 
 /-- Splitting off the q-constant term gives the library's Lambert-tail model. -/
 theorem ellipticSeries_eval_lambert (d : ℕ) {x y : ℂ}

@@ -79,7 +79,7 @@ theorem a3_pair_box_fixed_key (a b c : ℕ)
         have hK : a3ConvKey j k (xs.sum + d + zs.sum) xs
             (VOA.DeligneAudit.CLAssembly.lst f) zs = K := by
           fin_cases j <;> simp [a3ConvKey, K, hlen]
-        simpa only [A, B, R, N, hK] using h
+        simpa only [A, B, R, N, hK] using! h
     | zero => simp
     | add v z _ _ hv hz =>
         rw [map_add]

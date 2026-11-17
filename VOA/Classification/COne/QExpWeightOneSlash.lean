@@ -58,8 +58,8 @@ theorem weightOneNormalized_slash {N : ℕ} [NeZero N] (hf : WeightOneThetaFouri
   | mem g hg =>
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hg
     rcases hg with rfl | rfl
-    · simpa using weightOneNormalized_slash_S hf (x 0) (x 1)
-    · simpa using weightOneNormalized_slash_T hf (x 0) (x 1)
+    · simpa using! weightOneNormalized_slash_S hf (x 0) (x 1)
+    · simpa using! weightOneNormalized_slash_T hf (x 0) (x 1)
   | one => simp
   | mul g h _ _ ig ih =>
     rw [SlashAction.slash_mul, ig, ih, weightOneResidueAction_mul]
@@ -67,7 +67,7 @@ theorem weightOneNormalized_slash {N : ℕ} [NeZero N] (hf : WeightOneThetaFouri
     have h := ig (weightOneResidueAction x g⁻¹)
     rw [← weightOneResidueAction_mul, inv_mul_cancel, weightOneResidueAction_one] at h
     have h' := congrArg (fun f : ℍ → ℂ => f ∣[(1 : ℤ)] g⁻¹) h
-    simpa only [← SlashAction.slash_mul, mul_inv_cancel, SlashAction.slash_one] using h'.symm
+    simpa only [← SlashAction.slash_mul, mul_inv_cancel, SlashAction.slash_one] using! h'.symm
 
 theorem weightOneQSeries_eq_scale_normalized {N : ℕ} [NeZero N] (a b : Fin N) :
     weightOneQSeries N (weightOneStandardRoot N) a b =
@@ -115,7 +115,7 @@ theorem weightOneSlashLaws_standard_of_thetaFourier {N : ℕ} (hN : 0 < N)
     rw [weightOneQSeries_eq_scale_normalized, SL_smul_slash]
     have he := weightOneNormalized_slash hf ![(a.val : ZMod N), (b.val : ZMod N)] δ
     rw [weightOneResidueAction_Gamma _ δ hδ] at he
-    simpa using congrArg (fun f : ℍ → ℂ => weightOneScale N (weightOneStandardRoot N) a b • f) he
+    simpa using! congrArg (fun f : ℍ → ℂ => weightOneScale N (weightOneStandardRoot N) a b • f) he
   · intro a b γ
     let x := weightOneResidueAction ![(a.val : ZMod N), (b.val : ZMod N)] γ
     refine ⟨weightOneIndex (x 0), weightOneIndex (x 1),

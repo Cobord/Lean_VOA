@@ -103,10 +103,10 @@ noncomputable def postTarget (E : End ℂ M₃)
     (F : ModeFamily (M₁ := M₁) (M₂ := M₂) (M₃ := M₃)) :
     ModeFamily (M₁ := M₁) (M₂ := M₂) (M₃ := M₃) := fun n => LinearMap.mk₂ ℂ
       (fun x y => E (F n x y))
-      (fun x x' y => by dsimp only; simp)
-      (fun c x y => by dsimp only; simp)
-      (fun x y y' => by dsimp only; simp)
-      (fun c x y => by dsimp only; simp)
+      (fun x x' y => by simp)
+      (fun c x y => by simp)
+      (fun x y y' => by simp)
+      (fun c x y => by simp)
 
 theorem IsJacobiFamily.preFirst {F : ModeFamily (M₁ := M₁) (M₂ := M₂) (M₃ := M₃)}
     (hF : IsJacobiFamily A₁ A₂ A₃ F) (E : End ℂ M₁)
@@ -154,7 +154,7 @@ theorem IsJacobiFamily.postTarget {F : ModeFamily (M₁ := M₁) (M₂ := M₂) 
         (A₁ := A₁) (liftModes F) u x y ell m n 0)] at h
     simp only [IsLogIntertwining.jacL,IsLogIntertwining.jacR,liftModes,map_smul,map_sub] at h
     simp_rw [hE] at h
-    simpa only [postTarget,LinearMap.mk₂_apply] using h
+    simpa only [postTarget,LinearMap.mk₂_apply] using! h
 
 /-- The genuine nilpotent parts commute with modes, so their three-slot defect
 preserves the complete actual Jacobi identity. -/
@@ -174,7 +174,7 @@ theorem IsJacobiFamily.nilDefect (N₁ : LogVModule W M₁) (N₂ : LogVModule W
   change Pz.preSecond N₂.L0nil F ∈ jacobiFamilies N₁.toWeakModule N₂.toWeakModule N₃.toWeakModule at h₂
   have h := (jacobiFamilies N₁.toWeakModule N₂.toWeakModule N₃.toWeakModule).sub_mem
     ((jacobiFamilies N₁.toWeakModule N₂.toWeakModule N₃.toWeakModule).sub_mem h₃ h₁) h₂
-  convert h using 1
+  exact h
 
 theorem IsJacobiFamily.nilDefect_pow (N₁ : LogVModule W M₁) (N₂ : LogVModule W M₂)
     (N₃ : LogVModule W M₃) {F : ModeFamily (M₁ := M₁) (M₂ := M₂) (M₃ := M₃)}
@@ -182,8 +182,8 @@ theorem IsJacobiFamily.nilDefect_pow (N₁ : LogVModule W M₁) (N₂ : LogVModu
     IsJacobiFamily N₁.toWeakModule N₂.toWeakModule N₃.toWeakModule
       (fun n => (Pz.nilDefect N₁ N₂ N₃ ^ k) (F n)) := by
   induction k with
-  | zero => simpa using hF
+  | zero => simpa using! hF
   | succ k ih =>
-    simpa only [pow_succ',Module.End.mul_apply] using ih.nilDefect N₁ N₂ N₃
+    simpa only [pow_succ',Module.End.mul_apply] using! ih.nilDefect N₁ N₂ N₃
 
 end VOA.LogTensor.Pz

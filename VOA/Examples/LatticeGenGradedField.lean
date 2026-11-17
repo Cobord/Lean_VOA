@@ -369,14 +369,14 @@ theorem mkEα_mem_HSpanLatGen (w : ℕ) (α : L.carrier) {p : FockN (rank L)}
   classical
   rw [mkEα_apply, ← MvPolynomial.support_sum_monomial_coeff p, TensorProduct.sum_tmul]
   refine Submodule.sum_mem _ (fun a ha => ?_)
-  rw [show (MvPolynomial.monomial a (MvPolynomial.coeff a p))
-        = (MvPolynomial.coeff a p) • MvPolynomial.monomial a (1 : ℂ) from by
+  rw [show (MvPolynomial.monomial a (p.coeff a))
+        = (p.coeff a) • MvPolynomial.monomial a (1 : ℂ) from by
       rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one],
-    ← TensorProduct.smul_tmul' (MvPolynomial.coeff a p) (MvPolynomial.monomial a (1 : ℂ)) (eGen L α)]
+    ← TensorProduct.smul_tmul' (p.coeff a) (MvPolynomial.monomial a (1 : ℂ)) (eGen L α)]
   refine Submodule.smul_mem _ _ ?_
   have hwa : Finsupp.weight HeisenbergN.weightFnN a = w := by
     rw [HeisenbergN.mem_gradingWN] at hp
-    exact hp (by rw [MvPolynomial.coeff]; exact Finsupp.mem_support_iff.mp ha)
+    exact hp (MvPolynomial.mem_support_iff.mp ha)
   exact monomial_tmul_mem_HSpanLatGen L a w α hwa
 
 /-- **Homogeneous spanning**: `gradingLatGen q ≤ HSpanLatGen q`. -/

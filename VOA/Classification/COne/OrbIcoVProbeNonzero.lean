@@ -34,13 +34,14 @@ theorem neutralProbe_wv_charge (i : ℕ) (hi : i ≠ 6) :
   rw [← he]
   change cnk 6 i * firstProbe (coordEα (latP 1) 0
     (latStateGen (latP 1) P ((6 : ℤ) - (i : ℤ)))) = 0
-  simp only [latStateGen, coordEα_apply]
-  split_ifs with hd
-  · exfalso
+  have hne : ¬((0 : (latP 1).carrier) = (((6 : ℤ) - (i : ℤ) : ℤ) : (latP 1).carrier)) := by
+    intro hd
     apply hi
     change (0 : ℤ) = 6 - (i : ℤ) at hd
     omega
-  · rw [map_zero, mul_zero]
+  have h0 : coordEα (latP 1) 0 (latStateGen (latP 1) P ((6 : ℤ) - (i : ℤ))) = 0 :=
+    (coordEα_apply (latP 1) _ _ P).trans (if_neg hne)
+  rw [h0, map_zero, mul_zero]
 
 
 theorem neutralProbe_Xico : OrbIcoS.neutralProbe Xico =

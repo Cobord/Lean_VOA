@@ -30,7 +30,7 @@ theorem gtQ_oneRow_branching (q : R) (h : PochhammerUnits q) (u : ℕ → Rˣ)
   rw [gtQ_oneRow_eq, gtEval_oneRow_branching, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj
-  have hle : j ≤ k := by simpa using hj
+  have hle : j ≤ k := by simpa using! hj
   have hn := gtGaussian_normalized q h k (k - j) (Nat.sub_le k j)
   rw [Nat.sub_sub_self hle] at hn
   simp only [← gtInvPoch_nat] at hn

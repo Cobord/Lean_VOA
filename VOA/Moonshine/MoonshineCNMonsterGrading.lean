@@ -9,6 +9,9 @@ namespace VOA.Moonshine.ConwayNorton
 open IntegralLattice LatGen HeisenbergN
 open scoped TensorProduct BigOperators
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 attribute [local instance] monsterPhysicalAddCommGroup
 attribute [local instance] Classical.typeDecidableEq
 
@@ -24,8 +27,13 @@ theorem moonshineMatterConformal_momentum :
 theorem moonshineMatterVirasoro_momentum (n : ℤ) (α : lorentzianLattice.carrier)
     (u : moonshineMatterSpace) (hu : u ∈ moonshineMatterMomentum α) :
     moonshineMatterNearVOA.L n u ∈ moonshineMatterMomentum α := by
-  simpa only [zero_add] using moonshineMatterMomentum_mode 0 α
-    moonshineMatterNearVOA.conformalVector u moonshineMatterConformal_momentum hu (n + 1)
+  first
+  | simpa only [zero_add] using moonshineMatterMomentum_mode 0 α
+      moonshineMatterNearVOA.conformalVector u moonshineMatterConformal_momentum hu (n + 1)
+  | have h := moonshineMatterMomentum_mode 0 α
+        moonshineMatterNearVOA.conformalVector u moonshineMatterConformal_momentum hu (n + 1)
+    rw [zero_add] at h
+    exact h
 
 instance matterMomentumDecomposition : DirectSum.Decomposition moonshineMatterMomentum :=
   moonshineMatterMomentum_isInternal.chooseDecomposition

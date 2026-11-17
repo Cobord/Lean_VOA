@@ -61,7 +61,7 @@ theorem nearTensorGrading_energy (V : NearVOA A) (W : NearVOA B)
   · intro x y hx hy; simp only [map_add, hx, hy, smul_add]
   · intro c x hx; simp only [map_smul, hx, smul_comm c]
   · intro i j a b ha hb hij
-    dsimp only
+    try dsimp only
     simp only [tensorTranslation, LinearMap.add_apply, LinearMap.rTensor_tmul,
       LinearMap.lTensor_tmul, nearVirasoroMode, zero_add, V.L0_grading a ha,
       W.L0_grading b hb, TensorProduct.smul_tmul', TensorProduct.tmul_smul]
@@ -92,7 +92,7 @@ theorem nearTensorGrading_mode (V : NearVOA A) (W : NearVOA B)
   refine nearTensorGrading_induction V W
     (P := fun u => nearTensorCoefficient V W (-n - 1) u v ∈
       nearTensorGrading V W (k + l - n - 1)) ?_ ?_ ?_ ?_ hu
-  · dsimp only
+  · try dsimp only
     rw [map_zero, LinearMap.zero_apply]; exact Submodule.zero_mem _
   · intro x y hx hy
     rw [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ hx hy
@@ -102,7 +102,7 @@ theorem nearTensorGrading_mode (V : NearVOA A) (W : NearVOA B)
     refine nearTensorGrading_induction V W
       (P := fun v => nearTensorCoefficient V W (-n - 1) (a ⊗ₜ b) v ∈
         nearTensorGrading V W (k + l - n - 1)) ?_ ?_ ?_ ?_ hv
-    · dsimp only
+    · try dsimp only
       rw [map_zero]; exact Submodule.zero_mem _
     · intro x y hx hy; rw [map_add]; exact Submodule.add_mem _ hx hy
     · intro c x hx; rw [map_smul]; exact Submodule.smul_mem _ c hx

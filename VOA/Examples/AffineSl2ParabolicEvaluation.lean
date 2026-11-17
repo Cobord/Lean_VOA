@@ -7,6 +7,8 @@ The parabolic module is the genuine affine Verma quotient with the finite
 horizontal highest-weight relation imposed. Its map to an actual homogeneous
 primitive is constructed from enveloping-algebra evaluation.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineSl2GeneralRigidity
 noncomputable section
 open AffineVOA AffineVOA.HighestModule AffineVOA.Strong
@@ -70,9 +72,9 @@ theorem energyShift_isHighest (k h : ℂ) (N : ℤ) (v : WakModule k)
     · have hnz : n=0 := by omega
       subst n
       fin_cases a
-      · simpa using he
+      · simpa using! he
       · exact False.elim (hnot (by simp [HighestNormalOrdering.IsLower]))
-      · simpa using hh
+      · simpa using! hh
 
 /-- The literal Verma evaluation at an actual primitive state. -/
 def primitiveVermaMap (k h : ℂ) (N : ℤ) (v : WakModule k)
@@ -250,7 +252,7 @@ theorem primitiveParabolicMap_range_le_idealGen
         | nil => rfl
         | cons a l ih =>
             simpa only [NormalOrdering.currentWord,Module.End.mul_apply,
-              AffineSl2BoundaryC2.currentWord_cons] using congrArg (J k a.1 a.2) ih
+              AffineSl2BoundaryC2.currentWord_cons] using! congrArg (J k a.1 a.2) ih
       rw [hw]
       exact AffineSl2BoundaryMaximalIdeal.currentWord_mem_idealGen k hk v _
     intro u
@@ -319,7 +321,7 @@ theorem admissible_first_parabolic_map_exists (p q : ℕ) (hp : 2 ≤ p) (hq : 0
     have hc : ((p-1:ℕ):ℂ)=(p:ℂ)-1 := by
       rw [Nat.cast_sub (by omega : 1 ≤ p),Nat.cast_one]
     simpa only [Int.cast_mul,Int.cast_ofNat,Int.cast_sub,Int.cast_natCast,
-      Int.cast_one,Nat.cast_mul,Nat.cast_ofNat,hc] using h
+      Int.cast_one,Nat.cast_mul,Nat.cast_ofNat,hc] using! h
   have hd : 0 < 2*(p-1) := by omega
   have hn := jointSpace_le_grading k hk _ _ hj
   let f := primitiveParabolicMap k hk (2*(p-1)) hd (q*(p-1):ℕ) v hv hn hs he hh
@@ -327,8 +329,8 @@ theorem admissible_first_parabolic_map_exists (p q : ℕ) (hp : 2 ≤ p) (hq : 0
   refine ⟨f, hf ▸ hv, fun a n u => primitiveParabolicMap_mode _ _ _ _ _ _ _ _ _ _ _ a n u, ?_, ?_⟩
   · rw [hf]
     exact primitiveParabolicMap_range ..
-  · rw [primitiveParabolicMap_range]
-    exact SingVec.idealGen_le (QuotVOA.maxGradedIdeal_isIdeal (universal k hk)) hi
+  · exact (primitiveParabolicMap_range_le_idealGen k hk (2*(p-1)) hd (q*(p-1):ℕ) v hv hn hs
+      he hh).trans (SingVec.idealGen_le (QuotVOA.maxGradedIdeal_isIdeal (universal k hk)) hi)
 
 end
 end VOA.AffineSl2GeneralRigidity

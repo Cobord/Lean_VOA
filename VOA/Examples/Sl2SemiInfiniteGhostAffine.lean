@@ -60,7 +60,7 @@ theorem ghostCurrent_simplePole (a b : Fin 3) :
     mode (ghostCurrentField a) 0 (ghostCurrent b) =
       ∑ c, fabc a b c • ghostCurrent c := by
   fin_cases a <;> fin_cases b <;>
-    simp only [ghostCurrentField, ghostCurrent, Fin.sum_univ_three] <;>
+    simp only [ghostCurrentField, ghostCurrent, Fin.sum_univ_three, Fin.reduceFinMk] <;>
     norm_num only [ghostCurrentCoefficient, fabc] <;>
     simp only [map_add, map_sub, map_smul, map_neg, map_zero,
       mode_add, mode_sub, mode_smul, mode_neg, mode_zero,
@@ -80,7 +80,7 @@ theorem ghostCurrent_doublePole (a b : Fin 3) :
     mode (ghostCurrentField a) 1 (ghostCurrent b) =
       (4 * kappa a b) • sl2GhostSVA.vacuum := by
   fin_cases a <;> fin_cases b <;>
-    simp only [ghostCurrentField, ghostCurrent, Fin.sum_univ_three] <;>
+    simp only [ghostCurrentField, ghostCurrent, Fin.sum_univ_three, Fin.reduceFinMk] <;>
     norm_num only [ghostCurrentCoefficient, fabc] <;>
     simp only [map_add, map_sub, map_smul, map_neg, map_zero,
       mode_add, mode_sub, mode_smul, mode_neg, mode_zero,

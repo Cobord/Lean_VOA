@@ -66,9 +66,17 @@ theorem gen_sugawara :
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [map_smul, smul_gen_gen]
 
+/-- `kappaInv` as an explicit matrix literal (the `match` on `Fin 8` literals is slow to unfold). -/
+theorem kappaInv_eq : kappaInv = ![![0, 0, 0, 1, 0, 0, 0, 0], ![0, 0, 0, 0, 1, 0, 0, 0],
+    ![0, 0, 0, 0, 0, 1, 0, 0], ![1, 0, 0, 0, 0, 0, 0, 0], ![0, 1, 0, 0, 0, 0, 0, 0],
+    ![0, 0, 1, 0, 0, 0, 0, 0], ![0, 0, 0, 0, 0, 0, 2/3, 1/3], ![0, 0, 0, 0, 0, 0, 1/3, 2/3]] := by
+  funext a b
+  fin_cases a <;> fin_cases b <;> rfl
+
 theorem kappaInv_bracket_trace (c : Fin 8) :
     ∑ i, ∑ j, kappaInv i j * bracketTable i j c = 0 := by
-  fin_cases c <;> simp [Fin.sum_univ_eight, kappaInv, bracketTable]
+  rw [kappaInv_eq]
+  fin_cases c <;> simp [Fin.sum_univ_eight, bracketTable]
 
 theorem kappaInv_form_trace : ∑ i, ∑ j, kappaInv i j * formTable i j = 8 := by
   simp [Fin.sum_univ_eight, kappaInv, formTable]

@@ -105,10 +105,14 @@ theorem extVOA_pseudoUnitary (hV : Nice V)
     by_contra hall
     push Not at hall
     apply hx0
-    have htot := congrArg (fun φ : X ⟶ X => φ.val x)
-      (show e.hom ≫ (∑ j, biproduct.π g j ≫ biproduct.ι g j) ≫ e.inv = 𝟙 X by
-        rw [biproduct.total, Category.id_comp, e.hom_inv_id])
-    simp only [Ordinary.comp_apply, Ordinary.sum_val, Ordinary.id_apply] at htot
+    have htot : e.inv.val (∑ j, (biproduct.ι g j).val ((biproduct.π g j).val (e.hom.val x))) =
+        x := by
+      have h0 := congrArg (fun φ : X ⟶ X => φ.val x)
+        (show e.hom ≫ (∑ j, biproduct.π g j ≫ biproduct.ι g j) ≫ e.inv = 𝟙 X by
+          rw [biproduct.total, Category.id_comp, e.hom_inv_id])
+      refine Eq.trans ?_ h0
+      exact congrArg e.inv.val (Ordinary.sum_val Finset.univ
+        (fun j => biproduct.π g j ≫ biproduct.ι g j) (e.hom.val x)).symm
     rw [← htot, Finset.sum_eq_zero fun j _ => by rw [hall j]; exact map_zero _]
     exact map_zero _
   obtain ⟨j, hj⟩ := hex

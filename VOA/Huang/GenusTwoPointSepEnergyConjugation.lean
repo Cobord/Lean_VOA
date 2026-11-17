@@ -8,6 +8,8 @@ The commutator calculation, local finiteness, and evaluation of the actual
 exponentials are discharged here. The remaining identity is entirely scalar:
 it compares the exponential of the Witt adjoint action with Zhu's coefficients.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable section
 namespace VOA.Huang.GenusTwoPoint.Separate
 open VOA GenusOne
@@ -42,7 +44,7 @@ theorem stateEnergy_comm (W : VertexOperatorAlgebra V) (i j : ℕ) (x : V) :
     subst i; subst j
     simp
   · simpa only [Ring.lie_def, LinearMap.sub_apply, Module.End.mul_apply,
-      Nat.cast_add, Int.cast_natCast, if_neg hij, add_zero] using h
+      Nat.cast_add, Int.cast_natCast, if_neg hij, add_zero] using! h
 
 /-- The abstract Witt action is exactly the implemented negative generator. -/
 theorem stateEnergy_generator (a : ℕ → ℂ) :
@@ -73,7 +75,7 @@ theorem normalizedState_energy_expansion (x : V) :
     rw [LinearEquiv.apply_symm_apply, normalizedStateChange_exp]
     exact (expFun_neg_cancel' (coordGen_isLocNilp W a) x).symm
   rw [normalizedStateChange_exp, hinv]
-  simpa only [he, neg_neg, energyWittAction_apply] using h
+  simpa only [he, neg_neg, energyWittAction_apply] using! h
 
 /-- The state zero-mode law consumes only the scalar coefficient identity. -/
 theorem normalizedStateZeroConjugation_of_energyCoefficients
@@ -108,7 +110,7 @@ theorem moduleEnergy_comm (P : LWModule W) (i j : ℕ) (x : P.carrier) :
     simp
   · simpa only [SquareModule.roundL, Ring.lie_def, LinearMap.sub_apply,
       Module.End.mul_apply, Nat.cast_add, Int.cast_natCast, if_neg hij, add_zero,
-      LinearMap.smul_apply] using h
+      LinearMap.smul_apply] using! h
 
 theorem moduleEnergy_generator (P : LWModule W) (a : ℕ → ℂ) :
     energyWittAction (fun n : ℕ => SquareModule.roundL P.isMod n)

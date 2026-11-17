@@ -106,7 +106,7 @@ theorem exists_poly_V : ∃ V : ℂ[X], mk Wt tetraV = aeval (omegaL Wt) V (mk W
     rw [map_smul, smul_eq_mul, Matrix.vandermonde_apply, mul_comm]
     congr 1
     have := hψw j (X ^ (a : ℕ))
-    simpa [w] using this
+    simpa [w] using! this
   have hind : LinearIndependent ℂ w := by
     rw [Fintype.linearIndependent_iff]
     intro d hd
@@ -121,7 +121,7 @@ theorem exists_poly_V : ∃ V : ℂ[X], mk Wt tetraV = aeval (omegaL Wt) V (mk W
     apply Submodule.span_le.mpr
     rintro _ ⟨a, rfl⟩
     have := hfixed (X ^ (a : ℕ))
-    simpa [w] using this
+    simpa [w] using! this
   haveI : FiniteDimensional ℂ evenSpan := by
     haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun a : Fin 11 =>
         (omegaL Wt ^ (a : ℕ)) (mk Wt Wt.vacuum))) :=
@@ -214,6 +214,7 @@ theorem tetraOddAnnihilator_of_singleValues (h : TetraOddSingleValues) : TetraOd
       refine ⟨ψ, hmul, h1, ?_, ?_⟩
       · rw [hw]; fin_cases j <;> rfl
       · convert hne using 3
+        all_goals (fin_cases j <;> rfl)
     rcases Fin.eq_zero_or_eq_succ i with rfl | ⟨j, rfl⟩
     · obtain ⟨ψ, hmul, h1, hw, hv⟩ := exists_vacuumChar
       have e := key ψ hmul h1 (lam := ((sglQ 0 : ℚ) : ℂ)) (by rw [hw]; simp [sglQ])

@@ -41,14 +41,14 @@ theorem mixedTop_presentation
       exact List.mem_map.mpr ⟨u, by simp, rfl⟩
     simp [cs, mixedXYZColours] at hu
     rcases hu with ⟨_, hu⟩ | ⟨_, hu⟩ | ⟨_, hu⟩
-    · simpa [hu] using hj
+    · simpa [hu] using! hj
     · exact Or.inr (Or.inr hu)
-    · simpa [hu] using ht
+    · simpa [hu] using! ht
   refine ⟨shape, W, hgood, ?_⟩
   have hsum := mixedTop_eq_radicalWordSum ρ w j t k s bases rs
   have hW' : xyzEvaluation ρ w shape W =
       ((mixedXYZWords j t k s bases rs).map (radicalWord ρ w)).sum := by
-    simpa only [List.map_map, Function.comp_def, one_smul] using hW
+    simpa only [List.map_map, Function.comp_def, one_smul] using! hW
   exact hW'.trans hsum.symm
 
 end VOA.DeligneAudit.D4Levi

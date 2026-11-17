@@ -35,7 +35,7 @@ theorem shiftedJacobi_of_productFormula {n : ℕ} (hn : 0 < n) (a j : ℤ)
   apply twistedJacobi_of_local_pf (shiftAut n a) (shiftedY n a j) hn
     (shiftedY_truncation hn a j) (fun r => -(r : ℤ)) (fun r => by simp)
     (fun r u _ v e _ _ => shiftedY_local hn a j (-(r : ℤ)) e u v)
-  simpa only [ShiftedProductFormula, sub_eq_add_neg, Int.cast_neg] using hpf
+  simpa only [ShiftedProductFormula, sub_eq_add_neg, Int.cast_neg] using! hpf
 
 /-- CONDITIONAL constructor: the concrete fields become a genuine
 `TwistedModule` once their remaining product identity is proved. -/

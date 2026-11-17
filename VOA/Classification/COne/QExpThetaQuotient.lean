@@ -29,7 +29,7 @@ theorem thetaRegularizedQuotient_differentiable {f g : ℂ → ℂ}
       rw [← differentiableOn_univ]
       exact (Complex.differentiableOn_dslope (Filter.univ_mem : Set.univ ∈ 𝓝 x)).mpr
         hg.differentiableOn
-    have hn : dslope g x x ≠ 0 := by simpa only [dslope_same] using hsimple x hx
+    have hn : dslope g x x ≠ 0 := by simpa only [dslope_same] using! hsimple x hx
     apply ((hdsf x).div (hdsg x) hn).congr_of_eventuallyEq
     filter_upwards [(hdsg x).continuousAt.eventually_ne hn] with y hy
     by_cases hyx : y = x

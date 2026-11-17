@@ -49,10 +49,18 @@ theorem injective_of_theta {A : LogModuleCat W} (m : tensorObject hC2 A A ⟶ A)
   change (tensorMorphism hC2 m (𝟙 A)).1 ((associatorIso hC2 A A A).inv.1
     ((tensorMorphism hC2 u (𝟙 _)).1 ((leftUnitIso hC2 (tensorObject hC2 A A)).inv.1 w))) = w
     at hU'
-  rw [leftUnitIso_inv_apply, tensorMorphism_apply] at hU'
+  rw [leftUnitIso_inv_apply] at hU'
+  -- 4.35: `W.vacuum : V` sits at the `unitObject` carrier, so the canonical-mode
+  -- lemma is applied in term mode rather than by `rw`.
+  replace hU' := (congrArg
+    (fun v => (tensorMorphism hC2 m (𝟙 A)).1 ((associatorIso hC2 A A A).inv.1 v))
+    (tensorMorphism_apply hC2 u (𝟙 (tensorObject hC2 A A)) (-1) 0 W.vacuum w)).symm.trans hU'
   let z := (canonical hC2 (tensorObject hC2 A A) (tensorObject hC2 A A)).1 (-1) 0 w' w
   have hT' := congrArg (fun F => F.1 z) hT
-  simp only [sum_apply] at hT'
+  -- 4.35: `simp only [sum_apply] at hT'` no longer fires (carrier alias); apply it in term mode.
+  replace hT' := ((sum_apply (N := tensorObject hC2 (tensorObject hC2 A A) (tensorObject hC2 A A))
+    Finset.univ _ z).symm.trans hT').trans
+    (sum_apply (N := tensorObject hC2 (tensorObject hC2 A A) (tensorObject hC2 A A)) Finset.univ _ z)
   have hL : ∀ g : G, (tensorMorphism hC2 (ψ g) (𝟙 (tensorObject hC2 A A)) ≫
       (associatorIso hC2 A A A).inv ≫ tensorMorphism hC2 (ψ g) (𝟙 A)).1 z =
       if g = 1 then w else 0 := by

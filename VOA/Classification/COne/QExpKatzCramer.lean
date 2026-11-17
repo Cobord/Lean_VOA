@@ -128,7 +128,8 @@ theorem cramer_levelOne_coeff_lattice {M : ℕ} (hM : M ≠ 0)
           qExpansion 1 (G i)) :
     ∃ L : Submodule ℤ ℂ, L.FG ∧ ∀ n, PowerSeries.coeff n (b j) ∈ awaySat M L := by
   apply exists_lattice_of_levelOne_multiplier hM A hA (b j) v t ht (H j) w G
-  rw [← hdet, cramer_det_sq]
-  simp_rw [hnum]
+  rw [← hdet]
+  refine (cramer_det_sq (fun i j => PowerSeries.map (algebraMap A ℂ) (H i j)) b j).trans ?_
+  exact Finset.sum_congr rfl fun i _ => by rw [hnum i]
 
 end VOA.Classification.COne.SSHecke

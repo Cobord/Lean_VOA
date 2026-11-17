@@ -286,7 +286,7 @@ theorem pair_terms (q : σ × σ → K) (ij : IncreasingPair (Fin m)) (t : Fin m
     rw [Finset.sum_comm]
     rw [Finset.sum_congr rfl fun b _ => Finset.sum_comm]
     exact Finset.sum_comm
-  congr 1
+  refine congrArg₂ (· + ·) ?_ ?_
   · rw [e1]
     refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun b _ =>
       Finset.sum_congr rfl fun a _ => ?_
@@ -393,7 +393,7 @@ theorem deltaVec_mem {Q : ρ → σ × σ → K} (c₀ : σ) (hdiag : ∀ r, Q r
   · simp only [deltaVec]
     have : (t ∘ g.symm = fun _ => c₀) ↔ (t = fun _ => c₀) := by
       constructor
-      · intro h; funext k; have := congrFun h (g k); simpa using this
+      · intro h; funext k; have := congrFun h (g k); simpa using! this
       · intro h; subst h; rfl
     split_ifs with h1 h2 h2 <;> simp_all
   · unfold currentReadback projectedDiagonal

@@ -65,7 +65,7 @@ theorem positiveProbe_mixed_simple (F : SphericalFusion C) (i j a : F.Label) :
       (categoricalS F a i / F.dimension (F.simple i)) •
         𝟙 (F.simple i ⊗ F.simple j) := by
   rw [positiveProbe_mixedCenter, monodromyLoop_simple]
-  simp
+  simp <;> rfl
 
 open Classical in
 /-- Fourier projection in the positive probe variable, on an arbitrary central object. -/
@@ -101,7 +101,7 @@ theorem positiveProbeProjector_mixed_simple (F : SphericalFusion C) (M : Modular
   have h := F.comp_simpleProjector a i (𝟙 (F.simple i))
   simp only [Category.id_comp] at h
   rw [h]
-  split_ifs <;> simp
+  split_ifs <;> simp <;> rfl
 
 /-- Distinct first labels have no central morphisms, regardless of the second labels. -/
 theorem mixedCenter_hom_eq_zero_of_first_ne (F : SphericalFusion C) (M : Modular F)

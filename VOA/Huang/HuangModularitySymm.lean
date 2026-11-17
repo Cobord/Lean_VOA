@@ -145,8 +145,9 @@ theorem fus_dual (hW : Nice W) (D : VOA.Classification.COne.ModularData W)
     let e3 : (F.simple c ⊗ F.simple x ⟶ 𝟙_ M.C) ≃ₗ[ℂ] (F.simple c ⊗ F.simple x ⟶ F.simple D.vac) :=
       Linear.homCongr ℂ (Iso.refl _) F.unitIso.symm
     have h1 : mult (F.simple x)ᘁ c = finrank ℂ (F.simple c ⊗ F.simple x ⟶ F.simple D.vac) := by
-      rw [mult, e1.finrank_eq, e2.finrank_eq, e3.finrank_eq]
-    rw [h1, ← mult_eq_finrank_hom_to]
+      show finrank ℂ (F.simple c ⟶ (F.simple x)ᘁ) = _
+      rw [e1.finrank_eq, e2.finrank_eq, e3.finrank_eq]
+    rw [h1, ← mult_eq_finrank_hom_to (F.simple c ⊗ F.simple x) D.vac]
     have h2 := fusionN_eq hW M D hD c x D.vac
     change mult (F.simple c ⊗ F.simple x) D.vac = _ at h2
     rw [h2, hvac]
@@ -157,31 +158,35 @@ theorem fus_dual (hW : Nice W) (D : VOA.Classification.COne.ModularData W)
   have hdual : Nonempty ((F.simple x)ᘁ ≅ F.simple (σ x)) := by
     obtain ⟨n, f, ⟨e⟩⟩ := F.semisimple (F.simple x)ᘁ
     have hcard : ∀ c, (Finset.univ.filter fun k => f k = c).card = if c = σ x then 1 else 0 :=
-      fun c => by rw [← mult_eq_card f e c, hmult]
+      fun c => by
+        rw [← mult_eq_card f e c, hmult c]
+        split_ifs <;> first | rfl | exact absurd ‹c = σ x› ‹¬c = σ x›
     have hn : n = 1 := by
       have := Finset.card_eq_sum_card_fiberwise (s := (Finset.univ : Finset (Fin n)))
         (t := (Finset.univ : Finset F.ι)) (f := f) (fun _ _ => Finset.mem_univ _)
       rw [Finset.card_univ, Fintype.card_fin] at this
       rw [this]
       simp_rw [hcard]
-      simp
+      convert (Finset.sum_ite_eq' (Finset.univ : Finset F.ι) (σ x) fun _ => (1 : ℕ)).trans
+        (if_pos (Finset.mem_univ _))
     subst hn
     have hf0 : f 0 = σ x := by
       have h1 := hcard (σ x)
-      rw [if_pos rfl] at h1
-      obtain ⟨k, hk⟩ := Finset.card_pos.mp (by rw [h1]; exact Nat.one_pos)
+      replace h1 := h1.trans (if_pos rfl)
+      obtain ⟨k, hk⟩ := Finset.card_pos.mp (lt_of_lt_of_eq Nat.one_pos h1.symm)
       have hk0 : k = 0 := Subsingleton.elim _ _
       rw [← hk0]
-      exact (Finset.mem_filter.mp hk).2
+      exact (Finset.mem_filter.mp
+        (show k ∈ Finset.univ.filter (fun k => f k = σ x) by convert hk)).2
     exact ⟨e ≪≫ biproductFinOneIso (fun k => F.simple (f k)) ≪≫ eqToIso (congrArg F.simple hf0)⟩
   obtain ⟨ed⟩ := hdual
   -- `N_{ax}^y = dim Hom(X_a ⊗ X_x, X_y) = dim Hom(X_a, X_y ⊗ X_{σx}) = N_{y,σx}^a`
   have h3 := fusionN_eq hW M D hD a x y
   change mult (F.simple a ⊗ F.simple x) y = _ at h3
-  rw [mult_eq_finrank_hom_to] at h3
+  rw [mult_eq_finrank_hom_to (F.simple a ⊗ F.simple x) y] at h3
   have h4 := fusionN_eq hW M D hD y (σ x) a
-  change mult (F.simple y ⊗ F.simple (σ x)) a = _ at h4
-  rw [← h3, ← h4, mult, (tensorRightHomLinearEquiv (F.simple a) (F.simple x) (F.simple x)ᘁ
+  change finrank ℂ (F.simple a ⟶ F.simple y ⊗ F.simple (σ x)) = _ at h4
+  rw [← h3, ← h4, (tensorRightHomLinearEquiv (F.simple a) (F.simple x) (F.simple x)ᘁ
     (F.simple y)).finrank_eq]
   exact (Linear.homCongr ℂ (Iso.refl _) (whiskerLeftIso (F.simple y) ed)).finrank_eq
 

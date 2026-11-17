@@ -95,9 +95,9 @@ theorem gradedUnitaryAt_of_harmonic_image
     exact e.symm.injective (ha hj)
   apply gradedUnitaryAt_of_harmonic_filteredIso C G F n β h i hi
   · intro x y
-    simpa only [he] using hB (e.symm x) (e.symm y)
+    simpa only [he] using! hB (e.symm x) (e.symm y)
   · intro x y
-    simpa only [he] using hh (e.symm x) (e.symm y)
+    simpa only [he] using! hh (e.symm x) (e.symm y)
   · intro p
     apply map_eq_harmonic_flag_of_cohom_map_eq C (F.pieceIn p n) b
     have hmap := simple_map_eq_of_image_squeeze j ha q hqs P Q T

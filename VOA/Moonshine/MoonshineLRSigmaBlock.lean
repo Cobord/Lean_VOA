@@ -11,6 +11,11 @@ in `V₀⁺`; diagonal matrices are fixed by triality. Odd short coordinates map
 still requires matching the off-diagonal and octad transport constants with `ζ`.
 -/
 
+-- Lean 4.35 port: as in the Axiom source, erase two newer-Mathlib instances (absent in v4.30) that
+-- create a second `CommGroup`/`AddCommGroup` structure on simple nilpotent groups such as `ZMod 2`.
+attribute [-instance] instCommGroupOfIsSimpleGroupOfIsNilpotent
+  instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace VOA.Moonshine.ConwayNorton.M8
@@ -256,7 +261,10 @@ theorem sigmaBlockConjugate (D : SigmaData) :
   · intro a ha
     have hf : plusFrame a = a := by
       have h := mem_frameSector'.mp (V0Sub_carrier ▸ ha)
-      simpa only [Extraspecial.sgn_zero, one_smul] using h
+      first
+        | simpa only [Extraspecial.sgn_zero, one_smul] using h
+        | exact (by simpa only [Extraspecial.sgn_zero, one_smul] using h :
+            plusFrameAut.toLinearEquiv a = a)
     simp only [LinearMap.comp_apply]
     have hz : sigmaBlockZ (sigNat D (a, 0)) = sigNat D (a, 0) := by
       rw [sigNat_V0 D ⟨a, ha⟩]
@@ -266,7 +274,10 @@ theorem sigmaBlockConjugate (D : SigmaData) :
   · intro a ha
     have hf : plusFrame a = -a := by
       have h := mem_frameSector'.mp ha
-      simpa only [Extraspecial.sgn_one, neg_one_smul] using h
+      first
+        | simpa only [Extraspecial.sgn_one, neg_one_smul] using h
+        | exact (by simpa only [Extraspecial.sgn_one, neg_one_smul] using h :
+            plusFrameAut.toLinearEquiv a = -a)
     simp only [LinearMap.comp_apply]
     have hz : sigmaBlockZ (sigNat D (a, 0)) = -sigNat D (a, 0) := by
       rw [sigNat_V3 D ha]
@@ -320,11 +331,19 @@ theorem sigmaBlockPlusFrame_dict (ζ : ShortIdx → ℂ) (u : SpaceB) :
       (sigmaBlockEvenState ζ u : VPlus) := by
     have hm := (le_of_eq V0Sub_carrier) (sigmaBlockEvenState ζ u).property
     have h := mem_frameSector'.mp hm
-    simpa only [Extraspecial.sgn_zero, one_smul] using h
+    first
+      | simpa only [Extraspecial.sgn_zero, one_smul] using h
+      | exact (by simpa only [Extraspecial.sgn_zero, one_smul] using h :
+          plusFrameAut.toLinearEquiv (sigmaBlockEvenState ζ u : VPlus) =
+            (sigmaBlockEvenState ζ u : VPlus))
   have h1 : plusFrame (shortDict ζ (sigmaBlockShortPart 1 u.2.1)) =
       -shortDict ζ (sigmaBlockShortPart 1 u.2.1) := by
     have h := mem_frameSector'.mp (sigmaBlockShortPart_mem ζ u.2.1 1)
-    simpa only [Extraspecial.sgn_one, neg_one_smul] using h
+    first
+      | simpa only [Extraspecial.sgn_one, neg_one_smul] using h
+      | exact (by simpa only [Extraspecial.sgn_one, neg_one_smul] using h :
+          plusFrameAut.toLinearEquiv (shortDict ζ (sigmaBlockShortPart 1 u.2.1)) =
+            -shortDict ζ (sigmaBlockShortPart 1 u.2.1))
   rw [sigmaBlockUntwisted_split, map_add, h0, h1]
   change (matDict u.1 + shortDict ζ (sigmaBlockShortPart 0 u.2.1)) +
     -shortDict ζ (sigmaBlockShortPart 1 u.2.1) =

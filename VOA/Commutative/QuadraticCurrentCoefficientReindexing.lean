@@ -68,7 +68,7 @@ def tensorPolynomial {N m : ℕ} (F : (JetVar σ N →₀ ℕ) → K) :
 /-- Every labelled coefficient is exactly the prescribed commutative coefficient. -/
 theorem coeff_tensorPolynomial {N m : ℕ} (F : (JetVar σ N →₀ ℕ) → K)
     (t : Fin m → σ) (a : Fin m → Fin (N + 1)) :
-    MvPolynomial.coeff (labelledExponent a) (tensorPolynomial F t) =
+    (tensorPolynomial F t).coeff (labelledExponent a) =
       F (coloredExponent t a) := by
   classical
   rw [tensorPolynomial, MvPolynomial.coeff_sum]
@@ -160,7 +160,7 @@ theorem exists_coloredExponent {N m : ℕ} (e : JetVar σ N →₀ ℕ)
     ∃ (t : Fin m → σ) (a : Fin m → Fin (N + 1)), coloredExponent t a = e := by
   classical
   have he' : e.sum (fun _ => id) = m := by
-    simpa only [Finsupp.weight_apply, smul_eq_mul, mul_one, Function.id_def] using he
+    simpa only [Finsupp.weight_apply, smul_eq_mul, mul_one, Function.id_def] using! he
   let s : Sym (JetVar σ N) m := (Sym.equivNatSum (JetVar σ N) m).symm ⟨e, he'⟩
   let v := Quotient.out (Sym.symEquivSym' s)
   have hv : Sym.ofVector (List.Vector.ofFn v.get) = s := by
@@ -173,7 +173,6 @@ theorem exists_coloredExponent {N m : ℕ} (e : JetVar σ N →₀ ℕ)
     exact Quotient.out_eq _
   refine ⟨fun i => (v.get i).generator, fun i => (v.get i).order, ?_⟩
   have hv' := congrArg (fun z : Sym (JetVar σ N) m => (Sym.equivNatSum (JetVar σ N) m z).1) hv
-  dsimp only at hv'
   have hs : (Sym.equivNatSum (JetVar σ N) m s).1 = e := by
     simp [s]
   rw [hs] at hv'
@@ -194,8 +193,10 @@ theorem tensorPolynomial_injective_on_particleSector {N m : ℕ}
   funext e
   by_cases he : Finsupp.weight (fun _ : JetVar σ N => 1) e = m
   · obtain ⟨t, a, rfl⟩ := exists_coloredExponent e he
-    have hc := congrArg (MvPolynomial.coeff (labelledExponent a)) (congrFun h t)
-    simpa only [coeff_tensorPolynomial] using hc
+    have hc := congrArg (fun q : MvPolynomial _ K => q.coeff (labelledExponent a))
+      (congrFun h t)
+    beta_reduce at hc
+    simpa only [coeff_tensorPolynomial] using! hc
   · rw [hF e he, hG e he]
 
 /-- Equality of multiplicity functions means that two labelled tuples differ by a
@@ -222,9 +223,9 @@ theorem coloredExponent_eq_iff {N m : ℕ} (t u : Fin m → σ)
       (fun i => (⟨t i, a i⟩ : JetVar σ N)) (fun i => (⟨u i, b i⟩ : JetVar σ N)) h
     refine ⟨g, ?_, ?_⟩
     · funext i
-      simpa using congrArg JetVar.generator (hg (g.symm i))
+      simpa using! congrArg JetVar.generator (hg (g.symm i))
     · funext i
-      simpa using congrArg JetVar.order (hg (g.symm i))
+      simpa using! congrArg JetVar.order (hg (g.symm i))
   · rintro ⟨g, rfl, rfl⟩
     exact (coloredExponent_relabel g t a).symm
 
@@ -234,8 +235,8 @@ theorem coefficient_eq_of_coloredExponent_eq {N m : ℕ}
     (p : TensorPolynomial (K := K) (σ := σ) m 0) (hp : Symmetric p)
     (t u : Fin m → σ) (a b : Fin m → Fin (N + 1))
     (h : coloredExponent t a = coloredExponent u b) :
-    MvPolynomial.coeff (labelledExponent a) (p t) =
-      MvPolynomial.coeff (labelledExponent b) (p u) := by
+    (p t).coeff (labelledExponent a) =
+      (p u).coeff (labelledExponent b) := by
   obtain ⟨g, rfl, rfl⟩ := (coloredExponent_eq_iff t u a b).mp h
   have hg := hp g g (by intro i; rfl) t
   rw [← hg, ← mapDomain_labelledExponent]
@@ -257,15 +258,15 @@ off its particle sector. Symmetry will prove independence of the chosen labellin
 def coefficientsOfTensor {N m : ℕ} (p : TensorPolynomial (K := K) (σ := σ) m 0) :
     (JetVar σ N →₀ ℕ) → K :=
   fun e => if he : Finsupp.weight (fun _ : JetVar σ N => 1) e = m then
-    MvPolynomial.coeff (labelledExponent (exponentLabelling e he).2)
-      (p (exponentLabelling e he).1) else 0
+    (p (exponentLabelling e he).1).coeff (labelledExponent (exponentLabelling e he).2)
+  else 0
 
 /-- Coefficient readback is independent of labelling, including all repeated modes/colors. -/
 theorem coefficientsOfTensor_coloredExponent {N m : ℕ}
     (p : TensorPolynomial (K := K) (σ := σ) m 0) (hp : Symmetric p)
     (t : Fin m → σ) (a : Fin m → Fin (N + 1)) :
     coefficientsOfTensor p (coloredExponent t a) =
-      MvPolynomial.coeff (labelledExponent a) (p t) := by
+      (p t).coeff (labelledExponent a) := by
   rw [coefficientsOfTensor, dif_pos (coloredExponent_particleDegree t a)]
   exact coefficient_eq_of_coloredExponent_eq p hp _ t _ a
     (coloredExponent_exponentLabelling _ _)
@@ -292,7 +293,7 @@ theorem tensorPolynomial_coefficientsOfTensor {N m : ℕ}
   funext t
   apply MvPolynomial.ext
   intro e
-  by_cases he : MvPolynomial.coeff e (p t) = 0
+  by_cases he : (p t).coeff e = 0
   · rw [he]
     by_contra h
     obtain ⟨a, rfl⟩ := tensorPolynomial_supported (coefficientsOfTensor (N := N) p) t e h
@@ -322,7 +323,7 @@ def fixedCoefficientSpace (N m r : ℕ) : Submodule K ((JetVar σ N →₀ ℕ) 
   add_mem' := by
     intro F G hF hG e he
     by_cases hz : F e = 0
-    · exact hG e (by simpa [hz] using he)
+    · exact hG e (by simpa [hz] using! he)
     · exact hF e hz
   smul_mem' := by
     intro a F hF e he
@@ -345,7 +346,7 @@ def homogeneousSymmetricSpace (m r : ℕ) :
     refine ⟨?_, fun t => (MvPolynomial.weightedHomogeneousSubmodule K (fun _ => 1) r).smul_mem
       a (hp.2 t)⟩
     intro e g he t
-    simpa using congrArg (fun f => a • f) (hp.1 e g he t)
+    simpa using! congrArg (fun f => a • f) (hp.1 e g he t)
 
 /-- The concrete coefficient reindexing, with both gradings retained. -/
 def fixedReindexingMap (N m r : ℕ) :

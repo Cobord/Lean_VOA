@@ -149,13 +149,13 @@ theorem mixedAStateEvaluation_relations (q : MixedParams) (hq : MixedValid q)
            exact he (by decide))
         | (have h : j = q.d3.toNat := by omega
            subst j
-           simpa [mixedAPair] using hb.2)
+           simpa [mixedAPair] using! hb.2)
         | (have h : j = q.e1.toNat := by omega
            subst j
-           simpa [mixedAPair] using hb.1)
+           simpa [mixedAPair] using! hb.1)
         | (have h : j = q.e2.toNat := by omega
            subst j
-           simpa [mixedAPair] using hb.2)
+           simpa [mixedAPair] using! hb.2)
   · by_cases ho : (q.A - q.d1).toNat < j
     · apply mixedStateEvaluation_relation q hq
       exact Or.inr (Or.inl ⟨j, ho, by simp [mixedANext] at hu; omega, rfl⟩)
@@ -164,7 +164,7 @@ theorem mixedAStateEvaluation_relations (q : MixedParams) (hq : MixedValid q)
         | omega
         | (have h : j = (q.A - q.d1).toNat := by omega
            subst j
-           simpa [mixedAPair] using hb.1)
+           simpa [mixedAPair] using! hb.1)
   · apply mixedStateEvaluation_relation q hq
     exact Or.inr (Or.inr (Or.inl ⟨j, hj, hu, rfl⟩))
   · by_cases ho : (q.A - q.d3).toNat < j
@@ -188,7 +188,7 @@ theorem mixedAStateEvaluation_relations (q : MixedParams) (hq : MixedValid q)
         | (simp only [mixedP] at ho; omega)
         | (have h : j = (mixedP q - q.e1).toNat := by simp [mixedP] at *; omega
            subst j
-           simpa [mixedAPair] using hb.1)
+           simpa [mixedAPair] using! hb.1)
   · by_cases ho : (mixedQ q - q.e2).toNat < j
     · apply mixedStateEvaluation_relation q hq
       exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr ⟨j, ho, by
@@ -200,7 +200,7 @@ theorem mixedAStateEvaluation_relations (q : MixedParams) (hq : MixedValid q)
         | (simp only [mixedQ] at ho; omega)
         | (have h : j = (mixedQ q - q.e2).toNat := by simp [mixedQ] at *; omega
            subst j
-           simpa [mixedAPair] using hb.2)
+           simpa [mixedAPair] using! hb.2)
 
 /-- The reduced ring maps onto each valid a-state quotient. -/
 def mixedAStateSurjection (q : MixedParams) (hq : MixedValid q)

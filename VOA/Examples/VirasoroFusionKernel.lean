@@ -23,7 +23,7 @@ noncomputable def wardSingle (c h : ℂ) (r : ℕ) (v : sortedSpan c h r) :
   refine ⟨fun j => if j=r then v.val else 0,?_⟩
   intro j
   by_cases hj : j=r
-  · subst j; simpa using v.property
+  · subst j; simpa using! v.property
   · simp only [if_neg hj]; exact (sortedSpan c h j).zero_mem
 
 /-- The single coefficient has exactly its prescribed value. -/
@@ -84,7 +84,7 @@ theorem wardSourceAt_diagonal (c h b t a : ℂ) (N r : ℕ) (f : wardSequenceSpa
       wardBSASourceDiagonal h b t N r N (a+(N:ℂ)) • f.val r := by
   have hh := wardBSASourceOperator_diagonal c h b t N N
     (wardFieldLift c h a f) r (wardFieldLift_below c h a f r hf) (a+(N:ℂ))
-  simpa [wardSourceAt,wardFieldLift] using hh
+  simpa [wardSourceAt,wardFieldLift] using! hh
 
 /-- Single-coefficient elimination for any actual level-sequence operator
 with a triangular scalar diagonal. It constructs states, not assumed kernels. -/
@@ -167,7 +167,7 @@ theorem ward_partial_kernel_unique (c h : ℂ)
   | h r ih =>
     intro hr
     by_cases hz : r=0
-    · simpa [hz] using h0
+    · simpa [hz] using! h0
     · have hb : ∀ j<r, (f-g).val j=0 := by
         intro j hj
         change f.val j-g.val j=0
@@ -197,7 +197,7 @@ theorem ward_partial_kernel_terminal_unique (c h : ℂ)
 
 /-- The nonzero actual highest vector as a member of level zero. -/
 noncomputable def fusionLeadingState (c h : ℂ) : sortedSpan c h 0 :=
-  ⟨highestVector c h,by simpa [energyHW] using negWord_mem_sortedSpan c h []⟩
+  ⟨highestVector c h,by simpa [energyHW] using! negWord_mem_sortedSpan c h []⟩
 
 /-- Fix an actual solution of the preterminal equations, normalized by the
 highest vector. Existence comes from the explicit single-coefficient elimination. -/

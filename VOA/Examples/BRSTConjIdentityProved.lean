@@ -36,14 +36,14 @@ theorem kpZero_proved : KpZero := by
   match e, hp, hW with
   | 0, _, hW =>
     have hk : 1 ≤ j + 1 := by omega
-    have h := Kp_b_zero N a hk (W := W) (by simpa [ghModeWt, ghWt] using hW) hy hC
-    simpa using h
+    have h := Kp_b_zero N a hk (W := W) (by simpa [ghModeWt, ghWt] using! hW) hy hC
+    simpa using! h
   | 1, hp, hW =>
     have hk : 1 ≤ j := by
       rcases Nat.eq_zero_or_pos j with h | h
       · subst h; exact absurd rfl hp
       · exact h
-    exact Kp_c_zero N a hk (W := W) (by simpa [ghModeWt, ghWt] using hW) hy hC
+    exact Kp_c_zero N a hk (W := W) (by simpa [ghModeWt, ghWt] using! hW) hy hC
 
 /-- **The ghost-only identity for the cubic charge.** -/
 theorem ghostCubicConj_proved : GhostCubicConj := ghostCubicConj_of_Kp kpZero_proved

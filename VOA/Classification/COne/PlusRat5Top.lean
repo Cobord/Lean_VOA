@@ -52,7 +52,7 @@ theorem quot_top_zero {h' : ℂ} (hbQ : FactorBottom A P ⊤ h') {x : M} (hx : L
       Submodule.Quotient.mk (mode (A.YM a) n y) := by
     intro a n y
     have := WeakModule.quotient_act_mk A (ofR A P) a n y
-    simpa only [WeakModule.act_def] using this
+    simpa only [WeakModule.act_def] using! this
   have hxg : x ∈ (L0 A).maxGenEigenspace h' :=
     Module.End.eigenspace_le_maxGenEigenspace (Module.End.mem_eigenspace_iff.mpr hx)
   have hΩ : (Submodule.Quotient.mk x : M ⧸ (ofR A P).carrier) ∈ Omega Q := by

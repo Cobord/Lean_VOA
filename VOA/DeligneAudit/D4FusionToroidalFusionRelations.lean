@@ -89,7 +89,7 @@ theorem eval_generator_cartanN_moment (h : Fin S.n) (hh : S.cartanN h) (s : ℕ)
 theorem eval_generator_cartanN_zero (h : Fin S.n) (hh : S.cartanN h) :
     (d1EvalAction S.f S.jacobi hskew z).op h 0 0 (generator S.c₀) =
       -((N * S.thetaN h : ℕ) : ℂ) • generator S.c₀ := by
-  simpa using eval_generator_cartanN_moment S hskew z h hh 0
+  simpa using! eval_generator_cartanN_moment S hskew z h hh 0
 
 /-- The `u`-degree-one non-theta fusion letters kill the generator. -/
 theorem eval_generator_fusion_one (x : Fin S.n) (hx : x ≠ S.c₀) (s : ℕ) :

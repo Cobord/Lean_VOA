@@ -54,7 +54,7 @@ theorem simple_of_vertexEquiv {X Y : Type*} [AddCommGroup X] [Module ℂ X]
       obtain ⟨v', hv', rfl⟩ := hv
       refine ⟨V.smul (e.symm u) n v', hI _ _ _ hv', ?_⟩
       have hm := he.map_smul (e.symm u) n v'
-      simpa only [LinearEquiv.coe_toLinearMap, LinearEquiv.apply_symm_apply] using hm
+      simpa only [LinearEquiv.coe_toLinearMap, LinearEquiv.apply_symm_apply] using! hm
     have hc : I = (I.map e.toLinearMap).comap e.toLinearMap :=
       (Submodule.comap_map_eq_of_injective e.injective I).symm
     rcases hW.2 _ hJ with h | h
@@ -89,7 +89,7 @@ theorem mem_grading_of_L_zero {X : Type*} [AddCommGroup X] [Module ℂ X]
   have hz1 : z ∈ (V.L 0).eigenspace (n : ℂ) := by
     have h1 : a + z ∈ (V.L 0).eigenspace (n : ℂ) :=
       Module.End.mem_eigenspace_iff.mpr hx
-    simpa using Submodule.sub_mem _ h1 (hgr n ha)
+    simpa using! Submodule.sub_mem _ h1 (hgr n ha)
   have hle : (⨆ (k : ℤ) (_ : k ≠ n), V.grading k) ≤
       ⨆ (μ : ℂ) (_ : μ ≠ (n : ℂ)), (V.L 0).eigenspace μ :=
     iSup₂_le fun k hk => le_trans (hgr k)
@@ -126,7 +126,7 @@ def CosetIdentification.weightEquiv (ident : CosetIdentification) (n : ℤ) :
     cosetVOA.grading n ≃ₗ[ℂ] (virasoroSimple leeYangC).grading n where
   toFun x := ⟨ident.equiv x, (ident.map_mem_grading_iff n x).mpr x.property⟩
   invFun y := ⟨ident.equiv.symm y, (ident.map_mem_grading_iff n (ident.equiv.symm y)).mp
-    (by simpa only [LinearEquiv.apply_symm_apply] using y.property)⟩
+    (by simpa only [LinearEquiv.apply_symm_apply] using! y.property)⟩
   left_inv x := Subtype.ext (ident.equiv.symm_apply_apply x)
   right_inv y := Subtype.ext (ident.equiv.apply_symm_apply y)
   map_add' x y := Subtype.ext (map_add ident.equiv (x : CosetSpace) (y : CosetSpace))

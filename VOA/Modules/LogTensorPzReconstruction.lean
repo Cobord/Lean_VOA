@@ -29,14 +29,13 @@ noncomputable def modeDefect (A₁ : WeakModule W M₁) (A₂ : WeakModule W M�
     (A₃ : WeakModule W M₃) (n : ℂ) : End ℂ (M₁ →ₗ[ℂ] M₂ →ₗ[ℂ] M₃) where
   toFun F := LinearMap.mk₂ ℂ
     (fun x y => L0 A₃ (F x y) - F (L0 A₁ x) y - F x (L0 A₂ y) + (n+1) • F x y)
-    (fun x x' y => by dsimp only; simp only [map_add, LinearMap.add_apply, smul_add]; module)
-    (fun s x y => by dsimp only; simp only [map_smul, LinearMap.smul_apply]; module)
-    (fun x y y' => by dsimp only; simp only [map_add, smul_add]; module)
-    (fun s x y => by dsimp only; simp only [map_smul]; module)
-  map_add' F G := by ext x y; dsimp only; simp only [LinearMap.mk₂_apply, LinearMap.add_apply, map_add, smul_add]; module
+    (fun x x' y => by simp only [map_add, LinearMap.add_apply, smul_add]; module)
+    (fun s x y => by simp only [map_smul, LinearMap.smul_apply]; module)
+    (fun x y y' => by simp only [map_add, smul_add]; module)
+    (fun s x y => by simp only [map_smul]; module)
+  map_add' F G := by ext x y; simp only [LinearMap.mk₂_apply, LinearMap.add_apply, map_add, smul_add]; module
   map_smul' s F := by
     ext x y
-    dsimp only
     simp only [LinearMap.mk₂_apply, LinearMap.smul_apply, map_smul, RingHom.id_apply]
     module
 

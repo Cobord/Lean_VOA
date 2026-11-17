@@ -64,7 +64,7 @@ theorem fivePointTerm_zero_first_of_weight_bot (N P Q R : LogModuleCat W) (tree 
       have ho : A (B u z) w=0 := (congrArg (fun q => A q w) hv).trans (LinearMap.map_zero₂ A w)
       have hh := congrArg (fun q : (tensorObject hC2 L R).act.weight β => f (q : (tensorObject hC2 L R).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | inner =>
       let T := tensorObject hC2 P Q
       let L := tensorObject hC2 N T
@@ -77,7 +77,7 @@ theorem fivePointTerm_zero_first_of_weight_bot (N P Q R : LogModuleCat W) (tree 
       have ho : A (B x u) w=0 := (congrArg (fun q => A q w) hv).trans (LinearMap.map_zero₂ A w)
       have hh := congrArg (fun q : (tensorObject hC2 L R).act.weight β => f (q : (tensorObject hC2 L R).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | middle =>
       let T := tensorObject hC2 P Q
       let L := tensorObject hC2 T R
@@ -90,7 +90,7 @@ theorem fivePointTerm_zero_first_of_weight_bot (N P Q R : LogModuleCat W) (tree 
       have ho : A x (B u w)=0 := (congrArg (A x) hv).trans (map_zero _)
       have hh := congrArg (fun q : (tensorObject hC2 N L).act.weight β => f (q : (tensorObject hC2 N L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | right =>
       let T := tensorObject hC2 Q R
       let L := tensorObject hC2 P T
@@ -103,7 +103,7 @@ theorem fivePointTerm_zero_first_of_weight_bot (N P Q R : LogModuleCat W) (tree 
       have ho : A x (B y u)=0 := (congrArg (A x) hv).trans (map_zero _)
       have hh := congrArg (fun q : (tensorObject hC2 N L).act.weight β => f (q : (tensorObject hC2 N L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | pair =>
       let T := tensorObject hC2 N P
       let L := tensorObject hC2 Q R
@@ -115,7 +115,7 @@ theorem fivePointTerm_zero_first_of_weight_bot (N P Q R : LogModuleCat W) (tree 
       have ho : A u v=0 := (congrArg (fun q => A q v) hu).trans (LinearMap.map_zero₂ A v)
       have hh := congrArg (fun q : (tensorObject hC2 T L).act.weight β => f (q : (tensorObject hC2 T L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
 
 /-- A zero second internal weight space kills the literal all-log point term. -/
 theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree : FiveTree)
@@ -137,7 +137,7 @@ theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree
       have ho : A (B u z) w=0 := (congrArg (fun q => A q w) hv).trans (LinearMap.map_zero₂ A w)
       have hh := congrArg (fun q : (tensorObject hC2 L R).act.weight β => f (q : (tensorObject hC2 L R).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | inner =>
       let T := tensorObject hC2 P Q
       let L := tensorObject hC2 N T
@@ -149,7 +149,7 @@ theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree
       have ho : A (B x u) w=0 := (congrArg (fun q => A q w) hv).trans (LinearMap.map_zero₂ A w)
       have hh := congrArg (fun q : (tensorObject hC2 L R).act.weight β => f (q : (tensorObject hC2 L R).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | middle =>
       let T := tensorObject hC2 P Q
       let L := tensorObject hC2 T R
@@ -161,7 +161,7 @@ theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree
       have ho : A x (B u w)=0 := (congrArg (A x) hv).trans (map_zero _)
       have hh := congrArg (fun q : (tensorObject hC2 N L).act.weight β => f (q : (tensorObject hC2 N L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | right =>
       let T := tensorObject hC2 Q R
       let L := tensorObject hC2 P T
@@ -173,7 +173,7 @@ theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree
       have ho : A x (B y u)=0 := (congrArg (A x) hv).trans (map_zero _)
       have hh := congrArg (fun q : (tensorObject hC2 N L).act.weight β => f (q : (tensorObject hC2 N L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
   | pair =>
       let T := tensorObject hC2 N P
       let L := tensorObject hC2 Q R
@@ -185,7 +185,7 @@ theorem fivePointTerm_zero_second_of_weight_bot (N P Q R : LogModuleCat W) (tree
       have ho : A u v=0 := (congrArg (A u) hv).trans (map_zero _)
       have hh := congrArg (fun q : (tensorObject hC2 T L).act.weight β => f (q : (tensorObject hC2 T L).carrier)) ho
       have hh' := hh.trans (f.map_zero)
-      simpa only [Submodule.coe_zero] using hh'
+      simpa only [Submodule.coe_zero] using! hh'
 
 /-- Every nonzero true term requires both genuine internal weight spaces. -/
 theorem fivePointTerm_weight_support (N P Q R : LogModuleCat W) (tree : FiveTree)

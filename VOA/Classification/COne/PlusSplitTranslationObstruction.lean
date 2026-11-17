@@ -24,7 +24,7 @@ theorem liftObstruction_eq_zero_iff (D : M →ₗ[ℂ] N) (K : Submodule ℂ M) 
   · rintro ⟨y, hy, he⟩
     exact ⟨y, hy, by rw [map_sub, he, sub_self]⟩
   · rintro ⟨y, hy, he⟩
-    exact ⟨y, hy, (sub_eq_zero.mp (by simpa only [map_sub] using he)).symm⟩
+    exact ⟨y, hy, (sub_eq_zero.mp (by simpa only [map_sub] using! he)).symm⟩
 
 /-- The obstruction does not change when the lift changes by a kernel vector. -/
 theorem liftObstruction_add (D : M →ₗ[ℂ] N) (K : Submodule ℂ M)
@@ -104,8 +104,9 @@ theorem complement_of_vacuum_quotient_no_weight_one (hC2 : C2Cofinite W)
   obtain ⟨x, hx, he⟩ := exists_generalized_vacuum_lift hC2 A π hπ
   apply complement_of_vacuum_lift A π (x := x) _ he
   have hw : translation A x ∈ (L0 A).maxGenEigenspace 1 := by
-    simpa only [sub_zero, show (2 : ℤ) - 1 = 1 from rfl, Int.cast_one, zero_add]
-      using mode_mem_maxGenEigenspace A W.conformal_mem 0 hx
+    have h := mode_mem_maxGenEigenspace A W.conformal_mem 0 hx
+    simp only [sub_zero, show (2 : ℤ) - 1 = 1 from rfl, Int.cast_one, zero_add] at h
+    exact h
   have hk : translation A x ∈ LinearMap.ker π.toLinearMap := by
     change π.toLinearMap (A.act W.conformalVector 0 x) = 0
     rw [π.map_act, he]
@@ -165,7 +166,7 @@ theorem complement_iff_translation_zero_of_positive_bottom (A : WeakModule W M)
       apply Module.End.eigenspace_le_maxGenEigenspace
       apply Module.End.mem_eigenspace_iff.mpr
       have hv := nonnegative_modes_zero_of_translation_zero A hz W.conformalVector 1 (by norm_num)
-      simpa only [zero_smul] using hv
+      simpa only [zero_smul] using! hv
     have heq : x = x - y := generalized_vacuum_lift_unique A π h hb hh hx hgen (by
       change π.toLinearMap y = 0 at hy
       rw [map_sub, hy, sub_zero])

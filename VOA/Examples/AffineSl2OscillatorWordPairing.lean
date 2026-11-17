@@ -62,7 +62,7 @@ theorem listOccupation_bosonWeight (s : ℤ) (w : List (Fin 3×ℕ)) :
 /-- Reversal preserves the number of boson letters. -/
 theorem bosonCount_reverse (w : List (Fin 3×ℕ)) : bosonCount w.reverse=bosonCount w := by
   have hh := congrArg (Finsupp.weight (bosonWeight 1)) (listOccupation_reverse w)
-  simpa only [listOccupation_bosonWeight,one_mul,Int.natCast_inj] using hh
+  simpa only [listOccupation_bosonWeight,one_mul,Int.natCast_inj] using! hh
 
 /-- Finite exact multiplier for differentiating a word while extracting
 occupation e. Each step records the new positive multiplicity before recursion. -/
@@ -74,8 +74,8 @@ def derivativeMultiplier (k : ℂ) : List (Fin 3×ℕ)→Occupation→ℂ
 /-- Exact coefficient of an actual pure adjoint word on every Fock polynomial. -/
 theorem pureAnnihilationWord_coeff (k : ℂ) (w : List (Fin 3×ℕ))
     (e : Occupation) (P : WakFock) :
-    coeff e (pureAnnihilationWord k w P)=
-      derivativeMultiplier k w e*coeff (e+listOccupation w) P := by
+    (pureAnnihilationWord k w P).coeff e=
+      derivativeMultiplier k w e*P.coeff (e+listOccupation w) := by
   induction w generalizing e with
   | nil => simp [pureAnnihilationWord,derivativeMultiplier,listOccupation]
   | cons v w ih =>
@@ -100,7 +100,7 @@ matches the whole adjoint word, and is the explicit nonzero multiplier if it doe
 theorem pureAnnihilationWord_pair (k : ℂ) (w : List (Fin 3×ℕ)) (e : Occupation) :
     constantCoeff (pureAnnihilationWord k w (monomial e 1))=
       if e=listOccupation w then derivativeMultiplier k w 0 else 0 := by
-  change coeff 0 _=_
+  change (pureAnnihilationWord k w (monomial e 1)).coeff 0=_
   rw [pureAnnihilationWord_coeff,zero_add,coeff_monomial]
   split_ifs <;> simp_all
 

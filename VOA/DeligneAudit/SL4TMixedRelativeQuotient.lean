@@ -38,7 +38,7 @@ theorem mixedElementarySource_elementary_tail (a b c : ℕ) (d : Fin 3 → ℕ)
       e₁ e₂ 0 (elementary s)).val = 0
     rw [secondLeviElementaryAlphabet_elementary]
     have hz : esymm (Fin e₁) (RadicalGrassmannianRing a b c d) s = 0 := by
-      have hc : (Finset.univ : Finset (Fin e₁)).card < s := by simpa using hs
+      have hc : (Finset.univ : Finset (Fin e₁)).card < s := by simpa using! hs
       simp only [esymm, Finset.powersetCard_eq_empty.mpr hc, Finset.sum_empty]
     simp [hz]
   · apply Subtype.ext
@@ -46,7 +46,7 @@ theorem mixedElementarySource_elementary_tail (a b c : ℕ) (d : Fin 3 → ℕ)
       e₁ e₂ 1 (elementary s)).val = 0
     rw [secondLeviElementaryAlphabet_elementary]
     have hz : esymm (Fin e₂) (RadicalGrassmannianRing a b c d) s = 0 := by
-      have hc : (Finset.univ : Finset (Fin e₂)).card < s := by simpa using hs
+      have hc : (Finset.univ : Finset (Fin e₂)).card < s := by simpa using! hs
       simp only [esymm, Finset.powersetCard_eq_empty.mpr hc, Finset.sum_empty]
     simp [hz]
 
@@ -71,7 +71,7 @@ theorem mixedElementarySource_ideal_le (a b : ℕ) (d : Fin 3 → ℕ) (e₁ e�
   rcases hP with ⟨j, s, hs, rfl⟩ | ⟨s, hs, _, rfl⟩ | ⟨s, hs, _, rfl⟩ |
     ⟨s, hs, _, rfl⟩ | ⟨s, hs, ht, rfl⟩ | ⟨s, hs, ht, rfl⟩
   · rw [mixedElementarySource_elementary_tail _ _ _ _ _ _ _ _ (by
-      simpa [mixedLengths, mixedLabelBlockParams] using hs)]
+      simpa [mixedLengths, mixedLabelBlockParams] using! hs)]
     exact Ideal.zero_mem _
   · rw [mixedH, mixedElementarySource_alphabet]
     change secondLeviSymmetricBase e₁ e₂

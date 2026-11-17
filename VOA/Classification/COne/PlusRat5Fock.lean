@@ -146,7 +146,8 @@ theorem lat_h_mode (n : ℤ) (p : FockN (rank (latP m))) (γ : (latP m).carrier)
   change (shiftWeakModule (latP m) (glueLat m j) (glueIota m j) (glueDelta m j) (latP_even m)
     (latP_posDef m hm) (glueLat_even m j) (glueLat_posDef m hm j) (glueIota_isometry m j)).YM
       (curState (latP m) (a0 m)) (-n - 1) _ = _
-  rw [shiftWeakModule_current, alphaShift_latStateGen, show -(-n - 1) - 1 = n by ring]
+  refine (shiftWeakModule_current _ _ _ _ _ _ _ _ _ _ _ _).trans ?_
+  rw [alphaShift_latStateGen, show -(-n - 1) - 1 = n by ring]
   by_cases hn : n = 0
   · subst hn; simp
   · rw [if_neg (by omega), if_neg hn]
@@ -466,8 +467,8 @@ theorem lat_weight_mem_span (w : ℂ) {v : LatModuleGen (latP m)}
   refine Submodule.sum_mem _ (fun d hd => ?_)
   have hdw : Finsupp.weight HeisenbergN.weightFnN d = N.toNat :=
     hq' (MvPolynomial.mem_support_iff.mp hd)
-  rw [show MvPolynomial.monomial d (MvPolynomial.coeff d q) =
-      MvPolynomial.coeff d q • MvPolynomial.monomial d (1 : ℂ) by
+  rw [show MvPolynomial.monomial d (q.coeff d) =
+      q.coeff d • MvPolynomial.monomial d (1 : ℂ) by
     rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one], map_smul]
   apply Submodule.smul_mem
   apply Submodule.subset_span

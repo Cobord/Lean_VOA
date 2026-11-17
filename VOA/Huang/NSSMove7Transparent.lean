@@ -120,7 +120,7 @@ theorem loopTranspose_of_transparent_positive (F : SphericalFusion C) (X Y : C)
 theorem monodromy_eq_id_symm (X Y : C) (h : monodromy X Y = 𝟙 _) :
     monodromy Y X = 𝟙 _ := by
   apply (cancel_epi (β_ X Y).hom).mp
-  simpa only [monodromy, Category.assoc, Category.comp_id, Category.id_comp] using
+  simpa only [monodromy, Category.assoc, Category.comp_id, Category.id_comp] using!
     congrArg (fun f => f ≫ (β_ X Y).hom) h
 
 /-- Transport trivial monodromy along an isomorphism of its first color. -/

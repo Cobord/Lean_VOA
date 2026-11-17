@@ -35,18 +35,18 @@ theorem torus_weight_has_vac_below (P : TwistedModule (charU 1 le_rfl u) n M)
     ∃ r : ℕ, P.weight (α - r) ≠ ⊥ ∧
       P.weight (α - r) ≤ (torusHeisenberg P hn).vac := by
   obtain ⟨B, hB⟩ := P.boundedBelow
-  have hinh : ∃ k : ℤ, P.weight (α + k) ≠ ⊥ := ⟨0, by simpa using hα⟩
+  have hinh : ∃ k : ℤ, P.weight (α + k) ≠ ⊥ := ⟨0, by simpa using! hα⟩
   have hbdd : ∃ b : ℤ, ∀ k : ℤ, P.weight (α + k) ≠ ⊥ → b ≤ k := by
     refine ⟨⌈B - α.re⌉, fun k hk => ?_⟩
     have hre := hB (α + k) hk
     simp only [Complex.add_re, Complex.intCast_re] at hre
     exact Int.ceil_le.mpr (by linarith)
   obtain ⟨k, hk, hmin⟩ := Int.exists_least_of_bdd hbdd hinh
-  have hk0 : k ≤ 0 := hmin 0 (by simpa using hα)
+  have hk0 : k ≤ 0 := hmin 0 (by simpa using! hα)
   have hcast : (((-k).toNat : ℕ) : ℂ) = -(k : ℂ) := by
     rw [← Int.cast_natCast, Int.toNat_of_nonneg (by omega), Int.cast_neg]
   refine ⟨(-k).toNat, ?_, ?_⟩
-  · simpa only [hcast, sub_neg_eq_add] using hk
+  · simpa only [hcast, sub_neg_eq_add] using! hk
   · rw [hcast, sub_neg_eq_add]
     intro x hx
     rw [HeisSvN.HeisRep.mem_vac]

@@ -181,7 +181,7 @@ theorem lineFlagFrom_layers [FiniteDimensional ℂ R]
     LineFlagFrom p P M r (U n)
       (cost + (Module.finrank ℂ (U 0) - Module.finrank ℂ (U n)) * lineLevelCost r L) := by
   induction n with
-  | zero => simpa using h
+  | zero => simpa using! h
   | succ n ih =>
       have hchain : ∀ e ≤ n, U e ≤ U 0 := by
         intro e he
@@ -306,7 +306,7 @@ theorem lineFlagFrom_gradedStrata [FiniteDimensional ℂ R]
         rw [hVD, hV0 j (by omega)] at hlayers
         rw [Finset.sum_range_succ]
         exact hlayers
-  simpa only [hGm] using hstrata m le_rfl
+  simpa only [hGm] using! hstrata m le_rfl
 
 /-- Line flags push forward along surjective algebra maps compatible with the power sums. -/
 theorem lineFlagFrom_map {T : Type*} [CommRing T] [Algebra ℂ T]
@@ -345,7 +345,7 @@ theorem lineFlagFrom_map {T : Type*} [CommRing T] [Algebra ℂ T]
         Set.image_singleton] at hm
       simpa only [Polynomial.coe_mapRingHom, Polynomial.map_add, Polynomial.map_mul,
         Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, AlgHom.toRingHom_eq_coe,
-        RingHom.coe_coe] using hm
+        RingHom.coe_coe] using! hm
 
 /-- In a mixed coefficient quotient a line flag from zero is a power-sum-stable subspace
 flag with the same cost. -/

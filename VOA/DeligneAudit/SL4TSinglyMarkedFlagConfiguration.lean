@@ -119,7 +119,7 @@ theorem singlyMarkedFlagIdeal_le_pointInitialIdeal (B k : ℕ) (V : Finset (Fin 
       simp [singlyMarkedPoint]
     · have h := IsHomogeneous.prod S (fun i => (X i : MvPolynomial (Fin (B + 1)) ℂ))
         (fun _ => 1) (fun i _ => isHomogeneous_X ℂ i)
-      simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, smul_eq_mul] using h
+      simpa only [Finset.sum_const, nsmul_eq_mul, mul_one, smul_eq_mul] using! h
   · apply Ideal.span_le.mpr
     rintro p ⟨i, rfl⟩
     by_cases hi : i ∈ V
@@ -150,11 +150,11 @@ theorem singlyMarkedFlag_finrank_ge (B k : ℕ) (V : Finset (Fin (B + 1))) (hV :
   have hζ : Function.Injective ζ := by
     intro a b h
     apply Fin.ext
-    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using h
+    have h' : (a.val : ℂ) = b.val := by simpa [ζ] using! h
     exact_mod_cast h'
   have hζ0 : ∀ a, ζ a ≠ 0 := by
     intro a h
-    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using h
+    have h' : ((a.val + 1 : ℕ) : ℂ) = 0 := by simpa [ζ] using! h
     exact Nat.succ_ne_zero a.val (by exact_mod_cast h')
   letI : Fintype (FullFlagConfiguration B k) := Fintype.ofFinite _
   obtain ⟨hfin, hdim⟩ := pointInitialQuotient_finrank (singlyMarkedPoint B k V ζ)

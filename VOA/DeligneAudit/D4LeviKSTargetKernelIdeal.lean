@@ -48,7 +48,7 @@ theorem pairSourceSymmetric_mul_prefix
   have hQ : (Q : MvPolynomial (PairSource a b c) ℂ) ∈
       xyzPowerSumAlgebra (pairSourceShape a b c) :=
     pairSourceSymmetric_le_xyzPowerSumAlgebra a b c Q.property
-  simpa only [Subalgebra.coe_mul, symmetricShiftAction_apply] using
+  simpa only [Subalgebra.coe_mul, symmetricShiftAction_apply] using!
     xyzPowerSumAlgebra_prefix ρ w m i h hi
       (pairSourceShape a b c) (pairSourceShape_xyz a b c)
       Q hQ P hP

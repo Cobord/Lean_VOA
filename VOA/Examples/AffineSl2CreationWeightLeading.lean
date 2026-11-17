@@ -58,12 +58,12 @@ theorem oscillatorMonomial_mem (w : List (Fin 3×ℕ)) {d : ℤ} {P : WakFock}
     (hP : P∈bosonAtLeast (-1) d) :
     oscillatorMonomial w*P∈bosonAtLeast (-1) (d-(bosonCount w : ℤ)) := by
   induction w with
-  | nil => simpa [oscillatorMonomial,bosonCount] using hP
+  | nil => simpa [oscillatorMonomial,bosonCount] using! hP
   | cons v w ih =>
     rw [oscillatorMonomial,mul_assoc]
     have hb := boson_X_mul (-1) v ih
     by_cases hv : v.1=2 <;>
-      simpa [bosonWeight,bosonCount,hv,Int.natCast_add,sub_eq_add_neg,add_assoc,add_comm,add_left_comm] using hb
+      simpa [bosonWeight,bosonCount,hv,Int.natCast_add,sub_eq_add_neg,add_assoc,add_comm,add_left_comm] using! hb
 
 /-- One actual leading creation operator increases the boson upper bound
 by at most one for neutral colour and by zero for either charged colour. -/
@@ -76,9 +76,9 @@ theorem leadingCreation_mem (k : ℂ) (v : Fin 3×ℕ) {d : ℤ} {P : WakFock}
     apply Submodule.add_mem
     · apply bosonAtLeast_mono (-1) (show d-1≤d by omega)
       exact Submodule.smul_mem _ _ (boson_BG (-1) _ hP)
-    · simpa [bosonWeight,hv] using boson_X_mul (-1) v hP
+    · simpa [bosonWeight,hv] using! boson_X_mul (-1) v hP
   · rw [if_neg hv,if_neg hv,mulL_apply,sub_zero]
-    simpa [bosonWeight,hv] using boson_X_mul (-1) v hP
+    simpa [bosonWeight,hv] using! boson_X_mul (-1) v hP
 
 /-- Complete actual leading creation word in the original arbitrary order. -/
 def leadingCreationWord (k : ℂ) : List (Fin 3×ℕ)→Module.End ℂ WakFock
@@ -90,11 +90,11 @@ theorem leadingCreationWord_mem (k : ℂ) (w : List (Fin 3×ℕ)) {d : ℤ} {P :
     (hP : P∈bosonAtLeast (-1) d) :
     leadingCreationWord k w P∈bosonAtLeast (-1) (d-(bosonCount w : ℤ)) := by
   induction w with
-  | nil => simpa [leadingCreationWord,bosonCount] using hP
+  | nil => simpa [leadingCreationWord,bosonCount] using! hP
   | cons v w ih =>
     have hb := leadingCreation_mem k v ih
     change leadingCreation k v (leadingCreationWord k w P)∈_
-    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using hb
+    by_cases hv : v.1=2 <;> simpa [bosonCount,hv,sub_sub,add_comm] using! hb
 
 /-- All corrections to the pure oscillator product have strictly smaller
 boson degree. This is an actual operator estimate on every filtered input. -/
@@ -123,7 +123,7 @@ theorem leadingCreationWord_error (k : ℂ) (w : List (Fin 3×ℕ)) {d : ℤ} {P
           (-2 : ℂ) (boson_BG (-1) (-(v.2 : ℤ)-1) hQ)
         convert hh using 1 <;> simp [bosonCount,hv,Q] <;> congr 1 <;> omega
     · apply Submodule.add_mem
-      · simpa [bosonCount,hv] using he
+      · simpa [bosonCount,hv] using! he
       · rw [leadingCreation_eq,if_neg hv,mulL_apply,sub_self]
         exact Submodule.zero_mem _
 

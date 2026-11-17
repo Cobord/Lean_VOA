@@ -28,7 +28,7 @@ theorem exists_simple_iso_of_finrank_end (X : C)
     refine ⟨e.hom ≫ biproduct.π _ k, ?_⟩
     intro hz
     have hh := congrArg (fun g => (biproduct.ι (fun k => F.simple (a k)) k ≫ e.inv) ≫ g) hz
-    have : 𝟙 (F.simple (a k)) = 0 := by simpa using hh
+    have : 𝟙 (F.simple (a k)) = 0 := by simpa using! hh
     exact id_nonzero _ this
   have hn : n = 1 := by
     have hnle : n ≤ 1 := calc
@@ -103,7 +103,7 @@ theorem vafa_row_pos (i : F.Label) :
     Nat.zero_le (F.fusionMultiplicity i (F.dualLabel i) (F.simple p) *
       F.fusionMultiplicity p i (F.simple i))) (Finset.mem_univ F.unitLabel)
   rw [F.fusion_dual_unit, F.fusion_unit_left] at h
-  simpa using h
+  simpa using! h
 
 end SphericalFusion
 
@@ -125,7 +125,7 @@ theorem twistScalar_dualLabel (i : F.Label) : R.twistScalar (F.dualLabel i) = R.
     rightAdjointMate_smul, rightAdjointMate_id] at h
   have hh := congrArg (fun f => (F.dualLabelIso i).inv ≫ f) h
   apply smul_left_injective ℂ (id_nonzero (F.simple (F.dualLabel i)))
-  simpa using hh
+  simpa using! hh
 
 end Ribbon
 end VOA.Huang.NgSchauenburg

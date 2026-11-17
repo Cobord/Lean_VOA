@@ -197,8 +197,8 @@ theorem prodLift_differentiableOn (hV : StronglyRational W)
       Summable fun p => ‖liftTerm Y₁ Y₂ x y α₁ α₂ (t : ℂ) 0 τ p‖ := by
     intro t ht0 ht1
     refine summable_norm_iff.mpr (summable_liftTerm Y₁ Y₂ hV i₁ i₂ iN hx hy (t : ℂ) 0 τ
-      (by simpa using ht0) ?_)
-    simpa using hq t ht1
+      (by simpa using! ht0) ?_)
+    simpa using! hq t ht1
   intro u₀ hu₀
   obtain ⟨h0, h1⟩ := hu₀
   set a : ℝ := u₀.re / 2

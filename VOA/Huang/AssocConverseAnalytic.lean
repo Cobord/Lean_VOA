@@ -36,7 +36,7 @@ theorem log_coeff_zero_of_real_interval {ι : Type*} [Fintype ι]
     rw [tendsto_nhdsWithin_iff]
     refine ⟨?_, Eventually.of_forall fun n => ?_⟩
     · have h0 : Tendsto t atTop (𝓝 (a / 2)) := by
-        simpa only [mul_zero, add_zero] using
+        simpa only [mul_zero, add_zero] using!
           (tendsto_one_div_add_atTop_nhds_zero_nat.const_mul (-a / 4)).const_add (a / 2)
       exact Complex.continuous_ofReal.continuousAt.tendsto.comp h0
     · simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
@@ -133,7 +133,7 @@ theorem product_coefficients_zero_of_values_zero {ι : Type v} [Fintype ι]
     have hc (j : ι) : LogGood (c j) := by
       have hh := logGood_const (prodSeries_mem_subexpPS hV i₁ i₂ i₃ i₄
         (A j).property (B j).property d.hw₁ d.hw₂ d.hw₃ d.hf)
-      simpa only [coeff_prodSeries] using hh
+      simpa only [coeff_prodSeries] using! hh
     have he : ∀ μ k, ∑ j, exCoeff (lam j) (c j) μ k = 0 := by
       apply log_coeff_zero_of_real_interval lam c hc
         (a := -Real.log 2) (neg_neg_of_pos (Real.log_pos (by norm_num)))
@@ -156,9 +156,9 @@ theorem product_coefficients_zero_of_values_zero {ι : Type v} [Fintype ι]
         · simp
         · simp only [Complex.neg_im, Complex.ofReal_im, neg_zero]; linarith [Real.pi_pos]
         · simp only [Complex.neg_im, Complex.ofReal_im, neg_zero]; exact Real.pi_pos.le
-      simpa only [productValue_eq_logFun, hlog] using hh
+      simpa only [productValue_eq_logFun, hlog] using! hh
     have hh := he (p + 1) 0
-    simpa only [lam, c, exCoeff_product_eq _ _ d p q hpq] using hh
+    simpa only [lam, c, exCoeff_product_eq _ _ d p q hpq] using! hh
   · exact Finset.sum_eq_zero fun j _ => prodCoeff_eq_zero_of_ne
       (A j).property (B j).property d.hw₁ d.hw₂ d.hw₃ d.hf hpq
 

@@ -73,7 +73,7 @@ theorem completedLogIterate_weight_summable (hC2 : C2Cofinite W)
     ring
   have hs (r : ℂ) (l : ℕ) : Summable fun n : ℕ =>
       PowerSeries.coeff n (logIterateLowerCosetSeries Y₃.1 Y₄.1 f x y z α₁ α₂ α₃ β r l)*(Complex.exp t)^n := by
-    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using
+    simpa only [logIterateLowerCosetSeries,PowerSeries.coeff_mk] using!
       summable_log_iterate_series hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₃ Y₄
         f x y z (r+α₃-β-1) (α₁+α₂-r-1) 0 l (by rw [Complex.norm_exp]; exact Real.exp_lt_one_iff.mpr ht.1)
   have hrows : ∀ mu∈spectrumCosets hC2 N₅ hfg₅,

@@ -133,8 +133,8 @@ theorem polynomial_mul_mem_of_boundaries (hm2 : 2 ≤ m)
   have hp (n : ℕ) : generator m hm 0 ^ n * x ∈
       Submodule.span ℂ (Set.range (monomial m hm)) := by
     induction n with
-    | zero => simpa using hx
-    | succ n ih => simpa only [pow_succ', mul_assoc] using hs _ ih
+    | zero => simpa using! hx
+    | succ n ih => simpa only [pow_succ', mul_assoc] using! hs _ ih
   rw [aeval_eq_sum_range, Finset.sum_mul]
   exact Submodule.sum_mem _ fun i _ => by
     rw [smul_mul_assoc]
@@ -150,12 +150,12 @@ theorem E_squared_mem_of_schurZhuIdentity (hm2 : 2 ≤ m) (h : SchurZhuIdentity 
   rw [E_squared_of_schurZhuIdentity m hm h]
   have hW : generator m hm 1 ∈ Submodule.span ℂ (Set.range (monomial m hm)) := by
     by_cases hz : wCount m = 0
-    · simpa only [hz, pow_zero, one_mul] using hw
-    · simpa using omega_power_W_mem m hm 0 (by omega)
+    · simpa only [hz, pow_zero, one_mul] using! hw
+    · simpa using! omega_power_W_mem m hm 0 (by omega)
   have hw1 : generator m hm 0 ∈ Submodule.span ℂ (Set.range (monomial m hm)) := by
-    simpa using omega_power_mem m hm 1 (by have := omegaCount_ge_four m hm2; omega)
+    simpa using! omega_power_mem m hm 1 (by have := omegaCount_ge_four m hm2; omega)
   refine Submodule.add_mem _ ?_ ?_
-  · simpa using polynomial_mul_mem_of_boundaries m hm hm2 ho hw (curvePolynomial m) 1
+  · simpa using! polynomial_mul_mem_of_boundaries m hm hm2 ho hw (curvePolynomial m) 1
       (one_mem_span m hm)
   · exact polynomial_mul_mem_of_boundaries m hm hm2 ho hw (correctionPolynomial m) _
       (Submodule.sub_mem _ hW (Submodule.smul_mem _ _ hw1))

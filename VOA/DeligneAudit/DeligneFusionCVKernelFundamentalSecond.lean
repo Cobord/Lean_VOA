@@ -33,7 +33,7 @@ theorem source_second_cutoff (h : CV3Rel R w (1, 0) ν ϱ j) :
   apply cvrel_cutoff (CVRoots.sl2_second R).hFF h.second
     (ν.2 + ϱ.2) 2 _ (by omega)
   have ht : T (ν.2 + ϱ.2) (parts ϱ.2 ν.2 (0 + j)) = j := by
-    simpa only [Nat.zero_add, Nat.add_comm ν.2 ϱ.2] using parts_tail ϱ.2 ν.2 j
+    simpa only [Nat.zero_add, Nat.add_comm ν.2 ϱ.2] using! parts_tail ϱ.2 ν.2 j
   rw [ht]
   omega
 
@@ -66,17 +66,16 @@ theorem theta_boundary (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
   have hc2 : (2 : ℂ) • R.op 4 B v + t2 = 0 := by
     have he := congrArg (fun T : Module.End ℂ V => T w)
       (cutoff_split_two (CVRoots.sl2_second R).hFF B j hj)
-    dsimp only at he
     rw [source_second_cutoff h] at he
     simpa only [LinearMap.add_apply, LinearMap.smul_apply, Module.End.mul_apply,
-      ← Nat.cast_smul_eq_nsmul ℂ, Nat.cast_ofNat] using he.symm
+      ← Nat.cast_smul_eq_nsmul ℂ, Nat.cast_ofNat] using! he.symm
   have hcomm : R.op 3 a (R.op 4 B v) = -R.op 5 q v := by
     rw [comm_apply 3 4]
     simp [Fin.sum_univ_eight, bracketTable, hXv,
       show a + B = q by dsimp [a, q]; omega]
   have hneg : (2 : ℂ) • (-R.op 5 q v) = 0 := by
     have he := congrArg (fun x : V => R.op 3 a x) hc2
-    simpa only [map_add, map_smul, map_zero, htail, add_zero, hcomm] using he
+    simpa only [map_add, map_smul, map_zero, htail, add_zero, hcomm] using! he
   exact neg_eq_zero.mp ((smul_eq_zero.mp hneg).resolve_left (by norm_num))
 
 theorem theta_trunc (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
@@ -94,7 +93,7 @@ theorem first_trunc (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
     R.op 3 q (R.op 4 (ν.2 + ϱ.2 + j - 1) w) = 0 := by
   have hq0 : R.op 3 q w = 0 := by
     by_cases heq : q = ν.1 + ϱ.1 + j
-    · simpa only [heq] using hfirst
+    · simpa only [heq] using! hfirst
     · apply trunc_of_cvrel h.first q
       rw [parts_length]
       omega
@@ -129,13 +128,12 @@ theorem first_cutoff_in_quotient (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
   · subst s
     have he := congrArg (fun T : Module.End ℂ V => T w)
       (cutoff_split_two (CVRoots.sl2_first R).hFF (A + 1) j hj)
-    dsimp only at he
     rw [source_first_cutoff h] at he
     have ht : QFrom (R.op 3) (A + 1 + 1) 2 (2 * (A + 1) + j - 1) w = 0 := by
       simpa only [LinearMap.add_apply, LinearMap.smul_apply, Module.End.mul_apply,
-        hfirst', map_zero, smul_zero, zero_add] using he.symm
+        hfirst', map_zero, smul_zero, zero_add] using! he.symm
     simpa only [show A + 1 + 1 = A + 2 by omega,
-      show 2 * (A + 1) + j - 1 = 2 * A + j + 1 by omega] using ht
+      show 2 * (A + 1) + j - 1 = 2 * A + j + 1 by omega] using! ht
   · apply cvrel_cutoff (CVRoots.sl2_first R).hFF h.first
       (ν.1 + ϱ.1 + 2) 2 s (by omega)
     have ht : T (ν.1 + ϱ.1 + 2) (parts ϱ.1 ν.1 (1 + j)) = j - 1 := by
@@ -170,20 +168,20 @@ theorem second_cv (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j) :
     (List.replicate ϱ.2 3 ++ List.replicate ν.2 2) j hj (CVRoots.sl2_second R)
     (fun s => h.raising 1 (by decide) s)
     (fun p hp => h.cartan_pos 7 (by decide) p hp)
-    (by simpa only [parts, Nat.zero_add] using h.second)
+    (by simpa only [parts, Nat.zero_add] using! h.second)
   simpa only [parts, List.length_append, List.length_replicate,
-    Nat.add_comm ϱ.2 ν.2] using hs
+    Nat.add_comm ϱ.2 ν.2] using! hs
 
 private theorem raising (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
     (e : Fin 8) (he : e.val < 3) (k : ℕ) :
     R.op e k (R.op 4 (ν.2 + ϱ.2 + j - 1) w) = 0 := by
-  simpa only [Nat.add_zero] using
-    CVKernelGeneralHW.second_raising h (by simpa only [Nat.zero_add] using hj) e he k
+  simpa only [Nat.add_zero] using!
+    CVKernelGeneralHW.second_raising h (by simpa only [Nat.zero_add] using! hj) e he k
 
 private theorem cartan_pos (h : CV3Rel R w (1, 0) ν ϱ j)
     (hh : Fin 8) (hhh : 6 ≤ hh.val) (k : ℕ) (hk : 1 ≤ k) :
     R.op hh k (R.op 4 (ν.2 + ϱ.2 + j - 1) w) = 0 := by
-  simpa only [Nat.add_zero] using CVKernelGeneralHW.second_cartan_pos h hh hhh k hk
+  simpa only [Nat.add_zero] using! CVKernelGeneralHW.second_cartan_pos h hh hhh k hk
 
 /-- The full strengthened first-root CV partition of the second quotient
 generator in the fundamental-epsilon recurrence. -/
@@ -197,7 +195,7 @@ theorem first_cv (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
   · rw [Module.End.pow_apply]
     rw [show 3 * ϱ.1 + 2 * (ν.1 + 2) + (j - 2) + 1 =
       1 + 2 * ν.1 + 3 * ϱ.1 + j + 2 by omega]
-    simpa only [Nat.add_zero] using CVKernelGeneralHW.second_lowering_first h
+    simpa only [Nat.add_zero] using! CVKernelGeneralHW.second_lowering_first h
   · intro q hq
     exact first_trunc h hj hfirst q (by omega)
   · intro s hs
@@ -222,10 +220,10 @@ theorem highest_cv (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
   · rw [Module.End.pow_apply]
     rw [show 3 * (ϱ.1 + ϱ.2) + 2 * (ν.1 + ν.2 + j) + 0 + 1 =
       1 + 0 + 2 * ν.1 + 3 * ϱ.1 + 2 * ν.2 + 3 * ϱ.2 + 2 * j by omega]
-    simpa only [Nat.add_zero] using
-      CVKernelGeneralHW.second_lowering_highest h (by simpa only [Nat.zero_add] using hj)
+    simpa only [Nat.add_zero] using!
+      CVKernelGeneralHW.second_lowering_highest h (by simpa only [Nat.zero_add] using! hj)
   · intro q hq
-    exact htr q (by simpa only [Nat.add_zero] using hq)
+    exact htr q (by simpa only [Nat.add_zero] using! hq)
   · intro s hs
     exact Q_high (CVRoots.sl2_highest R).hFF htr 2 s (by dsimp only [L]; omega)
 
@@ -240,17 +238,17 @@ theorem rel (h : CV3Rel R w (1, 0) ν ϱ j) (hj : 2 ≤ j)
   · change R.op 6 0 _ = ((0 + 2 * (ν.1 + 2) + 3 * ϱ.1 + (j - 2) : ℕ) : ℂ) • _
     rw [show 0 + 2 * (ν.1 + 2) + 3 * ϱ.1 + (j - 2) =
       1 + 2 * ν.1 + 3 * ϱ.1 + j + 1 by omega]
-    simpa only [Nat.add_zero] using CVKernelGeneralHW.second_cartan_first h
-  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using
-      CVKernelGeneralHW.second_cartan_second h (by simpa only [Nat.zero_add] using hj)
+    simpa only [Nat.add_zero] using! CVKernelGeneralHW.second_cartan_first h
+  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using!
+      CVKernelGeneralHW.second_cartan_second h (by simpa only [Nat.zero_add] using! hj)
   · change (R.op 3 0)^[0 + 2 * (ν.1 + 2) + 3 * ϱ.1 + (j - 2) + 1] _ = 0
     rw [show 0 + 2 * (ν.1 + 2) + 3 * ϱ.1 + (j - 2) + 1 =
       1 + 2 * ν.1 + 3 * ϱ.1 + j + 2 by omega]
-    simpa only [Nat.add_zero] using CVKernelGeneralHW.second_lowering_first h
-  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using
-      CVKernelGeneralHW.second_lowering_second h (by simpa only [Nat.zero_add] using hj)
-  · simpa only [Prod.fst_add, Nat.zero_add] using first_cv h hj hfirst
-  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using second_cv h hj
+    simpa only [Nat.add_zero] using! CVKernelGeneralHW.second_lowering_first h
+  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using!
+      CVKernelGeneralHW.second_lowering_second h (by simpa only [Nat.zero_add] using! hj)
+  · simpa only [Prod.fst_add, Nat.zero_add] using! first_cv h hj hfirst
+  · simpa only [Prod.snd_add, Nat.add_zero, Nat.zero_add] using! second_cv h hj
   · change CVRel (R.op 5) (parts (ϱ.1 + ϱ.2) ((ν.1 + 2) + (ν.2 + 0) + (j - 2))
       (0 + 0)) _
     rw [show (ν.1 + 2) + (ν.2 + 0) + (j - 2) = ν.1 + ν.2 + j by omega,

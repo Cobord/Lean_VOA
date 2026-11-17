@@ -26,11 +26,13 @@ theorem pow_card_dvd_det_of_eval_columns (M : Matrix ι ι K[X]) (z : K)
     intro i j
     by_cases hj : j ∈ S
     · obtain ⟨q,hq⟩ := dvd_iff_isRoot.mpr (hS j hj i)
-      exact ⟨q, by simpa only [v,if_pos hj] using hq⟩
+      exact ⟨q, by simpa only [v,if_pos hj] using! hq⟩
     · exact ⟨M i j, by simp [v,hj]⟩
   choose Q hQ using hv
   have hM : M = Matrix.of (fun i j => v j * Q i j) := by funext i j; exact hQ i j
-  rw [hM,det_mul_row]
+  have hdet : (Matrix.of (fun i j => v j * Q i j)).det = (∏ j : ι, v j) * (Matrix.of Q).det :=
+    det_mul_row v (Matrix.of Q)
+  rw [hM,hdet]
   have hprod : ∏ j : ι, v j = (X-Polynomial.C z)^S.card := by
     simp only [v]
     rw [Finset.prod_ite_mem]

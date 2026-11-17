@@ -275,8 +275,11 @@ theorem sigmaBlockOColumn_exists (c : ShortIdx) (he : sigmaBlockParity c = 0) :
         ⟨hp, (sigmaBlockParity_eq c).trans he⟩, Or.inl rfl⟩
     · refine ⟨γ, Finset.mem_filter.mpr ⟨hγ, ?_⟩, Or.inr ?_⟩
       · have hc := (sigmaBlockParity_eq c).trans he
-        rw [← hn, map_neg, neg_eq_zero] at hc
-        exact hc
+        rw [← hn, map_neg] at hc
+        first
+          | (rw [neg_eq_zero] at hc; exact hc)
+          | exact neg_eq_zero.mp hc
+          | exact (neg_neg (frameChar γ)).symm.trans ((congrArg Neg.neg hc).trans neg_zero)
       · rw [← hn, neg_neg]
   have hi (a : leech.carrier) (ha : leech.form a a = 4)
       (hg : γ = a ∨ γ = -a) : sigmaBlockRIndex a ha = c :=

@@ -15,6 +15,8 @@ level and the new highest weight is the old level. Every highest-weight
 creation letter, including F_0, becomes strictly negative. This permits use
 of the already proved vacuum word independence in tensor constructions.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.Wak.Charged
 open Module (End)
 open MvPolynomial AffineVOA

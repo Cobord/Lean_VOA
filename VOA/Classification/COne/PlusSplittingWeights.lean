@@ -80,7 +80,7 @@ theorem exceptional_or_latticeWeight {m : ℕ} {h : ℂ}
   · exact Or.inl (Or.inr (Or.inr (Or.inr h)))
   · exact Or.inr (Or.inl h)
   · rcases Nat.eq_zero_or_pos j with rfl | hpos
-    · exact Or.inl (Or.inl (by simpa using h))
+    · exact Or.inl (Or.inl (by simpa using! h))
     · exact Or.inr (Or.inr ⟨j, hpos, hj, h⟩)
 
 /-- Among exceptional weights, only `0` and `1` differ by a nonzero integer. -/

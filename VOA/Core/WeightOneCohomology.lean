@@ -94,6 +94,9 @@ open LieModule.Cohomology Module
 
 namespace VOA
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! ## §1  Whitehead's second lemma for `𝔰𝔩₂`
 
 Everything in this section is pure Lie algebra: no VOA appears.  The target is
@@ -498,7 +501,7 @@ theorem jacobi_zero_modes {W : VertexOperatorAlgebra 𝒱} (D : FirstOrderDeform
       finsum_eq_single _ (0 : ℤ) (fun i hi => by rw [cbz_zero_left, if_neg hi, zero_smul])] at h
   simp only [cbz_zero_left, mul_one, one_smul, negOnePow, Even.zero, if_pos, add_zero,
     sub_zero] at h
-  simpa using h
+  simpa [FirstOrderDeformation.smul₁_eq_coeff] using h
 
 variable {W : VertexOperatorAlgebra 𝒱}
 

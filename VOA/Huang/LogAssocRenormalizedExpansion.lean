@@ -60,7 +60,7 @@ theorem renormalized_QT_hasLogExp (hC2 : C2Cofinite W)
     have hh := hmem p.1 p.2 n₁ (n₂+j) n₃ n₄ f x
       ((⇑(Lm1 N₂.toWeakModule))^[j] y) z hx
       (Lm1_iterate_mem_weight (A₂ := N₂.toGW) hy j) hz
-    simpa only [Q,c,s,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using hh
+    simpa only [Q,c,s,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using! hh
   let μ : ℕ → ℂ := fun j => ν+((s+j : ℕ) : ℂ)+1
   let next : ℕ×ℕ → ℕ×ℕ := fun p => (p.1,p.2+1)
   let d : ℕ×ℕ → ℂ := fun p => (p.2 : ℂ)+1

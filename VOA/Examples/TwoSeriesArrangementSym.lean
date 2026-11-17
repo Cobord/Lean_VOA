@@ -77,12 +77,12 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
   by_contra hFU
   obtain ⟨ψ, hψF, hUψ⟩ := Submodule.exists_le_ker_of_notMem hFU
   have hψJ : ∀ G ∈ jetIdealT n, ψ G = 0 := fun G hG =>
-    hUψ (Submodule.mem_sup_left (by simpa using hG))
+    hUψ (Submodule.mem_sup_left (by simpa using! hG))
   have hψB : ∀ G ∈ boxSpan N k E, ψ G = 0 := fun G hG => hUψ (Submodule.mem_sup_right hG)
   set d := E - k with hd
   set f : XP k := ∑ e ∈ Ek k d,
     monomial e (ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ)) with hfdef
-  have hcoeff : ∀ e, coeff e f =
+  have hcoeff : ∀ e, f.coeff e =
       if e ∈ Ek k d then ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ) else 0 := by
     intro e
     rw [hfdef, coeff_sum]
@@ -104,9 +104,9 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
     have hsE : Finsupp.weight wT s = E := hFw (mem_support_iff.mp hs)
     rw [hfdef, dot_sum_right]
     simp only [dot_monomial_right]
-    have h1 : ∀ e ∈ Ek k d, coeff e (pol univ (monomial s 1)) *
+    have h1 : ∀ e ∈ Ek k d, (pol univ (monomial s 1)).coeff e *
         (ψ (monomial (toMS univ e) 1) / (k.factorial : ℂ)) =
-        coeff e (pol univ (monomial s 1)) * (ψ (monomial s 1) / (k.factorial : ℂ)) := by
+        (pol univ (monomial s 1)).coeff e * (ψ (monomial s 1) / (k.factorial : ℂ)) := by
       intro e _
       by_cases he : e ∈ (pol univ (monomial s 1)).support
       · rw [pol_monomial_support s univ e he]
@@ -119,7 +119,7 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
       rw [h2, hsE] at h3
       rw [mem_Ek, ← Finsupp.degree_eq_sum, hd]
       omega
-    have hsum : ∑ e ∈ Ek k d, coeff e (pol univ (monomial s 1)) = (k.factorial : ℂ) := by
+    have hsum : ∑ e ∈ Ek k d, (pol univ (monomial s 1)).coeff e = (k.factorial : ℂ) := by
       rw [← sum_subset hsub (fun e _ he => notMem_support_iff.mp he)]
       have := pol_monomial_eval (k := k) s univ
       rw [card_univ, Fintype.card_fin, if_pos hsk, eval_eq] at this
@@ -131,7 +131,7 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
     conv_lhs => rw [as_sum F]
     rw [pol_sum, dot_sum_left, map_sum]
     refine sum_congr rfl fun s hs => ?_
-    have hmon : (monomial s (coeff s F) : TPoly) = coeff s F • monomial s 1 := by
+    have hmon : (monomial s (F.coeff s) : TPoly) = F.coeff s • monomial s 1 := by
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [hmon, pol_smul, dot_smul_left, hC1 s hs, map_smul, smul_eq_mul]
   -- `f ∈ L`
@@ -156,7 +156,7 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
     have hτ : Function.Injective τ := τ.injective
     have himS : univ.image τ = S := Finset.image_orderEmbOfFin_univ S hS
     ext c
-    rw [coeff_zero]
+    rw [MvPolynomial.coeff_zero, Finsupp.zero_apply]
     by_cases hc : ∃ i ∈ S, i ≠ s₀ ∧ c i ≠ 0
     · obtain ⟨i, hiS, his, hci⟩ := hc
       by_contra hc0
@@ -215,7 +215,7 @@ theorem jetPoincare_of_symArrangement {n : ℕ} (hn : 1 ≤ n) (hA : SymArrangem
       rw [mem_Ek, mem_Ek, ← Finsupp.degree_eq_sum, ← Finsupp.degree_eq_sum, degree_mapDomain]
     have htoMS : toMS univ (e₁.mapDomain σ) = toMS univ e₁ := by
       rw [toMS, toMS, ← Equiv.sum_comp σ]
-      exact sum_congr rfl fun i _ => by rw [Finsupp.mapDomain_apply σ.injective]
+      exact sum_congr rfl fun i _ => by rw [Finsupp.mapDomain_apply_of_injective σ.injective]
     rw [coeff_rename_mapDomain _ σ.injective, hcoeff, hcoeff, htoMS]
     simp only [hEk']
   exact hψF (hC2 ▸ dot_pol_Wn hn hder

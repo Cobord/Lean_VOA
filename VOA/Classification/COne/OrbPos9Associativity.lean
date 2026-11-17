@@ -42,7 +42,10 @@ theorem iterTerm_eq (d : FourPointTest A A A A) (w : ℂ) :
   congr 2
   change (μ).val ((tensorHom F μ (𝟙 A)).val
     ((F (tensorObj F A A) A).intertwiner.val _ _ d.z)) = _
-  rw [tensorHom_intertwiner, Ordinary.id_apply, ambientMultiplication_intertwiner, ambientMultiplication_intertwiner, ambientIntertwiner_val]
+  refine (congrArg (fun z => (μ).val z) (tensorHom_intertwiner F μ (𝟙 A) _ _ d.z)).trans
+    ((ambientMultiplication_intertwiner G F _ _ _).trans ?_)
+  exact congrArg (fun z : V => moduleModes (adjointModule W) (w + d.γ - d.δ - 1) z d.z)
+    (ambientMultiplication_intertwiner G F (d.α + d.β - w - 1) d.x d.y)
 
 /-- The product summand of `(1 ⊠ act) ≫ act`. -/
 theorem prodTerm_eq (d : FourPointTest A A A A) (w : ℂ) :
@@ -55,7 +58,10 @@ theorem prodTerm_eq (d : FourPointTest A A A A) (w : ℂ) :
   congr 2
   change (μ).val ((tensorHom F (𝟙 A) (μ)).val
     ((F A (tensorObj F A A)).intertwiner.val _ d.x _)) = _
-  rw [tensorHom_intertwiner, Ordinary.id_apply, ambientMultiplication_intertwiner, ambientMultiplication_intertwiner]
+  refine (congrArg (fun z => (μ).val z) (tensorHom_intertwiner F (𝟙 A) μ _ d.x _)).trans
+    ((ambientMultiplication_intertwiner G F _ _ _).trans ?_)
+  exact congrArg (fun z : V => moduleModes (adjointModule W) (d.α + w - d.δ - 1) d.x z)
+    (ambientMultiplication_intertwiner G F (d.β + d.γ - w - 1) d.y d.z)
 
 /-- **The associator relation from the Jacobi identity of `Y_N`** (Jacobi at `m = K`, with
 `a_{K+i} x = 0` for `i ≥ 0`), after applying a functional. -/
@@ -120,8 +126,11 @@ theorem assoc_rel (a b : (ambient G).carrier) (x : V) (f : V →ₗ[ℂ] ℂ) (D
   refine Finset.sum_congr rfl fun i hi => ?_
   simp only [ι, Function.Embedding.coeFn_mk]
   rw [cbz_apply_nonneg _ (by positivity), show ((i : ℤ)).toNat = i from by simp,
-    VOA.Huang.AssocAssociator.gBinom_natCast, ambientIntertwiner_int,
-    show (K : ℤ) + (D - K - ℓ) - i = D - (ℓ + i) by ring]
+    VOA.Huang.AssocAssociator.gBinom_natCast]
+  refine congrArg (fun z : V => (K.choose i : ℂ) * f z) ?_
+  exact (congrArg (fun z : V => mode ((adjointModule W).YM z) (D - (ℓ + i)) x)
+    (ambientIntertwiner_int G (ℓ + i) a b)).trans
+    (congrArg (fun m : ℤ => mode ((adjointModule W).YM (W.smul a (ℓ + i) b)) m x) (by ring))
 
 /-- The iterate summand on the integral lattice `w = α' + β' - 1 - r`. -/
 theorem iterTerm_int (d : FourPointTest A A A A) {α' β' g : ℤ}
@@ -138,7 +147,11 @@ theorem iterTerm_int (d : FourPointTest A A A A) {α' β' g : ℤ}
       (((α' + β' - 1 : ℤ) : ℂ) - r) + (d.γ - d.δ) - 1 by ring, hg]; push_cast; ring
   have e3 : (((α' + β' - 1 : ℤ) : ℂ) - r) - d.α - d.β = ((-r - 1 : ℤ) : ℂ) := by
     rw [hα, hβ]; push_cast; ring
-  rw [e1, e2, e3, moduleModes_apply_intCast, Complex.cpow_intCast]
+  rw [e1, e2, e3]
+  exact congrArg₂ (· * ·)
+    (congrArg d.functional (moduleModes_apply_intCast (adjointModule W) (α' + β' + g - 2 - r)
+      ((ambientIntertwiner G).val ((r : ℤ) : ℂ) d.x d.y) d.z))
+    (Complex.cpow_intCast _ _)
 
 /-- The product summand on the lattice `w = β + γ - 1 - k`. -/
 theorem prodTerm_int (d : FourPointTest A A A A) {α' β' g : ℤ}
@@ -155,7 +168,14 @@ theorem prodTerm_int (d : FourPointTest A A A A) {α' β' g : ℤ}
   have e3 : d.δ - d.α - (d.β + d.γ - 1 - k) = ((k - (α' + β' + g - 2) - 1 : ℤ) : ℂ) := by
     rw [show d.δ - d.α - (d.β + d.γ - 1 - k) = k + 1 - d.α - d.β - (d.γ - d.δ) by ring,
       hα, hβ, hg]; push_cast; ring
-  rw [e1, e2, e3, moduleModes_apply_intCast, moduleModes_apply_intCast, Complex.cpow_intCast]
+  rw [e1, e2, e3]
+  exact congrArg₂ (· * ·)
+    (congrArg d.functional
+      ((moduleModes_apply_intCast (adjointModule W) (α' + β' + g - 2 - k) d.x
+        (moduleModes (adjointModule W) ((k : ℤ) : ℂ) d.y d.z)).trans
+        (congrArg (fun z : V => mode ((adjointModule W).YM d.x) (α' + β' + g - 2 - k) z)
+          (moduleModes_apply_intCast (adjointModule W) k d.y d.z))))
+    (Complex.cpow_intCast _ _)
 
 /-- Support of the iterate summand. -/
 theorem iterTerm_support (d : FourPointTest A A A A) (w : ℂ)
@@ -167,16 +187,21 @@ theorem iterTerm_support (d : FourPointTest A A A A) (w : ℂ)
   · by_contra h
     push Not at h
     apply hw
-    rw [ambientIntertwiner_val, moduleModes_of_not_int (adjointModule W) h, LinearMap.zero_apply, LinearMap.zero_apply]
-    have hz : moduleModes (adjointModule W) (w + d.γ - d.δ - 1) (0 : V) d.z = 0 := by
-      simp only [map_zero, LinearMap.zero_apply]
-    rw [hz]
-    exact (congrArg (fun z : ℂ => z * _) d.functional.map_zero).trans (zero_mul _)
+    have key : ∀ (a b c : V) (φ : V →ₗ[ℂ] ℂ), φ (moduleModes (adjointModule W) (w + d.γ - d.δ - 1)
+        ((ambientIntertwiner G).val (d.α + d.β - w - 1) a b) c) = 0 := by
+      intro a b c φ
+      rw [ambientIntertwiner_val, moduleModes_of_not_int (adjointModule W) h]
+      simp only [LinearMap.zero_apply, map_zero]
+    exact (congrArg (fun z : ℂ => z * _) (key d.x d.y d.z d.functional)).trans (zero_mul _)
   · by_contra h
     push Not at h
     apply hw
-    rw [moduleModes_of_not_int (adjointModule W) h, LinearMap.zero_apply, LinearMap.zero_apply]
-    erw [LinearMap.map_zero, zero_mul]
+    have key : ∀ (u c : V) (φ : V →ₗ[ℂ] ℂ),
+        φ (moduleModes (adjointModule W) (w + d.γ - d.δ - 1) u c) = 0 := by
+      intro u c φ
+      rw [moduleModes_of_not_int (adjointModule W) h]
+      simp only [LinearMap.zero_apply, map_zero]
+    exact (congrArg (fun z : ℂ => z * _) (key _ d.z d.functional)).trans (zero_mul _)
 
 /-- Support of the product summand. -/
 theorem prodTerm_support (d : FourPointTest A A A A) (w : ℂ)
@@ -188,13 +213,21 @@ theorem prodTerm_support (d : FourPointTest A A A A) (w : ℂ)
   · by_contra h
     push Not at h
     apply hw
-    rw [moduleModes_of_not_int (adjointModule W) h, LinearMap.zero_apply, LinearMap.zero_apply, LinearMap.map_zero]
-    erw [LinearMap.map_zero, zero_mul]
+    have key : ∀ (a b c : V) (φ : V →ₗ[ℂ] ℂ), φ (moduleModes (adjointModule W) (d.α + w - d.δ - 1) a
+        (moduleModes (adjointModule W) (d.β + d.γ - w - 1) b c)) = 0 := by
+      intro a b c φ
+      rw [moduleModes_of_not_int (adjointModule W) h]
+      simp only [LinearMap.zero_apply, map_zero]
+    exact (congrArg (fun z : ℂ => z * _) (key d.x d.y d.z d.functional)).trans (zero_mul _)
   · by_contra h
     push Not at h
     apply hw
-    rw [moduleModes_of_not_int (adjointModule W) h, LinearMap.zero_apply, LinearMap.zero_apply]
-    erw [LinearMap.map_zero, zero_mul]
+    have key : ∀ (a u : V) (φ : V →ₗ[ℂ] ℂ),
+        φ (moduleModes (adjointModule W) (d.α + w - d.δ - 1) a u) = 0 := by
+      intro a u φ
+      rw [moduleModes_of_not_int (adjointModule W) h]
+      simp only [LinearMap.zero_apply, map_zero]
+    exact (congrArg (fun z : ℂ => z * _) (key d.x _ d.functional)).trans (zero_mul _)
 
 end Terms
 
@@ -253,16 +286,20 @@ theorem iter_eq_prod (hV : StronglyRational (orbifoldVOA G)) (d : FourPointTest 
       ?hProd ?hIt d.positive d.less_one
     case hP =>
       intro k hk
-      simp only
-      rw [hk1 k hk, LinearMap.map_zero]
-      erw [LinearMap.map_zero]
+      have key : ∀ (u : V) (φ : V →ₗ[ℂ] ℂ),
+          φ (mode ((adjointModule W).YM u) (D - k) (mode ((adjointModule W).YM d.y) k d.z)) = 0 := by
+        intro u φ
+        rw [hk1 k hk, LinearMap.map_zero, LinearMap.map_zero]
+      exact key d.x d.functional
     case hQ =>
       intro r hr
-      simp only
       have h0 := hr0 r hr
       rw [zero_add] at h0
-      erw [h0, map_zero, mode_zero, LinearMap.zero_apply]
-      erw [LinearMap.map_zero]
+      have key : ∀ (u z : V) (φ : V →ₗ[ℂ] ℂ), u = 0 →
+          φ (mode ((adjointModule W).YM u) (D - r) z) = 0 := by
+        intro u z φ hu
+        rw [hu, map_zero, mode_zero, LinearMap.zero_apply, map_zero]
+      exact key _ d.z d.functional h0
     case hProd =>
       intro s hs0 hs1
       let d' : FourPointTest A A A A :=
@@ -271,7 +308,7 @@ theorem iter_eq_prod (hV : StronglyRational (orbifoldVOA G)) (d : FourPointTest 
         (postcompose (F A (tensorObj F A A)).intertwiner (ambient G).isMod
           (tensorHom F (𝟙 A) (μ) ≫ μ))
       have hinj : Function.Injective fun k : ℤ => d.β + d.γ - 1 - (k : ℂ) := fun a b h => by
-        simpa using h
+        simpa using! h
       refine (hsum.comp_injective hinj).congr fun k => ?_
       simp only [Function.comp]
       rw [prodTerm_eq G F d', prodTerm_int G d' hα hβ hg]
@@ -283,7 +320,7 @@ theorem iter_eq_prod (hV : StronglyRational (orbifoldVOA G)) (d : FourPointTest 
         (postcompose (F (tensorObj F A A) A).intertwiner (ambient G).isMod
           (tensorHom F μ (𝟙 A) ≫ μ))
       have hinj : Function.Injective fun r : ℤ => (((α' + β' - 1 : ℤ) : ℂ)) - (r : ℂ) :=
-        fun a b h => by simpa using h
+        fun a b h => by simpa using! h
       refine (hsum.comp_injective hinj).congr fun r => ?_
       simp only [Function.comp]
       rw [iterTerm_eq G F d', iterTerm_int G d' hα hβ hg]

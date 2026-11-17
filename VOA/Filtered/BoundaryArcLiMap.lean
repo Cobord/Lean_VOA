@@ -64,7 +64,7 @@ private theorem lift_mul {p q : MvPolynomial (Fin 3) ℂ} {N M : ℕ}
   obtain ⟨x,hxc,hxl⟩ := hp
   obtain ⟨y,hyc,hyl⟩ := hq
   have hg : W.smul x.1 (-1) y.1 ∈ W.grading ((N+M : ℕ) : ℤ) := by
-    simpa using W.smul_mem_grading x.2 y.2 (-1)
+    simpa using! W.smul_mem_grading x.2 y.2 (-1)
   refine ⟨⟨W.smul x.1 (-1) y.1,hg⟩, ?_, ?_⟩
   · rw [map_mul,hxc,hyc,A₂_mul_mk]
     rfl
@@ -75,8 +75,8 @@ private theorem lift_mul {p q : MvPolynomial (Fin 3) ℂ} {N M : ℕ}
 private theorem lift_pow {p : MvPolynomial (Fin 3) ℂ} {N : ℕ}
     (hp : HasLift W gen hgen p N) (r : ℕ) : HasLift W gen hgen (p^r) (r*N) := by
   induction r with
-  | zero => simpa using lift_one W gen hgen
-  | succ r ih => simpa [pow_succ,Nat.succ_mul] using lift_mul W gen hgen ih hp
+  | zero => simpa using! lift_one W gen hgen
+  | succ r ih => simpa [pow_succ,Nat.succ_mul] using! lift_mul W gen hgen ih hp
 
 private theorem lift_casimir : HasLift W gen hgen (BoundaryAuxiliary.casimir (R := ℂ)) 2 := by
   have hh := lift_pow W gen hgen (lift_X W gen hgen 1) 2
@@ -147,11 +147,11 @@ theorem baseIdeal_le_boundaryIdeal : BoundaryAuxiliary.baseIdeal (R := ℂ) m �
   rintro p ⟨i,rfl⟩
   fin_cases i
   · simpa [BoundaryAuxiliary.baseRelation,BoundaryAuxiliary.casimir,
-      casSym,eSym,hSym,fSym,mul_comm] using cas_pow_mul_e_mem m
+      casSym,eSym,hSym,fSym,mul_comm] using! cas_pow_mul_e_mem m
   · simpa [BoundaryAuxiliary.baseRelation,BoundaryAuxiliary.casimir,
-      casSym,eSym,hSym,fSym,mul_comm] using cas_pow_mul_h_mem m
+      casSym,eSym,hSym,fSym,mul_comm] using! cas_pow_mul_h_mem m
   · simpa [BoundaryAuxiliary.baseRelation,BoundaryAuxiliary.casimir,
-      casSym,eSym,hSym,fSym,mul_comm] using cas_pow_mul_f_mem m
+      casSym,eSym,hSym,fSym,mul_comm] using! cas_pow_mul_f_mem m
 
 /-- The actual base relations vanish on paper-order simple Li current classes. -/
 theorem baseIdeal_le_kernel : BoundaryAuxiliary.baseIdeal (R := ℂ) m ≤

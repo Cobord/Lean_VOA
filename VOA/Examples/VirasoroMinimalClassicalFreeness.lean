@@ -236,7 +236,7 @@ theorem mem_jetIdeal_of_psi_eq_zero (m : ℕ) (h : JP) (hh : psi m h = 0) :
     h ∈ InfiniteJet.jetIdeal (relIdeal m) := by
   have h1 : psi0 h ∈ TwoSeries.StrictModel.jetIdealT (m + 1) :=
     (Ideal.Quotient.eq_zero_iff_mem (I := TwoSeries.StrictModel.jetIdealT (m + 1))).mp
-      (by simpa [psi] using hh)
+      (by simpa [psi] using! hh)
   have h2 := rho0_mem_jetIdeal m h1
   rwa [rho0_psi0] at h2
 
@@ -257,7 +257,7 @@ theorem isWeightedHomogeneous_list_prod {M : Type*} [AddCommMonoid M] (w : Fin 1
     ((L.map (fun v => (MvPolynomial.X v : JP))).prod).IsWeightedHomogeneous w
       (L.map w).sum := by
   induction L with
-  | nil => simpa using MvPolynomial.isWeightedHomogeneous_one (R := ℂ) w
+  | nil => simpa using! MvPolynomial.isWeightedHomogeneous_one (R := ℂ) w
   | cons v L ih =>
       simp only [List.map_cons, List.prod_cons, List.sum_cons]
       exact (MvPolynomial.isWeightedHomogeneous_X ℂ w v).mul ih

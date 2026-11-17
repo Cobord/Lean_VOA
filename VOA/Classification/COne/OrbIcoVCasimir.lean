@@ -68,6 +68,6 @@ theorem spinCasimir_vacuum : spinCasimir V2v.vacuum = 0 := by
   have he : wv 0 0 = V2v.vacuum := by
     rw [wv_zero]
     rfl
-  simpa [he] using h
+  simpa [he] using! h
 
 end VOA.Classification.COne.OrbIcoV

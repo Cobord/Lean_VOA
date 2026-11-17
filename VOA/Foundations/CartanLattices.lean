@@ -169,7 +169,7 @@ theorem d4_posDef : d4.PosDef :=
 theorem quad_E6 (v : Fin 6 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₆) v v =
       2 * (v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2 + v 3 ^ 2 + v 4 ^ 2 + v 5 ^ 2 - v 0 * v 2 - v 1 * v 3 - v 2 * v 3 - v 3 * v 4 - v 4 * v 5) := by
-  rw [Matrix.toBilin'_apply']; unfold CartanMatrix.E₆
+  rw [CartanMatrix.E₆, CartanMatrix.E_six_eq, Matrix.toBilin'_apply']
   simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
   ring
 
@@ -237,7 +237,7 @@ theorem e6_posDef : e6.PosDef :=
 theorem quad_E7 (v : Fin 7 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₇) v v =
       2 * (v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2 + v 3 ^ 2 + v 4 ^ 2 + v 5 ^ 2 + v 6 ^ 2 - v 0 * v 2 - v 1 * v 3 - v 2 * v 3 - v 3 * v 4 - v 4 * v 5 - v 5 * v 6) := by
-  rw [Matrix.toBilin'_apply']; unfold CartanMatrix.E₇
+  rw [CartanMatrix.E₇, CartanMatrix.E_seven_eq, Matrix.toBilin'_apply']
   simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
   ring
 
@@ -310,7 +310,7 @@ theorem e7_posDef : e7.PosDef :=
 theorem quad_E8 (v : Fin 8 → ℤ) :
     Matrix.toBilin' (CartanMatrix.E₈) v v =
       2 * (v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2 + v 3 ^ 2 + v 4 ^ 2 + v 5 ^ 2 + v 6 ^ 2 + v 7 ^ 2 - v 0 * v 2 - v 1 * v 3 - v 2 * v 3 - v 3 * v 4 - v 4 * v 5 - v 5 * v 6 - v 6 * v 7) := by
-  rw [Matrix.toBilin'_apply']; unfold CartanMatrix.E₈
+  rw [CartanMatrix.E₈, CartanMatrix.E_eight_eq, Matrix.toBilin'_apply']
   simp [Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
   ring
 

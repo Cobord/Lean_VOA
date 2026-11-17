@@ -129,7 +129,7 @@ theorem coeff_prod_embS_pow {K : ℕ} (c a : Fin K → ℕ) :
 theorem ψF_coeff_rename {s K : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F)
     (ρ : Fin s → Fin K) (e : Fin K →₀ ℕ) :
     ψF F (MvPowerSeries.coeff e (MvPowerSeries.rename ρ (tProd s))) =
-      MvPolynomial.coeff e (rename ρ F) := by
+      (rename ρ F).coeff e := by
   rw [← MvPolynomial.coeff_coe, ← MvPowerSeries.rename_coe, MvPowerSeries.coeff_rename,
     MvPowerSeries.coeff_rename, map_sum]
   apply Finset.sum_congr rfl
@@ -141,7 +141,7 @@ theorem ψF_coeff_rename {s K : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F
 theorem ψF_tpow {s K : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) (ρ : Fin s → Fin K)
     (c : Fin K → ℕ) (hρ : ∀ b, (Finset.univ.filter fun v => ρ v = b).card = c b)
     (a : Fin K → ℕ) :
-    ψF F (∏ b, PowerSeries.coeff (a b) (tSer ^ c b)) = coeff (toF a) (rename ρ F) := by
+    ψF F (∏ b, PowerSeries.coeff (a b) (tSer ^ c b)) = (rename ρ F).coeff (toF a) := by
   rw [← coeff_prod_embS_pow, ← rename_tProd ρ c hρ, ψF_coeff_rename hF]
 
 /-! ### The jet ideal of `Tⁿ` -/
@@ -166,7 +166,7 @@ theorem ψF_eq_zero_of_isHomogeneous {s : ℕ} (F : MvPolynomial (Fin s) ℂ) {p
   have h := hp (mem_support_iff.mp he)
   rw [cF_eq_zero, mul_zero]
   rw [Finsupp.degree_eq_weight_one]
-  simpa using fun h' => hd (h.symm.trans (by simpa using h'))
+  simpa using! fun h' => hd (h.symm.trans (by simpa using! h'))
 
 /-- The collision map: the first `n` variables to `0`, the rest to `1, …, s'`. -/
 def collide (n s' : ℕ) : Fin (n + s') → Fin (s' + 1) :=
@@ -226,8 +226,8 @@ theorem ψF_jet_mul_eq_zero' {n s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Sy
       · intro w hw
         refine ⟨(finCongr hs).symm w, ?_, by simp⟩
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hw ⊢
-        simpa [ρ] using hw
-    have hprod : PowerSeries.coeff m (tSer ^ n) * monomial e (coeff e p) = coeff e p •
+        simpa [ρ] using! hw
+    have hprod : PowerSeries.coeff m (tSer ^ n) * monomial e (p.coeff e) = p.coeff e •
         ∏ b, PowerSeries.coeff ((Fin.cons m j : Fin (d + 1) → ℕ) b)
           (tSer ^ (Fin.cons n (fun _ : Fin d => 1) : Fin (d + 1) → ℕ) b) := by
       rw [Fin.prod_univ_succ]
@@ -240,8 +240,8 @@ theorem ψF_jet_mul_eq_zero' {n s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Sy
         rw [tSer, PowerSeries.coeff_mk]
       rw [hX, smul_eq_C_mul, ← mul_assoc, mul_comm (MvPolynomial.C _), mul_assoc,
         C_mul_monomial, mul_one]
-    rw [hprod, map_smul, ψF_tpow hF ρ _ hρ, hcoll (d + 1) ρ 0 (by rw [hρ 0]; simp), coeff_zero,
-      smul_zero]
+    rw [hprod, map_smul, ψF_tpow hF ρ _ hρ, hcoll (d + 1) ρ 0 (by rw [hρ 0]; simp), MvPolynomial.coeff_zero,
+      Finsupp.zero_apply, smul_zero]
   · apply ψF_eq_zero_of_isHomogeneous F _ (d := n + e.degree) (by omega)
     exact (tSer_pow_isHomogeneous n m).mul (isHomogeneous_monomial _ rfl)
 
@@ -260,7 +260,7 @@ theorem ψF_jetIdeal_n {n s : ℕ} {F : MvPolynomial (Fin s) ℂ} (hF : Symm F) 
     · intro y; rw [mul_zero, map_zero]
     · intro a b _ _ ha hb y; rw [mul_add, map_add, ha, hb, add_zero]
     · intro a b _ hb y; rw [smul_eq_mul, ← mul_assoc]; exact hb _
-  simpa using key 1
+  simpa using! key 1
 
 /-- The descended functional `ψ_F : R_n → ℂ` for `F` killed by `n`-collisions. -/
 def ψbarG (n : ℕ) {s : ℕ} (F : MvPolynomial (Fin s) ℂ) (hF : Symm F) (hk : CollKill n F) :

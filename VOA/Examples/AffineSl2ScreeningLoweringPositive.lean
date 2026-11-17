@@ -67,13 +67,12 @@ theorem gammaErase_AG_positive (k : ℂ) (P : WakFock) (hP : P∈gammaFree) :
   congr 1
   refine Finset.sum_bij (fun p _ => -p) ?_ ?_ ?_ ?_
   · intro p hp; have hp' := Finset.mem_Icc.mp hp
-    apply Finset.mem_Icc.mpr; dsimp only; constructor <;> omega
-  · intro p hp v hv he; dsimp only at he; omega
+    apply Finset.mem_Icc.mpr; constructor <;> omega
+  · intro p hp v hv he; omega
   · intro m hm; have hm' := Finset.mem_Icc.mp hm
     refine ⟨-m,Finset.mem_Icc.mpr ?_,by simp⟩
     constructor <;> omega
   · intro p hp
-    dsimp only
     rw [show 1-p=-p+1 by omega]
 
 /-- The projected triple ghost term is a finite positive triangle of
@@ -85,14 +84,13 @@ theorem gammaErase_BGG_positive (P : WakFock) (hP : P∈gammaFree) :
   rw [BGG_gammaFree P hP,map_sum]
   refine Finset.sum_bij (fun p _ => -p) ?_ ?_ ?_ ?_
   · intro p hp; have hp' := Finset.mem_Icc.mp hp
-    apply Finset.mem_Icc.mpr; dsimp only; constructor <;> omega
-  · intro p hp v hv he; dsimp only at he; omega
+    apply Finset.mem_Icc.mpr; constructor <;> omega
+  · intro p hp v hv he; omega
   · intro m hm; have hm' := Finset.mem_Icc.mp hm
     refine ⟨-m,Finset.mem_Icc.mpr ?_,by simp⟩
     constructor <;> omega
   · intro p hp
     have hp' := Finset.mem_Icc.mp hp
-    dsimp only
     rw [map_mul,gammaErase_bV,gammaErase_GG_triangle P hP (1-p) (by omega)]
     simp only [show 1-p=-p+1 by omega,add_sub_cancel_right]
 

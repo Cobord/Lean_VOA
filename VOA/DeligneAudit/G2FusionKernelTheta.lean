@@ -44,7 +44,7 @@ theorem op_comm_g2 (a b : Fin 14) :
   ext x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.coe_sum, Finset.sum_apply,
     LinearMap.smul_apply]
-  simpa using ρ.comm a b 0 0 x
+  simpa using! ρ.comm a b 0 0 x
 
 theorem sum_single_g2 {a b z : Fin 14} {c : ℤ}
     (h : ∀ e : Fin 14, fZ br a b e = if e = z then c else 0) :
@@ -65,35 +65,41 @@ theorem g2_thetaNil : ThetaNilG G2sector := by
   have hA : ρ.op (4 : Fin 14) 0 w = 0 := by
     have := hL (4 : Fin 14) (show ((4 : Fin 14) : ℕ) ∈ ([4, 13] : List ℕ) by decide)
     change (ρ.op (4 : Fin 14) 0)^[k * lowExpS 4 + 1] w = 0 at this
-    simpa [lowExpS] using this
+    simpa [lowExpS] using! this
   have hX : ((ρ.op (13 : Fin 14) 0) ^ (k + 1)) w = 0 := by
     have := hL (13 : Fin 14) (show ((13 : Fin 14) : ℕ) ∈ ([4, 13] : List ℕ) by decide)
     change (ρ.op (13 : Fin 14) 0)^[k * lowExpS 13 + 1] w = 0 at this
     rw [Module.End.pow_apply]
-    simpa [lowExpS] using this
+    simpa [lowExpS] using! this
   set A := ρ.op (4 : Fin 14) 0 with hAdef
   have hstep : ∀ x : Fin 14, adL A (ρ.op x 0) = ∑ e, fG2 4 x e • ρ.op e 0 :=
     fun x => op_comm_g2 (ρ := ρ) 4 x
   have h3 : (adL A)^[3] (ρ.op (13 : Fin 14) 0) = (6 : ℂ) • ρ.op (3 : Fin 14) 0 := by
-    simp only [Function.iterate_succ_apply', Function.iterate_zero_apply]
-    rw [hstep, sum_single_g2 c1, map_smul, hstep, sum_single_g2 c2, smul_smul, map_smul, hstep,
-      sum_single_g2 c3, smul_smul]
+    have e1 := (hstep 13).trans (sum_single_g2 (ρ := ρ) (a := 4) (b := 13) c1)
+    have e2 := (hstep 11).trans (sum_single_g2 (ρ := ρ) (a := 4) (b := 11) c2)
+    have e3 := (hstep 8).trans (sum_single_g2 (ρ := ρ) (a := 4) (b := 8) c3)
+    change adL A (adL A (adL A (ρ.op (13 : Fin 14) 0))) = _
+    rw [e1, map_smul, e2, smul_smul, map_smul, e3, smul_smul]
     norm_num
   have h4 : (adL A)^[3 + 1] (ρ.op (13 : Fin 14) 0) = 0 := by
-    rw [Function.iterate_succ_apply', h3, map_smul, hstep, sum_zero_g2 c4, smul_zero]
+    have e4 := (hstep 3).trans (sum_zero_g2 (ρ := ρ) (a := 4) (b := 3) c4)
+    rw [Function.iterate_succ_apply', h3, map_smul, e4, smul_zero]
   have hY := nil_of_ad A hA h4 hX
   rw [h3, smul_pow, LinearMap.smul_apply, smul_eq_zero] at hY
   have hY' : ((ρ.op (3 : Fin 14) 0) ^ (k + 1)) w = 0 :=
     hY.resolve_left (pow_ne_zero _ (by norm_num))
   have hXY : ρ.op (13 : Fin 14) 0 * ρ.op (3 : Fin 14) 0 - ρ.op (3 : Fin 14) 0 * ρ.op (13 : Fin 14) 0
       = ρ.op (12 : Fin 14) 0 := by
-    rw [op_comm_g2, sum_single_g2 c5]; simp
+    exact (op_comm_g2 (ρ := ρ) 13 3).trans
+      ((sum_single_g2 (ρ := ρ) (a := 13) (b := 3) c5).trans (by simp))
   have hXZ : ρ.op (13 : Fin 14) 0 * ρ.op (12 : Fin 14) 0 =
       ρ.op (12 : Fin 14) 0 * ρ.op (13 : Fin 14) 0 := by
-    rw [← sub_eq_zero, op_comm_g2, sum_zero_g2 c6]
+    rw [← sub_eq_zero]
+    exact (op_comm_g2 (ρ := ρ) 13 12).trans (sum_zero_g2 (ρ := ρ) (a := 13) (b := 12) c6)
   have hYZ : ρ.op (3 : Fin 14) 0 * ρ.op (12 : Fin 14) 0 =
       ρ.op (12 : Fin 14) 0 * ρ.op (3 : Fin 14) 0 := by
-    rw [← sub_eq_zero, op_comm_g2, sum_zero_g2 c7]
+    rw [← sub_eq_zero]
+    exact (op_comm_g2 (ρ := ρ) 3 12).trans (sum_zero_g2 (ρ := ρ) (a := 3) (b := 12) c7)
   exact Garland.heis_nilpotent hXY hYZ hXZ hX hY'
 
 /-- **Ravinder's kernel lemma for `G₂`, unconditional.** -/

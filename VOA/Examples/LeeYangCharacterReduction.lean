@@ -81,7 +81,7 @@ theorem finrank_pieceIn_le (n : ℤ) (p : ℕ) :
     rw [finrank_pieceIn_eq, goodFil_eq_span_lyFamily, sum_leadingCoefficient_eq,
       ← card_gapWordsLe]
     have := finrank_range_le_card (R := ℂ) (lyFamily N p)
-    simpa [Set.finrank] using this
+    simpa [Set.finrank] using! this
 
 /-! ## The named lower bound and the equivalence -/
 

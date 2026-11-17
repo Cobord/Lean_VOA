@@ -57,8 +57,7 @@ theorem mid_mem_weight (hY₁ : LogHuangODEProduct.IsGradedJacobiFamily A₁ A�
     Y₁ p w₁ (swap2 YB q w₂ (Y₃ r w₃ w₄)) ∈
       A₀.weight (α₁ + α₂ + α₃ + α₄ - p - q - r - 3) := by
   convert hY₁.mem_weight h₁ (hYB.mem_weight (hY₃.mem_weight h₃ h₄ r) h₂ q) p using 1
-  congr 1
-  ring
+  all_goals first | (congr 1; ring) | rfl
 
 /-- Boundedness below gives a uniform base for the flipped middle shape. -/
 theorem exists_midUniformBase (hYB : LogHuangODEProduct.IsGradedJacobiFamily A₅ A₂ A₆ YB)

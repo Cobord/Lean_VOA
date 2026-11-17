@@ -82,7 +82,7 @@ def levelLeviCurrent (m : ℕ) (κ p : ℤ) :
       (levelFiltration_stable ρ w m κ p (leviColour e) r (leviColour_isLevi e) hv))
   comm a b r s v := by
     apply Subtype.ext
-    simpa using (leviCurrent ρ).comm a b r s (v : V)
+    simpa using! (leviCurrent ρ).comm a b r s (v : V)
 
 /-- The semisimple Levi current representation on the level coinvariant. -/
 def levelCoinvariantCurrent (m : ℕ) (κ p : ℤ) :
@@ -116,7 +116,7 @@ theorem bottomVector_mem_multiplicity (a b c : ℕ) :
   · simp [keyAlphaGrade, keyDepth, bottomRadicalKey]
   · simp [keyLeviLevel, bottomRadicalKey]
     ring
-  · simpa only [bottomVector, bottomRadicalWord_key] using
+  · simpa only [bottomVector, bottomRadicalWord_key] using!
       radicalWord_mem_key ρ w (bottomRadicalWord a c)
 
 /-- The four raw Cartan colours in the reductive Levi. -/
@@ -136,11 +136,11 @@ theorem levelMultiplicitySpan_rawCartan (m : ℕ)
       (levelMultiplicitySpan ρ w m κ p).comap (ρ.op (reductiveCartanColour i) r) := by
   fin_cases i
   · exact levelMultiplicitySpan_extraCartan ρ w m h κ p r
-  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using
+  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using!
       levelMultiplicitySpan_cartan ρ w m h κ p 1 r
-  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using
+  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using!
       levelMultiplicitySpan_cartan ρ w m h κ p 0 r
-  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using
+  · simpa [leviCurrent, leviSign, A3Sector.simpleH, leviColour, reductiveCartanColour] using!
       levelMultiplicitySpan_cartan ρ w m h κ p 2 r
 
 /-- A word in all four reductive Cartan current directions. -/

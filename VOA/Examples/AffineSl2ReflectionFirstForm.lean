@@ -29,7 +29,7 @@ theorem reflectionPairPolynomial_highest (k : ℂ) (d : ℕ) :
   apply Polynomial.funext
   intro h
   rw [reflectionPairPolynomial_eval]
-  simpa [indexedWord,List.map_replicate,lowerLetter,horizontalState] using
+  simpa [indexedWord,List.map_replicate,lowerLetter,horizontalState] using!
     horizontalState_norm k (h+(d : ℂ)) (d+1)
 
 /-- Differentiating once removes precisely the simple horizontal zero. -/

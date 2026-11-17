@@ -48,6 +48,6 @@ theorem genericSymbolCoefficient_recurrence (self : Bool) (N n : ℕ) (hn : n≤
     (symbolTargetWeight self t) t N n (genericSymbolWard self N t him) hn
     ((genericSymbolWard_spec self N t him).2.1 (2*n) (by omega))
   simpa only [genericSymbolCoefficient,dif_pos him,OrbIcoW.widthAt,
-    ← incomingWeight_eq_widthH,symbolTargetWeight] using hh
+    ← incomingWeight_eq_widthH,symbolTargetWeight] using! hh
 
 end VOA.Classification.COne.OrbIcoV

@@ -48,7 +48,7 @@ theorem current_center_pow_mem (w : V) (n : ℕ) {d : ℕ} {v : V}
     (hv : v ∈ currentPiece R w d) :
     (currentCenter R 0 ^ n) v ∈ currentPiece R w (n+d) := by
   induction n with
-  | zero => simpa only [pow_zero, Module.End.one_apply, Nat.zero_add] using hv
+  | zero => simpa only [pow_zero, Module.End.one_apply, Nat.zero_add] using! hv
   | succ n ih =>
       rw [pow_succ', Module.End.mul_apply]
       exact currentPiece_mono R w (by omega) (current_radical_mem R w 8 0 ih)

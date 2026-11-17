@@ -34,7 +34,7 @@ theorem f4_all_of_getD {α : Type*} (xs : List α) (fallback : α) (P : α → B
   intro x hx
   obtain ⟨i, hi, rfl⟩ := List.getElem_of_mem hx
   have hh := List.all_eq_true.mp h i (List.mem_range'_1.mpr ⟨Nat.zero_le _, by omega⟩)
-  simpa only [List.getD_eq_getElem _ _ hi] using hh
+  simpa only [List.getD_eq_getElem _ _ hi] using! hh
 
 /-- The non-recursive row of a generation-tree certificate. -/
 def f4_generation_row (n : ℕ) (br : ℕ → ℕ → SV)
@@ -57,13 +57,13 @@ theorem f4_genCheck_of_rows (n : ℕ) (br : ℕ → ℕ → SV)
   | nil => rfl
   | cons t gen ih =>
       have h0 : f4_generation_row n br t seen = true := by
-        simpa [f4_generation_at] using h 0 (by simp)
+        simpa [f4_generation_at] using! h 0 (by simp)
       have ht : ∀ i, i < gen.length →
           f4_generation_at n br gen (t.1 :: seen) i = true := by
         intro i hi
-        have hh := h (i + 1) (by simpa using Nat.succ_lt_succ hi)
+        have hh := h (i + 1) (by simpa using! Nat.succ_lt_succ hi)
         simpa [f4_generation_at, List.take_succ_cons, List.reverse_cons,
-          List.append_assoc] using hh
+          List.append_assoc] using! hh
       change (f4_generation_row n br t seen && genCheck n br gen (t.1 :: seen)) = true
       rw [h0, ih _ ht]
       rfl

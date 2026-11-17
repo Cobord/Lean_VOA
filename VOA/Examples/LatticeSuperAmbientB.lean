@@ -595,7 +595,7 @@ theorem bgCompat_latP (p : ℕ) (hp : 1 ≤ p) :
     BgCompat (Triplet.latP p) (Triplet.qrP p) (Triplet.lamP p) := by
   intro m
   rw [bgPair_B_eq_A, Triplet.bgPair_lamP_eq p hp m]
-  simp only [Triplet.qrP_q]
+  erw [Triplet.qrP_q]
   push_cast
   ring
 

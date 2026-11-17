@@ -42,10 +42,13 @@ theorem alphaMode_comm_EEC (c : ℂ) (m s : ℤ) :
   rw [hidx] at h
   by_cases hm : m = 0
   · have hj : -m - 1 = -1 := by omega
-    simpa only [alphaMode, if_pos hm, if_pos hj] using h
+    rw [if_pos hj] at h
+    rw [if_pos hm]
+    exact h
   · have hj : -m - 1 ≠ -1 := by omega
-    simpa only [alphaMode, if_neg hm, if_neg hj,
-      show s + (-m - 1) + 1 = s - m by ring] using h
+    rw [if_neg hj, show s + (-m - 1) + 1 = s - m by ring] at h
+    rw [if_neg hm]
+    exact h
 
 /-- The shifted target current minus the source current contracts with the exponential uniformly,
 including the momentum-zero mode. -/

@@ -24,8 +24,8 @@ theorem ordinary_coset_has_lowest (N : OrdVModule W M) (α : ℂ)
     have h := hB _ hd
     simp only [Complex.add_re, Complex.intCast_re] at h
     linarith
-  obtain ⟨d, hd, hmin⟩ := Int.exists_least_of_bdd hb ⟨0, by simpa using hα⟩
-  have hd0 : d ≤ 0 := hmin 0 (by simpa using hα)
+  obtain ⟨d, hd, hmin⟩ := Int.exists_least_of_bdd hb ⟨0, by simpa using! hα⟩
+  have hd0 : d ≤ 0 := hmin 0 (by simpa using! hα)
   refine ⟨α + (d : ℂ), (-d).toNat, ?_, hd, ?_⟩
   · intro β hβ
     obtain ⟨e, rfl⟩ := hcos β hβ

@@ -13,6 +13,9 @@ namespace VOA.Moonshine.ConwayNorton
 open scoped BigOperators
 open IntegralLattice HeisenbergN
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Complex bilinear coordinates for the integral lattice pairing. -/
 structure ComplexLatticeFrame (L : IntegralLattice) where
   coordinate : L.carrier →+ (Fin (rank L) → ℂ)

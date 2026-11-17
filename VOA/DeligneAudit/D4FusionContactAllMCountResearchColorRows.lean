@@ -61,7 +61,7 @@ theorem rowEval_swap (r : WordRow) :
 theorem rowEval_fullH (r : WordRow) :
     rowEval varIndex (differentiateRow (images 0) r) = g0Deriv 2 0 0 (rowEval varIndex r) := by
   simpa only [Polynomial.candidateDeriv,derivationIndex,Fin.isValue,ite_true,
-    Nat.zero_div,Nat.zero_mod,Fin.val_zero] using rowEval_images 0 r
+    Nat.zero_div,Nat.zero_mod,Fin.val_zero] using! rowEval_images 0 r
 
 /-- The finite integer checker compiles the actual complex color operator. -/
 theorem rowEval_boundary (r : WordRow) :

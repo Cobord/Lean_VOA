@@ -103,6 +103,7 @@ noncomputable def initBasis (e : Module.Basis (Fin m) K E) {k : ℕ} (hk : k ≤
 /-- Each step has the expected dimension. -/
 theorem finrank_initFlag (e : Module.Basis (Fin m) K E) {k : ℕ} (hk : k ≤ m) :
     finrank K (initFlag e hk) = k := by
+  show finrank K (Submodule.span K (Set.range (initFam e hk))) = k
   simpa using finrank_span_eq_card (initFam_linearIndependent e hk)
 
 /-! ## §2  Leading principal minors -/

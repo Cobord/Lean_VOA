@@ -17,6 +17,8 @@ the regular vacuum representation, it does not impose the fixed-level relation
 C=k on the extension. This is the representation in which the singular-vector
 obstruction must be computed. Its construction does not force δ to vanish.
 -/
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace VOA.AffineVOA
 open Deform
 open Module (End)

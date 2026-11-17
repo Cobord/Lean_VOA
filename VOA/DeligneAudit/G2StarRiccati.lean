@@ -48,30 +48,30 @@ theorem eq_zero_of_mul_eulerOp (U H d : PowerSeries ℚ) (h : U * eulerOp d = H 
   | _ n ih =>
     have hc := congrArg (coeff n) h
     rw [coeff_mul, coeff_mul] at hc
-    have hL : ∑ p ∈ Finset.antidiagonal n, coeff p.1 U * coeff p.2 (eulerOp d) =
+    have hL : ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, coeff p.1 U * coeff p.2 (eulerOp d) =
         constantCoeff U * ((n : ℚ) * coeff n d) := by
       rw [Finset.sum_eq_single (0, n)]
       · simp
       · rintro ⟨i, j⟩ hp hne
-        have hp' := Finset.mem_antidiagonal.mp hp
+        have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
         have hj : j < n := by
           rcases Nat.eq_zero_or_pos i with hi | hi
           · exact absurd (by simp_all) hne
           · simp only at hp'; omega
         simp [coeff_eulerOp, ih j hj]
-      · intro h0; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h0
-    have hR : ∑ p ∈ Finset.antidiagonal n, coeff p.1 H * coeff p.2 d =
+      · intro h0; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h0
+    have hR : ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n, coeff p.1 H * coeff p.2 d =
         constantCoeff H * coeff n d := by
       rw [Finset.sum_eq_single (0, n)]
       · simp
       · rintro ⟨i, j⟩ hp hne
-        have hp' := Finset.mem_antidiagonal.mp hp
+        have hp' := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
         have hj : j < n := by
           rcases Nat.eq_zero_or_pos i with hi | hi
           · exact absurd (by simp_all) hne
           · simp only at hp'; omega
         simp [ih j hj]
-      · intro h0; exact absurd (Finset.mem_antidiagonal.mpr (by simp)) h0
+      · intro h0; exact absurd (Finset.HasAntidiagonal.mem_antidiagonal.mpr (by simp)) h0
     rw [hL, hR] at hc
     by_cases hn : (n : ℚ) * constantCoeff U = constantCoeff H
     · exact hroot n hn

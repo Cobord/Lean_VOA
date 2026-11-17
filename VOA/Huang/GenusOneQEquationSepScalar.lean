@@ -41,7 +41,7 @@ theorem pairSeriesSpan_euler_closed {E F : Type*}
     obtain ⟨⟨x, y⟩, rfl⟩ := hf
     exact hD x y
   | zero => simp
-  | add f g _ _ hf hg => simpa only [map_add] using (pairSeriesSpan R S).add_mem hf hg
+  | add f g _ _ hf hg => simpa only [map_add] using! (pairSeriesSpan R S).add_mem hf hg
   | smul a f hf ih =>
     rw [Algebra.smul_def, Subalgebra.algebraMap_eq, thetaShift_mul]
     exact (pairSeriesSpan R S).add_mem

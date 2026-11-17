@@ -103,6 +103,8 @@ theorem modularInvolution_involutive (γ : SL(2, ℤ)) :
 theorem modularInvolution_mul (γ δ : SL(2, ℤ)) :
     modularInvolution (γ * δ) = modularInvolution γ * modularInvolution δ := by
   ext i j
+  change _ = ((modularInvolution γ : Matrix (Fin 2) (Fin 2) ℤ) *
+    (modularInvolution δ : Matrix (Fin 2) (Fin 2) ℤ)) i j
   fin_cases i <;> fin_cases j <;>
     simp [modularInvolution, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 

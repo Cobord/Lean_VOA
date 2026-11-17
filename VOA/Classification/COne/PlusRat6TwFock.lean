@@ -29,12 +29,12 @@ theorem aut_L_neg_one (g : Aut W) (u : V) : g (W.L (-1) u) = W.L (-1) (g u) := b
 theorem aut_L_iter_neg (u : V) (hu : g u = -u) (p : ℕ) :
     g ((W.L (-1))^[p] u) = -((W.L (-1))^[p] u) := by
   induction p with
-  | zero => simpa using hu
+  | zero => simpa using! hu
   | succ p ih => rw [Function.iterate_succ_apply', aut_L_neg_one, ih, map_neg]
 
 theorem mem_eig_one {u : V} (hu : g u = -u) : u ∈ g.twistedEigenspace 2 1 := by
   rw [Aut.twistedEigenspace, Module.End.mem_eigenspace_iff, HeisenbergN.exp_twisted_two]
-  simpa using hu
+  simpa using! hu
 
 /-- Iterated derivative property on the `-1`-eigenspace. -/
 theorem tw_deriv_iter (u : V) (hu : g u = -u) (p : ℕ) (k : ℤ) (hk : Odd k) (x : M) :

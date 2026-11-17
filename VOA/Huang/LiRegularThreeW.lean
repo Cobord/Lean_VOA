@@ -342,7 +342,7 @@ theorem pascal_vanish_z {z : ℂ} (hz : z ≠ 0) (f : ℤ → ℤ → G)
   have hneg : ∀ n : ℕ, ∀ m, f (-(n : ℤ)) m = 0 := by
     intro n
     induction n with
-    | zero => simpa using h0
+    | zero => simpa using! h0
     | succ n ih =>
       have hstep : ∀ m, f (-((n + 1 : ℕ) : ℤ)) (m + 1) = z • f (-((n + 1 : ℕ) : ℤ)) m := by
         intro m

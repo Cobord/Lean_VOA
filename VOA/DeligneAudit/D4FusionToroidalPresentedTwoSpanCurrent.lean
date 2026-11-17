@@ -44,13 +44,13 @@ theorem two_toroidal_letters_deg (l : List (Ltr 28)) :
     twoUDeg (twoToroidalLetters l) = 0 := by
   induction l with
   | nil => rfl
-  | cons x l ih => simpa [twoToroidalLetters, twoUDeg] using ih
+  | cons x l ih => simpa [twoToroidalLetters, twoUDeg] using! ih
 
 theorem two_current_word_reverse (s : ℕ) (l : List (Ltr 28)) :
     wordOp twoCurrent l (twoGen s) =
       wordOpT (ρPTE 2) (twoToroidalLetters l) (twoGen s) := by
   simpa [twoZeroLetters', twoToroidalLetters, List.map_map,
-    Function.comp_def] using
+    Function.comp_def] using!
     (two_current_word s (twoToroidalLetters l) (two_toroidal_letters_deg l)).symm
 
 theorem twoM_eq_cycSubG (s : ℕ) :
@@ -64,7 +64,7 @@ theorem twoM_eq_cycSubG (s : ℕ) :
   · rw [cycSubG, Submodule.span_le]
     rintro v ⟨l, rfl⟩
     change wordOp twoCurrent l (twoGen s) ∈ twoM s
-    rw [two_current_word_reverse]
+    rw [two_current_word_reverse s l]
     exact twoM_word s _ (two_toroidal_letters_deg l)
 
 end

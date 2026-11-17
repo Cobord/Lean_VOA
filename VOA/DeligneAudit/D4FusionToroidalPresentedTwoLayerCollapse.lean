@@ -33,7 +33,7 @@ theorem two_second_layer_bound_of_collapse (h : TwoUTwoCollapse) :
         Module.finrank ℂ (Submodule.span ℂ {seedN1}) :=
       Submodule.finrank_mono hle
     _ ≤ 1 := by
-      simpa using (finrank_span_le_card (R := ℂ) ({seedN1} : Set (twoN 1)))
+      simpa using! (finrank_span_le_card (R := ℂ) ({seedN1} : Set (twoN 1)))
 
 theorem presentedRankBoundE_two_of' (h₁ : TwoPositiveSpanBound)
     (h₂ : TwoUTwoCollapse) : PresentedRankBoundE 2 (by norm_num) :=

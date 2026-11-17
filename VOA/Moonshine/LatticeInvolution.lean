@@ -205,7 +205,8 @@ variable (L : IntegralLattice)
 theorem orthCoord_neg (α : L.carrier) : orthCoord L (-α) = -orthCoord L α := by
   have hc : coordR L (-α) = -coordR L α := by
     funext i
-    simp only [coordR, coord, map_neg, Finsupp.neg_apply, Int.cast_neg, Pi.neg_apply]
+    simp only [coordR, coord, map_neg, Pi.neg_apply]
+    exact Int.cast_neg _
   rw [orthCoord, orthCoord, hc, Matrix.mulVec_neg]
 
 theorem chargeCoord_neg (α : L.carrier) (b : Fin (rank L)) :

@@ -127,8 +127,8 @@ theorem sum_range_add_shift (W : ℕ → M) (f : ℕ → ℂ) (r K : ℕ)
     ∑ J ∈ Finset.range K, f J • W (J + r)
       = ∑ J' ∈ Finset.range K, (if r ≤ J' then f (J' - r) else 0) • W J' := by
   rw [sum_range_shift (fun J' => (if r ≤ J' then f (J' - r) else 0) • W J') r K
-    (fun J' hJ' => by simp only; rw [if_neg (by omega), zero_smul])
-    (fun J hJ => by simp only; rw [hW _ hJ, smul_zero])]
+    (fun J' hJ' => by (try simp only); rw [if_neg (by omega), zero_smul])
+    (fun J hJ => by (try simp only); rw [hW _ hJ, smul_zero])]
   refine Finset.sum_congr rfl fun J _ => ?_
   rw [if_pos (by omega), Nat.add_sub_cancel_left, add_comm]
 

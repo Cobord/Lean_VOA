@@ -128,7 +128,7 @@ theorem partitionRange_le_stepRange (m D : ℕ) (lam : Nat.Partition (Fintype.ca
     refine ⟨((mem_nextSource m D G).mp hG).1, ((mem_nextSource m D G).mp hG).2, ?_⟩
     rw [canonicalMap_shape]
     rw [mem_residualFiltration] at hmem ⊢
-    exact ⟨Submodule.mem_top, by simpa only [hGF] using hmem.2⟩
+    exact ⟨Submodule.mem_top, by simpa only [hGF] using! hmem.2⟩
   refine ⟨⟨G, hstep⟩, ?_⟩
   change clusterEval (canonicalMap lam) G = residualEval (canonicalMap lam) F.val.val
   rw [clusterEval_eq, hGF]

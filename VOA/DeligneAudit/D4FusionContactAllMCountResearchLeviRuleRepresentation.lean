@@ -19,7 +19,7 @@ def representation (m : ℕ) :
     change deriv K m a k (deriv K m b l p) - deriv K m b l (deriv K m a k p) =
       ∑ e, structureCoeff K a b e • deriv K m e (k+l) p
     simp only [structureCoeff,ite_smul,zero_smul,Finset.sum_ite_eq',Finset.mem_univ,if_true]
-    simpa only [Derivation.commutator_apply,Derivation.smul_apply,Int.cast_smul_eq_zsmul] using h
+    simpa only [Derivation.commutator_apply,Derivation.smul_apply,Int.cast_smul_eq_zsmul] using! h
 
 end
 #print axioms representation

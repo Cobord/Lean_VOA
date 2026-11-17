@@ -24,6 +24,8 @@ open VOA
 open Module (End)
 open LieAlgebra LieAlgebra.Extension UniversalEnvelopingAlgebra
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable (c : ℂ)
 
 /-- The operator identity `virVacRho ⁅Lₘ, x⁆ z = Lₘ(x·z) − x·(Lₘ z)` (from the Lie hom `virVacRho`). -/
@@ -77,14 +79,14 @@ theorem Lm_bracket_ann (x : Virasoro) (z : VirUniv c) (Mz : ℤ)
 /-- `U(𝔙𝔦𝔯)`-valued wrapper of `RingQuot.mkAlgHom` — codomain declared as `UVir` (not the raw
 `RingQuot`) so the quotient-module smul instances `HSMul UVir (VirUniv c)` resolve for `map_add` /
 `add_smul` / `mul_smul` / `algebraMap_smul`. -/
-noncomputable def mkU : TensorAlgebra ℂ Virasoro →ₐ[ℂ] UVir := RingQuot.mkAlgHom ℂ (Rel ℂ Virasoro)
+noncomputable def mkU : TensorAlgebra ℂ Virasoro →ₐ[ℂ] UVir := UniversalEnvelopingAlgebra.mkAlgHom ℂ Virasoro
 
 /-- Every element of the universal enveloping algebra has a tensor-algebra
 representative. This permits induction on tensors when proving eventual
 annihilation by sufficiently large positive modes; it asserts spanning
 through the quotient, not a PBW independence theorem. -/
 theorem mkU_surjective (a : UVir) : ∃ p, mkU p = a :=
-  (RingQuot.mkAlgHom_surjective ℂ (Rel ℂ Virasoro)) a
+  (RingCon.mkₐ_surjective _ : Function.Surjective (UniversalEnvelopingAlgebra.mkAlgHom ℂ Virasoro)) a
 
 /-- **The combined annihilation bound**: for any `a ∈ U(𝔙𝔦𝔯)` and any `z` whose modes eventually
 annihilate, the modes of `a·z` eventually annihilate.  The multiplicative case chains the bound

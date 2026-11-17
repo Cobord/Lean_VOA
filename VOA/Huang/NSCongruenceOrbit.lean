@@ -181,7 +181,7 @@ theorem projectiveKernel_of_orbit_rescaling (F : SphericalFusion C) (M : Modular
     (he ρ hr a) (mixedRepresentation_T_period F M ρ hr) ?_ γ hγ z
   intro r s hs0 hrs hrN w
   have hmod : Int.ModEq M.toRibbon.twistOrder r 1 :=
-    (ZMod.intCast_eq_intCast_iff r 1 _).mp (by simpa using hrN)
+    (ZMod.intCast_eq_intCast_iff r 1 _).mp (by simpa using! hrN)
   simp only [mixedRow, equivariantIndicator, LinearMap.coe_mk, AddHom.coe_mk,
     hs a _ _ r s hs0 hrs hmod]
 
@@ -223,7 +223,7 @@ theorem orbitEquivariance_of_moves (F : SphericalFusion C) (M : Modular F)
       simp [SpecialLinearGroup.SL2Z_generators]
     induction hg using Subgroup.closure_induction with
     | mem x hx =>
-      rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using hx) with rfl | rfl
+      rcases (show x = ModularGroup.S ∨ x = ModularGroup.T by simpa using! hx) with rfl | rfl
       · intro g w
         have h := hS ρ hr a g w
         rw [rowAction_mul, rowAction_S, modularInvolution_S]
@@ -247,7 +247,7 @@ theorem orbitEquivariance_of_moves (F : SphericalFusion C) (M : Modular F)
       rw [modularInvolution_one, map_one, le_one_apply] at h
       exact h.symm
   have h := hQ γ 1 z
-  simpa [rowAction] using h
+  simpa [rowAction] using! h
 
 /-! ## The `T` move from the mixed twist identity -/
 
@@ -318,7 +318,7 @@ theorem gcd_eq_one_of_coprime_modEq {r s : ℤ} {N : ℕ} (hrs : IsCoprime r s)
   push_cast
   apply IsCoprime.mul_right
   · rcases hs with hs | hs
-    · simpa [hs] using hrs
+    · simpa [hs] using! hrs
     · rw [hs] at hrs
       exact_mod_cast hrs.neg_right
   · obtain ⟨k, hk⟩ := (Int.ModEq.dvd hr.symm)
@@ -351,7 +351,7 @@ theorem mixedRescaling_of_twist_cyclotomic (F : SphericalFusion C) (M : Modular 
       (mixedCenter (F.simple i) (F.simple j)) (F.simple a)ᘁ n hN ht (hj i j) htN hζ r 1
       (gcd_eq_one_of_coprime_modEq hrs hr n (Or.inr hsn)) hr
       (by rw [exp_pow_succ n N hN]; exact hmem)
-    simpa using h
+    simpa using! h
   · set n := s.toNat - 1 with hn
     have hsn : s = ((n + 1 : ℕ) : ℤ) := by omega
     simp only [generalizedIndicatorAll, if_pos hpos] at hmem ⊢
@@ -361,7 +361,7 @@ theorem mixedRescaling_of_twist_cyclotomic (F : SphericalFusion C) (M : Modular 
       (mixedCenter (F.simple i) (F.simple j)) (F.simple a) n hN ht (hj i j) htN hζ r (-1)
       (gcd_eq_one_of_coprime_modEq hrs hr n (Or.inl hsn)) hr
       (by rw [exp_pow_succ n N hN]; exact hmem)
-    simpa using h
+    simpa using! h
 
 /-! ## Assembly -/
 

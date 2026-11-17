@@ -96,8 +96,8 @@ theorem coeff_multispeciesParticlePolynomial {jetOrder : ℕ}
     {multiplicity : Species → ℕ}
     (F : MultispeciesJetParticleSpace K jetOrder multiplicity)
     (r : MultispeciesModeTuple jetOrder multiplicity) :
-    MvPolynomial.coeff (multispeciesLabelledExponent r)
-        (multispeciesParticlePolynomial F) =
+    (multispeciesParticlePolynomial F).coeff
+        (multispeciesLabelledExponent r) =
       F (multispeciesUnorderedModeBlock r) := by
   classical
   rw [multispeciesParticlePolynomial, MvPolynomial.coeff_sum]
@@ -134,7 +134,8 @@ theorem multispeciesParticlePolynomial_injective {jetOrder : ℕ}
   intro F G h
   funext b
   let r := multispeciesOrderedRepresentative b
-  have hc := congrArg (MvPolynomial.coeff (multispeciesLabelledExponent r)) h
+  have hc := congrArg (fun q : MvPolynomial _ K => q.coeff (multispeciesLabelledExponent r)) h
+  beta_reduce at hc
   rw [coeff_multispeciesParticlePolynomial,
     coeff_multispeciesParticlePolynomial] at hc
   have hr : multispeciesUnorderedModeBlock r = b :=

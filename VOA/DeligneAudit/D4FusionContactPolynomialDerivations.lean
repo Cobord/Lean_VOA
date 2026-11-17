@@ -84,7 +84,7 @@ theorem source_e_ann_closed (hm : 1 ≤ m) (h : LocalWeylRelG D4sector R w m)
   have hh : ∀ j r, m ≤ r → R.op (radIndex j) r w = 0 :=
     fun j r hr => localWeyl_high_kills hm h (radIndex j) r hr
   apply annIdeal_derivation_closed R w (modeLetter m) (eDeriv m i k) (eGr hw i k) 0
-  · simpa only [zero_smul] using eGr_generator_zero hw i k
+  · simpa only [zero_smul] using! eGr_generator_zero hw i k
   · intro x
     rw [polyAlg_eDeriv_X hh]
     exact eGr_comm hw i x.1 k x.2.val

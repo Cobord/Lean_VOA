@@ -28,11 +28,11 @@ theorem cellFlag_step_bound_any (hS : SL2 E H F) (v : ℕ → V) (i r ν : ℕ)
       (hst.2.2 0 (hR.raising 0))
   have hR0 : CellRelations E H F (cellFlag E H F v i) (v i) 0 1 := by
     refine ⟨hR.raising, ?_, hR.cartan, ?_, fun s _ => hR.truncated s (Nat.zero_le s)⟩
-    · simpa using hw
-    · simpa only [Nat.zero_add, pow_one] using hR.truncated 0 le_rfl
+    · simpa using! hw
+    · simpa only [Nat.zero_add, pow_one] using! hR.truncated 0 le_rfl
   obtain ⟨fd, hb⟩ := cellFlag_step_bound hS v i 0 1 le_rfl hR0
   refine ⟨fd, hb.trans ?_⟩
-  simpa [bal] using Nat.one_le_pow r 2 (by omega)
+  simpa [bal] using! Nat.one_le_pow r 2 (by omega)
 
 /-- Zero cutoffs contribute at most one, including the empty alphabet. -/
 theorem cellFlag_bound_any (hS : SL2 E H F) (v : ℕ → V) (r : ℕ) (ν : ℕ → ℕ) :
@@ -225,7 +225,7 @@ theorem newtonCoeff_unique (p e : ℕ → R) (h0 : e 0 = 1)
   induction n using Nat.strong_induction_on with
   | h n ih =>
       cases n with
-      | zero => simpa only [newtonCoeff] using h0.symm
+      | zero => simpa only [newtonCoeff] using! h0.symm
       | succ n =>
           apply (smul_right_injective R
             (show ((n + 1 : ℕ) : ℂ) ≠ 0 by exact_mod_cast Nat.succ_ne_zero n))
@@ -292,7 +292,6 @@ theorem signed_esymm_newton (ι : Type*) [Fintype ι] (n : ℕ) :
     rw [if_pos i.isLt]
   rw [hs] at h
   have he := congrArg (fun z : MvPolynomial ι ℂ => (-1) ^ (n + 1) * z) h
-  dsimp only at he
   have hsign : (-1 : MvPolynomial ι ℂ) ^ (n + 1) * (-1) ^ (n + 1 + 1) = -1 := by
     rw [pow_succ (-1 : MvPolynomial ι ℂ) (n + 1), ← mul_assoc, ← mul_pow]
     simp
@@ -366,7 +365,7 @@ theorem garland_H_series : ∀ q : ℕ,
     Hs H * Fs F ^ (q + 1) = Fs F ^ (q + 1) * Hs H -
       ((2 * (q + 1) : ℕ) : ℂ) • (Fs F ^ q * Dop (Fs F))
   | 0 => by
-      simpa [sub_eq_add_neg, neg_smul] using rel_HF H F hHF
+      simpa [sub_eq_add_neg, neg_smul] using! rel_HF H F hHF
   | q + 1 => by
       have hDB : Dop (Fs F) * Fs F ^ (q + 1) = Fs F ^ (q + 1) * Dop (Fs F) :=
         (Commute.pow_right (rel_FD F hFF).symm (q + 1)).eq
@@ -510,7 +509,7 @@ theorem garland_pi_coeff (hS : SL2 E H F) (π : R →ₗ[ℂ] V) (p : ℕ → R)
     (coeff s (Fs F ^ k * newtonSeries H)) (π a) = 0 := by
   obtain ⟨q, rfl⟩ : ∃ q, k = q + 1 := ⟨k - 1, by omega⟩
   have hEF (j : ℕ) : E 1 * F j - F j * E 1 = H (j + 1) := by
-    simpa only [Nat.add_comm] using hS.hEF 1 j
+    simpa only [Nat.add_comm] using! hS.hEF 1 j
   obtain ⟨c, hc, he⟩ := garland_corrected_iter (E 1) H F hEF
     (fun m j => hS.hHF (m + 1) j) hS.hFF (newtonSeries H)
     (newtonSeries_raising π p hE hH a) (newtonSeries_differential π p hH a) q s 0

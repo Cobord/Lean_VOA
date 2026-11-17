@@ -162,9 +162,12 @@ def activeZeroMap (two one : List ℕ) :
     (activeZeroModelMap two.length (two.length + one.length) two one).toLinearMap
 
 theorem activeZeroMap_surjective (two one : List ℕ) :
-    Function.Surjective (activeZeroMap two one) :=
-  (activeZeroLengthEquiv two one).surjective.comp
-    (activeZeroModelMap_surjective two.length (two.length + one.length) two one)
+    Function.Surjective (activeZeroMap two one) := by
+  intro y
+  obtain ⟨x, rfl⟩ := (activeZeroLengthEquiv two one).surjective y
+  obtain ⟨z, rfl⟩ := activeZeroModelMap_surjective two.length (two.length + one.length) two one x
+  refine ⟨z, ?_⟩
+  simp only [activeZeroMap, LinearMap.comp_apply, LinearEquiv.coe_coe, AlgHom.toLinearMap_apply]
 
 /-- The arithmetic color-length transport for an added one-color site. -/
 def inactiveZeroLengthEquiv (two one : List ℕ) :

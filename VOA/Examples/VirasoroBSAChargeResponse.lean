@@ -180,7 +180,7 @@ theorem bsaSource_L2_terminal_response (c : ℂ) (N r : ℕ)
     push_cast
     field_simp [hd, hn]
     <;> ring_nf
-    <;> field_simp [show (3:ℂ)+(r:ℂ) ≠ 0 by simpa [add_comm] using hn]
+    <;> field_simp [show (3:ℂ)+(r:ℂ) ≠ 0 by simpa [add_comm] using! hn]
     <;> ring
   simp only [smul_add, smul_smul]
   linear_combination (norm := module) he • bsaSource c (r+2) r
@@ -199,7 +199,7 @@ theorem bsaL2Response_mem_grading (c : ℂ) (N r : ℕ) :
     · apply Submodule.sum_mem
       intro j hj
       have hh := Lop_maps_grading c ((j:ℤ)-(r:ℤ)) (ih j j.isLt)
-      simpa using hh
+      simpa using! hh
 
 /-- In the Fock realization, a response has oscillator degree at most its
 level. Translation costs no polynomial degree, as in the original recursion. -/
@@ -240,7 +240,7 @@ theorem fockMap_bsaL2_propagation_error {c lam : ℂ}
   have hs : ∀ a b d : Fock, a+b-d=(a-d)+b := by intros; ring
   rw [hs]
   apply Submodule.add_mem
-  · simpa using errLd_mem lam 0 (fockMap_bsaL2Response_mem hlam N k)
+  · simpa using! errLd_mem lam 0 (fockMap_bsaL2Response_mem hlam N k)
   · apply Submodule.sum_mem
     intro j hj
     have hjn : j.val ≠ k := by
@@ -294,8 +294,9 @@ theorem fockMap_bsaL2Response_top {c lam : ℂ} (hlam : 1-12*lam^2=c) (N k : ℕ
         | succ k => exact FDeg_mono (by omega) (creationPoly_mul_mem 0 ih.2)
       have hf' : (1/2:ℂ) • (fockMap hlam (bsaState c N (2*(k+1))) -
           bsaTopCoefficient N (k+1) • (creationPoly 0)^(k+1)) ∈ FDeg (2*k+1) := by
-        simpa only [show 2*(k+1)-1=2*k+1 by omega] using hf
+        simpa only [show 2*(k+1)-1=2*k+1 by omega] using! hf
       have hsum := (FDeg (2*k+1)).add_mem ((FDeg _).add_mem hf' he) hi
+      rw [show 2*(k+1)-1=2*k+1 by omega]
       convert hsum using 1
       · simp only [bsaL2SourceResponse, map_add, map_smul, map_sum, fockMap_Lop,
           show 2*(k+1)=2*k+2 by omega, Nat.cast_add, Nat.cast_one,
@@ -321,7 +322,7 @@ theorem bsaL2SourceResponse_even_ne_zero (c : ℂ) (k : ℕ) :
   have hp : creationPoly 0 ≠ 0 := by
     intro hz
     have hn := tSub_creationPoly_ne_zero 2 0 (by omega)
-    simpa [hz] using hn
+    simpa [hz] using! hn
   have hn : ((((k:ℂ)+1)/2)*bsaTopCoefficient (2*(k+1)) k) • (creationPoly 0)^k ≠ 0 :=
     smul_ne_zero ha (pow_ne_zero _ hp)
   have hom : (((((k:ℂ)+1)/2)*bsaTopCoefficient (2*(k+1)) k) • (creationPoly 0)^k).IsHomogeneous
@@ -333,7 +334,7 @@ theorem bsaL2SourceResponse_even_ne_zero (c : ℂ) (k : ℕ) :
   | zero =>
     have hv := vacVec_ne_zero c
     apply hv
-    simpa [bsaL2SourceResponse, bsaState_zero] using hz
+    simpa [bsaL2SourceResponse, bsaState_zero] using! hz
   | succ k =>
     rw [hz, map_zero, zero_sub] at hh
     have hd := FDeg_totalDegree ((FDeg _).neg_mem hh)

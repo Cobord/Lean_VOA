@@ -159,6 +159,7 @@ theorem vacuumAdaptedBasis_right (k : ℂ) (hk : k+2≠0) (n : ℕ) (c : ℤ)
       horizontalEmbedding k (occupationBasis k (-2) i.val) := by
   simp [vacuumAdaptedBasis,Module.Basis.prod_apply,vacuumJointSplit,
     horizontalJointEmbedding,jointBasis_apply]
+  exact congrArg (fun x => horizontalEmbedding k x) (jointBasis_apply k (-2) n (c+1) i)
 
 end
 end VOA.AffineVOA.HighestModule

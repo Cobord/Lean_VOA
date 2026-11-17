@@ -11,13 +11,13 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 noncomputable def mixedTop (a b : ℕ → Module.End ℂ V)
     (k s : ℕ) (xs : List ℕ) (B : PowerSeries (Module.End ℂ V)) :
     Module.End ℂ V :=
-  ∑ q ∈ Finset.antidiagonal s,
+  ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
     topSum a b k q.1 xs * PowerSeries.coeff q.2 B
 
 noncomputable def mixedLower (f a b : ℕ → Module.End ℂ V)
     (k s : ℕ) (xs : List ℕ) (B : PowerSeries (Module.End ℂ V)) :
     Module.End ℂ V :=
-  ∑ q ∈ Finset.antidiagonal s,
+  ∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
     lowerSum f a b k q.1 xs * PowerSeries.coeff q.2 B
 
 /-- The full contractions equal the negative of the partial contractions,
@@ -32,7 +32,7 @@ theorem mixed_top_eq_lower (w : V) (f a b : ℕ → Module.End ℂ V)
       mixedTop a b k s xs B) w = -(mixedLower f a b k s xs B) w := by
   have h := mixed_wick_zero w f a b hfa hfb hab k s xs B hkill
   have hsum :
-      (∑ q ∈ Finset.antidiagonal s,
+      (∑ q ∈ Finset.HasAntidiagonal.antidiagonal s,
         ((choices xs).map (conversionTerm f a b k q.1)).sum *
           PowerSeries.coeff q.2 B) =
       ((-1 : Module.End ℂ V) ^ k * (k.factorial : Module.End ℂ V)) *
@@ -68,12 +68,12 @@ theorem mixed_top_mem_of_lower (w : V) (f a b : ℕ → Module.End ℂ V)
     simpa only [show ∀ v : V,
       (algebraMap ℂ (Module.End ℂ V) c) v = c • v from by
         intro v
-        simp] using heq
+        simp] using! heq
   have hm : c • mixedTop a b k s xs B w ∈ N := by
     rw [hsmul]
     exact N.neg_mem hlower
   have hm' := N.smul_mem c⁻¹ hm
-  simpa [smul_smul, inv_mul_cancel₀ hc] using hm'
+  simpa [smul_smul, inv_mul_cancel₀ hc] using! hm'
 
 end VOA.DeligneAudit.D4Levi
 

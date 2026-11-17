@@ -29,7 +29,7 @@ noncomputable def auxiliaryLaurent (r : ℕ) :
 extracts exponent (r-1)t+s in each variable after multiplication by Delta^(2t).
 It is defined for every polynomial, with no infinite-series convention. -/
 noncomputable def screeningMoment (r s t : ℕ) (P : MvPolynomial (Fin r) ℚ) : ℚ :=
-  (vandermondeLaurent r^(2*t) * auxiliaryLaurent r P)
+  (vandermondeLaurent r^(2*t) * auxiliaryLaurent r P).coeff
     (fun _ : Fin r => (((r-1)*t+s:ℕ):ℤ))
 
 /-- The product of all auxiliary variables to power s becomes the single
@@ -50,8 +50,8 @@ Vandermonde coefficient, with no normalization factor to be guessed. -/
 theorem screeningMoment_product (r s t : ℕ) :
     screeningMoment r s t ((∏ i : Fin r,
       (MvPolynomial.X i : MvPolynomial (Fin r) ℚ))^s) =
-      (vandermondeLaurent r^(2*t)) (fun _ : Fin r => (((r-1)*t:ℕ):ℤ)) := by
-  rw [screeningMoment,auxiliaryLaurent_product,mul_single_apply,mul_one]
+      (vandermondeLaurent r^(2*t)).coeff (fun _ : Fin r => (((r-1)*t:ℕ):ℤ)) := by
+  rw [screeningMoment,auxiliaryLaurent_product,coeff_mul_single_apply,mul_one]
   congr 1
   funext k
   simp

@@ -29,7 +29,7 @@ theorem logCoeff_monomial_psEval {G : PowerSeries ℂ} (hG : G∈SubexpPS) (lam 
     intro j
     by_cases hj : j=l
     · subst j
-      simpa only [p,Polynomial.coeff_monomial,ite_true] using (mem_subexpPS.mp hG)
+      simpa only [p,Polynomial.coeff_monomial,ite_true] using! (mem_subexpPS.mp hG)
     · have he : (fun n => ‖(p n).coeff j‖)=(fun _ => (0 : ℝ)) := by
         funext n
         simp [p,Polynomial.coeff_monomial,hj,Ne.symm hj]
@@ -64,7 +64,7 @@ theorem logCoeff_lowerIterate (hC2 : C2Cofinite W)
   have hH (l : ℕ) : H l∈SubexpPS := by
     apply subexp_of_summable_unitDisc
     intro t ht
-    simpa only [H,logIterateLowerCosetSeries,PowerSeries.coeff_mk] using
+    simpa only [H,logIterateLowerCosetSeries,PowerSeries.coeff_mk] using!
       summable_log_iterate hC2 N₁ N₂ N₃ N₄ N₅ hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₃ Y₄
         f x y z (r+c-β-1) (a+b-r-1) 0 l ht
   have hF (l : ℕ) : HasLogExp overlapDomain (F l) :=

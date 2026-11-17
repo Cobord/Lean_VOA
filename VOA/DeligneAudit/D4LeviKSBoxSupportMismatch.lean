@@ -17,7 +17,7 @@ theorem ksZeroOccupation_mem_box (q n : ℕ) (hn : n ≤ q) :
       by_contra hne
       simp [Finsupp.mem_support_iff, Finsupp.single_apply, hne, Ne.symm hne] at hr
     subst r
-    simpa using hn
+    simpa using! hn
 
 /-- Every non-overfull triple has at least its all-zero box word. -/
 theorem ksGradedBoxCount_zero_pos (m a b c : ℕ) (h : a + b + c ≤ m) :

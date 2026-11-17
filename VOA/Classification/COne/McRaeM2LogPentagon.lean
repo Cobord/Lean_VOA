@@ -180,7 +180,8 @@ theorem tensorPentagon (N P Q R : LogModuleCat W) :
     tensorPentagonLong hC2 N P Q R=tensorPentagonShort hC2 N P Q R := by
   rw [tensorPentagon_eq_iff_canonical]
   intro n m p x y z w
-  rw [← sub_eq_zero, ← LinearMap.sub_apply]
+  rw [← sub_eq_zero]
+  refine (LinearMap.sub_apply _ _ _).symm.trans ?_
   apply (Module.forall_dual_apply_eq_zero_iff ℂ _).mp
   intro f
   refine leftFour_functional_eq_zero hC2 N P Q R

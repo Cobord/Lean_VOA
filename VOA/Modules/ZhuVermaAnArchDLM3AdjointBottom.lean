@@ -112,7 +112,8 @@ theorem adjointBottomInclusion_equivariant (W : VertexOperatorAlgebra 𝒱)
       rw [fzRho_actMode]
       symm
       have hx : adjointBottomInclusion W x ∈ (adjointModule W).weight 0 := by
-        simpa only [adjointBottomInclusion_apply] using x.2
+        simp only [adjointBottomInclusion_apply]
+        exact x.2
       exact mode_lowering_vanish (adjointModule W) (adjointModule_isLowestWeight W)
         ha hx (by omega)
   · simp only [map_zero, LinearMap.zero_apply]
@@ -120,6 +121,8 @@ theorem adjointBottomInclusion_equivariant (W : VertexOperatorAlgebra 𝒱)
     simp only [map_add, LinearMap.add_apply]
     rw [hy, hz]
   · intro c y _ hy
+    have hs : zhuDeg0 W (c • y) = c • zhuDeg0 W y := (zhuDeg0 W).map_smul c y
+    erw [hs]
     simp only [map_smul, LinearMap.smul_apply]
     rw [hy]
 

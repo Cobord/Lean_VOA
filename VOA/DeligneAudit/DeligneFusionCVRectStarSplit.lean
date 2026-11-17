@@ -63,10 +63,8 @@ theorem splitVars_starX (L N R : ℕ) :
   rw [Fin.sum_univ_succ]
   simp only [hcoe, splitVars_X_zero, splitVars_X_succ, Fin.val_zero, Fin.val_succ,
     Nat.add_sub_cancel, Nat.sub_zero]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro i _
-  congr 2
+  refine congrArg₂ (· + ·) rfl (Finset.sum_congr rfl fun i _ => ?_)
+  refine congrArg₂ (· * ·) rfl (congrArg (PowerSeries.X ^ ·) ?_)
   omega
 
 theorem splitVars_starY (L N R : ℕ) :

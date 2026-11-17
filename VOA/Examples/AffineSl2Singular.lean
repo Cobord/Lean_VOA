@@ -175,7 +175,8 @@ theorem Jc_ne (k : ℂ) (a b : Fin 3) {m n : ℤ} (h : m + n ≠ 0) (v : WakModu
   have hv : J k a m (J k b n v) - J k b n (J k a m v)
       = ∑ c, fabc a b c • J k c (m + n) v := by
     have h2 := LinearMap.congr_fun hop v
-    simpa only [LinearMap.sub_apply, LinearMap.sum_apply, LinearMap.smul_apply] using h2
+    simpa only [LinearMap.sub_apply, LinearMap.sum_apply, LinearMap.smul_apply,
+      Module.End.mul_apply] using h2
   rw [Fin.sum_univ_three, sub_eq_iff_eq_add] at hv
   rw [hv]; abel
 
@@ -192,7 +193,7 @@ theorem Jc_eq (k : ℂ) (a b : Fin 3) {m n : ℤ} (h : m + n = 0) (v : WakModule
       = (∑ c, fabc a b c • J k c (m + n) v) + ((m : ℂ) * k * kappa a b) • v := by
     have h2 := LinearMap.congr_fun hop v
     simpa only [LinearMap.sub_apply, LinearMap.add_apply, LinearMap.sum_apply,
-      LinearMap.smul_apply, LinearMap.id_coe, id_eq] using h2
+      LinearMap.smul_apply, LinearMap.id_coe, id_eq, Module.End.mul_apply] using h2
   rw [Fin.sum_univ_three, sub_eq_iff_eq_add] at hv
   rw [hv]; abel
 

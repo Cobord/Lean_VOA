@@ -124,11 +124,11 @@ theorem traceDescent_of_collected (A : WeakModule W M₁) (B : WeakModule W M₂
   · obtain ⟨L, htail, h⟩ := hL a x y
     change tensorTrace S t = 0
     rw [ht, relationLeft_cutoff A B c a x y hK htail]
-    simpa only [relationLeft, map_add, map_sum, map_smul, tensorTrace_pair] using h
+    simpa only [relationLeft, map_add, map_sum, map_smul, tensorTrace_pair] using! h
   · obtain ⟨L, htail, h⟩ := hR a x y
     change tensorTrace S t = 0
     rw [ht, relationRight_cutoff A B c a x y hK htail]
-    simpa only [relationRight, map_add, map_sum, map_smul, tensorTrace_pair] using h
+    simpa only [relationRight, map_add, map_sum, map_smul, tensorTrace_pair] using! h
 
 /-- No relation was lost in the collected formulation. -/
 theorem traceDescent_iff_collected (A : WeakModule W M₁) (B : WeakModule W M₂)
@@ -143,13 +143,13 @@ theorem traceDescent_iff_collected (A : WeakModule W M₁) (B : WeakModule W M�
       refine ⟨K, hK, ?_⟩
       have he := h (Submodule.subset_span ⟨a, x, y, K, hK, Or.inl rfl⟩)
       simpa only [LinearMap.mem_ker, relationLeft, map_add, map_sum, map_smul,
-        tensorTrace_pair] using he
+        tensorTrace_pair] using! he
     · intro a x y
       obtain ⟨K, hK⟩ := exists_tailBound A B a x y
       refine ⟨K, hK, ?_⟩
       have he := h (Submodule.subset_span ⟨a, x, y, K, hK, Or.inr rfl⟩)
       simpa only [LinearMap.mem_ker, relationRight, map_add, map_sum, map_smul,
-        tensorTrace_pair] using he
+        tensorTrace_pair] using! he
   · rintro ⟨hL, hR⟩
     exact traceDescent_of_collected A B c S hL hR
 

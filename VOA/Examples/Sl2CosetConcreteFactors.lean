@@ -62,7 +62,7 @@ def aAction : TranslatedAffineSl2Action ASVA (-4 / 3) where
   current_weight := (simpleAction ALevel aNoncritical).current_weight
   current_even := (simpleAction ALevel aNoncritical).current_even
   current_comm a b m n := by
-    simpa only [aLevel_eq] using (simpleAction ALevel aNoncritical).current_comm a b m n
+    simpa only [aLevel_eq] using! (simpleAction ALevel aNoncritical).current_comm a b m n
   translation := (simpleAction ALevel aNoncritical).translation
 
 def bAction : TranslatedAffineSl2Action BSVA 1 := simpleAction 1 bNoncritical

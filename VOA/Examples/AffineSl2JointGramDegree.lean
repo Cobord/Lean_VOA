@@ -23,9 +23,9 @@ theorem applyNormal_mem_contractionFiltration (u : List (Fin 3 × ℤ))
     {d : ℕ} {f : NormalForm} (hf : f ∈ contractionFiltration d) :
     applyNormal u f ∈ contractionFiltration (d+u.length) := by
   induction u with
-  | nil => simpa [applyNormal] using hf
+  | nil => simpa [applyNormal] using! hf
   | cons a u ih =>
-    simpa only [applyNormal, LinearMap.comp_apply, List.length_cons, Nat.add_assoc] using
+    simpa only [applyNormal, LinearMap.comp_apply, List.length_cons, Nat.add_assoc] using!
       actNormal_mem_contractionFiltration a.1 a.2 ih
 
 /-- A vacuum polynomial coefficient vanishes if its doubled central degree

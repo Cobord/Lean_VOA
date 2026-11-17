@@ -32,11 +32,11 @@ theorem octa_zhu_finrank_le_124 : Module.finrank ℂ (A W) ≤ 124 := by
     · subst i
       have h := pow_mem_towerSub_of_monic W (mk W (octaSeeds 1))
         positivePolynomial_monic q24_seed_one a
-      simpa only [heights, if_pos rfl, positivePolynomial_natDegree] using h
-    · simpa only [heights, if_neg hi] using pow_mem_towerSub W (mk W (octaSeeds i)) ha
+      simpa only [heights, if_pos rfl, positivePolynomial_natDegree] using! h
+    · simpa only [heights, if_neg hi] using! pow_mem_towerSub W (mk W (octaSeeds i)) ha
   have hd := (finrank_A_le_of_towers W octaSeeds (fun i => (seedWeight i : ℤ))
     seeds_homogeneous (fun _ => 25) heights towers25 hm).2
-  simpa [heights, Fin.sum_univ_succ] using hd
+  simpa [heights, Fin.sum_univ_succ] using! hd
 
 /-- The remaining three explicit certificates suffice without rationality. -/
 theorem octa_pseudoUnitary_of_three_Q24

@@ -43,9 +43,12 @@ def regularSimpleAction :
         t.val ((F A Y).intertwiner.val (k : ℂ) v y)) hf
       change (MonObj.mul : tensorObj F A A ⟶ A).val
         ((tensorHom F (𝟙 A) f).val ((F A Y).intertwiner.val (k : ℂ) v y)) = _ at he
-      rw [E.mul_eq, tensorHom_intertwiner, Ordinary.id_apply,
-        ambientMultiplication_intertwiner, moduleModes_apply_intCast] at he
-      exact he.symm
+      rw [E.mul_eq] at he
+      refine he.symm.trans ?_
+      refine (congrArg (fun z => (ambientMultiplication G F).val z)
+        (tensorHom_intertwiner F (𝟙 A) f (k : ℂ) v y)).trans ?_
+      refine (ambientMultiplication_intertwiner G F (k : ℂ) v (f.val y)).trans ?_
+      exact moduleModes_apply_intCast (adjointModule (V2m 1 le_rfl)) k v (f.val y)
     let P : WeakModule.Submodule' (adjointModule (V2m 1 le_rfl)).toWeakModule :=
       ⟨LinearMap.range f.val, hs⟩
     have hi := (isSimple_iff_adjointModule_isIrreducible (V2m 1 le_rfl)).mp

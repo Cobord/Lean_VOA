@@ -158,17 +158,19 @@ def psiMono (n N : ℕ) {m : ℕ} (β : Fin m →₀ ℕ) : Rn n :=
 
 /-- The reversed monomial map `ℂ[y_1, …, y_m] → R_n`, `y^β ↦ Π_i T_{N-1-β_i}`. -/
 def Psi (n N m : ℕ) : MvPolynomial (Fin m) ℂ →ₗ[ℂ] Rn n :=
-  Finsupp.linearCombination ℂ (psiMono n N)
+  (Finsupp.linearCombination ℂ (psiMono n N (m := m))).comp
+    (AddMonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap
 
 theorem Psi_monomial (n N : ℕ) {m : ℕ} (β : Fin m →₀ ℕ) (c : ℂ) :
-    Psi n N m (monomial β c) = c • psiMono n N β :=
-  Finsupp.linearCombination_single ℂ c β
+    Psi n N m (monomial β c) = c • psiMono n N β := by
+  show Finsupp.linearCombination ℂ (psiMono n N) (Finsupp.single β c) = c • psiMono n N β
+  exact Finsupp.linearCombination_single ℂ c β
 
 theorem psiMono_mapDomain (n N : ℕ) {m : ℕ} (e : Equiv.Perm (Fin m)) (β : Fin m →₀ ℕ) :
     psiMono n N (Finsupp.mapDomain e β) = psiMono n N β := by
   unfold psiMono
   refine (Fintype.prod_equiv e _ _ fun i => ?_).symm
-  rw [Finsupp.mapDomain_apply e.injective]
+  rw [Finsupp.mapDomain_apply_of_injective e.injective]
 
 /-- `Psi` is invariant under permutations of the variables. -/
 theorem Psi_rename (n N : ℕ) {m : ℕ} (e : Equiv.Perm (Fin m)) (p : MvPolynomial (Fin m) ℂ) :
@@ -205,6 +207,9 @@ theorem Psi_hh_mul_monomial (n N : ℕ) {m : ℕ} (q : ℕ) (β : Fin m →₀ �
   refine Finset.sum_congr rfl fun α _ => ?_
   rw [monomial_mul, one_mul, Psi_monomial, one_smul, psiMono]
   simp only [PowerSeries.coeff_mk, Finsupp.add_apply]
+  first
+    | rfl
+    | exact Finset.prod_congr rfl fun i _ => by split_ifs <;> rfl
 
 /-- **`Psi` kills `h_q · y^β` for `(n-1) N < q + m`.** -/
 theorem Psi_hh_mul_monomial_eq_zero {n N m : ℕ} (q : ℕ) (hq : (n - 1) * N < q + m)

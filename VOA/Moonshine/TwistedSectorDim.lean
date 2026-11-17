@@ -91,7 +91,7 @@ theorem thetaT_of_mem_gradingT {r d : ℕ} {p : FockT r} (hp : p ∈ gradingT r 
     thetaT r p = (-1 : ℂ) ^ d • p := by
   ext m
   rw [coeff_thetaT, coeff_smul, smul_eq_mul]
-  by_cases hm : coeff m p = 0
+  by_cases hm : p.coeff m = 0
   · simp [hm]
   · have hw : Finsupp.weight wT m = d := hp hm
     have h2 := weight_wT_mod_two m

@@ -51,7 +51,7 @@ theorem oneColor_ideal_le (m : ℕ) :
   | zero =>
       simp only [pow_zero, one_mul]
       have horder : j < m * (b - 2) := by
-        simpa [CVRectZero.familyOrder, CVRectIntegrationOrder.excess, nsmul_eq_mul] using hj
+        simpa [CVRectZero.familyOrder, CVRectIntegrationOrder.excess, nsmul_eq_mul] using! hj
       have hm : 1 ≤ m := by
         by_contra hh
         have he : m = 0 := by omega
@@ -72,7 +72,7 @@ theorem oneColor_ideal_le (m : ℕ) :
       change (Polynomial.reflect (m - 1) f ^ b).coeff j ∈ centerIdeal m
       by_cases hdegree : j ≤ (m - 1) * b
       · have he := CVRectReflection.coeff_reflect_pow_mul_pow f 1 (m - 1) 0 b 0 j hf
-          (by simp) (by simpa only [Nat.mul_zero, Nat.add_zero] using hdegree)
+          (by simp) (by simpa only [Nat.mul_zero, Nat.add_zero] using! hdegree)
         simp only [pow_zero, mul_one] at he
         rw [he]
         have hD : (m - 1) * b + b = m * b := by
@@ -92,7 +92,7 @@ theorem oneColor_ideal_le (m : ℕ) :
         rw [← hseries, ← Polynomial.coe_pow, Polynomial.coeff_coe] at hh
         exact hh
       · have he := CVRectReflection.coeff_reflect_pow_mul_pow_high f 1 (m - 1) 0 b 0 j hf
-          (by simp) (by simpa only [Nat.mul_zero, Nat.add_zero] using (by omega : (m - 1) * b < j))
+          (by simp) (by simpa only [Nat.mul_zero, Nat.add_zero] using! (by omega : (m - 1) * b < j))
         simp only [pow_zero, mul_one] at he
         rw [he]
         exact (centerIdeal m).zero_mem

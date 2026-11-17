@@ -80,12 +80,12 @@ theorem exists_mem_linearEquiv
       refine sSup_le fun I hI => ?_
       intro a ha
       have := congrArg (fun g => g ⟨a, ha⟩) (hcon I hI)
-      simpa [f] using this
+      simpa [f] using! this
     rw [htop] at hle
     have h1 : (1 : A W) ∈ LinearMap.ker f := hle Submodule.mem_top
     rw [LinearMap.mem_ker] at h1
     apply hu
-    simpa [f] using h1
+    simpa [f] using! h1
   obtain ⟨I, hI, hne⟩ := hex
   haveI := hsimp I hI
   exact ⟨I, hI, ⟨LinearEquiv.ofBijective _ (LinearMap.bijective_of_ne_zero hne)⟩⟩
@@ -112,7 +112,7 @@ theorem canonicalIrrFamily_bottomSeparated_of_Pr
   have hforget := congrArg (forgetClass W) hclasses
   apply hjk
   change (canonicalIrrModule j).toΦ = (canonicalIrrModule k).toΦ at hforget
-  simpa using hforget
+  simpa using! hforget
 
 /-- **Finitely many irreducible modules** when `A(V)` is finite-dimensional and semisimple
 (given the PBW datum `Pr`). -/

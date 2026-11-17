@@ -289,7 +289,6 @@ private theorem sum_reindex_cbz {N : Type*} [AddCommMonoid N] [Module ℂ N] {P 
   have hcast : ((P.toNat : ℕ) : ℤ) = P := Int.toNat_of_nonneg hP
   rw [range_sum_eq_finsumZ (P.toNat + 1) (fun j : ℤ => (cbz P j * f j) • T (j - c)) (by
       intro x hx
-      dsimp only
       rcases hx with hx | hx
       · rw [cbz_apply_neg P hx, zero_mul, zero_smul]
       · have : ((P.toNat + 1 : ℕ) : ℤ) = P + 1 := by push_cast [hcast]; ring
@@ -374,7 +373,6 @@ theorem zeroModeOuter_collapse {m e : ℤ} (p : ℕ) (hp : (p : ℤ) - e ≥ 0) 
     range_sum_eq_finsumZ (p + 1) (fun t : ℤ => cbz (e - m - 1) t * cbz (m - d) ((e - d) - t))
       (by
         intro x hx
-        dsimp only
         rcases hx with hx | hx
         · rw [cbz_apply_neg (e - m - 1) hx, zero_mul]
         · have hxp : ((p + 1 : ℕ) : ℤ) = (p : ℤ) + 1 := by push_cast; ring
@@ -419,12 +417,10 @@ theorem oOmega_resHom_law (A : WeakModule W M) {s : ℤ} (hs : 0 ≤ s) (q : ℤ
       (fun x : ℤ => negOnePow i * cbz (x - q) i)
       (fun d : ℤ => mode (A.YM u) (k - 1 + d) (mode (A.YM v) (l - 1 - d) w))
       (fun d hd => by
-        dsimp only
         rw [Omega_mode_vanish hw hv (n := l - 1 - d) (by omega), map_zero])
       (fun d hd => by omega)
     refine Eq.trans ?_ hkey
     refine Finset.sum_congr rfl (fun j _ => ?_)
-    dsimp only
     rw [show k - 1 + ((j : ℤ) - (q + i + k - 1)) = (j : ℤ) - q - i from by ring,
       show l - 1 - ((j : ℤ) - (q + i + k - 1)) = k + l - ((j : ℤ) - q) - 2 + i from by ring]
   rw [Finset.sum_congr rfl hstep, Finset.sum_comm]

@@ -37,6 +37,9 @@ open VertexOperatorAlgebra
 open scoped BigOperators
 open Classical
 
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 universe u
 
 variable {𝒱 : Type u} [AddCommGroup 𝒱] [Module ℂ 𝒱]
@@ -262,11 +265,11 @@ noncomputable def A₂bracket (W : VertexOperatorAlgebra 𝒱) : A₂ W →ₗ[�
 
 @[simp] theorem A₂mul_mk (W : VertexOperatorAlgebra 𝒱) (u v : 𝒱) :
     A₂mul W (mk₂ W u) (mk₂ W v) = mk₂ W (poissonMul W u v) := by
-  rw [A₂mul, descendBilin_apply]; rfl
+  rw [A₂mul]; exact descendBilin_apply W _ _ _ u v
 
 @[simp] theorem A₂bracket_mk (W : VertexOperatorAlgebra 𝒱) (u v : 𝒱) :
     A₂bracket W (mk₂ W u) (mk₂ W v) = mk₂ W (poissonBracket W u v) := by
-  rw [A₂bracket, descendBilin_apply]; rfl
+  rw [A₂bracket]; exact descendBilin_apply W _ _ _ u v
 
 /-- `mk₂` is surjective. -/
 theorem mk₂_surjective (W : VertexOperatorAlgebra 𝒱) : Function.Surjective (mk₂ W) :=

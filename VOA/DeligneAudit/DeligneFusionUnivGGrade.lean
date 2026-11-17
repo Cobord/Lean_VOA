@@ -133,7 +133,7 @@ def quotRepG : CurrentModule f (V ⧸ T) where
   comm c d r s x := by
     obtain ⟨y, rfl⟩ := Submodule.mkQ_surjective T x
     have := congrArg T.mkQ (ρ.comm c d r s y)
-    simpa [Submodule.mapQ_apply, map_sum, map_smul, map_sub] using this
+    simpa [Submodule.mapQ_apply, map_sum, map_smul, map_sub] using! this
 
 theorem quotRepG_op (c : Fin n) (r : ℕ) (v : V) :
     (quotRepG ρ T hT).op c r (T.mkQ v) = T.mkQ (ρ.op c r v) := rfl

@@ -35,13 +35,13 @@ theorem adjointKey_simple_lower_sharp (a b d : ℕ)
   have he : E v = 0 := adjointKey_all_raise_zero ρ w (a + b) a d h hv
     (A3Sector.simpleE i) (by fin_cases i <;> decide) 0
   have hh' : H v = (((A3Sector.weightABC a b a i : ℕ) : ℤ) : ℂ) • v := by
-    simpa using adjointKey_cartan_weight ρ w a b d h i hv
+    simpa using! adjointKey_cartan_weight ρ w a b d h i hv
   let K := lowerBaseExponent (a + b) i + 2 * keyDepth (adjointLetterKey a d)
   have hn : F^[K] v = 0 := by
     rw [← Module.End.pow_apply]
     exact key_simple_lower_nil_levi ρ w (a + b) h i (adjointLetterKey a d) hv
   have hs := (CLFilt.hw_pow E F H hEF hHF he hh' K hn).2 (Int.natCast_nonneg _)
-  simpa only [Int.toNat_natCast] using hs
+  simpa only [Int.toNat_natCast] using! hs
 
 /-- An invariant quotient killing positive Cartan modes has the edge local Weyl relations. -/
 theorem adjointKey_localWeyl_quotient (a b d : ℕ)

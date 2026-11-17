@@ -44,7 +44,7 @@ theorem tensorAdjoint_pair
   change dualPairing (tensorDual hC2 N₁ N₂ h₁ h₂).toGW
       ((doubleDualInverseHom (tensorDual hC2 N₁ N₂ h₁ h₂)).toLinearMap
         ((transposeLog (tensorModule hC2 N₁ N₂ h₁ h₂) N f).toLinearMap r)) q = _
-  rw [doubleDualInverseHom_pair]
+  refine (doubleDualInverseHom_pair (tensorDual hC2 N₁ N₂ h₁ h₂) _ q).trans ?_
   exact transposeLog_pair (tensorModule hC2 N₁ N₂ h₁ h₂) N f q r
 
 /-- The adjoint is literally completed evaluation of the postcomposed genuine
@@ -77,8 +77,7 @@ theorem tensorAdjoint_apply
     simp only [if_pos hc,tensorInclusion_apply] at hp
     rw [forward_homogeneous N₁ N₂ N _ hx hy hr,postcompose_apply,tensorIntertwiner_logZero]
     exact hp
-  · dsimp only
-    rw [map_zero,map_zero]
+  · rw [map_zero,map_zero]
     rfl
   · intro r s hr hs
     simp only [map_add,Submodule.coe_add,hr,hs]

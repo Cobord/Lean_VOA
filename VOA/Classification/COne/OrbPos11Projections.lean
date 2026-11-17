@@ -38,14 +38,14 @@ theorem simpleAction_idempotent (Q : SimpleAction A) (p : Q.obj ⟶ Q.obj)
   have hY : IsLeftAct aY := quotient_action_laws Q.act Q.laws e i hie aY he
   letI : Mono i := ⟨fun f g h => by
     have hh := congrArg (fun t => t ≫ e) h
-    simpa only [Category.assoc, hie, Category.comp_id] using hh⟩
+    simpa only [Category.assoc, hie, Category.comp_id] using! hh⟩
   rcases Q.simple Y aY hY i hi inferInstance with hi0 | hiso
   · left
     rw [← hei, hi0, comp_zero]
   · right
     letI := hiso
     apply (cancel_epi i).mp
-    simpa only [Category.comp_id] using hip
+    simpa only [Category.comp_id] using! hip
 
 end Abstract
 
@@ -85,6 +85,6 @@ theorem exceptionalSimpleActionMonodromy_of_projections
   obtain ⟨hid, hlin, hmono⟩ := hp g hg
   have he := (simpleAction_idempotent Q (p g) hid hlin).resolve_left hne
   refine ⟨g, ?_⟩
-  simpa only [he, Category.comp_id] using hmono
+  simpa only [he, Category.comp_id] using! hmono
 
 end VOA.Classification.COne.OrbPos11

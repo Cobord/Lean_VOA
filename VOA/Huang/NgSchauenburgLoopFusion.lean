@@ -38,7 +38,7 @@ theorem halfBraidingLoop_iso (F : SphericalFusion C) (X Y : Center C)
     ((X.2.β V).inv ≫ f ▷ V ≫ (Y.2.β V).hom)
   rw [← Category.assoc, halfBraidingConjugation_naturality] at h
   simpa only [Category.assoc, ← comp_whiskerRight, Iso.hom_inv_id,
-    id_whiskerRight, Category.comp_id] using h
+    id_whiskerRight, Category.comp_id] using! h
 
 /-- Resolve an arbitrary loop label into its actual simple multiplicities. -/
 theorem halfBraidingLoop_eq_sum_simples (F : SphericalFusion C)

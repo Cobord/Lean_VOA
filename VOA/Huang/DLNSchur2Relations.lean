@@ -51,7 +51,7 @@ theorem root_lifts_generate_derived {n : ℕ} [NeZero n] {E : Type*} [Group E]
     · exact hb
   · apply commutator_le_of_central_map_top π hc
     rw [MonoidHom.map_closure]
-    simpa only [Set.image_insert_eq, Set.image_singleton, hpa, hpb] using root_generators n
+    simpa only [Set.image_insert_eq, Set.image_singleton, hpa, hpb] using! root_generators n
 
 /-- Every central extension away from six has two honest root homomorphisms whose
 ranges generate its derived subgroup. The mixed-root relations are not asserted here. -/
@@ -78,9 +78,9 @@ theorem exists_root_homs {n : ℕ} [NeZero n] {E : Type*} [Group E]
     intro g hg
     rcases hg with rfl | rfl
     · apply le_sup_left (α := Subgroup E)
-      exact ⟨Multiplicative.ofAdd 1, by simpa [X] using cyclicLift_natCast _ han 1⟩
+      exact ⟨Multiplicative.ofAdd 1, by simpa [X] using! cyclicLift_natCast _ han 1⟩
     · apply le_sup_right (α := Subgroup E)
-      exact ⟨Multiplicative.ofAdd 1, by simpa [Y] using cyclicLift_natCast _ hbn 1⟩
+      exact ⟨Multiplicative.ofAdd 1, by simpa [Y] using! cyclicLift_natCast _ hbn 1⟩
 
 /-- Precise remaining relations: the two torsion root lifts must extend together to a
 homomorphism from the matrix group. This proposition is NOT proved unconditionally. -/
@@ -106,8 +106,8 @@ theorem schurTrivial_of_rootLiftExtension {n : ℕ} [NeZero n]
     · exact root_generators n
     · intro g hg
       rcases hg with rfl | rfl
-      · simpa [hσa] using hpa
-      · simpa [hσb] using hpb
+      · simpa [hσa] using! hpa
+      · simpa [hσb] using! hpb
   have hmem : x ∈ σ.range := by
     have hle : Subgroup.closure {a, b} ≤ σ.range := by
       rw [Subgroup.closure_le]
@@ -149,12 +149,12 @@ theorem rootLiftExtension_of_schurTrivial {n : ℕ} [NeZero n]
   · change (e.symm (upperRoot 1) : E) = a
     have he : e.symm (upperRoot 1) = ⟨a, ha⟩ := by
       apply e.injective
-      simpa [e, f] using hpa.symm
+      simpa [e, f] using! hpa.symm
     exact congrArg Subtype.val he
   · change (e.symm (lowerRoot 1) : E) = b
     have he : e.symm (lowerRoot 1) = ⟨b, hb⟩ := by
       apply e.injective
-      simpa [e, f] using hpb.symm
+      simpa [e, f] using! hpb.symm
     exact congrArg Subtype.val he
 
 /-- An equivalence, so the residual has not silently weakened the target. -/

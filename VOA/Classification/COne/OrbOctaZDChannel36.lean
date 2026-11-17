@@ -25,7 +25,7 @@ private theorem pair11 : V2v.smul (wv 4 1) (-5) (wv 4 1) =
   have he := eq_neg_of_add_eq_zero_left h
   have hs := congrArg (fun v : Sp => (1 / 8 : ℂ) • v) he
   norm_num [smul_smul, smul_neg, ← neg_smul] at hs
-  simpa only [neg_div] using hs
+  simpa only [neg_div] using! hs
 
 private theorem pair20 : V2v.smul (wv 4 2) (-5) (wv 4 0) =
     (-56628 / 7 : ℂ) • wv 6 0 := by
@@ -35,7 +35,7 @@ private theorem pair20 : V2v.smul (wv 4 2) (-5) (wv 4 0) =
   have he := eq_neg_of_add_eq_zero_left h
   have hs := congrArg (fun v : Sp => (1 / 7 : ℂ) • v) he
   norm_num [smul_smul, smul_neg, ← neg_smul] at hs
-  simpa only [neg_div] using hs
+  simpa only [neg_div] using! hs
 
 /-- The normalized second-transvectant coefficient; the (0,2) entry is one. -/
 def coeff36 (i j : ℕ) : ℂ :=
@@ -64,6 +64,7 @@ theorem second44 : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 2 ≤ t → t ≤ 1
       have hgr : Φ i j ∈ V2v.grading (((6 : ℕ) : ℤ) ^ 2) := by
         refine Submodule.sub_mem _ ?_ (Submodule.smul_mem _ _ (wv_grading _ _))
         convert V2v.smul_mem_grading (wv_grading 4 i) (wv_grading 4 j) (-5) using 2
+        all_goals norm_num
       have hho : ho (Φ i j) = ((12 : ℂ) - 2 * ((t - 2 : ℕ) : ℂ)) • Φ i j := by
         subst hij
         simp only [Φ]
@@ -111,6 +112,6 @@ theorem second44 : ∀ t : ℕ, ∀ i j : ℕ, i + j = t → 2 ≤ t → t ≤ 1
           · exact Submodule.zero_mem _
           · exact Submodule.smul_mem _ _
               (ih (i + (j - 1)) (by omega) i (j - 1) rfl (by omega) (by omega) hi (by omega))
-      exact ekernel 6 (t - 2) (by omega) hgr (by simpa using hho) heo
+      exact ekernel 6 (t - 2) (by omega) hgr (by simpa using! hho) heo
 
 end VOA.Classification.COne.OrbOctaZD

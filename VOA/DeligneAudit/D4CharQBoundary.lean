@@ -45,7 +45,7 @@ theorem gtQCoeff_of_not_mem (q : R) (h : PochhammerUnits q) {N : ℕ}
     gtQCoeff q h lam μ = 0 := by
   classical
   have hn : ¬ ∀ i, lam i.succ ≤ μ i ∧ μ i ≤ lam i.castSucc := by
-    simpa only [mem_gtRows] using hμ
+    simpa only [mem_gtRows] using! hμ
   obtain ⟨i, hi⟩ := not_forall.mp hn
   have hz : (∏ j : Fin N, CarrierChain.qpochGen q (gtGap μ j) *
       gtInvPoch q h (lam j.castSucc - μ j) * gtInvPoch q h (μ j - lam j.succ)) = 0 := by

@@ -49,7 +49,7 @@ def seedMap (W : VertexOperatorAlgebra V) (h : ℤ) (x : V) (hp : x ∈ prim W h
 theorem seedMap_mode (W : VertexOperatorAlgebra V) (h : ℤ) (x : V)
     (hp : x ∈ prim W h) (n : ℤ) (v : Verma W.centralCharge (h : ℂ)) :
     seedMap W h x hp (vermaMode _ _ n v) = W.L n (seedMap W h x hp v) := by
-  simpa only [seedMap, seedRep, seedData, fixedRho_L] using universalMap_intertwines
+  simpa only [seedMap, seedRep, seedData, fixedRho_L] using! universalMap_intertwines
     (seedRep W) x (seedHighest W h x hp) (VOA.L n) v
 
 theorem seedMap_word (W : VertexOperatorAlgebra V) (h : ℤ) (x : V)
@@ -72,7 +72,7 @@ theorem seedMap_mem_grading (W : VertexOperatorAlgebra V) (h : ℤ) (x : V)
   rw [seedMap_word]
   have hg := OrbOctaR.virWord_grading W ((mem_prim W).mp hp).1 w.val
   have he : OrbOctaR.wordWeight w.val = N := by
-    simpa [OrbOctaR.wordWeight, energyHW] using w.property.2
+    simpa [OrbOctaR.wordWeight, energyHW] using! w.property.2
   rwa [he] at hg
 
 theorem seedMap_kernel_le_radical (W : VertexOperatorAlgebra V) (h : ℤ) (x : V)
@@ -96,7 +96,7 @@ theorem Xico_seedMap_s13_zero :
       (vermaBSASource Wi.centralCharge (36 : ℂ) 1 13 13) = 0 := by
   have hc : Wi.centralCharge = 1 := by
     change (V2m 1 le_rfl).centralCharge = 1
-    simpa using V2m_centralCharge 1 le_rfl
+    simpa using! V2m_centralCharge 1 le_rfl
   have hpos : vermaMode Wi.centralCharge (36:ℂ) 1
       (vermaBSASource Wi.centralCharge (36:ℂ) 1 13 13) = 0 ∧
       vermaMode Wi.centralCharge (36:ℂ) 2
@@ -118,7 +118,7 @@ theorem Xico_seedMap_s13_zero :
         (by norm_num [vermaBSAWeight]) he
     exact haux _ hc
   apply sixth_channel_positive_rigidity 49 (by norm_num) (by norm_num)
-  · simpa using seedMap_mem_grading Wi 36 Xico OrbIcoZ.X_primary 13 _
+  · simpa using! seedMap_mem_grading Wi 36 Xico OrbIcoZ.X_primary 13 _
       (vermaBSASource_mem_level _ _ _ _ _)
   · rw [← seedMap_mode]
     have hz : vermaMode Wi.centralCharge ((36 : ℤ) : ℂ) 1

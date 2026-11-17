@@ -21,7 +21,7 @@ theorem seriesWeighted_algebraMap (w : σ → ℕ) (z : ℂ) :
   · exact MvPolynomial.isWeightedHomogeneous_zero ℂ w 0
 
 theorem seriesWeighted_one (w : σ → ℕ) : seriesWeighted w 0 1 := by
-  simpa only [map_one] using seriesWeighted_algebraMap w (1:ℂ)
+  simpa only [map_one] using! seriesWeighted_algebraMap w (1:ℂ)
 
 theorem seriesWeighted_mul {w : σ → ℕ} {n k : ℕ}
     {f g : PowerSeries (MvPolynomial σ ℂ)}
@@ -37,9 +37,9 @@ theorem seriesWeighted_pow {w : σ → ℕ} {n : ℕ}
     {f : PowerSeries (MvPolynomial σ ℂ)} (hf : seriesWeighted w n f) (k : ℕ) :
     seriesWeighted w (k*n) (f^k) := by
   induction k with
-  | zero => simpa only [pow_zero,Nat.zero_mul] using seriesWeighted_one w
+  | zero => simpa only [pow_zero,Nat.zero_mul] using! seriesWeighted_one w
   | succ k ih =>
-      simpa only [pow_succ,Nat.succ_mul] using seriesWeighted_mul ih hf
+      simpa only [pow_succ,Nat.succ_mul] using! seriesWeighted_mul ih hf
 
 theorem seriesWeighted_prod {ι : Type*} (w : σ → ℕ) (s : Finset ι)
     (f : ι → PowerSeries (MvPolynomial σ ℂ)) (n : ι → ℕ)
@@ -50,7 +50,7 @@ theorem seriesWeighted_prod {ι : Type*} (w : σ → ℕ) (s : Finset ι)
   induction s using Finset.induction_on with
   | empty =>
       intro _
-      simpa only [Finset.sum_empty,Finset.prod_empty] using seriesWeighted_one w
+      simpa only [Finset.sum_empty,Finset.prod_empty] using! seriesWeighted_one w
   | @insert i s hi ih =>
       intro h
       rw [Finset.sum_insert hi,Finset.prod_insert hi]
@@ -105,11 +105,11 @@ theorem currentMap_monomial_weighted (m : ℕ) (d : Fin 8 →₀ ℕ) (z : ℂ) 
   have he := sourceEnergy_weight d
   simp only [Finsupp.weight_apply,nsmul_eq_mul,Nat.cast_id] at he
   rw [he] at hp
-  simpa only [zero_add] using
+  simpa only [zero_add] using!
     seriesWeighted_mul (seriesWeighted_algebraMap (currentColorWeight m) z) hp
 
 def currentColorLow (m L : ℕ) : Submodule ℂ (MvPolynomial (Vars m) ℂ) :=
-  Finsupp.supported ℂ ℂ {d | Finsupp.weight (currentColorWeight m) d < L}
+  AddMonoidAlgebra.supported ℂ ℂ {d | Finsupp.weight (currentColorWeight m) d < L}
 
 /-- Strict weight is proved in the actual target monomials, not just in a named image. -/
 theorem current_coefficient_low (m s L : ℕ) (p : P8 ℂ) (hp : p ∈ colorLow ℂ L) :
@@ -119,9 +119,9 @@ theorem current_coefficient_low (m s L : ℕ) (p : P8 ℂ) (hp : p ∈ colorLow 
   apply Submodule.sum_mem
   intro d hd
   change (↑(PowerSeries.coeff s (currentMap m
-    (MvPolynomial.monomial d (MvPolynomial.coeff d p)))).support : Set (Vars m →₀ ℕ)) ⊆ _
+    (MvPolynomial.monomial d (p.coeff d)))).support : Set (Vars m →₀ ℕ)) ⊆ _
   intro e he
-  have hw := currentMap_monomial_weighted m d (MvPolynomial.coeff d p) s
+  have hw := currentMap_monomial_weighted m d (p.coeff d) s
     (MvPolynomial.mem_support_iff.mp he)
   change Finsupp.weight (currentColorWeight m) e < L
   rw [hw]

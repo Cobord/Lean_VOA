@@ -64,7 +64,7 @@ theorem jointGramSquare_column_relation (n h : ℤ) (c : JointIndex n h → ℂ)
       map_sum, map_smul, smul_eq_mul, mul_comm] using hc i)
   have hz : (I).mkQ (∑ j, c j • currentPBWBasis k hk (jointChargeEquiv n h j).val) = 0 :=
     (Submodule.Quotient.mk_eq_zero _).mpr hm
-  simpa only [map_sum, map_smul, ← jointWord_state, universalWord_mkQ] using hz
+  simpa only [map_sum, map_smul, ← jointWord_state, universalWord_mkQ] using! hz
 
 /-- A simple zero of the actual joint determinant produces two ordinary
 quotient relations with nonzero derivative of their universal pairing.

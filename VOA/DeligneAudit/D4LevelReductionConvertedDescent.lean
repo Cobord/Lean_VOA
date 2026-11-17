@@ -115,8 +115,8 @@ theorem coreGrassmannianEvaluation_converted :
         rw [mul_add, map_add, ihQ, ihS, add_zero]
     | smul z Q hQ ih =>
         intro R
-        simpa only [smul_eq_mul, mul_assoc] using ih (R * z)
-  simpa only [one_mul] using hall P hP 1
+        simpa only [smul_eq_mul, mul_assoc] using! ih (R * z)
+  simpa only [one_mul] using! hall P hP 1
 
 /-- The universal evaluation satisfies every converted relation at every raising length. -/
 theorem universalCoreEvaluation_converted (a b c : ℕ) :

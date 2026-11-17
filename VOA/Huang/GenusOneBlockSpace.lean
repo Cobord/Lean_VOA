@@ -166,12 +166,12 @@ theorem IsInsertionAnalyticBlock.sub {F G : M → ℂ → ℂ} (hF : IsInsertion
   have h := hF.add (hG.smul (-1))
   refine ⟨fun v => ?_, fun v w z => ?_, fun c v z => ?_, fun ka hka a ha v => ?_,
     fun ka hka a ha v z hz => ?_, fun v z hz => ?_⟩
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.holo v
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.addv v w z
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.smulv c v z
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.vanish ka hka a ha v
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.negTwo ka hka a ha v z hz
-  · simpa only [neg_one_mul, ← sub_eq_add_neg] using h.omega v z hz
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.holo v
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.addv v w z
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.smulv c v z
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.vanish ka hka a ha v
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.negTwo ka hka a ha v z hz
+  · simpa only [neg_one_mul, ← sub_eq_add_neg] using! h.omega v z hz
 
 /-- **The space of genus-one conformal blocks**, as a `ℂ`-subspace of `M → ℂ → ℂ`. -/
 def insertionAnalyticBlocks (A : OrdVModule W M) : Submodule ℂ (M → ℂ → ℂ) where

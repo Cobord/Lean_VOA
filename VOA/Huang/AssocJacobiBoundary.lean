@@ -482,7 +482,6 @@ theorem borcherds_of_boundaries (htr : Truncated YM) (hC : CommutatorBoundary W 
       have key := antidiag_pin
         (fun ell' n' => BL YM u v x ell' (-(k : ℤ) - 1) n' - BR W YM u v x ell' (-(k : ℤ) - 1) n')
         (fun ell' n' => by
-          dsimp only
           have hbl := BL_rec htr u v x ell' (-(k : ℤ) - 1) n'
           have hbr := BR_rec (W := W) (YM := YM) u v x ell' (-(k : ℤ) - 1) n'
           rw [show (-(k : ℤ) - 1) + 1 = -(k : ℤ) by ring] at hbl hbr
@@ -491,7 +490,6 @@ theorem borcherds_of_boundaries (htr : Truncated YM) (hC : CommutatorBoundary W 
           rw [neg_sub, sub_eq_sub_iff_add_eq_add]
           exact hih.trans (add_comm _ _))
         (fun n' => by
-          dsimp only
           rw [hC u v x (-(k : ℤ) - 1) n', sub_self])
         ell n
       exact sub_eq_zero.mp key

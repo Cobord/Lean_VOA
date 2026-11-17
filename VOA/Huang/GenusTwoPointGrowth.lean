@@ -20,7 +20,7 @@ theorem exists_geometric_margin {t : ℝ} (ht0 : 0 ≤ t) (ht : t < 1) :
     ∃ a : ℝ, 1 < a ∧ a * t < 1 := by
   obtain ⟨s, hts, hs⟩ := exists_between ht
   have hs0 : 0 < s := lt_of_le_of_lt ht0 hts
-  refine ⟨1 / s, (lt_div_iff₀ hs0).2 (by simpa using hs), ?_⟩
+  refine ⟨1 / s, (lt_div_iff₀ hs0).2 (by simpa using! hs), ?_⟩
   rw [div_mul_eq_mul_div, one_mul, div_lt_one hs0]
   exact hts
 

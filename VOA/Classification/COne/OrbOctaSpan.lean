@@ -109,7 +109,7 @@ def reyO (F : P3) : P3 := ((Fintype.card octa : ℂ)⁻¹) • ∑ g : octa, phi
 theorem reyO_fix (F : P3) {h : Aut V1} (hh : h ∈ octa) : phiE h (reyO F) = reyO F := by
   unfold reyO
   rw [map_smul, map_sum]
-  congr 1
+  refine congrArg (((Fintype.card octa : ℂ)⁻¹) • ·) ?_
   rw [← Equiv.sum_comp (Equiv.mulLeft (⟨h, hh⟩ : octa)) (fun g : octa => phiE g.1 F)]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [Equiv.coe_mulLeft, Subgroup.coe_mul, phiE_mul]
@@ -161,7 +161,7 @@ theorem Tav_genMon_mem (t : ℕ × ℕ × ℕ × ℕ) (ht : par t % 2 = 0) :
   · rw [genMon_one, Tav_one]; exact seed_mem ⟨0, rfl⟩ _
   · rw [genMon_r2]
     have h := average_lowerDesc octa T2_r2
-    exact Submodule.mem_sup_right (by simpa [gdeg] using h)
+    exact Submodule.mem_sup_right (by simpa [gdeg] using! h)
   · rw [genMon_I4]; exact seed_mem ⟨1, rfl⟩ _
   · rw [genMon_I3sq]; exact seed_mem ⟨2, rfl⟩ _
   · rw [genMon_I3I6]; exact seed_mem ⟨3, rfl⟩ _

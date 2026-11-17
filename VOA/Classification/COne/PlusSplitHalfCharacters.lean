@@ -36,6 +36,9 @@ theorem half_transition_product (m : ℕ) :
   norm_num only [neg_add_cancel, add_neg_cancel, neg_add_cancel_left, add_zero]
   rw [show (0 : ℤ) = (0 : (latP m).carrier) from rfl, latCob_zero]
   simp only [inv_one, mul_one]
+  have h1 : ∀ a b : ℤ, (latP m).latticeCocycle a b = 1 := rankOne_cocycle m
+  simp only [h1, one_mul]
+  erw [rankOne_cocycle m, one_mul]
   calc
     _ = (sig m m (-1) * sig m m 1) *
         (latCob (latP m) (glueLat m m) (glueIota m m) ((-1 : ℤ) : (latP m).carrier) *
@@ -51,6 +54,12 @@ theorem halfVector_ne_zero (m : ℕ) (s : ℂ) : halfVector m s ≠ 0 := by
   intro h
   have he := congrArg (coordEα (latP m) 0) h
   simp [halfVector, latVacuumGen, latStateGen, coordEα_apply, vacuumN] at he
+  have hz : coordEα (latP m) (0 : ℤ) ((1 : FockN (rank (latP m))) ⊗ₜ[ℂ] eGen (latP m) (-1 : ℤ))
+      = 0 :=
+    (coordEα_apply (latP m) _ _ _).trans
+      (if_neg fun h => by have : (0 : ℤ) = -1 := h; omega)
+  erw [hz, smul_zero, add_zero] at he
+  exact one_ne_zero he
 
 theorem halfVector_mem (m : ℕ) (hm : 1 ≤ m) (s : ℂ) :
     halfVector m s ∈ (resN m hm (latticeModule m hm m)).weight ((m : ℂ) / 4) := by
@@ -109,11 +118,11 @@ theorem half_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m)
 theorem half_plus_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
     letI := instRingA (V2mPlus m hm); letI := instAlgebraA (V2mPlus m hm)
     ∃ χ : VOA.A (V2mPlus m hm) →ₐ[ℂ] ℂ, HasValues m hm (.inr 2) χ := by
-  simpa [HasValues, values, exceptional] using half_character_exists m hm hm2 1 (by norm_num)
+  simpa [HasValues, values, exceptional] using! half_character_exists m hm hm2 1 (by norm_num)
 
 theorem half_minus_character_exists (m : ℕ) (hm : 1 ≤ m) (hm2 : 2 ≤ m) :
     letI := instRingA (V2mPlus m hm); letI := instAlgebraA (V2mPlus m hm)
     ∃ χ : VOA.A (V2mPlus m hm) →ₐ[ℂ] ℂ, HasValues m hm (.inr 3) χ := by
-  simpa [HasValues, values, exceptional] using half_character_exists m hm hm2 (-1) (by norm_num)
+  simpa [HasValues, values, exceptional] using! half_character_exists m hm hm2 (-1) (by norm_num)
 
 end VOA.Classification.COne.PlusCharacterTable

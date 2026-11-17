@@ -107,7 +107,7 @@ theorem coefficient_compatible_homogeneous (f : M₄ →ₗ[ℂ] ℂ) (z : M₃)
         f (mode (N₃.YM u) i z) (c+d-i-1) β (γ-d+ell+1-s) k=0 := by
     obtain ⟨S0,hS0⟩ := exists_nat_gt (γ.re+(ell : ℝ)-M+c.re+β.re)
     refine ⟨S0,fun s hs i => hB _ _ _ f ?_ hf _ k (Or.inr ?_)⟩
-    · simpa only [Int.cast_natCast] using N₃.mode_mem_weight hu hz (i : ℤ)
+    · simpa only [Int.cast_natCast] using! N₃.mode_mem_weight hu hz (i : ℤ)
     · have hs' : (S0 : ℝ) ≤ s := by exact_mod_cast hs
       have hi' : (0 : ℝ) ≤ i := Nat.cast_nonneg i
       simp only [Complex.add_re,Complex.sub_re,Complex.intCast_re,Complex.one_re,Complex.natCast_re]
@@ -145,7 +145,7 @@ theorem coefficient_compatible_homogeneous (f : M₄ →ₗ[ℂ] ℂ) (z : M₃)
   have hInL : InL N₁.toWeakModule u 0 ell C x y=C (mode (N₁.YM u) ell x) y := by
     unfold InL
     rw [finsum_eq_single (f := fun r : ℤ => cbz 0 r*C (mode (N₁.YM u) (ell+r) x) y) 0
-      (fun r hr => by dsimp only; rw [cbz_zero_left,if_neg hr,zero_mul])]
+      (fun r hr => by rw [cbz_zero_left,if_neg hr,zero_mul])]
     simp only [cbz_zero,add_zero,one_mul]
   have hInR : InR N₂.toWeakModule u 0 ell C x y=
       negOnePow ell*∑ j∈Finset.range NY,negOnePow j*cbz ell j*C x (mode (N₂.YM u) j y) := by
@@ -163,13 +163,12 @@ theorem coefficient_compatible_homogeneous (f : M₄ →ₗ[ℂ] ℂ) (z : M₃)
     hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ (f ∘ₗ mode (N₄.YM u) q) z c
       (β-d+q+1) (γ-d+ell+1-s) k x y) ell (Nf := Nf) (K := K) hNK
     (fun s i hi => by
-      dsimp only
       rw [hNf ell le_rfl i hi,coefficient_zero_f hC2 N₁ N₂ N₃ N₄ N₅
         hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂,LinearMap.zero_apply,LinearMap.zero_apply])
   have cY := Ypart (fun s i => coefficient hC2 N₁ N₂ N₃ N₄ N₅
     hfg₁ hfg₂ hfg₃ hfg₄ hfg₅ Y₁ Y₂ f (mode (N₃.YM u) i z) (c+d-i-1)
       β (γ-d+ell+1-s) k x y) ell (N₃ := NZ) (K := K)
-    (fun s hs i => by dsimp only; rw [hSw s (le_trans hSK hs) i,LinearMap.zero_apply,LinearMap.zero_apply])
+    (fun s hs i => by rw [hSw s (le_trans hSK hs) i,LinearMap.zero_apply,LinearMap.zero_apply])
   change Dsl N₁.toWeakModule N₂.toWeakModule u 0 ell C x y=0
   unfold Dsl
   rw [hOut,hInL,hInR]

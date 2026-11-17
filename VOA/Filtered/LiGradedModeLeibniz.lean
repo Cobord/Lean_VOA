@@ -48,7 +48,7 @@ theorem liWeightPiece_mode_mul_mem (W : VertexOperatorAlgebra V)
         ((N : ℤ) + M - n - 1) + L - (-1) - 1 := by
       rw [Nat.cast_sub hN, Nat.cast_add, Nat.cast_add, Nat.cast_add, Nat.cast_one]
       ring
-    simpa only [heq] using hgr
+    simpa only [heq, SetLike.mem_coe] using hgr
 
 /-- Multiplying a descended mode agrees with the total-bidegree class of the original
 nested vertex products, even if the intermediate graded mode is forced to vanish. -/
@@ -106,7 +106,7 @@ theorem liWeightPiece_mul_mode_mem (W : VertexOperatorAlgebra V)
         (L : ℤ) + ((N : ℤ) + M - n - 1) - (-1) - 1 := by
       rw [Nat.cast_sub hN, Nat.cast_add, Nat.cast_add, Nat.cast_add, Nat.cast_one]
       ring
-    simpa only [heq] using hgr
+    simpa only [heq, SetLike.mem_coe] using hgr
 
 /-- Multiplying a descended mode agrees with the total-bidegree class of the original
 nested vertex products, even if the intermediate graded mode is forced to vanish. -/
@@ -150,7 +150,7 @@ theorem liGradedClass_eq_add_of_defect (W : VertexOperatorAlgebra V) (p N : ℕ)
   apply (Submodule.Quotient.eq _).mpr
   change x - (y + z) ∈ liWeightPiece W (p + 1) N
   refine ⟨?_, (W.grading N).sub_mem hx.2 ((W.grading N).add_mem hy.2 hz.2)⟩
-  simpa only [sub_sub] using hdef
+  simpa only [sub_sub, SetLike.mem_coe] using hdef
 
 /-- The Leibniz rule for every mode on homogeneous classes. -/
 theorem liGradedClass_mode_leibniz (W : VertexOperatorAlgebra V)

@@ -128,7 +128,7 @@ theorem galois_row_one (F : SphericalFusion C) (M : Modular F) (σ : ℂ ≃+* �
       generalizedIndicatorAll F (mixedCenter (F.simple q.1) (F.simple q.2)) (F.simple c) 1
         (m * a) :=
   mixed_indicatorAll_galois F M q.1 q.2 (F.simple c) 1 one_ne_zero σ (a : ℤ)
-    (by simpa using hσ) m
+    (by simpa using! hσ) m
 
 open Classical in
 /-- **A scalar form of DLN Lemma 5.3 for `Z(A)`**:
@@ -221,7 +221,7 @@ theorem galoisTwistCore_of_SMove_lift (F : SphericalFusion C) (M : Modular F)
   set π := galoisPerm F M σ
   -- the two rows `(a, 1)` and `(a, 1 + a)`
   have L1 := galois_mixed_row F M hS ρ hr hcyc σ a ha hσ a₀ ha₀ i F.unitLabel i 1 one_ne_zero
-    isCoprime_one_right (by simpa using hcopN)
+    isCoprime_one_right (by simpa using! hcopN)
   have hcop2 : IsCoprime (a : ℤ) (1 + a) := ⟨-1, 1, by ring⟩
   have hgcd2 : Nat.Coprime a ((1 + (a : ℤ)).natAbs * M.toRibbon.twistOrder) := by
     have : (1 + (a : ℤ)).natAbs = 1 + a := by omega
@@ -246,7 +246,7 @@ theorem galoisTwistCore_of_SMove_lift (F : SphericalFusion C) (M : Modular F)
   set ε := galoisSign F M σ a₀ F.unitLabel * galoisSign F M σ a₀ i
   set X := generalizedIndicatorAll F (mixedCenter (F.simple (π F.unitLabel))
     (F.simple (π i))) (F.simple i) (a : ℤ) 1
-  have L1' : ε * X = (t ^ (a : ℤ))⁻¹ := by simpa only [one_mul] using L1
+  have L1' : ε * X = (t ^ (a : ℤ))⁻¹ := by simpa only [one_mul] using! L1
   have key : t'⁻¹ * (t ^ (a : ℤ))⁻¹ = (t ^ ((1 + (a : ℤ)) * a))⁻¹ := by
     rw [← L2, ← L1']; ring
   have hsplit : t ^ ((1 + (a : ℤ)) * a) = t ^ (a : ℤ) * t ^ ((a : ℤ) * a) := by

@@ -130,7 +130,7 @@ theorem octaProbe_virWord_bad (ks : List ℕ) (p : (orbifold octa).carrier)
     rw [virWord, octaProbe_L]
     by_cases hk : k = 1
     · subst k
-      rw [ih (by simpa using h), mul_zero]
+      rw [ih (by simpa using! h), mul_zero]
     · rw [if_neg hk, zero_mul]
 
 theorem virError_le_ker_octaProbe (p : (orbifold octa).carrier) :

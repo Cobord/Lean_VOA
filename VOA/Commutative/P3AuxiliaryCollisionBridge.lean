@@ -38,6 +38,12 @@ universe u
 
 variable {K : Type u} [Field K]
 
+/-- Labels in different species are distinct. -/
+private theorem sigmaLabel_ne_of_fst_ne {m : BoundarySpecies → ℕ} {A B : BoundarySpecies}
+    (h : A ≠ B) (i : Fin (m A)) (j : Fin (m B)) :
+    (⟨A, i⟩ : SpeciesLabel m) ≠ ⟨B, j⟩ :=
+  fun e ↦ h (congrArg Sigma.fst e)
+
 section ShiftedSS
 
 /-- The source label type with two distinguished `S` particles. -/
@@ -73,9 +79,12 @@ theorem liftSSPassiveLabel_ne_newSSLabelZero (a b c d : ℕ)
   intro h
   rcases i with ⟨A, i⟩
   cases A
-  · simp [liftSSPassiveLabel, newSSLabelZero] at h
-  · simp [liftSSPassiveLabel, newSSLabelZero] at h
-  · simp [liftSSPassiveLabel, newSSLabelZero] at h
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.X, i⟩ : SSLabel a b c d) = ⟨.S, (0 : Fin (d + 2))⟩ from h)) (by simp)
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.Y, i⟩ : SSLabel a b c d) = ⟨.S, (0 : Fin (d + 2))⟩ from h)) (by simp)
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.Z, i⟩ : SSLabel a b c d) = ⟨.S, (0 : Fin (d + 2))⟩ from h)) (by simp)
   · have hv := congrArg (fun q : SSLabel a b c d => (q.2 : ℕ)) h
     change ((i.succ.succ : Fin (d + 2)) : ℕ) = ((0 : Fin (d + 2)) : ℕ) at hv
     simp at hv
@@ -120,11 +129,14 @@ theorem ssToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
       i = newSSLabelZero a b c d ∨ i = newSSLabelOne a b c d := by
   rcases i with ⟨A, i⟩
   cases A
-  · simp [ssToDiagonalLabel, newSSLabelZero, newSSLabelOne]
-  · simp [ssToDiagonalLabel, newSSLabelZero, newSSLabelOne]
-  · simp [ssToDiagonalLabel, newSSLabelZero, newSSLabelOne]
+  · refine iff_of_false (by simp [ssToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
+  · refine iff_of_false (by simp [ssToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
+  · refine iff_of_false (by simp [ssToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
   · refine Fin.cases ?_ (fun j => ?_) i
-    · simp [ssToDiagonalLabel, newSSLabelZero, newSSLabelOne]
+    · exact iff_of_true rfl (Or.inl rfl)
     · refine Fin.cases ?_ (fun k => ?_) j
       · constructor
         · intro _
@@ -264,7 +276,7 @@ theorem mapDomain_ssToDiagonalLabel_eq_iff (a b c d q : ℕ)
         ((Finsupp.single (Sum.inl ()) q + Finsupp.mapDomain Sum.inr v :
           BoundaryDiagonalLabel a b c d →₀ ℕ) (Sum.inr j)) at hp
       rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j] at hp
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j] at hp
       simpa using hp
   · rintro ⟨hc, hp⟩
     ext i
@@ -275,7 +287,7 @@ theorem mapDomain_ssToDiagonalLabel_eq_iff (a b c d q : ℕ)
         Finsupp.mapDomain_notin_range v _ (by simp)
       simpa [hzero] using hc
     · rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j]
       simpa using hp j
 
 /-- Decompose an `SS` tuple into the ordered active modes and an arbitrary labelled passive
@@ -322,7 +334,8 @@ theorem shiftedExponent_ssModeTupleEquiv_symm_activeZero
         (newSSLabelZero a b c d) = (rs.1 : ℕ) + 1 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, ssModeTupleEquiv, newSSLabelZero,
-    boundarySpeciesShift, add_comm]
+    boundarySpeciesShift]
+  exact (add_comm _ _).trans rfl
 
 @[simp]
 theorem shiftedExponent_ssModeTupleEquiv_symm_activeOne
@@ -333,7 +346,8 @@ theorem shiftedExponent_ssModeTupleEquiv_symm_activeOne
         (newSSLabelOne a b c d) = (rs.2 : ℕ) + 1 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, ssModeTupleEquiv, newSSLabelOne,
-    boundarySpeciesShift, add_comm]
+    boundarySpeciesShift]
+  exact (add_comm _ _).trans rfl
 
 @[simp]
 theorem shiftedExponent_ssModeTupleEquiv_symm_passive
@@ -441,11 +455,10 @@ theorem coeff_ssDiagonalSubstitution_eq_fiberSum
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a b c (d + 2)))
     (v : SpeciesLabel (boundaryMultiplicity a b c d) →₀ ℕ) :
-    MvPolynomial.coeff
+    (ssDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
         (Finsupp.single (Sum.inl () : BoundaryDiagonalLabel a b c d) q +
-          Finsupp.mapDomain Sum.inr v)
-        (ssDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+          Finsupp.mapDomain Sum.inr v) =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity a b c (d + 2)),
         if
@@ -471,9 +484,9 @@ theorem coeff_ssDiagonalSubstitution_tupleExponent
     (t₀ : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d))
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity a b c (d + 2))) :
-    MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-        (ssDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (ssDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
+        (boundaryDiagonalTupleExponent q t₀) =
       shiftedS2DiagonalCoefficient q (unorderedModeBlock (t₀ .S))
         (fun s => F (boundaryModeConfiguration
           (unorderedModeBlock (t₀ .X))
@@ -566,9 +579,8 @@ theorem boundaryS2Orthogonal_ssDiagonalSubstitution_eq_zero
         (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F) = 0 := by
   apply MvPolynomial.ext
   intro target
-  by_cases hcoeff : MvPolynomial.coeff target
-      (ssDiagonalSubstitution (K := K) a b c d
-        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) ≠ 0
+  by_cases hcoeff : (ssDiagonalSubstitution (K := K) a b c d
+        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target ≠ 0
   · classical
     simp only [ssDiagonalSubstitution, shiftedMultispeciesParticlePolynomial, map_sum,
       MvPolynomial.coeff_sum, MvPolynomial.rename_monomial,
@@ -798,8 +810,8 @@ def newXSLabelS (a b c d : ℕ) : XSLabel a b c d :=
   ⟨.S, (0 : Fin (d + 1))⟩
 
 theorem newXSLabelS_ne_newXSLabelX (a b c d : ℕ) :
-    newXSLabelS a b c d ≠ newXSLabelX a b c d := by
-  simp [newXSLabelS, newXSLabelX]
+    newXSLabelS a b c d ≠ newXSLabelX a b c d :=
+  fun h ↦ absurd (congrArg Sigma.fst h) (by simp [newXSLabelS, newXSLabelX])
 
 def xsToDiagonalLabel (a b c d : ℕ) :
     XSLabel a b c d → BoundaryDiagonalLabel a b c d
@@ -835,7 +847,7 @@ theorem xsToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
   rcases i with ⟨A, i⟩
   cases A
   · refine Fin.cases ?_ (fun j => ?_) i
-    · simp [xsToDiagonalLabel, newXSLabelX, newXSLabelS]
+    · exact iff_of_true rfl (Or.inl rfl)
     · constructor
       · intro h
         simp only [xsToDiagonalLabel] at h
@@ -843,17 +855,19 @@ theorem xsToDiagonalLabel_eq_collision_iff (a b c d : ℕ)
       · rintro (h | h)
         · have hv := congrArg (fun q : XSLabel a b c d => (q.2 : ℕ)) h
           simp [newXSLabelX] at hv
-        · simp [newXSLabelS, newXSLabelX] at h
-  · simp [xsToDiagonalLabel, newXSLabelX, newXSLabelS]
-  · simp [xsToDiagonalLabel, newXSLabelX, newXSLabelS]
+        · exact absurd (congrArg Sigma.fst h) (by simp [newXSLabelS])
+  · refine iff_of_false (by simp [xsToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
+  · refine iff_of_false (by simp [xsToDiagonalLabel]) ?_
+    rintro (h | h) <;> exact sigmaLabel_ne_of_fst_ne (by simp) _ _ h
   · refine Fin.cases ?_ (fun j => ?_) i
-    · simp [xsToDiagonalLabel, newXSLabelX, newXSLabelS]
+    · exact iff_of_true rfl (Or.inr rfl)
     · constructor
       · intro h
         simp only [xsToDiagonalLabel] at h
         contradiction
       · rintro (h | h)
-        · simp [newXSLabelS, newXSLabelX] at h
+        · exact absurd (congrArg Sigma.fst h) (by simp [newXSLabelX])
         · have hv := congrArg (fun q : XSLabel a b c d => (q.2 : ℕ)) h
           simp [newXSLabelS] at hv
 
@@ -866,9 +880,12 @@ theorem liftXSPassiveLabel_ne_newXSLabelX (a b c d : ℕ)
   · have hv := congrArg (fun q : XSLabel a b c d => (q.2 : ℕ)) h
     change ((i.succ : Fin (a + 1)) : ℕ) = ((0 : Fin (a + 1)) : ℕ) at hv
     simp at hv
-  · simp [liftXSPassiveLabel, newXSLabelX] at h
-  · simp [liftXSPassiveLabel, newXSLabelX] at h
-  · simp [liftXSPassiveLabel, newXSLabelX] at h
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.Y, i⟩ : XSLabel a b c d) = ⟨.X, (0 : Fin (a + 1))⟩ from h)) (by simp)
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.Z, i⟩ : XSLabel a b c d) = ⟨.X, (0 : Fin (a + 1))⟩ from h)) (by simp)
+  · exact absurd (congrArg Sigma.fst
+      (show (⟨.S, i.succ⟩ : XSLabel a b c d) = ⟨.X, (0 : Fin (a + 1))⟩ from h)) (by simp)
 
 def xsResidualEquiv (a b c d : ℕ) :
     {i : XSLabel a b c d // i ≠ newXSLabelX a b c d} ≃
@@ -984,7 +1001,7 @@ theorem mapDomain_xsToDiagonalLabel_eq_iff (a b c d q : ℕ)
         ((Finsupp.single (Sum.inl ()) q + Finsupp.mapDomain Sum.inr v :
           BoundaryDiagonalLabel a b c d →₀ ℕ) (Sum.inr j)) at hp
       rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j] at hp
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j] at hp
       simpa using hp
   · rintro ⟨hc, hp⟩
     ext i
@@ -995,7 +1012,7 @@ theorem mapDomain_xsToDiagonalLabel_eq_iff (a b c d q : ℕ)
         Finsupp.mapDomain_notin_range v _ (by simp)
       simpa [hzero] using hc
     · rw [Finsupp.add_apply, Finsupp.single_eq_of_ne (by simp), zero_add,
-        Finsupp.mapDomain_apply Sum.inr_injective v j]
+        Finsupp.mapDomain_apply_of_injective Sum.inr_injective v j]
       simpa using hp j
 
 def xsModeTupleEquiv (jetOrder a b c d : ℕ) :
@@ -1039,6 +1056,7 @@ theorem shiftedExponent_xsModeTupleEquiv_symm_activeX
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, xsModeTupleEquiv, newXSLabelX,
     boundarySpeciesShift]
+  rfl
 
 @[simp]
 theorem shiftedExponent_xsModeTupleEquiv_symm_activeS
@@ -1049,7 +1067,8 @@ theorem shiftedExponent_xsModeTupleEquiv_symm_activeS
         (newXSLabelS a b c d) = (rs.2 : ℕ) + 1 := by
   simp [shiftedMultispeciesLabelledExponent, speciesShiftExponent,
     multispeciesLabelledExponent, xsModeTupleEquiv, newXSLabelS,
-    boundarySpeciesShift, add_comm]
+    boundarySpeciesShift]
+  exact (add_comm _ _).trans rfl
 
 @[simp]
 theorem shiftedExponent_xsModeTupleEquiv_symm_passive
@@ -1111,11 +1130,10 @@ theorem coeff_xsDiagonalSubstitution_eq_fiberSum
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b c (d + 1)))
     (v : SpeciesLabel (boundaryMultiplicity a b c d) →₀ ℕ) :
-    MvPolynomial.coeff
+    (xsDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
         (Finsupp.single (Sum.inl () : BoundaryDiagonalLabel a b c d) q +
-          Finsupp.mapDomain Sum.inr v)
-        (xsDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+          Finsupp.mapDomain Sum.inr v) =
       ∑ r : MultispeciesModeTuple jetOrder
           (boundaryMultiplicity (a + 1) b c (d + 1)),
         if
@@ -1139,9 +1157,9 @@ theorem coeff_xsDiagonalSubstitution_tupleExponent
     (t₀ : MultispeciesModeTuple jetOrder (boundaryMultiplicity a b c d))
     (F : MultispeciesJetParticleSpace K jetOrder
       (boundaryMultiplicity (a + 1) b c (d + 1))) :
-    MvPolynomial.coeff (boundaryDiagonalTupleExponent q t₀)
-        (xsDiagonalSubstitution (K := K) a b c d
-          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) =
+    (xsDiagonalSubstitution (K := K) a b c d
+          (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff
+        (boundaryDiagonalTupleExponent q t₀) =
       shiftedASDiagonalCoefficient q (unorderedModeBlock (t₀ .X))
         (unorderedModeBlock (t₀ .S))
         (fun z => F (boundaryModeConfiguration z.1
@@ -1229,9 +1247,8 @@ theorem boundaryXSOrthogonal_xsDiagonalSubstitution_eq_zero
         (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F) = 0 := by
   apply MvPolynomial.ext
   intro target
-  by_cases hcoeff : MvPolynomial.coeff target
-      (xsDiagonalSubstitution (K := K) a b c d
-        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)) ≠ 0
+  by_cases hcoeff : (xsDiagonalSubstitution (K := K) a b c d
+        (shiftedMultispeciesParticlePolynomial boundarySpeciesShift F)).coeff target ≠ 0
   · classical
     simp only [xsDiagonalSubstitution, shiftedMultispeciesParticlePolynomial, map_sum,
       MvPolynomial.coeff_sum, MvPolynomial.rename_monomial,
@@ -1338,8 +1355,42 @@ theorem boundaryXSOrthogonal_all_literal_collisions
     hmoveX
   apply (collisionFactor_dvd_iff _ _ his p).1
   apply reverse_collisionFactor_dvd
-  simpa [speciesLabelEquiv_boundarySpeciesTransposition,
-    newXSLabelX, newXSLabelS, boundarySpeciesLabel] using hmoveS
+  have hTX := speciesLabelEquiv_boundarySpeciesTransposition
+    (boundaryMultiplicity (a + 1) b c (d + 1)) .X (0 : Fin (a + 1)) i
+  have hTS := speciesLabelEquiv_boundarySpeciesTransposition
+    (boundaryMultiplicity (a + 1) b c (d + 1)) .S (0 : Fin (d + 1)) s
+  have e1 : (Equiv.swap (⟨.X, (0 : Fin (a + 1))⟩ : XSLabel a b c d) ⟨.X, i⟩)
+      (newXSLabelX a b c d) = ⟨.X, i⟩ :=
+    Equiv.swap_apply_left _ _
+  have e2 : (Equiv.swap (⟨.S, (0 : Fin (d + 1))⟩ : XSLabel a b c d) ⟨.S, s⟩)
+      ⟨.X, i⟩ = ⟨.X, i⟩ :=
+    Equiv.swap_apply_of_ne_of_ne
+      (sigmaLabel_ne_of_fst_ne (m := boundaryMultiplicity (a + 1) b c (d + 1))
+        (A := .X) (B := .S) (by simp) _ _)
+      (sigmaLabel_ne_of_fst_ne (m := boundaryMultiplicity (a + 1) b c (d + 1))
+        (A := .X) (B := .S) (by simp) _ _)
+  have e3 : (Equiv.swap (⟨.X, (0 : Fin (a + 1))⟩ : XSLabel a b c d) ⟨.X, i⟩)
+      (newXSLabelS a b c d) = newXSLabelS a b c d :=
+    Equiv.swap_apply_of_ne_of_ne
+      (sigmaLabel_ne_of_fst_ne (m := boundaryMultiplicity (a + 1) b c (d + 1))
+        (A := .S) (B := .X) (by simp) _ _)
+      (sigmaLabel_ne_of_fst_ne (m := boundaryMultiplicity (a + 1) b c (d + 1))
+        (A := .S) (B := .X) (by simp) _ _)
+  have e4 : (Equiv.swap (⟨.S, (0 : Fin (d + 1))⟩ : XSLabel a b c d) ⟨.S, s⟩)
+      (newXSLabelS a b c d) = ⟨.S, s⟩ :=
+    Equiv.swap_apply_left _ _
+  have g1 := (congrArg (speciesLabelEquiv
+      (boundarySpeciesTransposition (boundaryMultiplicity (a + 1) b c (d + 1))
+        .S (0 : Fin (d + 1)) s))
+      ((DFunLike.congr_fun hTX (newXSLabelX a b c d)).trans e1)).trans
+    ((DFunLike.congr_fun hTS _).trans e2)
+  have g2 := (congrArg (speciesLabelEquiv
+      (boundarySpeciesTransposition (boundaryMultiplicity (a + 1) b c (d + 1))
+        .S (0 : Fin (d + 1)) s))
+      ((DFunLike.congr_fun hTX (newXSLabelS a b c d)).trans e3)).trans
+    ((DFunLike.congr_fun hTS _).trans e4)
+  rw [g1, g2] at hmoveS
+  exact hmoveS
 
 end XS
 
@@ -1769,15 +1820,15 @@ theorem p3CommonFactor_dvd_of_auxiliaryOrthogonal [CharZero K]
     p3CommonFactor (K := K) a b c d ∣
       shiftedMultispeciesParticlePolynomial boundarySpeciesShift F := by
   apply p3CommonFactor_dvd F
-  · simpa [boundarySLabel, boundarySpeciesLabel] using
+  · exact
       hasBoundaryS2Orthogonality_all_literal_collisions F hSS
   · intro i s his
     rcases i with ((i | i) | i)
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         hasBoundaryXSOrthogonality_all_literal_collisions F hXS i s his
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         hasBoundaryYSOrthogonality_all_literal_collisions F hYS i s his
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         hasBoundaryZSOrthogonality_all_literal_collisions F hZS i s his
 
 /-- In a sector with at least one particle of each current species and at least two `S`
@@ -1796,15 +1847,15 @@ theorem p3CommonFactor_dvd_of_auxiliaryOrthogonal_positive [CharZero K]
       shiftedMultispeciesParticlePolynomial boundarySpeciesShift F := by
   apply p3CommonFactor_dvd F
   · intro i j hji
-    simpa [boundarySLabel, boundarySpeciesLabel] using
+    exact
       boundaryS2Orthogonal_all_literal_collisions F hSS i j hji
   · intro i s his
     rcases i with ((i | i) | i)
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         boundaryXSOrthogonal_all_literal_collisions F hXS i s his
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         boundaryYSOrthogonal_all_literal_collisions F hYS i s his
-    · simpa [boundaryCurrentLabel, boundarySLabel, boundarySpeciesLabel] using
+    · exact
         boundaryZSOrthogonal_all_literal_collisions F hZS i s his
 
 end PositiveSectorAssembly

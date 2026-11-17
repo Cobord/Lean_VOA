@@ -65,7 +65,7 @@ theorem paperJetAlgEquiv_mode (n : ℕ) (f g : InfiniteJet.JetPoly ℂ (Fin 3)) 
       FiniteJet.dividedIterate (liAssociatedGradedTranslation (universal k hk)) n
         (affineCurrentLiClass k hk (symbolToCurrentColor i)) := by
   have h := DFunLike.congr_fun (paperJetAlgEquiv_eq_eval k hk) (MvPolynomial.X (i,n))
-  simpa [InfiniteJet.derivationJetEval] using h
+  simpa [InfiniteJet.derivationJetEval] using! h
 
 /-- Positive modes of the original polynomial generators vanish. -/
 theorem universalJetPVA_base_succ (i j : Fin 3) (n : ℕ) :
@@ -82,7 +82,7 @@ theorem universal_current_poissonBracket (a b : Fin 3) :
       ∑ c : Fin 3, fabc a b c • currentState k c := by
   change (affineSl2VOA_closed k hk).smul (currentState k a) 0 (currentState k b) = _
   rw [smul_currentState_eq_J]
-  simpa only [currentState_def] using Vir.J0_current k b a
+  simpa only [currentState_def] using! Vir.J0_current k b a
 
 /-- Exact sl2 brackets between the original current classes in the universal Li algebra. -/
 theorem affineCurrentLiClass_mode_zero (a b : Fin 3) :
@@ -102,7 +102,7 @@ theorem affineCurrentLiClass_mode_zero (a b : Fin 3) :
   simp only [← map_smul,← map_sum]
   apply congrArg (liHomogeneousClassLinear (universal k hk) 0 1)
   apply Subtype.ext
-  simpa only [Submodule.coe_sum,Submodule.coe_smul,x] using
+  simpa only [Submodule.coe_sum,Submodule.coe_smul,x] using!
     universal_current_poissonBracket k hk a b
 
 /-- The PVA on free jets has precisely the geometric sl2 Lie--Poisson bracket on its base. -/

@@ -36,10 +36,10 @@ theorem a3OrderedPrefix_eq_higher (a b c : ℕ)
       · exact hlt
       · have hmeq : m = ⟨i, hi⟩ := Fin.ext heq
         exact False.elim ((a3KeyLess_irrefl b c j)
-          (by simpa [← hm, hmeq] using hj))
+          (by simpa [← hm, hmeq] using! hj))
       · have hless := a3KeyEnum_descending a b c ⟨i, hi⟩ m hgt
         exact False.elim ((a3KeyLess_irrefl b c j)
-          (a3KeyLess_trans b c (by simpa [hm] using hless) hj))
+          (a3KeyLess_trans b c (by simpa [hm] using! hless) hj))
     rw [← hm]
     exact le_iSup_of_le m (le_iSup_of_le hmi le_rfl)
 

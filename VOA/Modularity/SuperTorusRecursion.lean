@@ -62,7 +62,7 @@ theorem IsParityHomogeneousMap.comp {X Y Z : Type*}
     IsParityHomogeneousMap P R (p + q) (f.comp g) := by
   intro r x hx
   change f (g x) ∈ R.parity ((p + q) + r)
-  simpa only [add_assoc] using hf (q + r) (hg r hx)
+  simpa only [add_assoc] using! hf (q + r) (hg r hx)
 
 /-- Moving a homogeneous map past the parity involution, from source to target. -/
 theorem parityInvol_comp_of_isParityHomogeneousMap
@@ -137,15 +137,15 @@ theorem supertrace_comp_comm_shift
     supertrace P (A.comp B) = koszul p q * supertrace Q (B.comp A) := by
   rcases zmod2_cases p with hp | hp <;> rcases zmod2_cases q with hq | hq <;>
     subst hp <;> subst hq
-  · simpa using supertrace_comp_comm_shift_right_degree P Q A hB
+  · simpa using! supertrace_comp_comm_shift_right_degree P Q A hB
   · have hAB : IsParityHomogeneousEnd P 1 (A.comp B) := by
-      simpa using hA.comp hB
+      simpa using! hA.comp hB
     have hBA : IsParityHomogeneousEnd Q 1 (B.comp A) := by
-      simpa using hB.comp hA
+      simpa using! hB.comp hA
     rw [supertrace_eq_zero_of_odd P hAB, supertrace_eq_zero_of_odd Q hBA]
     simp
-  · simpa using supertrace_comp_comm_shift_right_degree P Q A hB
-  · simpa using supertrace_comp_comm_shift_right_degree P Q A hB
+  · simpa using! supertrace_comp_comm_shift_right_degree P Q A hB
+  · simpa using! supertrace_comp_comm_shift_right_degree P Q A hB
 
 namespace SuperWeakModule
 
@@ -244,7 +244,7 @@ theorem superWeightShift_mode (N : SuperOrdVModule W M) {k : ℤ} {a : VType}
   intro α x hx
   have h := N.act_weight ha hx i
   simpa only [SuperOrdVModule.act_def,
-    show α + (k : ℂ) - (i : ℂ) - 1 = α + ((k : ℂ) - i - 1) by ring] using h
+    show α + (k : ℂ) - (i : ℂ) - 1 = α + ((k : ℂ) - i - 1) by ring] using! h
 
 /-- The ordinary mode of a parity-homogeneous state has that parity degree. -/
 theorem superParityDegree_mode (N : SuperOrdVModule W M) {p : ZMod 2} {a : VType}
@@ -474,7 +474,7 @@ theorem superOMod_mem_weight (N : SuperOrdVModule W M)
   rw [N.superOMod_of_mem_gradingZ hW ha]
   have hw := N.act_weight (mem_zeroModeWeight_of_mem_gradingZ ha) hx (k - 1)
   simpa only [SuperOrdVModule.act_def, Int.cast_sub, Int.cast_one,
-    show α + (((k : ℂ) - 1) + 1) - ((k : ℂ) - 1) - 1 = α by ring] using hw
+    show α + (((k : ℂ) - 1) + 1) - ((k : ℂ) - 1) - 1 = α by ring] using! hw
 
 /-- The diagonal block of a product splits when the right factor preserves the weight space. -/
 theorem superOModWeightBlock_mul (N : SuperOrdVModule W M)

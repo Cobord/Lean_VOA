@@ -357,7 +357,7 @@ set_option linter.deprecated false in
 /-- Polynomials in the commuting creation operators. -/
 noncomputable def ev (p : MvPolynomial ι ℂ) : Module.End ℂ (𝒱 ⧸ currentC2 W D.g) :=
   letI : CommRing (Algebra.adjoin ℂ (Set.range D.Tq)) :=
-    Algebra.adjoinCommRingOfComm ℂ D.Tq_hcomm
+    Algebra.adjoinCommRingOfComm ℂ fun a ha b hb _ => D.Tq_hcomm a ha b hb
   ((MvPolynomial.aeval (R := ℂ) (S₁ := Algebra.adjoin ℂ (Set.range D.Tq))
     fun i => ⟨D.Tq i, Algebra.subset_adjoin ⟨i, rfl⟩⟩) p : Module.End ℂ (𝒱 ⧸ currentC2 W D.g))
 
@@ -376,7 +376,7 @@ theorem ev_C (c : ℂ) : D.ev (MvPolynomial.C c) = c • 1 := by
   simp only [ev, MvPolynomial.aeval_C]; rfl
 
 theorem ev_zero : D.ev 0 = 0 := by
-  simpa using D.ev_smul 0 0
+  simpa using! D.ev_smul 0 0
 
 theorem ev_mul_comm (p q : MvPolynomial ι ℂ) : D.ev p * D.ev q = D.ev q * D.ev p := by
   rw [← ev_mul, ← ev_mul, mul_comm]
@@ -385,7 +385,7 @@ theorem ev_sum {κ : Type*} (s : Finset κ) (f : κ → MvPolynomial ι ℂ) :
     D.ev (∑ k ∈ s, f k) = ∑ k ∈ s, D.ev (f k) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using D.ev_zero
+  | empty => simpa using! D.ev_zero
   | insert k s hk ih => rw [Finset.sum_insert hk, Finset.sum_insert hk, ev_add, ih]
 
 end SqCurrentData

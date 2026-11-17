@@ -54,8 +54,8 @@ noncomputable def WeakModule.transport (A : WeakModule W F) (e : E ≃ₗ[ℂ] F
   vacuum_YM := by
     funext k
     refine LinearMap.ext fun x => ?_
-    simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.coe_comp, Function.comp_apply,
-      A.vacuum_YM]
+    change e.symm ((A.YM W.vacuum) k (e x)) = ((1 : FormalDist (Module.End ℂ E)) k) x
+    rw [A.vacuum_YM]
     change e.symm (((1 : FormalDist (Module.End ℂ F)) k) (e x))
       = ((1 : FormalDist (Module.End ℂ E)) k) x
     have h1 : ∀ (X : Type u) [AddCommGroup X] [Module ℂ X],
@@ -70,11 +70,12 @@ noncomputable def WeakModule.transport (A : WeakModule W F) (e : E ≃ₗ[ℂ] F
     change e.symm (mode (A.YM a) n (e x)) = 0
     rw [hN n hn, map_zero]
   jacobi a b x l m n := by
-    have hmode : ∀ (c : V) (p : ℤ) (y : E),
-        mode ((fun k : ℤ => (e.symm.toLinearMap ∘ₗ A.YM c k ∘ₗ e.toLinearMap :
-          Module.End ℂ E)) : FormalDist (Module.End ℂ E)) p y = e.symm (mode (A.YM c) p (e y)) :=
-      fun c p y => rfl
-    simp only [LinearMap.coe_mk, AddHom.coe_mk, hmode, LinearEquiv.apply_symm_apply]
+    change (∑ᶠ i : ℤ, (negOnePow i * cbz l i) •
+        (e.symm (mode (A.YM a) (l + m - i) (e (e.symm (mode (A.YM b) (n + i) (e x)))))
+          - negOnePow l • e.symm (mode (A.YM b) (l + n - i)
+            (e (e.symm (mode (A.YM a) (m + i) (e x)))))))
+      = ∑ᶠ i : ℤ, cbz m i • e.symm (mode (A.YM (W.smul a (l + i) b)) (m + n - i) (e x))
+    simp only [LinearEquiv.apply_symm_apply]
     have hL := A.jacobi a b (e x) l m n
     have hfinL : (Function.support fun i : ℤ => (negOnePow i * cbz l i) •
         (mode (A.YM a) (l + m - i) (mode (A.YM b) (n + i) (e x))
@@ -148,7 +149,7 @@ theorem bres_tBase_poly (c : ℂ) (a : V) (p : ℂ[X]) :
     rw [← Polynomial.C_mul_X_pow_eq_monomial, map_mul, Polynomial.toLaurent_C, toLaurent_X_pow',
       OppBase.bres_CT, Polynomial.mul_comp, Polynomial.C_comp, Polynomial.X_pow_comp, add_pow,
       Finset.mul_sum, map_sum, OppBase.bres_sum, LinearMap.smul_apply, tB_nat,
-      LinearMap.coeFn_sum, Finset.sum_apply, Finset.smul_sum]
+      LinearMap.coe_sum, Finset.sum_apply, Finset.smul_sum]
     have hterm : ∀ x ∈ Finset.range (j + 1),
         Bs.bres a (Polynomial.toLaurent (Polynomial.C d * (Polynomial.X ^ x *
           Polynomial.C c ^ (j - x) * ((j.choose x : ℕ) : ℂ[X])))) y

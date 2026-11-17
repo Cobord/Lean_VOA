@@ -26,7 +26,7 @@ theorem a2_other_cartan_weight_word (p : ℕ)
     ρ.op 6 0 (radicalWord (a2RadicalOp ρ) l • w) =
       otherWeight p l • (radicalWord (a2RadicalOp ρ) l • w) := by
   induction l with
-  | nil => simpa [radicalWord, otherWeight] using h
+  | nil => simpa [radicalWord, otherWeight] using! h
   | cons x l ih =>
       rcases x with ⟨i, s⟩
       have hc := other_cartan_radical_comm ρ i 0 s
@@ -51,7 +51,7 @@ theorem a2_other_cartan_weight_key (p : ℕ) (k : A2RadicalKey)
   induction hv using Submodule.span_induction with
   | mem z hz =>
       obtain ⟨l, hd₁, hd₂, _, _, rfl⟩ := hz
-      simpa only [otherWeight, hd₁, hd₂] using
+      simpa only [otherWeight, hd₁, hd₂] using!
         a2_other_cartan_weight_word ρ w p h l
   | zero => simp
   | add x y _ _ hx hy => simp [map_add, hx, hy, smul_add]

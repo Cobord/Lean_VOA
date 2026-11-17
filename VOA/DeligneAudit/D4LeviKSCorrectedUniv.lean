@@ -64,7 +64,7 @@ theorem d4_demazureUnivRank_of_corrected_key_box_bounds
     FiniteDimensional.of_surjective
       (⊤ : Submodule ℂ (UModG D4sector.f R)).subtype
       (fun x => ⟨⟨x, Submodule.mem_top⟩, rfl⟩)
-  exact ⟨inferInstance, by simpa only [finrank_top] using h.2⟩
+  exact ⟨inferInstance, by simpa only [finrank_top] using! h.2⟩
 
 end VOA.DeligneAudit.D4Levi
 

@@ -297,7 +297,7 @@ theorem cyclicEvaluation (Φ : FockCoordinates σ hz hpos Bdeg r) {V : Type*} [A
   have hcharge : ∀ v, σ hz (contract D.w (ι v)) = (2 * (r : ℂ)) • contract D.w (ι v) := by
     intro v
     have := charge_contract_π D (hinv v) 1
-    simpa only [map_one, LinearMap.comp_id] using this
+    simpa only [map_one, LinearMap.comp_id] using! this
   refine ⟨?_, ?_, ?_⟩
   · rw [← LinearMap.ker_eq_bot, eq_bot_iff]
     intro v hv

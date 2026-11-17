@@ -47,12 +47,12 @@ theorem canonical_mode_remainder (r : ℕ) (hr : 18 ≤ r) (hmax : r < 50) :
 theorem canonical_weight74_remainder :
     modeSymbol Wi Xico (-3) 37 19 (vacuumCoefficient 37) (sixthCoefficient 37) ∈
       virError Wi Wi.vacuum ⊔ virError Wi Xico := by
-  simpa using canonical_mode_remainder 37 (by omega) (by omega)
+  simpa using! canonical_mode_remainder 37 (by omega) (by omega)
 
 theorem canonical_weight76_remainder :
     modeSymbol Wi Xico (-5) 38 20 (vacuumCoefficient 38) (sixthCoefficient 38) ∈
       virError Wi Wi.vacuum ⊔ virError Wi Xico := by
-  simpa using canonical_mode_remainder 38 (by omega) (by omega)
+  simpa using! canonical_mode_remainder 38 (by omega) (by omega)
 
 /-- The sole numerical gate, stated in terms of actual, fixed scalar functionals. -/
 def ActualCoefficientCompatibility : Prop :=

@@ -185,7 +185,7 @@ theorem pairSplitting_charged_gap_two (r r' : Fin (m - 1))
     change chiT m hm hm2 (.inl r) (VOA.mk (V2mPlus m hm) (EP m hm)) = _ at hv
     rw [hv] at h1
     simp [values] at h1
-    simpa using h1
+    simpa using! h1
   -- degree one: the line
   have hD1 : Deg1Line A x := by
     intro j c hc

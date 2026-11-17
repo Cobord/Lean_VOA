@@ -38,14 +38,14 @@ theorem oH4_top_gen (hxΩ : x ∈ Omega A) (hxL : L0 A x = hC m r • x) :
     mode (A.YM (HP m hm 2)) 3 x = 0 := by
   have h := zero_mode_top_gen m hm hm2 r huq A hxΩ hxL (HP_mem_grading m hm 2 (by norm_num) (by norm_num))
   rw [chiT_HP_zero m hm hm2 r 2 (Or.inl rfl), zero_smul] at h
-  simpa using h
+  simpa using! h
 
 include hm2 huq in
 theorem oH6_top_gen (hxΩ : x ∈ Omega A) (hxL : L0 A x = hC m r • x) :
     mode (A.YM (HP m hm 3)) 5 x = 0 := by
   have h := zero_mode_top_gen m hm hm2 r huq A hxΩ hxL (HP_mem_grading m hm 3 (by norm_num) (by norm_num))
   rw [chiT_HP_zero m hm hm2 r 3 (Or.inr rfl), zero_smul] at h
-  simpa using h
+  simpa using! h
 
 include hm2 huq in
 theorem oE_top_gen (hxΩ : x ∈ Omega A) (hxL : L0 A x = hC m r • x) :
@@ -55,7 +55,7 @@ theorem oE_top_gen (hxΩ : x ∈ Omega A) (hxL : L0 A x = hC m r • x) :
   change chiT m hm hm2 (.inl r) (VOA.mk (V2mPlus m hm) (EP m hm)) = _ at hv
   rw [hv] at h
   simp [values] at h
-  simpa using h
+  simpa using! h
 
 include hm2 huq in
 theorem comm_H4_p2_gen (hxΩ : x ∈ Omega A) (hxL : L0 A x = hC m r • x) :
@@ -487,7 +487,7 @@ theorem pairSplitting_charged_gap_one (r r' : Fin (m - 1))
       linarith
     exact kernel_generalized_below_bottom_eq_zero A P _ hb hvP hv (by rw [hre]; linarith)
   obtain ⟨x, hxL, hxP⟩ := PlusRat2Dual.exists_eigen_lift (V2mPlus_c2Cofinite m hm) A P hP
-    (show hC m r' ≠ hC m r by rw [hgapC]; intro h; simpa using congrArg (· - hC m r) h) hb ht
+    (show hC m r' ≠ hC m r by rw [hgapC]; intro h; simpa using! congrArg (· - hC m r) h) hb ht
   have hx0 : x ≠ 0 := fun h => hxP (h ▸ P.zero_mem)
   have hxg : x ∈ (L0 A).maxGenEigenspace (hC m r) :=
     Module.End.eigenspace_le_maxGenEigenspace (Module.End.mem_eigenspace_iff.mpr hxL)

@@ -384,7 +384,7 @@ theorem Hbr_support_finite (k : ℂ) (c : Fin 8) (μ : ℤ) (x : Vacuum k) :
   have hval : Hbr k c μ p x = Lsum k p (J k c μ x) - J k c μ (Lsum k p x) := by
     have := Lsum_comm_eq_Hbr k c μ p
     have happ := congrArg (fun (T : End ℂ (Vacuum k)) => T x) this
-    simpa only [LinearMap.sub_apply, Module.End.mul_apply] using happ.symm
+    simpa only [LinearMap.sub_apply, Module.End.mul_apply] using! happ.symm
   rw [hval, h1, h2, map_zero, sub_zero]
 
 /-- **The full commutator as a single finsum of `Hbr`.**
@@ -402,7 +402,7 @@ theorem Lcomm_eq_finsum_Hbr (k : ℂ) (c : Fin 8) (μ : ℤ) (x : Vacuum k) :
   refine finsum_congr fun p => ?_
   have := Lsum_comm_eq_Hbr k c μ p
   have happ := congrArg (fun (T : End ℂ (Vacuum k)) => T x) this
-  simpa only [LinearMap.sub_apply, Module.End.mul_apply] using happ
+  simpa only [LinearMap.sub_apply, Module.End.mul_apply] using! happ
 
 /-! ## The finite collapse of `∑ᶠ_p Hbr` and the main theorem -/
 
@@ -490,12 +490,12 @@ theorem inner_body_eq_S (k : ℂ) (c aa bb : Fin 8) (μ p : ℤ) (x : Vacuum k) 
     have happ := congrArg (fun (R : End ℂ (Vacuum k)) => R x)
       (show (J k aa (-p-1) * J k bb p) * J k c μ - J k c μ * (J k aa (-p-1) * J k bb p)
         = -(J k c μ * (J k aa (-p-1) * J k bb p) - (J k aa (-p-1) * J k bb p) * J k c μ) from by abel)
-    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using happ
+    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using! happ
   · rw [if_neg hp, if_neg hp]
     have happ := congrArg (fun (R : End ℂ (Vacuum k)) => R x)
       (show (J k bb p * J k aa (-p-1)) * J k c μ - J k c μ * (J k bb p * J k aa (-p-1))
         = -(J k c μ * (J k bb p * J k aa (-p-1)) - (J k bb p * J k aa (-p-1)) * J k c μ) from by abel)
-    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using happ
+    simpa only [LinearMap.sub_apply, LinearMap.neg_apply, Module.End.mul_apply] using! happ
 
 /-- The structure-constant operator-part of `[J^c_μ, sugTermJ aa bb p]`. -/
 noncomputable def structOp (k : ℂ) (c aa bb : Fin 8) (μ p : ℤ) : End ℂ (Vacuum k) :=

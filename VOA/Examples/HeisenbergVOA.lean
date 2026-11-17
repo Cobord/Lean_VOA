@@ -294,8 +294,7 @@ i.e. `Y k v` is `L₋₁`-covariant.  By `ℂ`-linearity of `Y k` from the monom
 theorem Y_DCovariant (k : ℂ) (hk : k ≠ 0) (v : Fock) :
     DCovariant (Lvir k (-1)) (Y k v) := by
   classical
-  rw [show Y k v = Finsupp.linearCombination ℂ (Ymon k) v from rfl,
-    Finsupp.linearCombination_apply, Finsupp.sum]
+  rw [Y_eq_support_sum]
   exact DCovariant.finsetSum _ _ (fun a _ => (Ymon_DCovariant k hk a).smul _)
 
 /-! ## §3b  The bare `PreVertexAlgebra Fock` (VA1–VA5), for invoking Goddard uniqueness -/

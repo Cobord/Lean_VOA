@@ -23,7 +23,7 @@ theorem hypOneFamily_mem_iff (a : Fin 2) (p : hypFock) :
   mem_supported
 
 theorem hypOneFamily_coeff (a : Fin 2) (p : hypFock) (hp : p ∈ hypOneFamily a)
-    (d : (ℕ × Fin 2) →₀ ℕ) (hd : coeff d p ≠ 0) (v : ℕ × Fin 2)
+    (d : (ℕ × Fin 2) →₀ ℕ) (hd : p.coeff d ≠ 0) (v : ℕ × Fin 2)
     (hv : v.2 ≠ a) : d v = 0 := by
   by_contra h
   exact hv ((hypOneFamily_mem_iff a p).mp hp v
@@ -46,7 +46,7 @@ theorem hypOneFamily_iff_pderiv (a : Fin 2) (p : hypFock) :
     subst b
     obtain ⟨d, hd, hv⟩ := (mem_vars_iff_mem_support (j, a.rev)).mp hv
     have hc := coeff_X_mul_pderiv_self (j, a.rev) d p
-    rw [hp j, mul_zero, coeff_zero] at hc
+    rw [hp j, mul_zero, show (0 : hypFock).coeff d = 0 by simp] at hc
     have hz : (d (j, a.rev) : ℂ) = 0 :=
       (mul_eq_zero.mp hc.symm).resolve_right (mem_support_iff.mp hd)
     exact Finsupp.mem_support_iff.mp hv (by exact_mod_cast hz)
@@ -84,7 +84,7 @@ theorem hypOneFamily_constant_mem (a : Fin 2) (c : ℂ) :
 /-- The form restricted to one isotropic family is the product of evaluations. -/
 theorem hypOneFamily_form (a : Fin 2) (p q : hypFock)
     (hp : p ∈ hypOneFamily a) (hq : q ∈ hypOneFamily a) :
-    hypForm p q = coeff 0 p * coeff 0 q := by
+    hypForm p q = p.coeff 0 * q.coeff 0 := by
   rw [hypOneFamily_eq_range, LinearMap.mem_range] at hp
   obtain ⟨f, rfl⟩ := hp
   induction f using MvPolynomial.induction_on with
@@ -93,12 +93,12 @@ theorem hypOneFamily_form (a : Fin 2) (p q : hypFock)
     rw [show (MvPolynomial.C c : hypFock) = monomial 0 c from rfl, hypForm_monomial]
     simp
   | add f g hf hg =>
-    simpa only [map_add, LinearMap.add_apply, coeff_add, add_mul] using congrArg₂ (· + ·) hf hg
+    simpa only [map_add, LinearMap.add_apply, MvPolynomial.coeff_add, add_mul] using congrArg₂ (· + ·) hf hg
   | mul_X f j hf =>
     simp only [AlgHom.toLinearMap_apply, map_mul, rename_X]
     rw [mul_comm _ (X (j, a)), hypForm_creation_adjoint,
       (hypOneFamily_iff_pderiv a q).mp hq j]
-    change _ = constantCoeff (X (j, a) * rename (fun j : ℕ => (j, a)) f) * coeff 0 q
+    change _ = constantCoeff (X (j, a) * rename (fun j : ℕ => (j, a)) f) * q.coeff 0
     simp
 
 /-- Evaluation on the one-family subspace. -/
@@ -115,7 +115,7 @@ theorem hypOneFamilyEval_surjective (a : Fin 2) :
 
 theorem hypOneFamily_radical_iff (a : Fin 2) (p : hypOneFamily a) :
     (∀ q : hypOneFamily a, hypForm p q = 0) ↔ p ∈ hypOneFamilyAugmentation a := by
-  change _ ↔ coeff 0 p.val = 0
+  change _ ↔ (p.val).coeff 0 = 0
   constructor
   · intro h
     have he := h ⟨MvPolynomial.C 1, hypOneFamily_constant_mem a 1⟩
@@ -130,15 +130,15 @@ def hypOneFamilyQuotientEquiv (a : Fin 2) :
   LinearMap.quotKerEquivOfSurjective (hypOneFamilyEval a) (hypOneFamilyEval_surjective a)
 
 theorem hypOneFamilyQuotientEquiv_mk (a : Fin 2) (p : hypOneFamily a) :
-    hypOneFamilyQuotientEquiv a (Submodule.Quotient.mk p) = coeff 0 p.val := rfl
+    hypOneFamilyQuotientEquiv a (Submodule.Quotient.mk p) = (p.val).coeff 0 := rfl
 
 theorem hypOneFamily_decomposition (a : Fin 2) (p : hypOneFamily a) :
     ∃ q : hypOneFamilyAugmentation a,
-      p.val = MvPolynomial.C (coeff 0 p.val) + q.val.val := by
-  let q : hypOneFamily a := p - ⟨MvPolynomial.C (coeff 0 p.val),
+      p.val = MvPolynomial.C ((p.val).coeff 0) + q.val.val := by
+  let q : hypOneFamily a := p - ⟨MvPolynomial.C ((p.val).coeff 0),
     hypOneFamily_constant_mem a _⟩
   have hq : q ∈ hypOneFamilyAugmentation a := by
-    change coeff 0 (p.val - MvPolynomial.C (coeff 0 p.val)) = 0
+    change (p.val - MvPolynomial.C ((p.val).coeff 0)).coeff 0 = 0
     simp
   exact ⟨⟨q, hq⟩, by change p.val = _ + (p.val - _); ring⟩
 

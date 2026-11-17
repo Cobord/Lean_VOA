@@ -247,7 +247,7 @@ theorem left_mul_mem {p q : ℕ} {a b : V} (ha : a ∈ W.grading (p : ℤ))
     rw [if_pos (by simp), e1, add_sub_cancel_left]; exact hG
   · rw [if_neg (by omega), sub_zero]
     refine Submodule.add_mem _ (res_mem_of_good A ha _ ?_) hG
-    simpa using left_tail_mem A (p := p) t ht 1
+    simpa using! left_tail_mem A (p := p) t ht 1
 
 theorem cbz_int_one (n : ℤ) : cbz n 1 = (n : ℂ) := by
   rw [cbz_apply_nonneg _ (by norm_num)]; simp [gBinom]
@@ -353,7 +353,7 @@ theorem right_tail_mem {Q : ℕ} {b : V} (hb : b ∈ W.grading ((Q + 1 : ℕ) : 
         = (1 + z) ^ (Q + 1) * T (-2 - ((0 : ℕ) : ℤ)) - (1 + z) ^ Q * T (-1) := by
       rw [pow_succ, Nat.cast_zero, sub_zero, ← z_mul_T_neg_two]; ring
     rw [he, map_sub]
-    simpa using h b hb y
+    simpa using! h b hb y
   | j + 1 => by
     have ih := right_tail_mem hb y j
     have h := gen_mem_good' A (k := ((Q + 1 : ℕ) : ℤ)) (e := Q + 1) (n := 0) (m := j + 1)
@@ -428,7 +428,7 @@ theorem right_mul_mem {P Q : ℕ} {a b : V} (ha : a ∈ W.grading ((P + 1 : ℕ)
   have part1 : (∑ t ∈ Finset.range (J + 1), F t) - F 0 ∈ fzO A := by
     rw [Finset.sum_range_succ', add_sub_cancel_right]
     refine Submodule.sum_mem _ fun t _ => res_mem_of_good A ha _ ?_
-    simpa using left_tail_mem A (p := P + 1) (t + 1) (by omega) 1
+    simpa using! left_tail_mem A (p := P + 1) (t + 1) (by omega) 1
   have part2 : (∑ t ∈ Finset.range (J + 1), G t)
       - ∑ t ∈ Finset.range (J + 1), ((-1 : ℂ) ^ (t + 1)) • Rb (y t) ∈ fzO A := by
     rw [← Finset.sum_sub_distrib]
@@ -551,7 +551,7 @@ theorem rawLeft_sub_rawRight_stable (a : V) : ∀ w ∈ fzO A.toWeakModule,
     · rw [eq_zero_of_neg_grading hk ha]; intro w _; simp
     obtain ⟨p, rfl⟩ := exists_nat_of_nonneg hk
     rcases Nat.eq_zero_or_pos p with rfl | hp
-    · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using ha)
+    · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using! ha)
       intro w _
       rw [LinearMap.sub_apply, rawLeft_smul_vacuum, rawRight_smul_vacuum, sub_self]
       exact Submodule.zero_mem _
@@ -570,7 +570,7 @@ theorem rawRight_stable (a : V) (w : M₀) (hw : w ∈ fzO A.toWeakModule) :
   have h1 := rawLeft_stable A a w hw
   have h2 := rawLeft_sub_rawRight_stable A a w hw
   rw [LinearMap.sub_apply] at h2
-  simpa using Submodule.sub_mem _ h1 h2
+  simpa using! Submodule.sub_mem _ h1 h2
 
 /-- Homogeneous expansion of the Zhu product inside `rawLeft`. -/
 theorem rawLeft_zhuMul_homogeneous {p q : ℕ} {a b : V} (ha : a ∈ W.grading (p : ℤ))
@@ -641,7 +641,7 @@ theorem rawCommute (a b : V) (w : M₀) :
       obtain ⟨p, rfl⟩ := exists_nat_of_nonneg hk
       obtain ⟨q, rfl⟩ := exists_nat_of_nonneg hl
       rcases Nat.eq_zero_or_pos q with rfl | hq
-      · obtain ⟨d, rfl⟩ := exists_smul_vacuum (by simpa using hb)
+      · obtain ⟨d, rfl⟩ := exists_smul_vacuum (by simpa using! hb)
         rw [rawRight_smul_vacuum, rawRight_smul_vacuum, map_smul, sub_self]
         exact Submodule.zero_mem _
       obtain ⟨Q, rfl⟩ : ∃ Q, q = Q + 1 := ⟨q - 1, by omega⟩
@@ -672,12 +672,12 @@ theorem rawRight_mul (a b : V) (w : M₀) :
       obtain ⟨p, rfl⟩ := exists_nat_of_nonneg hk
       obtain ⟨q, rfl⟩ := exists_nat_of_nonneg hl
       rcases Nat.eq_zero_or_pos p with rfl | hp
-      · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using ha)
+      · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using! ha)
         rw [zhuMul_smul_left, zhuMul_vacuum_left, rawRight_smul_vacuum, map_smul,
           LinearMap.smul_apply, map_smul, sub_self]
         exact Submodule.zero_mem _
       rcases Nat.eq_zero_or_pos q with rfl | hq
-      · obtain ⟨d, rfl⟩ := exists_smul_vacuum (by simpa using hb)
+      · obtain ⟨d, rfl⟩ := exists_smul_vacuum (by simpa using! hb)
         rw [zhuMul_smul_right, zhuMul_vacuum_right, rawRight_smul_vacuum, map_smul,
           LinearMap.smul_apply, sub_self]
         exact Submodule.zero_mem _
@@ -725,7 +725,7 @@ theorem rawRight_translation (u : V) (y : M₀) :
     · rw [eq_zero_of_neg_grading hk hu]; simp
     obtain ⟨p, rfl⟩ := exists_nat_of_nonneg hk
     rcases Nat.eq_zero_or_pos p with rfl | hp
-    · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using hu)
+    · obtain ⟨c, rfl⟩ := exists_smul_vacuum (by simpa using! hu)
       rw [map_smul, map_smul, VertexOperatorAlgebra.L_neg_one_vacuum,
         VertexOperatorAlgebra.L_zero_grading W W.vacuum W.vacuum_mem_grading_zero]
       simp
@@ -749,7 +749,7 @@ theorem rawLeft_O (a : V) (ha : a ∈ O W) (w : M₀) : rawLeft A a w ∈ fzO A.
     obtain ⟨u, v, rfl⟩ := hx
     have h1 := rawLeft_mul A (W.L (-1) u + W.L 0 u) v w
     have h2 := rawLeft_translation A u (rawLeft A v w)
-    simpa using Submodule.add_mem _ h1 h2
+    simpa using! Submodule.add_mem _ h1 h2
   | zero => simp
   | add x y _ _ hx hy =>
     rw [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ (hx w) (hy w)
@@ -762,7 +762,7 @@ theorem rawRight_O (a : V) (ha : a ∈ O W) (w : M₀) : rawRight A a w ∈ fzO 
     obtain ⟨u, v, rfl⟩ := hx
     have h1 := rawRight_mul A (W.L (-1) u + W.L 0 u) v w
     have h2 := rawRight_stable A v _ (rawRight_translation A u w)
-    simpa using Submodule.add_mem _ h1 h2
+    simpa using! Submodule.add_mem _ h1 h2
   | zero => simp
   | add x y _ _ hx hy =>
     rw [map_add, LinearMap.add_apply]; exact Submodule.add_mem _ (hx w) (hy w)

@@ -49,8 +49,8 @@ theorem coeff_mul (f g : BiSeries) (m n : ℕ) :
     PowerSeries.coeff j (PowerSeries.coeff (m - i) f) *
       PowerSeries.coeff (n - j) (PowerSeries.coeff (m - (m - i)) g)) (n + 1)]
   refine Finset.sum_congr rfl fun j hj => ?_
-  have hi' : i ≤ m := by simpa using hi
-  have hj' : j ≤ n := by simpa using hj
+  have hi' : i ≤ m := by simpa using! hi
+  have hj' : j ≤ n := by simpa using! hj
   simp only [Nat.add_sub_cancel, Nat.sub_sub_self hi', Nat.sub_sub_self hj', coeff]
 
 /-- A single nonnegative majorant constant can always be chosen. -/
@@ -58,7 +58,7 @@ theorem joint_bound {c : ℕ → ℕ → ℂ} (hc : JointSubexponential c)
     {r : ℝ} (hr : 1 < r) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ i j, ‖c i j‖ ≤ K * r ^ (i + j) := by
   obtain ⟨K, hK⟩ := hc r hr
-  exact ⟨K, (norm_nonneg (c 0 0)).trans (by simpa using hK 0 0), hK⟩
+  exact ⟨K, (norm_nonneg (c 0 0)).trans (by simpa using! hK 0 0), hK⟩
 
 theorem joint_add {f g : ℕ → ℕ → ℂ}
     (hf : JointSubexponential f) (hg : JointSubexponential g) :
@@ -67,14 +67,14 @@ theorem joint_add {f g : ℕ → ℕ → ℂ}
   obtain ⟨A, hA⟩ := hf r hr
   obtain ⟨B, hB⟩ := hg r hr
   exact ⟨A + B, fun i j => (norm_add_le _ _).trans
-    (by simpa [add_mul] using add_le_add (hA i j) (hB i j))⟩
+    (by simpa [add_mul] using! add_le_add (hA i j) (hB i j))⟩
 
 theorem joint_smul (z : ℂ) {f : ℕ → ℕ → ℂ}
     (hf : JointSubexponential f) : JointSubexponential (fun i j => z * f i j) := by
   intro r hr
   obtain ⟨A, hA⟩ := hf r hr
   refine ⟨‖z‖ * A, fun i j => ?_⟩
-  simpa [norm_mul, mul_assoc] using mul_le_mul_of_nonneg_left (hA i j) (norm_nonneg z)
+  simpa [norm_mul, mul_assoc] using! mul_le_mul_of_nonneg_left (hA i j) (norm_nonneg z)
 
 /-- Convolution preserves bounds at every rate greater than one. The polynomial
 number of terms is absorbed by using the input bounds at the square-root rate. -/
@@ -97,8 +97,8 @@ theorem joint_conv {f g : ℕ → ℕ → ℂ}
   have ht : ∀ i ∈ Finset.range (m + 1), ∀ j ∈ Finset.range (n + 1),
       ‖f (m - i) (n - j) * g i j‖ ≤ A * B * s ^ (m + n) := by
     intro i hi j hj
-    have hi' : i ≤ m := by simpa using hi
-    have hj' : j ≤ n := by simpa using hj
+    have hi' : i ≤ m := by simpa using! hi
+    have hj' : j ≤ n := by simpa using! hj
     calc
       _ ≤ (A * s ^ (m - i + (n - j))) * (B * s ^ (i + j)) := by
         rw [norm_mul]
@@ -119,7 +119,7 @@ theorem joint_conv {f g : ℕ → ℕ → ℂ}
       nlinarith [Nat.cast_nonneg (α := ℝ) m, Nat.cast_nonneg (α := ℝ) n]
     _ ≤ (C * s ^ (m + n)) * (A * B * s ^ (m + n)) := by
       apply mul_le_mul_of_nonneg_right _ (by positivity)
-      simpa only [Nat.cast_add, Nat.cast_one] using hC (m + n)
+      simpa only [Nat.cast_add, Nat.cast_one] using! hC (m + n)
     _ = (A * B * C) * r ^ (m + n) := by
       have he : s * s = r := Real.mul_self_sqrt (by linarith)
       rw [show (C * s ^ (m + n)) * (A * B * s ^ (m + n)) =
@@ -135,8 +135,8 @@ def bidiscAlgebra : Subalgebra ℂ BiSeries where
     have hb : ‖coeff (1 : BiSeries) i j‖ ≤ 1 := by
       by_cases hi : i = 0 <;> by_cases hj : j = 0
       all_goals simp [coeff, PowerSeries.coeff_one, hi, hj]
-    exact hb.trans (by simpa only [one_mul] using one_le_pow₀ hr.le (n := i + j))
-  add_mem' := by intro f g hf hg; simpa using joint_add hf hg
+    exact hb.trans (by simpa only [one_mul] using! one_le_pow₀ hr.le (n := i + j))
+  add_mem' := by intro f g hf hg; simpa using! joint_add hf hg
   mul_mem' := by
     intro f g hf hg
     change JointSubexponential (coeff (f * g))
@@ -177,7 +177,7 @@ theorem finite_family_bound {ι : Type*} (s : Finset ι) (g : ι → BiSeries)
   have hKG : K k hk ≤ G :=
     Finset.single_le_sum (fun a _ => hK0 a.val a.property) (Finset.mem_attach s ⟨k, hk⟩)
   exact (hK k hk i j).trans (by
-    simpa [pow_add, mul_assoc] using
+    simpa [pow_add, mul_assoc] using!
       mul_le_mul_of_nonneg_right hKG (pow_nonneg (show 0 ≤ r by linarith) (i + j)))
 
 end VOA.Huang.GenusTwoPoint.Separate

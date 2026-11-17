@@ -155,7 +155,7 @@ theorem allm_derivWord_graded (m : ℕ) (j : AllM.SeedIndex m) :
 theorem polyWord_graded (m : ℕ) (l : List (Vars m)) :
     (polyWord l).IsWeightedHomogeneous (cw m) ((l.map fun x => (x.2.val : ℤ)).sum) := by
   induction l with
-  | nil => simpa [polyWord] using MvPolynomial.isWeightedHomogeneous_one ℂ (cw m)
+  | nil => simpa [polyWord] using! MvPolynomial.isWeightedHomogeneous_one ℂ (cw m)
   | cons x l ih =>
       have h := (MvPolynomial.isWeightedHomogeneous_X ℂ (cw m) x).mul ih
       change (MvPolynomial.X x * polyWord l).IsWeightedHomogeneous _ _

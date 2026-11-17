@@ -3604,7 +3604,7 @@ creation words of weight $N$ and length $\le p$ (Chapter~\ref{ch:L19}, Definitio
 \begin{leancode}
 def jetSum : ℕ → ℕ → VirUniv c
   | 0, k => if k = 0 then vacVec c else 0
-  | m + 1, k => ∑ p ∈ Finset.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum m p.2)
+  | m + 1, k => ∑ p ∈ Finset.HasAntidiagonal.antidiagonal k, Lop c (-(p.1 : ℤ) - 2) (jetSum m p.2)
 
 def HasJetRelations (c : ℂ) (n : ℕ) : Prop :=
   ∃ α : ℂ, α ≠ 0 ∧ ∀ k : ℕ, ∃ σ ∈ maxIdealVir c,

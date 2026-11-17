@@ -48,7 +48,7 @@ theorem finiteWard_ground_injective (self : Bool) (R : ℕ)
     simp only [finiteFirstDefect,LinearMap.sub_apply,LinearMap.comp_apply,
       LinearMap.smul_apply,finiteBlockFock] at h
     simpa only [f,dif_pos hnR,dif_pos (by omega : n-1≤R),
-      show n-1+1=n by omega] using h
+      show n-1+1=n by omega] using! h
   have hsecond (n : ℕ) (hn : 2≤n) (hnR : n≤R) :
       sectorVirasoro (familyBackground 1) (symbolFamilyMomentum self 1) 2
         (symbolFamilyMap self 1 (f n))=
@@ -58,7 +58,7 @@ theorem finiteWard_ground_injective (self : Bool) (R : ℕ)
     simp only [finiteSecondDefect,LinearMap.sub_apply,LinearMap.comp_apply,
       LinearMap.smul_apply,finiteBlockFock] at h
     simpa only [f,dif_pos hnR,dif_pos (by omega : n-2≤R),
-      show n-2+2=n by omega] using h
+      show n-2+2=n by omega] using! h
   have hz : actualFiberMap self (f 0)=0 := by
     have hp : uniformProbe _ _ (f 0)=0 := by
       simp only [f,dif_pos (by omega : 0≤R)]
@@ -73,7 +73,7 @@ theorem finiteWard_ground_injective (self : Bool) (R : ℕ)
     change symbolFamilyMap self 1 (finiteBlockVerma self R a 1 n v)=0
     have h := (actualFiberMap_zero_iff_fock self n.val (f n.val) (hf n.val (by omega))).mp
       (hall n.val (by omega))
-    simpa only [f,dif_pos (by omega : n.val≤R)] using h
+    simpa only [f,dif_pos (by omega : n.val≤R)] using! h
   have hb (n : Fin (R+1)) : ∑ j : Fin (symbolBasisSize self n.val),
       v ⟨n,j⟩ • symbolColumns self n.val (a n) 1 j=0 := by
     funext d
@@ -83,15 +83,18 @@ theorem finiteWard_ground_injective (self : Bool) (R : ℕ)
     have hm := map_finiteBlockVerma self R a 1 n v (symbolFamilyMap self 1)
     have hz := hF n
     change symbolFamilyMap self 1 (finiteBlockVerma self R a 1 n v)=0 at hz
-    have hc := congrArg (coeff d.val) (hm.symm.trans hz)
+    have hc := congrArg (fun q : FockN 1 => q.coeff d.val) (hm.symm.trans hz)
     have hc' : (∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ •
-        coeff d.val (symbolFamilyMap self 1
-          (vermaLevelState (familyCharge 1) (symbolFamilyWeight self 1) n.val (a n j))))=0 := by
-      simpa only [coeff_sum,coeff_smul,coeff_zero] using hc
+        (symbolFamilyMap self 1
+          (vermaLevelState (familyCharge 1) (symbolFamilyWeight self 1) n.val (a n j))).coeff
+            d.val)=0 := by
+      simpa only [MvPolynomial.coeff_sum,MvPolynomial.coeff_smul,AddMonoidAlgebra.coeff_zero,
+        Finsupp.coe_zero,Pi.zero_apply] using! hc
     calc
       _ = ∑ j : Fin (symbolBasisSize self n.val), v ⟨n,j⟩ •
-          coeff d.val (symbolFamilyMap self 1
-            (vermaLevelState (familyCharge 1) (symbolFamilyWeight self 1) n.val (a n j))) := by
+          (symbolFamilyMap self 1
+            (vermaLevelState (familyCharge 1) (symbolFamilyWeight self 1) n.val (a n j))).coeff
+              d.val := by
         apply Finset.sum_congr rfl
         intro j hj
         exact congrArg (fun z : ℂ => v ⟨n,j⟩ • z)

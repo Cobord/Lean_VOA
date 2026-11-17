@@ -58,7 +58,7 @@ theorem huangU_Lm1 (P : LWModule W) (t : ℂ) (w : P.carrier) :
       map_smul, normalizedCoordinateChange_Lm1,
       huangU_eq_normalized, moduleWeightExp_zero]
   have ht (v : P.carrier) : huangU P t v = moduleWeightExp P.isMod t (huangU P 0 v) := by
-    simpa using huangU_add P t 0 v
+    simpa using! huangU_add P t 0 v
   rw [ht, hzero, map_smul]
   simp only [cylT, LinearMap.add_apply, map_add, moduleWeightExp_Lm1,
     moduleWeightExp_L0, ht, OrdVModule.Lm1]
@@ -84,15 +84,15 @@ theorem hasDerivAt_weightExp_scalar (P : LWModule W) (f : P.carrier →ₗ[ℂ] 
     HasDerivAt (fun s => f (moduleWeightExp P.isMod s w))
       (f (mode (P.isMod.YM W.conformalVector) 1 (moduleWeightExp P.isMod t w))) t := by
   refine FusionTop.induction_weight P.isMod w ?_ ?_ ?_
-  · simpa using (hasDerivAt_const t (0 : ℂ))
+  · simpa using! (hasDerivAt_const t (0 : ℂ))
   · intro x y hx hy
-    simpa only [map_add] using hx.add hy
+    simpa only [map_add] using! hx.add hy
   · intro α x hx
     simp only [moduleWeightExp_of_weight P.isMod _ hx, map_smul, smul_eq_mul,
       P.isMod.L0_weight α x hx]
     convert (((hasDerivAt_id t).mul_const α).cexp.mul_const (f x)) using 1
-    simp only [id_eq]
-    ring
+    all_goals try simp only [id_eq]
+    all_goals ring
 
 /-- The derivative of a scalar modified insertion, on the logarithmic cover. -/
 theorem hasDerivAt_huangU_scalar (P : LWModule W) (f : P.carrier →ₗ[ℂ] ℂ)
@@ -100,7 +100,7 @@ theorem hasDerivAt_huangU_scalar (P : LWModule W) (f : P.carrier →ₗ[ℂ] ℂ
     HasDerivAt (fun s => f (huangU P s w))
       (f (mode (P.isMod.YM W.conformalVector) 1 (huangU P t w))) t := by
   have ht (s : ℂ) : huangU P s w = moduleWeightExp P.isMod s (huangU P 0 w) := by
-    simpa using huangU_add P s 0 w
+    simpa using! huangU_add P s 0 w
   convert hasDerivAt_weightExp_scalar P f (huangU P 0 w) t using 1
   · funext s
     rw [← ht]
@@ -125,9 +125,12 @@ theorem hasDerivAt_huangModifiedModeTrace_left
   have he := (((hasDerivAt_id t₁).neg.mul_const (n₁ + 1)).sub_const
     (t₂ * (n₂ + 1))).cexp
   convert he.mul h using 1
-  simp only [huangModifiedModeTrace, modifiedProductModeTrace, f,
-    LinearMap.flip_apply, huangU, Pi.neg_apply, id_eq]
-  ring
+  · funext s
+    simp only [huangModifiedModeTrace, modifiedProductModeTrace, f,
+      LinearMap.flip_apply, huangU, Pi.mul_apply, Pi.neg_apply, id_eq]
+  · simp only [huangModifiedModeTrace, modifiedProductModeTrace, f,
+      LinearMap.flip_apply, huangU, Pi.neg_apply, id_eq]
+    ring
 
 /-- The right coordinate derivative, with the product orientation retained. -/
 theorem hasDerivAt_huangModifiedModeTrace_right
@@ -144,7 +147,10 @@ theorem hasDerivAt_huangModifiedModeTrace_right
   have he := (((hasDerivAt_id t₂).mul_const (n₂ + 1)).const_sub
     (-t₁ * (n₁ + 1))).cexp
   convert he.mul h using 1
-  simp only [huangModifiedModeTrace, modifiedProductModeTrace, f, huangU, id_eq]
-  ring
+  · funext s
+    simp only [huangModifiedModeTrace, modifiedProductModeTrace, f, huangU, Pi.mul_apply,
+      id_eq]
+  · simp only [huangModifiedModeTrace, modifiedProductModeTrace, f, huangU, id_eq]
+    ring
 
 end VOA.Huang.GenusTwoPoint.Separate

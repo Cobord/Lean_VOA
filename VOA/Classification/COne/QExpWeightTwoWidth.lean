@@ -18,7 +18,7 @@ namespace VOA.Classification.COne.SSHecke
 
 theorem nat_mem_strictPeriods_Gamma1 (N m : ℕ) :
     (m : ℝ) ∈ (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by
-  simpa using
+  simpa using!
     (CongruenceSubgroup.Gamma1 N : Subgroup (GL (Fin 2) ℝ)).strictPeriods.nsmul_mem
       (one_mem_strictPeriods_Gamma1 N) m
 

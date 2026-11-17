@@ -47,7 +47,7 @@ theorem a2_cov : ∀ c : Fin 8, (certKnown a2Kn a2Cert c && !wEqB (A2sector.wt c
 theorem a2_kn : ∀ c : Fin 8, a2Kn c = true → A2sector.raising c ∨ A2sector.lowering c := by
   change ∀ c : Fin 8, a2Kn c = true → (c.val < 3) ∨ (c = 3 ∨ c = 4)
   intro c h
-  simpa [a2Kn] using h
+  simpa [a2Kn] using! h
 
 /-- **The finiteness table facts for `A₂`.** -/
 theorem a2_finiteTable : FiniteTableG A2sector :=

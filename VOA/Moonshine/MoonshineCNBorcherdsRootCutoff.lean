@@ -8,6 +8,8 @@ noncomputable section
 attribute [local instance] Classical.propDecidable
 open scoped BigOperators
 namespace VOA.Moonshine.ConwayNorton
+-- Lean 4.35 port: newer Mathlib makes the commutator Lie ring of an associative ring a local instance only.
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 theorem borcherdsPositiveRoot_boundedHeight_finite (h : ℤ) :
     {α : ℤ × ℤ | borcherdsPositiveRoot α ∧ borcherdsRootHeight α ≤ h}.Finite := by

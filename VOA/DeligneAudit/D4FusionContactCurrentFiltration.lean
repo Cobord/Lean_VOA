@@ -56,7 +56,7 @@ theorem current_prefix_mem (w : V) (l : List CurrentLetter) {d : ℕ} {v : V}
     (hv : v ∈ currentPiece R w d) :
     currentRadicalWord R l v ∈ currentPiece R w (l.length + d) := by
   induction l with
-  | nil => simpa [currentRadicalWord, wordOp] using hv
+  | nil => simpa [currentRadicalWord, wordOp] using! hv
   | cons x l ih =>
       exact currentPiece_mono R w (by simp only [List.length_cons]; omega)
         (current_radical_mem R w x.1 x.2 ih)

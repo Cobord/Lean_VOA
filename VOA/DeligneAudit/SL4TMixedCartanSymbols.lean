@@ -109,7 +109,7 @@ theorem mixedLastCartan_newtonCoeff (q : MixedParams) (hq : MixedValid q) (n : �
   rw [coefficientPoly_coeff_of_tail _ q.e1.toNat (by
     intro k hk
     have hz : mixedEvaluation q (mixedE 3 k) = 0 := mixedRelation_zero q hq _
-      (Or.inl ⟨3, k, by simpa [mixedLengths] using hk, rfl⟩)
+      (Or.inl ⟨3, k, by simpa [mixedLengths] using! hk, rfl⟩)
     rw [hz, mul_zero]), coefficientPoly_coeff_of_tail _ (mixedQ q - q.e2).toNat (by
     intro k hk
     rw [mixedG2prime_tail q hq k hk]

@@ -109,8 +109,10 @@ supported there. -/
 theorem finrank_cohomFilt (A : Set (ℤ × ℤ)) :
     finrank ℂ (C.cohomFilt A) = finrank ℂ (C.harm ⊓ C.degOn A : Submodule ℂ K) := by
   rw [C.cohomFilt_eq_map_harm, ← C.finrank_harmOn]
-  exact (Submodule.equivMapOfInjective _
-    (harmonicToCohomology_injective C.P C.pos C.D C.Dadj C.adj_D) _).finrank_eq.symm
+  -- 4.35: type the map on `C.harm` so its `Module` instance matches `C.harmOn A`.
+  let f : C.harm →ₗ[ℂ] cycleQuotient C.D := harmonicToCohomology C.D C.Dadj
+  have hf : Function.Injective f := harmonicToCohomology_injective C.P C.pos C.D C.Dadj C.adj_D
+  exact (Submodule.equivMapOfInjective f hf (C.harmOn A)).finrank_eq.symm
 
 /-- The bidegrees `(j, g)` with `j ∈ S`: ghost number `g`, twice the `ℜ`-degree in `S`. -/
 def rowSet (S : Finset ℤ) (g : ℤ) : Set (ℤ × ℤ) := {a | a.1 ∈ S ∧ a.2 = g}

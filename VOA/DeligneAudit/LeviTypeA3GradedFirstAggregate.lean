@@ -50,7 +50,7 @@ theorem a3FirstBoxKeySpan_le_layer (a : ℕ) (k : A3RadicalKey) :
   apply iSup_le
   intro hd
   have h := a3FirstBoxSortedSpan_le_key ρ w a xs ys zs
-  simpa only [hx, hy, hz, hd] using h
+  simpa only [hx, hy, hz, hd] using! h
 
 theorem a3KeyLayer_eq_firstBox (a b c : ℕ)
     (h : LocalWeylRel ρ w (weightABC a b c)) (k : A3RadicalKey) :

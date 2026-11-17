@@ -16,7 +16,7 @@ theorem highest_root_he (c : Fin 28) :
     contactF 0 15 c + contactF 1 15 c + contactF 1 15 c +
       contactF 2 15 c + contactF 3 15 c = if c = 15 then 2 else 0 := by
   have hh := congrArg (fun x : ℤ => (x : ℂ)) (highest_root_heZ c)
-  simpa only [Int.cast_add, Int.cast_ite, Int.cast_ofNat, Int.cast_zero] using hh
+  simpa only [Int.cast_add, Int.cast_ite, Int.cast_ofNat, Int.cast_zero] using! hh
 
 theorem highest_root_eeZ : ∀ c : Fin 28, fZ br 15 15 c = 0 := by decide +kernel
 

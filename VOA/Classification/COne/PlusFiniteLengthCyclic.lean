@@ -63,7 +63,7 @@ theorem finiteLength_of_generalized_cyclic (hC2 : C2Cofinite W) (k : ℕ)
           simp only [Module.End.one_apply, hj]
           rfl
       rw [hp]
-      simpa only [pow_succ, Module.End.mul_apply] using hx
+      simpa only [pow_succ, Module.End.mul_apply] using! hx
     have hP : IsFiniteLength (modeAlg A) P :=
       finiteLength_submodule_of_restricted A P
         (ih B z hz (cyclic_restriction_eq_top A y))
